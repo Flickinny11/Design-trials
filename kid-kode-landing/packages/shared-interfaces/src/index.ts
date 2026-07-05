@@ -10,5 +10,6 @@ export * from './prism-collab';
 export * from './prism-brand';
 export * from './prism-agent';
 export * from './prism-tenancy';
+export * from './prism-sharing';
 export * from './prism-intake';
 export * from './prism-integrations';

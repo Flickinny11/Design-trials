@@ -1,1 +1,1 @@
-[01:08:47] FINISH-F4: still building · 291m elapsed · agent up · 1046 commits · last: finish-f4: judge round — advocate MUST-FIX fixed (galaxy fly-in ghost = 
+[21:58:41] SHELL-W7: commit 28981cc4 — shell-w7: record deviations (W7-D1 CollabRoom adapter seam · W7-D2 audit

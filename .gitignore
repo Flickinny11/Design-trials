@@ -59,3 +59,4 @@ artifacts/
 /*.pid
 /*.out
 /chain-*.log.preflight
+.harness-*

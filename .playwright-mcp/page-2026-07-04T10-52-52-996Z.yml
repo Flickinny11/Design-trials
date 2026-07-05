@@ -1,0 +1,103 @@
+- generic [ref=f20e1]:
+  - main [ref=f20e2]:
+    - generic [ref=f20e4]:
+      - button "Galaxy" [ref=f20e5] [cursor=pointer]
+      - button "Canvas" [ref=f20e6] [cursor=pointer]
+      - button "Preview App" [ref=f20e7] [cursor=pointer]
+    - generic [ref=f20e8]:
+      - generic:
+        - generic [ref=f20e47]:
+          - generic [ref=f20e48]:
+            - img "Prism" [ref=f20e50]
+            - generic [ref=f20e73]:
+              - generic [ref=f20e74]: Prism
+              - generic [ref=f20e75]: KRIPTIK EDITOR
+          - generic [ref=f20e77]:
+            - button "Graph" [ref=f20e78] [cursor=pointer]:
+              - img [ref=f20e79]
+              - text: Graph
+            - generic [ref=f20e89]: /
+            - generic [ref=f20e90]:
+              - img [ref=f20e91]
+              - text: Arrival
+        - generic [ref=f20e103]:
+          - generic "Graph health" [ref=f20e111]:
+            - img [ref=f20e112]
+            - generic [ref=f20e125]: 100%
+          - button "+ Add Node" [ref=f20e126] [cursor=pointer]:
+            - generic [ref=f20e127]: +
+            - generic [ref=f20e128]: Add Node
+          - button "Reset camera" [ref=f20e129] [cursor=pointer]:
+            - img [ref=f20e130]
+          - button "Search ⌘K" [ref=f20e140] [cursor=pointer]:
+            - img [ref=f20e141]
+            - generic [ref=f20e151]: Search
+            - generic [ref=f20e152]: ⌘K
+      - generic [ref=f20e154]:
+        - button "Galaxy" [ref=f20e155] [cursor=pointer]:
+          - img [ref=f20e157]
+          - text: Galaxy
+        - button "Arrival 6" [ref=f20e168] [cursor=pointer]:
+          - img [ref=f20e170]
+          - text: Arrival
+          - generic "6 elements" [ref=f20e180]: "6"
+        - button "The Movement 8" [ref=f20e181] [cursor=pointer]:
+          - img [ref=f20e183]
+          - text: The Movement
+          - generic "8 elements" [ref=f20e193]: "8"
+        - button "Materia 8" [ref=f20e194] [cursor=pointer]:
+          - img [ref=f20e196]
+          - text: Materia
+          - generic "8 elements" [ref=f20e206]: "8"
+        - button "Celestia 7" [ref=f20e207] [cursor=pointer]:
+          - img [ref=f20e209]
+          - text: Celestia
+          - generic "7 elements" [ref=f20e219]: "7"
+        - button "Acquire 10" [ref=f20e220] [cursor=pointer]:
+          - img [ref=f20e222]
+          - text: Acquire
+          - generic "10 elements" [ref=f20e232]: "10"
+        - button "The Atelier 17" [ref=f20e233] [cursor=pointer]:
+          - img [ref=f20e235]
+          - text: The Atelier
+          - generic "17 elements" [ref=f20e245]: "17"
+      - generic:
+        - generic:
+          - generic:
+            - generic: MINIMAP
+            - generic: 56 elements
+      - button "Filter" [ref=f20e455] [cursor=pointer]:
+        - img [ref=f20e456]
+        - generic [ref=f20e466]: Filter
+    - button "Open the guided tour" [ref=f20e467] [cursor=pointer]:
+      - generic:
+        - img
+    - img [ref=f20e469]
+    - 'dialog "Guided tour step 1 of 7: Welcome — the view-mode switcher." [ref=f20e476]':
+      - generic [ref=f20e478]:
+        - button [ref=f20e479] [cursor=pointer]: SKIP
+        - button [ref=f20e480] [cursor=pointer]:
+          - img [ref=f20e481]
+      - generic [ref=f20e483]:
+        - generic [ref=f20e484]: WELCOME TO PRISM
+        - heading "Three views, one living scene" [level=2] [ref=f20e485]:
+          - generic [ref=f20e486]: Three
+          - generic [ref=f20e487]: views,
+          - generic [ref=f20e488]: one
+          - generic [ref=f20e489]: living
+          - generic [ref=f20e490]: scene
+        - paragraph [ref=f20e491]: Prism is one continuous 3D scene with three views. This control switches between them — Galaxy, Canvas, and your running Preview App. Let me show you around.
+      - generic [ref=f20e492]:
+        - button "Previous step" [disabled] [ref=f20e493]: ‹ Back
+        - tablist "Tour progress" [ref=f20e494]:
+          - tab "Go to step 1 of 7" [selected] [ref=f20e495] [cursor=pointer]
+          - tab "Go to step 2 of 7" [ref=f20e496] [cursor=pointer]
+          - tab "Go to step 3 of 7" [ref=f20e497] [cursor=pointer]
+          - tab "Go to step 4 of 7" [ref=f20e498] [cursor=pointer]
+          - tab "Go to step 5 of 7" [ref=f20e499] [cursor=pointer]
+          - tab "Go to step 6 of 7" [ref=f20e500] [cursor=pointer]
+          - tab "Go to step 7 of 7" [ref=f20e501] [cursor=pointer]
+        - button "Next step" [active] [ref=f20e502] [cursor=pointer]: Next ›
+  - button "Open Next.js Dev Tools" [ref=f20e39] [cursor=pointer]:
+    - img [ref=f20e40]
+  - alert [ref=f20e43]

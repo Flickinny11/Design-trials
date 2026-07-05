@@ -1,0 +1,103 @@
+- generic [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e4]:
+      - button "Galaxy" [ref=e5] [cursor=pointer]
+      - button "Canvas" [ref=e6] [cursor=pointer]
+      - button "Preview App" [ref=e7] [cursor=pointer]
+    - generic [ref=e8]:
+      - generic:
+        - generic [ref=e44]:
+          - generic [ref=e45]:
+            - img "Prism" [ref=e47]
+            - generic [ref=e70]:
+              - generic [ref=e71]: Prism
+              - generic [ref=e72]: KRIPTIK EDITOR
+          - generic [ref=e99]:
+            - button "Graph" [ref=e100] [cursor=pointer]:
+              - img [ref=e101]
+              - text: Graph
+            - generic [ref=e111]: /
+            - generic [ref=e112]:
+              - img [ref=e113]
+              - text: Arrival
+        - generic [ref=e123]:
+          - generic "Graph health" [ref=e131]:
+            - img [ref=e132]
+            - generic [ref=e145]: 100%
+          - button "+ Add Node" [ref=e146] [cursor=pointer]:
+            - generic [ref=e147]: +
+            - generic [ref=e148]: Add Node
+          - button "Reset camera" [ref=e149] [cursor=pointer]:
+            - img [ref=e150]
+          - button "Search ⌘K" [ref=e160] [cursor=pointer]:
+            - img [ref=e161]
+            - generic [ref=e171]: Search
+            - generic [ref=e172]: ⌘K
+      - generic [ref=e174]:
+        - button "Galaxy" [ref=e175] [cursor=pointer]:
+          - img [ref=e177]
+          - text: Galaxy
+        - button "Arrival 5" [ref=e188] [cursor=pointer]:
+          - img [ref=e190]
+          - text: Arrival
+          - generic "5 elements" [ref=e200]: "5"
+        - button "The Movement 7" [ref=e201] [cursor=pointer]:
+          - img [ref=e203]
+          - text: The Movement
+          - generic "7 elements" [ref=e213]: "7"
+        - button "Materia 7" [ref=e214] [cursor=pointer]:
+          - img [ref=e216]
+          - text: Materia
+          - generic "7 elements" [ref=e226]: "7"
+        - button "Celestia 6" [ref=e227] [cursor=pointer]:
+          - img [ref=e229]
+          - text: Celestia
+          - generic "6 elements" [ref=e239]: "6"
+        - button "Acquire 10" [ref=e240] [cursor=pointer]:
+          - img [ref=e242]
+          - text: Acquire
+          - generic "10 elements" [ref=e252]: "10"
+        - button "The Atelier 16" [ref=e253] [cursor=pointer]:
+          - img [ref=e255]
+          - text: The Atelier
+          - generic "16 elements" [ref=e265]: "16"
+      - generic:
+        - generic:
+          - generic:
+            - generic: MINIMAP
+            - generic: 51 elements
+      - button "Filter" [ref=e377] [cursor=pointer]:
+        - img [ref=e378]
+        - generic [ref=e388]: Filter
+    - button "Open the guided tour" [ref=e372] [cursor=pointer]:
+      - generic:
+        - img
+    - img [ref=e390]
+    - 'dialog "Guided tour step 1 of 7: Welcome — the view-mode switcher." [ref=e397]':
+      - generic [ref=e399]:
+        - button [ref=e400] [cursor=pointer]: SKIP
+        - button [ref=e401] [cursor=pointer]:
+          - img [ref=e402]
+      - generic [ref=e404]:
+        - generic [ref=e405]: WELCOME TO PRISM
+        - heading "Three views, one living scene" [level=2] [ref=e406]:
+          - generic [ref=e407]: Three
+          - generic [ref=e408]: views,
+          - generic [ref=e409]: one
+          - generic [ref=e410]: living
+          - generic [ref=e411]: scene
+        - paragraph [ref=e412]: Prism is one continuous 3D scene with three views. This control switches between them — Galaxy, Canvas, and your running Preview App. Let me show you around.
+      - generic [ref=e413]:
+        - button "Previous step" [disabled] [ref=e414]: ‹ Back
+        - tablist "Tour progress" [ref=e415]:
+          - tab "Go to step 1 of 7" [selected] [ref=e416] [cursor=pointer]
+          - tab "Go to step 2 of 7" [ref=e417] [cursor=pointer]
+          - tab "Go to step 3 of 7" [ref=e418] [cursor=pointer]
+          - tab "Go to step 4 of 7" [ref=e419] [cursor=pointer]
+          - tab "Go to step 5 of 7" [ref=e420] [cursor=pointer]
+          - tab "Go to step 6 of 7" [ref=e421] [cursor=pointer]
+          - tab "Go to step 7 of 7" [ref=e422] [cursor=pointer]
+        - button "Next step" [active] [ref=e423] [cursor=pointer]: Next ›
+  - button "Open Next.js Dev Tools" [ref=e35] [cursor=pointer]:
+    - img [ref=e36]
+  - alert [ref=e39]

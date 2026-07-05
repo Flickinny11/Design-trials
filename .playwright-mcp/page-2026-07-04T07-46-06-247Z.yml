@@ -1,0 +1,77 @@
+- generic [ref=f5e1]:
+  - main [ref=f5e2]:
+    - generic [ref=f5e4]:
+      - button "Galaxy" [active] [ref=f5e5] [cursor=pointer]
+      - button "Canvas" [ref=f5e6] [cursor=pointer]
+      - button "Preview App" [ref=f5e7] [cursor=pointer]
+    - generic [ref=f5e8]:
+      - generic:
+        - generic [ref=f5e26]:
+          - generic [ref=f5e27]:
+            - img "Prism" [ref=f5e29]
+            - generic [ref=f5e52]:
+              - generic [ref=f5e53]: Prism
+              - generic [ref=f5e54]: KRIPTIK EDITOR
+          - generic [ref=f5e56]:
+            - button "Graph" [ref=f5e57] [cursor=pointer]:
+              - img [ref=f5e58]
+              - text: Graph
+            - generic [ref=f5e68]: /
+            - generic [ref=f5e69]:
+              - img [ref=f5e70]
+              - text: Arrival
+        - generic [ref=f5e80]:
+          - generic "Graph health" [ref=f5e88]:
+            - img [ref=f5e89]
+            - generic [ref=f5e102]: 100%
+          - button "+ Add Node" [ref=f5e103] [cursor=pointer]:
+            - generic [ref=f5e104]: +
+            - generic [ref=f5e105]: Add Node
+          - button "Reset camera" [ref=f5e106] [cursor=pointer]:
+            - img [ref=f5e107]
+          - button "Search ⌘K" [ref=f5e117] [cursor=pointer]:
+            - img [ref=f5e118]
+            - generic [ref=f5e128]: Search
+            - generic [ref=f5e129]: ⌘K
+      - generic [ref=f5e131]:
+        - button "Galaxy" [ref=f5e132] [cursor=pointer]:
+          - img [ref=f5e134]
+          - text: Galaxy
+        - button "Arrival 5" [ref=f5e145] [cursor=pointer]:
+          - img [ref=f5e147]
+          - text: Arrival
+          - generic "5 elements" [ref=f5e157]: "5"
+        - button "The Movement 7" [ref=f5e158] [cursor=pointer]:
+          - img [ref=f5e160]
+          - text: The Movement
+          - generic "7 elements" [ref=f5e170]: "7"
+        - button "Materia 7" [ref=f5e171] [cursor=pointer]:
+          - img [ref=f5e173]
+          - text: Materia
+          - generic "7 elements" [ref=f5e183]: "7"
+        - button "Celestia 6" [ref=f5e184] [cursor=pointer]:
+          - img [ref=f5e186]
+          - text: Celestia
+          - generic "6 elements" [ref=f5e196]: "6"
+        - button "Acquire 10" [ref=f5e197] [cursor=pointer]:
+          - img [ref=f5e199]
+          - text: Acquire
+          - generic "10 elements" [ref=f5e209]: "10"
+        - button "The Atelier 16" [ref=f5e210] [cursor=pointer]:
+          - img [ref=f5e212]
+          - text: The Atelier
+          - generic "16 elements" [ref=f5e222]: "16"
+      - generic:
+        - generic:
+          - generic:
+            - generic: MINIMAP
+            - generic: 51 elements
+      - button "Filter" [ref=f5e224] [cursor=pointer]:
+        - img [ref=f5e225]
+        - generic [ref=f5e235]: Filter
+    - button "Open the guided tour" [ref=f5e236] [cursor=pointer]:
+      - generic:
+        - img
+  - button "Open Next.js Dev Tools" [ref=f5e19] [cursor=pointer]:
+    - img [ref=f5e20]
+  - alert [ref=f5e13]

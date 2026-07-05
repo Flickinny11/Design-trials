@@ -1,0 +1,7 @@
+- generic [active] [ref=f3e1]:
+  - banner "Preview banner" [ref=f3e5]:
+    - generic [ref=f3e7]: Nova Atelier
+    - generic [ref=f3e8]: Prism preview
+  - button "Open Next.js Dev Tools" [ref=f3e14] [cursor=pointer]:
+    - img [ref=f3e15]
+  - alert [ref=f3e18]

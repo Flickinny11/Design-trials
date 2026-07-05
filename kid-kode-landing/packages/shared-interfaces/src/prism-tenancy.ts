@@ -279,3 +279,49 @@ export const prismUsageOutputSchema = z.object({
   asOf: z.string().datetime(),
 });
 export type PrismUsageOutput = z.infer<typeof prismUsageOutputSchema>;
+
+// ── Account settings (W7 — settings depth: profile/model/notifications) ───────
+
+/** Per-account notification preferences (real toggles; delivery wiring lands
+ *  with the billing/testing phase — the prefs persist now). */
+export const prismNotificationPrefsSchema = z.object({
+  buildComplete: z.boolean(),
+  shareInvites: z.boolean(),
+  productUpdates: z.boolean(),
+});
+export type PrismNotificationPrefs = z.infer<typeof prismNotificationPrefsSchema>;
+
+export const PRISM_DEFAULT_NOTIFICATION_PREFS: PrismNotificationPrefs = {
+  buildComplete: true,
+  shareInvites: true,
+  productUpdates: false,
+};
+
+/** The persisted account settings (spec 7.2 account default model + §8
+ *  settings depth). `defaultModelId` is a model-config id resolved against the
+ *  single config source (7.4); null = the registry default. */
+export const prismAccountSettingsSchema = z.object({
+  v: z.literal(PRISM_TENANCY_CONTRACT_VERSION),
+  defaultModelId: z.string().max(120).nullable(),
+  notifications: prismNotificationPrefsSchema,
+});
+export type PrismAccountSettings = z.infer<typeof prismAccountSettingsSchema>;
+
+/** `tenancy.settings.set` input — every field optional (partial update);
+ *  owner-free (I11), the tenant is the session. */
+export const accountSettingsSetInputSchema = z
+  .object({
+    defaultModelId: z.string().max(120).nullable().optional(),
+    notifications: prismNotificationPrefsSchema.partial().optional(),
+  })
+  .strict();
+export type AccountSettingsSetInput = z.infer<
+  typeof accountSettingsSetInputSchema
+>;
+
+/** `tenancy.account.delete` (danger zone, W7-D3). Requires the user to type
+ *  their exact account name back — a deliberate friction gate, server-checked. */
+export const accountDeleteInputSchema = z
+  .object({ confirmName: z.string().min(1).max(200) })
+  .strict();
+export type AccountDeleteInput = z.infer<typeof accountDeleteInputSchema>;

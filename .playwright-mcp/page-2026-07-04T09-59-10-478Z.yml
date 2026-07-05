@@ -1,0 +1,9 @@
+- generic [active] [ref=f11e1]:
+  - main [ref=f11e2]:
+    - generic [ref=f11e35]:
+      - button "Galaxy" [ref=f11e36] [cursor=pointer]
+      - button "Canvas" [ref=f11e37] [cursor=pointer]
+      - button "Preview" [ref=f11e38] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f11e44] [cursor=pointer]:
+    - img [ref=f11e45]
+  - alert [ref=f11e48]

@@ -1,0 +1,323 @@
+- generic [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e4]:
+      - button "Galaxy" [ref=e5] [cursor=pointer]
+      - button "Canvas" [ref=e6] [cursor=pointer]
+      - button "Preview App" [ref=e7] [cursor=pointer]
+    - generic [ref=e8]:
+      - generic:
+        - generic [ref=e44]:
+          - generic [ref=e45]:
+            - img "Prism" [ref=e47]
+            - generic [ref=e70]:
+              - generic [ref=e71]: Prism
+              - generic [ref=e72]: KRIPTIK EDITOR
+          - generic [ref=e427]:
+            - button "Scene" [ref=e428] [cursor=pointer]:
+              - img [ref=e429]
+              - generic [ref=e439]: Scene
+            - button "Topology" [ref=e440] [cursor=pointer]:
+              - img [ref=e441]
+              - generic [ref=e451]: Topology
+          - generic [ref=e99]:
+            - button "Graph" [ref=e100] [cursor=pointer]:
+              - img [ref=e101]
+              - text: Graph
+            - generic [ref=e111]: /
+            - generic [ref=e112]:
+              - img [ref=e113]
+              - text: Arrival
+            - generic [ref=e689]: /
+            - generic [ref=e690]: Orr Arrival Watch
+        - generic [ref=e123]:
+          - generic "Graph health" [ref=e131]:
+            - img [ref=e132]
+            - generic [ref=e145]: 100%
+          - button "+ Add Node" [ref=e146] [cursor=pointer]:
+            - generic [ref=e147]: +
+            - generic [ref=e148]: Add Node
+          - button "Reset camera" [ref=e149] [cursor=pointer]:
+            - img [ref=e150]
+          - button "Search ⌘K" [ref=e160] [cursor=pointer]:
+            - img [ref=e161]
+            - generic [ref=e171]: Search
+            - generic [ref=e172]: ⌘K
+      - generic [ref=e174]:
+        - button "Galaxy" [ref=e175] [cursor=pointer]:
+          - img [ref=e177]
+          - text: Galaxy
+        - button "Arrival 5" [ref=e188] [cursor=pointer]:
+          - img [ref=e190]
+          - text: Arrival
+          - generic "5 elements" [ref=e200]: "5"
+        - button "The Movement 7" [ref=e201] [cursor=pointer]:
+          - img [ref=e203]
+          - text: The Movement
+          - generic "7 elements" [ref=e213]: "7"
+        - button "Materia 7" [ref=e214] [cursor=pointer]:
+          - img [ref=e216]
+          - text: Materia
+          - generic "7 elements" [ref=e226]: "7"
+        - button "Celestia 6" [ref=e227] [cursor=pointer]:
+          - img [ref=e229]
+          - text: Celestia
+          - generic "6 elements" [ref=e239]: "6"
+        - button "Acquire 10" [ref=e240] [cursor=pointer]:
+          - img [ref=e242]
+          - text: Acquire
+          - generic "10 elements" [ref=e252]: "10"
+        - button "The Atelier 16" [ref=e253] [cursor=pointer]:
+          - img [ref=e255]
+          - text: The Atelier
+          - generic "16 elements" [ref=e265]: "16"
+      - generic:
+        - generic:
+          - generic:
+            - generic: MINIMAP
+            - generic: 51 elements
+      - generic [ref=e691]:
+        - generic [ref=e693]:
+          - generic [ref=e694]:
+            - generic [ref=e695]:
+              - img [ref=e696]
+              - text: ARRIVAL
+            - generic [ref=e706]: Orr Arrival Watch
+            - generic [ref=e707]: element
+          - button [ref=e708] [cursor=pointer]:
+            - img [ref=e709]
+        - generic [ref=e719]: The timepiece itself — photoreal generated 3D under the hub light rig; floats on idle, tilts toward the pointer, glints on click.
+        - generic [ref=e720]:
+          - generic [ref=e721]: FE ✓
+          - generic [ref=e722]: BE —
+          - generic [ref=e723]: Anim ○
+          - generic [ref=e724]: States 0
+        - generic [ref=e726]:
+          - generic [ref=e727]: VERIFICATION
+          - generic [ref=e728]: "0.85"
+        - generic [ref=e731]:
+          - button "Inspect" [ref=e732] [cursor=pointer]:
+            - img [ref=e733]
+            - text: Inspect
+          - button "Edit" [ref=e743] [cursor=pointer]:
+            - img [ref=e744]
+            - text: Edit
+          - button "Re-generate" [ref=e754] [cursor=pointer]:
+            - img [ref=e755]
+          - button "Freeze (lock from AI edits)" [ref=e765] [cursor=pointer]:
+            - img [ref=e766]
+      - generic [ref=e452]:
+        - generic [ref=e453]:
+          - generic "Drag to move the toolbar" [ref=e454]:
+            - button "Collapse toolbar" [ref=e455] [cursor=pointer]
+          - generic [ref=e461]:
+            - button "Transform" [ref=e465] [cursor=pointer]
+            - button "Selection" [ref=e466] [cursor=pointer]
+            - button "Add" [ref=e467] [cursor=pointer]
+            - button "Elements" [ref=e468] [cursor=pointer]
+            - button "Image" [ref=e469] [cursor=pointer]
+            - button "3D Object" [ref=e470] [cursor=pointer]
+            - button "Background" [ref=e471] [cursor=pointer]
+            - button "Change Artifact" [ref=e472] [cursor=pointer]
+            - button "Prompt Edit" [ref=e473] [cursor=pointer]
+            - button "Text" [ref=e474] [cursor=pointer]
+            - button "Animation" [active] [ref=e475] [cursor=pointer]
+            - button "Function" [ref=e476] [cursor=pointer]
+            - button "Lighting" [ref=e477] [cursor=pointer]
+            - button "Build" [ref=e478] [cursor=pointer]
+            - generic:
+              - tooltip "Animation": Animation
+        - generic [ref=e480]:
+          - generic [ref=e481]:
+            - generic [ref=e482]:
+              - img [ref=e484]
+              - generic [ref=e496]: Animation
+            - button [ref=e497] [cursor=pointer]:
+              - img [ref=e498]
+          - generic [ref=e998]:
+            - generic [ref=e999]:
+              - img [ref=e1000]
+              - generic [ref=e1010]: The timepiece itself — photoreal generated 3D under the hub light rig; floats on idle, tilts toward the pointer, glints on click.
+              - generic [ref=e1011]: 3 bound
+            - generic [ref=e1012]:
+              - generic [ref=e1014]: Catalog · 407 primitives · hover plays
+              - textbox "Search 407 primitives…" [ref=e1016]
+              - generic [ref=e1017]:
+                - button "All" [ref=e1018] [cursor=pointer]
+                - button "transform" [ref=e1019] [cursor=pointer]
+                - button "fade" [ref=e1020] [cursor=pointer]
+                - button "scroll" [ref=e1021] [cursor=pointer]
+                - button "pointer" [ref=e1022] [cursor=pointer]
+                - button "text" [ref=e1023] [cursor=pointer]
+                - button "glass" [ref=e1024] [cursor=pointer]
+                - button "caustics" [ref=e1025] [cursor=pointer]
+                - button "volumetric" [ref=e1026] [cursor=pointer]
+                - button "particles" [ref=e1027] [cursor=pointer]
+                - button "smoke" [ref=e1028] [cursor=pointer]
+                - button "displacement" [ref=e1029] [cursor=pointer]
+                - button "wave" [ref=e1030] [cursor=pointer]
+                - button "shimmer" [ref=e1031] [cursor=pointer]
+                - button "blur" [ref=e1032] [cursor=pointer]
+                - button "mask" [ref=e1033] [cursor=pointer]
+            - generic [ref=e1034]:
+              - generic [ref=e1035]:
+                - button "Accordion Y transform" [ref=e1036] [cursor=pointer]:
+                  - generic [ref=e1039]:
+                    - generic [ref=e1041]: Accordion Y
+                    - generic [ref=e1042]: transform
+                - button "Block Topple transform" [ref=e1043] [cursor=pointer]:
+                  - generic [ref=e1046]:
+                    - generic [ref=e1048]: Block Topple
+                    - generic [ref=e1049]: transform
+                - button "Bounce In transform" [ref=e1050] [cursor=pointer]:
+                  - generic [ref=e1053]:
+                    - generic [ref=e1055]: Bounce In
+                    - generic [ref=e1056]: transform
+                - button "Card Fold transform" [ref=e1057] [cursor=pointer]:
+                  - generic [ref=e1060]:
+                    - generic [ref=e1062]: Card Fold
+                    - generic [ref=e1063]: transform
+                - button "Corner Peel transform" [ref=e1064] [cursor=pointer]:
+                  - generic [ref=e1067]:
+                    - generic [ref=e1069]: Corner Peel
+                    - generic [ref=e1070]: transform
+                - button "Cross Morph transform" [ref=e1071] [cursor=pointer]:
+                  - generic [ref=e1074]:
+                    - generic [ref=e1076]: Cross Morph
+                    - generic [ref=e1077]: transform
+                - button "Cube Rotate transform" [ref=e1078] [cursor=pointer]:
+                  - generic [ref=e1081]:
+                    - generic [ref=e1083]: Cube Rotate
+                    - generic [ref=e1084]: transform
+                - button "Cylinder Unroll transform" [ref=e1085] [cursor=pointer]:
+                  - generic [ref=e1088]:
+                    - generic [ref=e1090]: Cylinder Unroll
+                    - generic [ref=e1091]: transform
+                - button "Depth Pop transform" [ref=e1092] [cursor=pointer]:
+                  - generic [ref=e1095]:
+                    - generic [ref=e1097]: Depth Pop
+                    - generic [ref=e1098]: transform
+              - generic [ref=e1099]:
+                - button [disabled] [ref=e1100]:
+                  - img [ref=e1101]
+                - generic [ref=e1111]: 1 / 46 · 407 matches
+                - button [ref=e1112] [cursor=pointer]:
+                  - img [ref=e1113]
+            - generic [ref=e1123]:
+              - generic [ref=e1125]: On this element · stack order
+              - generic [ref=e1127]:
+                - generic [ref=e1128]:
+                  - generic [ref=e1129]:
+                    - button "Move earlier in the stack" [disabled] [ref=e1130]:
+                      - img [ref=e1131]
+                    - button "Move later in the stack" [ref=e1141] [cursor=pointer]:
+                      - img [ref=e1142]
+                  - generic [ref=e1153]:
+                    - generic [ref=e1154]: Float
+                    - generic [ref=e1155]: transform · Load/Time
+                  - button "Tune params (ControlSchema)" [ref=e1156] [cursor=pointer]:
+                    - img [ref=e1157]
+                  - button "Remove binding" [ref=e1167] [cursor=pointer]:
+                    - img [ref=e1168]
+                - generic [ref=e1178]:
+                  - button "Load/Time" [ref=e1179] [cursor=pointer]
+                  - button "Scroll" [ref=e1180] [cursor=pointer]
+                  - button "Pointer" [ref=e1181] [cursor=pointer]
+                  - button "State" [ref=e1182] [cursor=pointer]
+                  - button "Event" [ref=e1183] [cursor=pointer]
+              - generic [ref=e1184]:
+                - generic [ref=e1185]:
+                  - generic [ref=e1186]:
+                    - button "Move earlier in the stack" [ref=e1187] [cursor=pointer]:
+                      - img [ref=e1188]
+                    - button "Move later in the stack" [ref=e1198] [cursor=pointer]:
+                      - img [ref=e1199]
+                  - generic [ref=e1210]:
+                    - generic [ref=e1211]: Pointer Tilt 3D
+                    - generic [ref=e1212]: pointer · Pointer
+                  - button "Tune params (ControlSchema)" [ref=e1213] [cursor=pointer]:
+                    - img [ref=e1214]
+                  - button "Remove binding" [ref=e1224] [cursor=pointer]:
+                    - img [ref=e1225]
+                - generic [ref=e1235]:
+                  - button "Load/Time" [ref=e1236] [cursor=pointer]
+                  - button "Scroll" [ref=e1237] [cursor=pointer]
+                  - button "Pointer" [ref=e1238] [cursor=pointer]
+                  - button "State" [ref=e1239] [cursor=pointer]
+                  - button "Event" [ref=e1240] [cursor=pointer]
+              - generic [ref=e1241]:
+                - generic [ref=e1242]:
+                  - generic [ref=e1243]:
+                    - button "Move earlier in the stack" [ref=e1244] [cursor=pointer]:
+                      - img [ref=e1245]
+                    - button "Move later in the stack" [disabled] [ref=e1255]:
+                      - img [ref=e1256]
+                  - generic [ref=e1267]:
+                    - generic [ref=e1268]: Scale pop
+                    - generic [ref=e1269]: transform · Event
+                  - button "Tune params (ControlSchema)" [ref=e1270] [cursor=pointer]:
+                    - img [ref=e1271]
+                  - button "Remove binding" [ref=e1281] [cursor=pointer]:
+                    - img [ref=e1282]
+                - generic [ref=e1292]:
+                  - button "Load/Time" [ref=e1293] [cursor=pointer]
+                  - button "Scroll" [ref=e1294] [cursor=pointer]
+                  - button "Pointer" [ref=e1295] [cursor=pointer]
+                  - button "State" [ref=e1296] [cursor=pointer]
+                  - button "Event" [ref=e1297] [cursor=pointer]
+            - generic [ref=e1298]:
+              - generic [ref=e1300]: Timeline · authoring
+              - button "Keyframe Editor" [ref=e1302] [cursor=pointer]:
+                - img [ref=e1303]
+                - generic [ref=e1313]: Keyframe Editor
+              - button "From Scratch — bespoke" [ref=e1314] [cursor=pointer]:
+                - img [ref=e1315]
+                - generic [ref=e1325]: From Scratch — bespoke
+            - generic [ref=e1326]:
+              - generic [ref=e1327]: Animations play in Preview — the canvas stays still while you edit. Triggers control animation only; making elements act (links, data) happens in the node editor.
+              - button "Preview App" [ref=e1328] [cursor=pointer]:
+                - img [ref=e1329]
+                - generic [ref=e1339]: Preview App
+                - img [ref=e1340]
+      - generic:
+        - generic [ref=e653]:
+          - img [ref=e654]
+          - status [ref=e661]:
+            - generic [ref=e662]:
+              - generic [ref=e663]: AZ +0°
+              - generic [ref=e664]: TILT +0°
+            - generic [ref=e665]: STRAIGHT ON
+          - button "Reset view to straight-on" [ref=e666] [cursor=pointer]:
+            - img [ref=e667]
+        - generic [ref=e670]:
+          - generic [ref=e671]: JOURNEY
+          - generic [ref=e672]: 0 pts
+          - button "REC" [ref=e673] [cursor=pointer]:
+            - generic [ref=e675]: REC
+          - button "Clear camera journey" [disabled] [ref=e676]:
+            - img [ref=e677]
+          - button "Preview" [disabled] [ref=e680]:
+            - img [ref=e681]
+            - generic [ref=e683]: Preview
+        - button "Shipped Frame" [ref=e684] [cursor=pointer]:
+          - img [ref=e685]
+          - generic [ref=e688]: Shipped Frame
+    - button "Open the guided tour" [ref=e372] [cursor=pointer]:
+      - generic:
+        - img
+    - generic [ref=e959]:
+      - generic [ref=e960]:
+        - img [ref=e961]
+        - generic [ref=e971]:
+          - generic [ref=e972]: Node Agent
+          - generic [ref=e973]: The timepiece itself — photoreal generated 3D under the hub light rig; floats on idle, tilts toward the pointer, glints on click.
+      - textbox "Describe a change to this element…" [ref=e974]
+      - generic [ref=e975]:
+        - button "Plan" [disabled] [ref=e976]:
+          - img [ref=e977]
+          - text: Plan
+        - button "Self-heal" [ref=e987] [cursor=pointer]:
+          - img [ref=e988]
+          - text: Self-heal
+  - button "Open Next.js Dev Tools" [ref=e35] [cursor=pointer]:
+    - img [ref=e36]
+  - alert [ref=e39]

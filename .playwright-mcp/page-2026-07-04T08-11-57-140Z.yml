@@ -1,0 +1,313 @@
+- generic [ref=f5e1] [cursor=pointer]:
+  - main [ref=f5e2]:
+    - generic [ref=f5e4]:
+      - button "Galaxy" [ref=f5e5]
+      - button "Canvas" [active] [ref=f5e6]
+      - button "Preview App" [ref=f5e7]
+    - generic [ref=f5e8]:
+      - generic:
+        - generic [ref=f5e1626]:
+          - generic [ref=f5e1627]:
+            - img "Prism" [ref=f5e1629]
+            - generic [ref=f5e1652]:
+              - generic [ref=f5e1653]: Prism
+              - generic [ref=f5e1654]: KRIPTIK EDITOR
+          - generic [ref=f5e1656]:
+            - button "Scene" [ref=f5e1657]:
+              - img [ref=f5e1658]
+              - generic [ref=f5e1668]: Scene
+            - button "Topology" [ref=f5e1669]:
+              - img [ref=f5e1670]
+              - generic [ref=f5e1680]: Topology
+          - generic [ref=f5e1681]:
+            - button "Graph" [ref=f5e1682]:
+              - img [ref=f5e1683]
+              - text: Graph
+            - generic [ref=f5e1693]: /
+            - generic [ref=f5e1694]:
+              - img [ref=f5e1695]
+              - text: Arrival
+            - generic [ref=f5e1705]: /
+            - generic [ref=f5e1706]: Orr Arrival Headline
+        - generic [ref=f5e1707]:
+          - generic "Graph health" [ref=f5e1715]:
+            - img [ref=f5e1716]
+            - generic [ref=f5e1729]: 100%
+          - button "+ Add Node" [ref=f5e1730]:
+            - generic [ref=f5e1731]: +
+            - generic [ref=f5e1732]: Add Node
+          - button "Reset camera" [ref=f5e1733]:
+            - img [ref=f5e1734]
+          - button "Search ⌘K" [ref=f5e1744]:
+            - img [ref=f5e1745]
+            - generic [ref=f5e1755]: Search
+            - generic [ref=f5e1756]: ⌘K
+      - generic [ref=f5e1758]:
+        - button "Galaxy" [ref=f5e1759]:
+          - img [ref=f5e1761]
+          - text: Galaxy
+        - button "Arrival 5" [ref=f5e1772]:
+          - img [ref=f5e1774]
+          - text: Arrival
+          - generic "5 elements" [ref=f5e1784]: "5"
+        - button "The Movement 7" [ref=f5e1785]:
+          - img [ref=f5e1787]
+          - text: The Movement
+          - generic "7 elements" [ref=f5e1797]: "7"
+        - button "Materia 7" [ref=f5e1798]:
+          - img [ref=f5e1800]
+          - text: Materia
+          - generic "7 elements" [ref=f5e1810]: "7"
+        - button "Celestia 6" [ref=f5e1811]:
+          - img [ref=f5e1813]
+          - text: Celestia
+          - generic "6 elements" [ref=f5e1823]: "6"
+        - button "Acquire 10" [ref=f5e1824]:
+          - img [ref=f5e1826]
+          - text: Acquire
+          - generic "10 elements" [ref=f5e1836]: "10"
+        - button "The Atelier 16" [ref=f5e1837]:
+          - img [ref=f5e1839]
+          - text: The Atelier
+          - generic "16 elements" [ref=f5e1849]: "16"
+      - generic:
+        - generic:
+          - generic:
+            - generic: MINIMAP
+            - generic: 51 elements
+      - generic [ref=f5e1850]:
+        - generic [ref=f5e1851]:
+          - generic [ref=f5e1852]:
+            - generic [ref=f5e1853]:
+              - generic [ref=f5e1854]:
+                - generic [ref=f5e1855]: INSPECTOR
+                - img [ref=f5e1856]
+                - generic [ref=f5e1866]: element
+              - generic [ref=f5e1868]: Orr Arrival Headline
+            - generic [ref=f5e1869]:
+              - generic "Built · snapshot 70798d45" [ref=f5e1870]: Built
+              - button "Close inspector" [ref=f5e1871]:
+                - img [ref=f5e1872]
+          - generic [ref=f5e1882]:
+            - button "Done" [pressed] [ref=f5e1883]
+            - button "Save (2)" [ref=f5e1884]
+            - button "Save & Rebuild" [ref=f5e1885]
+            - button "Discard" [ref=f5e1886]
+            - button "Clone" [ref=f5e1887]
+            - button "Change Artifact" [ref=f5e1888]
+            - button "Preview in App UI" [ref=f5e1889]
+        - generic [ref=f5e1890]:
+          - button "Visual" [ref=f5e1891]:
+            - img [ref=f5e1892]
+            - text: Visual
+          - button "Material" [ref=f5e1902]:
+            - img [ref=f5e1903]
+            - text: Material
+          - button "Behavior" [ref=f5e1913]:
+            - img [ref=f5e1914]
+            - text: Behavior
+          - button "Functions" [ref=f5e1924]:
+            - img [ref=f5e1925]
+            - text: Functions
+          - button "Integrations" [ref=f5e1935]:
+            - img [ref=f5e1936]
+            - text: Integrations
+          - button "Code" [ref=f5e1946]:
+            - img [ref=f5e1947]
+            - text: Code
+          - button "Animation" [ref=f5e1957]:
+            - img [ref=f5e1958]
+            - text: Animation
+          - button "Links" [ref=f5e1968]:
+            - img [ref=f5e1969]
+            - text: Links
+          - button "Backend" [ref=f5e1979]:
+            - img [ref=f5e1980]
+            - text: Backend
+          - button "History" [ref=f5e1990]:
+            - img [ref=f5e1991]
+            - text: History
+        - generic [ref=f5e2001]:
+          - button "Describe the behavior…" [ref=f5e2003]:
+            - img [ref=f5e2004]
+            - generic [ref=f5e2014]: Describe the behavior…
+            - img [ref=f5e2015]
+          - generic [ref=f5e2025]:
+            - generic [ref=f5e2026]: INTERACTIONS
+            - generic [ref=f5e2028]: No interactions defined
+            - generic [ref=f5e2029]: STATE MANAGEMENT
+            - generic [ref=f5e2030]:
+              - generic [ref=f5e2031]:
+                - text: "Store:"
+                - generic [ref=f5e2032]: orrarrivalheadlineStore
+              - generic [ref=f5e2033]: 0 state keys tracked
+      - generic [ref=f5e2034]:
+        - generic [ref=f5e2035]:
+          - generic "Drag to move the toolbar" [ref=f5e2036]:
+            - button "Collapse toolbar" [ref=f5e2037]
+          - generic [ref=f5e2043]:
+            - button "Transform" [ref=f5e2047]
+            - button "Selection" [ref=f5e2048]
+            - button "Add" [ref=f5e2049]
+            - button "Elements" [ref=f5e2050]
+            - button "Image" [ref=f5e2051]
+            - button "3D Object" [ref=f5e2052]
+            - button "Background" [ref=f5e2053]
+            - button "Change Artifact" [ref=f5e2054]
+            - button "Prompt Edit" [ref=f5e2055]
+            - button "Text" [ref=f5e2056]
+            - button "Animation" [ref=f5e2057]
+            - button "Function" [ref=f5e2058]
+            - button "Lighting" [ref=f5e2059]
+            - button "Build" [ref=f5e2060]
+            - generic:
+              - tooltip:
+                - generic: "01"
+        - generic [ref=f5e2062]:
+          - generic [ref=f5e2063]:
+            - generic [ref=f5e2064]:
+              - img [ref=f5e2066]
+              - generic [ref=f5e2078]: Transform
+            - button [ref=f5e2079]:
+              - img [ref=f5e2080]
+          - generic [ref=f5e2090]:
+            - img [ref=f5e2091]
+            - generic [ref=f5e2101]: Hero headline — molten brass poured into real MSDF letterforms; light sweeps it on entry, it drifts with scroll and recedes as you descend into the movement.
+          - button "Editing — handles on" [ref=f5e2102]:
+            - img [ref=f5e2103]
+            - generic [ref=f5e2113]: Editing — handles on
+          - generic [ref=f5e2115]: Tool
+          - generic [ref=f5e2117]:
+            - button "Move" [ref=f5e2118]:
+              - img [ref=f5e2119]
+              - generic [ref=f5e2130]: Move
+            - button "Rotate" [ref=f5e2131]:
+              - img [ref=f5e2132]
+              - generic [ref=f5e2143]: Rotate
+            - button "Scale" [ref=f5e2144]:
+              - img [ref=f5e2145]
+              - generic [ref=f5e2156]: Scale
+          - generic [ref=f5e2158]: Space · world / local
+          - generic [ref=f5e2160]:
+            - button "World" [ref=f5e2161]:
+              - img [ref=f5e2162]
+              - generic [ref=f5e2172]: World
+            - button "Local" [ref=f5e2173]:
+              - img [ref=f5e2174]
+              - generic [ref=f5e2184]: Local
+          - generic [ref=f5e2186]: Position · stages scenePosition
+          - generic [ref=f5e2188]:
+            - generic [ref=f5e2189]:
+              - generic [ref=f5e2190]: X
+              - button "−" [ref=f5e2191]
+              - generic [ref=f5e2192]: "0.00"
+              - button "+" [ref=f5e2193]
+            - generic [ref=f5e2194]:
+              - generic [ref=f5e2195]: "Y"
+              - button "−" [ref=f5e2196]
+              - generic [ref=f5e2197]: "2.38"
+              - button "+" [ref=f5e2198]
+            - generic [ref=f5e2199]:
+              - generic [ref=f5e2200]: Z
+              - button "−" [ref=f5e2201]
+              - generic [ref=f5e2202]: "0.30"
+              - button "+" [ref=f5e2203]
+          - generic [ref=f5e2205]: Scale · Rotate
+          - generic [ref=f5e2207]:
+            - generic [ref=f5e2208]:
+              - generic [ref=f5e2209]: S
+              - button "−" [ref=f5e2210]
+              - generic [ref=f5e2211]: 1.08×
+              - button "+" [ref=f5e2212]
+            - generic [ref=f5e2213]:
+              - generic [ref=f5e2214]: R
+              - button "−" [ref=f5e2215]
+              - generic [ref=f5e2216]: 0°
+              - button "+" [ref=f5e2217]
+          - generic [ref=f5e2219]: Align · needs group
+          - generic [ref=f5e2221]:
+            - button "Align X" [disabled] [ref=f5e2222]:
+              - img [ref=f5e2223]
+              - generic [ref=f5e2234]: Align X
+            - button "Align Y" [disabled] [ref=f5e2235]:
+              - img [ref=f5e2236]
+              - generic [ref=f5e2247]: Align Y
+          - generic [ref=f5e2248]:
+            - button "Snap On" [ref=f5e2249]:
+              - img [ref=f5e2250]
+              - generic [ref=f5e2260]: Snap On
+            - button "Reset" [ref=f5e2261]:
+              - img [ref=f5e2262]
+              - generic [ref=f5e2272]: Reset
+      - generic [ref=f5e2274]:
+        - generic [ref=f5e2275]:
+          - generic [ref=f5e2276]:
+            - img [ref=f5e2277]
+            - generic [ref=f5e2288]: Keyframe Editor
+            - generic [ref=f5e2289]: 1 KEY
+            - generic [ref=f5e2290]: · Hero headline — molten brass poured into real MSDF letterforms; light sweeps it on entry, it drifts with scroll and recedes as you descend into the movement.
+          - generic [ref=f5e2291]:
+            - button "Play" [ref=f5e2292]:
+              - img [ref=f5e2293]
+            - button "Loop" [ref=f5e2303]:
+              - img [ref=f5e2304]
+            - generic [ref=f5e2314]:
+              - button "1/60" [ref=f5e2315]
+              - button "1/100" [ref=f5e2316]
+              - button "1/120" [ref=f5e2317]
+            - button "Close" [ref=f5e2318]:
+              - img [ref=f5e2319]
+        - generic [ref=f5e2330]:
+          - generic [ref=f5e2331]: 0.96 / 3.00s
+          - slider "Playhead" [ref=f5e2333]: "0.32"
+        - generic [ref=f5e2336]:
+          - generic [ref=f5e2337]:
+            - generic [ref=f5e2338]: Opacity
+            - button "Capture keyframe at playhead" [ref=f5e2342]:
+              - img [ref=f5e2343]
+          - generic [ref=f5e2353]:
+            - generic [ref=f5e2354]: Translate
+            - button "Seek to 0.96s" [ref=f5e2358]
+            - button "Capture keyframe at playhead" [ref=f5e2359]:
+              - img [ref=f5e2360]
+          - generic [ref=f5e2370]:
+            - generic [ref=f5e2371]: Scale
+            - button "Seek to 0.96s" [ref=f5e2375]
+            - button "Capture keyframe at playhead" [ref=f5e2376]:
+              - img [ref=f5e2377]
+          - generic [ref=f5e2387]:
+            - generic [ref=f5e2388]: Rotate
+            - button "Seek to 0.96s" [ref=f5e2392]
+            - button "Capture keyframe at playhead" [ref=f5e2393]:
+              - img [ref=f5e2394]
+      - generic:
+        - generic [ref=f5e2404]:
+          - img [ref=f5e2405]
+          - status [ref=f5e2412]:
+            - generic [ref=f5e2413]:
+              - generic [ref=f5e2414]: AZ -0°
+              - generic [ref=f5e2415]: TILT -0°
+            - generic [ref=f5e2416]: STRAIGHT ON
+          - button "Reset view to straight-on" [ref=f5e2417]:
+            - img [ref=f5e2418]
+        - generic [ref=f5e2421]:
+          - generic [ref=f5e2422]: JOURNEY
+          - generic [ref=f5e2423]:
+            - text: "0"
+            - generic [ref=f5e2424]: pts
+          - button "REC" [ref=f5e2425]:
+            - generic [ref=f5e2427]: REC
+          - button "Clear camera journey" [disabled] [ref=f5e2428]:
+            - img [ref=f5e2429]
+          - button "Preview" [disabled] [ref=f5e2432]:
+            - img [ref=f5e2433]
+            - generic [ref=f5e2435]: Preview
+        - button "Shipped Frame" [ref=f5e2436]:
+          - img [ref=f5e2437]
+          - generic [ref=f5e2440]: Shipped Frame
+    - button "Open the guided tour" [ref=f5e2441]:
+      - generic:
+        - img
+  - button "Open Next.js Dev Tools" [ref=f5e19]:
+    - img [ref=f5e20]
+  - alert [ref=f5e13]
