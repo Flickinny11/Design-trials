@@ -17,6 +17,7 @@ import dynamic from 'next/dynamic';
 import Lazy3D from '../Lazy3D';
 import { ClearedRender } from './MarketingCanvas';
 import { ForgeEnvironment, ForgeLights } from './ForgeEnvironment';
+import { usePrefersReducedMotion } from '../../shell/builder/use-reduced-motion';
 import { useGeneratedPBR } from './use-generated-pbr';
 import { CHROME, GUNMETAL, SIGNAL_RED, RED_HOT, RED_DEEP } from '@/components/shell/design/prism-premium-tokens';
 
@@ -214,7 +215,8 @@ function ShowcasePoster() {
   return <div className="mk-show-poster" aria-hidden="true" />;
 }
 
-export default function CapabilityShowcase({ reduced = false }: { reduced?: boolean }) {
+export default function CapabilityShowcase() {
+  const reduced = usePrefersReducedMotion();
   const [mode, setMode] = useState<Mode>('galaxy');
   const active = MODES.find((m) => m.id === mode)!;
   return (

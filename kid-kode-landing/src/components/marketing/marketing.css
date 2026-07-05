@@ -109,6 +109,12 @@
   width: 34px;
   height: 34px;
   flex: none;
+  transition: transform var(--pp-motion-med) var(--pp-ease-weight),
+    filter var(--pp-motion-med) var(--pp-ease-settle);
+}
+.mk-brand:hover .mk-brand-mark {
+  transform: translateY(-1px) rotate(-4deg) scale(1.05);
+  filter: drop-shadow(0 3px 8px rgba(var(--pp-red-rgb), 0.45));
 }
 .mk-brand-word {
   font-size: 19px;
@@ -120,6 +126,7 @@
   gap: 4px;
 }
 .mk-nav-link {
+  position: relative;
   font-family: var(--mk-font-mono);
   font-size: 12.5px;
   letter-spacing: 0.06em;
@@ -131,9 +138,29 @@
   transition: color var(--pp-motion-fast) var(--pp-ease-settle),
     background var(--pp-motion-fast) var(--pp-ease-settle);
 }
+/* A machined red seam that grows from centre on hover (the 3D hover language of
+   the shell nav, distilled to a crisp 2D control). */
+.mk-nav-link::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 3px;
+  height: 1.5px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--pp-red), transparent);
+  box-shadow: 0 0 8px 0 rgba(var(--pp-red-rgb), 0.7);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform var(--pp-motion-med) var(--pp-ease-weight);
+}
 .mk-nav-link:hover {
   color: var(--pp-text-hi);
   background: var(--pp-elev-2);
+}
+.mk-nav-link:hover::after,
+.mk-nav-link[aria-current='page']::after {
+  transform: scaleX(1);
 }
 .mk-nav-link[aria-current='page'] {
   color: var(--pp-text-hi);

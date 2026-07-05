@@ -21,6 +21,7 @@ import { MarkPoster } from '../posters';
 import { BrandMark } from '@/components/shell/intake/BrandMark3D';
 import { ForgeEnvironment, ForgeLights } from './ForgeEnvironment';
 import { ClearedRender } from './MarketingCanvas';
+import { usePrefersReducedMotion } from '../../shell/builder/use-reduced-motion';
 
 const MarketingCanvas = dynamic(() => import('./MarketingCanvas'), { ssr: false });
 
@@ -129,7 +130,8 @@ function WallScene({
   );
 }
 
-export default function IntegrationsWall({ reduced = false }: { reduced?: boolean }) {
+export default function IntegrationsWall() {
+  const reduced = usePrefersReducedMotion();
   const hoveredRef = useRef<number>(-1);
   const labelRefs = useRef<(HTMLElement | null)[]>([]);
 

@@ -16,6 +16,7 @@ import dynamic from 'next/dynamic';
 import Lazy3D from '../Lazy3D';
 import { ClearedRender } from './MarketingCanvas';
 import { ForgeEnvironment, ForgeLights } from './ForgeEnvironment';
+import { usePrefersReducedMotion } from '../../shell/builder/use-reduced-motion';
 import { CHROME, GUNMETAL, SIGNAL_RED, RED_HOT, RED_DEEP } from '@/components/shell/design/prism-premium-tokens';
 
 const MarketingCanvas = dynamic(() => import('./MarketingCanvas'), { ssr: false });
@@ -147,7 +148,8 @@ function FlowPoster() {
   return <div className="mk-flow-poster" aria-hidden="true" />;
 }
 
-export default function PipelineFlow({ reduced = false }: { reduced?: boolean }) {
+export default function PipelineFlow() {
+  const reduced = usePrefersReducedMotion();
   const progressRef = useRef(0);
   const labelRefs = useRef<(HTMLElement | null)[]>([]);
   return (
