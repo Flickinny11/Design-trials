@@ -1502,3 +1502,16 @@ Toolbar fully REBUILT from GENERATED Tripo v3.1 GLBs (procedural forms discarded
 [01:37:39] CHAIN/SHELL-W5B: still building · 39m elapsed · agent up · 1135 commits · last: shell-w5b: E18 host recommendations + live pricing (source-cited, ≤24h c
 [01:37:40] CHAIN/SHELL-W5B: commit cf77eff0 — shell-w5b: E18 host recommendations + live pricing (source-cited, ≤24h c
 [01:41:10] CHAIN/SHELL-W5B: still building · 42m elapsed · agent up · 1135 commits · last: shell-w5b: E18 host recommendations + live pricing (source-cited, ≤24h c
+[01:42:10] CHAIN/SHELL-W5B: commit 7e3b74e6 — shell-w5b: E20 managed-care tier stub (tier gate + scheduled checks + se
+[01:44:41] CHAIN/SHELL-W5B: still building · 46m elapsed · agent up · 1136 commits · last: shell-w5b: E20 managed-care tier stub (tier gate + scheduled checks + se
+[01:46:41] CHAIN/SHELL-W5B: commit cbe930b6 — shell-w5b: §14.1 gate e2e test (ships ≥2 targets incl backend post-ship 
+[01:48:11] CHAIN/SHELL-W5B: still building · 49m elapsed · agent up · 1137 commits · last: shell-w5b: §14.1 gate e2e test (ships ≥2 targets incl backend post-ship 
+[01:51:42] CHAIN/SHELL-W5B: still building · 53m elapsed · agent up · 1137 commits · last: shell-w5b: §14.1 gate e2e test (ships ≥2 targets incl backend post-ship 
+[01:52:42] CHAIN/SHELL-W5B: commit f1de4886 — shell-w5b: visual evidence — ship-anywhere frames (real build, both view
+[01:55:12] CHAIN/SHELL-W5B: still building · 56m elapsed · agent up · 1138 commits · last: shell-w5b: visual evidence — ship-anywhere frames (real build, both view
+[01:58:43] CHAIN/SHELL-W5B: still building · 60m elapsed · agent up · 1138 commits · last: shell-w5b: visual evidence — ship-anywhere frames (real build, both view
+[02:02:13] CHAIN/SHELL-W5B: still building · 64m elapsed · agent up · 1139 commits · last: shell-w5b: advocate follow-up — capture E20 care-card frame (01c) + bran
+[02:02:13] CHAIN/SHELL-W5B: commit d1c27f6d — shell-w5b: advocate follow-up — capture E20 care-card frame (01c) + bran
+[02:04:44] CHAIN/SHELL-W5B: commit 19f1333c — shell-w5b: run report (+ complete per-adapter env-var list) + pricing hy
+[02:05:14] CHAIN/SHELL-W5B: commit e49117a2 — shell-w5b: report — BOTH judges PASS 0 MUST-FIX (criteria PASS; advocate
+[02:05:20] CHAIN/SHELL-W5B: COMPLETE — marker written. Ship-anywhere (hosts+domains+profitable+backend+care) built, verified, judged. Founder review ready.

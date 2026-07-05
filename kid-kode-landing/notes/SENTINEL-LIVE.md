@@ -1305,3 +1305,15 @@ complete marker: 'PRISM-SHELL-W5B: RUN COMPLETE'
 [01:37:39] SHELL-W5B · 39m · agent=1 · still building · 39m elapsed · agent up · 1135 commits · last: shell-w5b: E18 host recommendations + live pricing (source-cited, ≤24h c
 [01:37:40] SHELL-W5B · 39m · agent=1 · commit cf77eff0 — shell-w5b: E18 host recommendations + live pricing (source-cited, ≤24h c
 [01:41:10] SHELL-W5B · 42m · agent=1 · still building · 42m elapsed · agent up · 1135 commits · last: shell-w5b: E18 host recommendations + live pricing (source-cited, ≤24h c
+[01:42:10] SHELL-W5B · 43m · agent=1 · commit 7e3b74e6 — shell-w5b: E20 managed-care tier stub (tier gate + scheduled checks + se
+[01:44:41] SHELL-W5B · 46m · agent=1 · still building · 46m elapsed · agent up · 1136 commits · last: shell-w5b: E20 managed-care tier stub (tier gate + scheduled checks + se
+[01:46:41] SHELL-W5B · 48m · agent=1 · commit cbe930b6 — shell-w5b: §14.1 gate e2e test (ships ≥2 targets incl backend post-ship 
+[01:48:11] SHELL-W5B · 49m · agent=1 · still building · 49m elapsed · agent up · 1137 commits · last: shell-w5b: §14.1 gate e2e test (ships ≥2 targets incl backend post-ship 
+[01:51:42] SHELL-W5B · 53m · agent=1 · still building · 53m elapsed · agent up · 1137 commits · last: shell-w5b: §14.1 gate e2e test (ships ≥2 targets incl backend post-ship 
+[01:52:42] SHELL-W5B · 54m · agent=1 · commit f1de4886 — shell-w5b: visual evidence — ship-anywhere frames (real build, both view
+[01:55:12] SHELL-W5B · 56m · agent=1 · still building · 56m elapsed · agent up · 1138 commits · last: shell-w5b: visual evidence — ship-anywhere frames (real build, both view
+[01:58:43] SHELL-W5B · 60m · agent=1 · still building · 60m elapsed · agent up · 1138 commits · last: shell-w5b: visual evidence — ship-anywhere frames (real build, both view
+[02:02:13] SHELL-W5B · 64m · agent=1 · still building · 64m elapsed · agent up · 1139 commits · last: shell-w5b: advocate follow-up — capture E20 care-card frame (01c) + bran
+[02:02:13] SHELL-W5B · 64m · agent=1 · commit d1c27f6d — shell-w5b: advocate follow-up — capture E20 care-card frame (01c) + bran
+[02:04:44] SHELL-W5B · 66m · agent=1 · commit 19f1333c — shell-w5b: run report (+ complete per-adapter env-var list) + pricing hy
+[02:05:14] SHELL-W5B · 67m · agent=1 · commit e49117a2 — shell-w5b: report — BOTH judges PASS 0 MUST-FIX (criteria PASS; advocate
