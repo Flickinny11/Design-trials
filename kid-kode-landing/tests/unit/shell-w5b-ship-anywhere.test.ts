@@ -219,3 +219,62 @@ describe('W5B / E16 — in-platform domains (Entri Sell/Connect/Monitor)', () =>
     expect(providers[0].requiredEnv).toContain('ENTRI_APPLICATION_ID');
   });
 });
+
+describe('W5B / E17 — Ship & Make Profitable completeness scan', () => {
+  it('scans a fixture app, offers a payments card, adds it end-to-end, re-verifies', async () => {
+    const { computeCompleteness, addCapability } = await import('@/server/conductor/ship-flow');
+    const store = await import('@/server/tenancy/tenant-store');
+    const { tenantId, projectId } = await buildFixtureApp();
+
+    // 1. The scan finds payments MISSING (a "Pricing" section title ≠ payments)
+    //    and offers a Stripe one-click card.
+    const scan = await computeCompleteness(tenantId, projectId, new Date().toISOString());
+    expect(scan).not.toBeNull();
+    const payments = scan!.items.find((i) => i.category === 'payments')!;
+    expect(payments.present).toBe(false);
+    const card = scan!.cards.find((c) => c.category === 'payments')!;
+    expect(card.providerId).toBe('stripe');
+    expect(card.brandMark).toBe('stripe');
+    expect(scan!.missingCount).toBeGreaterThan(0);
+
+    const nodesBefore = ((await store.getGraph(tenantId, projectId)) as { nodes: unknown[] }).nodes.length;
+
+    // 2. Accept the card — the Conductor authors the payments nodes through the
+    //    certified path and re-verifies.
+    const out = await addCapability(tenantId, projectId, 'payments', 'http://localhost:3000', 'Nova Ship', new Date().toISOString());
+    expect(out).not.toBeNull();
+    expect(out!.addedNodeIds.length).toBeGreaterThan(0);
+    expect(out!.latch.behavioral.status).toBe('pass');
+    expect(out!.latch.visual.status).toBe('pass');
+    expect(out!.latch.deploy.status).toBe('pass');
+
+    // 3. The authored nodes are real + schema-complete (certified path held).
+    const { validatePlanRendererFields } = await import('@/lib/prism/codegen/plan-output-hook');
+    const graphAfter = (await store.getGraph(tenantId, projectId)) as {
+      nodes: Array<Parameters<typeof validatePlanRendererFields>[0] & { subtype: string; integrationRefs?: Array<{ platformId: string }> }>;
+    };
+    expect(graphAfter.nodes.length).toBeGreaterThan(nodesBefore);
+    const capNode = graphAfter.nodes.find((n) => n.subtype === 'capability-payments')!;
+    expect(capNode).toBeTruthy();
+    expect(validatePlanRendererFields(capNode).some((v) => v.severity === 'error')).toBe(false);
+    // The capability carries a REAL capability reference (I5 — no secret).
+    expect(capNode.integrationRefs?.[0]?.platformId).toBe('stripe');
+
+    // 4. Re-scan now sees payments PRESENT.
+    expect(out!.scan.items.find((i) => i.category === 'payments')?.present).toBe(true);
+    expect(out!.scan.missingCount).toBe(scan!.missingCount - 1);
+  });
+
+  it('streams the scan as chat tool-steps (E4)', async () => {
+    const { runShipScan } = await import('@/server/conductor/ship-flow');
+    const { tenantId, projectId } = await buildFixtureApp();
+    let steps = 0;
+    let ended = false;
+    for await (const ev of runShipScan(tenantId, projectId, () => new Date().toISOString())) {
+      if (ev.type === 'tool-step-start') steps += 1;
+      if (ev.type === 'message-end') ended = true;
+    }
+    expect(steps).toBeGreaterThan(0);
+    expect(ended).toBe(true);
+  });
+});

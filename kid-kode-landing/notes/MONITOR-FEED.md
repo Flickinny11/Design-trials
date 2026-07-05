@@ -1492,3 +1492,7 @@ Toolbar fully REBUILT from GENERATED Tripo v3.1 GLBs (procedural forms discarded
 [01:15:06] CHAIN/SHELL-W5B: commit 42a1f3ee — shell-w5b: E15 host adapters + post-ship verification (§11.2)
 [01:16:36] CHAIN/SHELL-W5B: still building · 18m elapsed · agent up · 1131 commits · last: shell-w5b: E15 host adapters + post-ship verification (§11.2)
 [01:20:07] CHAIN/SHELL-W5B: still building · 21m elapsed · agent up · 1131 commits · last: shell-w5b: E15 host adapters + post-ship verification (§11.2)
+[01:20:37] CHAIN/SHELL-W5B: commit 68a45fa5 — shell-w5b: E16 in-platform domains (Entri Sell/Connect/Monitor + registr
+[01:23:37] CHAIN/SHELL-W5B: still building · 25m elapsed · agent up · 1132 commits · last: shell-w5b: E16 in-platform domains (Entri Sell/Connect/Monitor + registr
+[01:27:08] CHAIN/SHELL-W5B: still building · 28m elapsed · agent up · 1132 commits · last: shell-w5b: E16 in-platform domains (Entri Sell/Connect/Monitor + registr
+[01:30:38] CHAIN/SHELL-W5B: still building · 32m elapsed · agent up · 1132 commits · last: shell-w5b: E16 in-platform domains (Entri Sell/Connect/Monitor + registr

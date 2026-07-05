@@ -118,6 +118,7 @@ const MONOGRAM_BRANDS: Record<string, BrandAsset> = {
   modal: { name: 'Modal', accent: '#7fee64', monogram: 'Mo' },
   replicate: { name: 'Replicate', accent: '#ffffff', monogram: 'Rp' },
   postgres: { name: 'Postgres', accent: '#4169e1', monogram: 'Pg' },
+  posthog: { name: 'PostHog', accent: '#f9bd2b', monogram: 'Ph' },
 };
 
 const FALLBACK: BrandAsset = { name: 'Provider', accent: '#c9a86a', monogram: '?' };

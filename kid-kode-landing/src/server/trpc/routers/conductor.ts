@@ -25,13 +25,20 @@ import {
   deployRollbackInputSchema,
   deploySetDomainInputSchema,
   exportInputSchema,
+  completenessInputSchema,
+  completenessScanSchema,
+  addCapabilityInputSchema,
+  addCapabilityOutputSchema,
   type ConductorStatus,
   type DeployOutput,
   type DeployRequirementsOutput,
   type ExportOutput,
+  type CompletenessScan,
+  type AddCapabilityOutput,
 } from '../../../../packages/shared-interfaces/src/prism-conductor';
 import * as store from '../../tenancy/tenant-store';
 import { runConductor } from '../../conductor/conductor';
+import { runShipScan, computeCompleteness, addCapability } from '../../conductor/ship-flow';
 import { runDeploy, rollbackDeploy } from '../../deploy/deploy-service';
 import { buildHostRequirements, getDeployTargets } from '../../deploy/deploy-targets';
 import { buildExport } from '../../conductor/export-bundle';
@@ -168,6 +175,45 @@ export const conductorRouter = router({
       );
       if (!updated) throw new TRPCError({ code: 'NOT_FOUND', message: 'Deploy not found.' });
       return deployOutputSchema.parse({ v: PRISM_CONDUCTOR_CONTRACT_VERSION, deploy: updated, targets: getDeployTargets() });
+    }),
+
+  /** E17 — stream the "Ship & Make Profitable" completeness scan as tool-steps
+   *  (same streaming contract as chat/build so the builder folds it in). */
+  shipScan: protectedProcedure
+    .input(conductorStatusInputSchema)
+    .mutation(async function* ({ ctx, input }) {
+      const now = () => new Date().toISOString();
+      yield* runShipScan(ctx.session.user.id, input.projectId, now);
+    }),
+
+  /** E17 — the structured completeness scan (cards the chat renders). */
+  completeness: protectedProcedure
+    .input(completenessInputSchema)
+    .query(async ({ ctx, input }): Promise<CompletenessScan> => {
+      const owned = await store.getProject(ctx.session.user.id, input.projectId);
+      if (!owned) notFound();
+      const scan = await computeCompleteness(ctx.session.user.id, input.projectId, new Date().toISOString());
+      if (!scan) throw new TRPCError({ code: 'PRECONDITION_FAILED', message: 'Build the app first.' });
+      return completenessScanSchema.parse(scan);
+    }),
+
+  /** E17 — accept a capability card: author its nodes (certified path) +
+   *  re-verify + re-scan. */
+  addCapability: protectedProcedure
+    .input(addCapabilityInputSchema)
+    .mutation(async ({ ctx, input }): Promise<AddCapabilityOutput> => {
+      const owned = await store.getProject(ctx.session.user.id, input.projectId);
+      if (!owned) notFound();
+      const res = await addCapability(
+        ctx.session.user.id,
+        input.projectId,
+        input.category,
+        originFromHeaders(ctx.headers),
+        owned.name,
+        new Date().toISOString(),
+      );
+      if (!res) throw new TRPCError({ code: 'PRECONDITION_FAILED', message: 'Build the app first.' });
+      return addCapabilityOutputSchema.parse(res);
     }),
 
   /** E7 export — the deployable runtime bundle manifest + download URL. */

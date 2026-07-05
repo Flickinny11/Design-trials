@@ -12,6 +12,7 @@
 
 import { create } from 'zustand';
 import type { AgentAttachment } from '../../../packages/shared-interfaces/src/prism-agent';
+import type { CapabilityCard } from '../../../packages/shared-interfaces/src/prism-conductor';
 import { getDefaultModel } from './model-config';
 
 export interface ChatToolStep {
@@ -22,9 +23,16 @@ export interface ChatToolStep {
   readonly status: 'running' | 'ok' | 'error' | 'stopped';
 }
 
+/** E17 — one-click capability cards rendered IN the chat turn (W5B-D4). */
+export interface ChatCardGroup {
+  readonly cardsId: string;
+  readonly cards: readonly CapabilityCard[];
+}
+
 export type ChatSegment =
   | { readonly kind: 'text'; readonly text: string }
-  | { readonly kind: 'step'; readonly step: ChatToolStep };
+  | { readonly kind: 'step'; readonly step: ChatToolStep }
+  | { readonly kind: 'cards'; readonly group: ChatCardGroup };
 
 export type ChatTurnStatus = 'streaming' | 'complete' | 'interrupted' | 'error';
 
@@ -59,6 +67,8 @@ interface ChatState {
   startStep(turnId: string, stepId: string, title: string, detail?: string): void;
   appendStep(turnId: string, stepId: string, delta: string): void;
   endStep(turnId: string, stepId: string, status: 'ok' | 'error'): void;
+  /** E17 — attach/replace a one-click capability card group on a turn. */
+  setCards(turnId: string, cardsId: string, cards: readonly CapabilityCard[]): void;
   finishTurn(turnId: string, status: ChatTurnStatus, errorMessage?: string): void;
 }
 
@@ -174,6 +184,20 @@ export const useChatStore = create<ChatState>((set) => ({
         ...t,
         segments: updateStep(t.segments, stepId, (step) => ({ ...step, status })),
       })),
+    })),
+
+  setCards: (turnId, cardsId, cards) =>
+    set((s) => ({
+      turns: updateTurn(s.turns, turnId, (t) => {
+        const group = { cardsId, cards };
+        const existing = t.segments.findIndex((seg) => seg.kind === 'cards' && seg.group.cardsId === cardsId);
+        if (existing >= 0) {
+          const next = [...t.segments];
+          next[existing] = { kind: 'cards', group };
+          return { ...t, segments: next };
+        }
+        return { ...t, segments: [...t.segments, { kind: 'cards', group }] };
+      }),
     })),
 
   finishTurn: (turnId, status, errorMessage) =>

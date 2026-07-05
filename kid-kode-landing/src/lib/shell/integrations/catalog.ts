@@ -35,6 +35,8 @@ export const INTEGRATION_CATALOG: readonly CatalogTile[] = [
   // ── Social ─────────────────────────────────────────────────────────────────
   { providerId: 'x', label: 'X', brandMark: 'x', category: 'Social', hint: 'Post & read timelines', authMethods: ['oauth2.1'] },
   { providerId: 'discord', label: 'Discord', brandMark: 'discord', category: 'Social', hint: 'Community & webhooks', authMethods: ['oauth2.1'] },
+  // ── Analytics (E17 completeness scan target) ─────────────────────────────────
+  { providerId: 'posthog', label: 'PostHog', brandMark: 'posthog', category: 'Analytics', hint: 'Product analytics & events', authMethods: ['api-token'] },
 ] as const;
 
 export const CATALOG_BY_ID = new Map(

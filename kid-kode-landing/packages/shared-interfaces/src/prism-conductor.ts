@@ -356,6 +356,87 @@ export const deployRequirementsOutputSchema = z.object({
 });
 export type DeployRequirementsOutput = z.infer<typeof deployRequirementsOutputSchema>;
 
+// ── E17 "Ship & Make Profitable" completeness scan ───────────────────────────
+
+/** The capability categories the completeness scan checks an app graph for
+ *  (founder anchor: auth, db, storage, payments, subscriptions, email,
+ *  analytics). */
+export const capabilityCategorySchema = z.enum([
+  'auth',
+  'db',
+  'storage',
+  'payments',
+  'subscriptions',
+  'email',
+  'analytics',
+]);
+export type CapabilityCategory = z.infer<typeof capabilityCategorySchema>;
+
+/** A recommended one-click capability card — the W3 catalog tile that fills a
+ *  missing capability, rendered IN the streaming chat (E17). Accepting it has
+ *  the Conductor author the capability's nodes through the certified path. */
+export const capabilityCardSchema = z.object({
+  category: capabilityCategorySchema,
+  title: z.string().min(1).max(80),
+  description: z.string().max(240),
+  /** The catalog provider this card attaches (binds to W3 INTEGRATION_CATALOG). */
+  providerId: z.string().min(1).max(60),
+  providerLabel: z.string().min(1).max(60),
+  /** The brand-mark id the card renders (real glyph — no stock icon). */
+  brandMark: z.string().min(1).max(60),
+});
+export type CapabilityCard = z.infer<typeof capabilityCardSchema>;
+
+/** One category's presence verdict in the scanned graph. */
+export const completenessItemSchema = z.object({
+  category: capabilityCategorySchema,
+  present: z.boolean(),
+  /** Why we judged it present/missing (node ids / integration ids / keywords). */
+  evidence: z.string().max(240),
+  /** The one-click card offered when the capability is missing. */
+  card: capabilityCardSchema.nullable(),
+});
+export type CompletenessItem = z.infer<typeof completenessItemSchema>;
+
+/** The full completeness scan (E17). `cards` is the subset the chat renders. */
+export const completenessScanSchema = z.object({
+  v: z.literal(PRISM_CONDUCTOR_CONTRACT_VERSION),
+  projectId: prismTenancyIdSchema,
+  items: z.array(completenessItemSchema).max(16),
+  cards: z.array(capabilityCardSchema).max(16),
+  presentCount: z.number().int().nonnegative(),
+  missingCount: z.number().int().nonnegative(),
+  scannedAt: z.string().datetime(),
+});
+export type CompletenessScan = z.infer<typeof completenessScanSchema>;
+
+export const completenessInputSchema = z
+  .object({ projectId: prismTenancyIdSchema })
+  .strict();
+export type CompletenessInput = z.infer<typeof completenessInputSchema>;
+
+/** `conductor.addCapability` input — accept a card. The Conductor authors the
+ *  capability's nodes through the certified node path + re-verifies. */
+export const addCapabilityInputSchema = z
+  .object({
+    projectId: prismTenancyIdSchema,
+    category: capabilityCategorySchema,
+  })
+  .strict();
+export type AddCapabilityInput = z.infer<typeof addCapabilityInputSchema>;
+
+export const addCapabilityOutputSchema = z.object({
+  v: z.literal(PRISM_CONDUCTOR_CONTRACT_VERSION),
+  category: capabilityCategorySchema,
+  /** Node ids the Conductor authored for this capability (certified path). */
+  addedNodeIds: z.array(z.string().max(120)).max(24),
+  /** The re-run latch after adding the capability. */
+  latch: verifyLatchSchema,
+  /** The scan re-run after adding (so the UI updates remaining cards). */
+  scan: completenessScanSchema,
+});
+export type AddCapabilityOutput = z.infer<typeof addCapabilityOutputSchema>;
+
 // ── E7 export bundle manifest ────────────────────────────────────────────────
 
 /** One asset referenced by the export bundle (a URL + size; bytes ride the

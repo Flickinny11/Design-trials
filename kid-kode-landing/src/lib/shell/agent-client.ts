@@ -44,6 +44,14 @@ export async function sendChatMessage(opts: {
   const chat = useChatStore.getState();
   if (chat.isStreaming) return;
 
+  // E17 — a ship / make-profitable message routes to the completeness scan
+  // instead of the freeform agent (NL-invocation).
+  const { isShipIntent, runShipScan } = await import('./ship-client');
+  if (isShipIntent(opts.prompt)) {
+    await runShipScan(opts.projectId);
+    return;
+  }
+
   const attachments: readonly AgentAttachment[] = chat.pendingAttachments;
   // History = completed prose turns before this one (contract: tool-step
   // bodies are presentation, not conversation state).

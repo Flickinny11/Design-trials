@@ -460,6 +460,50 @@
   margin: 0;
   overflow-wrap: break-word;
 }
+/* ── E17 capability cards in chat + ship quick-action ───────────────────── */
+.bw1-cap-cards { display: flex; flex-direction: column; gap: 7px; margin: 8px 0; }
+.bw1-cap-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 11px;
+  border-radius: 10px;
+  border: 1px solid rgba(232, 236, 242, 0.12);
+  background: linear-gradient(180deg, rgba(22, 22, 30, 0.85), rgba(14, 14, 20, 0.85));
+}
+.bw1-cap-mark {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #0b0b10;
+  text-transform: uppercase;
+}
+.bw1-cap-body { flex: 1; display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.bw1-cap-title { font-size: 13px; font-weight: 600; color: var(--pp-text-hi, #f4f1ea); }
+.bw1-cap-desc { font-size: 11px; color: #9a958a; line-height: 1.35; }
+.bw1-cap-provider { font-size: 10px; color: #7fb2e6; margin-top: 1px; }
+.bw1-cap-add { flex-shrink: 0; }
+
+.bw1-quickrow { display: flex; padding: 0 2px 8px; }
+.bw1-quickaction {
+  font-size: 12px;
+  color: #f4f1ea;
+  background: linear-gradient(180deg, rgba(255, 42, 56, 0.22), rgba(255, 42, 56, 0.1));
+  border: 1px solid rgba(255, 42, 56, 0.35);
+  border-radius: 999px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.bw1-quickaction:hover:not(:disabled) { background: linear-gradient(180deg, rgba(255, 42, 56, 0.32), rgba(255, 42, 56, 0.16)); }
+.bw1-quickaction:disabled { opacity: 0.5; cursor: default; }
+
 .bw1-caret {
   display: inline-block;
   width: 8px;

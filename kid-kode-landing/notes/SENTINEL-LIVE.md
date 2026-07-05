@@ -1295,3 +1295,7 @@ complete marker: 'PRISM-SHELL-W5B: RUN COMPLETE'
 [01:15:06] SHELL-W5B · 16m · agent=1 · commit 42a1f3ee — shell-w5b: E15 host adapters + post-ship verification (§11.2)
 [01:16:36] SHELL-W5B · 18m · agent=1 · still building · 18m elapsed · agent up · 1131 commits · last: shell-w5b: E15 host adapters + post-ship verification (§11.2)
 [01:20:07] SHELL-W5B · 21m · agent=1 · still building · 21m elapsed · agent up · 1131 commits · last: shell-w5b: E15 host adapters + post-ship verification (§11.2)
+[01:20:37] SHELL-W5B · 22m · agent=1 · commit 68a45fa5 — shell-w5b: E16 in-platform domains (Entri Sell/Connect/Monitor + registr
+[01:23:37] SHELL-W5B · 25m · agent=1 · still building · 25m elapsed · agent up · 1132 commits · last: shell-w5b: E16 in-platform domains (Entri Sell/Connect/Monitor + registr
+[01:27:08] SHELL-W5B · 28m · agent=1 · still building · 28m elapsed · agent up · 1132 commits · last: shell-w5b: E16 in-platform domains (Entri Sell/Connect/Monitor + registr
+[01:30:38] SHELL-W5B · 32m · agent=1 · still building · 32m elapsed · agent up · 1132 commits · last: shell-w5b: E16 in-platform domains (Entri Sell/Connect/Monitor + registr

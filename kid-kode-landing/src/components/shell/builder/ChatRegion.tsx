@@ -11,12 +11,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { sendChatMessage, stopStreaming } from '@/lib/shell/agent-client';
+import { runShipScan, acceptCapability } from '@/lib/shell/ship-client';
 import {
   useChatStore,
+  type ChatCardGroup,
   type ChatToolStep,
   type ChatTurn,
 } from '@/lib/shell/chat-store';
 import { getModelById } from '@/lib/shell/model-config';
+import { getBrandAsset } from '@/lib/capabilities/brand-assets';
 
 const SendButton3D = dynamic(() => import('./SendButton3D'), {
   ssr: false,
@@ -69,9 +72,58 @@ function ToolStepRow({ step }: { step: ChatToolStep }) {
   );
 }
 
+// ── E17 one-click capability cards (rendered IN the chat turn) ────────────────
+
+function CapabilityCards({
+  group,
+  projectId,
+  turnId,
+}: {
+  group: ChatCardGroup;
+  projectId: string;
+  turnId: string;
+}) {
+  const [busy, setBusy] = useState<string | null>(null);
+  const isStreaming = useChatStore((s) => s.isStreaming);
+  const onAccept = useCallback(async (category: string) => {
+    setBusy(category);
+    await acceptCapability(projectId, category as never, turnId);
+    setBusy(null);
+  }, [projectId, turnId]);
+
+  if (group.cards.length === 0) return null;
+  return (
+    <div className="bw1-cap-cards" role="group" aria-label="Add missing capabilities">
+      {group.cards.map((card) => {
+        const brand = getBrandAsset(card.brandMark);
+        return (
+          <div key={card.category} className="bw1-cap-card">
+            <span className="bw1-cap-mark" aria-hidden style={{ background: brand.accent }}>
+              {brand.monogram}
+            </span>
+            <div className="bw1-cap-body">
+              <span className="bw1-cap-title">{card.title}</span>
+              <span className="bw1-cap-desc">{card.description}</span>
+              <span className="bw1-cap-provider">via {card.providerLabel}</span>
+            </div>
+            <button
+              type="button"
+              className="bw1-minibtn bw1-cap-add"
+              onClick={() => onAccept(card.category)}
+              disabled={busy !== null || isStreaming}
+            >
+              {busy === card.category ? 'Wiring…' : 'Add'}
+            </button>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 // ── One turn ─────────────────────────────────────────────────────────────────
 
-function TurnView({ turn }: { turn: ChatTurn }) {
+function TurnView({ turn, projectId }: { turn: ChatTurn; projectId: string }) {
   const model = turn.modelId ? getModelById(turn.modelId) : undefined;
   return (
     <article className="bw1-turn" data-role={turn.role} data-status={turn.status}>
@@ -102,6 +154,8 @@ function TurnView({ turn }: { turn: ChatTurn }) {
                 <span className="bw1-caret" aria-hidden />
               ) : null}
             </p>
+          ) : seg.kind === 'cards' ? (
+            <CapabilityCards key={seg.group.cardsId} group={seg.group} projectId={projectId} turnId={turn.id} />
           ) : (
             <ToolStepRow key={seg.step.stepId} step={seg.step} />
           ),
@@ -189,8 +243,20 @@ export default function ChatRegion({ projectId }: { projectId: string }) {
             </p>
           </div>
         ) : (
-          turns.map((t) => <TurnView key={t.id} turn={t} />)
+          turns.map((t) => <TurnView key={t.id} turn={t} projectId={projectId} />)
         )}
+      </div>
+
+      <div className="bw1-quickrow">
+        <button
+          type="button"
+          className="bw1-quickaction"
+          onClick={() => { nearBottom.current = true; void runShipScan(projectId); }}
+          disabled={isStreaming}
+          title="Scan your app for missing capabilities, then ship"
+        >
+          ⚡ Ship &amp; make profitable
+        </button>
       </div>
 
       <div className="bw1-composer">
