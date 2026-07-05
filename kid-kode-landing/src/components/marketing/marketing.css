@@ -1012,7 +1012,8 @@
 .mk-tier-price-cadence {
   font-family: var(--mk-font-mono);
   font-size: 12px;
-  color: var(--pp-text-low);
+  /* --pp-text-mid (not -low) to clear WCAG AA 4.5:1 on the solid tier card. */
+  color: var(--pp-text-mid);
   letter-spacing: 0.04em;
 }
 .mk-tier-summary {
@@ -1102,7 +1103,7 @@
 .mk-care-price-cadence {
   font-family: var(--mk-font-mono);
   font-size: 13px;
-  color: var(--pp-text-low);
+  color: var(--pp-text-mid);
   letter-spacing: 0.04em;
 }
 .mk-care-summary {
@@ -1116,7 +1117,7 @@
   font-family: var(--mk-font-mono);
   font-size: 12px;
   letter-spacing: 0.03em;
-  color: var(--pp-text-low);
+  color: var(--pp-text-mid);
   margin: 12px 0 0;
 }
 .mk-care-free {
