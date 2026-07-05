@@ -1,0 +1,39 @@
+{
+  "wave": "PRISM-SHELL-W9A",
+  "subject": "ORRERY No.7 mock watch-atelier showpiece enhancement",
+  "capturedAt": "2026-07-05",
+  "renderer": "three/webgpu (WebGL2 fallback)",
+  "measuredIn": "chrome-devtools MCP automation browser, emulated 1440x900x2 (a floor; real Metal GPU runs higher)",
+  "performance": {
+    "fps": 48,
+    "frames": 96,
+    "seconds": 2.02,
+    "note": "atelier hub, interactive watch mounted (rig handle live), idle drift + intro running"
+  },
+  "heroFramePixelStats": {
+    "frame": "w9a-desktop-01-hero.png",
+    "region": "central-watch (36-66% W, 30-72% H)",
+    "meanLuminance_0_255": 47.5,
+    "pctNearBlack_lt12": 14.2,
+    "pctBrightSpecular_gt200": 3.1,
+    "pixels": 653184,
+    "dl16_verdict": "PASS — watch region has full tonal range + real specular highlights; not a flat-black void"
+  },
+  "tscBaseline": { "errors": 9, "newErrors": 0 },
+  "verify": { "exit": 0, "prism": "14/14", "galaxy": "7/7", "globalShell": "6/6", "paritySchema": "338/338", "tenancy": "35/35" },
+  "shipGateW5B": { "file": "tests/unit/shell-w5b-ship-anywhere.test.ts", "tests": "11/11", "gate_14_1": "PASS", "exit": 0 },
+  "consoleErrors": 0,
+  "diffScope": {
+    "engineCanvasEditorTouched": false,
+    "changed": [
+      "src/lib/prism/atelier/watch-node-factory.ts (staging: light rig + reveal + reduced-motion + night dim)",
+      "public/prism-mock/orrery/meshes/atelier/{case-gen,bezel-gen,crown-gen}.glb (Tripo geometry, force-added per DL13)",
+      "public/prism-mock/orrery/meshes/tourbillon.glb (Tripo rose-gold movement)",
+      "public/prism-mock/orrery/meshes/atelier/textures/{dial-tex-orrery,dial-tex-guilloche,metal-nrm-brushed,metal-rgh-brushed,strap-nrm-leather,strap-rgh-leather}.png (FLUX materials)"
+    ]
+  },
+  "spend": {
+    "tripo": { "unit": "credits", "start": 640, "end": 460, "used": 180, "breakdown": "case 60 + movement 60 + bezel 60 (P1-20260311, textured PBR)" },
+    "replicate": { "unit": "USD (estimate)", "estimate": 0.45, "images": 9, "breakdown": "flux-2-pro: 7x 2MP (3 dials incl 2 variants, 3 part concepts, 1 validation) + 2x 1MP (metal/leather plates)", "underCap": "yes (< ~$5)" }
+  }
+}
