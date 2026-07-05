@@ -26,6 +26,22 @@ const nextConfig = {
   ],
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
+  // SHELL W6 (decision D) — surface split. The public marketing landing lives
+  // at /home; the editor prototype occupies / and is FP7-protected (never
+  // touched). On the MARKETING deployment (PRISM_SURFACE=marketing) we serve
+  // the landing at the apex via a beforeFiles rewrite — config only, no editor
+  // change. OFF by default: / continues to resolve to the editor, and every
+  // existing verify script that hits / is unaffected.
+  async rewrites() {
+    if (process.env.PRISM_SURFACE !== 'marketing') {
+      return { beforeFiles: [], afterFiles: [], fallback: [] };
+    }
+    return {
+      beforeFiles: [{ source: '/', destination: '/home' }],
+      afterFiles: [],
+      fallback: [],
+    };
+  },
 };
 
 export default nextConfig;

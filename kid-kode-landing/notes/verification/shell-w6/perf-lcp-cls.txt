@@ -1,0 +1,14 @@
+SHELL W6 — Landing perf (headless, chrome-devtools performance trace)
+URL: http://localhost:3000/home
+Profile: Fast 4G network + 4x CPU throttle, mobile viewport 390x844 @3x (touch)
+Build: next dev (unminified; production would be faster)
+
+  LCP: 548 ms   (TTFB 63 ms + render delay 484 ms)   — "good" < 2500 ms
+  CLS: 0.00     — perfect; all 3D slots have reserved dimensions
+  Best Practices (Lighthouse desktop): 100
+  Accessibility (Lighthouse desktop):  100
+
+The live 3D hero showpiece does NOT block LCP: it is a dynamic(ssr:false)
+island behind an SSR poster inside the Lazy3D viewport/capability guard
+(DL8). LCP element = server-rendered hero copy/poster.
+Render-blocking insight (~217 ms potential) is the unminified dev CSS.
