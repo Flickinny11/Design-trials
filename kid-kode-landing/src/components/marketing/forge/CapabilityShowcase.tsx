@@ -19,7 +19,7 @@ import { ClearedRender } from './MarketingCanvas';
 import { ForgeEnvironment, ForgeLights } from './ForgeEnvironment';
 import { usePrefersReducedMotion } from '../../shell/builder/use-reduced-motion';
 import { useGeneratedPBR } from './use-generated-pbr';
-import { CHROME, GUNMETAL, SIGNAL_RED, RED_HOT, RED_DEEP } from '@/components/shell/design/prism-premium-tokens';
+import { CHROME, GUNMETAL, SIGNAL_RED, RED_HOT } from '@/components/shell/design/prism-premium-tokens';
 
 const MarketingCanvas = dynamic(() => import('./MarketingCanvas'), { ssr: false });
 
@@ -163,9 +163,15 @@ function CanvasArtifact() {
 // ── PREVIEW: a framed running app ───────────────────────────────────────────
 function PreviewApp() {
   const frame = useMemo(() => new THREE.MeshStandardMaterial({ color: GUNMETAL, metalness: 0.9, roughness: 0.32 }), []);
-  const screen = useMemo(() => new THREE.MeshPhysicalMaterial({ color: '#0d0d11', metalness: 0.1, roughness: 0.1, clearcoat: 1, clearcoatRoughness: 0.05 }), []);
-  const red = useMemo(() => new THREE.MeshStandardMaterial({ color: SIGNAL_RED, emissive: new THREE.Color(RED_DEEP), emissiveIntensity: 0.6, metalness: 0.2, roughness: 0.3 }), []);
-  const chrome = useMemo(() => new THREE.MeshPhysicalMaterial({ color: CHROME, metalness: 1, roughness: 0.22 }), []);
+  // A lit screen (subtle self-illumination) so the built app reads bright, not a
+  // dark mockup in a void (advocate flag).
+  const screen = useMemo(
+    () => new THREE.MeshStandardMaterial({ color: '#1b1c22', emissive: new THREE.Color('#20222b'), emissiveIntensity: 0.9, metalness: 0.1, roughness: 0.5 }),
+    [],
+  );
+  const red = useMemo(() => new THREE.MeshStandardMaterial({ color: SIGNAL_RED, emissive: new THREE.Color(SIGNAL_RED), emissiveIntensity: 1.1, metalness: 0.2, roughness: 0.3, toneMapped: false }), []);
+  // Near-white emissive UI cards so they read as bright content on the screen.
+  const chrome = useMemo(() => new THREE.MeshStandardMaterial({ color: '#e8ecf2', emissive: new THREE.Color('#c8ccd4'), emissiveIntensity: 0.55, metalness: 0.4, roughness: 0.4 }), []);
   return (
     <group rotation={[0.03, -0.32, 0]}>
       <mesh material={frame}>

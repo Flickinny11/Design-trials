@@ -74,8 +74,15 @@ function MarkNode({
       g.current.scale.y = g.current.scale.z = g.current.scale.x;
     }
     if (spin.current) {
-      const rate = hot ? 1.4 : reduced ? 0 : 0.28;
-      spin.current.rotation.y += dt * rate;
+      if (hot) {
+        // Hover: a full reveal spin.
+        spin.current.rotation.y += dt * 1.4;
+      } else {
+        // Idle: settle facing the camera with a barely-there sway so each mark's
+        // silhouette stays instantly recognizable (advocate: no mid-spin ambiguity).
+        const target = reduced ? 0 : Math.sin(t * 0.5 + phase) * 0.22;
+        spin.current.rotation.y += (target - spin.current.rotation.y) * (1 - Math.exp(-dt * 4));
+      }
     }
   });
   return (
