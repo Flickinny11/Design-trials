@@ -282,7 +282,7 @@ export interface Stat {
 
 export const STATS: readonly Stat[] = [
   { value: 'WebGPU', label: 'real-time renderer, WebGL2 fallback' },
-  { value: '5 modes', label: 'one continuous scene, never a mockup' },
+  { value: '3 modes', label: 'galaxy, canvas & preview — one scene' },
   { value: '1-click', label: 'deploy or portable export — no lock-in' },
   { value: '100%', label: 'per-tenant isolation by default' },
 ] as const;

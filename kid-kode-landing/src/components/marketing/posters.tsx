@@ -6,6 +6,13 @@
 // the RED/BLACK/WHITE identity (DL2) with light-simulating gradients so the
 // hand-off to the live scene is seamless. Decorative — marked aria-hidden; the
 // meaning is carried by adjacent copy (WCAG 1.1.1).
+//
+// The <stop>/fill hexes below are the premium.ts identity values (SIGNAL_RED
+// #ff2a38, RED_HOT #ff5a55, RED_DEEP #7d0f18, CHROME_HI #f6f8fb, CHROME
+// #e8ecf2, CHROME_LO #9aa1ac, GUNMETAL_DEEP #0b0b10) inlined literally because
+// SVG gradient stops cannot read CSS custom properties in a server-rendered
+// still. They MIRROR the single token source — keep in lockstep with
+// src/components/shell/design/prism-premium-tokens.ts (DL2).
 
 /** Full hero still: machined pedestal, chrome gyroscope, rising red prism,
  *  red graph wiring — the same composition the live scene animates into. */

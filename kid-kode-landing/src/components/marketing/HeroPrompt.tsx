@@ -8,23 +8,12 @@
 // component knowing the session: it navigates to /app/build?prompt=…, and the
 // /app/* edge guard redirects a signed-out visitor to /sign-in?next=… then back
 // to the same intake URL after auth (middleware.ts + safeNextPath) — the prompt
-// rides through sign-in untouched. The Build control is a real 3D object
-// (CtaButton3D) with its label in DOM for legibility (DL10/DL12).
+// rides through sign-in untouched. The Build control is a crisp machined red
+// button (decision A — the prompt bar is a working surface; the hero's
+// materiality lives in the big 3D showpiece beside it, not in this inline slot).
 
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
-
-const CtaButton3D = dynamic(() => import('./CtaButton3D'), {
-  ssr: false,
-  loading: () => (
-    <div className="mk-cta3d" aria-hidden>
-      <span style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', fontFamily: 'var(--mk-font-mono)', fontSize: 12, color: 'var(--pp-text-mid)' }}>
-        Build
-      </span>
-    </div>
-  ),
-});
 
 const STARTERS = [
   'A booking site for my barbershop',
@@ -97,15 +86,20 @@ export default function HeroPrompt() {
               spellCheck={false}
             />
           </div>
-          <div className="mk-prompt-cta">
-            <CtaButton3D
-              label="Build"
-              sublabel="start free"
-              pending={going}
-              onClick={go}
-              ariaLabel="Start building — open the guided builder with your prompt"
-            />
-          </div>
+          <button
+            type="button"
+            className="mk-prompt-go"
+            onClick={go}
+            disabled={going}
+            aria-label="Start building — open the guided builder with your prompt"
+          >
+            <span className="mk-prompt-go-label">{going ? 'Working…' : 'Build'}</span>
+            {!going ? (
+              <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M3 8h9M8.5 4l4 4-4 4" stroke="currentColor" strokeWidth="1.7" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            ) : null}
+          </button>
         </div>
       </div>
       <div className="mk-prompt-hint">
