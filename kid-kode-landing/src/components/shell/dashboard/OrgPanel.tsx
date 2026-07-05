@@ -185,9 +185,7 @@ export default function OrgPanel({ planTier }: { planTier: string }) {
                   <button className="dw-btn dw-btn-sm dw-btn-ghost" onClick={() => onRemove(mem.userId)} disabled={busy}>
                     Remove
                   </button>
-                ) : (
-                  <span className="dw-org-owner-tag">owner</span>
-                )}
+                ) : null}
               </li>
             ))}
           </ul>

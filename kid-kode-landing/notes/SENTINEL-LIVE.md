@@ -1215,3 +1215,8 @@ complete marker: 'PRISM-SHELL-W7: RUN COMPLETE'
 [22:32:46] SHELL-W7 · 46m · agent=1 · still building · 46m elapsed · agent up · 1112 commits · last: shell-w7: access-gated graph.get/save + project.get (edit grants modify;
 [22:33:46] SHELL-W7 · 47m · agent=1 · commit b9b20a6a — shell-w7: collab client store (useCollabStore, native WS, one store per 
 [22:36:16] SHELL-W7 · 49m · agent=1 · still building · 49m elapsed · agent up · 1113 commits · last: shell-w7: collab client store (useCollabStore, native WS, one store per 
+[22:38:47] SHELL-W7 · 52m · agent=1 · commit 2d296456 — shell-w7: settings depth (persisted default model, notification prefs, o
+[22:39:47] SHELL-W7 · 53m · agent=1 · still building · 53m elapsed · agent up · 1114 commits · last: shell-w7: settings depth (persisted default model, notification prefs, o
+[22:40:47] SHELL-W7 · 54m · agent=1 · commit 249e03c7 — shell-w7: untrack throwaway .playwright-mcp snapshots + stray png (swept
+[22:43:17] SHELL-W7 · 57m · agent=1 · still building · 57m elapsed · agent up · 1115 commits · last: shell-w7: untrack throwaway .playwright-mcp snapshots + stray png (swept
+[22:46:48] SHELL-W7 · 60m · agent=1 · still building · 60m elapsed · agent up · 1115 commits · last: shell-w7: untrack throwaway .playwright-mcp snapshots + stray png (swept

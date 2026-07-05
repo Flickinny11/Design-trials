@@ -6,10 +6,10 @@
 // (self + others). Reads the collab store only; renders nothing until the room
 // is live, so a solo/enterprise-off session shows no multiplayer chrome.
 
-import { colorForSeed, useCollabStore } from '@/lib/shell/collab-store';
+import { colorForSeed, useCollabStore, useOthers } from '@/lib/shell/collab-store';
 
 export default function PresenceAvatars({ selfName }: { selfName: string }) {
-  const others = useCollabStore((s) => s.others());
+  const others = useOthers();
   const status = useCollabStore((s) => s.status);
   const selfActorId = useCollabStore((s) => s.selfActorId);
   if (status !== 'live') return null;

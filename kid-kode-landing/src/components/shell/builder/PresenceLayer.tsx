@@ -8,10 +8,10 @@
 // — driven entirely by the collab store's presence map, which expires stale
 // actors locally. pointer-events:none so it never steals input from the engine.
 
-import { colorForSeed, useCollabStore } from '@/lib/shell/collab-store';
+import { colorForSeed, useCollabStore, useOthers } from '@/lib/shell/collab-store';
 
 export default function PresenceLayer() {
-  const others = useCollabStore((s) => s.others());
+  const others = useOthers();
   const status = useCollabStore((s) => s.status);
   if (status !== 'live' || others.length === 0) return null;
 
@@ -55,7 +55,7 @@ export default function PresenceLayer() {
 /** Small "who's here" chip stack. Shows self implicitly via the store's
  *  connection; used both in the TopBar and the presence badge. */
 export function PresenceCount() {
-  const others = useCollabStore((s) => s.others());
+  const others = useOthers();
   const status = useCollabStore((s) => s.status);
   if (status !== 'live') return null;
   return (

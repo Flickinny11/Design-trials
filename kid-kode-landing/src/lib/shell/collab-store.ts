@@ -13,6 +13,7 @@
 // Co-editing ops are broadcast for optimistic apply; graph PERSISTENCE stays
 // on the existing additive mutation path (tenancy.graph.save), unchanged.
 
+import { useMemo } from 'react';
 import { create } from 'zustand';
 import type {
   CollabActor,
@@ -47,8 +48,6 @@ interface CollabState {
   sendOp(op: Omit<CollabOp, 'seq'>): void;
   setLock(nodeId: string, acquire: boolean): void;
   undo(): void;
-  /** Presence of everyone except self, freshest first, stale dropped. */
-  others(): PresenceState[];
 }
 
 // Module-scoped socket (one per store; the store is a singleton).
@@ -153,16 +152,23 @@ export const useCollabStore = create<CollabState>((set, get) => ({
   },
 
   undo: () => sendMessage({ kind: 'undo' }),
+}));
 
-  others: () => {
-    const { presence, selfActorId } = get();
+/** Presence of everyone except self, freshest first, stale dropped. Selects the
+ *  STABLE `presence` reference (only replaced when presence changes) so
+ *  useSyncExternalStore's snapshot stays referentially stable — deriving the
+ *  array inside the selector would return a fresh array every render and loop. */
+export function useOthers(): PresenceState[] {
+  const presence = useCollabStore((s) => s.presence);
+  const selfActorId = useCollabStore((s) => s.selfActorId);
+  return useMemo(() => {
     const now = Date.now();
     return Object.values(presence)
       .filter((p) => p.actor.actorId !== selfActorId)
       .filter((p) => p.updatedAt === 0 || now - p.updatedAt < PRESENCE_TTL_MS)
       .sort((a, b) => b.updatedAt - a.updatedAt);
-  },
-}));
+  }, [presence, selfActorId]);
+}
 
 function applyEvent(
   env: RoomEventEnvelope,

@@ -34,8 +34,10 @@ export default function ShareDialog({
   const [note, setNote] = useState<string | null>(null);
   const shareLabel = visibility === 'private' ? 'Private' : `Org · ${visibility}`;
 
+  // Load current share state on MOUNT (not just on open) so the trigger label
+  // reflects reality — a shared project must not read "Private" until opened.
   useEffect(() => {
-    if (!open || !canManageSharing) return;
+    if (!canManageSharing) return;
     let alive = true;
     (async () => {
       try {
@@ -50,13 +52,13 @@ export default function ShareDialog({
           setOrgId(myOrgs[0].id);
         }
       } catch {
-        /* dialog opens empty; the user can retry */
+        /* leaves the default; the user can retry from the dialog */
       }
     })();
     return () => {
       alive = false;
     };
-  }, [open, canManageSharing, projectId]);
+  }, [canManageSharing, projectId]);
 
   const apply = useCallback(
     async (next: OrgVisibility) => {

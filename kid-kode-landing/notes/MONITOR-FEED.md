@@ -1423,3 +1423,8 @@ Toolbar fully REBUILT from GENERATED Tripo v3.1 GLBs (procedural forms discarded
 [22:32:46] CHAIN/SHELL-W7: still building · 46m elapsed · agent up · 1112 commits · last: shell-w7: access-gated graph.get/save + project.get (edit grants modify;
 [22:33:46] CHAIN/SHELL-W7: commit b9b20a6a — shell-w7: collab client store (useCollabStore, native WS, one store per 
 [22:36:16] CHAIN/SHELL-W7: still building · 49m elapsed · agent up · 1113 commits · last: shell-w7: collab client store (useCollabStore, native WS, one store per 
+[22:38:47] CHAIN/SHELL-W7: commit 2d296456 — shell-w7: settings depth (persisted default model, notification prefs, o
+[22:39:47] CHAIN/SHELL-W7: still building · 53m elapsed · agent up · 1114 commits · last: shell-w7: settings depth (persisted default model, notification prefs, o
+[22:40:47] CHAIN/SHELL-W7: commit 249e03c7 — shell-w7: untrack throwaway .playwright-mcp snapshots + stray png (swept
+[22:43:17] CHAIN/SHELL-W7: still building · 57m elapsed · agent up · 1115 commits · last: shell-w7: untrack throwaway .playwright-mcp snapshots + stray png (swept
+[22:46:48] CHAIN/SHELL-W7: still building · 60m elapsed · agent up · 1115 commits · last: shell-w7: untrack throwaway .playwright-mcp snapshots + stray png (swept
