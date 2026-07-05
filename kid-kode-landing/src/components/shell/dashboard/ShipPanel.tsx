@@ -20,8 +20,14 @@ const ROADMAP: readonly ShipRow[] = [
   {
     key: 'preview',
     title: 'Preview URLs',
-    detail: 'Every build gets a shareable preview deployment.',
-    wave: 'W5',
+    detail: 'Every build ships a shareable preview from its builder — verified before it ships.',
+    wave: 'Live',
+  },
+  {
+    key: 'verify',
+    title: 'Verified shippable',
+    detail: 'Builds gate on behavioral + visual + deploy verification (I9) — the Conductor.',
+    wave: 'Live',
   },
   {
     key: 'hosts',

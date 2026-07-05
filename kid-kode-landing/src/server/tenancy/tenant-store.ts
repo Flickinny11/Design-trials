@@ -54,6 +54,12 @@ import {
   type IntegrationConnection,
   type ProjectCapabilityBinding,
 } from '../../../packages/shared-interfaces/src/prism-integrations';
+import {
+  conductorStatusSchema,
+  deployRecordSchema,
+  type ConductorStatus,
+  type DeployRecord,
+} from '../../../packages/shared-interfaces/src/prism-conductor';
 
 const MAX_GRAPH_BYTES = 16 * 1024 * 1024; // 16 MB graph JSON ceiling
 const MAX_ASSET_BYTES = 64 * 1024 * 1024; // matches assets/store.ts ceiling
@@ -777,4 +783,141 @@ export async function setGithubImport(
     });
     return parsed;
   });
+}
+
+// ── Conductor build status + deploy records (SHELL W5) ───────────────────────
+// The Conductor's per-project build status and its deploy/preview records.
+// Same four isolation walls: tenant-key-first paths, id-grammar validation,
+// path re-check, not-owned == not-found. I5 posture holds — a deploy record
+// carries a capability TOKEN (a reference to a project snapshot), never a
+// secret; env values never touch these files (only NAMES, via the contract).
+
+function conductorStatusPath(tenantId: string, projectId: string): string {
+  return insideTenant(
+    tenantId,
+    'projects',
+    safeId(projectId, 'project'),
+    'conductor-status.json',
+  );
+}
+
+export async function saveConductorStatus(
+  tenantId: string,
+  projectId: string,
+  status: ConductorStatus,
+): Promise<ConductorStatus | null> {
+  const owned = await getProject(tenantId, projectId);
+  if (!owned) return null;
+  const parsed = conductorStatusSchema.parse(status);
+  await writeJson(conductorStatusPath(tenantId, projectId), parsed);
+  return parsed;
+}
+
+export async function getConductorStatus(
+  tenantId: string,
+  projectId: string,
+): Promise<ConductorStatus | null> {
+  const owned = await getProject(tenantId, projectId);
+  if (!owned) return null;
+  const raw = await readJson<unknown>(conductorStatusPath(tenantId, projectId));
+  if (raw == null) return null;
+  const parsed = conductorStatusSchema.safeParse(raw);
+  return parsed.success ? parsed.data : null;
+}
+
+function deploysIndexPath(tenantId: string, projectId: string): string {
+  return insideTenant(
+    tenantId,
+    'projects',
+    safeId(projectId, 'project'),
+    'deploys.json',
+  );
+}
+
+async function readDeploys(
+  tenantId: string,
+  projectId: string,
+): Promise<DeployRecord[]> {
+  const raw = await readJson<unknown[]>(deploysIndexPath(tenantId, projectId));
+  if (!Array.isArray(raw)) return [];
+  return raw.flatMap((d) => {
+    const parsed = deployRecordSchema.safeParse(d);
+    return parsed.success ? [parsed.data] : [];
+  });
+}
+
+export async function saveDeploy(
+  tenantId: string,
+  projectId: string,
+  record: DeployRecord,
+): Promise<DeployRecord | null> {
+  const owned = await getProject(tenantId, projectId);
+  if (!owned) return null;
+  const parsed = deployRecordSchema.parse(record);
+  return serialized(tenantId, async () => {
+    const all = await readDeploys(tenantId, projectId);
+    await writeJson(deploysIndexPath(tenantId, projectId), [...all, parsed]);
+    return parsed;
+  });
+}
+
+export async function updateDeploy(
+  tenantId: string,
+  projectId: string,
+  deployId: string,
+  patch: (d: DeployRecord) => DeployRecord,
+): Promise<DeployRecord | null> {
+  const owned = await getProject(tenantId, projectId);
+  if (!owned) return null;
+  const did = safeId(deployId, 'deploy');
+  return serialized(tenantId, async () => {
+    const all = await readDeploys(tenantId, projectId);
+    const idx = all.findIndex((d) => d.id === did);
+    if (idx < 0) return null;
+    const updated = deployRecordSchema.parse({ ...patch(all[idx]), id: all[idx].id });
+    const next = [...all];
+    next[idx] = updated;
+    await writeJson(deploysIndexPath(tenantId, projectId), next);
+    return updated;
+  });
+}
+
+export async function listDeploys(
+  tenantId: string,
+  projectId: string,
+): Promise<DeployRecord[] | null> {
+  const owned = await getProject(tenantId, projectId);
+  if (!owned) return null;
+  return readDeploys(tenantId, projectId);
+}
+
+export async function getDeploy(
+  tenantId: string,
+  projectId: string,
+  deployId: string,
+): Promise<DeployRecord | null> {
+  const owned = await getProject(tenantId, projectId);
+  if (!owned) return null;
+  const all = await readDeploys(tenantId, projectId);
+  return all.find((d) => d.id === safeId(deployId, 'deploy')) ?? null;
+}
+
+/** Read an immutable version SNAPSHOT without touching the live graph — the
+ *  preview route serves the exact graph a deploy shipped, not the moving live
+ *  graph. Fails closed (not owned / not found == null). */
+export async function getVersionSnapshot(
+  tenantId: string,
+  projectId: string,
+  versionId: string,
+): Promise<Record<string, unknown> | null> {
+  const owned = await getProject(tenantId, projectId);
+  if (!owned) return null;
+  const snapshotFile = insideTenant(
+    tenantId,
+    'projects',
+    safeId(projectId, 'project'),
+    'versions',
+    `${safeId(versionId, 'version')}.json`,
+  );
+  return readJson<Record<string, unknown>>(snapshotFile);
 }

@@ -729,3 +729,68 @@ certified scene as the preview interior, stated on-screen. Editing inside
 the embedded prototype writes through the engine's own existing autosave
 path exactly as at `/` (shared demo graph) — a known, stated W2 limitation,
 resolved when W5 binds tenant graphs.
+
+---
+
+## SHELL W5 — Conductor + Deploy + Verify loop (2026-07-04)
+
+**W5-D1 — The Conductor runs server-side and authors the graph via a
+server-callable certified node path, not the client `useGraphSourceStore`
+mutators.** Lock H requires authoring "EXCLUSIVELY through the certified node
+paths (node-agent validated plans, additive schema, schema-completeness +
+verify gates)". The editor's node-agent (`applyPlan` → `updateNode` on the
+Zustand store) is a browser surface; a build orchestrator runs on the server
+(streaming tRPC procedure). The Conductor therefore reuses the SAME certified
+discipline as pure server functions: (a) node configs are DATA whose additive
+slice is filtered through the exact `APPLYABLE_NODE_FIELDS` allowlist
+(`sanitizeAdditive`, mirroring `apply-plan.ts:sanitizePatch`) — never raw code
+injection (I10, INV-NEV2-3); (b) every node is normalized with the shared
+`applyPlanRendererDefaults`; (c) every node passes the shared
+`validatePlanRendererFields` schema-completeness gate (the same gate the
+`/api/prism/regen` persist route runs) before the graph is saved. Same
+invariants, server entry point. The swarm-dispatch upgrade (non-ratified) can
+replace the planner behind the unchanged `BuildBlueprint` interface without
+touching this discipline.
+
+**W5-D2 — Conductor-authored nodes render via `text` (MSDF) and
+`mesh`+`meshPrimitive` (tinted PBR) render modes — no baked diffusion assets.**
+The asset-provisioning pipeline (fal.ai image bake) is out of W5 scope and
+env-gated. The Conductor authors nodes the runtime renders WITHOUT remote
+assets: real MSDF glyph text (the Inter atlas is pre-baked + warmed) with
+Direction-Board palette fills, and synchronous `meshPrimitive` geometry with
+`materialSpec` tinted to the board's `materialFamily` (metalness/roughness).
+This satisfies "runs in the Prism runtime" + §11.3 visual conformance with
+deterministic, offline-renderable nodes. Image/3D asset generation stays a
+later pipeline (explicitly out of scope in the editor-build rules).
+
+**W5-D3 — The built app runs in the Prism runtime through a second sanctioned
+React host (`mountFromGraphSource`), shown one-at-a-time with the engine-frame,
+never simultaneously (FP-R1/FP-R6 honored).** The builder preview shows EITHER
+the certified engine-frame iframe (pre-build / demo) OR the Conductor-authored
+tenant graph mounted via `mountFromGraphSource` (post-build) — the same
+runtime primitive `PrismHost` uses — never both visible at once, so there is
+still one visible `three/webgpu` scene. This is DOM host + WebGPU interior
+(I0 respected); it does not touch the engine interior at `/` (FP7).
+
+**W5-D4 — E14 preview URLs + prism-cloud deploy are served by this Next app
+(token-guarded `/preview/[projectId]`), the default DeployTarget; external
+hosts are env-gated dry-runs.** Absent host tokens (the dry-run default per
+the W5 prompt), "deploy" produces a real, shareable preview URL served by
+this app that mounts the project graph in the Prism runtime, plus the
+deploy-target manifest as evidence. The token is a capability reference bound
+to a project snapshot (I5 — never a secret). The Vercel/Netlify/Cloudflare +
+Modal/RunPod/Vast adapters implement the E15 `DeployTarget` interface but run
+in dry-run (manifest-only) until their env tokens are present — W5B extends
+the SAME interface. Custom-domain is a stored field with a verification stub
+(DNS not testable in CI).
+
+**W5-D5 — The §11 completion latch's behavioral layer is structural on the
+server + visual/interactive in the browser harness.** The server cannot mount
+a WebGPU scene, so the server-side latch checks are structural-behavioral
+(every node schema-complete, exactly one PrismRootNode, edges resolve,
+Direction-Board palette/material/type conformance). The full behavioral +
+visual pass (graph mounts, nodes render, no console errors, matches the board)
+is the browser-driven verification harness (§11.1-11.4) + the fresh-context
+user-advocate — exactly the two-layer evidence protocol the project mandates.
+The runtime "Verified shippable" badge (I9) is gated on the server latch;
+"done" additionally requires the advocate pass.

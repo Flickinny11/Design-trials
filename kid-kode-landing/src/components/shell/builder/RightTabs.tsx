@@ -13,6 +13,7 @@ import dynamic from 'next/dynamic';
 import type { PrismShellCommand } from '../../../../packages/shared-interfaces/src/prism-shell';
 import { useBuilderStore } from '@/lib/shell/builder-store';
 import { getStubNode, getStubProject } from '@/lib/shell/project-stub';
+import ShipTab from './ShipTab';
 
 const EditPromptButton3D = dynamic(() => import('./EditPromptButton3D'), {
   ssr: false,
@@ -181,26 +182,6 @@ function IntegrationsPanel({ projectId }: { projectId: string }) {
   );
 }
 
-function DeployPanel() {
-  return (
-    <div className="bw1-panel">
-      <p className="bw1-panel-kicker">Deploy · lands in W5</p>
-      <h3 className="bw1-panel-headline">Verified shippable.</h3>
-      <p className="bw1-panel-body">
-        Deploys gate on behavioral + visual verification — the Verify phase streams its
-        evidence into chat as tool steps (E4), and only a passing app earns the badge:
-      </p>
-      <span className="bw1-badge-preview">
-        <span className="bw1-badge-bead" aria-hidden />
-        Verified shippable
-      </span>
-      <p className="bw1-panel-foot">
-        “Shippable” means verified (I9), never merely “build finished.”
-      </p>
-    </div>
-  );
-}
-
 // ── Contract wire log (dev only) ─────────────────────────────────────────────
 
 function ContractPanel() {
@@ -260,7 +241,7 @@ export default function RightTabs({
           Integrations
         </Tabs.Trigger>
         <Tabs.Trigger value="deploy" className="bw1-tab">
-          Deploy
+          Ship
         </Tabs.Trigger>
         {SHOW_CONTRACT_TAB ? (
           <Tabs.Trigger value="contract" className="bw1-tab bw1-tab--dev">
@@ -275,7 +256,7 @@ export default function RightTabs({
         <IntegrationsPanel projectId={projectId} />
       </Tabs.Content>
       <Tabs.Content value="deploy" className="bw1-tabs-content">
-        <DeployPanel />
+        <ShipTab projectId={projectId} />
       </Tabs.Content>
       {SHOW_CONTRACT_TAB ? (
         <Tabs.Content value="contract" className="bw1-tabs-content">

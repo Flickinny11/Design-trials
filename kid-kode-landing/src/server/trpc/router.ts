@@ -19,14 +19,16 @@ import 'server-only';
 import { agentChatRequestSchema } from '../../../packages/shared-interfaces/src/prism-agent';
 import { runStubAgent } from '../agent/stub-agent';
 import { protectedProcedure, router } from './init';
+import { conductorRouter } from './routers/conductor';
 import { intakeRouter } from './routers/intake';
 import { integrationsRouter } from './routers/integrations';
 import { tenancyRouter } from './routers/tenancy';
 
 export const appRouter = router({
   agent: router({
-    /** The chat agentic loop endpoint. W1: local echo/stub agent; W5 swaps
-     *  in the real build orchestrator behind this exact procedure. */
+    /** The chat agentic loop endpoint (freeform build chat — W1 echo/stub).
+     *  W5's real build orchestrator lives at `conductor.run` (same streaming
+     *  contract); this endpoint stays the conversational surface. */
     chat: protectedProcedure
       .input(agentChatRequestSchema)
       .mutation(async function* ({ input, signal }) {
@@ -36,6 +38,8 @@ export const appRouter = router({
   tenancy: tenancyRouter,
   intake: intakeRouter,
   integrations: integrationsRouter,
+  /** W5 — the Conductor build/deploy/verify surface. */
+  conductor: conductorRouter,
 });
 
 export type AppRouter = typeof appRouter;

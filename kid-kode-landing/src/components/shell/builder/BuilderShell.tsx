@@ -118,8 +118,10 @@ export default function BuilderShell({
             <PreviewRegion
               containerId={ENGINE_CONTAINER_ID}
               graphRef={project.graphRef}
+              projectId={project.id}
               projectName={project.name}
               planPending={buildState === 'plan-pending'}
+              buildState={buildState ?? null}
               sendCommand={sendCommand}
               onSelectMode={onSelectMode}
             />

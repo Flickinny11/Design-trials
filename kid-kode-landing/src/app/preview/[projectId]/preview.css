@@ -1,0 +1,125 @@
+/* PRISM SHELL — SHAREABLE PREVIEW (SHELL W5 / E14) */
+
+.cr-page {
+  position: fixed;
+  inset: 0;
+  background: #05050a;
+  color: #e8e4da;
+  font-family: var(--font-shell-mono, ui-monospace, monospace);
+  overflow: hidden;
+}
+
+.cr-runtime {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.cr-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.cr-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: #b9b4a8;
+  pointer-events: none;
+}
+
+.cr-overlay--error {
+  color: #ff8a86;
+}
+
+.cr-bead {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ff5a55, #7d0f18);
+  box-shadow: 0 0 12px rgba(255, 90, 85, 0.6);
+  animation: cr-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes cr-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cr-bead { animation: none; }
+}
+
+.cr-badge {
+  position: absolute;
+  top: 0.9rem;
+  left: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(11, 11, 16, 0.72);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(232, 236, 242, 0.12);
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+}
+
+.cr-badge-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ff5a55, #7d0f18);
+}
+
+.cr-badge-name {
+  font-family: var(--font-shell-display, ui-serif, serif);
+  font-weight: 600;
+  color: #f4f1ea;
+}
+
+.cr-badge-tag {
+  color: #8f8a7e;
+  text-transform: uppercase;
+  font-size: 0.62rem;
+}
+
+.cr-unavailable {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.cr-unavailable-card {
+  max-width: 26rem;
+  text-align: center;
+  padding: 2rem;
+  border-radius: 1rem;
+  background: rgba(16, 16, 22, 0.7);
+  border: 1px solid rgba(232, 236, 242, 0.1);
+}
+
+.cr-unavailable-title {
+  font-family: var(--font-shell-display, ui-serif, serif);
+  font-size: 1.4rem;
+  margin: 0 0 0.6rem;
+  color: #f4f1ea;
+}
+
+.cr-unavailable-body {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #b9b4a8;
+  margin: 0;
+}
