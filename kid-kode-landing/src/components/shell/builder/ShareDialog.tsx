@@ -91,7 +91,12 @@ export default function ShareDialog({
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
-        <button type="button" className="bw1-topbtn" aria-label="Share this project">
+        <button
+          type="button"
+          className="bw1-topbtn"
+          aria-label="Share this project"
+          data-shared={visibility !== 'private' && canManageSharing ? 'true' : undefined}
+        >
           <span className="bw1-topbtn-kicker">Share</span>
           <span className="bw1-topbtn-value">{role === 'owner' || canManageSharing ? shareLabel : 'Shared'}</span>
         </button>

@@ -1928,3 +1928,8 @@
 }
 .bw1-share-close { margin-top: 16px; width: 100%; }
 .bw1-share-note { margin: 0; font-size: 12px; color: var(--pp-text-mid); }
+
+/* W7: a shared project's Share control reads active (red accent) for at-a-glance state */
+.bw1-topbtn[data-shared='true'] { border-color: var(--pp-hairline-red); }
+.bw1-topbtn[data-shared='true'] .bw1-topbtn-value { color: var(--pp-red); }
+.bw1-topbtn[data-shared='true'] .bw1-topbtn-kicker { color: var(--pp-text-mid); }

@@ -1428,3 +1428,6 @@ Toolbar fully REBUILT from GENERATED Tripo v3.1 GLBs (procedural forms discarded
 [22:40:47] CHAIN/SHELL-W7: commit 249e03c7 — shell-w7: untrack throwaway .playwright-mcp snapshots + stray png (swept
 [22:43:17] CHAIN/SHELL-W7: still building · 57m elapsed · agent up · 1115 commits · last: shell-w7: untrack throwaway .playwright-mcp snapshots + stray png (swept
 [22:46:48] CHAIN/SHELL-W7: still building · 60m elapsed · agent up · 1115 commits · last: shell-w7: untrack throwaway .playwright-mcp snapshots + stray png (swept
+[22:48:18] CHAIN/SHELL-W7: commit ca344d45 — shell-w7: fix infinite render loop (stable useOthers() selector — s.othe
+[22:50:18] CHAIN/SHELL-W7: still building · 64m elapsed · agent up · 1116 commits · last: shell-w7: fix infinite render loop (stable useOthers() selector — s.othe
+[22:53:49] CHAIN/SHELL-W7: still building · 67m elapsed · agent up · 1116 commits · last: shell-w7: fix infinite render loop (stable useOthers() selector — s.othe

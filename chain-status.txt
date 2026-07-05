@@ -1,1 +1,1 @@
-[22:46:48] SHELL-W7: still building · 60m elapsed · agent up · 1115 commits · last: shell-w7: untrack throwaway .playwright-mcp snapshots + stray png (swept
+[22:53:49] SHELL-W7: still building · 67m elapsed · agent up · 1116 commits · last: shell-w7: fix infinite render loop (stable useOthers() selector — s.othe
