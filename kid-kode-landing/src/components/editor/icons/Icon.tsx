@@ -61,6 +61,22 @@ const PATHS: Record<string, string> = {
   crop: 'M6 2 L8 2 L8 16 L22 16 L22 18 L8 18 L6 18 Z M2 6 L4 6 L16 6 L16 8 L6 8 L6 22 L4 22 L4 8 L2 8 Z',
   sliders: 'M4 5 L20 5 L20 7 L4 7 Z M4 11 L20 11 L20 13 L4 13 Z M4 17 L20 17 L20 19 L4 19 Z M7 3 L9 3 L9 9 L7 9 Z M14 9 L16 9 L16 15 L14 15 Z M8 15 L10 15 L10 21 L8 21 Z',
   cursor: 'M5 3 L19 11 L12 12 L16 19 L13.5 20.5 L9.5 13.5 L5 17 Z',
+  // SHELL-W10 — Generate capability family glyphs (DL14: custom, black/white/red,
+  // 3D via the Icon extrude). One per GenerativeCapabilityKind; keyed gen*.
+  // gen3d — a faceted cube emerging with a generation spark (object generation).
+  gen3d: 'M12 3 L20 7.4 L12 11.8 L4 7.4 Z M3.5 8.9 L11 13 L11 21.2 L3.5 17.1 Z M13 13 L20.5 8.9 L20.5 17.1 L13 21.2 Z M19.4 1.1 L20.1 3 L22 3.7 L20.1 4.4 L19.4 6.3 L18.7 4.4 L16.8 3.7 L18.7 3 Z',
+  // genTexture — a paint roller laying a textured swatch (re-texturing a mesh).
+  genTexture: 'M3.5 4 L15.5 4 L15.5 8.6 L3.5 8.6 Z M9.7 8.6 L11.5 8.6 L11.5 12.2 L15 12.2 L15 14 L9.7 14 Z M3.5 16.4 L20.5 16.4 L20.5 21 L3.5 21 Z',
+  // genRig — an armature: head, spine, shoulder bar, hand joints, splayed legs.
+  genRig: 'M12 1.4 A1.7 1.7 0 1 1 11.99 1.4 Z M11.1 5 L12.9 5 L12.9 16 L11.1 16 Z M5.5 7.2 L18.5 7.2 L18.5 8.8 L5.5 8.8 Z M4 6.3 A1.3 1.3 0 1 1 3.99 6.3 Z M20 6.3 A1.3 1.3 0 1 1 19.99 6.3 Z M9.2 16 L11 16 L8.8 21.2 L7 21.2 Z M13 16 L14.8 16 L17 21.2 L15.2 21.2 Z',
+  // genSegment — four separated quadrants (a mesh split into named parts).
+  genSegment: 'M3 3 L10.6 3 L10.6 10.6 L3 10.6 Z M13.4 3 L21 3 L21 10.6 L13.4 10.6 Z M3 13.4 L10.6 13.4 L10.6 21 L3 21 Z M13.4 13.4 L21 13.4 L21 21 L13.4 21 Z',
+  // genMaterial — a shaded material orb with a specular highlight (evenodd hole).
+  genMaterial: 'M12 3 A9 9 0 1 1 11.99 3 Z M8 7.5 A2.1 2.1 0 1 1 7.99 7.5 Z',
+  // genWorld — a horizon dome with a sun (evenodd hole) over layered ground.
+  genWorld: 'M3 15 A9 9 0 0 1 21 15 Z M12 8.4 A2.2 2.2 0 1 1 11.99 8.4 Z M2 16.4 L22 16.4 L22 18.2 L2 18.2 Z M4.5 19.6 L19.5 19.6 L19.5 21.2 L4.5 21.2 Z',
+  // genMeshOps — a triangulated patch (retopology / mesh utilities).
+  genMeshOps: 'M3 11 L7 5 L11 11 Z M7.4 11 L11.4 5 L15.4 11 Z M11.8 11 L15.8 5 L19.8 11 Z M5 13 L9 19 L13 13 Z M9.4 13 L13.4 19 L17.4 13 Z',
 };
 
 export type IconName = keyof typeof PATHS;

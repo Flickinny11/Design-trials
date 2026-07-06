@@ -12,6 +12,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Icon } from '@/components/editor/icons/Icon';
 import BrandLogo from './BrandLogo';
+import GeneratePanel from './GeneratePanel';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import type { PrismNode, FunctionTile, FunctionTileValidationStatus } from '@/lib/prism-graph/types';
 import type { ActionTileDescriptor } from '@/lib/capabilities/provider';
@@ -149,6 +150,11 @@ export default function FunctionsTab({ node, onToast }: { node: PrismNode; onToa
 
   return (
     <div data-component="functions-tab" className="px-3 py-2 flex flex-col gap-2.5" style={{ color: 'var(--ds-text)' }}>
+      {/* SHELL-W10 — Generate capability family (object gen · texturing · rig ·
+          segmentation · PBR material · world · mesh-ops), additive above the
+          action search. Provider-agnostic; metered against user credits. */}
+      <GeneratePanel node={node} onToast={onToast} />
+
       {/* Search */}
       <div className="flex items-center gap-1.5 ds-well rounded-[5px] px-2 py-1" style={{ background: 'var(--ds-grad-well)', boxShadow: 'var(--ds-chamfer-soft, inset 0 1px 2px rgba(0,0,0,0.45))' }}>
         <Icon name="search" size={11} color="var(--ds-text-low)" />

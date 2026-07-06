@@ -1009,6 +1009,12 @@ export interface PrismNode {
   // capability lives in the provider/adapter (Prism stores the reference, never
   // raw code or secrets). Absent on legacy nodes. Round-trips through save/reload.
   functionTiles?: FunctionTile[];
+  // SHELL-W10 Generate capability family (additive). Generated-3D assets
+  // attached to this node (GLBs, PBR texture sets, rigs, part splits,
+  // materials) — each a baked-asset REFERENCE with capability/model
+  // provenance, produced via the provider-agnostic generative adapters.
+  // Absent on legacy nodes. Round-trips through save/reload.
+  generativeAssets?: GenerativeAssetAttachment[];
   // NODE-EDITOR-V2 Integrations tab (criteria C; INV-NEV2-2 / INV-R13 additive).
   // Third-party platform hookups connected on this node. Each entry carries a
   // CAPABILITY REFERENCE only (never a raw token — vault resolves server-side),
@@ -1225,6 +1231,28 @@ export interface FunctionTile {
   params?: Record<string, unknown>;
   /** Last validation result (criteria B4). */
   validation?: FunctionTileValidation;
+}
+
+// SHELL-W10 — a generated-3D asset attached to a node by the Generate
+// capability family (additive; absent on legacy nodes). The attachment is a
+// REFERENCE to a baked asset under the project asset store (a committed/public
+// URL) plus provenance (which capability/model produced it). It never carries
+// secret material and never carries executable vendor code. "Use as mesh"
+// applies the asset through the EXISTING optional fields (meshUrl/renderMode).
+export interface GenerativeAssetAttachment {
+  /** Stable id (`ga-<base36>`). */
+  id: string;
+  /** Owning capability ('tripo.text-to-3d') — provenance, not a vendor call. */
+  capabilityId: string;
+  /** Model that produced it ("Smart Mesh P1", "FLUX 2 Pro"). */
+  model: string;
+  /** Asset kind ('glb' | 'texture-set' | 'material' | 'rig' | 'segments' | 'world'). */
+  kind: string;
+  /** Project-relative public URL under the existing asset store paths. */
+  url: string;
+  label: string;
+  createdAt: string;
+  meta?: Record<string, string | number | boolean>;
 }
 
 // A saved asset the user owns on a connected platform (criteria C3) — e.g. a

@@ -77,3 +77,19 @@ job progress → attach), (c) a dev-grade ledger list inside the same panel. No 
 editor code path is deleted or rewritten; Inspector.tsx is not modified (FunctionsTab
 already mounts there); the `/` canvas editor prototype gets these hooks only through
 the already-mounted Inspector surface. Diff-verified additive at close.
+
+## W10-D8 — Vendor clients extended in the committed .assetgen pipeline (post-impl record)
+The Tripo REST for the downstream ops (texture / rig / segment / prerig) was added
+to the EXISTING committed Tripo client `.assetgen/tripo.py` as new subcommands
+(`texture`/`rig`/`segment`/`prerig`), and a new sibling client
+`.assetgen/replicate-3d.py` was added for the Replicate 3D models (Hunyuan 3D 3.1
+`tencent/hunyuan-3d-3.1`, Rodin Gen-2 `hyper3d/rodin`). This keeps ALL vendor REST
+for each provider in ONE swappable client (INV-NEV2-4 spirit): the `src/server`
+adapter is the thin interface impl that spawns it, exactly as `/api/material-gen`
+spawns `gen-material.sh`. `.assetgen/` is gitignored (keys live there; INV-19), so
+these clients are NOT committed — on a fresh clone the adapters see the scripts
+absent, report `live:false`, and serve the committed demo fixtures. The demo
+fixtures under `public/prism-mock/editor/models/generated/demo-*` and
+`textures/generated/demo-flux-brass` ARE committed (DL13, baked real output).
+Model note: the catalog names the Replicate object-gen tile "Hunyuan 3D 3.1",
+which is the exact Replicate model used (`tencent/hunyuan-3d-3.1`, prompt-capable).
