@@ -9,7 +9,9 @@
     "composition": [
       "3-5 explicit planes, no more: far scenery, midground subject, foreground props; each plane owns a distinct silhouette so separation reads instantly.",
       "Foreground elements can frame the composition like a natural vignette or portal (cliffs, arches, props at frame edges).",
-      "The subject holds a stable anchor while satellite planes carry the motion; typography usually lives between mid and foreground so objects can interlock with it."
+      "The subject holds a stable anchor while satellite planes carry the motion; typography usually lives between mid and foreground so objects can interlock with it.",
+      "The cheapest, most powerful depth trick: route the oversized headline BEHIND the hero subject so the product occludes its own title — one z-swap sells more dimensionality than any amount of blur.",
+      "A swarm of 8-12 small garnish/ingredient cutouts at varied scale and blur orbits the subject; the swarm is a per-theme set (swap the garnish, swap the flavor) and its scale-variance is what reads as volumetric space around the product."
     ],
     "layering": [
       "Depth comes from clean background-free cutouts stacked with scale/offset — a can plus a separate shadow plate plus floating props reads as more dimensional than one flat photo.",
@@ -20,7 +22,8 @@
     "lighting": [
       "Light is baked into the photography — golden meadow, beach glow, overcast snow; the composite must match light TEMPERATURE and direction across planes or the collage falls apart.",
       "A gentle scrim or vignette behind copy zones protects legibility without flattening the scene.",
-      "Glow/haze planes between cutouts act as atmosphere and hide seam artifacts."
+      "Glow/haze planes between cutouts act as atmosphere and hide seam artifacts.",
+      "A neon rim/back glow keyed to the state's single brand hue silhouettes the product against the near-black backdrop — the rim light is what ties the photographic cutout to the current theme color and makes the whole scene read as lit from one source."
     ],
     "typography": [
       "Type is treated as one of the depth planes (see oversized-type-editorial) — occluded by foreground, occluding background.",
@@ -99,8 +102,8 @@
       "url": "https://www.sliderrevolution.com/templates/zero-point-energy-drink-showcase-template/",
       "sourceType": "sr-template",
       "analysisDepth": "deep",
-      "motionEvidence": "Founder live analysis recorded in PRISM-DESIGN-SUPREMACY-PLAN.md §1: identified as layered photographic/pre-rendered cutouts (can + separate shadow plate + floating fruit PNGs + four full-bleed background plates) choreographed with motion/parallax + post — NOT realtime 3D. Corroborated by the monitor session's live-demo observation of the ambient orbit loop.",
-      "observationRef": "analysis/zero-point-energy-drink-showcase-template.json"
+      "motionEvidence": "Founder live analysis recorded in PRISM-DESIGN-SUPREMACY-PLAN.md §1: identified as layered photographic/pre-rendered cutouts (can + separate shadow plate + floating fruit PNGs + four full-bleed background plates) choreographed with motion/parallax + post — NOT realtime 3D. Deepened by the monitor session's interactive 4-state scroll re-observation (seed layered-photo-product-hero.md): confirmed the headline routes BEHIND the product, the garnish swarm and backdrop swap per state, and a neon rim glow keys the product to each state's hue.",
+      "observationRef": "layered-photo-product-hero.md"
     },
     {
       "title": "4 Seasons Parallax Theme",
