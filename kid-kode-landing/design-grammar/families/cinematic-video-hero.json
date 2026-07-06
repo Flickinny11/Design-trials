@@ -1,0 +1,119 @@
+{
+  "schemaVersion": "prism-dg-v1",
+  "id": "cinematic-video-hero",
+  "name": "Cinematic Video Hero",
+  "status": "grounded",
+  "summary": "A full-viewport muted video loop is treated as an opening film shot — real-time footage as the base plane with staged type assembling over it. The premium tell is restraint: film-grade footage, a legibility scrim, and one disciplined accent instead of effects.",
+  "elementTypes": ["video-hero", "hero"],
+  "whatMakesItWork": {
+    "composition": [
+      "Asymmetric split: subject anchored to one side, headline stack over confident negative space on the other — magazine-cover balance, never centered-on-face.",
+      "A fixed cinematic frame (eyebrow, title zone, index/labels, controls) that any footage pours into — the chrome is the constant, the film is the variable.",
+      "Minimal nav; the frame should feel like a title card, not a website header."
+    ],
+    "layering": [
+      "Footage as the full-bleed background plane → a soft gradient/vignette scrim for legibility → type and UI on the frontmost plane.",
+      "Depth comes from the footage's own camera work and depth-of-field, not stacked cutouts.",
+      "An optional info/caption layer can toggle away so the media can be viewed clean."
+    ],
+    "lighting": [
+      "Light is the footage's own cinematography; the only added light is a radial gradient lifting the headline zone off the film.",
+      "Desaturated or monochrome grades unify disparate clips; the grade is the brand."
+    ],
+    "typography": [
+      "Film-title typography: high-end serif display for luxury registers or engineered sans for tech; small tracked support copy.",
+      "Type assembles ONTO the running film — title first, support second, CTA last — then holds; the elegance is in stillness over motion."
+    ]
+  },
+  "palette": {
+    "logic": ["photographic-derived", "monochrome-plus-accent"],
+    "rules": [
+      "Let the footage own the color; interface chrome stays neutral/dark so any clip drops in without clashing.",
+      "One restrained accent (a gold outline, a single violet) owns 100% of the non-photographic saturation and points at the primary action."
+    ]
+  },
+  "motion": {
+    "character": ["cinematic-slow", "smooth-luxurious"],
+    "easing": [
+      "The motion is the footage itself, playing at real-world pace; overlay text uses long gentle fades/rises with expo-out settles.",
+      "No bounce, no spring — anything springy breaks the film register."
+    ],
+    "pacing": [
+      "Unhurried: text settles once and holds; transitions between media run ~1s film-trailer crossfades.",
+      "The loop must be seamless — a visible loop seam reads as cheap instantly."
+    ],
+    "choreography": [
+      "Video plays continuously as the base layer; on load the title, subhead, and CTA stagger in over the still-running film.",
+      "In gallery form: media crossfades first, then title and index labels re-reveal — footage always leads, type follows."
+    ]
+  },
+  "capabilities": {
+    "renderingRoutes": ["R2"],
+    "genModels": [],
+    "primitives": ["hub-background", "keyframes", "inview-driver", "msdf-text", "extruded-text"],
+    "postFx": ["vignette", "color-grade", "grain"],
+    "readiness": "gap",
+    "gapNotes": [
+      "No video-texture plane primitive in the prism runtime — hub backgrounds are procedural/3D presets; a video-loop background layer (muted, autoplaying, seamless-loop, reduced-motion-aware) does not exist yet.",
+      "No generative video model is wired into the capability family (image and 3D only), so 'footage without user upload' has no path — W-PHOTO or a future gen-video adapter must decide the source.",
+      "Legibility scrim + LUT grade over a video layer needs the R1 cinematic floor post stack (W-PHOTO)."
+    ]
+  },
+  "usage": {
+    "whenToUse": [
+      "Portfolio/showreel, hospitality, film, and quiet-luxury brands where footage already exists or is being produced.",
+      "Any brief whose product is inherently in motion (venues, performance, food preparation, travel)."
+    ],
+    "whenNotToUse": [
+      "Bandwidth-sensitive or accessibility-first contexts — autoplay full-bleed video is heavy and must degrade to a poster frame.",
+      "Content-dense pages needing fast scanning; the film pace delays information.",
+      "When only stock-feeling footage is available — weak film reads worse than a strong still."
+    ],
+    "archetypeFit": ["content", "commerce", "marketing"],
+    "moods": ["cinematic", "luxury", "refined", "timeless", "dark"]
+  },
+  "pairing": {
+    "pairsWith": ["quiet-luxury-monochrome", "oversized-type-editorial", "media-showreel-gallery", "glitch-cyber-fx"],
+    "avoidWith": ["gpu-fluid-overlay", "particle-field-hero"],
+    "notes": [
+      "Pairs with glitch-cyber-fx only as its transition language (footage between glitch bursts); never run a GPU field over playing footage.",
+      "The monochrome + single-metallic-accent pairing (see quiet-luxury-monochrome) is the strongest observed premium register for this family."
+    ]
+  },
+  "antiRepetition": {
+    "clusterId": "video-hero",
+    "notes": "Same cluster as scroll-video-scrub and media-showreel-gallery — all footage-led surfaces."
+  },
+  "sources": [
+    {
+      "title": "Raven Cinematic Video Hero",
+      "url": "https://www.sliderrevolution.com/templates/raven-cinematic-video-hero-template/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session, live demo: 1080p muted loop observed running; on-load stagger of title → support → gold CTA watched over the running footage; loop continuity checked over multiple cycles.",
+      "observationRef": "analysis/raven-cinematic-video-hero-template.json"
+    },
+    {
+      "title": "WordPress Media Gallery Slider",
+      "url": "https://www.sliderrevolution.com/templates/wordpress-media-gallery-slider/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session, live demo: active-slide full-bleed video observed playing under overlay type; thumbnail rail + arrows driven through the reel; info toggle exercised.",
+      "observationRef": "analysis/wordpress-media-gallery-slider.json"
+    },
+    {
+      "title": "Cyber Glitch Effect Slider",
+      "url": "https://www.sliderrevolution.com/templates/cyber-glitch-effect-slider/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session, live demo: WebGL2 canvas observed driving looping footage per slide; glitch transitions triggered between slides and the resolve-to-clean-frame sequence captured.",
+      "observationRef": "analysis/cyber-glitch-effect-slider.json"
+    }
+  ],
+  "exemplars": [],
+  "provenance": {
+    "groundTruth": ["monitor-observation"],
+    "distilledAt": "2026-07-06",
+    "distilledBy": "wdg1-orchestrator"
+  }
+}
