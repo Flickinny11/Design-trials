@@ -111,5 +111,26 @@ Plus `metrics.json`, `verify-output.txt` (EXIT 0, 35/35).
 - Tripo: **105 / ~120 credits** (balance 460 → 355).
 - Replicate: **~$1.05 / $3** (2 Hunyuan runs + 3 FLUX material plates).
 
-## Judge verdicts
-_(criteria-reviewer + user-advocate, fresh-context, 0 MUST-FIX gate — recorded below)_
+## Judge verdicts (fresh-context, 0 MUST-FIX gate — MET)
+- **criteria-reviewer — PASS, no MUST-FIX.** All seven W10 requirements + the
+  load-bearing invariants (INV-NEV2-4 / INV-19 / I-ADDITIVE) MEET; no forbidden-pattern
+  drift. Verified additive edits (zero deleted lines in FunctionsTab/Icon/types), no
+  vendor SDK import in client/lib, no secret reference in client/lib, all 8 server files
+  `import 'server-only'`. Three non-blocking [NOTE]s (metering-on-failure, estimate-vs-
+  reconciled-cost, stub-non-metering).
+- **user-advocate — PLEASED / PASS, 0 MUST-FIX.** All five questions YES with cited
+  frames: premium/legible tiles (01,07), distinctive on-brand DL14 glyphs (crops of
+  01), clear MODEL+FUNCTION naming (01,07), complete pick→params→progress→result→attach→
+  becomes-the-node's-mesh flow (02,03,04,06), fair/transparent dual-unit metering (05,08).
+  Frame 06 ("node became the generated robot") judged a convincing real-3D payoff. Two
+  non-blocking taste FLAGs (robot default scale; demo-mode default).
+
+### Post-judge refinement (criteria [NOTE] #1 closed)
+Metering now records a `CapabilityUsage` event on terminal FAILURE too (`ok:false`) so
+the E20 ledger literally reflects "every invocation" (deviation W10-D5): post-submit
+failures (vendor spend real) charge the estimate; pre/at-submit failures record amount 0;
+the ledger view tags failed invocations. Verified live (a source-less texture job records
+`ok:false, amount:0`). Re-ran `npm run verify` → EXIT 0 (35/35, tenant isolation GREEN);
+tsc 0-new.
+
+**GATE: MET. PRISM-SHELL-W10: RUN COMPLETE.**
