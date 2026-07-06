@@ -1,6 +1,8 @@
 # SHELL W-DG1 — DESIGN GRAMMAR HARVEST — RUN REPORT
 
-Status: EVIDENCE COMPLETE — awaiting dual-judge verdicts (§8)
+# PRISM-WDG1: RUN COMPLETE
+
+Status: RUN COMPLETE — both judges PASS, 0 MUST-FIX (§8)
 Started: 2026-07-06
 Branch: codex/prism-recovery-harness-20260630 (current checkout, unchanged)
 Orchestrator working dir: kid-kode-landing/
@@ -27,7 +29,7 @@ original exemplars only, analysis screenshots ephemeral.
 - [x] D6 `design-grammar/index.ts` typed loader + query API (+ types.ts + validate.mjs)
 - [x] D7 Flight-recorded harvest events (8th record type, per DEV-1; ledger evidence)
 - [x] D8 Evidence at `notes/verification/shell-wdg1/`
-- [ ] D9 Dual judges (criteria-reviewer + user-advocate creative director), 0 MUST-FIX — §8
+- [x] D9 Dual judges (criteria-reviewer + user-advocate creative director) — both PASS, 0 MUST-FIX (§8)
 - [x] D10 `npm run verify` EXIT 0; scratch dir deleted at wave end (§3)
 
 ## 3. Legal-doctrine compliance ledger
@@ -125,7 +127,35 @@ aesthetic target, never runtime motion.
 - Flight-recorder: `verify:flight-recorder` PASS (schema-doc freshness +
   invariant suite); new `wdg1-design-analysis` suite 4/4; replayed corpus →
   35-record ledger (`harvest-ledger.ndjson`).
-- **Dual judges:** _pending — verdicts recorded here._
+- **Dual judges (fresh-context, read-only):**
+  - **Criteria reviewer → PASS, 0 MUST-FIX.** Reproduced every load-bearing
+    report number against reality (14/2/9/3, 27 deep/0 listing, 11 exemplars,
+    8 clusters, tsc 9-baseline); verified all three binding laws mechanically
+    (0 harvested rasters tracked; 0 deep sources missing motionEvidence; every
+    non-ready family carries gapNotes); ran the loader/query API/validator/
+    vitest himself. Called the validator "the honesty engine, not decoration"
+    and the principle quality "expert-level, in original words."
+  - **User-advocate (creative director) → PASS, 0 MUST-FIX, PLEASED.** Ran 3
+    divergent briefs (fintech SaaS / luxury watch / nightlife) through the real
+    `selectDistinctOptions` and got three visibly different, appropriate,
+    one-per-cluster option sets; confirmed the corpus "knows what NOT to offer"
+    (glitch withheld from fintech). Opened all 11 exemplar images and judged
+    them "premium and original… all Awwwards-register, all deliberately
+    different subjects from their analyzed sources." Called the 2/9/3 self-grade
+    "a conservative self-grade… this one under-claims."
+
+### SHOULD-FIX disposition (both judges, non-blocking)
+
+- **[DONE] Planned-vs-typo pairing refs** (both judges' #1): `validate.mjs` now
+  carries a `PLANNED_FAMILIES` allowlist and splits the corpus warning into
+  "pairs with planned (not-yet-authored) family" (informational, 22 today) vs.
+  "POSSIBLE TYPO" (0 today) — so a future mistyped ref is catchable instead of
+  hiding among intentional forward-references.
+- **[BACKLOG] `selectDistinctOptions` cluster-underfill signal** — when clusters
+  run out it silently returns < `count`; a future `allowClusterRepeatToFill`
+  option or a returned "budget-limited" flag would harden the intake contract.
+  Deferred to the intake-wiring wave (out of scope this wave).
+- **[DONE] Report checklist** updated to reflect the landed verdicts (this §).
 
 ## 9. Deviations
 
