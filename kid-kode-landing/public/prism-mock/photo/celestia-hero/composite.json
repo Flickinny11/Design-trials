@@ -1,7 +1,7 @@
 {
   "schemaVersion": "prism-photo-v1",
   "id": "celestia-hero",
-  "createdAt": "2026-07-06T18:22:40.933Z",
+  "createdAt": "2026-07-06T19:32:17.503Z",
   "route": "R2",
   "themeHue": "#c9962f",
   "layers": [
@@ -137,9 +137,11 @@
       "mode": "live",
       "provider": "replicate",
       "model": "chenxwh/depth-anything-v2",
-      "note": "reused existing",
+      "note": "reused existing (id preserved)",
       "costUsd": 0,
-      "costEstimated": true
+      "costEstimated": true,
+      "predictionId": "dh6vx3a3a5rn80cz72evp8bfg4",
+      "predictTime": 0.811423918
     },
     {
       "stage": "grade",
@@ -163,9 +165,11 @@
       "mode": "live",
       "provider": "replicate",
       "model": "bria/remove-background",
-      "note": "reused existing",
+      "note": "reused existing (id preserved)",
       "costUsd": 0,
-      "costEstimated": true
+      "costEstimated": true,
+      "predictionId": "7bnagdwgc9rmr0cz72eshq5hn8",
+      "predictTime": 1.244316912
     },
     {
       "stage": "shadow-plate",
@@ -197,9 +201,11 @@
       "mode": "live",
       "provider": "replicate",
       "model": "bria/remove-background",
-      "note": "reused existing",
+      "note": "reused existing (id preserved)",
       "costUsd": 0,
-      "costEstimated": true
+      "costEstimated": true,
+      "predictionId": "vw8nrnebvdrmw0cz72evrc6tew",
+      "predictTime": 1.6224285950000001
     },
     {
       "stage": "generate",
@@ -215,9 +221,11 @@
       "mode": "live",
       "provider": "replicate",
       "model": "bria/remove-background",
-      "note": "reused existing",
+      "note": "reused existing (id preserved)",
       "costUsd": 0,
-      "costEstimated": true
+      "costEstimated": true,
+      "predictionId": "qpxdcz8cahrmw0cz72fbc9q0qc",
+      "predictTime": 2.7803413949999998
     },
     {
       "stage": "generate",
@@ -233,9 +241,11 @@
       "mode": "live",
       "provider": "replicate",
       "model": "bria/remove-background",
-      "note": "reused existing",
+      "note": "reused existing (id preserved)",
       "costUsd": 0,
-      "costEstimated": true
+      "costEstimated": true,
+      "predictionId": "170qrf2eknrmw0cz72f9dfj6s8",
+      "predictTime": 1.344402546
     }
   ],
   "grade": {

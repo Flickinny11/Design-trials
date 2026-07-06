@@ -66,19 +66,55 @@ function parseProv(out) {
   return line ? JSON.parse(line.slice(5)) : null;
 }
 
+// Prior manifest provenance, so an idempotent SKIP preserves the real
+// predictionId/predictTime of the original hosted call instead of dropping it to
+// a bare "reused existing" (I-PROVENANCE — a committed asset must keep its id).
+let priorProv = [];
+const priorCursor = {};
+function loadPriorProvenance(manifestPath) {
+  try {
+    if (existsSync(manifestPath))
+      priorProv =
+        JSON.parse(readFileSync(manifestPath, "utf8")).provenance ?? [];
+  } catch {
+    priorProv = [];
+  }
+}
+/** Next prior provenance entry for `stage` (in order), or null. */
+function reuseProv(stage) {
+  const from = priorCursor[stage] ?? 0;
+  for (let i = from; i < priorProv.length; i++) {
+    if (priorProv[i].stage === stage) {
+      priorCursor[stage] = i + 1;
+      return priorProv[i];
+    }
+  }
+  return null;
+}
+/** A skip-branch provenance entry that PRESERVES the prior id when we have one. */
+function reusedProvEntry(stage, model) {
+  const prior = reuseProv(stage);
+  if (prior && (prior.predictionId || prior.predictTime)) {
+    return { ...prior, note: "reused existing (id preserved)", costUsd: 0 };
+  }
+  return {
+    stage,
+    mode: "live",
+    provider: "replicate",
+    model,
+    note: "reused existing",
+    costUsd: 0,
+    costEstimated: true,
+  };
+}
+
 // ── Stage: generate (FLUX) ────────────────────────────────────────────────
 function generate(prompt, outPath, aspect, seed) {
   if (existsSync(outPath) && !FORCE) {
     log(`  · skip generate (exists): ${outPath}`);
-    provenance.push({
-      stage: "generate",
-      mode: "live",
-      provider: "replicate",
-      model: "black-forest-labs/flux-2-pro",
-      note: "reused existing",
-      costUsd: 0,
-      costEstimated: true,
-    });
+    provenance.push(
+      reusedProvEntry("generate", "black-forest-labs/flux-2-pro"),
+    );
     return true;
   }
   if (!haveAssetgen("gen-flux.py")) {
@@ -115,15 +151,7 @@ function generate(prompt, outPath, aspect, seed) {
 async function cutout(srcPath, outPath) {
   if (existsSync(outPath) && !FORCE) {
     log(`  · skip cutout (exists): ${outPath}`);
-    provenance.push({
-      stage: "cutout",
-      mode: "live",
-      provider: "replicate",
-      model: "bria/remove-background",
-      note: "reused existing",
-      costUsd: 0,
-      costEstimated: true,
-    });
+    provenance.push(reusedProvEntry("cutout", "bria/remove-background"));
     return;
   }
   if (haveAssetgen("replicate-op.py")) {
@@ -200,15 +228,7 @@ async function localLuminanceCutout(srcPath, outPath, low = 14, high = 60) {
 async function depth(srcPath, outPath) {
   if (existsSync(outPath) && !FORCE) {
     log(`  · skip depth (exists): ${outPath}`);
-    provenance.push({
-      stage: "depth",
-      mode: "live",
-      provider: "replicate",
-      model: "chenxwh/depth-anything-v2",
-      note: "reused existing",
-      costUsd: 0,
-      costEstimated: true,
-    });
+    provenance.push(reusedProvEntry("depth", "chenxwh/depth-anything-v2"));
     return;
   }
   if (haveAssetgen("replicate-op.py")) {
@@ -273,6 +293,7 @@ async function main() {
   const outDir = join(APP_ROOT, "public", "prism-mock", "photo", id); // committed
   mkdirSync(scratch, { recursive: true });
   mkdirSync(outDir, { recursive: true });
+  loadPriorProvenance(join(outDir, "composite.json")); // preserve real ids on skip
   const pub = (f) => `/prism-mock/photo/${id}/${f}`;
 
   log(`\n=== photo-composite: ${id} (${cfg.themeHue}) ===`);
