@@ -1,7 +1,9 @@
 # SHELL W-PHOTO — PHOTOREALISM PIPELINE (run report)
 
-_Status: IN PROGRESS — skeleton committed first per run protocol._
-_Orchestrator: claude-fable-5, started 2026-07-06. Branch: `codex/prism-recovery-harness-20260630`._
+_Status: **RUN COMPLETE** — both judges PASS 0 MUST-FIX (criteria-reviewer PASS;
+user-advocate PLEASED). D1–D6 + D8 shipped; D7 triaged/deferred (DEV-7)._
+_Orchestrator: skeleton by claude-fable-5; build + verification resumed and
+completed by claude-opus-4-8, 2026-07-06. Branch: `codex/prism-recovery-harness-20260630`._
 
 ## 0. Mission recap
 
@@ -152,8 +154,35 @@ Replicate-first + local grade/shadow (DEV-6), video families deferred (DEV-7).
 
 ## 7. Judge verdicts
 
-_(to fill after the dual fresh-context review: criteria-reviewer + user-advocate
-"art director with a loupe")_
+Both fresh-context judges **PASS, 0 MUST-FIX**.
+
+**criteria-reviewer (diff vs D1–D8 + invariants):** PASS. "MUST-FIX: NONE. Every
+invariant holds" — I-CANVAS/I-ENGINE clean (no runtime/`page.tsx`/`GraphScene`
+touched), INV-18 additive `splatUrl`, INV-19 secrets clean, I-PROVENANCE real
+(prediction ids proven in git history), D2 gap-report cluster-1 discharge
+SATISFIED (bria cutout + real shadow-plate synthesis exist in the adapters),
+Spark owned-canvas WebGL2 (not a new RenderMode), no forbidden patterns, all 5
+new primitives registered, gates green (tsc 9=baseline, verify EXIT 0, W5B 11/11,
+34 new tests pass). One SHOULD-FIX (idempotent regenerate dropped the prediction
+ids from the committed manifest) — **FIXED** (`...` this commit: orchestrator now
+preserves prior ids on skip; the 5 real ids restored).
+
+**user-advocate (art director with a loupe):** "(a) PASS · (b) PASS · net
+PLEASED · 0 MUST-FIX." On (a) _would you believe the hero is a photograph_ — "The
+flagship R2 composite holds together as one believable image… the armillary reads
+as a real studio-shot object… the detached soft-shadow plate grounds the base…
+the grade unifies the plates under a single amber key… No CGI tells." On (b)
+_alive-not-busy_ — "Parallax = real differentiated depth (foreground gear travels
+~255px, hero armillary only ~130px, backdrop barely drifts)… Carousel = real
+coverflow… Loop-column = seamless crawl (no visible seam/jump)." Overall:
+"**PREMIUM — this kills the 'looks-digital' read on the flagship.** A founder
+could put `scene-floor-final.jpeg` on a landing page and a non-technical visitor
+would read it as a photographed celestial atelier, not a render."
+
+**Accepted FLAGS (advocate, non-blocking polish — not fixed this wave):**
+(1) the crystal-globe garnish edge is a touch clean/product-shot; (2) the driver
+plates are under-lit/small in a large void (mechanics correct, staging under-sells
+them). Both are logged for a future polish pass; neither is a MUST-FIX.
 
 ## 8. Gap-report deltas
 
