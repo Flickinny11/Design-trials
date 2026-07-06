@@ -1,0 +1,172 @@
+{
+  "v": 1,
+  "repoRef": "acme/acme-notes",
+  "sourceKind": "local",
+  "framework": "nextjs-app",
+  "supported": true,
+  "frameworkNote": "Next.js App Router — routes read from app/**/page & route handlers.",
+  "packageName": "acme-notes",
+  "description": "A minimal notes app — capture, organize, and share your notes.",
+  "routes": [
+    {
+      "path": "/",
+      "kind": "layout",
+      "file": "app/layout.tsx",
+      "dynamic": false,
+      "title": "Home layout"
+    },
+    {
+      "path": "/",
+      "kind": "page",
+      "file": "app/page.tsx",
+      "dynamic": false,
+      "title": "Home"
+    },
+    {
+      "path": "/api/notes",
+      "kind": "api",
+      "file": "app/api/notes/route.ts",
+      "dynamic": false,
+      "title": "Notes"
+    },
+    {
+      "path": "/dashboard",
+      "kind": "page",
+      "file": "app/dashboard/page.tsx",
+      "dynamic": false,
+      "title": "Dashboard"
+    },
+    {
+      "path": "/notes/[id]",
+      "kind": "page",
+      "file": "app/notes/[id]/page.tsx",
+      "dynamic": true,
+      "title": "Notes"
+    }
+  ],
+  "components": [
+    {
+      "name": "DashboardPage",
+      "file": "app/dashboard/page.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "RootLayout",
+      "file": "app/layout.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "NotePage",
+      "file": "app/notes/[id]/page.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "HomePage",
+      "file": "app/page.tsx",
+      "isClient": false,
+      "imports": [
+        "NoteForm"
+      ],
+      "exported": true
+    },
+    {
+      "name": "NoteForm",
+      "file": "components/NoteForm.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": true
+    }
+  ],
+  "dataModels": [
+    {
+      "name": "Note",
+      "source": "prisma",
+      "fields": [
+        "id",
+        "title",
+        "body",
+        "pinned",
+        "createdAt",
+        "author",
+        "authorId"
+      ],
+      "file": "prisma/schema.prisma"
+    },
+    {
+      "name": "User",
+      "source": "prisma",
+      "fields": [
+        "id",
+        "email",
+        "name",
+        "notes"
+      ],
+      "file": "prisma/schema.prisma"
+    }
+  ],
+  "api": [
+    {
+      "path": "/api/notes",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app/api/notes/route.ts"
+    }
+  ],
+  "integrations": [
+    {
+      "providerId": "database",
+      "label": "Prisma / SQL DB",
+      "evidence": "dep: prisma"
+    },
+    {
+      "providerId": "stripe",
+      "label": "Stripe",
+      "evidence": "dep: stripe"
+    }
+  ],
+  "brand": {
+    "name": "acme-notes",
+    "colors": [
+      "#1f6feb",
+      "#f97316",
+      "#0b1020",
+      "#f6f8fb"
+    ],
+    "fonts": [
+      "Playfair Display",
+      "Inter"
+    ],
+    "images": [],
+    "themeColor": "#1f6feb"
+  },
+  "copy": {
+    "headings": [
+      "Your dashboard",
+      "Every note, beautifully organized"
+    ],
+    "cta": [
+      "Open a note",
+      "Acme Notes",
+      "Dashboard",
+      "Get started",
+      "Save note"
+    ],
+    "body": [
+      "Recent notes, pinned collections, and quick capture.",
+      "Acme Notes keeps your thoughts fast, searchable, and shareable.",
+      "Title",
+      "Body",
+      "Saved!"
+    ]
+  },
+  "fileCount": 9,
+  "warnings": []
+}

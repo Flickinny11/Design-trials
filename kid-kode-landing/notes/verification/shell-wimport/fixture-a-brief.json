@@ -1,0 +1,133 @@
+{
+  "v": 1,
+  "title": "acme-notes",
+  "prompt": "Imported from acme/acme-notes — a Next.js (App Router) app: A minimal notes app — capture, organize, and share your notes.. Main sections: Home, Dashboard, Notes. Structure: 3 pages, 5 components, 1 API routes, 2 data models.",
+  "brandProfile": {
+    "v": 1,
+    "name": "acme-notes",
+    "palette": {
+      "primary": "#1f6feb",
+      "secondary": "#f97316",
+      "accent": "#0b1020"
+    },
+    "typePrefs": {
+      "display": {
+        "classification": "geometric"
+      },
+      "text": {
+        "classification": "geometric"
+      }
+    },
+    "toneDescriptors": [
+      "ethereal",
+      "calm",
+      "futuristic"
+    ]
+  },
+  "chosenDirectionId": "aurora-glass",
+  "lines": [
+    {
+      "id": "l-summary",
+      "key": "summary",
+      "label": "What Prism will build",
+      "value": "Imported from acme/acme-notes — a Next.js (App Router) app: A minimal notes app — capture, organize, and share your notes.. Main sections: Home, Dashboard, Notes. Structure: 3 pages, 5 components, 1 API routes, 2 data models."
+    },
+    {
+      "id": "l-archetype",
+      "key": "archetype",
+      "label": "App type",
+      "value": "Content / editorial"
+    },
+    {
+      "id": "l-direction",
+      "key": "direction",
+      "label": "Design direction",
+      "value": "Aurora Glass — Ethereal soft-tech — smoked glass, drifting sapphire refraction."
+    },
+    {
+      "id": "l-sections",
+      "key": "sections",
+      "label": "Main sections",
+      "value": "Home, Dashboard, Notes"
+    },
+    {
+      "id": "l-tone",
+      "key": "tone",
+      "label": "Tone",
+      "value": "editorial"
+    },
+    {
+      "id": "l-backend",
+      "key": "backend",
+      "label": "Backend & data",
+      "value": "Database (2 models detected), Payments, 1 API endpoints"
+    },
+    {
+      "id": "l-integrations",
+      "key": "integrations",
+      "label": "Integrations",
+      "value": "Prisma / SQL DB, Stripe"
+    },
+    {
+      "id": "l-github",
+      "key": "github",
+      "label": "GitHub import",
+      "value": "acme/acme-notes"
+    },
+    {
+      "id": "l-deploy",
+      "key": "deploy",
+      "label": "Deploy target",
+      "value": "Decide at ship time"
+    }
+  ],
+  "integrations": [
+    {
+      "providerId": "database",
+      "label": "Prisma / SQL DB"
+    },
+    {
+      "providerId": "stripe",
+      "label": "Stripe"
+    }
+  ],
+  "githubImport": {
+    "requested": true,
+    "repo": "acme/acme-notes"
+  },
+  "deployTarget": "undecided",
+  "seedsUsed": [
+    {
+      "kind": "prompt",
+      "detail": "Direction “Aurora Glass” seeded the palette & type"
+    },
+    {
+      "kind": "url",
+      "detail": "Imported from acme/acme-notes"
+    }
+  ],
+  "answers": [
+    {
+      "cardId": "archetype",
+      "stream": "design",
+      "freeText": "Content / editorial"
+    },
+    {
+      "cardId": "sections",
+      "stream": "design",
+      "freeText": "Home, Dashboard, Notes"
+    },
+    {
+      "cardId": "tone",
+      "stream": "design",
+      "freeText": "editorial"
+    },
+    {
+      "cardId": "backend",
+      "stream": "capability",
+      "freeText": "Database (2 models detected), Payments, 1 API endpoints"
+    }
+  ],
+  "branchCount": 0,
+  "fastPath": true
+}

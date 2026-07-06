@@ -1,0 +1,89 @@
+{
+  "v": 1,
+  "repoRef": "acme/acme-notes",
+  "generatedAt": "2026-07-06T00:00:00.000Z",
+  "features": [
+    {
+      "name": "nextjs-app project",
+      "category": "framework",
+      "status": "adapted",
+      "reason": "Prism regenerates your app as a node graph (the graph is the app) — it does not run your framework build. Structure, copy, and brand are carried into the regenerated app.",
+      "detail": "Next.js App Router — routes read from app/**/page & route handlers."
+    },
+    {
+      "name": "3 page routes → 3 hubs",
+      "category": "routes",
+      "status": "carried",
+      "reason": "Each page route becomes a hub in the regenerated Prism app.",
+      "detail": "Home, Dashboard, Notes"
+    },
+    {
+      "name": "1 dynamic routes (e.g. /notes/[id])",
+      "category": "routes",
+      "status": "adapted",
+      "reason": "A dynamic route becomes one hub template; the per-item data that fills it comes from a data source you connect (needs-you below)."
+    },
+    {
+      "name": "1 layout(s)",
+      "category": "routes",
+      "status": "adapted",
+      "reason": "Shared layouts map onto Prism global slots (header/footer/nav), not arbitrary React layout components."
+    },
+    {
+      "name": "5 React components",
+      "category": "components",
+      "status": "adapted",
+      "reason": "Your components inform the regenerated layout, but Prism authors scene NODES (3D-native), not your React code verbatim — the graph is the app.",
+      "detail": "1 client components ('use client')"
+    },
+    {
+      "name": "7 copy strings (headings, CTAs)",
+      "category": "copy",
+      "status": "carried",
+      "reason": "Your headings and calls-to-action seed the regenerated text nodes.",
+      "detail": "Your dashboard · Every note, beautifully organized"
+    },
+    {
+      "name": "Brand palette (#1f6feb, #f97316, #0b1020)",
+      "category": "brand",
+      "status": "carried",
+      "reason": "Your colours carry into the regenerated app, mapped onto the \"Aurora Glass\" material direction."
+    },
+    {
+      "name": "Typography (Playfair Display, Inter)",
+      "category": "brand",
+      "status": "adapted",
+      "reason": "Your font choices map to the nearest Prism type classification (display/text). Exact webfonts can be wired at ship time."
+    },
+    {
+      "name": "Prisma / SQL DB integration",
+      "category": "integrations",
+      "status": "adapted",
+      "reason": "Becomes a Prism capability reference you authorize. No credentials were read from the repo (dep: prisma)."
+    },
+    {
+      "name": "Stripe integration",
+      "category": "integrations",
+      "status": "adapted",
+      "reason": "Becomes a Prism capability reference you authorize. No credentials were read from the repo (dep: stripe)."
+    },
+    {
+      "name": "2 data models (Note, User)",
+      "category": "data",
+      "status": "needs-you",
+      "reason": "Prism does not migrate your database. The models are captured so you can connect your data source; the schema itself stays where it lives."
+    },
+    {
+      "name": "1 API endpoints",
+      "category": "api",
+      "status": "needs-you",
+      "reason": "Server routes are not transplanted (contamination-aware: Prism never runs unverified code). They are listed so you can rebuild them as Prism backend capabilities.",
+      "detail": "GET/POST /api/notes"
+    }
+  ],
+  "summary": {
+    "carried": 3,
+    "adapted": 7,
+    "needsYou": 2
+  }
+}

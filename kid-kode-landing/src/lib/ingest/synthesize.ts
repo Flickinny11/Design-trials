@@ -28,20 +28,23 @@ export interface SynthesisResult {
   sections: string[];
 }
 
-/** Map an analyzed archetype guess from routes/deps/description → intake vocab. */
+/** Map an analyzed archetype guess from routes/description → intake vocab. The
+ *  signal comes from ROUTES + DESCRIPTION (what the app IS), not from a single
+ *  dependency — a notes app with a Stripe dep is still a notes app, not a store.
+ *  Commerce requires genuine commerce surface (cart/checkout/catalog). */
 function inferArchetype(report: AnalyzerReport): string {
   const hay = [
     report.description ?? '',
     report.packageName ?? '',
-    ...report.routes.map((r) => r.path),
-    ...report.integrations.map((i) => i.providerId),
+    ...report.routes.filter((r) => r.kind === 'page').map((r) => `${r.path} ${r.title ?? ''}`),
+    ...report.copy.headings,
   ]
     .join(' ')
     .toLowerCase();
-  if (/shop|store|commerce|product|cart|checkout|catalog|stripe/.test(hay)) return 'Storefront / commerce';
-  if (/dashboard|admin|analytics|saas|app|console|billing|auth/.test(hay)) return 'SaaS product / dashboard';
-  if (/blog|post|article|docs|content|cms|editorial|sanity|contentful/.test(hay)) return 'Content / editorial';
-  if (/profile|feed|social|community|message|chat|forum/.test(hay)) return 'Community / social';
+  if (/cart|checkout|catalog|storefront|\bshop\b|\bstore\b|product listing|add to cart/.test(hay)) return 'Storefront / commerce';
+  if (/blog|post|article|\bdocs\b|editorial|newsletter|\bnotes?\b|journal|cms|publish/.test(hay)) return 'Content / editorial';
+  if (/dashboard|admin|analytics|\bsaas\b|console|billing|workspace|settings|report/.test(hay)) return 'SaaS product / dashboard';
+  if (/profile|\bfeed\b|social|community|message|\bchat\b|forum|follow/.test(hay)) return 'Community / social';
   return 'Web app';
 }
 

@@ -75,6 +75,13 @@ describe('PRISM INGEST — local fixture end-to-end', () => {
     const sectionsLine = brief.lines.find((l) => l.key === 'sections')?.value ?? '';
     expect(sectionsLine).toMatch(/Home/);
     expect(sectionsLine).toMatch(/Dashboard/);
+    // The dynamic route /notes/[id] reads as its collection "Notes", not "Id".
+    expect(sectionsLine).toMatch(/Notes/);
+    expect(sectionsLine).not.toMatch(/\bId\b/);
+    // Archetype is content/editorial (a notes app), NOT commerce from a lone Stripe dep.
+    const archetypeLine = brief.lines.find((l) => l.key === 'archetype')?.value ?? '';
+    expect(archetypeLine).toMatch(/content|editorial/i);
+    expect(archetypeLine).not.toMatch(/commerce|storefront/i);
     // Repo palette carried onto the matched direction.
     expect(brief.brandProfile.palette.primary).toBe('#1f6feb');
     expect(brief.chosenDirectionId).toBeTruthy();

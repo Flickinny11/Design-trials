@@ -32,8 +32,12 @@ function appDirToUrl(segments: string[]): string {
 }
 
 function titleOf(url: string): string {
+  // Prefer the last STATIC segment — a dynamic leaf like `/notes/[id]` should
+  // read as "Notes" (its collection), not "Id".
   const parts = url.split('/').filter(Boolean);
-  return parts.length ? titleCase(parts[parts.length - 1]) : 'Home';
+  const staticParts = parts.filter((p) => !p.startsWith('['));
+  const pick = staticParts.length ? staticParts[staticParts.length - 1] : parts[parts.length - 1];
+  return pick ? titleCase(pick) : 'Home';
 }
 
 /** Strip a leading `src/` and return path segments after the routing root. */
