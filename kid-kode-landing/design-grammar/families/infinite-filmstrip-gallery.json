@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "prism-dg-v1",
+  "id": "infinite-filmstrip-gallery",
+  "name": "Infinite Filmstrip Gallery",
+  "status": "grounded",
+  "summary": "Vertical columns of media tiles crawl endlessly and seamlessly in opposing directions, forming a continuously moving mood-board wall. A rock-steady oversized headline holds the center while whole-board theme swaps recolor every cell at once — an ever-moving, ever-recoloring wall that never visibly repeats.",
+  "elementTypes": ["gallery", "background", "hero", "marquee"],
+  "whatMakesItWork": {
+    "composition": [
+      "Symmetric tri-column (or flanking-column) layout: infinite tile columns frame a centered typographic core that commands the negative space.",
+      "Tight tile grid with near-zero gutters builds density — the wall reads as ONE fabric, not discrete cards.",
+      "Dozens of small cells beat a few large ones: the mood-board effect needs mass."
+    ],
+    "layering": [
+      "Two planes only: the moving tile wall behind, the static headline + CTA plate in front.",
+      "The wall stays lower-contrast than the front plate so the busy motion never wins the legibility fight.",
+      "Loops must be seamless — a visible seam or stutter destroys the infinite illusion."
+    ],
+    "lighting": [
+      "Emissive-on-black: bright cells glow against a pure black field; the black itself is the vignette.",
+      "No shadows — flatness is correct here; the wall is a graphic surface, not a physical stack."
+    ],
+    "typography": [
+      "Massive geometric sans headline in solid accent color, tightly stacked; a small tracked-out eyebrow above provides editorial framing.",
+      "On theme swap the headline crossfades to the new accent — type and imagery share one color story."
+    ]
+  },
+  "palette": {
+    "logic": ["monochrome-plus-accent", "high-contrast-print", "seasonal-shift"],
+    "rules": [
+      "Pure black base + exactly ONE saturated hue per theme, governing both the type and the curated imagery — each mood is one color story.",
+      "Theme swaps re-skin every cell at once; partial recolors read as errors."
+    ]
+  },
+  "motion": {
+    "character": ["ambient-drift", "mechanical-precise"],
+    "easing": [
+      "Constant-velocity LINEAR crawl for the columns — no easing at all; it must loop seamlessly.",
+      "The centered headline never moves; theme-accent crossfades are the only type motion."
+    ],
+    "pacing": [
+      "Perpetual slow ambient scroll — background texture, never demanding attention.",
+      "Slow enough that any single tile can be glimpsed, fast enough that the wall visibly lives."
+    ],
+    "choreography": [
+      "Adjacent columns crawl in OPPOSING directions (up vs down) — the counter-flow is what makes the wall feel alive and parallaxed.",
+      "Theme swaps hit all cells simultaneously while the headline crossfades its accent."
+    ]
+  },
+  "capabilities": {
+    "renderingRoutes": ["R1", "2d-composition"],
+    "genModels": ["flux-2-pro"],
+    "primitives": ["parallax-scroll", "keyframes", "hub-background", "msdf-text", "extruded-text"],
+    "postFx": ["bloom"],
+    "readiness": "partial",
+    "gapNotes": [
+      "Textured tile planes in scrolling columns are expressible, but a seamless-loop column driver (wrap-around repositioning without a visible seam) does not exist as a primitive — hand-building it per instance is error-prone.",
+      "Whole-board theme swap needs a coordinated multi-node material/texture switch (a 'theme token' driver) — today each node would be edited individually.",
+      "Sourcing 30+ cohesive, single-hue-curated images per theme is a FLUX batch pipeline that exists ad hoc but is not productized."
+    ]
+  },
+  "usage": {
+    "whenToUse": [
+      "Creative studios, galleries, media brands, and mood-board/showcase hubs where volume of work IS the message.",
+      "Backgrounds behind a hero when the brief wants density and life without interaction."
+    ],
+    "whenNotToUse": [
+      "Interfaces needing readable, CLICKABLE individual media items — the perpetual crawl makes single tiles hard to target.",
+      "Sparse content (fewer than ~20 items) — the wall exposes thin catalogs.",
+      "Reduced-motion contexts: the crawl must pause to a static grid."
+    ],
+    "archetypeFit": ["content", "community", "marketing"],
+    "moods": ["bold", "energetic", "editorial", "dark", "minimal"]
+  },
+  "pairing": {
+    "pairsWith": ["oversized-type-editorial", "dark-stage-single-accent"],
+    "avoidWith": ["filmstrip-3d-carousel", "gpu-fluid-overlay"],
+    "notes": [
+      "The still center headline is structural — without it the counter-flowing wall has no anchor and reads as chaos.",
+      "Never combine with another perpetual-motion family; one ambient motion system per surface."
+    ]
+  },
+  "antiRepetition": {
+    "clusterId": "gallery-wall",
+    "notes": "Same cluster as media-showreel-gallery and editorial-product-gallery — one gallery grammar per option set."
+  },
+  "sources": [
+    {
+      "title": "Mood Board Infinite Filmstrip Media Gallery",
+      "url": "https://www.sliderrevolution.com/templates/mood-board-infinite-filmstrip-media-gallery/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session, live demo: opposing-direction column crawl observed over multiple loop cycles (seam checked); theme swap triggered — simultaneous whole-board recolor and headline accent crossfade captured from the sequence.",
+      "observationRef": "analysis/mood-board-infinite-filmstrip-media-gallery.json"
+    }
+  ],
+  "exemplars": [],
+  "provenance": {
+    "groundTruth": ["monitor-observation"],
+    "distilledAt": "2026-07-06",
+    "distilledBy": "wdg1-orchestrator"
+  }
+}
