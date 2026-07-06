@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { writeFileSync, mkdirSync } from 'node:fs';
 
-import { LocalDirSource, runIngest } from '@/lib/ingest';
+import { LocalDirSource, GitHubUrlSource, parseGitHubRef, runIngest, type HttpGet } from '@/lib/ingest';
 import { resolveDirection } from '@/server/conductor/directions';
 import { buildDeterministicBlueprint } from '@/server/conductor/blueprint';
 import { assembleGraph } from '@/server/conductor/graph-assembler';
@@ -135,4 +135,43 @@ describe('PRISM INGEST — local fixture end-to-end', () => {
       writeFileSync(path.join(dir, 'fixture-a-graph-summary.json'), JSON.stringify({ hubs: graph.hubs.length, nodes: graph.nodes.length, rootNodes: graph.rootNodes.length, hubTitles: graph.hubs.map((h) => h.title ?? h.caption) }, null, 2));
     }
   });
+
+  // Fixture (b): a REAL public GitHub repo over the real fetch path. Network-gated
+  // (WIMPORT_LIVE=1) so the offline `npm run verify` gate never depends on GitHub.
+  // The regen machinery is identical to fixture (a) — this proves it on a real,
+  // substantial (~250-file) OSS Next.js App-Router app.
+  it.skipIf(!process.env.WIMPORT_LIVE)(
+    'imports a real public GitHub repo (shadcn-ui/taxonomy) and regenerates a graph',
+    async () => {
+      const ref = parseGitHubRef('shadcn-ui/taxonomy')!;
+      const httpGet: HttpGet = async (url) => {
+        const res = await fetch(url, { headers: { 'user-agent': 'PrismIngestBot/1.0' } });
+        return { ok: res.ok, status: res.status, text: await res.text() };
+      };
+      const source = new GitHubUrlSource(ref, httpGet);
+      const { analysis, brief, fidelity } = await runIngest(source, { nowIso: NOW });
+
+      expect(analysis.framework).toBe('nextjs-app');
+      expect(analysis.routes.filter((r) => r.kind === 'page').length).toBeGreaterThanOrEqual(10);
+      expect(analysis.dataModels.length).toBeGreaterThanOrEqual(5);
+      expect(analysis.integrations.map((i) => i.providerId)).toContain('stripe');
+      // Data models + API + auth are honestly needs-you (never claimed carried).
+      expect(fidelity.features.some((f) => f.category === 'data' && f.status === 'needs-you')).toBe(true);
+      expect(fidelity.features.some((f) => f.category === 'auth' && f.status === 'needs-you')).toBe(true);
+
+      const direction = resolveDirection(brief);
+      const blueprint = buildDeterministicBlueprint(brief, direction);
+      const { graph } = assembleGraph(blueprint, direction, Date.parse(NOW));
+      expect(graph.hubs.length).toBeGreaterThanOrEqual(2);
+      expect(graph.rootNodes).toHaveLength(1);
+      expect(graph.nodes.length).toBeGreaterThan(4);
+
+      if (process.env.WIMPORT_EVIDENCE === '1') {
+        const dir = path.resolve(here, '../../notes/verification/shell-wimport');
+        mkdirSync(dir, { recursive: true });
+        writeFileSync(path.join(dir, 'fixture-b-analysis.json'), JSON.stringify(analysis, null, 2));
+        writeFileSync(path.join(dir, 'fixture-b-graph-summary.json'), JSON.stringify({ hubs: graph.hubs.length, nodes: graph.nodes.length, rootNodes: graph.rootNodes.length, hubTitles: graph.hubs.map((h) => h.title ?? h.caption) }, null, 2));
+      }
+    },
+  );
 });

@@ -1,0 +1,12 @@
+{
+  "hubs": 5,
+  "nodes": 33,
+  "rootNodes": 1,
+  "hubTitles": [
+    "Home",
+    "Home",
+    "Pages",
+    "Blog",
+    "Dashboard"
+  ]
+}

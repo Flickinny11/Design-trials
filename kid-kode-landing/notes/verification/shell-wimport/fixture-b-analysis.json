@@ -1,0 +1,1222 @@
+{
+  "v": 1,
+  "repoRef": "shadcn-ui/taxonomy",
+  "sourceKind": "github-url",
+  "framework": "nextjs-app",
+  "supported": true,
+  "frameworkNote": "Next.js App Router — routes read from app/**/page & route handlers.",
+  "packageName": "taxonomy",
+  "description": "An open source application built using the new router, server components and everything new in Next.js 13.",
+  "routes": [
+    {
+      "path": "/",
+      "kind": "layout",
+      "file": "app/(auth)/layout.tsx",
+      "dynamic": false,
+      "title": "Home layout"
+    },
+    {
+      "path": "/",
+      "kind": "layout",
+      "file": "app/(docs)/layout.tsx",
+      "dynamic": false,
+      "title": "Home layout"
+    },
+    {
+      "path": "/",
+      "kind": "layout",
+      "file": "app/(marketing)/layout.tsx",
+      "dynamic": false,
+      "title": "Home layout"
+    },
+    {
+      "path": "/",
+      "kind": "page",
+      "file": "app/(marketing)/page.tsx",
+      "dynamic": false,
+      "title": "Home"
+    },
+    {
+      "path": "/",
+      "kind": "layout",
+      "file": "app/layout.tsx",
+      "dynamic": false,
+      "title": "Home layout"
+    },
+    {
+      "path": "/[...slug]",
+      "kind": "page",
+      "file": "app/(marketing)/[...slug]/page.tsx",
+      "dynamic": true,
+      "title": "Pages"
+    },
+    {
+      "path": "/api/auth/[...nextauth]",
+      "kind": "api",
+      "file": "pages/api/auth/[...nextauth].ts",
+      "dynamic": true,
+      "title": "Auth"
+    },
+    {
+      "path": "/api/og",
+      "kind": "api",
+      "file": "app/api/og/route.tsx",
+      "dynamic": false,
+      "title": "Og"
+    },
+    {
+      "path": "/api/posts",
+      "kind": "api",
+      "file": "app/api/posts/route.ts",
+      "dynamic": false,
+      "title": "Posts"
+    },
+    {
+      "path": "/api/posts/[postId]",
+      "kind": "api",
+      "file": "app/api/posts/[postId]/route.ts",
+      "dynamic": true,
+      "title": "Posts"
+    },
+    {
+      "path": "/api/users/[userId]",
+      "kind": "api",
+      "file": "app/api/users/[userId]/route.ts",
+      "dynamic": true,
+      "title": "Users"
+    },
+    {
+      "path": "/api/users/stripe",
+      "kind": "api",
+      "file": "app/api/users/stripe/route.ts",
+      "dynamic": false,
+      "title": "Stripe"
+    },
+    {
+      "path": "/api/webhooks/stripe",
+      "kind": "api",
+      "file": "app/api/webhooks/stripe/route.ts",
+      "dynamic": false,
+      "title": "Stripe"
+    },
+    {
+      "path": "/blog",
+      "kind": "page",
+      "file": "app/(marketing)/blog/page.tsx",
+      "dynamic": false,
+      "title": "Blog"
+    },
+    {
+      "path": "/blog/[...slug]",
+      "kind": "page",
+      "file": "app/(marketing)/blog/[...slug]/page.tsx",
+      "dynamic": true,
+      "title": "Blog"
+    },
+    {
+      "path": "/dashboard",
+      "kind": "layout",
+      "file": "app/(dashboard)/dashboard/layout.tsx",
+      "dynamic": false,
+      "title": "Dashboard layout"
+    },
+    {
+      "path": "/dashboard",
+      "kind": "page",
+      "file": "app/(dashboard)/dashboard/page.tsx",
+      "dynamic": false,
+      "title": "Dashboard"
+    },
+    {
+      "path": "/dashboard/billing",
+      "kind": "page",
+      "file": "app/(dashboard)/dashboard/billing/page.tsx",
+      "dynamic": false,
+      "title": "Billing"
+    },
+    {
+      "path": "/dashboard/settings",
+      "kind": "page",
+      "file": "app/(dashboard)/dashboard/settings/page.tsx",
+      "dynamic": false,
+      "title": "Settings"
+    },
+    {
+      "path": "/docs",
+      "kind": "layout",
+      "file": "app/(docs)/docs/layout.tsx",
+      "dynamic": false,
+      "title": "Docs layout"
+    },
+    {
+      "path": "/docs/[[...slug]]",
+      "kind": "page",
+      "file": "app/(docs)/docs/[[...slug]]/page.tsx",
+      "dynamic": true,
+      "title": "Docs"
+    },
+    {
+      "path": "/editor",
+      "kind": "layout",
+      "file": "app/(editor)/editor/layout.tsx",
+      "dynamic": false,
+      "title": "Editor layout"
+    },
+    {
+      "path": "/editor/[postId]",
+      "kind": "page",
+      "file": "app/(editor)/editor/[postId]/page.tsx",
+      "dynamic": true,
+      "title": "Editor"
+    },
+    {
+      "path": "/guides",
+      "kind": "layout",
+      "file": "app/(docs)/guides/layout.tsx",
+      "dynamic": false,
+      "title": "Guides layout"
+    },
+    {
+      "path": "/guides",
+      "kind": "page",
+      "file": "app/(docs)/guides/page.tsx",
+      "dynamic": false,
+      "title": "Guides"
+    },
+    {
+      "path": "/guides/[...slug]",
+      "kind": "page",
+      "file": "app/(docs)/guides/[...slug]/page.tsx",
+      "dynamic": true,
+      "title": "Guides"
+    },
+    {
+      "path": "/login",
+      "kind": "page",
+      "file": "app/(auth)/login/page.tsx",
+      "dynamic": false,
+      "title": "Login"
+    },
+    {
+      "path": "/pricing",
+      "kind": "page",
+      "file": "app/(marketing)/pricing/page.tsx",
+      "dynamic": false,
+      "title": "Pricing"
+    },
+    {
+      "path": "/register",
+      "kind": "page",
+      "file": "app/(auth)/register/page.tsx",
+      "dynamic": false,
+      "title": "Register"
+    }
+  ],
+  "components": [
+    {
+      "name": "AuthLayout",
+      "file": "app/(auth)/layout.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "LoginPage",
+      "file": "app/(auth)/login/page.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "RegisterPage",
+      "file": "app/(auth)/register/page.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "DashboardBillingLoading",
+      "file": "app/(dashboard)/dashboard/billing/loading.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "BillingPage",
+      "file": "app/(dashboard)/dashboard/billing/page.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "DashboardLayout",
+      "file": "app/(dashboard)/dashboard/layout.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "DashboardLoading",
+      "file": "app/(dashboard)/dashboard/loading.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "DashboardPage",
+      "file": "app/(dashboard)/dashboard/page.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "DashboardSettingsLoading",
+      "file": "app/(dashboard)/dashboard/settings/loading.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "SettingsPage",
+      "file": "app/(dashboard)/dashboard/settings/page.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "DocPage",
+      "file": "app/(docs)/docs/[[...slug]]/page.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "DocsLayout",
+      "file": "app/(docs)/docs/layout.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "GuidePage",
+      "file": "app/(docs)/guides/[...slug]/page.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "GuidesLayout",
+      "file": "app/(docs)/guides/layout.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "GuidesPage",
+      "file": "app/(docs)/guides/page.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "DocsLayout",
+      "file": "app/(docs)/layout.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "Loading",
+      "file": "app/(editor)/editor/[postId]/loading.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "NotFound",
+      "file": "app/(editor)/editor/[postId]/not-found.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "EditorPage",
+      "file": "app/(editor)/editor/[postId]/page.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "EditorLayout",
+      "file": "app/(editor)/editor/layout.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "PagePage",
+      "file": "app/(marketing)/[...slug]/page.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "PostPage",
+      "file": "app/(marketing)/blog/[...slug]/page.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "BlogPage",
+      "file": "app/(marketing)/blog/page.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "MarketingLayout",
+      "file": "app/(marketing)/layout.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "IndexPage",
+      "file": "app/(marketing)/page.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "PricingPage",
+      "file": "app/(marketing)/pricing/page.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "OgRoute",
+      "file": "app/api/og/route.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "RootLayout",
+      "file": "app/layout.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "Analytics",
+      "file": "components/analytics.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "BillingForm",
+      "file": "components/billing-form.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "Callout",
+      "file": "components/callout.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "CardSkeleton",
+      "file": "components/card-skeleton.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "Editor",
+      "file": "components/editor.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "EmptyPlaceholder",
+      "file": "components/empty-placeholder.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "Header",
+      "file": "components/header.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Icons",
+      "file": "components/icons.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "MainNav",
+      "file": "components/main-nav.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "MdxCard",
+      "file": "components/mdx-card.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "MdxComponents",
+      "file": "components/mdx-components.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "MobileNav",
+      "file": "components/mobile-nav.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "ModeToggle",
+      "file": "components/mode-toggle.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "Nav",
+      "file": "components/nav.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "PageHeader",
+      "file": "components/page-header.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Pager",
+      "file": "components/pager.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "PostCreateButton",
+      "file": "components/post-create-button.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "PostItem",
+      "file": "components/post-item.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "PostOperations",
+      "file": "components/post-operations.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "Search",
+      "file": "components/search.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Shell",
+      "file": "components/shell.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "SidebarNav",
+      "file": "components/sidebar-nav.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "SiteFooter",
+      "file": "components/site-footer.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "TailwindIndicator",
+      "file": "components/tailwind-indicator.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "ThemeProvider",
+      "file": "components/theme-provider.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "Toc",
+      "file": "components/toc.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Accordion",
+      "file": "components/ui/accordion.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "AlertDialog",
+      "file": "components/ui/alert-dialog.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Alert",
+      "file": "components/ui/alert.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "AspectRatio",
+      "file": "components/ui/aspect-ratio.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Avatar",
+      "file": "components/ui/avatar.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Badge",
+      "file": "components/ui/badge.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Button",
+      "file": "components/ui/button.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Calendar",
+      "file": "components/ui/calendar.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Card",
+      "file": "components/ui/card.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Checkbox",
+      "file": "components/ui/checkbox.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Collapsible",
+      "file": "components/ui/collapsible.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Command",
+      "file": "components/ui/command.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "ContextMenu",
+      "file": "components/ui/context-menu.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Dialog",
+      "file": "components/ui/dialog.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "DropdownMenu",
+      "file": "components/ui/dropdown-menu.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "HoverCard",
+      "file": "components/ui/hover-card.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Input",
+      "file": "components/ui/input.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Label",
+      "file": "components/ui/label.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Menubar",
+      "file": "components/ui/menubar.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "NavigationMenu",
+      "file": "components/ui/navigation-menu.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Popover",
+      "file": "components/ui/popover.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Progress",
+      "file": "components/ui/progress.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "RadioGroup",
+      "file": "components/ui/radio-group.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "ScrollArea",
+      "file": "components/ui/scroll-area.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Select",
+      "file": "components/ui/select.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Separator",
+      "file": "components/ui/separator.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Sheet",
+      "file": "components/ui/sheet.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Skeleton",
+      "file": "components/ui/skeleton.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Slider",
+      "file": "components/ui/slider.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Switch",
+      "file": "components/ui/switch.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Tabs",
+      "file": "components/ui/tabs.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Textarea",
+      "file": "components/ui/textarea.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Toast",
+      "file": "components/ui/toast.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Toaster",
+      "file": "components/ui/toaster.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "Toggle",
+      "file": "components/ui/toggle.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "Tooltip",
+      "file": "components/ui/tooltip.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": false
+    },
+    {
+      "name": "UserAccountNav",
+      "file": "components/user-account-nav.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "UserAuthForm",
+      "file": "components/user-auth-form.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "UserAvatar",
+      "file": "components/user-avatar.tsx",
+      "isClient": false,
+      "imports": [],
+      "exported": true
+    },
+    {
+      "name": "UserNameForm",
+      "file": "components/user-name-form.tsx",
+      "isClient": true,
+      "imports": [],
+      "exported": true
+    }
+  ],
+  "dataModels": [
+    {
+      "name": "Account",
+      "source": "prisma",
+      "fields": [
+        "id",
+        "userId",
+        "type",
+        "provider",
+        "providerAccountId",
+        "refresh_token",
+        "access_token",
+        "expires_at",
+        "token_type",
+        "scope",
+        "id_token",
+        "session_state",
+        "createdAt",
+        "updatedAt",
+        "user"
+      ],
+      "file": "prisma/schema.prisma"
+    },
+    {
+      "name": "Session",
+      "source": "prisma",
+      "fields": [
+        "id",
+        "sessionToken",
+        "userId",
+        "expires",
+        "user"
+      ],
+      "file": "prisma/schema.prisma"
+    },
+    {
+      "name": "User",
+      "source": "prisma",
+      "fields": [
+        "id",
+        "name",
+        "email",
+        "emailVerified",
+        "image",
+        "createdAt",
+        "updatedAt",
+        "accounts",
+        "sessions",
+        "Post",
+        "stripeCustomerId",
+        "stripeSubscriptionId",
+        "stripePriceId",
+        "stripeCurrentPeriodEnd"
+      ],
+      "file": "prisma/schema.prisma"
+    },
+    {
+      "name": "VerificationToken",
+      "source": "prisma",
+      "fields": [
+        "identifier",
+        "token",
+        "expires"
+      ],
+      "file": "prisma/schema.prisma"
+    },
+    {
+      "name": "Post",
+      "source": "prisma",
+      "fields": [
+        "id",
+        "title",
+        "content",
+        "published",
+        "createdAt",
+        "updatedAt",
+        "authorId",
+        "author"
+      ],
+      "file": "prisma/schema.prisma"
+    },
+    {
+      "name": "NavItem",
+      "source": "typescript",
+      "fields": [
+        "title",
+        "href",
+        "disabled"
+      ],
+      "file": "types/index.d.ts"
+    },
+    {
+      "name": "SidebarNavItem",
+      "source": "typescript",
+      "fields": [
+        "title",
+        "disabled",
+        "external",
+        "icon"
+      ],
+      "file": "types/index.d.ts"
+    },
+    {
+      "name": "SiteConfig",
+      "source": "typescript",
+      "fields": [
+        "name",
+        "description",
+        "url",
+        "ogImage",
+        "links",
+        "twitter",
+        "github"
+      ],
+      "file": "types/index.d.ts"
+    },
+    {
+      "name": "DocsConfig",
+      "source": "typescript",
+      "fields": [
+        "mainNav",
+        "sidebarNav"
+      ],
+      "file": "types/index.d.ts"
+    },
+    {
+      "name": "MarketingConfig",
+      "source": "typescript",
+      "fields": [
+        "mainNav"
+      ],
+      "file": "types/index.d.ts"
+    },
+    {
+      "name": "DashboardConfig",
+      "source": "typescript",
+      "fields": [
+        "mainNav",
+        "sidebarNav"
+      ],
+      "file": "types/index.d.ts"
+    },
+    {
+      "name": "SubscriptionPlan",
+      "source": "typescript",
+      "fields": [
+        "name",
+        "description",
+        "stripePriceId"
+      ],
+      "file": "types/index.d.ts"
+    },
+    {
+      "name": "JWT",
+      "source": "typescript",
+      "fields": [
+        "id"
+      ],
+      "file": "types/next-auth.d.ts"
+    },
+    {
+      "name": "Session",
+      "source": "typescript",
+      "fields": [
+        "user",
+        "id"
+      ],
+      "file": "types/next-auth.d.ts"
+    }
+  ],
+  "api": [
+    {
+      "path": "/api/auth/[...nextauth]",
+      "methods": [
+        "*"
+      ],
+      "file": "pages/api/auth/[...nextauth].ts"
+    },
+    {
+      "path": "/api/og",
+      "methods": [
+        "GET"
+      ],
+      "file": "app/api/og/route.tsx"
+    },
+    {
+      "path": "/api/posts",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app/api/posts/route.ts"
+    },
+    {
+      "path": "/api/posts/[postId]",
+      "methods": [
+        "PATCH",
+        "DELETE"
+      ],
+      "file": "app/api/posts/[postId]/route.ts"
+    },
+    {
+      "path": "/api/users/[userId]",
+      "methods": [
+        "PATCH"
+      ],
+      "file": "app/api/users/[userId]/route.ts"
+    },
+    {
+      "path": "/api/users/stripe",
+      "methods": [
+        "GET"
+      ],
+      "file": "app/api/users/stripe/route.ts"
+    },
+    {
+      "path": "/api/webhooks/stripe",
+      "methods": [
+        "POST"
+      ],
+      "file": "app/api/webhooks/stripe/route.ts"
+    }
+  ],
+  "integrations": [
+    {
+      "providerId": "database",
+      "label": "Prisma / SQL DB",
+      "evidence": "dep: prisma"
+    },
+    {
+      "providerId": "analytics",
+      "label": "Vercel Analytics",
+      "evidence": "dep: @vercel/analytics"
+    },
+    {
+      "providerId": "auth",
+      "label": "Auth.js",
+      "evidence": "dep: next-auth"
+    },
+    {
+      "providerId": "email",
+      "label": "Postmark",
+      "evidence": "dep: postmark"
+    },
+    {
+      "providerId": "stripe",
+      "label": "Stripe",
+      "evidence": "dep: stripe"
+    }
+  ],
+  "brand": {
+    "name": "taxonomy",
+    "colors": [],
+    "fonts": [
+      "Inter as Font Sans"
+    ],
+    "images": [
+      "/android-chrome-192x192.png",
+      "/android-chrome-512x512.png",
+      "/apple-touch-icon.png",
+      "/favicon-16x16.png",
+      "/favicon-32x32.png",
+      "/favicon.ico",
+      "/images/avatars/shadcn.png",
+      "/images/blog/blog-post-1.jpg",
+      "/images/blog/blog-post-2.jpg",
+      "/images/blog/blog-post-3.jpg",
+      "/images/blog/blog-post-4.jpg",
+      "/images/hero.png",
+      "/og.jpg",
+      "/vercel.svg"
+    ],
+    "themeColor": null
+  },
+  "copy": {
+    "headings": [
+      "Welcome back",
+      "Create an account",
+      "Blog",
+      "An example app built using Next.js 13 server components.",
+      "Features",
+      "Next.js 13",
+      "React 18",
+      "Database",
+      "Components",
+      "Authentication",
+      "Subscriptions",
+      "Proudly Open Source",
+      "Simple, transparent pricing",
+      "What&apos;s included in the PRO plan",
+      "$19"
+    ],
+    "cta": [
+      "Stripe docs",
+      "New post",
+      "shadcn",
+      "Vercel",
+      "Popsy",
+      "GitHub",
+      "Sign In with Email",
+      "Github"
+    ],
+    "body": [
+      "Back",
+      "Enter your email to sign in to your account",
+      "Don&apos;t have an account? Sign Up",
+      "Login",
+      "Enter your email below to create your account",
+      "By clicking continue, you agree to our",
+      "Terms of Service",
+      "and",
+      "Privacy Policy",
+      "This is a demo app.",
+      "Taxonomy app is a demo app using a Stripe test environment. You can find a list of test card numbers on the",
+      "No posts created",
+      "You don&apos;t have any posts yet. Start creating content.",
+      "See all guides",
+      "Featured",
+      "View",
+      "No guides published.",
+      "GitHub",
+      "Uh oh! Not Found",
+      "This post cound not be found. Please try again.",
+      "Go to Dashboard",
+      "See all posts",
+      "Published on",
+      "A blog built using Contentlayer. Posts are written in MDX.",
+      "View Article",
+      "No posts published.",
+      "Follow along on Twitter",
+      "I&apos;m building a web app with Next.js 13 and open sourcing everything. Follow along as we figure this out together.",
+      "Get Started",
+      "This project is an experiment to see how a modern app, with features like auth, subscriptions, API routes, and static pages would work in Next.js 13 app dir.",
+      "App dir, Routing, Layouts, Loading UI and API routes.",
+      "Server and Client Components. Use hook.",
+      "ORM using Prisma and deployed on PlanetScale.",
+      "UI components built using Radix UI and styled with Tailwind CSS.",
+      "Authentication using NextAuth.js and middlewares.",
+      "Free and paid subscriptions using Stripe.",
+      "Taxonomy also includes a blog and a full-featured documentation site built using Contentlayer and MDX.",
+      "Unlock all features including unlimited posts for your blog.",
+      "Unlimited Posts",
+      "Unlimited Users"
+    ]
+  },
+  "fileCount": 174,
+  "warnings": []
+}
