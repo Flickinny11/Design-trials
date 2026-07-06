@@ -39,9 +39,9 @@ describe("cinematic-floor library", () => {
     const a = makeImperfectionMap({ size: 64, seed: 42 });
     const b = makeImperfectionMap({ size: 64, seed: 42 });
     expect(a.image.width).toBe(64);
-    expect(Buffer.from(a.image.data).equals(Buffer.from(b.image.data))).toBe(
-      true,
-    );
+    const ad = a.image.data as Uint8Array;
+    const bd = b.image.data as Uint8Array;
+    expect(Buffer.from(ad).equals(Buffer.from(bd))).toBe(true);
     a.dispose();
     b.dispose();
   });
@@ -49,9 +49,9 @@ describe("cinematic-floor library", () => {
   it("different seeds produce different maps", () => {
     const a = makeImperfectionMap({ size: 64, seed: 1 });
     const b = makeImperfectionMap({ size: 64, seed: 2 });
-    expect(Buffer.from(a.image.data).equals(Buffer.from(b.image.data))).toBe(
-      false,
-    );
+    const ad = a.image.data as Uint8Array;
+    const bd = b.image.data as Uint8Array;
+    expect(Buffer.from(ad).equals(Buffer.from(bd))).toBe(false);
   });
 
   it("overlay has transparent (neutral) and opaque (imperfection) pixels", () => {
