@@ -1,0 +1,52 @@
+{
+  "schema": "prism-dg-v1",
+  "generatedAt": "2026-07-06",
+  "totalFamilies": 14,
+  "grounded": 14,
+  "provisional": 0,
+  "byReadiness": {
+    "ready": 2,
+    "partial": 9,
+    "gap": 3
+  },
+  "clusters": 8,
+  "clusterIds": [
+    "carousel",
+    "gallery-wall",
+    "photo-composite-hero",
+    "scene-transition",
+    "shader-field",
+    "transition-fx",
+    "typography",
+    "video-hero"
+  ],
+  "sources": 27,
+  "deepAnalyzedSources": 27,
+  "listingSources": 0,
+  "exemplars": 11,
+  "elementTypes": {
+    "bento-grid": 1,
+    "grid": 1,
+    "slider": 4,
+    "hero": 12,
+    "video-hero": 2,
+    "carousel": 2,
+    "card-stack": 1,
+    "gallery": 5,
+    "product-showcase": 2,
+    "filmstrip": 1,
+    "page-transition": 1,
+    "section-transition": 2,
+    "background": 5,
+    "marquee": 1,
+    "typography": 1,
+    "scroll-narrative": 2
+  },
+  "routeCoverage": {
+    "2d-composition": 3,
+    "R1": 10,
+    "R2": 8,
+    "R3": 3
+  },
+  "moodCoverage": 21
+}
