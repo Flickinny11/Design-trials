@@ -1,1 +1,2 @@
-[15:28:35] SHELL-W9: commit 53ef2c8d — shell-w9: RUN COMPLETE — finalized report + production evidence (frames,
+[20:52:01] SHELL-W10: commit d1115bd5 — shell-w10: meter every invocation incl. failures (criteria note)
+[20:53:26] PRISM-SHELL-W10: RUN COMPLETE — generative 3D capability family in the editor; dual judges PASS 0 MUST-FIX; verify EXIT 0; Tripo 105/120cr, Replicate ~$1.05/$3
