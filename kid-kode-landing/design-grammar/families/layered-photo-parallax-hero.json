@@ -1,0 +1,144 @@
+{
+  "schemaVersion": "prism-dg-v1",
+  "id": "layered-photo-parallax-hero",
+  "name": "Layered-Photo Parallax Hero",
+  "status": "grounded",
+  "summary": "The hero scene is assembled from photographic depth planes — background plate, midground subject, foreground cutout props — that drift at different rates on scroll and cursor move, producing a diorama sense of 3D depth from 2D imagery. This is the industry's core imagery-first method (PLAN §1): pre-rendered plates choreographed with parallax, not realtime geometry.",
+  "elementTypes": ["hero", "background", "product-showcase"],
+  "whatMakesItWork": {
+    "composition": [
+      "3-5 explicit planes, no more: far scenery, midground subject, foreground props; each plane owns a distinct silhouette so separation reads instantly.",
+      "Foreground elements can frame the composition like a natural vignette or portal (cliffs, arches, props at frame edges).",
+      "The subject holds a stable anchor while satellite planes carry the motion; typography usually lives between mid and foreground so objects can interlock with it."
+    ],
+    "layering": [
+      "Depth comes from clean background-free cutouts stacked with scale/offset — a can plus a separate shadow plate plus floating props reads as more dimensional than one flat photo.",
+      "Parallax rate encodes depth: background slowest, foreground fastest; a plane moving at the wrong rate for its apparent distance instantly breaks the illusion.",
+      "Slight per-plane blur or atmospheric haze on far planes sells distance better than scale alone.",
+      "Shadows are their own plates — detached, softened, and moved independently of the object casting them."
+    ],
+    "lighting": [
+      "Light is baked into the photography — golden meadow, beach glow, overcast snow; the composite must match light TEMPERATURE and direction across planes or the collage falls apart.",
+      "A gentle scrim or vignette behind copy zones protects legibility without flattening the scene.",
+      "Glow/haze planes between cutouts act as atmosphere and hide seam artifacts."
+    ],
+    "typography": [
+      "Type is treated as one of the depth planes (see oversized-type-editorial) — occluded by foreground, occluding background.",
+      "Copy stays minimal; the scene is the message."
+    ]
+  },
+  "palette": {
+    "logic": ["photographic-derived", "seasonal-shift"],
+    "rules": [
+      "The palette comes FROM the plates — natural photographic color, optionally re-graded per scene/theme; UI chrome stays neutral so any plate set drops in.",
+      "When scenes swap (seasons, flavors, destinations) the grade itself carries the mood shift while layout stays constant."
+    ]
+  },
+  "motion": {
+    "character": ["smooth-luxurious", "ambient-drift"],
+    "easing": [
+      "Soft damped glides — planes ease to rest with expo-out settles; no bounce, the planes have photographic mass.",
+      "Cursor-driven parallax uses viscous follow (lag), never 1:1 tracking."
+    ],
+    "pacing": [
+      "Scroll-driven and moderately paced; each composed state holds long enough to read before the next resolves.",
+      "Idle states keep a barely-perceptible drift so the diorama never freezes into a flat image."
+    ],
+    "choreography": [
+      "Layers stagger by depth: background shifts first/slowest, foreground props fastest — the stagger IS the depth cue.",
+      "Scene changes restage all planes together (crossfade or fly-in cascade) while the layout skeleton stays fixed."
+    ]
+  },
+  "capabilities": {
+    "renderingRoutes": ["R2", "R3"],
+    "genModels": ["flux-2-pro"],
+    "primitives": ["parallax-scroll", "scroll-scrub-driver", "inview-driver", "keyframes", "hub-background"],
+    "postFx": ["vignette", "atmospheric-haze", "color-grade"],
+    "readiness": "partial",
+    "gapNotes": [
+      "PrismNode already carries renderMode 'parallax-plane' + depthMapUrl, and FLUX generates the source imagery — but the R2 composite pipeline (automated background removal/cutout, depth-map extraction, per-plane relight and unified color grade) is W-PHOTO scope.",
+      "Detached shadow plates and seam-hiding haze layers have no authoring primitive yet; today they must be hand-assembled.",
+      "Cross-plane light-direction matching is unverified — no gate checks that composited planes share light temperature."
+    ]
+  },
+  "usage": {
+    "whenToUse": [
+      "Product heroes where photoreal quality matters more than free-angle interaction — this route maximizes realism per byte (PLAN §1).",
+      "Narrative scenes (seasons, places, moods) that swap plate sets over a constant layout.",
+      "Any brief that supplies or generates strong photography."
+    ],
+    "whenNotToUse": [
+      "Objects needing free rotation/inspection — that is R1/R4 territory; parallax planes break past ~15° of implied camera movement.",
+      "Content-dense utility pages; heavy hero plates tax load time.",
+      "When source imagery is weak — the family amplifies photographic quality, good or bad."
+    ],
+    "archetypeFit": ["commerce", "content", "marketing", "community"],
+    "moods": ["cinematic", "warm", "organic", "luxury", "grounded"]
+  },
+  "pairing": {
+    "pairsWith": [
+      "oversized-type-editorial",
+      "seasonal-theme-shift",
+      "parallax-zoom-deep-dive",
+      "levitating-product-hero",
+      "editorial-product-gallery"
+    ],
+    "avoidWith": ["gpu-fluid-overlay", "glitch-cyber-fx"],
+    "notes": [
+      "The most load-bearing family in the corpus: 5 of 17 deep sources build on it, and the zero-point teardown in the PLAN identified it as the industry's actual photoreal method.",
+      "Avoid stacking a second full-screen shader effect over the plates — the composite already spends the motion budget; fluid/glitch overlays fight the depth read."
+    ]
+  },
+  "antiRepetition": {
+    "clusterId": "photo-composite-hero",
+    "notes": "Same cluster as levitating-product-hero and cutout-product-cascade-hero — all are cutout-plate composites; offer one per option set."
+  },
+  "sources": [
+    {
+      "title": "Zero Point Energy Drink Showcase (PLAN §1 teardown)",
+      "url": "https://www.sliderrevolution.com/templates/zero-point-energy-drink-showcase-template/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder live analysis recorded in PRISM-DESIGN-SUPREMACY-PLAN.md §1: identified as layered photographic/pre-rendered cutouts (can + separate shadow plate + floating fruit PNGs + four full-bleed background plates) choreographed with motion/parallax + post — NOT realtime 3D. Corroborated by the monitor session's live-demo observation of the ambient orbit loop.",
+      "observationRef": "analysis/zero-point-energy-drink-showcase-template.json"
+    },
+    {
+      "title": "4 Seasons Parallax Theme",
+      "url": "https://www.sliderrevolution.com/templates/4-seasons-wordpress-parallax-theme/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session, live demo: scroll + cursor-move driven; per-season depth planes (foreground props, subject, background scenery) observed drifting at different rates; staggered layer restage on season change.",
+      "observationRef": "analysis/4-seasons-wordpress-parallax-theme.json"
+    },
+    {
+      "title": "Starry Night Parallax Zoom Slider",
+      "url": "https://www.sliderrevolution.com/templates/starry-night-parallax-zoom-effect-slider/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session, live demo: cursor-move parallax observed across near-cliff/mid-nebula/far-star planes; swipe-driven zoom transitions exercised through the 4-slide sequence.",
+      "observationRef": "analysis/starry-night-parallax-zoom-effect-slider.json"
+    },
+    {
+      "title": "Hover Morph Effect Hero Collection",
+      "url": "https://www.sliderrevolution.com/templates/hover-morph-effect-hero-collection/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session, live demo: cutout figure / giant word / sky plate sandwich observed; only the photographic plane deformed under the cursor while the other planes held.",
+      "observationRef": "analysis/hover-morph-effect-hero-collection.json"
+    },
+    {
+      "title": "Filmstrip Hero 3D Image Carousel",
+      "url": "https://www.sliderrevolution.com/templates/filmstrip-hero-3d-image-carousel-collection/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session, live demo: three-plane parallax (background headline, midground frame stack, foreground counterweight frame) observed separating during carousel advances.",
+      "observationRef": "analysis/filmstrip-hero-3d-image-carousel-collection.json"
+    }
+  ],
+  "exemplars": [],
+  "provenance": {
+    "groundTruth": ["founder-plan", "monitor-observation"],
+    "distilledAt": "2026-07-06",
+    "distilledBy": "wdg1-orchestrator"
+  }
+}
