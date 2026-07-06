@@ -77,7 +77,7 @@ export class ReplicateAdapter implements GenerativeCapabilityAdapter {
 
   private async runLive(job: GenerativeJob, desc: GenerativeCapabilityDescriptor, input: GenerativeSubmitInput): Promise<void> {
     const slug = MODEL_SLUG[desc.capabilityId];
-    if (!slug) { await patchJob(job.jobId, { status: 'failed', error: `no model slug for ${desc.capabilityId}` }); return; }
+    if (!slug) { await patchJob(job.jobId, { status: 'failed', error: `no model slug for ${desc.capabilityId}` }); await this.meterFail(job, desc, false); return; }
     const jobDir = path.join(MODELS_DIR, job.jobId);
     const srcDir = path.join(jobDir, 'src');
     const srcGlb = path.join(srcDir, 'model.glb');
@@ -90,7 +90,7 @@ export class ReplicateAdapter implements GenerativeCapabilityAdapter {
     if (P.imageUrl) inp[desc.capabilityId === 'replicate.rodin-gen2' ? 'images' : 'image'] = desc.capabilityId === 'replicate.rodin-gen2' ? [String(P.imageUrl)] : String(P.imageUrl);
     if (P.prompt) inp.prompt = String(P.prompt);
     if (desc.capabilityId === 'replicate.hunyuan-3d') inp.enable_pbr = P.enablePbr !== false;
-    if (!inp.image && !inp.images && !inp.prompt) { await patchJob(job.jobId, { status: 'failed', error: 'provide an image URL or a prompt' }); return; }
+    if (!inp.image && !inp.images && !inp.prompt) { await patchJob(job.jobId, { status: 'failed', error: 'provide an image URL or a prompt' }); await this.meterFail(job, desc, false); return; }
 
     let vendorTaskId: string | undefined;
     const onLine = (line: string) => {
@@ -103,6 +103,7 @@ export class ReplicateAdapter implements GenerativeCapabilityAdapter {
     const res = await spawnCapture('python3', [REPLICATE_SCRIPT, slug, srcGlb, JSON.stringify(inp)], { cwd: path.dirname(REPLICATE_SCRIPT), timeoutMs: 720_000 }, onLine);
     if (res.code !== 0 || !hasFile(srcGlb)) {
       await patchJob(job.jobId, { status: 'failed', error: `replicate failed (code ${res.code}): ${res.err.slice(-240) || res.out.slice(-240)}` });
+      await this.meterFail(job, desc, false);
       return;
     }
     const finalPath = await finalizeGlb(srcGlb, jobDir);
@@ -113,11 +114,15 @@ export class ReplicateAdapter implements GenerativeCapabilityAdapter {
     await this.meter(job, desc, result, cost);
   }
 
-  private async meter(job: GenerativeJob, desc: GenerativeCapabilityDescriptor, result: GenerativeAssetRef, cost: { unit: 'credits' | 'usd'; amount: number; estimated: boolean }): Promise<void> {
+  private async meter(job: GenerativeJob, desc: GenerativeCapabilityDescriptor, result: GenerativeAssetRef | null, cost: { unit: 'credits' | 'usd'; amount: number; estimated: boolean }, ok = true): Promise<void> {
     await recordUsage({
       id: `use-${job.jobId}`, capabilityId: desc.capabilityId, model: desc.model, provider: 'replicate',
       userId: USER, projectId: job.projectId, nodeId: job.nodeId, jobId: job.jobId,
-      costBasis: cost, resultAssetRef: result.url, live: job.live, at: new Date().toISOString(),
+      costBasis: cost, resultAssetRef: result?.url, live: job.live, ok, at: new Date().toISOString(),
     });
+  }
+
+  private async meterFail(job: GenerativeJob, desc: GenerativeCapabilityDescriptor, spent: boolean): Promise<void> {
+    await this.meter(job, desc, null, { unit: desc.costBasis.unit, amount: spent ? desc.costBasis.estimate : 0, estimated: true }, false);
   }
 }

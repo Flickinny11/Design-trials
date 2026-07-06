@@ -132,6 +132,9 @@ export interface CapabilityUsageEvent {
   costBasis: { unit: 'credits' | 'usd'; amount: number; estimated: boolean };
   resultAssetRef?: string;
   live: boolean;
+  /** Whether the invocation succeeded. false = attempt recorded (failed job) —
+   *  every invocation is metered (E20), even ones that error. */
+  ok?: boolean;
   at: string;
 }
 

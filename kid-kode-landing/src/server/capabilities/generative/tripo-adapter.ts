@@ -117,12 +117,14 @@ export class TripoAdapter implements GenerativeCapabilityAdapter {
       args = await this.buildArgs(desc, input, srcGlb, env);
     } catch (e) {
       await patchJob(job.jobId, { status: 'failed', error: (e as Error).message });
+      await this.meterFail(job, desc, false); // pre-submit — no vendor spend
       return;
     }
 
     const res = await spawnCapture('python3', [TRIPO_SCRIPT, ...args], { cwd: path.dirname(TRIPO_SCRIPT), env, timeoutMs: 900_000 }, onLine);
     if (res.code !== 0 || !hasFile(srcGlb)) {
       await patchJob(job.jobId, { status: 'failed', error: `tripo failed (code ${res.code}): ${res.err.slice(-240) || res.out.slice(-240)}` });
+      await this.meterFail(job, desc, false); // vendor task failed — no full charge
       return;
     }
     let finalUrl: string;
@@ -132,6 +134,7 @@ export class TripoAdapter implements GenerativeCapabilityAdapter {
       await fs.rm(srcDir, { recursive: true, force: true });
     } catch (e) {
       await patchJob(job.jobId, { status: 'failed', error: `finalize failed: ${(e as Error).message}` });
+      await this.meterFail(job, desc, true); // vendor succeeded → credits WERE spent
       return;
     }
     const result: GenerativeAssetRef = {
@@ -189,11 +192,18 @@ export class TripoAdapter implements GenerativeCapabilityAdapter {
     return out;
   }
 
-  private async meter(job: GenerativeJob, desc: GenerativeCapabilityDescriptor, result: GenerativeAssetRef, cost: { unit: 'credits' | 'usd'; amount: number; estimated: boolean }): Promise<void> {
+  private async meter(job: GenerativeJob, desc: GenerativeCapabilityDescriptor, result: GenerativeAssetRef | null, cost: { unit: 'credits' | 'usd'; amount: number; estimated: boolean }, ok = true): Promise<void> {
     await recordUsage({
       id: `use-${job.jobId}`, capabilityId: desc.capabilityId, model: desc.model, provider: 'tripo',
       userId: USER, projectId: job.projectId, nodeId: job.nodeId,
-      jobId: job.jobId, costBasis: cost, resultAssetRef: result.url, live: job.live, at: new Date().toISOString(),
+      jobId: job.jobId, costBasis: cost, resultAssetRef: result?.url, live: job.live, ok, at: new Date().toISOString(),
     });
+  }
+
+  /** Record a failed invocation (E20 — every invocation is metered). `spent`
+   *  ⇒ the vendor already consumed credits (post-submit failure) so the estimate
+   *  is charged; otherwise amount 0 (no vendor spend). */
+  private async meterFail(job: GenerativeJob, desc: GenerativeCapabilityDescriptor, spent: boolean): Promise<void> {
+    await this.meter(job, desc, null, { unit: desc.costBasis.unit, amount: spent ? desc.costBasis.estimate : 0, estimated: true }, false);
   }
 }

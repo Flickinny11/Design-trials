@@ -303,6 +303,7 @@ export default function GeneratePanel({ node, onToast }: { node: PrismNode; onTo
                 {ledger.events.slice(0, 24).map((e) => (
                   <div key={e.id} className="flex items-center gap-1.5 px-1 py-0.5">
                     <span className="text-[7px] font-mono flex-1 truncate" style={{ color: 'var(--ds-text-mid)' }}>{e.model}</span>
+                    {e.ok === false && <span className="text-[6.5px] font-mono uppercase" style={{ color: RED }}>failed</span>}
                     <span className="text-[6.5px] font-mono uppercase" style={{ color: e.live ? '#5fce8e' : 'var(--ds-text-low)' }}>{e.live ? 'live' : 'demo'}</span>
                     <span className="text-[7px] font-mono tabular-nums" style={{ color: 'var(--ds-text-low)' }}>{e.costBasis.amount} {e.costBasis.unit === 'credits' ? 'cr' : '$'}</span>
                   </div>

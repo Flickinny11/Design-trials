@@ -91,6 +91,7 @@ export class FluxMaterialAdapter implements GenerativeCapabilityAdapter {
     });
     if (res.code !== 0 || !res.out.includes('MATERIAL-GEN-DONE')) {
       await patchJob(job.jobId, { status: 'failed', error: `material gen failed (code ${res.code}): ${res.err.slice(-240) || res.out.slice(-240)}` });
+      await this.meterFail(job, desc, res.out.includes('FLUX')); // spent iff the FLUX call started
       return;
     }
     const result = materialResult(id, kind, `${prompt} · FLUX 2 Pro`, false);
@@ -99,11 +100,15 @@ export class FluxMaterialAdapter implements GenerativeCapabilityAdapter {
     await this.meter(job, desc, result, cost);
   }
 
-  private async meter(job: GenerativeJob, desc: GenerativeCapabilityDescriptor, result: GenerativeAssetRef, cost: { unit: 'credits' | 'usd'; amount: number; estimated: boolean }): Promise<void> {
+  private async meter(job: GenerativeJob, desc: GenerativeCapabilityDescriptor, result: GenerativeAssetRef | null, cost: { unit: 'credits' | 'usd'; amount: number; estimated: boolean }, ok = true): Promise<void> {
     await recordUsage({
       id: `use-${job.jobId}`, capabilityId: desc.capabilityId, model: desc.model, provider: 'flux',
       userId: USER, projectId: job.projectId, nodeId: job.nodeId, jobId: job.jobId,
-      costBasis: cost, resultAssetRef: result.url, live: job.live, at: new Date().toISOString(),
+      costBasis: cost, resultAssetRef: result?.url, live: job.live, ok, at: new Date().toISOString(),
     });
+  }
+
+  private async meterFail(job: GenerativeJob, desc: GenerativeCapabilityDescriptor, spent: boolean): Promise<void> {
+    await this.meter(job, desc, null, { unit: desc.costBasis.unit, amount: spent ? desc.costBasis.estimate : 0, estimated: true }, false);
   }
 }
