@@ -1,0 +1,38 @@
+:root {
+  --brand-primary: #1f6feb;
+  --brand-accent: #f97316;
+  --brand-ink: #0b1020;
+  --brand-surface: #f6f8fb;
+}
+
+body {
+  font-family: var(--font-body), Inter, system-ui, sans-serif;
+  color: var(--brand-ink);
+  background: var(--brand-surface);
+}
+
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: var(--brand-primary);
+  color: #ffffff;
+}
+
+.brand {
+  font-family: var(--font-display), 'Playfair Display', serif;
+  font-weight: 700;
+}
+
+.cta {
+  display: inline-block;
+  background: var(--brand-accent);
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+}
+
+h1 {
+  font-family: var(--font-display), 'Playfair Display', serif;
+  color: var(--brand-primary);
+}

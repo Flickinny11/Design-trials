@@ -1,0 +1,22 @@
+{
+  "name": "acme-notes",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A minimal notes app — capture, organize, and share your notes.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "^15.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@prisma/client": "^6.0.0",
+    "stripe": "^17.0.0"
+  },
+  "devDependencies": {
+    "prisma": "^6.0.0",
+    "typescript": "^5.7.0"
+  }
+}

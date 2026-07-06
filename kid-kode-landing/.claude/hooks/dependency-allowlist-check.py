@@ -280,8 +280,12 @@ def main() -> int:
         return 0
 
     base = os.path.basename(file_path)
-    is_pkg_json = base == "package.json"
-    is_lockfile = base == "package-lock.json"
+    # Test fixtures under tests/fixtures/** are ANALYZED DATA (input repos for the
+    # W-IMPORT ingest analyzer), never installed as project dependencies — the
+    # dependency allowlist does not apply to a fixture's manifest.
+    is_fixture = "/tests/fixtures/" in file_path
+    is_pkg_json = base == "package.json" and not is_fixture
+    is_lockfile = base == "package-lock.json" and not is_fixture
     is_code = file_path.endswith((".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs"))
     in_prism_scope = bool(re.search(r"/(src/lib/prism|src/components/prism-player)/|/scripts/", file_path))
     in_src_or_scripts = ("/kid-kode-landing/src/" in file_path) or ("/scripts/" in file_path)
