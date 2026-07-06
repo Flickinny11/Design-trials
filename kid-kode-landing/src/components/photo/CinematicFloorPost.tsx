@@ -19,13 +19,16 @@ import {
   pass,
   screenUV,
   vec2,
+  vec3,
   length as tslLength,
   smoothstep,
   mix,
+  saturation,
   float,
 } from "three/tsl";
 import { bloom } from "three/examples/jsm/tsl/display/BloomNode.js";
 import { film } from "three/examples/jsm/tsl/display/FilmNode.js";
+import { dof } from "three/examples/jsm/tsl/display/DepthOfFieldNode.js";
 
 export interface CinematicFloorPostProps {
   bloomStrength?: number;
@@ -34,6 +37,15 @@ export interface CinematicFloorPostProps {
   grain?: number;
   /** 0..1 edge darkening. */
   vignette?: number;
+  /** Depth-of-field (subtle focus falloff). Set false to disable. */
+  dofEnabled?: boolean;
+  /** View-space focus distance (product plane sits ~9.4 in front). */
+  dofFocus?: number;
+  dofBokeh?: number;
+  /** Colour grade: warm gain, contrast pivot 0.5, saturation. */
+  warmth?: number;
+  contrast?: number;
+  saturate?: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,6 +57,15 @@ export function CinematicFloorPost({
   bloomThreshold = 0.75,
   grain = 0.06,
   vignette = 0.32,
+  // DOF is opt-in: the R2 composite bakes its own focus into the plates, so the
+  // lab leaves it off; R1 realtime scenes (the watch, D6) turn it on to soften
+  // depth beyond the hero. Focus is view-space (negative in front of camera).
+  dofEnabled = false,
+  dofFocus = -9.4,
+  dofBokeh = 1.0,
+  warmth = 0.05,
+  contrast = 1.06,
+  saturate = 1.06,
 }: CinematicFloorPostProps) {
   const gl = useThree((s) => s.gl);
   const scene = useThree((s) => s.scene);
@@ -55,14 +76,23 @@ export function CinematicFloorPost({
     const scenePass = pass(scene as never, camera as never);
     const beauty: TNode = scenePass.getTextureNode();
 
-    // Bloom: soft bloomed highlights added over the beauty pass.
-    const glow: TNode = bloom(
-      beauty,
-      bloomStrength,
-      bloomRadius,
-      bloomThreshold,
-    );
-    let out: TNode = beauty.add(glow);
+    // Depth of field: gentle focus falloff so the far backdrop + near garnish
+    // soften while the product plane stays sharp (view-space viewZ from the pass).
+    let base: TNode = beauty;
+    if (dofEnabled) {
+      const viewZ: TNode = scenePass.getViewZNode();
+      base = dof(beauty, viewZ, float(dofFocus), float(1), float(dofBokeh));
+    }
+
+    // Bloom: soft bloomed highlights added over the (possibly DOF'd) beauty.
+    const glow: TNode = bloom(base, bloomStrength, bloomRadius, bloomThreshold);
+    let out: TNode = base.add(glow);
+
+    // Colour grade (the runtime LUT stand-in): warm gain → contrast (pivot 0.5)
+    // → saturation. Kept subtle — a grade, not a filter.
+    out = out.mul(vec3(1 + warmth, 1, 1 - warmth * 0.6));
+    out = mix(vec3(0.5, 0.5, 0.5), out, float(contrast));
+    out = saturation(out, float(saturate));
 
     // Vignette: darken toward the frame edge (radial, from screen centre).
     const d: TNode = tslLength((screenUV as TNode).sub(vec2(0.5, 0.5)));
@@ -85,6 +115,12 @@ export function CinematicFloorPost({
     bloomThreshold,
     grain,
     vignette,
+    dofEnabled,
+    dofFocus,
+    dofBokeh,
+    warmth,
+    contrast,
+    saturate,
   ]);
 
   useEffect(() => {
