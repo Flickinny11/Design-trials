@@ -1,6 +1,13 @@
 {
-  "source": "PRODUCTION flight-recorder .data (written by ingest.analyze route during live browser imports)",
-  "count": 9,
+  "source": "PRODUCTION flight-recorder .data — written by the ingest.analyze route (analyze/synthesize/fidelity), ingest.attachFidelity (approve), and the Conductor (regen) during live browser E2E imports of the local fixture + shadcn-ui/taxonomy",
+  "stages": {
+    "analyze": 3,
+    "synthesize": 3,
+    "fidelity": 3,
+    "approve": 1,
+    "regen": 1
+  },
+  "count": 11,
   "records": [
     {
       "schema_version": "prism-fr-v1",
@@ -154,6 +161,42 @@
       "adapted_count": 10,
       "needs_you_count": 4,
       "ok": true
+    },
+    {
+      "schema_version": "prism-fr-v1",
+      "record_id": "01KWV041A63GKM4W0PMX8AAXVJ",
+      "record_type": "import_event",
+      "touchpoint": "import",
+      "created_at": "2026-07-06T05:58:49.926Z",
+      "consent": true,
+      "consent_basis": "env-default",
+      "tenant_id": "3Kgpl5FYl3Q3htNXFGqTCYvTqFLdpGRY",
+      "user_ref": "3Kgpl5FYl3Q3htNXFGqTCYvTqFLdpGRY",
+      "project_id": "proj-65fa23fa-75ed-46c4-b50f-b4233dc5029e",
+      "stage": "approve",
+      "repo_ref": "shadcn-ui/taxonomy",
+      "carried_count": 2,
+      "adapted_count": 10,
+      "needs_you_count": 4,
+      "ok": true
+    },
+    {
+      "schema_version": "prism-fr-v1",
+      "record_id": "01KWV06AD9ET2X93DCZRA8V7C5",
+      "record_type": "import_event",
+      "touchpoint": "import",
+      "created_at": "2026-07-06T06:00:04.777Z",
+      "consent": true,
+      "consent_basis": "env-default",
+      "tenant_id": "3Kgpl5FYl3Q3htNXFGqTCYvTqFLdpGRY",
+      "project_id": "proj-65fa23fa-75ed-46c4-b50f-b4233dc5029e",
+      "session_id": "conductor-proj-65fa23fa-75ed-46c4-b50f-b4233dc5029e-1783317604324",
+      "stage": "regen",
+      "repo_ref": "shadcn-ui/taxonomy",
+      "route_count": 5,
+      "component_count": 33,
+      "ok": true,
+      "detail": "regenerated 5 hubs / 33 nodes"
     }
   ]
 }
