@@ -300,20 +300,25 @@ async function main() {
     assetUrl: pub("backdrop.png"),
     depthMapUrl: pub("backdrop.depth.png"),
     z: -8,
-    parallaxRate: 0.15,
-    scale: 1.25,
+    x: 0,
+    y: 0,
+    parallaxRate: 0.12,
+    scale: 1.6,
     opacity: 1,
   });
 
-  // 2. HEADLINE (z-interleaved, MSDF text at runtime — no baked plate).
+  // 2. HEADLINE (z-interleaved display type — MSDF text in the app, backlit
+  // glow in the owned-canvas preview; behind the product so it interleaves).
   if (cfg.headline) {
     layers.push({
       id: "headline",
       kind: "headline",
       assetUrl: "",
       z: -3.2,
+      x: -2.2,
+      y: 1.3,
       parallaxRate: 0.4,
-      scale: 1,
+      scale: 0.9,
       text: cfg.headline.text,
     });
   }
@@ -345,28 +350,42 @@ async function main() {
     note: "product",
     costUsd: 0,
   });
+  // Product sits right-of-centre so backdrop + headline breathe on the left.
+  const prodX = 1.5;
+  const prodY = -0.2;
   layers.push({
     id: "shadow",
     kind: "shadow",
     assetUrl: pub("product.shadow.png"),
-    z: -2.6,
-    parallaxRate: 0.55,
-    scale: 1.0,
+    z: -2.55,
+    x: prodX,
+    y: prodY - 0.15,
+    parallaxRate: 0.5,
+    scale: 0.5,
     opacity: 0.9,
-    float: { ampX: 0, ampY: 0.02, rotate: 0, period: 7, phase: 0 },
+    float: { ampX: 0, ampY: 0.015, rotate: 0, period: 7, phase: 0 },
   });
   layers.push({
     id: "product",
     kind: "product",
     assetUrl: pub("product.png"),
     z: -2.4,
-    parallaxRate: 0.6,
-    scale: 1.0,
+    x: prodX,
+    y: prodY,
+    parallaxRate: 0.5,
+    scale: 0.5,
     opacity: 1,
-    float: { ampX: 0.02, ampY: 0.06, rotate: 0.01, period: 6.5, phase: 0 },
+    float: { ampX: 0.02, ampY: 0.06, rotate: 0.008, period: 6.5, phase: 0 },
   });
 
-  // 4. GARNISH: generate → cutout → grade, each on its own float loop.
+  // 4. GARNISH: generate → cutout → grade; each spread to a frame slot, on its
+  // own float loop (phase-desynced) so nothing syncs — "alive, not busy".
+  const GARNISH_SLOTS = [
+    { x: -3.9, y: 2.0, z: -1.3, scale: 0.16 },
+    { x: 3.9, y: -1.5, z: -1.1, scale: 0.2 },
+    { x: -3.4, y: -1.9, z: -1.5, scale: 0.13 },
+    { x: 3.3, y: 2.2, z: -1.2, scale: 0.15 },
+  ];
   const garnish = cfg.garnish ?? [];
   for (let i = 0; i < garnish.length; i++) {
     const g = garnish[i];
@@ -375,14 +394,17 @@ async function main() {
     generate(g.prompt, gRaw, "1:1", g.seed ?? 20 + i);
     const gCut = join(outDir, `garnish-${g.id}.png`);
     await cutout(gRaw, gCut);
+    const slot = GARNISH_SLOTS[i % GARNISH_SLOTS.length];
     const phase = (i / Math.max(1, garnish.length)) * Math.PI * 2;
     layers.push({
       id: `garnish-${g.id}`,
       kind: "garnish",
       assetUrl: pub(`garnish-${g.id}.png`),
-      z: g.z ?? -1.6 + i * 0.15,
-      parallaxRate: 0.85,
-      scale: g.scale ?? 0.28,
+      z: slot.z,
+      x: slot.x,
+      y: slot.y,
+      parallaxRate: 0.85 + (i % 3) * 0.05,
+      scale: slot.scale,
       blur: g.blur ?? 0,
       opacity: g.opacity ?? 0.95,
       float: {

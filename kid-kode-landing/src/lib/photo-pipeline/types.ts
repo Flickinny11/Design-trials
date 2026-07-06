@@ -39,6 +39,9 @@ export interface CompositeLayer {
   depthMapUrl?: string;
   /** Z-order depth (more negative = further back). */
   z: number;
+  /** Base position within the frame (scene units); defaults to 0,0 (centre). */
+  x?: number;
+  y?: number;
   /** Parallax rate: 0 = locked to camera, 1 = full scene depth reaction. */
   parallaxRate: number;
   /** Per-layer independent idle float (garnish + product bob). Omit = static. */

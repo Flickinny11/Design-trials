@@ -15,11 +15,14 @@
 // point of R2). Browser-safe three only; no sharp, no DOM.
 
 import {
+  AdditiveBlending,
+  DataTexture,
   Group,
   LinearFilter,
   Mesh,
   MeshBasicMaterial,
   PlaneGeometry,
+  RGBAFormat,
   SRGBColorSpace,
   TextureLoader,
   type Object3D,
@@ -28,6 +31,28 @@ import {
 import type { CompositeLayer, CompositeManifest } from "./types";
 
 const BASE_W = 12; // scene width in world units for a scale-1 layer
+
+/** A soft radial-falloff RGBA texture (feathered disc) for glow layers. No DOM. */
+function radialGlowTexture(size = 96): DataTexture {
+  const data = new Uint8Array(size * size * 4);
+  const c = (size - 1) / 2;
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      const dx = (x - c) / c;
+      const dy = (y - c) / c;
+      const d = Math.sqrt(dx * dx + dy * dy);
+      const a = Math.max(0, 1 - d);
+      const i = (y * size + x) * 4;
+      data[i] = 255;
+      data[i + 1] = 255;
+      data[i + 2] = 255;
+      data[i + 3] = Math.round(a * a * 255); // squared falloff = soft feather
+    }
+  }
+  const tex = new DataTexture(data, size, size, RGBAFormat);
+  tex.needsUpdate = true;
+  return tex;
+}
 
 export interface SceneMotion {
   /** −1..1 normalized scroll/cursor drive for parallax (0 = rest). */
@@ -94,10 +119,13 @@ export function buildLayeredPhotoScene(
   const layers: BuiltLayer[] = [];
 
   for (const spec of manifest.layers) {
-    // Headline is MSDF text in the real graph; represented here as a subtle
-    // theme-hue emissive guide plane so the z-interleave is visible in the
-    // preview (product occludes it). No letterforms are rendered (MSDF law).
+    // The headline is real MSDF display type in the watch app (D6). In this
+    // owned-canvas assembly it is a soft BACKLIT GLOW in the theme hue at the
+    // headline z — a real premium cue (product backlit) that also demonstrates
+    // the z-interleave (the product occludes it). No letterforms (MSDF law).
     const isPlate = spec.kind !== "headline";
+    const baseX = spec.x ?? 0;
+    const baseY = spec.y ?? 0;
     const mat = new MeshBasicMaterial({
       transparent: true,
       depthWrite: spec.kind === "backdrop",
@@ -105,7 +133,10 @@ export function buildLayeredPhotoScene(
     });
     if (!isPlate) {
       mat.color.set(manifest.themeHue);
-      mat.opacity = 0.18;
+      mat.opacity = 0.5;
+      mat.map = radialGlowTexture();
+      mat.blending = AdditiveBlending;
+      mat.depthWrite = false;
     } else {
       // Start tinted near-black so a not-yet-loaded plate reads as scene, not white.
       mat.color.set("#050506");
@@ -113,17 +144,17 @@ export function buildLayeredPhotoScene(
 
     const mesh = new Mesh(geo, mat);
     mesh.name = spec.id;
-    mesh.position.set(0, 0, spec.z);
+    mesh.position.set(baseX, baseY, spec.z);
     mesh.renderOrder = Math.round((spec.z + 10) * 10); // stable back-to-front order
     const w = BASE_W * spec.scale;
-    mesh.scale.set(w, w * (isPlate ? 0.66 : 0.14), 1);
+    mesh.scale.set(w, w * (isPlate ? 0.66 : 0.6), 1);
     group.add(mesh);
 
     const built: BuiltLayer = {
       spec,
       mesh,
-      baseX: 0,
-      baseY: 0,
+      baseX,
+      baseY,
       texture: null,
       disposed: false,
     };
@@ -183,7 +214,10 @@ export function buildLayeredPhotoScene(
     for (const l of layers) {
       l.disposed = true;
       l.texture?.dispose();
-      (l.mesh.material as MeshBasicMaterial).dispose();
+      const m = l.mesh.material as MeshBasicMaterial;
+      // Headline glow uses a generated DataTexture as .map (no built.texture).
+      if (l.spec.kind === "headline") m.map?.dispose();
+      m.dispose();
       group.remove(l.mesh);
     }
     geo.dispose();
