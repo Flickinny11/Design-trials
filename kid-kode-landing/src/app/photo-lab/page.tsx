@@ -18,6 +18,7 @@ import { WebGPURenderer } from "three/webgpu";
 import { useSearchParams } from "next/navigation";
 import { PhotoCompositeScene } from "@/components/photo/PhotoCompositeScene";
 import { CinematicFloorPost } from "@/components/photo/CinematicFloorPost";
+import { PrimitivePreview } from "@/components/photo/PrimitivePreview";
 
 function makeFactory(tone: "agx" | "neutral") {
   return async function webgpuFactory(
@@ -70,28 +71,33 @@ function PhotoLabStage() {
     urlDrive != null ? Number(urlDrive) : null,
   );
   const floorOn = sp.get("floor") !== "0"; // R1 filmic floor on by default
+  const prim = sp.get("prim"); // ?prim=carousel-3d | loop-column → driver preview
 
   return (
     <div data-photo-stage data-testid="photo-stage">
       <Canvas
         dpr={[1, 2]}
         gl={makeFactory(tone) as never}
-        camera={{ position: [0, 0, 7], fov: 42 }}
+        camera={{ position: [0, 0, prim ? 5.5 : 7], fov: 42 }}
         data-testid="photo-canvas"
       >
         <color attach="background" args={["#040406"]} />
         <Suspense fallback={null}>
-          <PhotoCompositeScene
-            manifestUrl={`/prism-mock/photo/${manifestId}/composite.json`}
-            driveOverride={drive}
-          />
+          {prim ? (
+            <PrimitivePreview name={prim} scrollOverride={drive} />
+          ) : (
+            <PhotoCompositeScene
+              manifestUrl={`/prism-mock/photo/${manifestId}/composite.json`}
+              driveOverride={drive}
+            />
+          )}
         </Suspense>
-        {floorOn && <CinematicFloorPost />}
+        {floorOn && !prim && <CinematicFloorPost />}
         <LabRig onDrive={setDrive} />
       </Canvas>
       <div data-photo-caption>
-        photo-lab · {manifestId} · R2 composite {floorOn ? "+ R1 floor" : ""} ·{" "}
-        {tone.toUpperCase()}
+        photo-lab · {prim ? `driver: ${prim}` : `${manifestId} · R2 composite`}
+        {floorOn && !prim ? " + R1 floor" : ""} · {tone.toUpperCase()}
       </div>
     </div>
   );

@@ -66,7 +66,9 @@ import { fadeThroughBlackPrimitive } from './fade-through-black';
 import { fadeUpPrimitive } from './fade-up';
 import { fadeVignettePrimitive } from './fade-vignette';
 import { flashPrimitive } from './flash';
+import { carousel3dPrimitive } from './carousel-3d';
 import { horizontalScrollPrimitive } from './horizontal-scroll';
+import { loopColumnPrimitive } from './loop-column';
 import { parallaxPrimitive } from './parallax';
 import { pinRevealPrimitive } from './pin-reveal';
 import { revealMaskScrollPrimitive } from './reveal-mask-scroll';
@@ -231,11 +233,9 @@ import { barsWipePrimitive } from './bars-wipe';
 import { blindsWipePrimitive } from './blinds-wipe';
 import { checkerWipePrimitive } from './checker-wipe';
 import { clockWipePrimitive } from './clock-wipe';
-import { contactShadowPrimitive } from './contact-shadow';
 import { crossWipePrimitive } from './cross-wipe';
 import { diamondWipePrimitive } from './diamond-wipe';
 import { domainWarpMorphPrimitive } from './domain-warp-morph';
-import { imperfectionVeilPrimitive } from './imperfection-veil';
 import { irisWipePrimitive } from './iris-wipe';
 import { maskIrisMorphPrimitive } from './mask-iris-morph';
 import { maskWipePrimitive } from './mask-wipe';
@@ -415,6 +415,8 @@ import { vortexPrimitive } from './vortex';
 import { vortexPullSimPrimitive } from './vortex-pull-sim';
 import { waveGridPrimitive } from './wave-grid';
 import { windGustSimPrimitive } from './wind-gust-sim';
+import { contactShadowPrimitive } from './contact-shadow';
+import { imperfectionVeilPrimitive } from './imperfection-veil';
 import { layeredPhotoScenePrimitive } from './layered-photo-scene';
 
 export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
@@ -478,7 +480,9 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   fadeUpPrimitive,
   fadeVignettePrimitive,
   flashPrimitive,
+  carousel3dPrimitive,
   horizontalScrollPrimitive,
+  loopColumnPrimitive,
   parallaxPrimitive,
   pinRevealPrimitive,
   revealMaskScrollPrimitive,
@@ -643,11 +647,9 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   blindsWipePrimitive,
   checkerWipePrimitive,
   clockWipePrimitive,
-  contactShadowPrimitive,
   crossWipePrimitive,
   diamondWipePrimitive,
   domainWarpMorphPrimitive,
-  imperfectionVeilPrimitive,
   irisWipePrimitive,
   maskIrisMorphPrimitive,
   maskWipePrimitive,
@@ -827,6 +829,8 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   vortexPullSimPrimitive,
   waveGridPrimitive,
   windGustSimPrimitive,
+  contactShadowPrimitive,
+  imperfectionVeilPrimitive,
   layeredPhotoScenePrimitive,
 ];
 
