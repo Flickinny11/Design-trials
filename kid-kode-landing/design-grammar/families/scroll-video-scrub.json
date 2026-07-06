@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "prism-dg-v1",
+  "id": "scroll-video-scrub",
+  "name": "Scroll-Video Scrub",
+  "status": "grounded",
+  "summary": "A section pins in the viewport and scroll position becomes the playhead: scrolling scrubs a video/frame-sequence forward frame-by-frame instead of moving the page. The visitor controls the cinematic reveal's speed, making a linear film feel interactive.",
+  "elementTypes": ["scroll-narrative", "hero", "video-hero"],
+  "whatMakesItWork": {
+    "composition": [
+      "The opening frame is a composed poster (subject + giant name + copy corners) that deliberately DISASSEMBLES as the scrub advances — type clears, camera pushes in, and the sequence resolves on a tight subject close-up.",
+      "A scroll-progress indicator is required: the visitor must know they are inside a pinned sequence and how much remains.",
+      "A vertical side label or eyebrow keeps a magazine frame around the footage."
+    ],
+    "layering": [
+      "Scrubbed footage is the full-bleed base plane → a colored gradient wash/scrim → overlay type and UI on top.",
+      "Depth comes from the camera move INSIDE the footage (push-in, dolly), not from stacked layers — the film provides the parallax.",
+      "Overlay elements bind to scrub progress, entering and exiting at authored timeline positions."
+    ],
+    "lighting": [
+      "Light is the footage's cinematography (stage/concert/location lighting); a colored gradient scrim can unify and brand it.",
+      "The brightest element should be the type accent so the frame keeps a focal hierarchy while footage changes under it."
+    ],
+    "typography": [
+      "Ultra-bold condensed display for the anchor word/name; it rides the scrub timeline — fading out early to hand the frame to the subject.",
+      "Small script or eyebrow accents tie entrances to specific playhead positions."
+    ]
+  },
+  "palette": {
+    "logic": ["duotone", "neon-on-dark", "photographic-derived"],
+    "rules": [
+      "A single gradient wash over the footage + one loud complementary accent for type/CTA creates maximum energy with two decisions.",
+      "The accent must survive every frame of the sequence — test it against the brightest and darkest frames."
+    ]
+  },
+  "motion": {
+    "character": ["scroll-locked", "cinematic-slow"],
+    "easing": [
+      "The footage itself is LINEAR with scroll — no independent easing; smoothing belongs in a small scroll-position damper, not the mapping.",
+      "Overlay type uses quick fades/slides at its timeline marks."
+    ],
+    "pacing": [
+      "The visitor sets the pace; the design decision is the scroll-distance-to-frames ratio — long enough to feel cinematic, short enough not to trap.",
+      "The pin releases crisply at sequence end; trapping scroll past the payoff kills trust."
+    ],
+    "choreography": [
+      "Scroll leads everything: progress → camera push → type exits → subject resolve; a progress marker tracks the sequence.",
+      "Text choreography is authored against the playhead (enter at 10%, exit by 40%), never against wall-clock time."
+    ]
+  },
+  "capabilities": {
+    "renderingRoutes": ["R2"],
+    "genModels": [],
+    "primitives": ["scroll-scrub-driver", "keyframes", "hub-background", "extruded-text"],
+    "postFx": ["color-grade", "vignette"],
+    "readiness": "gap",
+    "gapNotes": [
+      "The scroll-scrub driver exists (W8: section-scrub + global scroll binding) but there is no frame-sequence/video-texture asset type to scrub — the R2 pre-rendered sequence pipeline is exactly the W-PHOTO deliverable.",
+      "Pinned-section behavior (section holds while scroll drives an internal timeline) is unproven in the prism runtime's preview scroll model.",
+      "No source for footage: needs either user upload or a pre-rendered sequence generated from our own 3D scenes (render-to-frames path, W-PHOTO)."
+    ]
+  },
+  "usage": {
+    "whenToUse": [
+      "Artist/performer/venue intros, product reveals, and any hero whose story is a single camera move.",
+      "When the brief wants 'interactive film' — the visitor drives, so it reads as craft rather than autoplay."
+    ],
+    "whenNotToUse": [
+      "Fast-utility or content-first sites: the pin delays access to everything below.",
+      "Mobile-heavy audiences on constrained bandwidth — frame sequences are heavy; must degrade to a static poster + normal scroll.",
+      "Briefs with no real footage or renderable scene — the family cannot fake its core asset."
+    ],
+    "archetypeFit": ["content", "marketing", "commerce"],
+    "moods": ["cinematic", "energetic", "bold", "dark"]
+  },
+  "pairing": {
+    "pairsWith": ["oversized-type-editorial", "kinetic-typography-hero", "sticky-pin-narrative"],
+    "avoidWith": ["gpu-fluid-overlay", "particle-field-hero"],
+    "notes": [
+      "The scrub owns the scroll axis — never combine with a second scroll-hijacking family on the same page.",
+      "Kinetic type pairs well because both bind to the same playhead."
+    ]
+  },
+  "antiRepetition": {
+    "clusterId": "video-hero",
+    "notes": "Same cluster as cinematic-video-hero and media-showreel-gallery."
+  },
+  "sources": [
+    {
+      "title": "DJ Website Template with Scroll Video",
+      "url": "https://www.sliderrevolution.com/templates/dj-website-template-with-scroll-video/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session, live demo: hero pinned and scrubbed via scroll through full progress in both directions; camera push-in, early name fade-out, and the bottom progress indicator all observed tracking the playhead.",
+      "observationRef": "analysis/dj-website-template-with-scroll-video.json"
+    }
+  ],
+  "exemplars": [],
+  "provenance": {
+    "groundTruth": ["monitor-observation"],
+    "distilledAt": "2026-07-06",
+    "distilledBy": "wdg1-orchestrator"
+  }
+}
