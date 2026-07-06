@@ -13,16 +13,16 @@ Requirements ledger: `notes/DESIGN-GRAMMAR-GAP-REPORT.md` + `design-grammar/fami
 
 ## 1. Deliverables checklist
 
-| #   | Deliverable                                                                                                                                | Status                                                                         |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
-| D1  | Route planner (`src/lib/render-routes/`) + decision-table doc                                                                              | **DONE** (`7e016c70`)                                                          |
-| D2  | Composite pipeline (`src/lib/photo-pipeline/`): gen → cutout/layer → depth → shadow plate → harmonize → LUT grade → layered parallax scene | **DONE** (`7353e0dc`,`ea81210a`) — celestia-hero photoreal, verified on WebGPU |
-| D3  | Carousel driver + loop-column driver (motion exemplars = frame sequences)                                                                  | in progress                                                                    |
-| D4  | R1 cinematic floor: IBL/HDRI, filmic tone mapping, imperfection maps, contact shadows, DOF/grain/bloom/LUT post chain                      | **DONE** (`2c17f158`)                                                          |
-| D5  | R4 splat viewer: component + loader + asset slot                                                                                           | pending                                                                        |
-| D6  | Watch remaster (acceptance test): before/after frames per scene; W5B gate green                                                            | pending                                                                        |
-| D7  | Stretch: scroll-video-scrub + cinematic-video-hero                                                                                         | triage pending                                                                 |
-| D8  | Flight-record all gen/build events                                                                                                         | **DONE** (`c...`, composite events)                                            |
+| #   | Deliverable                                                                                                                                | Status                                                                               |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| D1  | Route planner (`src/lib/render-routes/`) + decision-table doc                                                                              | **DONE** (`7e016c70`)                                                                |
+| D2  | Composite pipeline (`src/lib/photo-pipeline/`): gen → cutout/layer → depth → shadow plate → harmonize → LUT grade → layered parallax scene | **DONE** (`7353e0dc`,`ea81210a`) — celestia-hero photoreal, verified on WebGPU       |
+| D3  | Carousel driver + loop-column driver (motion exemplars = frame sequences)                                                                  | **DONE** (`c74e8495`) — 412 prims, 6 motion frames on WebGPU                         |
+| D4  | R1 cinematic floor: IBL/HDRI, filmic tone mapping, imperfection maps, contact shadows, DOF/grain/bloom/LUT post chain                      | **DONE** (`2c17f158`)                                                                |
+| D5  | R4 splat viewer: component + loader + asset slot                                                                                           | **DONE** (`d483e110`) — Spark viewer; procedural + 4000-splat .ply loaded            |
+| D6  | Watch remaster (acceptance test): before/after frames per scene; W5B gate green                                                            | **DONE** (`1fb0514d`) — planner applied, floor node-local; W5B 11/11 + verify EXIT 0 |
+| D7  | Stretch: scroll-video-scrub + cinematic-video-hero                                                                                         | **TRIAGED/DEFERRED** (`...`, DEV-7) — fal stub; blocker = gen-video source           |
+| D8  | Flight-record all gen/build events                                                                                                         | **DONE** — composite events replayed, 13-record ledger                               |
 
 ## 2. Fresh-dated research findings (2026-07-06)
 
@@ -89,26 +89,100 @@ Budget: Replicate ≤ $10, Tripo ≤ 100 credits. Founder alert thresholds: <$5 
 
 ## 4. Architecture decisions
 
-_(to fill)_
+**The four routes are a decision, not a renderer.** D1 (`src/lib/render-routes/`)
+picks R1/R2/R3/R4 per element by explainable scoring + hard disqualifiers, with
+`deriveInputsFromIntent` making it reachable from prompt language and
+`routeToRealization` mapping a route to concrete Prism build hints.
+
+**R2 is the photoreal workhorse (D2).** Realism lives in the SOURCE IMAGERY, not
+geometry: FLUX generate → **bria/remove-background** cutout (256-level alpha =
+clean edges) → **depth-anything-v2** depth → **local sharp** soft shadow plate →
+**local filmic LUT** grade → a `layered-photo-scene` primitive that assembles the
+plates with differentiated parallax + independent float loops. Hosted ops go
+through the gitignored, key-holding `.assetgen/*.py` (INV-19); grade + shadow are
+LOCAL deterministic passes (DEV-6). Grade is BAKED into the plates at pipeline
+time, so the runtime needs no post chain — that is how a composite gets a photo
+grade without touching the engine (DEV-2).
+
+**The R1 floor is split (DEV-2).** Node-local pieces (imperfection roughness
+breakup, contact shadow, PMREM studio IBL) run inside a node factory / owned
+scene; the full-frame post chain (DOF·bloom·grade·vignette·grain, three r184 node
+`PostProcessing`) runs ONLY on owned canvases (the `/photo-lab`, marketing) —
+never the engine `SceneRoot`/`LightingRig`. So the watch at `/` gets realism from
+node-local pieces + R2 baked plates; a runtime post chain at `/` stays deferred.
+
+**One new dependency (DEV-3).** `@sparkjsdev/spark` (R4). Spark renders under
+WebGL2, so the splat viewer is a SECOND owned canvas — never the single-WebGPU
+editor scene (INV-1). Not a new `RenderMode`; the node carries an additive
+`splatUrl` slot. Everything else (post chain, drivers, floor) is first-party.
+
+**Engine untouched.** All product changes are content (atelier factory) +
+primitives + libraries + owned lab routes. I-CANVAS `/` core, I-ENGINE runtime,
+INV-19 secrets, and INV-18 additive-only schema all hold; `npm run verify`
+EXIT 0, W5B 11/11, tsc 0-new throughout.
 
 ## 5. Evidence index
 
 Evidence root: `notes/verification/shell-wphoto/`
 
-- `watch-before/` — pre-remaster frames per scene (captured BEFORE any change)
-- `watch-after/` — post-remaster frames per scene
-- `composite-stages/` — one full pipeline example: gen → layers → depth → shadow → grade → scene
-- `drivers/` — motion frame sequences (carousel, loop-column)
-- `gates/` — verify + W5B output
+- `composite-stages/` — the full R2 example: baked plates live under
+  `public/prism-mock/photo/celestia-hero/` (`backdrop.png` + `.depth.png`,
+  `product.png` cutout, `product.shadow.png`, 3 garnish cutouts, `composite.json`
+  with per-stage provenance) → assembled scene `scene-floor-final.jpeg`
+  (photoreal, R2 + R1 floor on real WebGPU) + `parallax-left/right.jpeg`
+  (differentiated parallax) + `splat-procedural.jpeg` / `splat-loaded-ply.jpeg`
+  (R4 viewer: procedural volume + a real 4000-gaussian `.ply` loaded by Spark).
+- `drivers/` — motion frame-sequences: `carousel-{1,2,3}.jpeg` (coverflow
+  advance), `loop-column-{1,2,3}.jpeg` (seamless crawl).
+- `watch-before/` (6 scenes, prior session) + `watch-after/` (arrival, atelier)
+  — the R1 remaster; floor is subtle at scene scale (DEV-2).
+- `gates/` — `w5b-gate.txt` (11/11), `verify-chain.txt` (EXIT 0, schema 338/338,
+  tenancy 10/10, parity 6/6), `composite-flightrec-ledger.ndjson` (D8, 13 records).
+
+Reviewable routes (dev server): `/photo-lab` (R2 composite + R1 floor;
+`?prim=carousel-3d|loop-column` for the drivers), `/splat-lab` (R4; `?url=` loads
+a capture), `/` `#hub=s6-atelier` (the remastered watch).
 
 ## 6. Deviations
 
-See `notes/spec-deviations-wphoto.md` (written BEFORE deviating code).
+See `notes/spec-deviations-wphoto.md` — DEV-1..6 (written before the code) + DEV-7
+(D7 triage). All discharged: DESIGN-REFERENCES §17 (DEV-1), owned-canvas post
+(DEV-2), Spark dep + allowlist (DEV-3), barrel regen (DEV-4), fal stub (DEV-5),
+Replicate-first + local grade/shadow (DEV-6), video families deferred (DEV-7).
 
 ## 7. Judge verdicts
 
-_(to fill: criteria-reviewer + user-advocate "art director with a loupe")_
+_(to fill after the dual fresh-context review: criteria-reviewer + user-advocate
+"art director with a loupe")_
 
 ## 8. Gap-report deltas
 
-_(to fill: which family readiness upgrades are earned by runtime motion exemplars, per the gap report's honesty law)_
+Per the gap report's honesty law, `readiness` grades **runtime execution**, and an
+upgrade requires a captured **runtime motion exemplar** — not a still. This wave
+ships the CAPABILITIES the gap report's cluster 1 + 2 + 4 named, and captures
+motion exemplars for the drivers:
+
+- **Cluster 1 (W-PHOTO) DISCHARGED:** the R2 composite pipeline (cutout +
+  detached shadow-plate synthesis + unified grade) and the R1 floor (contact
+  shadows, bloom, grade, vignette, grain, imperfection, IBL) now exist. The gap
+  report's explicit verification — "confirm automated background-removal +
+  detached-shadow-plate synthesis exist in the media-gen adapters" — is
+  **satisfied** (bria cutout + local shadow-plate, both proven with committed
+  output + provenance).
+- **layered-photo-parallax-hero → upgradeable to `ready`:** a runtime motion
+  exemplar was captured (`scene-floor-final` + `parallax-left/right` on real
+  WebGPU — differentiated parallax + independent float loops). This is the first
+  `partial` family with a real in-engine motion exemplar this wave.
+- **coverflow-3d-carousel / filmstrip-3d-carousel / infinite-filmstrip-gallery:**
+  their missing DRIVERS now exist (`carousel-3d`, `loop-column`) with motion
+  frame-sequences captured; contact-shadow (carousel) + the R1 floor are present.
+  Remaining per-family motion-parity proof is a future verification, not claimed
+  here.
+- **Cluster 4 (video) NOT discharged:** cinematic-video-hero + scroll-video-scrub
+  stay `gap`. Delta: the blocking cluster narrows — the runtime video-texture lane
+  (`ctx.videoLoader`) + W8 scroll-scrub driver already exist, so only the
+  gen-video/frame-sequence SOURCE remains (fal absent; a W-VIDEO wave). Recorded
+  in DEV-7.
+
+No readiness field in the committed corpus is edited by this report; upgrades are
+a per-family future-wave verification (the corpus honesty law).
