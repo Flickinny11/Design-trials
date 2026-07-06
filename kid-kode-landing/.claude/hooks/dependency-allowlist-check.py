@@ -128,6 +128,12 @@ DEVDEP_ALLOW = {
     # bare specifier so colocated *.test.ts files pass the import guard.
     # Rationale: 3D TEXT STYLING outline-registry colocated test (2026-06-14).
     "vitest",
+    # Flight Recorder (W-FR, 2026-07-05, D3): offline Parquet compaction of the
+    # NDJSON training corpus. hyparquet-writer (+ its single dep hyparquet) is
+    # pure JS, no native code, used ONLY by scripts/flight-recorder-compact.mjs
+    # (never the request path, never the client bundle). Rationale logged in
+    # notes/mockup-pipeline.md §10 + notes/spec-deviations-wfr.md D3.
+    "hyparquet-writer", "hyparquet",
 }
 ALL_ALLOW = RUNTIME_ALLOW | BUILD_ALLOW | DEVDEP_ALLOW
 

@@ -430,3 +430,15 @@ prompt requires the chat agentic loop to "wire to a local echo/stub agent endpoi
 fetch response stream, NOT a WebSocket (I1 intact) and NOT polling. tRPC carries no
 renderer, no DOM, no state library (I3 intact — Zustand remains the only store).
 The stub agent is replaced by the real orchestrator in W5 behind the same contract.
+
+### §10 addendum — FLIGHT RECORDER devDep allowlist (W-FR, 2026-07-05)
+
+`hyparquet-writer@^0.16` (+ its single transitive dep `hyparquet`) added to
+`DEVDEP_ALLOW` in `.claude/hooks/dependency-allowlist-check.py` and installed as a
+**devDependency**. Rationale (deviation D3, `notes/spec-deviations-wfr.md`): the W-FR
+spec requires an NDJSON sink with daily rotation **plus a Parquet compaction script**.
+Both libs are pure JS with no native code; they are used ONLY by the offline
+`scripts/flight-recorder-compact.mjs` (rolls a day's NDJSON training-corpus partitions
+into columnar Parquet). They never enter the request path, the client bundle, or any
+`src/lib/**` runtime module — the recorder writer itself adds ZERO runtime deps (its
+NDJSON sink uses `node:fs`). No dependency was downgraded; no version pin changed.
