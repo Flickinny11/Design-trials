@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "prism-dg-v1",
+  "id": "bento-grid-slider",
+  "name": "Bento Grid Slider",
+  "status": "grounded",
+  "summary": "An asymmetric grid of rounded tiles at mixed sizes — one dominant hero tile, a solid copy/CTA panel, a rhythm of smaller category cells — where the grid skeleton is the slide frame: advancing swaps every tile's content in place while the layout never moves, marrying dashboard density with slideshow storytelling.",
+  "elementTypes": ["bento-grid", "grid", "slider", "hero"],
+  "whatMakesItWork": {
+    "composition": [
+      "Asymmetric bento balance: a dominant photo hero tile paired with a solid-color text/CTA tile of similar visual mass, then smaller equal category tiles — never a uniform grid.",
+      "Consistent rounded corners and tight UNIFORM gutters are what make it read as 'bento'; one wrong gutter breaks the box.",
+      "Labeled photo tiles double as content preview AND navigation entry points into sub-topics.",
+      "Type steps from a big name in the hero tile to small eyebrow labels in the cells — the grid provides the hierarchy, so type stays quiet."
+    ],
+    "layering": [
+      "Essentially flat single-plane tiling; depth is subtle tile elevation (soft shadow/inset) and the photo-vs-solid-plate contrast, not parallax.",
+      "Solid text plates set AMONG photo plates give the eye resting points inside the density."
+    ],
+    "lighting": [
+      "Flat even UI lighting with gentle tile shadows for separation; drama lives INSIDE the photos, never in the chrome.",
+      "The grid must stay calm so any photo set drops in — lighting effects on tiles fight the modular logic."
+    ],
+    "typography": [
+      "Large humanist display for the featured name; lowercase category labels; guidebook-like quiet legibility.",
+      "Weight contrast between the big place/product name and small tile eyebrows carries the hierarchy."
+    ]
+  },
+  "palette": {
+    "logic": ["editorial-neutral", "duotone", "photographic-derived"],
+    "rules": [
+      "One warm/neutral tile-chrome system (e.g. a two-tone neutral pair) unifies the grid so any content set's photos read as curated.",
+      "Accent restraint keeps the bento calm — a single UI accent at most, spent outside the photographic tiles.",
+      "Photo tiles must share a tonal register (same grade family) or the grid fragments."
+    ]
+  },
+  "motion": {
+    "character": ["smooth-luxurious", "mechanical-precise"],
+    "easing": [
+      "Soft ease-in-out crossfades of tile CONTENTS in place — the grid geometry holds perfectly still.",
+      "Slight cell-to-cell stagger on the swap so the board visibly ripples to the new state."
+    ],
+    "pacing": [
+      "Calm mid-tempo state changes (~1s), browsable rather than kinetic.",
+      "Hover states on tiles may lift/zoom the photo INSIDE its frame; the frame itself never moves."
+    ],
+    "choreography": [
+      "The fixed skeleton is the stage; on advance, tiles crossfade their photos and labels in a light stagger so the whole board morphs to a new subject without layout jumps.",
+      "Never re-flow the grid on advance — layout constancy is the family's identity."
+    ]
+  },
+  "capabilities": {
+    "renderingRoutes": ["2d-composition", "R1"],
+    "genModels": ["flux-2-pro"],
+    "primitives": ["keyframes", "msdf-text", "hub-background", "pbr-material", "inview-driver"],
+    "postFx": [],
+    "readiness": "partial",
+    "gapNotes": [
+      "Rounded-tile plane composition with in-place texture crossfade is expressible node-by-node, but there is no bento LAYOUT primitive (grid solver with mixed spans + uniform gutters) — Conductor would have to hand-place every tile.",
+      "The coordinated all-tiles content swap needs the same multi-node state driver as infinite-filmstrip-gallery's theme swap.",
+      "True flat/orthographic composition belongs to the W-2D hub mode; in 3D perspective today, tile grids show slight keystoning at frame edges."
+    ]
+  },
+  "usage": {
+    "whenToUse": [
+      "Overview/comparison surfaces: travel destinations, product ranges, feature matrices, dashboards with editorial ambition.",
+      "When the brief wants density AND premium calm — bento is the highest-information premium pattern in the corpus.",
+      "SaaS marketing where feature tiles double as navigation."
+    ],
+    "whenNotToUse": [
+      "Single-focus linear narratives — the grid fragments attention across many tiles by design.",
+      "When tile imagery varies wildly in tone and breaks the unified set.",
+      "Tiny viewports: bento collapses to a column and loses its identity; needs a designed mobile fallback."
+    ],
+    "archetypeFit": ["saas", "commerce", "content", "community"],
+    "moods": ["warm", "refined", "precise", "editorial", "calm"]
+  },
+  "pairing": {
+    "pairsWith": ["editorial-product-gallery", "quiet-luxury-monochrome"],
+    "avoidWith": ["parallax-zoom-deep-dive", "gpu-fluid-overlay", "filmstrip-3d-carousel"],
+    "notes": [
+      "Bento is the anti-spectacle family: it pairs with calm editorial registers and clashes with every full-frame motion family.",
+      "Category tiles can deep-link into hubs rendered by other families — bento as the map, immersive families as the territory."
+    ]
+  },
+  "antiRepetition": {
+    "clusterId": "carousel",
+    "notes": "Counts as a carousel mechanic (the grid IS the slide frame) — same cluster as filmstrip-3d-carousel, coverflow-3d-carousel, swatch-variant-swap."
+  },
+  "sources": [
+    {
+      "title": "Bento Grid Travel Slider",
+      "url": "https://www.sliderrevolution.com/templates/bento-grid-travel-slider/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session, live demo: prev/next driven through multiple destinations; in-place tile content crossfade with the grid skeleton perfectly static observed across advances; tile hover states checked.",
+      "observationRef": "analysis/bento-grid-travel-slider.json"
+    }
+  ],
+  "exemplars": [],
+  "provenance": {
+    "groundTruth": ["monitor-observation"],
+    "distilledAt": "2026-07-06",
+    "distilledBy": "wdg1-orchestrator"
+  }
+}
