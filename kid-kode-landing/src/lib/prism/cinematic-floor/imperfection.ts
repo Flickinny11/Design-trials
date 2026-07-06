@@ -37,8 +37,14 @@ export interface ImperfectionOptions {
   dust?: number;
   /** Number of fine scratches. */
   scratches?: number;
-  /** 0..1 overall strength of the breakup around the neutral 0.5. */
+  /** 0..1 overall strength of the breakup around the neutral value. */
   strength?: number;
+  /**
+   * Neutral value the map is centred on (default 0.5). Set ~0.9 when used as a
+   * `roughnessMap` (which MULTIPLIES base roughness) so the surface's roughness
+   * is mostly preserved with only a subtle imperfection breakup around it.
+   */
+  center?: number;
 }
 
 /** Compute the raw imperfection field (±deviation around 0), shared by both
@@ -132,10 +138,11 @@ export function makeImperfectionMap(
 ): DataTexture {
   const { field, size } = computeImperfectionField(opts);
   const strength = opts.strength ?? 1;
+  const center = opts.center ?? 0.5;
   const data = new Uint8Array(size * size * 4);
   for (let i = 0; i < size * size; i++) {
     const g = Math.round(
-      Math.max(0, Math.min(1, 0.5 + field[i] * strength)) * 255,
+      Math.max(0, Math.min(1, center + field[i] * strength)) * 255,
     );
     data[i * 4] = g;
     data[i * 4 + 1] = g;

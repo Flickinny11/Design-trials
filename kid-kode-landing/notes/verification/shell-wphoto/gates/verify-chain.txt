@@ -1,0 +1,32 @@
+=== npm run verify (D6, after all W-PHOTO changes) ===
+[[32mPASS[0m] cross.tenancy.project.setModelOverride B on A's project.setModelOverride is NOT_FOUND
+[[32mPASS[0m] cross.tenancy.project.duplicate    B on A's project.duplicate is NOT_FOUND
+[[32mPASS[0m] cross.tenancy.project.delete       B on A's project.delete is NOT_FOUND
+[[32mPASS[0m] cross.tenancy.graph.get            B on A's graph.get is NOT_FOUND
+[[32mPASS[0m] cross.tenancy.graph.save           B on A's graph.save is NOT_FOUND
+[[32mPASS[0m] cross.tenancy.version.list         B on A's version.list is NOT_FOUND
+[[32mPASS[0m] cross.tenancy.version.create       B on A's version.create is NOT_FOUND
+[[32mPASS[0m] cross.tenancy.version.restore      B on A's version.restore is NOT_FOUND
+[[32mPASS[0m] cross.sharing.project.access       B on A's project.access is NOT_FOUND
+[[32mPASS[0m] cross.sharing.project.getShare     B on A's project.getShare is NOT_FOUND
+[[32mPASS[0m] cross.sharing.project.setShare     B on A's project.setShare is NOT_FOUND
+[[32mPASS[0m] cross.project.list                 B's list contains ONLY B's data (empty)
+[[32mPASS[0m] cross.org.dashboard                B on a fabricated org dashboard is NOT_FOUND
+[[32mPASS[0m] cross.org.list                     B's org list is empty (member of none)
+[[32mPASS[0m] cross.usage.get                    B's usage meter counts only B's projects (0)
+[[32mPASS[0m] cross.asset.get                    B on A's asset is 404
+[[32mPASS[0m] cross.asset.post                   B upload into A's project is 404
+[[32mPASS[0m] cross.no-corruption                A's graph unchanged after B's attempts
+[[32mPASS[0m] wall.traversal-id                  traversal-shaped id is BAD_REQUEST at the edge
+[[32mPASS[0m] wall.owner-smuggle                 injected owner field is REJECTED (.strict())
+[i11] 35/35 checks passed
+> kid-kode-ai-landing@0.2.0 verify:flight-recorder
+> node scripts/verify-flight-recorder.mjs
+ Test Files  6 passed | 1 skipped (7)
+      Tests  33 passed | 1 skipped (34)
+   Duration  305ms (transform 247ms, setup 0ms, collect 394ms, tests 40ms, environment 1ms, prepare 572ms)
+── flight-recorder verify ──
+  PASS  schema-doc freshness
+  PASS  invariant unit suite
+FLIGHT-RECORDER VERIFY: PASS
+VERIFY EXIT 0 (zero regression)

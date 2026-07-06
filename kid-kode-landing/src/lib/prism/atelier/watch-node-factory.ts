@@ -23,27 +23,43 @@
 // mock-app-source/nodes/ + prism-player/ only), so writing window.__ATELIER_RIG__
 // here is sanctioned — it is the documented transitional inspect/input bridge
 // that actions.ts + AtelierDragController + AtelierInputController consume.
-'use client';
+"use client";
 
 import {
-  Group, Object3D, Vector3, Box3, Mesh, CatmullRomCurve3, Quaternion,
-  CircleGeometry, BoxGeometry, TorusGeometry, CylinderGeometry, PlaneGeometry, PointLight,
+  Group,
+  Object3D,
+  Vector3,
+  Box3,
+  Mesh,
+  CatmullRomCurve3,
+  Quaternion,
+  CircleGeometry,
+  BoxGeometry,
+  TorusGeometry,
+  CylinderGeometry,
+  PlaneGeometry,
+  PointLight,
   type Texture,
-} from 'three';
+} from "three";
 import {
   buildPhysicalMaterial,
   applyMaterialSpec,
-} from '@/lib/prism/runtime/shared/material-system';
-import type { MaterialSpec } from '@/lib/prism-graph/types';
-import type { PrismNode } from '@/lib/prism-graph/types';
-import { godrayPrimitive } from '@/lib/prism/animatable/primitives/godray';
-import { variantOf, type AtelierLayerId } from '@/lib/prism/atelier/config';
-import { useConfiguratorStore } from '@/stores/useConfiguratorStore';
-import { getSharedDriverHub } from '@/lib/prism/runtime/shared-context';
-import type { NodeContext } from '@/lib/prism/runtime/shared/adapter';
+} from "@/lib/prism/runtime/shared/material-system";
+import type { MaterialSpec } from "@/lib/prism-graph/types";
+import type { PrismNode } from "@/lib/prism-graph/types";
+import { godrayPrimitive } from "@/lib/prism/animatable/primitives/godray";
+// W-PHOTO D6: R1 cinematic-floor node-local pieces (imperfection roughness
+// breakup on metals + a soft grounding shadow). Content-level, per W9A.
+import { makeImperfectionMap } from "@/lib/prism/cinematic-floor/imperfection";
+import { makeContactShadow } from "@/lib/prism/cinematic-floor/contact-shadow";
+import type { DataTexture } from "three";
+import { variantOf, type AtelierLayerId } from "@/lib/prism/atelier/config";
+import { useConfiguratorStore } from "@/stores/useConfiguratorStore";
+import { getSharedDriverHub } from "@/lib/prism/runtime/shared-context";
+import type { NodeContext } from "@/lib/prism/runtime/shared/adapter";
 
-const ASSET = '/prism-mock/orrery/meshes/atelier';
-const MOVEMENT_URL = '/prism-mock/orrery/meshes/tourbillon.glb';
+const ASSET = "/prism-mock/orrery/meshes/atelier";
+const MOVEMENT_URL = "/prism-mock/orrery/meshes/tourbillon.glb";
 const CASE_GEN_URL = `${ASSET}/case-gen.glb`;
 const BEZEL_GEN_URL = `${ASSET}/bezel-gen.glb`;
 const CROWN_GEN_URL = `${ASSET}/crown-gen.glb`;
@@ -54,7 +70,11 @@ const IDLE_DELAY_MS = 3000;
 const IDLE_SPEED = 0.1; // rad/s — slow luxury turntable
 const WATCH_R = 1.0;
 const DIAL_FRONT = 0.05;
-const LUME_COLOR: Record<string, string | undefined> = { blue: '#1ec8ff', green: '#5ef08a', ice: '#bfe9ff' };
+const LUME_COLOR: Record<string, string | undefined> = {
+  blue: "#1ec8ff",
+  green: "#5ef08a",
+  ice: "#bfe9ff",
+};
 
 // GLB transform constants (tuned against the studio rig) — unchanged from the rig.
 const CASE_SIZE = 2.06;
@@ -65,12 +85,38 @@ const CROWN_SIZE = 0.42;
 const CROWN_AT_X = 1.02;
 
 type Build = Record<AtelierLayerId, string>;
-type AnyMesh = Mesh & { material: { normalMap?: unknown; map?: unknown; dispose?: () => void } };
-type WMat = ReturnType<typeof buildPhysicalMaterial> & {
-  map?: unknown; normalMap?: unknown; roughnessMap?: unknown;
-  normalScale?: { set: (x: number, y: number) => void };
-  emissive?: unknown; emissiveIntensity: number; needsUpdate: boolean; dispose: () => void;
+type AnyMesh = Mesh & {
+  material: { normalMap?: unknown; map?: unknown; dispose?: () => void };
 };
+type WMat = ReturnType<typeof buildPhysicalMaterial> & {
+  map?: unknown;
+  normalMap?: unknown;
+  roughnessMap?: unknown;
+  normalScale?: { set: (x: number, y: number) => void };
+  emissive?: unknown;
+  emissiveIntensity: number;
+  needsUpdate: boolean;
+  dispose: () => void;
+};
+
+// R1 cinematic floor (W-PHOTO D6): one shared imperfection roughness map so
+// polished metal catches light with micro dust/scratch breakup instead of
+// mirror-perfect digital cleanliness. Centre ~0.9 keeps base roughness mostly
+// intact (roughnessMap MULTIPLIES). Module singleton — tiny, shared across every
+// watch material + instance; never disposed per-node (would clobber live users).
+let _watchImperfection: DataTexture | null = null;
+function watchImperfectionMap(): DataTexture {
+  if (!_watchImperfection) {
+    _watchImperfection = makeImperfectionMap({
+      size: 512,
+      seed: 77,
+      center: 0.9,
+      strength: 0.6,
+    });
+    _watchImperfection.repeat.set(3, 3); // tile finer across the small parts
+  }
+  return _watchImperfection;
+}
 
 // ── Build a node-owned MeshPhysicalNodeMaterial from a MaterialSpec, pouring any
 //    albedo/normal/roughness maps the spec carries (mirrors the rig's makeMat). ─
@@ -78,21 +124,40 @@ function makeMat(ctx: NodeContext, spec: MaterialSpec): WMat {
   const m = buildPhysicalMaterial(spec);
   applyMaterialSpec(m, spec);
   const mm = m as unknown as WMat;
+  // R1 floor: metals with no roughness map of their own get the imperfection
+  // breakup (swap-proof — every finish re-dress passes back through makeMat).
+  if (!spec.roughnessMapUrl && (spec.metalness ?? 0) > 0.5) {
+    mm.roughnessMap = watchImperfectionMap();
+    mm.needsUpdate = true;
+  }
   if (spec.baseColorMapUrl) {
-    void ctx.textureLoader.loadTexture(spec.baseColorMapUrl).then((t) => {
-      (t as { colorSpace?: string }).colorSpace = 'srgb';
-      mm.map = t; mm.needsUpdate = true;
-    }).catch(() => {});
+    void ctx.textureLoader
+      .loadTexture(spec.baseColorMapUrl)
+      .then((t) => {
+        (t as { colorSpace?: string }).colorSpace = "srgb";
+        mm.map = t;
+        mm.needsUpdate = true;
+      })
+      .catch(() => {});
   }
   if (spec.normalMapUrl) {
-    void ctx.textureLoader.loadTexture(spec.normalMapUrl).then((t: Texture) => {
-      mm.normalMap = t;
-      mm.normalScale?.set(spec.normalScale ?? 1, spec.normalScale ?? 1);
-      mm.needsUpdate = true;
-    }).catch(() => {});
+    void ctx.textureLoader
+      .loadTexture(spec.normalMapUrl)
+      .then((t: Texture) => {
+        mm.normalMap = t;
+        mm.normalScale?.set(spec.normalScale ?? 1, spec.normalScale ?? 1);
+        mm.needsUpdate = true;
+      })
+      .catch(() => {});
   }
   if (spec.roughnessMapUrl) {
-    void ctx.textureLoader.loadTexture(spec.roughnessMapUrl).then((t) => { mm.roughnessMap = t; mm.needsUpdate = true; }).catch(() => {});
+    void ctx.textureLoader
+      .loadTexture(spec.roughnessMapUrl)
+      .then((t) => {
+        mm.roughnessMap = t;
+        mm.needsUpdate = true;
+      })
+      .catch(() => {});
   }
   return mm;
 }
@@ -103,8 +168,15 @@ function specOf(layer: AtelierLayerId, variantId: string): MaterialSpec | null {
 
 /** Clone + center + scale-to-target + orient a generated GLB; collect its meshes
  *  and the first baked normal map for finish grafting. (port of normalizeGenPart) */
-function normalizeGenPart(scene: Object3D, targetSize: number, rotX: number, posZ: number): {
-  holder: Group; meshes: AnyMesh[]; bakedNormal: unknown;
+function normalizeGenPart(
+  scene: Object3D,
+  targetSize: number,
+  rotX: number,
+  posZ: number,
+): {
+  holder: Group;
+  meshes: AnyMesh[];
+  bakedNormal: unknown;
 } {
   const root = scene.clone(true);
   const meshes: AnyMesh[] = [];
@@ -113,12 +185,15 @@ function normalizeGenPart(scene: Object3D, targetSize: number, rotX: number, pos
     const m = o as AnyMesh;
     if ((m as { isMesh?: boolean }).isMesh) {
       meshes.push(m);
-      if (!bakedNormal && m.material?.normalMap) bakedNormal = m.material.normalMap;
+      if (!bakedNormal && m.material?.normalMap)
+        bakedNormal = m.material.normalMap;
     }
   });
   const box = new Box3().setFromObject(root);
-  const size = new Vector3(); box.getSize(size);
-  const center = new Vector3(); box.getCenter(center);
+  const size = new Vector3();
+  box.getSize(size);
+  const center = new Vector3();
+  box.getCenter(center);
   root.position.sub(center);
   const holder = new Group();
   holder.add(root);
@@ -129,14 +204,24 @@ function normalizeGenPart(scene: Object3D, targetSize: number, rotX: number, pos
 }
 
 /** Dress a generated part's meshes in the live finish, grafting the baked normal. */
-function dressGenPart(ctx: NodeContext, meshes: AnyMesh[], spec: MaterialSpec, bakedNormal: unknown, normScale = 0.85): WMat {
+function dressGenPart(
+  ctx: NodeContext,
+  meshes: AnyMesh[],
+  spec: MaterialSpec,
+  bakedNormal: unknown,
+  normScale = 0.85,
+): WMat {
   const mat = makeMat(ctx, spec);
   if (bakedNormal && !spec.normalMapUrl) {
     mat.normalMap = bakedNormal as never;
     mat.normalScale?.set(normScale, normScale);
     mat.needsUpdate = true;
   }
-  for (const me of meshes) { me.material = mat as never; me.castShadow = true; me.receiveShadow = true; }
+  for (const me of meshes) {
+    me.material = mat as never;
+    me.castShadow = true;
+    me.receiveShadow = true;
+  }
   return mat;
 }
 
@@ -147,8 +232,15 @@ interface GenPart {
   dispose: () => void;
 }
 function makeGenPart(
-  ctx: NodeContext, url: string, layer: AtelierLayerId, size: number, rotX: number, posZ: number,
-  fallback: MaterialSpec, normScale: number, initialVariant: string,
+  ctx: NodeContext,
+  url: string,
+  layer: AtelierLayerId,
+  size: number,
+  rotX: number,
+  posZ: number,
+  fallback: MaterialSpec,
+  normScale: number,
+  initialVariant: string,
 ): GenPart {
   const holder = new Group();
   let meshes: AnyMesh[] = [];
@@ -156,20 +248,41 @@ function makeGenPart(
   let mat: WMat | null = null;
   let variant = initialVariant;
   let disposed = false;
-  void ctx.glbLoader.loadGLB(url).then((gltf) => {
-    if (disposed) return;
-    const part = normalizeGenPart((gltf as { scene: Object3D }).scene, size, rotX, posZ);
-    meshes = part.meshes; bakedNormal = part.bakedNormal;
-    holder.add(part.holder);
-    mat = dressGenPart(ctx, meshes, specOf(layer, variant) ?? fallback, bakedNormal, normScale);
-  }).catch(() => {});
+  void ctx.glbLoader
+    .loadGLB(url)
+    .then((gltf) => {
+      if (disposed) return;
+      const part = normalizeGenPart(
+        (gltf as { scene: Object3D }).scene,
+        size,
+        rotX,
+        posZ,
+      );
+      meshes = part.meshes;
+      bakedNormal = part.bakedNormal;
+      holder.add(part.holder);
+      mat = dressGenPart(
+        ctx,
+        meshes,
+        specOf(layer, variant) ?? fallback,
+        bakedNormal,
+        normScale,
+      );
+    })
+    .catch(() => {});
   return {
     holder,
     setVariant: (v: string) => {
       variant = v;
       if (!meshes.length) return;
       mat?.dispose?.();
-      mat = dressGenPart(ctx, meshes, specOf(layer, variant) ?? fallback, bakedNormal, normScale);
+      mat = dressGenPart(
+        ctx,
+        meshes,
+        specOf(layer, variant) ?? fallback,
+        bakedNormal,
+        normScale,
+      );
     },
     dispose: () => {
       disposed = true;
@@ -198,19 +311,26 @@ function makeMovement(ctx: NodeContext): Movement {
   let built: Group | null = null;
   let disposed = false;
   let exAmt = 0;
-  void ctx.glbLoader.loadGLB(MOVEMENT_URL).then((gltf) => {
-    if (disposed) return;
-    const root = (gltf as { scene: Object3D }).scene.clone(true);
-    const box = new Box3().setFromObject(root);
-    const size = new Vector3(); box.getSize(size);
-    const center = new Vector3(); box.getCenter(center);
-    root.position.sub(center);
-    const holder = new Group();
-    holder.add(root);
-    holder.scale.setScalar((1.55 * WATCH_R) / (Math.max(size.x, size.y, size.z) || 1));
-    built = holder;
-    group.add(holder);
-  }).catch(() => {});
+  void ctx.glbLoader
+    .loadGLB(MOVEMENT_URL)
+    .then((gltf) => {
+      if (disposed) return;
+      const root = (gltf as { scene: Object3D }).scene.clone(true);
+      const box = new Box3().setFromObject(root);
+      const size = new Vector3();
+      box.getSize(size);
+      const center = new Vector3();
+      box.getCenter(center);
+      root.position.sub(center);
+      const holder = new Group();
+      holder.add(root);
+      holder.scale.setScalar(
+        (1.55 * WATCH_R) / (Math.max(size.x, size.y, size.z) || 1),
+      );
+      built = holder;
+      group.add(holder);
+    })
+    .catch(() => {});
   return {
     group,
     update: (dt, flipped, explode) => {
@@ -247,15 +367,19 @@ function buildStrapBand(mat: WMat, sign: number): Group {
   const N = 9;
   const g = new Group();
   for (let i = 0; i < N; i++) {
-    const a = curve.getPoint(i / N), b = curve.getPoint((i + 1) / N);
+    const a = curve.getPoint(i / N),
+      b = curve.getPoint((i + 1) / N);
     const mid = a.clone().add(b).multiplyScalar(0.5);
-    const dir = b.clone().sub(a); const len = dir.length(); dir.normalize();
+    const dir = b.clone().sub(a);
+    const len = dir.length();
+    dir.normalize();
     const q = new Quaternion().setFromUnitVectors(up, dir);
     const w = 0.62 - 0.3 * (i / N);
     const seg = new Mesh(new BoxGeometry(w, len * 1.08, 0.07), mat as never);
     seg.position.copy(mid);
     seg.quaternion.copy(q);
-    seg.castShadow = true; seg.receiveShadow = true;
+    seg.castShadow = true;
+    seg.receiveShadow = true;
     g.add(seg);
   }
   return g;
@@ -264,7 +388,11 @@ function buildStrapBand(mat: WMat, sign: number): Group {
 // ── godray (static additive shaft) — port of GodrayShaft without the camera
 //    billboard. In the atelier the camera is head-on, so a fixed +Z-facing
 //    additive quad reads identically; this removes the node's only camera dep. ─
-interface Godray { mesh: Mesh; seek: (t: number) => void; dispose: () => void; }
+interface Godray {
+  mesh: Mesh;
+  seek: (t: number) => void;
+  dispose: () => void;
+}
 function makeGodray(): Godray {
   const geo = new PlaneGeometry(1, 1);
   const mesh = new Mesh(geo);
@@ -278,10 +406,23 @@ function makeGodray(): Godray {
     scene: mesh as unknown as Object3D,
     userData: {} as Record<string, unknown>,
   };
-  const anim = godrayPrimitive.create(target as never, { intensity: 0.85, decay: 0.955, density: 1, angleDeg: 90 }) as unknown as {
-    seek: (t: number) => void; dispose?: () => void;
+  const anim = godrayPrimitive.create(target as never, {
+    intensity: 0.85,
+    decay: 0.955,
+    density: 1,
+    angleDeg: 90,
+  }) as unknown as {
+    seek: (t: number) => void;
+    dispose?: () => void;
   };
-  return { mesh, seek: (t) => anim.seek(t), dispose: () => { anim.dispose?.(); geo.dispose(); } };
+  return {
+    mesh,
+    seek: (t) => anim.seek(t),
+    dispose: () => {
+      anim.dispose?.();
+      geo.dispose();
+    },
+  };
 }
 
 // ── W9A: node-local product-light rig — a three-point studio setup that stays
@@ -290,15 +431,23 @@ function makeGodray(): Godray {
 //    sparkles. Bounded distance/decay keeps the pool local to the watch (it does
 //    not wash the galaxy neighbours). Ramps down with the day→night reveal so the
 //    lume glow still owns the dark, then restores. ───────────────────────────────
-interface ProductLights { group: Group; setNight: (n: number) => void; dispose: () => void; }
+interface ProductLights {
+  group: Group;
+  setNight: (n: number) => void;
+  dispose: () => void;
+}
 function makeProductLights(): ProductLights {
   const group = new Group();
   // key (warm, upper-front-left), rim (cool, upper-back-right), fill (soft front-below),
   // face (soft near-axial lift so the aventurine dial art always reads, even face-on).
-  const key = new PointLight('#fff3df', 33, 16, 2); key.position.set(-2.9, 3.2, 4.0);
-  const rim = new PointLight('#bcd4ff', 22, 13, 2); rim.position.set(2.9, 1.3, -3.0);
-  const fill = new PointLight('#dfe8ff', 12, 14, 2); fill.position.set(1.6, -2.2, 3.4);
-  const face = new PointLight('#fff6ec', 13, 17, 2); face.position.set(0, 0.35, 5.4);
+  const key = new PointLight("#fff3df", 33, 16, 2);
+  key.position.set(-2.9, 3.2, 4.0);
+  const rim = new PointLight("#bcd4ff", 22, 13, 2);
+  rim.position.set(2.9, 1.3, -3.0);
+  const fill = new PointLight("#dfe8ff", 12, 14, 2);
+  fill.position.set(1.6, -2.2, 3.4);
+  const face = new PointLight("#fff6ec", 13, 17, 2);
+  face.position.set(0, 0.35, 5.4);
   const base = [33, 22, 12, 13];
   const lights = [key, rim, fill, face];
   for (const l of lights) group.add(l);
@@ -311,7 +460,11 @@ function makeProductLights(): ProductLights {
       fill.intensity = base[2] * (1 - 0.95 * n);
       face.intensity = base[3] * (1 - 0.92 * n);
     },
-    dispose: () => { for (const l of lights) { l.dispose?.(); } },
+    dispose: () => {
+      for (const l of lights) {
+        l.dispose?.();
+      }
+    },
   };
 }
 
@@ -322,7 +475,13 @@ interface Assembly {
   /** The anchored godray shaft (stays OUTSIDE the pivot — no spin, like the rig). */
   godrayMesh: Object3D;
   applyBuild: (build: Build) => void;
-  update: (dt: number, elapsed: number, explodeTarget: number, nightAmt: number, flipped: boolean) => void;
+  update: (
+    dt: number,
+    elapsed: number,
+    explodeTarget: number,
+    nightAmt: number,
+    flipped: boolean,
+  ) => void;
   markPlaced: () => void;
   dispose: () => void;
 }
@@ -333,40 +492,145 @@ function buildAssembly(ctx: NodeContext, initialBuild: Build): Assembly {
 
   // ── live-swappable materials ───────────────────────────────────────────────
   const lumeGlow = () => LUME_COLOR[build.lume];
-  const glowColor = () => lumeGlow() ?? '#bfe9ff';
+  const glowColor = () => lumeGlow() ?? "#bfe9ff";
   const dayLume = () => (lumeGlow() ? 0.95 : 0.0);
-  const withLume = (spec: MaterialSpec): MaterialSpec => ({ ...spec, emissive: glowColor(), emissiveIntensity: dayLume() });
+  const withLume = (spec: MaterialSpec): MaterialSpec => ({
+    ...spec,
+    emissive: glowColor(),
+    emissiveIntensity: dayLume(),
+  });
 
-  let dialMat = makeMat(ctx, specOf('dial', build.dial) ?? { baseColor: '#16243a', metalness: 0.4, roughness: 0.4 } as MaterialSpec);
-  let handsMat = makeMat(ctx, withLume(specOf('hands', build.hands) ?? { baseColor: '#eef2f8', metalness: 1, roughness: 0.12, envMapIntensity: 1.4 } as MaterialSpec));
-  let indexMat = makeMat(ctx, withLume(specOf('indices', build.indices) ?? { baseColor: '#e8c98a', metalness: 1, roughness: 0.2, envMapIntensity: 1.4 } as MaterialSpec));
-  let strapMat = makeMat(ctx, specOf('strap', build.strap) ?? { baseColor: '#2a1d14', metalness: 0, roughness: 1, envMapIntensity: 0.7 } as MaterialSpec);
+  let dialMat = makeMat(
+    ctx,
+    specOf("dial", build.dial) ??
+      ({
+        baseColor: "#16243a",
+        metalness: 0.4,
+        roughness: 0.4,
+      } as MaterialSpec),
+  );
+  let handsMat = makeMat(
+    ctx,
+    withLume(
+      specOf("hands", build.hands) ??
+        ({
+          baseColor: "#eef2f8",
+          metalness: 1,
+          roughness: 0.12,
+          envMapIntensity: 1.4,
+        } as MaterialSpec),
+    ),
+  );
+  let indexMat = makeMat(
+    ctx,
+    withLume(
+      specOf("indices", build.indices) ??
+        ({
+          baseColor: "#e8c98a",
+          metalness: 1,
+          roughness: 0.2,
+          envMapIntensity: 1.4,
+        } as MaterialSpec),
+    ),
+  );
+  let strapMat = makeMat(
+    ctx,
+    specOf("strap", build.strap) ??
+      ({
+        baseColor: "#2a1d14",
+        metalness: 0,
+        roughness: 1,
+        envMapIntensity: 0.7,
+      } as MaterialSpec),
+  );
   const crystalMat = makeMat(ctx, {
-    baseColor: '#eef4ff', metalness: 0, roughness: 0.1, transmission: 1, ior: 1.52,
-    thickness: 0.06, clearcoat: 0.12, clearcoatRoughness: 0.15, envMapIntensity: 0.28, opacity: 1,
+    baseColor: "#eef4ff",
+    metalness: 0,
+    roughness: 0.1,
+    transmission: 1,
+    ior: 1.52,
+    thickness: 0.06,
+    clearcoat: 0.12,
+    clearcoatRoughness: 0.15,
+    envMapIntensity: 0.28,
+    opacity: 1,
   } as MaterialSpec);
-  const capMat = makeMat(ctx, { baseColor: '#cfd4dc', metalness: 1, roughness: 0.15, envMapIntensity: 1.3 } as MaterialSpec);
+  const capMat = makeMat(ctx, {
+    baseColor: "#cfd4dc",
+    metalness: 1,
+    roughness: 0.15,
+    envMapIntensity: 1.3,
+  } as MaterialSpec);
   disposables.push(crystalMat, capMat);
 
   // ── geometry (memoised once; identical to the rig) ─────────────────────────
   const dialGeo = new CircleGeometry(WATCH_R * 0.82, 96);
   const chapterGeo = new TorusGeometry(WATCH_R * 0.8, WATCH_R * 0.022, 16, 128);
-  const indexGeo = (() => { const g = new BoxGeometry(0.03, 0.1, 0.02); g.translate(0, WATCH_R * 0.71, 0); return g; })();
+  const indexGeo = (() => {
+    const g = new BoxGeometry(0.03, 0.1, 0.02);
+    g.translate(0, WATCH_R * 0.71, 0);
+    return g;
+  })();
   const capGeo = new CylinderGeometry(0.035, 0.035, 0.05, 24);
   const crystalGeo = new CircleGeometry(WATCH_R * 0.83, 96);
-  const handGeo = (len: number, w: number) => { const g = new BoxGeometry(w, len, 0.012); g.translate(0, len * 0.34, 0); return g; };
+  const handGeo = (len: number, w: number) => {
+    const g = new BoxGeometry(w, len, 0.012);
+    g.translate(0, len * 0.34, 0);
+    return g;
+  };
   const hourGeo = handGeo(WATCH_R * 0.5, 0.045);
   const minGeo = handGeo(WATCH_R * 0.72, 0.032);
   const secGeo = handGeo(WATCH_R * 0.8, 0.012);
-  geoms.push(dialGeo, chapterGeo, indexGeo, capGeo, crystalGeo, hourGeo, minGeo, secGeo);
+  geoms.push(
+    dialGeo,
+    chapterGeo,
+    indexGeo,
+    capGeo,
+    crystalGeo,
+    hourGeo,
+    minGeo,
+    secGeo,
+  );
 
   // ── GLB parts ──────────────────────────────────────────────────────────────
-  const casePart = makeGenPart(ctx, CASE_GEN_URL, 'case', CASE_SIZE, CASE_ROT_X, CASE_POS_Z,
-    { baseColor: '#c9ced6', metalness: 1, roughness: 0.18, envMapIntensity: 1.4 } as MaterialSpec, 0.85, build.case);
-  const bezelPart = makeGenPart(ctx, BEZEL_GEN_URL, 'bezel', BEZEL_SIZE, -Math.PI / 2, 0.0,
-    { baseColor: '#aeb4bd', metalness: 1, roughness: 0.4 } as MaterialSpec, 0.4, build.bezel);
-  const crownPart = makeGenPart(ctx, CROWN_GEN_URL, 'crown', CROWN_SIZE, 0, 0,
-    { baseColor: '#c9ced6', metalness: 1, roughness: 0.2 } as MaterialSpec, 0.7, build.crown);
+  const casePart = makeGenPart(
+    ctx,
+    CASE_GEN_URL,
+    "case",
+    CASE_SIZE,
+    CASE_ROT_X,
+    CASE_POS_Z,
+    {
+      baseColor: "#c9ced6",
+      metalness: 1,
+      roughness: 0.18,
+      envMapIntensity: 1.4,
+    } as MaterialSpec,
+    0.85,
+    build.case,
+  );
+  const bezelPart = makeGenPart(
+    ctx,
+    BEZEL_GEN_URL,
+    "bezel",
+    BEZEL_SIZE,
+    -Math.PI / 2,
+    0.0,
+    { baseColor: "#aeb4bd", metalness: 1, roughness: 0.4 } as MaterialSpec,
+    0.4,
+    build.bezel,
+  );
+  const crownPart = makeGenPart(
+    ctx,
+    CROWN_GEN_URL,
+    "crown",
+    CROWN_SIZE,
+    0,
+    0,
+    { baseColor: "#c9ced6", metalness: 1, roughness: 0.2 } as MaterialSpec,
+    0.7,
+    build.crown,
+  );
   const movement = makeMovement(ctx);
   const godray = makeGodray();
   disposables.push(casePart, bezelPart, crownPart, movement, godray);
@@ -375,47 +639,71 @@ function buildAssembly(ctx: NodeContext, initialBuild: Build): Assembly {
   // watchGroup is the turntable subject (goes under the pivot); the godray is
   // anchored separately by the caller so it never spins (rig parity).
   const watchGroup = new Group();
-  const rootRef = new Group();           // settle-bounce wrapper (was rootRef)
+  const rootRef = new Group(); // settle-bounce wrapper (was rootRef)
   watchGroup.add(rootRef);
 
   const caseGroup = new Group();
   rootRef.add(caseGroup);
   caseGroup.add(casePart.holder);
-  const crownHolder = new Group(); crownHolder.position.set(CROWN_AT_X, 0, 0.0);
+  const crownHolder = new Group();
+  crownHolder.position.set(CROWN_AT_X, 0, 0.0);
   crownHolder.add(crownPart.holder);
   caseGroup.add(crownHolder);
 
-  const faceGroup = new Group(); faceGroup.position.set(0, 0, DIAL_FRONT);
+  const faceGroup = new Group();
+  faceGroup.position.set(0, 0, DIAL_FRONT);
   rootRef.add(faceGroup);
-  const bezelGroup = new Group(); bezelGroup.position.set(0, 0, 0.02);
+  const bezelGroup = new Group();
+  bezelGroup.position.set(0, 0, 0.02);
   bezelGroup.add(bezelPart.holder);
   faceGroup.add(bezelGroup);
 
-  const dialMesh = new Mesh(dialGeo, dialMat as never); dialMesh.position.set(0, 0, -0.01); dialMesh.receiveShadow = true;
+  const dialMesh = new Mesh(dialGeo, dialMat as never);
+  dialMesh.position.set(0, 0, -0.01);
+  dialMesh.receiveShadow = true;
   faceGroup.add(dialMesh);
-  const chapter = new Mesh(chapterGeo, indexMat as never); chapter.position.set(0, 0, 0.012);
+  const chapter = new Mesh(chapterGeo, indexMat as never);
+  chapter.position.set(0, 0, 0.012);
   faceGroup.add(chapter);
-  const indicesGroup = new Group(); indicesGroup.position.set(0, 0, 0.016);
+  const indicesGroup = new Group();
+  indicesGroup.position.set(0, 0, 0.016);
   for (let i = 0; i < 12; i++) {
-    const m = new Mesh(indexGeo, indexMat as never); m.rotation.set(0, 0, (-i * Math.PI) / 6);
+    const m = new Mesh(indexGeo, indexMat as never);
+    m.rotation.set(0, 0, (-i * Math.PI) / 6);
     indicesGroup.add(m);
   }
   faceGroup.add(indicesGroup);
-  const hourRef = new Group(); hourRef.position.set(0, 0, 0.03); hourRef.add(new Mesh(hourGeo, handsMat as never)); faceGroup.add(hourRef);
-  const minRef = new Group(); minRef.position.set(0, 0, 0.042); minRef.add(new Mesh(minGeo, handsMat as never)); faceGroup.add(minRef);
-  const secRef = new Group(); secRef.position.set(0, 0, 0.052); secRef.add(new Mesh(secGeo, handsMat as never)); faceGroup.add(secRef);
-  const cap = new Mesh(capGeo, capMat as never); cap.position.set(0, 0, 0.056); cap.rotation.set(Math.PI / 2, 0, 0); faceGroup.add(cap);
+  const hourRef = new Group();
+  hourRef.position.set(0, 0, 0.03);
+  hourRef.add(new Mesh(hourGeo, handsMat as never));
+  faceGroup.add(hourRef);
+  const minRef = new Group();
+  minRef.position.set(0, 0, 0.042);
+  minRef.add(new Mesh(minGeo, handsMat as never));
+  faceGroup.add(minRef);
+  const secRef = new Group();
+  secRef.position.set(0, 0, 0.052);
+  secRef.add(new Mesh(secGeo, handsMat as never));
+  faceGroup.add(secRef);
+  const cap = new Mesh(capGeo, capMat as never);
+  cap.position.set(0, 0, 0.056);
+  cap.rotation.set(Math.PI / 2, 0, 0);
+  faceGroup.add(cap);
 
-  const dialLight = new PointLight(glowColor(), 0, 2.8, 2); dialLight.position.set(0, 0, DIAL_FRONT + 0.12);
+  const dialLight = new PointLight(glowColor(), 0, 2.8, 2);
+  dialLight.position.set(0, 0, DIAL_FRONT + 0.12);
   rootRef.add(dialLight);
 
-  const crystalGroup = new Group(); crystalGroup.position.set(0, 0, DIAL_FRONT + 0.06);
+  const crystalGroup = new Group();
+  crystalGroup.position.set(0, 0, DIAL_FRONT + 0.06);
   crystalGroup.add(new Mesh(crystalGeo, crystalMat as never));
   rootRef.add(crystalGroup);
 
   const strapGroup = new Group();
-  let strapA = buildStrapBand(strapMat, 1); let strapB = buildStrapBand(strapMat, -1);
-  strapGroup.add(strapA); strapGroup.add(strapB);
+  let strapA = buildStrapBand(strapMat, 1);
+  let strapB = buildStrapBand(strapMat, -1);
+  strapGroup.add(strapA);
+  strapGroup.add(strapB);
   rootRef.add(strapGroup);
 
   rootRef.add(movement.group);
@@ -426,33 +714,90 @@ function buildAssembly(ctx: NodeContext, initialBuild: Build): Assembly {
     casePart.setVariant(build.case);
     bezelPart.setVariant(build.bezel);
     crownPart.setVariant(build.crown);
-    const newDial = makeMat(ctx, specOf('dial', build.dial) ?? { baseColor: '#16243a', metalness: 0.4, roughness: 0.4 } as MaterialSpec);
-    const newHands = makeMat(ctx, withLume(specOf('hands', build.hands) ?? { baseColor: '#eef2f8', metalness: 1, roughness: 0.12, envMapIntensity: 1.4 } as MaterialSpec));
-    const newIndex = makeMat(ctx, withLume(specOf('indices', build.indices) ?? { baseColor: '#e8c98a', metalness: 1, roughness: 0.2, envMapIntensity: 1.4 } as MaterialSpec));
-    const newStrap = makeMat(ctx, specOf('strap', build.strap) ?? { baseColor: '#2a1d14', metalness: 0, roughness: 1, envMapIntensity: 0.7 } as MaterialSpec);
-    dialMat.dispose?.(); handsMat.dispose?.(); indexMat.dispose?.(); strapMat.dispose?.();
-    dialMat = newDial; handsMat = newHands; indexMat = newIndex; strapMat = newStrap;
+    const newDial = makeMat(
+      ctx,
+      specOf("dial", build.dial) ??
+        ({
+          baseColor: "#16243a",
+          metalness: 0.4,
+          roughness: 0.4,
+        } as MaterialSpec),
+    );
+    const newHands = makeMat(
+      ctx,
+      withLume(
+        specOf("hands", build.hands) ??
+          ({
+            baseColor: "#eef2f8",
+            metalness: 1,
+            roughness: 0.12,
+            envMapIntensity: 1.4,
+          } as MaterialSpec),
+      ),
+    );
+    const newIndex = makeMat(
+      ctx,
+      withLume(
+        specOf("indices", build.indices) ??
+          ({
+            baseColor: "#e8c98a",
+            metalness: 1,
+            roughness: 0.2,
+            envMapIntensity: 1.4,
+          } as MaterialSpec),
+      ),
+    );
+    const newStrap = makeMat(
+      ctx,
+      specOf("strap", build.strap) ??
+        ({
+          baseColor: "#2a1d14",
+          metalness: 0,
+          roughness: 1,
+          envMapIntensity: 0.7,
+        } as MaterialSpec),
+    );
+    dialMat.dispose?.();
+    handsMat.dispose?.();
+    indexMat.dispose?.();
+    strapMat.dispose?.();
+    dialMat = newDial;
+    handsMat = newHands;
+    indexMat = newIndex;
+    strapMat = newStrap;
     dialMesh.material = dialMat as never;
     chapter.material = indexMat as never;
-    for (const m of indicesGroup.children) (m as Mesh).material = indexMat as never;
+    for (const m of indicesGroup.children)
+      (m as Mesh).material = indexMat as never;
     (hourRef.children[0] as Mesh).material = handsMat as never;
     (minRef.children[0] as Mesh).material = handsMat as never;
     (secRef.children[0] as Mesh).material = handsMat as never;
     // rebuild strap segments with the new material
-    strapGroup.remove(strapA); strapGroup.remove(strapB);
+    strapGroup.remove(strapA);
+    strapGroup.remove(strapB);
     strapA.traverse((o) => (o as Mesh).geometry?.dispose?.());
     strapB.traverse((o) => (o as Mesh).geometry?.dispose?.());
-    strapA = buildStrapBand(strapMat, 1); strapB = buildStrapBand(strapMat, -1);
-    strapGroup.add(strapA); strapGroup.add(strapB);
+    strapA = buildStrapBand(strapMat, 1);
+    strapB = buildStrapBand(strapMat, -1);
+    strapGroup.add(strapA);
+    strapGroup.add(strapB);
     (dialLight.color as { set: (c: string) => void }).set(glowColor());
   }
 
   // settle pulse on part placement (was buildKey watcher)
   let popT = 0;
-  function markPlaced() { popT = 0.0001; }
+  function markPlaced() {
+    popT = 0.0001;
+  }
 
   let explodeAmt = 0;
-  function update(dt: number, elapsed: number, explodeTarget: number, nightAmt: number, flipped: boolean) {
+  function update(
+    dt: number,
+    elapsed: number,
+    explodeTarget: number,
+    nightAmt: number,
+    flipped: boolean,
+  ) {
     godray.seek(elapsed);
     // a living watch: continuous sweep (not real time-of-day)
     secRef.rotation.z = -elapsed * 0.9;
@@ -462,7 +807,10 @@ function buildAssembly(ctx: NodeContext, initialBuild: Build): Assembly {
     // ── DRAMATIC exploded view (P3-2) — eased master + per-part stagger ───────
     explodeAmt += (explodeTarget - explodeAmt) * Math.min(1, dt * 4);
     const a = explodeAmt;
-    const stg = (s: number, e: number) => { const x = Math.min(1, Math.max(0, (a - s) / (e - s))); return x * x * (3 - 2 * x); };
+    const stg = (s: number, e: number) => {
+      const x = Math.min(1, Math.max(0, (a - s) / (e - s)));
+      return x * x * (3 - 2 * x);
+    };
     const FB = DIAL_FRONT;
     caseGroup.position.z = -0.2 * stg(0, 0.5);
     bezelGroup.position.z = 0.02 + 0.5 * stg(0.46, 1.0);
@@ -492,18 +840,30 @@ function buildAssembly(ctx: NodeContext, initialBuild: Build): Assembly {
     if (popT > 0) {
       popT += dt;
       const k = popT / 0.42;
-      if (k >= 1) { popT = 0; rootRef.scale.setScalar(1); }
-      else rootRef.scale.setScalar(1 + 0.05 * Math.sin(k * Math.PI));
+      if (k >= 1) {
+        popT = 0;
+        rootRef.scale.setScalar(1);
+      } else rootRef.scale.setScalar(1 + 0.05 * Math.sin(k * Math.PI));
     }
   }
 
   function dispose() {
     for (const d of disposables) d.dispose?.();
     for (const g of geoms) g.dispose();
-    dialMat.dispose?.(); handsMat.dispose?.(); indexMat.dispose?.(); strapMat.dispose?.();
+    dialMat.dispose?.();
+    handsMat.dispose?.();
+    indexMat.dispose?.();
+    strapMat.dispose?.();
   }
 
-  return { watchGroup, godrayMesh: godray.mesh, applyBuild, update, markPlaced, dispose };
+  return {
+    watchGroup,
+    godrayMesh: godray.mesh,
+    applyBuild,
+    update,
+    markPlaced,
+    dispose,
+  };
 }
 
 // ── the codeRef factory: createNode(config, ctx) → THREE.Object3D ─────────────
@@ -513,68 +873,130 @@ function buildAssembly(ctx: NodeContext, initialBuild: Build): Assembly {
 // has no drivers → it renders a static selectable watch with no frame loop, no
 // __ATELIER_RIG__ handle, and no store subscription. So exactly ONE interactive
 // watch exists, and the turntable/explode/night handle is never double-bound.
-export default function createWatchNode(config: PrismNode, ctx: NodeContext): Object3D {
+export default function createWatchNode(
+  config: PrismNode,
+  ctx: NodeContext,
+): Object3D {
   const root = new Group();
   root.name = `node:${config.nodeId}`;
   root.userData.nodeId = config.nodeId;
   root.userData.prismNodeId = config.nodeId;
   root.userData.handlers = {};
 
-  const assembly = buildAssembly(ctx, { ...useConfiguratorStore.getState().build });
-  const pivot = new Group();              // turntable
+  const assembly = buildAssembly(ctx, {
+    ...useConfiguratorStore.getState().build,
+  });
+  const pivot = new Group(); // turntable
   pivot.add(assembly.watchGroup);
-  root.add(assembly.godrayMesh);          // anchored (no spin)
+  root.add(assembly.godrayMesh); // anchored (no spin)
   root.add(pivot);
   // W9A: world-fixed three-point studio rig so the metal + aventurine dial catch light.
   const productLights = makeProductLights();
   root.add(productLights.group);
+
+  // W-PHOTO D6 (R1 floor): a soft grounding contact shadow, world-fixed on root
+  // (not the pivot), a touch behind + below the watch so the floating hero reads
+  // as SEATED rather than pasted onto the backdrop. Billboard (faces camera) so
+  // it grounds the face-on display without implying a literal floor.
+  const contactShadow = makeContactShadow({
+    size: 4.2,
+    opacity: 0.42,
+    softness: 1.4,
+    ground: false,
+  });
+  contactShadow.mesh.position.set(0, -0.35, -0.9);
+  root.add(contactShadow.mesh);
 
   const interactive = ctx.drivers != null;
   if (!interactive) {
     // Static galaxy/topology instance: seed one godray frame so it isn't black,
     // and stop — no frame loop, no window handle, no store subscription.
     assembly.update(0, 0, 0, 0, false);
-    root.userData.cleanup = () => { assembly.dispose(); productLights.dispose(); };
+    root.userData.cleanup = () => {
+      assembly.dispose();
+      productLights.dispose();
+      contactShadow.dispose();
+    };
     return root;
   }
 
   // ── interactive control state (port of AtelierWatchRig refs) ────────────────
-  let yaw = 0, pitch = 0.05, yawTarget = 0, pitchTarget = 0.05, yawVel = 0;
-  let dragging = false, lastInteract = 0;
-  let parallaxX = 0, parallaxY = 0, pressAmt = 0, pressTarget = 0;
-  let flipped = false, explodeTarget = 0, nightTarget = 0, nightAmt = 0;
-  let elapsedMs = 0, elapsedSec = 0, nightTouched = false;
+  let yaw = 0,
+    pitch = 0.05,
+    yawTarget = 0,
+    pitchTarget = 0.05,
+    yawVel = 0;
+  let dragging = false,
+    lastInteract = 0;
+  let parallaxX = 0,
+    parallaxY = 0,
+    pressAmt = 0,
+    pressTarget = 0;
+  let flipped = false,
+    explodeTarget = 0,
+    nightTarget = 0,
+    nightAmt = 0;
+  let elapsedMs = 0,
+    elapsedSec = 0,
+    nightTouched = false;
 
   // W9A: honor prefers-reduced-motion — a calm, well-lit, STILL watch (no idle
   // turntable drift, no cursor parallax, no reveal spin, hands frozen at a poised
   // pose); the user can still drag / flip / explode / toggle night on demand.
-  const reduce = (() => { try { return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false; } catch { return false; } })();
+  const reduce = (() => {
+    try {
+      return (
+        window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false
+      );
+    } catch {
+      return false;
+    }
+  })();
   const REDUCED_POSE = 2.0; // frozen sweep phase → a pleasing spread of the hands
   // W9A: cinematic intro — a gentle eased reveal turn + scale-in on first mount.
   let introT = reduce ? 1 : 0;
-  if (!reduce) { yaw = -0.62; pitchTarget = 0.1; } // reveal from a slight angle → settle nearly face-on so the celestial dial sells itself
+  if (!reduce) {
+    yaw = -0.62;
+    pitchTarget = 0.1;
+  } // reveal from a slight angle → settle nearly face-on so the celestial dial sells itself
 
   // lazy scene resolution for the night dim of the SHARED hub lights (by name).
   let sceneRef: Object3D | null = null;
   const resolveScene = (): Object3D | null => {
     if (sceneRef) return sceneRef;
     let o: Object3D | null = root;
-    while (o) { if ((o as { isScene?: boolean }).isScene) { sceneRef = o; break; } o = o.parent; }
+    while (o) {
+      if ((o as { isScene?: boolean }).isScene) {
+        sceneRef = o;
+        break;
+      }
+      o = o.parent;
+    }
     return sceneRef;
   };
   const restoreSharedLights = () => {
-    const s = sceneRef; if (!s) return;
+    const s = sceneRef;
+    if (!s) return;
     (s as { environmentIntensity?: number }).environmentIntensity = 1.0;
-    const set = (n: string, v: number) => { const l = s.getObjectByName(n); if (l) (l as unknown as { intensity: number }).intensity = v; };
-    set('scene-key', 0.5); set('scene-fill', 0.25); set('scene-amb', 0.06);
+    const set = (n: string, v: number) => {
+      const l = s.getObjectByName(n);
+      if (l) (l as unknown as { intensity: number }).intensity = v;
+    };
+    set("scene-key", 0.5);
+    set("scene-fill", 0.25);
+    set("scene-amb", 0.06);
   };
 
   // live finish swaps (and the settle bounce) from the configurator store.
-  const unsub = useConfiguratorStore.subscribe((st) => { assembly.applyBuild({ ...st.build }); assembly.markPlaced(); });
+  const unsub = useConfiguratorStore.subscribe((st) => {
+    assembly.applyBuild({ ...st.build });
+    assembly.markPlaced();
+  });
 
   const frameOff = getSharedDriverHub().frame.add((dtMs: number) => {
     const dt = dtMs / 1000;
-    elapsedMs += dtMs; elapsedSec += dt;
+    elapsedMs += dtMs;
+    elapsedSec += dt;
     const now = elapsedMs;
 
     // ── day→night reveal: ease + dim the shared IBL/key/fill/amb (rig parity) ──
@@ -584,65 +1006,133 @@ export default function createWatchNode(config: PrismNode, ctx: NodeContext): Ob
       if (s) {
         nightTouched = true;
         const n = nightAmt;
-        (s as { environmentIntensity?: number }).environmentIntensity = 1.0 - 0.93 * n;
-        const dim = (name: string, base: number, k: number) => { const l = s.getObjectByName(name); if (l) (l as unknown as { intensity: number }).intensity = base * (1 - k * n); };
-        dim('scene-key', 0.5, 0.96); dim('scene-fill', 0.25, 0.96); dim('scene-amb', 0.06, 0.7);
+        (s as { environmentIntensity?: number }).environmentIntensity =
+          1.0 - 0.93 * n;
+        const dim = (name: string, base: number, k: number) => {
+          const l = s.getObjectByName(name);
+          if (l)
+            (l as unknown as { intensity: number }).intensity =
+              base * (1 - k * n);
+        };
+        dim("scene-key", 0.5, 0.96);
+        dim("scene-fill", 0.25, 0.96);
+        dim("scene-amb", 0.06, 0.7);
       }
-    } else if (nightTouched) { restoreSharedLights(); nightTouched = false; }
+    } else if (nightTouched) {
+      restoreSharedLights();
+      nightTouched = false;
+    }
     // W9A: fade the node-local studio rig into night so the lume owns the dark.
     productLights.setNight(nightAmt);
 
     // ── turntable: idle drift + release momentum + eased follow (rig parity) ───
     // (idle drift + release momentum are motion → suppressed under reduced-motion)
-    if (!reduce && !dragging && lastInteract < 1e14 && now - lastInteract > IDLE_DELAY_MS) {
+    if (
+      !reduce &&
+      !dragging &&
+      lastInteract < 1e14 &&
+      now - lastInteract > IDLE_DELAY_MS
+    ) {
       yawTarget += IDLE_SPEED * Math.min(dt, 0.05);
     }
-    if (!reduce && !dragging && Math.abs(yawVel) > 0.0001) { yawTarget += yawVel; yawVel *= 0.92; }
+    if (!reduce && !dragging && Math.abs(yawVel) > 0.0001) {
+      yawTarget += yawVel;
+      yawVel *= 0.92;
+    }
     const ease = dragging ? 0.35 : 0.12;
     yaw += (yawTarget - yaw) * ease;
     pitch += (pitchTarget - pitch) * ease;
     // cursor parallax (DriverHub pointer NDC; suppressed while dragging / reduced-motion).
     const p = getSharedDriverHub().pointer.ndc;
-    const pPara = (dragging || reduce) ? 0 : 1;
+    const pPara = dragging || reduce ? 0 : 1;
     parallaxX += (p.x * 0.07 * pPara - parallaxX) * 0.08;
     parallaxY += (p.y * 0.05 * pPara - parallaxY) * 0.08;
     pivot.rotation.y = yaw + parallaxX;
     pivot.rotation.x = pitch - parallaxY;
     // W9A cinematic intro: eased scale-in on first mount (skipped under reduced-motion).
     introT = Math.min(1, introT + dt / 0.9);
-    const introS = reduce ? 1 : 0.9 + 0.1 * (introT * introT * (3 - 2 * introT));
+    const introS = reduce
+      ? 1
+      : 0.9 + 0.1 * (introT * introT * (3 - 2 * introT));
     // tactile press
     pressAmt += (pressTarget - pressAmt) * 0.2;
     pivot.scale.setScalar((1 - 0.035 * pressAmt) * introS);
 
     // hands sweep is continuous motion → frozen at a poised pose under reduced-motion.
-    assembly.update(dt, reduce ? REDUCED_POSE : elapsedSec, explodeTarget, nightAmt, flipped);
+    assembly.update(
+      dt,
+      reduce ? REDUCED_POSE : elapsedSec,
+      explodeTarget,
+      nightAmt,
+      flipped,
+    );
   });
 
   // ── window.__ATELIER_RIG__ — the documented transitional inspect/input bridge
   //    (consumed by actions.ts, AtelierDragController.pivot, AtelierInputController). ─
   const clampPitch = (v: number) => Math.max(TILT_MIN, Math.min(TILT_MAX, v));
   const handle = {
-    get yaw() { return yaw; },
-    get pitch() { return pitch; },
-    get flipped() { return flipped; },
-    get exploded() { return explodeTarget; },
-    get nightLevel() { return nightAmt; },
-    get pivot() { return pivot; },
-    spinTo: (y: number, pp?: number) => { yawTarget = y; if (typeof pp === 'number') pitchTarget = clampPitch(pp); lastInteract = 1e15; },
-    nudge: (dy: number) => { yawTarget += dy; lastInteract = 1e15; },
-    resumeIdle: () => { lastInteract = 0; },
-    flip: (on?: boolean) => { flipped = typeof on === 'boolean' ? on : !flipped; yawTarget = flipped ? Math.PI : 0; lastInteract = 1e15; return flipped; },
-    explode: (on?: boolean) => {
-      const next = (typeof on === 'boolean' ? on : explodeTarget < 0.5) ? 1 : 0;
-      explodeTarget = next;
-      if (next) { yawTarget = 0.6; pitchTarget = 0.4; lastInteract = 1e15; }
-      else { yawTarget = 0; pitchTarget = 0.05; lastInteract = elapsedMs; }
+    get yaw() {
+      return yaw;
+    },
+    get pitch() {
+      return pitch;
+    },
+    get flipped() {
+      return flipped;
+    },
+    get exploded() {
       return explodeTarget;
     },
-    night: (on?: boolean) => { nightTarget = (typeof on === 'boolean' ? on : nightTarget < 0.5) ? 1 : 0; return nightTarget; },
+    get nightLevel() {
+      return nightAmt;
+    },
+    get pivot() {
+      return pivot;
+    },
+    spinTo: (y: number, pp?: number) => {
+      yawTarget = y;
+      if (typeof pp === "number") pitchTarget = clampPitch(pp);
+      lastInteract = 1e15;
+    },
+    nudge: (dy: number) => {
+      yawTarget += dy;
+      lastInteract = 1e15;
+    },
+    resumeIdle: () => {
+      lastInteract = 0;
+    },
+    flip: (on?: boolean) => {
+      flipped = typeof on === "boolean" ? on : !flipped;
+      yawTarget = flipped ? Math.PI : 0;
+      lastInteract = 1e15;
+      return flipped;
+    },
+    explode: (on?: boolean) => {
+      const next = (typeof on === "boolean" ? on : explodeTarget < 0.5) ? 1 : 0;
+      explodeTarget = next;
+      if (next) {
+        yawTarget = 0.6;
+        pitchTarget = 0.4;
+        lastInteract = 1e15;
+      } else {
+        yawTarget = 0;
+        pitchTarget = 0.05;
+        lastInteract = elapsedMs;
+      }
+      return explodeTarget;
+    },
+    night: (on?: boolean) => {
+      nightTarget = (typeof on === "boolean" ? on : nightTarget < 0.5) ? 1 : 0;
+      return nightTarget;
+    },
     // input verbs fed by AtelierInputController (which owns the canvas DOM):
-    dragStart: () => { dragging = true; yawVel = 0; pressTarget = 1; lastInteract = elapsedMs; },
+    dragStart: () => {
+      dragging = true;
+      yawVel = 0;
+      pressTarget = 1;
+      lastInteract = elapsedMs;
+    },
     dragBy: (dxPx: number, dyPx: number) => {
       if (!dragging) return;
       yawTarget += dxPx * 0.0095;
@@ -650,7 +1140,11 @@ export default function createWatchNode(config: PrismNode, ctx: NodeContext): Ob
       yawVel = dxPx * 0.0095;
       lastInteract = elapsedMs;
     },
-    dragEnd: () => { dragging = false; pressTarget = 0; lastInteract = elapsedMs; },
+    dragEnd: () => {
+      dragging = false;
+      pressTarget = 0;
+      lastInteract = elapsedMs;
+    },
   };
   (window as unknown as { __ATELIER_RIG__?: unknown }).__ATELIER_RIG__ = handle;
   lastInteract = 0;
@@ -663,6 +1157,7 @@ export default function createWatchNode(config: PrismNode, ctx: NodeContext): Ob
     if (nightTouched) restoreSharedLights();
     assembly.dispose();
     productLights.dispose();
+    contactShadow.dispose();
   };
 
   return root;
