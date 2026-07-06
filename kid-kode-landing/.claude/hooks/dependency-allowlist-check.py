@@ -39,6 +39,10 @@ RUNTIME_ALLOW = {
     "@radix-ui/react-dialog", "@radix-ui/react-popover", "@radix-ui/react-scroll-area",
     "@radix-ui/react-slider", "@radix-ui/react-tabs", "@radix-ui/react-tooltip",
     "@react-three/drei", "@react-three/fiber", "@react-three/postprocessing",
+    # W-PHOTO R4 (DEV-3): gaussian-splat renderer for the owned-canvas splat
+    # viewer. WebGL2-only by design → used on a second owned canvas, NEVER in the
+    # single-WebGPU editor scene (INV-1). See notes/mockup-pipeline.md §10.
+    "@sparkjsdev/spark", "fflate",
     "camera-controls", "clsx", "d3-force-3d", "gsap", "jszip", "lenis",
     "next", "next/font", "next/font/google", "next/font/local", "next/image",
     "next/link", "next/navigation", "next/server", "postprocessing",

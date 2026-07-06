@@ -837,6 +837,11 @@ export interface PrismNode {
   contentType?: NodeContentType;
   depthMapUrl?: string | null;
   meshUrl?: string | null;
+  // W-PHOTO R4 (INV-18 additive). Optional gaussian-splat capture URL
+  // (.spz/.ply/.splat/.sog). Rendered by the owned-canvas Spark viewer (Spark is
+  // WebGL2-only; NOT a new engine RenderMode — DEV-3). `BackgroundLayerKind`
+  // already carries 'splat'; this is the node-level asset slot.
+  splatUrl?: string | null;
   // FIDELITY-2 W3 / audit item 3 (INV-18 additive). Optional video texture
   // source for image-bearing render modes (sprite / plane). When set, the
   // runtime's LoaderCache `loadVideo` lane wraps the URL in a

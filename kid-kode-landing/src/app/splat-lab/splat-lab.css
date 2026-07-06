@@ -1,0 +1,23 @@
+.splat-lab-root {
+  position: fixed;
+  inset: 0;
+  background: #050608;
+  overflow: hidden;
+}
+.splat-lab-root canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+.splat-caption {
+  position: absolute;
+  left: 16px;
+  bottom: 14px;
+  font:
+    12px/1.4 ui-monospace,
+    monospace;
+  letter-spacing: 0.04em;
+  color: rgba(220, 200, 150, 0.55);
+  pointer-events: none;
+  user-select: none;
+}

@@ -442,3 +442,19 @@ Both libs are pure JS with no native code; they are used ONLY by the offline
 into columnar Parquet). They never enter the request path, the client bundle, or any
 `src/lib/**` runtime module — the recorder writer itself adds ZERO runtime deps (its
 NDJSON sink uses `node:fs`). No dependency was downgraded; no version pin changed.
+
+### §10 addendum — SHELL W-PHOTO allowlist (2026-07-06)
+
+`@sparkjsdev/spark@^2.1.0` (+ its single transitive runtime dep `fflate@^0.8`)
+added to `RUNTIME_ALLOW` in `.claude/hooks/dependency-allowlist-check.py`.
+**Rationale:** the R4 gaussian-splat viewer (W-PHOTO D5). Spark is an advanced
+3DGS renderer for THREE.js that loads `.spz/.ply/.splat/.ksplat/.sog` via
+`SplatMesh`. It renders under **WebGL2 by design** (World Labs), so it runs on a
+**second OWNED canvas** (a lab/showcase route with its own `THREE.WebGLRenderer`)
+— it is NEVER injected into the single-WebGPU editor scene (INV-1 / one visible
+renderer). Not a new `RenderMode` (DEV-3): the node carries an additive
+`PrismNode.splatUrl?` asset slot, resolved by the owned-canvas component. `fflate`
+is Spark's gzip/zip codec (pure JS, no native). No dependency was downgraded; no
+version pin changed (three held at 0.184). Generation/capture of real splat
+assets is a later wave; this ships the viewer + loader + slot, demoed with a
+procedural gaussian volume.
