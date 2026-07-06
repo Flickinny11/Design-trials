@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "prism-dg-v1",
+  "id": "coverflow-3d-carousel",
+  "name": "Coverflow / Card-Deck Carousel",
+  "status": "grounded",
+  "summary": "Cards travel a perspective arc with real 3D rotation: the active card faces flat at center while flanking cards tilt away, shrink, dim, and step back — the album-coverflow grammar, plus its siblings (stacked fanned decks that shuffle forward, centered-focus testimonial tracks). The premium tell is genuine dimensional tilt and shadow craft, not a flat slide.",
+  "elementTypes": ["carousel", "card-stack", "gallery"],
+  "whatMakesItWork": {
+    "composition": [
+      "One active card is ALWAYS the focal anchor: biggest, brightest, forward; every sibling exists to frame it.",
+      "Generous whitespace around the track lets the 3D arc read cleanly — coverflow dies in cramped layouts.",
+      "Variants share one grammar: coverflow arc, fanned deck shuffle, centered-focus scale track — pick per content type (media, photos, quotes)."
+    ],
+    "layering": [
+      "Depth via overlapping stacks: active card top plane, neighbors stepped back with reduced scale, opacity, and slight blur.",
+      "Soft drop/contact shadows ground each card on a light backdrop — shadow quality is where cheap implementations fail.",
+      "Cards are physical objects: consistent corner radius, thickness illusion via shadow, no weightless floating."
+    ],
+    "lighting": [
+      "Soft ambient light with gentle contact shadows under each card; no glows — the premium feel comes from clean shadow craft.",
+      "Light backdrop keeps the register friendly; a dark variant trades shadows for rim separation."
+    ],
+    "typography": [
+      "Crisp sans for UI/labels; a warm serif for quote content on testimonial variants.",
+      "Oversized decorative quotation marks can serve as type ornaments on quote cards."
+    ]
+  },
+  "palette": {
+    "logic": ["high-key-airy", "monochrome-plus-accent", "photographic-derived"],
+    "rules": [
+      "Light neutral canvas + one warm accent family; chroma concentrated in the card imagery, chrome kept pale.",
+      "Cards must share a tonal register — the arc presents them as one collection."
+    ]
+  },
+  "motion": {
+    "character": ["smooth-luxurious", "weighty-physical"],
+    "easing": [
+      "Smooth ease-in-out with a gentle settle; cards rotate on a fixed perspective so travel CURVES rather than sliding flat.",
+      "Scale, opacity, and tilt animate in lockstep — desynced properties break the physicality."
+    ],
+    "pacing": [
+      "Comfortable mid-tempo advances (~600-900ms), interaction-driven, no perpetual auto-drift.",
+      "Deck-shuffle variants snap slightly faster — a card dealt, not a page turned."
+    ],
+    "choreography": [
+      "Center-focus choreography: the incoming card grows and comes forward while flanks shrink, dim, and rotate away simultaneously.",
+      "Every sibling moves on every advance — the whole track breathes, not just the active card."
+    ]
+  },
+  "capabilities": {
+    "renderingRoutes": ["R1"],
+    "genModels": ["flux-2-pro"],
+    "primitives": ["depth-rotate", "orbit", "keyframes", "pbr-material", "msdf-text"],
+    "postFx": [],
+    "readiness": "partial",
+    "gapNotes": [
+      "True 3D card tilt is native to our renderer (easier than the DOM's matrix3d), but soft CONTACT SHADOWS under floating cards need the R1 cinematic floor (W-PHOTO) — without them cards float weightlessly.",
+      "Same missing 'carousel driver' primitive as filmstrip-3d-carousel: the N-cards-on-an-arc state machine must be hand-built per instance."
+    ]
+  },
+  "usage": {
+    "whenToUse": [
+      "Small curated sets (3-9 items) where each deserves individual attention: testimonials, case studies, featured products, team members.",
+      "Friendly, warm, consumer registers — this is the most approachable carousel grammar in the corpus."
+    ],
+    "whenNotToUse": [
+      "Dense catalogs needing many visible items and fast scanning — coverflow deliberately hides/shrinks non-active items.",
+      "When items are text-heavy: tilted cards make flanking content illegible by design."
+    ],
+    "archetypeFit": ["commerce", "saas", "community", "marketing"],
+    "moods": ["warm", "human", "refined", "playful", "airy"]
+  },
+  "pairing": {
+    "pairsWith": ["quiet-luxury-monochrome", "editorial-product-gallery"],
+    "avoidWith": ["filmstrip-3d-carousel", "bento-grid-slider", "infinite-filmstrip-gallery"],
+    "notes": [
+      "One carousel mechanic per surface — the cluster exists because carousels are the most-repeated pattern in template galleries."
+    ]
+  },
+  "antiRepetition": {
+    "clusterId": "carousel",
+    "notes": "Same cluster as filmstrip-3d-carousel, bento-grid-slider, swatch-variant-swap."
+  },
+  "sources": [
+    {
+      "title": "Carousel Design Templates WordPress Pack",
+      "url": "https://www.sliderrevolution.com/templates/carousel-design-templates-wordpress-pack/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session, live demo: page scrolled through the full anthology; coverflow arc, stacked-deck shuffle, and centered-focus testimonial track each advanced through multiple states; matrix3d perspective tilt confirmed from the motion (side cards rotating, not just scaling).",
+      "observationRef": "analysis/carousel-design-templates-wordpress-pack.json"
+    }
+  ],
+  "exemplars": [],
+  "provenance": {
+    "groundTruth": ["monitor-observation"],
+    "distilledAt": "2026-07-06",
+    "distilledBy": "wdg1-orchestrator"
+  }
+}
