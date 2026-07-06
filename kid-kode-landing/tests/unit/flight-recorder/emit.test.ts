@@ -8,6 +8,7 @@ import {
   __setWriter,
   recordNodeAttempt,
   recordCapabilityUsage,
+  recordImportEvent,
   FLIGHT_RECORDER_SCHEMA_VERSION,
   OTEL_ALIGNMENT,
 } from '@/lib/flight-recorder';
@@ -26,6 +27,38 @@ describe('flight-recorder emit — record shape + scrub-at-write', () => {
   it('OTEL_ALIGNMENT pins the researched version', () => {
     expect(OTEL_ALIGNMENT.semconvVersion).toBe('1.43.0');
     expect(OTEL_ALIGNMENT.genaiStatus).toBe('development');
+  });
+
+  it('import_event: 7th record type — stage + counts survive, repo-derived PII scrubbed', async () => {
+    recordImportEvent({
+      touchpoint: 'import',
+      actor: { projectId: 'proj-imp', tenantId: 'tenant-hash', consentOverride: true },
+      stage: 'analyze',
+      repo_ref: 'vercel/next-learn',
+      framework: 'nextjs-app',
+      supported: true,
+      route_count: 3,
+      component_count: 7,
+      api_count: 1,
+      ok: true,
+      // Repo-derived free text can carry a maintainer email in commit copy —
+      // it MUST be redacted at write (D5 / I-PII), same as any other string.
+      detail: 'imported by jane.dev@example.com from README',
+    });
+    await writer.flush();
+
+    expect(training.records).toHaveLength(1);
+    const r = training.records[0] as Record<string, any>;
+    expect(r.record_type).toBe('import_event');
+    expect(r.stage).toBe('analyze');
+    expect(r.repo_ref).toBe('vercel/next-learn');
+    expect(r.framework).toBe('nextjs-app');
+    expect(r.route_count).toBe(3);
+    expect(r.supported).toBe(true);
+    expect(r.touchpoint).toBe('import');
+    // The email is gone; the surrounding structural text is preserved.
+    expect(r.detail).not.toContain('example.com');
+    expect(r.detail).toContain('imported by');
   });
 
   it('node_attempt: envelope + verbatim gen_ai/prism keys, PII scrubbed through the pipe', async () => {

@@ -172,6 +172,7 @@ export type PrismTouchpoint =
   | 'self-heal' // autonomous repair (E20)
   | 'material-gen' // prompt-to-texture route
   | 'generative-3d' // W10 generative capability family
+  | 'import' // W-IMPORT — PRISM INGEST (GitHub repo → plan source → regen)
   | 'verify' // judge / gate outcomes
   | 'session' // ship / abandon / return lifecycle
   | (string & {});
@@ -261,7 +262,8 @@ export type FlightRecordType =
   | 'edit_event'
   | 'capability_usage'
   | 'verify_signal'
-  | 'user_signal';
+  | 'user_signal'
+  | 'import_event';
 
 /** A whole build (plan → graph shape → SLA tier → cost → outcome). */
 export interface BuildSessionRecord extends RecordEnvelope {
@@ -325,6 +327,44 @@ export interface UserSignalRecord extends RecordEnvelope {
   detail?: string; // e.g. deploy url host (scrubbed), resume reason
 }
 
+/** Import lifecycle stage (W-IMPORT — PRISM INGEST). The set is fixed but the
+ *  union stays open so a future stage is additive. */
+export type PrismImportStage =
+  | 'analyze' // repo read + framework detect + structural extraction
+  | 'synthesize' // analysis → BuildBrief (the plan)
+  | 'approve' // user approved the imported plan at the existing gate
+  | 'regen' // Conductor regenerated the app as Prism nodes from the plan
+  | 'fidelity' // per-feature carried/adapted/needs-you ledger produced
+  | (string & {});
+
+/** One import lifecycle event (W-IMPORT). Import traces are premium training
+ *  data: the analyzed-repo → synthesized-plan → regenerated-graph chain is a
+ *  labeled example of "existing app DNA → Prism graph". `repo_ref` is a public
+ *  owner/repo identifier (not PII); repo-derived free text is scrubbed at write
+ *  like every other string. */
+export interface ImportEventRecord extends RecordEnvelope {
+  record_type: 'import_event';
+  stage: PrismImportStage;
+  /** owner/repo or host/owner/repo — a public identifier, not personal data. */
+  repo_ref?: string;
+  /** Detected framework ('nextjs-app' | 'nextjs-pages' | 'react' | 'unknown'). */
+  framework?: string;
+  /** Whether v1 supports the detected framework (analyze stage). */
+  supported?: boolean;
+  /** Structural counts extracted (analyze stage). */
+  route_count?: number;
+  component_count?: number;
+  api_count?: number;
+  /** Fidelity ledger tallies (fidelity stage — I-HONEST-FIDELITY). */
+  carried_count?: number;
+  adapted_count?: number;
+  needs_you_count?: number;
+  /** Stage outcome (false = failed/degraded, still recorded — data honesty). */
+  ok?: boolean;
+  /** Short human note (scrubbed at write). */
+  detail?: string;
+}
+
 /** The tagged union the writer accepts. */
 export type FlightRecord =
   | BuildSessionRecord
@@ -332,7 +372,8 @@ export type FlightRecord =
   | EditEventRecord
   | CapabilityUsageRecord
   | VerifySignalRecord
-  | UserSignalRecord;
+  | UserSignalRecord
+  | ImportEventRecord;
 
 /** All record type names (drives the schema doc + dev ledger grouping). */
 export const FLIGHT_RECORD_TYPES: FlightRecordType[] = [
@@ -342,4 +383,5 @@ export const FLIGHT_RECORD_TYPES: FlightRecordType[] = [
   'capability_usage',
   'verify_signal',
   'user_signal',
+  'import_event',
 ];

@@ -20,6 +20,7 @@ import {
   type EditEventRecord,
   type FlightRecord,
   type GenAiAttributes,
+  type ImportEventRecord,
   type NodeAttemptRecord,
   type PrismAttributes,
   type PrismTouchpoint,
@@ -186,6 +187,48 @@ export function recordUserSignal(
   try {
     const env = buildEnvelope(input, 'user_signal');
     const record: UserSignalRecord = { ...env, record_type: 'user_signal', signal: input.signal, detail: input.detail };
+    finalize(record, env, input.actor?.actorIdentifiers ?? []);
+  } catch { /* fail-open */ }
+}
+
+export function recordImportEvent(
+  input: EmitCommon &
+    Partial<
+      Pick<
+        ImportEventRecord,
+        | 'stage'
+        | 'repo_ref'
+        | 'framework'
+        | 'supported'
+        | 'route_count'
+        | 'component_count'
+        | 'api_count'
+        | 'carried_count'
+        | 'adapted_count'
+        | 'needs_you_count'
+        | 'ok'
+        | 'detail'
+      >
+    >,
+): void {
+  try {
+    const env = buildEnvelope(input, 'import_event');
+    const record: ImportEventRecord = {
+      ...env,
+      record_type: 'import_event',
+      stage: input.stage ?? 'analyze',
+      repo_ref: input.repo_ref,
+      framework: input.framework,
+      supported: input.supported,
+      route_count: input.route_count,
+      component_count: input.component_count,
+      api_count: input.api_count,
+      carried_count: input.carried_count,
+      adapted_count: input.adapted_count,
+      needs_you_count: input.needs_you_count,
+      ok: input.ok,
+      detail: input.detail,
+    };
     finalize(record, env, input.actor?.actorIdentifiers ?? []);
   } catch { /* fail-open */ }
 }

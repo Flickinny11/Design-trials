@@ -175,9 +175,9 @@ The Prism extension attribute bag. All optional; a record carries the columns it
 - **`GenAiOperationName`** — 'chat', 'create_agent', 'embeddings', 'execute_tool', 'generate_content', 'invoke_agent', 'invoke_workflow', 'retrieval', 'text_completion' _(open enum)_
 - **`PrismRepairClass`** — 'none', 'schema-gate', 'render-defensive', 'frontier-escalation' _(open enum)_
 - **`PrismUserDecision`** — 'keep', 'edit', 'regen', 'undo', 'accept', 'pending' _(open enum)_
-- **`PrismTouchpoint`** — 'guided-build', 'conductor', 'node-edit', 'self-heal', 'material-gen', 'generative-3d', 'verify', 'session' _(open enum)_
+- **`PrismTouchpoint`** — 'guided-build', 'conductor', 'node-edit', 'self-heal', 'material-gen', 'generative-3d', 'import', 'verify', 'session' _(open enum)_
 - **`ConsentBasis`** — 'override', 'tenant-flag', 'env-default' _(open enum)_
-- **`FlightRecordType`** — 'build_session', 'node_attempt', 'edit_event', 'capability_usage', 'verify_signal', 'user_signal'
+- **`FlightRecordType`** — 'build_session', 'node_attempt', 'edit_event', 'capability_usage', 'verify_signal', 'user_signal', 'import_event'
 
 ## Scrub coverage (I-PII / I-SECRETS)
 
