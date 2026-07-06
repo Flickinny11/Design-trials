@@ -1,0 +1,157 @@
+{
+  "schemaVersion": "prism-dg-v1",
+  "id": "oversized-type-editorial",
+  "name": "Oversized Editorial Type",
+  "status": "grounded",
+  "summary": "One colossal display word or two-line headline is used as a compositional PLATE — a graphic layer other elements occlude, inlay into, or float over — with a deliberately bimodal type scale: the giant word plus tiny supporting labels, and almost nothing in between.",
+  "elementTypes": ["typography", "hero"],
+  "whatMakesItWork": {
+    "composition": [
+      "The giant word spans edge-to-edge (or nearly) and behaves as layout architecture, not a caption — it sets the horizon line or central axis the rest of the scene hangs on.",
+      "Bimodal scale is the signature: one monumental word vs micro labels/eyebrows/body copy; any mid-size type dilutes the effect.",
+      "The headline is allowed to be partially occluded by imagery (frames drifting in front, a cutout subject straddling the baseline, props nestled into letter gaps) — the occlusion is what fuses type and image into one plate.",
+      "Supporting copy is pushed to corners or a compact card so the word keeps its negative space."
+    ],
+    "layering": [
+      "The word typically lives BETWEEN depth planes: behind a foreground subject or frame stack, in front of the background plate — a type sandwich that reads as physical depth.",
+      "When the word must stay legible over busy motion (tile walls, fluid sims), it holds the frontmost plane and stays perfectly still while everything behind moves.",
+      "Objects can be inlaid INTO letter counters/gaps (a prop nestled into the wordmark) to fuse photography and typography into one composed layer."
+    ],
+    "lighting": [
+      "The word often self-lights the frame: a solid saturated accent fill or warm off-white that reads as the brightest element on a dark stage.",
+      "On photographic scenes, a ghosted low-contrast treatment turns the word into a texture plate instead of a message — brightness pulled DOWN so imagery leads."
+    ],
+    "typography": [
+      "Heavy condensed or geometric display sans, tight tracking and tight leading; slab or high-contrast serif for luxury registers.",
+      "The word is usually static and authoritative — kinetic energy comes from what moves around/behind it; when the word itself animates, it enters word-by-word, not per-character scramble.",
+      "Weight contrast is extreme: colossal display weight vs thin tracked-out all-caps micro labels."
+    ]
+  },
+  "palette": {
+    "logic": ["monochrome-plus-accent", "dark-cinematic", "photographic-derived"],
+    "rules": [
+      "The giant word either owns the single accent hue (dark stage) or holds a constant neutral so it reads over any scene behind it (photographic stage).",
+      "When themes/scenes swap behind it, the word's color is the stable element — or it adopts exactly the theme accent, never a second hue."
+    ]
+  },
+  "motion": {
+    "character": ["ambient-drift", "smooth-luxurious"],
+    "easing": [
+      "The word itself: slow crossfades or a gentle settle; no bounce, no elastic — mass implies inertia.",
+      "Surrounding layers do the kinetic work with soft damping while the word anchors."
+    ],
+    "pacing": [
+      "Entrances land word-by-word or as one plate over ~0.6-1s; then the word HOLDS — stillness is the point.",
+      "On scroll narratives the word fades/clears early to hand focus to the scene."
+    ],
+    "choreography": [
+      "The word is the stable read amid motion: frames drift in front of it, fluids swirl behind it, tile walls crawl past it.",
+      "In staggered reveals the eyebrow/script accent leads, the giant word lands second as the payoff, CTA arrives last."
+    ]
+  },
+  "capabilities": {
+    "renderingRoutes": ["R1", "2d-composition"],
+    "genModels": [],
+    "primitives": ["extruded-text", "msdf-text", "kinetic-text", "parallax-scroll", "keyframes"],
+    "postFx": [],
+    "readiness": "ready",
+    "gapNotes": []
+  },
+  "usage": {
+    "whenToUse": [
+      "Hero sections needing instant brand authority with minimal assets — the word IS the artwork.",
+      "As the stable anchor for any high-motion family (fluid, particles, filmstrips): pair one still monumental word with continuous ambient motion.",
+      "Editorial, portfolio, product-launch and nightlife registers across dark and light stages."
+    ],
+    "whenNotToUse": [
+      "Text-dense or utility-first pages — the bimodal scale leaves no room for real content hierarchy.",
+      "When the headline must stay fully legible at all times: the occlusion sandwich deliberately covers letters.",
+      "Very long names/headlines — the plate effect dies past ~2 short lines."
+    ],
+    "archetypeFit": ["any"],
+    "moods": ["bold", "editorial", "cinematic", "minimal", "energetic"]
+  },
+  "pairing": {
+    "pairsWith": [
+      "layered-photo-parallax-hero",
+      "gpu-fluid-overlay",
+      "infinite-filmstrip-gallery",
+      "filmstrip-3d-carousel",
+      "scroll-video-scrub",
+      "particle-field-hero"
+    ],
+    "avoidWith": [],
+    "notes": [
+      "This family is the most common counterweight in the corpus: 7 of 17 deep-analyzed sites pair a monumental still word with a kinetic scene.",
+      "Avoid pairing with a second competing type treatment (e.g. kinetic-typography-hero on the same surface) — one type voice per composition."
+    ]
+  },
+  "antiRepetition": {
+    "clusterId": "typography",
+    "notes": "Same cluster as kinetic-typography-hero — offer at most one type-led family per option set."
+  },
+  "sources": [
+    {
+      "title": "4 Seasons Parallax Theme",
+      "url": "https://www.sliderrevolution.com/templates/4-seasons-wordpress-parallax-theme/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session (interactive browser + vision), live demo: scroll-driven season cycle observed across the full page; word held constant neutral while scenes crossfaded; props inlaid into letter gaps per season.",
+      "observationRef": "analysis/4-seasons-wordpress-parallax-theme.json"
+    },
+    {
+      "title": "Filmstrip Hero 3D Image Carousel",
+      "url": "https://www.sliderrevolution.com/templates/filmstrip-hero-3d-image-carousel-collection/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session, live demo: carousel advances driven; giant two-line headline observed as background plate partially occluded by drifting frames.",
+      "observationRef": "analysis/filmstrip-hero-3d-image-carousel-collection.json"
+    },
+    {
+      "title": "Hover Morph Effect Hero Collection",
+      "url": "https://www.sliderrevolution.com/templates/hover-morph-effect-hero-collection/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session, live demo: cursor sweeps at varied velocity; ~200px word stayed razor-sharp while the photographic plane liquefied behind/around it; cutout subject straddled the baseline.",
+      "observationRef": "analysis/hover-morph-effect-hero-collection.json"
+    },
+    {
+      "title": "Mood Board Infinite Filmstrip Media Gallery",
+      "url": "https://www.sliderrevolution.com/templates/mood-board-infinite-filmstrip-media-gallery/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session, live demo: infinite opposing-direction columns observed crawling while the stacked center headline held perfectly still; theme swap recolored the headline accent.",
+      "observationRef": "analysis/mood-board-infinite-filmstrip-media-gallery.json"
+    },
+    {
+      "title": "Scoop Society Ice Cream Shop Slider",
+      "url": "https://www.sliderrevolution.com/templates/scoop-society-ice-cream-shop-website-slider/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session: embedded hero on the template page rendered and driven (no standalone demo exposed); word-by-word headline entrance observed after the cutout cascade; deeper slide interaction partly inferred from the vendor's stated dynamic slides.",
+      "observationRef": "analysis/scoop-society-ice-cream-shop-website-slider.json"
+    },
+    {
+      "title": "Zero Point Energy Drink Showcase",
+      "url": "https://www.sliderrevolution.com/templates/zero-point-energy-drink-showcase-template/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session, live demo: ambient loop observed over time; giant ghosted word ran edge-to-edge behind the levitating product as a low-contrast texture plate drifting on its own slow cycle.",
+      "observationRef": "analysis/zero-point-energy-drink-showcase-template.json"
+    },
+    {
+      "title": "DJ Website Template with Scroll Video",
+      "url": "https://www.sliderrevolution.com/templates/dj-website-template-with-scroll-video/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session, live demo: pinned hero scrubbed via scroll through full progress; colossal name observed dominating the opening frame then fading out early as the camera pushed in.",
+      "observationRef": "analysis/dj-website-template-with-scroll-video.json"
+    }
+  ],
+  "exemplars": [],
+  "provenance": {
+    "groundTruth": ["monitor-observation"],
+    "distilledAt": "2026-07-06",
+    "distilledBy": "wdg1-orchestrator"
+  }
+}
