@@ -1,0 +1,248 @@
+{
+  "schemaVersion": "prism-photo-v1",
+  "id": "celestia-hero",
+  "createdAt": "2026-07-06T18:08:48.750Z",
+  "route": "R2",
+  "themeHue": "#c9962f",
+  "layers": [
+    {
+      "id": "backdrop",
+      "kind": "backdrop",
+      "assetUrl": "/prism-mock/photo/celestia-hero/backdrop.png",
+      "depthMapUrl": "/prism-mock/photo/celestia-hero/backdrop.depth.png",
+      "z": -8,
+      "parallaxRate": 0.15,
+      "scale": 1.25,
+      "opacity": 1
+    },
+    {
+      "id": "headline",
+      "kind": "headline",
+      "assetUrl": "",
+      "z": -3.2,
+      "parallaxRate": 0.4,
+      "scale": 1,
+      "text": "CELESTIA"
+    },
+    {
+      "id": "shadow",
+      "kind": "shadow",
+      "assetUrl": "/prism-mock/photo/celestia-hero/product.shadow.png",
+      "z": -2.6,
+      "parallaxRate": 0.55,
+      "scale": 1,
+      "opacity": 0.9,
+      "float": {
+        "ampX": 0,
+        "ampY": 0.02,
+        "rotate": 0,
+        "period": 7,
+        "phase": 0
+      }
+    },
+    {
+      "id": "product",
+      "kind": "product",
+      "assetUrl": "/prism-mock/photo/celestia-hero/product.png",
+      "z": -2.4,
+      "parallaxRate": 0.6,
+      "scale": 1,
+      "opacity": 1,
+      "float": {
+        "ampX": 0.02,
+        "ampY": 0.06,
+        "rotate": 0.01,
+        "period": 6.5,
+        "phase": 0
+      }
+    },
+    {
+      "id": "garnish-gear",
+      "kind": "garnish",
+      "assetUrl": "/prism-mock/photo/celestia-hero/garnish-gear.png",
+      "z": -1.6,
+      "parallaxRate": 0.85,
+      "scale": 0.22,
+      "blur": 0,
+      "opacity": 0.95,
+      "float": {
+        "ampX": 0.05,
+        "ampY": 0.08,
+        "rotate": 0.04,
+        "period": 5,
+        "phase": 0
+      }
+    },
+    {
+      "id": "garnish-globe",
+      "kind": "garnish",
+      "assetUrl": "/prism-mock/photo/celestia-hero/garnish-globe.png",
+      "z": -1.4500000000000002,
+      "parallaxRate": 0.85,
+      "scale": 0.26,
+      "blur": 2,
+      "opacity": 0.95,
+      "float": {
+        "ampX": 0.07,
+        "ampY": 0.11,
+        "rotate": 0.04,
+        "period": 5.8,
+        "phase": 2.0943951023931953
+      }
+    },
+    {
+      "id": "garnish-moon",
+      "kind": "garnish",
+      "assetUrl": "/prism-mock/photo/celestia-hero/garnish-moon.png",
+      "z": -1.3,
+      "parallaxRate": 0.85,
+      "scale": 0.18,
+      "blur": 0,
+      "opacity": 0.95,
+      "float": {
+        "ampX": 0.09,
+        "ampY": 0.08,
+        "rotate": 0.04,
+        "period": 6.6,
+        "phase": 4.1887902047863905
+      }
+    }
+  ],
+  "provenance": [
+    {
+      "stage": "generate",
+      "mode": "live",
+      "provider": "replicate",
+      "model": "black-forest-labs/flux-2-pro",
+      "note": "vrghmzrcphrmy0cz72er8dgjtr",
+      "costUsd": 0.08,
+      "costEstimated": true
+    },
+    {
+      "stage": "depth",
+      "mode": "live",
+      "provider": "replicate",
+      "model": "chenxwh/depth-anything-v2",
+      "predictionId": "dh6vx3a3a5rn80cz72evp8bfg4",
+      "predictTime": 0.811423918,
+      "costUsd": 0.003,
+      "costEstimated": true
+    },
+    {
+      "stage": "grade",
+      "mode": "local",
+      "provider": "local",
+      "model": "filmic-lut",
+      "note": "backdrop",
+      "costUsd": 0
+    },
+    {
+      "stage": "generate",
+      "mode": "live",
+      "provider": "replicate",
+      "model": "black-forest-labs/flux-2-pro",
+      "note": "fd1bck2bxnrmw0cz72evrr5h9r",
+      "costUsd": 0.08,
+      "costEstimated": true
+    },
+    {
+      "stage": "cutout",
+      "mode": "live",
+      "provider": "replicate",
+      "model": "bria/remove-background",
+      "predictionId": "7bnagdwgc9rmr0cz72eshq5hn8",
+      "predictTime": 1.244316912,
+      "costUsd": 0.02,
+      "costEstimated": true
+    },
+    {
+      "stage": "shadow-plate",
+      "mode": "local",
+      "provider": "local",
+      "model": "alpha-cast",
+      "note": "product",
+      "costUsd": 0
+    },
+    {
+      "stage": "grade",
+      "mode": "local",
+      "provider": "local",
+      "model": "filmic-lut",
+      "note": "product",
+      "costUsd": 0
+    },
+    {
+      "stage": "generate",
+      "mode": "live",
+      "provider": "replicate",
+      "model": "black-forest-labs/flux-2-pro",
+      "note": "e487fpwrznrmt0cz72er9jdt9c",
+      "costUsd": 0.08,
+      "costEstimated": true
+    },
+    {
+      "stage": "cutout",
+      "mode": "live",
+      "provider": "replicate",
+      "model": "bria/remove-background",
+      "predictionId": "vw8nrnebvdrmw0cz72evrc6tew",
+      "predictTime": 1.6224285950000001,
+      "costUsd": 0.02,
+      "costEstimated": true
+    },
+    {
+      "stage": "generate",
+      "mode": "live",
+      "provider": "replicate",
+      "model": "black-forest-labs/flux-2-pro",
+      "note": "9z298xypmhrmr0cz72etstag7c",
+      "costUsd": 0.08,
+      "costEstimated": true
+    },
+    {
+      "stage": "cutout",
+      "mode": "live",
+      "provider": "replicate",
+      "model": "bria/remove-background",
+      "predictionId": "qpxdcz8cahrmw0cz72fbc9q0qc",
+      "predictTime": 2.7803413949999998,
+      "costUsd": 0.02,
+      "costEstimated": true
+    },
+    {
+      "stage": "generate",
+      "mode": "live",
+      "provider": "replicate",
+      "model": "black-forest-labs/flux-2-pro",
+      "note": "zw43z6gw1srmw0cz72favvth78",
+      "costUsd": 0.08,
+      "costEstimated": true
+    },
+    {
+      "stage": "cutout",
+      "mode": "live",
+      "provider": "replicate",
+      "model": "bria/remove-background",
+      "predictionId": "170qrf2eknrmw0cz72f9dfj6s8",
+      "predictTime": 1.344402546,
+      "costUsd": 0.02,
+      "costEstimated": true
+    }
+  ],
+  "grade": {
+    "lift": [
+      1,
+      0.99,
+      0.97
+    ],
+    "gamma": 1.06,
+    "gain": [
+      1.08,
+      1.02,
+      0.9
+    ],
+    "saturation": 1.12,
+    "contrast": 1.14,
+    "vignette": 0.34
+  }
+}

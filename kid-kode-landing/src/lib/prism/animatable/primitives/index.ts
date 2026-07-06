@@ -67,6 +67,7 @@ import { fadeUpPrimitive } from './fade-up';
 import { fadeVignettePrimitive } from './fade-vignette';
 import { flashPrimitive } from './flash';
 import { horizontalScrollPrimitive } from './horizontal-scroll';
+import { layeredPhotoScenePrimitive } from './layered-photo-scene';
 import { parallaxPrimitive } from './parallax';
 import { pinRevealPrimitive } from './pin-reveal';
 import { revealMaskScrollPrimitive } from './reveal-mask-scroll';
@@ -293,14 +294,13 @@ import { fresnelGlowPrimitive } from './fresnel-glow';
 import { frostedGlassPrimitive } from './frosted-glass';
 import { gemstoneCutPrimitive } from './gemstone-cut';
 import { glassRefractionPrimitive } from './glass-refraction';
-import { liquidGlassPanelPrimitive } from './liquid-glass-panel';
 import { holoGlassPrimitive } from './holo-glass';
 import { iceGlassPrimitive } from './ice-glass';
 import { iridescentGlassPrimitive } from './iridescent-glass';
 import { liquidFillGlassPrimitive } from './liquid-fill-glass';
 import { liquidFillSimPrimitive } from './liquid-fill-sim';
 import { liquidGlassPrimitive } from './liquid-glass';
-import { moltenDripSimPrimitive } from './molten-drip-sim';
+import { liquidGlassPanelPrimitive } from './liquid-glass-panel';
 import { refractionWarpPrimitive } from './refraction-warp';
 import { smokedGlassPrimitive } from './smoked-glass';
 import { soapBubblePrimitive } from './soap-bubble';
@@ -386,6 +386,7 @@ import { hyperspaceWarpPrimitive } from './hyperspace-warp';
 import { imageToParticlesPrimitive } from './image-to-particles';
 import { magneticFieldPrimitive } from './magnetic-field';
 import { meteorShowerPrimitive } from './meteor-shower';
+import { moltenDripSimPrimitive } from './molten-drip-sim';
 import { morphCloudPrimitive } from './morph-cloud';
 import { murmurationPrimitive } from './murmuration';
 import { nBodyOrbitPrimitive } from './n-body-orbit';
@@ -476,6 +477,7 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   fadeVignettePrimitive,
   flashPrimitive,
   horizontalScrollPrimitive,
+  layeredPhotoScenePrimitive,
   parallaxPrimitive,
   pinRevealPrimitive,
   revealMaskScrollPrimitive,
@@ -702,14 +704,13 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   frostedGlassPrimitive,
   gemstoneCutPrimitive,
   glassRefractionPrimitive,
-  liquidGlassPanelPrimitive,
   holoGlassPrimitive,
   iceGlassPrimitive,
   iridescentGlassPrimitive,
   liquidFillGlassPrimitive,
   liquidFillSimPrimitive,
   liquidGlassPrimitive,
-  moltenDripSimPrimitive,
+  liquidGlassPanelPrimitive,
   refractionWarpPrimitive,
   smokedGlassPrimitive,
   soapBubblePrimitive,
@@ -795,6 +796,7 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   imageToParticlesPrimitive,
   magneticFieldPrimitive,
   meteorShowerPrimitive,
+  moltenDripSimPrimitive,
   morphCloudPrimitive,
   murmurationPrimitive,
   nBodyOrbitPrimitive,
