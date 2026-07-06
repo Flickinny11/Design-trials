@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "prism-dg-v1",
+  "id": "gpu-fluid-overlay",
+  "name": "GPU Fluid Overlay",
+  "status": "grounded",
+  "summary": "A realtime GPU fluid simulation runs OVER photographic plates or a dark stage: the cursor injects dye and momentum, so smoke-like neon vapor swirls, lingers, and dissipates in the visitor's wake. The visitor co-authors the hero in real time while a pinned monumental headline anchors the frame.",
+  "elementTypes": ["hero", "background"],
+  "whatMakesItWork": {
+    "composition": [
+      "One monumental anchored word is the only fixed typographic mass; the fluid needs a still element to swirl against or the frame reads as chaos.",
+      "The fluid field is full-bleed — cropping it into a panel kills the immersion.",
+      "A thin scene-selector rail can swap preset dye palettes/imagery, proving the effect is an engine, not a one-off."
+    ],
+    "layering": [
+      "The vapor deliberately crosses BOTH in front of and behind the headline letters, fusing the sim and type into one volume.",
+      "A subject cutout or photo can be woven into the vapor midground — fluid over photography, the effects-layered method from the PLAN diagnosis.",
+      "UI chrome stays on the frontmost plane, minimal and stable."
+    ],
+    "lighting": [
+      "The fluid IS the light source: emissive self-lit dye on a near-black vignetted stage, additive-style hot cores where trails overlap, soft falloff at edges.",
+      "Everything else in frame is graded around the dye color so the vapor is the brightest, most saturated element."
+    ],
+    "typography": [
+      "Heavy condensed uppercase display, one word, static — the fluid animates around it so it feels kinetic without moving.",
+      "Tiny mono/label UI at the edges; nothing mid-scale."
+    ]
+  },
+  "palette": {
+    "logic": ["neon-on-dark", "monochrome-plus-accent"],
+    "rules": [
+      "Near-black base + ONE emissive dye family per scene; the palette swaps with the scene preset rather than mixing hues in one frame.",
+      "The dye color doubles as brand accent — CTA and highlights borrow it."
+    ]
+  },
+  "motion": {
+    "character": ["organic-fluid", "ambient-drift"],
+    "easing": [
+      "No keyframed easing — the sim's own physics (velocity advection, diffusion, decay) IS the ease; damping constants are the design surface.",
+      "Dissipation should linger ~1-2s after input stops: the wake is the delight."
+    ],
+    "pacing": [
+      "Continuous low-level ambient turbulence at idle; spikes on cursor input then settles.",
+      "Scene swaps are quick (~1s crossfade) so the engine's range shows without dead time."
+    ],
+    "choreography": [
+      "Cursor leads, fluid follows and lingers — a lead/echo relationship between user motion and pigment.",
+      "Fast sweeps tear big vortices; slow drifts swell gently — input velocity maps to visual energy."
+    ]
+  },
+  "capabilities": {
+    "renderingRoutes": ["R1", "R2"],
+    "genModels": ["flux-2-pro"],
+    "primitives": ["fluid-sim", "magnetic-cursor", "custom-cursor-layer", "hub-background", "extruded-text"],
+    "postFx": ["bloom", "vignette"],
+    "readiness": "partial",
+    "gapNotes": [
+      "The physics/fluid pack ships 36 TSL sim primitives, but a cursor-driven dye-injection Navier-Stokes field composited OVER photographic plates has not been demonstrated as a hub background — needs a pointer-force + dye-source binding into the hub background layer.",
+      "Type-volume fusion (vapor passing in front of AND behind letters) needs depth-sorted compositing between the sim layer and text meshes — unproven.",
+      "Bloom post-pass exists in the marketing stack but is not part of the R1 cinematic floor in the prism runtime (W-PHOTO)."
+    ]
+  },
+  "usage": {
+    "whenToUse": [
+      "Tech/creative/AI products that must demonstrate GPU craft in the first second.",
+      "Dark-stage heroes where a single brand hue should own the frame.",
+      "Surfaces where visitor interaction is the message — the effect proves responsiveness."
+    ],
+    "whenNotToUse": [
+      "Text-heavy or accessibility-first pages — constant turbulence fights readability and must fully respect reduced-motion.",
+      "Low-power/mobile GPUs: per-frame sim is a battery/jank risk; needs a static-gradient fallback.",
+      "Calm, editorial, or trust-first registers (finance, health) — reads as spectacle."
+    ],
+    "archetypeFit": ["saas", "marketing", "community"],
+    "moods": ["futuristic", "energetic", "technical", "dark", "cinematic"]
+  },
+  "pairing": {
+    "pairsWith": ["oversized-type-editorial", "dark-stage-single-accent", "custom-cursor-choreography"],
+    "avoidWith": ["layered-photo-parallax-hero", "glitch-cyber-fx", "particle-field-hero"],
+    "notes": [
+      "One full-frame GPU effect per surface — fluid, particles, and glitch compete for the same motion budget and GPU frame time.",
+      "The pinned headline is not optional: every observed instance anchors the turbulence with one still monumental word."
+    ]
+  },
+  "antiRepetition": {
+    "clusterId": "shader-field",
+    "notes": "Same cluster as particle-field-hero and hover-morph-distortion — all full-frame pointer-reactive GPU fields."
+  },
+  "sources": [
+    {
+      "title": "Fluid Dynamics Effect Showcase (PLAN §1 teardown)",
+      "url": "https://www.sliderrevolution.com/templates/fluid-dynamics-effect-showcase/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder live analysis recorded in PRISM-DESIGN-SUPREMACY-PLAN.md §1 (realtime GPU fluid shaders OVER photographic plates/cutouts), corroborated by the monitor session's live demo: cursor sweeps at varied velocity injected dye that swirled and decayed; scene-selector rail exercised across presets (neon cyber, chromatic vapor, botanical, spice).",
+      "observationRef": "analysis/fluid-dynamics-effect-showcase.json"
+    }
+  ],
+  "exemplars": [],
+  "provenance": {
+    "groundTruth": ["founder-plan", "monitor-observation"],
+    "distilledAt": "2026-07-06",
+    "distilledBy": "wdg1-orchestrator"
+  }
+}
