@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "prism-dg-v1",
+  "id": "editorial-product-gallery",
+  "name": "Editorial Product Gallery",
+  "status": "grounded",
+  "summary": "Each product is presented as a full-page magazine spread: a full-bleed environment photograph, a light display headline, and a small museum-label spec block — a slider that feels like turning pages of a curated design catalog rather than browsing a store.",
+  "elementTypes": ["gallery", "product-showcase", "slider"],
+  "whatMakesItWork": {
+    "composition": [
+      "A consistent overlay grid across all slides: oversized headline pinned lower-left, spec block beneath it, filmstrip nav + counter lower-right, thin ruled dividers — the fixed frame makes product swaps feel like page turns of one publication.",
+      "Products are shot IN evocative environments (landscape, interior), never on white — each slide is a scene with the object as protagonist.",
+      "A row of small thumbnails + slide counter provides quiet navigation that never competes with the imagery."
+    ],
+    "layering": [
+      "Text sits on a subtle darkening scrim over the full-bleed photo; depth comes from real photographic depth-of-field, not stacked cutouts.",
+      "The spec block reads as a museum object label: category, material, dimensions in a small ruled data block anchored under the headline."
+    ],
+    "lighting": [
+      "Natural photographic light with soft atmospheric haze; a gentle bottom vignette/scrim anchors the text without hard glows.",
+      "A muted, desaturated, low-contrast grade unifies every product scene into one calm gallery mood — the grade IS the curation."
+    ],
+    "typography": [
+      "Light-weight LARGE display (serif or sans) for product names against tiny tracked-out mono/sans spec labels — extreme weight and size contrast is the editorial signature.",
+      "Ruled dividers and label typography borrow from print object-catalogs."
+    ]
+  },
+  "palette": {
+    "logic": ["editorial-neutral", "photographic-derived", "duotone"],
+    "rules": [
+      "Let each environment photo dictate a muted near-monochrome duotone; the grade keeps them siblings.",
+      "Interface chrome holds ONE constant brand accent (for the buy CTA) that stays outside the photographic world."
+    ]
+  },
+  "motion": {
+    "character": ["smooth-luxurious", "cinematic-slow"],
+    "easing": [
+      "Long gentle cross-dissolves/slides with expo-out settles; nothing snaps.",
+      "Headline and spec text stagger in AFTER the background lands — imagery leads, information follows."
+    ],
+    "pacing": [
+      "Slow and deliberate, ~1s+ transitions, matching the luxury register.",
+      "Each spread holds — no autoplay urgency; the visitor turns the pages."
+    ],
+    "choreography": [
+      "Top-down cascade per slide: environment transitions first, then headline, then metadata block and counter update.",
+      "The eye is always steered to the product name before the specs."
+    ]
+  },
+  "capabilities": {
+    "renderingRoutes": ["R2", "R3"],
+    "genModels": ["flux-2-pro"],
+    "primitives": ["hub-transition-preset", "keyframes", "msdf-text", "inview-driver", "hub-background"],
+    "postFx": ["color-grade", "vignette", "atmospheric-haze"],
+    "readiness": "partial",
+    "gapNotes": [
+      "FLUX generates environment product scenes, but the unified muted grade across a generated SET (grade-as-curation) needs the W-PHOTO color-grade/LUT pass — without it generated spreads read as unrelated stock.",
+      "Museum-label spec blocks and ruled dividers are straightforward MSDF/plane composition (no gap).",
+      "Cross-dissolve between full-bleed textured planes exists via hub transition presets."
+    ]
+  },
+  "usage": {
+    "whenToUse": [
+      "Premium object brands (furniture, instruments, craft goods) with a small curated catalog.",
+      "Portfolio-of-products storytelling where perceived value matters more than conversion speed.",
+      "Briefs that supply or can generate strong environmental photography."
+    ],
+    "whenNotToUse": [
+      "High-velocity e-commerce needing price, variants, and quick add-to-cart — the editorial pacing hides transactional affordances.",
+      "Large catalogs: past ~10 items the page-turn reverence collapses into slowness.",
+      "Products that photograph poorly in environments (small/flat items)."
+    ],
+    "archetypeFit": ["commerce", "content", "marketing"],
+    "moods": ["editorial", "refined", "luxury", "calm", "timeless"]
+  },
+  "pairing": {
+    "pairsWith": ["luxury-product-microsite", "quiet-luxury-monochrome", "layered-photo-parallax-hero"],
+    "avoidWith": ["glitch-cyber-fx", "playful-cutout-commerce"],
+    "notes": [
+      "Shares the reverent one-object-at-a-time register with luxury-product-microsite; they differ in stage (environment photography vs studio vitrine)."
+    ]
+  },
+  "antiRepetition": {
+    "clusterId": "gallery-wall",
+    "notes": "Same cluster as infinite-filmstrip-gallery and media-showreel-gallery."
+  },
+  "sources": [
+    {
+      "title": "Editorial Product Gallery Slider",
+      "url": "https://www.sliderrevolution.com/templates/editorial-product-gallery-slider-wordpress/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session, live demo: slides advanced via thumbnails and arrows; top-down reveal cascade (environment → headline → spec block → counter) observed per transition; hover states on nav checked.",
+      "observationRef": "analysis/editorial-product-gallery-slider-wordpress.json"
+    },
+    {
+      "title": "Prime Luxury Product Microsite",
+      "url": "https://www.sliderrevolution.com/templates/prime-luxury-product-microsite-template/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session: embedded hero on the template page rendered and observed (no standalone demo exposed); the museum-vitrine product row and gallery-formal register corroborate the family's composition rules; deeper slider interaction partly inferred.",
+      "observationRef": "analysis/prime-luxury-product-microsite-template.json"
+    }
+  ],
+  "exemplars": [],
+  "provenance": {
+    "groundTruth": ["monitor-observation"],
+    "distilledAt": "2026-07-06",
+    "distilledBy": "wdg1-orchestrator"
+  }
+}
