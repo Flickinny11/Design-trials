@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "prism-dg-v1",
+  "id": "hover-morph-distortion",
+  "name": "Hover Morph Distortion",
+  "status": "grounded",
+  "summary": "A shader-driven liquid warp liquefies the hero photograph under the cursor — displacement trails the pointer path with viscous, damped follow, and warp intensity scales with cursor velocity. The layout never moves; motion lives entirely inside the image plane while type and subject cutouts stay razor-sharp.",
+  "elementTypes": ["hero", "background", "gallery"],
+  "whatMakesItWork": {
+    "composition": [
+      "A stable graphic anchor is mandatory: a giant flat display word and/or a crisp cutout subject that the liquefying photo plays against.",
+      "The distortion zone is the full photographic plane; clipping it to a small hover target wastes the effect.",
+      "Small supporting label/CTA anchored low keeps the frame quiet."
+    ],
+    "layering": [
+      "Three planes with strict roles: background photo plate (DEFORMS) → giant flat type (STABLE) → foreground cutout subject (STABLE, occludes type).",
+      "Because only one plane deforms, the warp reads as intentional craft rather than glitch — corrupt everything and it reads as error.",
+      "The ripple can read as wet-glass refraction: displacement plus slight magnification near the pointer."
+    ],
+    "lighting": [
+      "Soft high-key daylight photography (airy skies, no hard shadows) shows displacement most clearly — busy dark imagery hides the warp.",
+      "No glows or vignettes: clarity over drama; the type provides graphic 'light' via a pure saturated fill."
+    ],
+    "typography": [
+      "Heavy geometric display sans at poster scale, single weight, tight; tiny tracked uppercase captions.",
+      "Type itself does NOT animate — the image does; the contrast between liquid photo and frozen type is the aesthetic."
+    ]
+  },
+  "palette": {
+    "logic": ["high-key-airy", "monochrome-plus-accent"],
+    "rules": [
+      "Neutral desaturated photographic base + ONE loud saturated hue owning the type — the accent is the brand voice; everything else stays muted so the morph reads clearly."
+    ]
+  },
+  "motion": {
+    "character": ["organic-fluid", "ambient-drift"],
+    "easing": [
+      "Viscous damped follow — the distortion LAGS the cursor and relaxes back slowly (~0.6-1s decay); no snap, no bounce.",
+      "Warp intensity maps to cursor VELOCITY: fast sweeps tear, slow drifts gently swell."
+    ],
+    "pacing": [
+      "Continuous and ambient while the pointer moves; fully at rest when idle — unlike fluid/particle fields, this family is silent until touched.",
+      "Decay must complete before the image fully re-sharpens; an instant reset breaks the liquid illusion."
+    ],
+    "choreography": [
+      "Pointer position is the sole driver — no autoplay, no scroll binding.",
+      "Only the photographic layer responds; subject cutout and headline hold, giving the eye a stable reference for the deformation."
+    ]
+  },
+  "capabilities": {
+    "renderingRoutes": ["R1", "R2"],
+    "genModels": ["flux-2-pro"],
+    "primitives": ["displacement-transition", "magnetic-cursor", "pbr-material", "extruded-text"],
+    "postFx": [],
+    "readiness": "partial",
+    "gapNotes": [
+      "A TSL displacement shader on a textured plane is native territory, but the pointer-velocity-to-warp-intensity driver (with viscous lag and decay) is not a shipped primitive — displacement-transition is a one-shot transition, not a continuous pointer field.",
+      "Needs the cutout pipeline (W-PHOTO) for the stable-subject sandwich: FLUX image → background-removed cutout + intact photo plate."
+    ]
+  },
+  "usage": {
+    "whenToUse": [
+      "Creative/portfolio/fashion heroes needing tactile GPU craft with a calm idle state (unlike always-moving fields).",
+      "Image-led brands where photography quality is high and deserves to be 'touchable'."
+    ],
+    "whenNotToUse": [
+      "Touch-first/mobile-heavy audiences — the effect is pointer-dependent and invisible on tap devices without a designed fallback.",
+      "Text-dense or data-heavy pages; per-frame displacement is a battery/jank risk on weak GPUs.",
+      "Brands wanting institutional restraint — liquefying imagery reads experimental."
+    ],
+    "archetypeFit": ["content", "commerce", "marketing"],
+    "moods": ["bold", "playful", "airy", "crafted", "energetic"]
+  },
+  "pairing": {
+    "pairsWith": ["oversized-type-editorial", "layered-photo-parallax-hero", "custom-cursor-choreography"],
+    "avoidWith": ["gpu-fluid-overlay", "particle-field-hero", "glitch-cyber-fx"],
+    "notes": [
+      "Shares the pointer-reactive-field cluster: never combine two pointer-driven GPU effects — the cursor can only author one field at a time."
+    ]
+  },
+  "antiRepetition": {
+    "clusterId": "shader-field",
+    "notes": "Same cluster as gpu-fluid-overlay and particle-field-hero."
+  },
+  "sources": [
+    {
+      "title": "Hover Morph Effect Hero Collection",
+      "url": "https://www.sliderrevolution.com/templates/hover-morph-effect-hero-collection/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session, live demo: cursor swept at varied velocities — velocity-scaled tearing vs gentle swelling observed; decay-to-rest timed; stability of type and cutout planes during deformation confirmed across collection variants.",
+      "observationRef": "analysis/hover-morph-effect-hero-collection.json"
+    }
+  ],
+  "exemplars": [],
+  "provenance": {
+    "groundTruth": ["monitor-observation"],
+    "distilledAt": "2026-07-06",
+    "distilledBy": "wdg1-orchestrator"
+  }
+}
