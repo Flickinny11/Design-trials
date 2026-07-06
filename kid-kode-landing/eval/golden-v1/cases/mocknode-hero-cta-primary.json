@@ -1,0 +1,40 @@
+{
+  "id": "mocknode-hero-cta-primary",
+  "family": "node-gen",
+  "title": "Mock app node — hero-cta-primary",
+  "input": {
+    "instruction": "Hero primary CTA pill — long turquoise-edged frosted acrylic pill below the portal frame, with a small flame glyph on its left and an arrow glyph on its right (no text in the image). Internal plasma glow pulses softly at idle, brightens fully on tap. MSDF label 'GENERATE A VIDEO' centered on the pill. Tap increments heroCtaClicks via the analytics backend.",
+    "target": {
+      "nodeId": "hero-cta-primary",
+      "subtype": "frontend-element",
+      "renderMode": "sprite",
+      "codeRef": "nodes/hero-card-cta.js"
+    }
+  },
+  "expected": {
+    "criteria": [
+      {
+        "id": "subtype",
+        "assert": "node subtype matches",
+        "subtype": "frontend-element"
+      },
+      {
+        "id": "completeness-gate",
+        "assert": "passes the schema-completeness gate",
+        "gate": "schema-completeness",
+        "outcome": "pass"
+      },
+      {
+        "id": "renders",
+        "assert": "node renders (no empty-Group placeholder)",
+        "renders": true
+      }
+    ]
+  },
+  "provenance": {
+    "source": "src/lib/prism/mock-app-source/hubs/home-hub.legacy.json",
+    "certifiedBy": "ORRERY mock app (canonical graph)",
+    "harvestedAt": "2026-07-06T03:19:55.900Z",
+    "note": "certified node 'hero-cta-primary'"
+  }
+}

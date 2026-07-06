@@ -1,0 +1,46 @@
+{
+  "id": "orrery-bezel-gem-set",
+  "family": "node-gen",
+  "title": "ORRERY watch — Bezel: Gem-set",
+  "input": {
+    "instruction": "Configure the atelier watch bezel as Gem-set.",
+    "target": {
+      "nodeId": "orr-atelier-watch",
+      "codeRef": "builtin:atelier-watch",
+      "renderMode": "mesh"
+    },
+    "layer": "bezel",
+    "variant": "gem-set"
+  },
+  "expected": {
+    "criteria": [
+      {
+        "id": "renders-mesh",
+        "assert": "node renders as a mesh (codeRef builtin:atelier-watch)",
+        "renderMode": "mesh"
+      },
+      {
+        "id": "has-material",
+        "assert": "variant carries a full MaterialSpec (LIT)",
+        "materialSpec": true
+      },
+      {
+        "id": "price-delta",
+        "assert": "priceDelta matches the certified value",
+        "priceDelta": 62000
+      },
+      {
+        "id": "completeness-gate",
+        "assert": "passes the schema-completeness gate",
+        "gate": "schema-completeness",
+        "outcome": "pass"
+      }
+    ]
+  },
+  "provenance": {
+    "source": "src/lib/prism/atelier/config.ts",
+    "certifiedBy": "MASTERPIECE M-2 + SHELL W9A (judged 0 MUST-FIX)",
+    "harvestedAt": "2026-07-06T03:19:55.900Z",
+    "note": "layer 'bezel' variant 'gem-set'"
+  }
+}

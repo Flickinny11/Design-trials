@@ -1,0 +1,40 @@
+{
+  "id": "ship-gate-w5b",
+  "family": "ship-gate",
+  "title": "W5B ship-anywhere gate (§14.1)",
+  "input": {
+    "instruction": "Build + ship a verified app to a shareable preview.",
+    "gate": "W5B / E15..E20 + §14.1"
+  },
+  "expected": {
+    "criteria": [
+      {
+        "id": "verified-shippable",
+        "assert": "build earns the Verified Shippable badge",
+        "builtBadge": true
+      },
+      {
+        "id": "multi-target",
+        "assert": "ships to ≥2 host targets",
+        "hosts": 7,
+        "min": 2
+      },
+      {
+        "id": "managed-care",
+        "assert": "Managed Care (E20) surface present",
+        "care": true
+      },
+      {
+        "id": "post-ship-verify",
+        "assert": "post-ship §11.2 verification passes on each target",
+        "outcome": "pass"
+      }
+    ]
+  },
+  "provenance": {
+    "source": "notes/verification/shell-w5b/frames-summary.json + tests/unit/shell-w5b-ship-anywhere.test.ts",
+    "certifiedBy": "SHELL W5B (11/11 gate pass)",
+    "harvestedAt": "2026-07-06T03:19:55.900Z",
+    "note": "hosts=7, recs=2, cards=7"
+  }
+}

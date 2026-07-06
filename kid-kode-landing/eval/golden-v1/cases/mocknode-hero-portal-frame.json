@@ -1,0 +1,40 @@
+{
+  "id": "mocknode-hero-portal-frame",
+  "family": "node-gen",
+  "title": "Mock app node — hero-portal-frame",
+  "input": {
+    "instruction": "Hero centerpiece — massive holographic portal frame, the visual anchor of the hero section. Ornate cast-bronze ring etched with deep ancient runes, turquoise plasma flowing along the rune channels. The interior of the frame shows a swirling cosmic nebula running as an i2v keyframe loop (method 3, 30 frames @ 30fps): purple-and-magenta gas clouds, distant stars rotating slowly, occasional bright pulse from within. Idle pulse + i2v loop. The single most ornate object in the composition.",
+    "target": {
+      "nodeId": "hero-portal-frame",
+      "subtype": "frontend-element",
+      "renderMode": "sprite",
+      "codeRef": "nodes/hero-portal-frame.js"
+    }
+  },
+  "expected": {
+    "criteria": [
+      {
+        "id": "subtype",
+        "assert": "node subtype matches",
+        "subtype": "frontend-element"
+      },
+      {
+        "id": "completeness-gate",
+        "assert": "passes the schema-completeness gate",
+        "gate": "schema-completeness",
+        "outcome": "pass"
+      },
+      {
+        "id": "renders",
+        "assert": "node renders (no empty-Group placeholder)",
+        "renders": true
+      }
+    ]
+  },
+  "provenance": {
+    "source": "src/lib/prism/mock-app-source/hubs/home-hub.legacy.json",
+    "certifiedBy": "ORRERY mock app (canonical graph)",
+    "harvestedAt": "2026-07-06T03:19:55.900Z",
+    "note": "certified node 'hero-portal-frame'"
+  }
+}

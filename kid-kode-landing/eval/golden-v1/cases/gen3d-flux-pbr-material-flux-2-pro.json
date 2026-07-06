@@ -1,0 +1,39 @@
+{
+  "id": "gen3d-flux-pbr-material-flux-2-pro",
+  "family": "generative-3d",
+  "title": "FLUX 2 Pro — flux.pbr-material",
+  "input": {
+    "capabilityId": "flux.pbr-material",
+    "model": "FLUX 2 Pro",
+    "adapterId": "flux"
+  },
+  "expected": {
+    "criteria": [
+      {
+        "id": "asset-kind",
+        "assert": "produces the expected asset kind",
+        "assetKind": "material"
+      },
+      {
+        "id": "cost-basis",
+        "assert": "cost basis recorded (metering)",
+        "cost": {
+          "unit": "usd",
+          "amount": 0.05,
+          "estimated": true
+        }
+      },
+      {
+        "id": "metered",
+        "assert": "invocation metered in CapabilityUsage + corpus",
+        "metered": true
+      }
+    ]
+  },
+  "provenance": {
+    "source": ".data/generative-jobs.json",
+    "certifiedBy": "SHELL W10 (DL13 committed demo output)",
+    "harvestedAt": "2026-07-06T03:19:55.900Z",
+    "note": "real live job → /prism-mock/editor/textures/generated/weathered-verdigris-bronze/albedo.png"
+  }
+}

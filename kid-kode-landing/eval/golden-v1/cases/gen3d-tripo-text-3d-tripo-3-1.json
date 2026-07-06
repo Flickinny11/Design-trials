@@ -1,0 +1,39 @@
+{
+  "id": "gen3d-tripo-text-3d-tripo-3-1",
+  "family": "generative-3d",
+  "title": "Tripo 3.1 — tripo.text-3d",
+  "input": {
+    "capabilityId": "tripo.text-3d",
+    "model": "Tripo 3.1",
+    "adapterId": "tripo"
+  },
+  "expected": {
+    "criteria": [
+      {
+        "id": "asset-kind",
+        "assert": "produces the expected asset kind",
+        "assetKind": "glb"
+      },
+      {
+        "id": "cost-basis",
+        "assert": "cost basis recorded (metering)",
+        "cost": {
+          "unit": "credits",
+          "amount": 10,
+          "estimated": true
+        }
+      },
+      {
+        "id": "metered",
+        "assert": "invocation metered in CapabilityUsage + corpus",
+        "metered": true
+      }
+    ]
+  },
+  "provenance": {
+    "source": ".data/generative-jobs.json",
+    "certifiedBy": "SHELL W10 (DL13 committed demo output)",
+    "harvestedAt": "2026-07-06T03:19:55.900Z",
+    "note": "real demo job → /prism-mock/editor/models/generated/demo-tripo-robot/model.glb"
+  }
+}

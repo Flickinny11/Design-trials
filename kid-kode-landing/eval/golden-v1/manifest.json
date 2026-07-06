@@ -1,0 +1,129 @@
+{
+  "evalSet": "golden-v1",
+  "generatedAt": "2026-07-06T03:19:55.900Z",
+  "schemaAlignment": {
+    "corpusSchema": "prism-fr-v1",
+    "otelSemconv": "1.43.0"
+  },
+  "purpose": "Frozen certified yardstick for measuring a candidate model/build against a known-good bar (proposal §5 G1 / §4 P0). Regenerate with scripts/flight-recorder-golden-seed.mjs as fixtures evolve.",
+  "caseCount": 16,
+  "byFamily": {
+    "node-gen": 11,
+    "generative-3d": 4,
+    "ship-gate": 1
+  },
+  "cases": [
+    {
+      "id": "orrery-movement-tourbillon",
+      "family": "node-gen",
+      "title": "ORRERY watch — Movement: Tourbillon",
+      "source": "src/lib/prism/atelier/config.ts",
+      "certifiedBy": "MASTERPIECE M-2 + SHELL W9A (judged 0 MUST-FIX)"
+    },
+    {
+      "id": "orrery-case-rose-gold",
+      "family": "node-gen",
+      "title": "ORRERY watch — Case: Rose Gold",
+      "source": "src/lib/prism/atelier/config.ts",
+      "certifiedBy": "MASTERPIECE M-2 + SHELL W9A (judged 0 MUST-FIX)"
+    },
+    {
+      "id": "orrery-bezel-gem-set",
+      "family": "node-gen",
+      "title": "ORRERY watch — Bezel: Gem-set",
+      "source": "src/lib/prism/atelier/config.ts",
+      "certifiedBy": "MASTERPIECE M-2 + SHELL W9A (judged 0 MUST-FIX)"
+    },
+    {
+      "id": "orrery-dial-orrery",
+      "family": "node-gen",
+      "title": "ORRERY watch — Dial: Orrery Celestial",
+      "source": "src/lib/prism/atelier/config.ts",
+      "certifiedBy": "MASTERPIECE M-2 + SHELL W9A (judged 0 MUST-FIX)"
+    },
+    {
+      "id": "orrery-dial-guilloche",
+      "family": "node-gen",
+      "title": "ORRERY watch — Dial: Guilloché",
+      "source": "src/lib/prism/atelier/config.ts",
+      "certifiedBy": "MASTERPIECE M-2 + SHELL W9A (judged 0 MUST-FIX)"
+    },
+    {
+      "id": "orrery-hands-blued",
+      "family": "node-gen",
+      "title": "ORRERY watch — Hands: Blued Steel",
+      "source": "src/lib/prism/atelier/config.ts",
+      "certifiedBy": "MASTERPIECE M-2 + SHELL W9A (judged 0 MUST-FIX)"
+    },
+    {
+      "id": "orrery-indices-diamond",
+      "family": "node-gen",
+      "title": "ORRERY watch — Indices: Diamond",
+      "source": "src/lib/prism/atelier/config.ts",
+      "certifiedBy": "MASTERPIECE M-2 + SHELL W9A (judged 0 MUST-FIX)"
+    },
+    {
+      "id": "mocknode-page-backdrop",
+      "family": "node-gen",
+      "title": "Mock app node — page-backdrop",
+      "source": "src/lib/prism/mock-app-source/hubs/home-hub.legacy.json",
+      "certifiedBy": "ORRERY mock app (canonical graph)"
+    },
+    {
+      "id": "mocknode-hero-portal-frame",
+      "family": "node-gen",
+      "title": "Mock app node — hero-portal-frame",
+      "source": "src/lib/prism/mock-app-source/hubs/home-hub.legacy.json",
+      "certifiedBy": "ORRERY mock app (canonical graph)"
+    },
+    {
+      "id": "mocknode-hero-cta-primary",
+      "family": "node-gen",
+      "title": "Mock app node — hero-cta-primary",
+      "source": "src/lib/prism/mock-app-source/hubs/home-hub.legacy.json",
+      "certifiedBy": "ORRERY mock app (canonical graph)"
+    },
+    {
+      "id": "mocknode-feature-card-3d",
+      "family": "node-gen",
+      "title": "Mock app node — feature-card-3d",
+      "source": "src/lib/prism/mock-app-source/hubs/home-hub.legacy.json",
+      "certifiedBy": "ORRERY mock app (canonical graph)"
+    },
+    {
+      "id": "gen3d-failclean-tripo-texture",
+      "family": "generative-3d",
+      "title": "Smart Mesh P1 — tripo.texture (must fail cleanly)",
+      "source": ".data/generative-jobs.json",
+      "certifiedBy": "SHELL W10 (meter-every-invocation law)"
+    },
+    {
+      "id": "gen3d-flux-pbr-material-flux-2-pro",
+      "family": "generative-3d",
+      "title": "FLUX 2 Pro — flux.pbr-material",
+      "source": ".data/generative-jobs.json",
+      "certifiedBy": "SHELL W10 (DL13 committed demo output)"
+    },
+    {
+      "id": "gen3d-tripo-text-3d-tripo-3-1",
+      "family": "generative-3d",
+      "title": "Tripo 3.1 — tripo.text-3d",
+      "source": ".data/generative-jobs.json",
+      "certifiedBy": "SHELL W10 (DL13 committed demo output)"
+    },
+    {
+      "id": "gen3d-replicate-hunyuan-3d-hunyuan-3d-3-1",
+      "family": "generative-3d",
+      "title": "Hunyuan 3D 3.1 — replicate.hunyuan-3d",
+      "source": ".data/generative-jobs.json",
+      "certifiedBy": "SHELL W10 (DL13 committed demo output)"
+    },
+    {
+      "id": "ship-gate-w5b",
+      "family": "ship-gate",
+      "title": "W5B ship-anywhere gate (§14.1)",
+      "source": "notes/verification/shell-w5b/frames-summary.json + tests/unit/shell-w5b-ship-anywhere.test.ts",
+      "certifiedBy": "SHELL W5B (11/11 gate pass)"
+    }
+  ]
+}

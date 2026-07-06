@@ -1,0 +1,30 @@
+{
+  "id": "gen3d-failclean-tripo-texture",
+  "family": "generative-3d",
+  "title": "Smart Mesh P1 — tripo.texture (must fail cleanly)",
+  "input": {
+    "capabilityId": "tripo.texture",
+    "model": "Smart Mesh P1",
+    "note": "invalid input (no source mesh)"
+  },
+  "expected": {
+    "criteria": [
+      {
+        "id": "fails-clean",
+        "assert": "fails with a typed error, never a broken asset",
+        "status": "failed"
+      },
+      {
+        "id": "metered-failure",
+        "assert": "failed invocation still metered (ok=false)",
+        "ok": false
+      }
+    ]
+  },
+  "provenance": {
+    "source": ".data/generative-jobs.json",
+    "certifiedBy": "SHELL W10 (meter-every-invocation law)",
+    "harvestedAt": "2026-07-06T03:19:55.900Z",
+    "note": "a source mesh (a prior Tripo job) is required"
+  }
+}

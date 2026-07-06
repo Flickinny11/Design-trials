@@ -1,0 +1,40 @@
+{
+  "id": "mocknode-feature-card-3d",
+  "family": "node-gen",
+  "title": "Mock app node — feature-card-3d",
+  "input": {
+    "instruction": "Feature card 2 — 3D-Native. Floating sci-fi card-relic; central element is a brushed-bronze 3D wireframe polyhedron (an icosahedron carved from cast bronze with thin turquoise rune-channels along its edges). Lift-hover on pointerover. MSDF labels: title '3D-NATIVE' + body 'Renders volumetric scenes natively.'",
+    "target": {
+      "nodeId": "feature-card-3d",
+      "subtype": "frontend-element",
+      "renderMode": "sprite",
+      "codeRef": "nodes/feature-card-bg.js"
+    }
+  },
+  "expected": {
+    "criteria": [
+      {
+        "id": "subtype",
+        "assert": "node subtype matches",
+        "subtype": "frontend-element"
+      },
+      {
+        "id": "completeness-gate",
+        "assert": "passes the schema-completeness gate",
+        "gate": "schema-completeness",
+        "outcome": "pass"
+      },
+      {
+        "id": "renders",
+        "assert": "node renders (no empty-Group placeholder)",
+        "renders": true
+      }
+    ]
+  },
+  "provenance": {
+    "source": "src/lib/prism/mock-app-source/hubs/home-hub.legacy.json",
+    "certifiedBy": "ORRERY mock app (canonical graph)",
+    "harvestedAt": "2026-07-06T03:19:55.900Z",
+    "note": "certified node 'feature-card-3d'"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "mocknode-page-backdrop",
+  "family": "node-gen",
+  "title": "Mock app node — page-backdrop",
+  "input": {
+    "instruction": "Page backdrop — duplicated full mockup image rendered as a single backdrop layer at z=0. Carries the entire scene's atmospheric tone: deep cosmic navy-black, volumetric fog, distant nebulae, scattered starfield, faint architectural silhouettes out of focus. Every foreground node composites on top of this backdrop. Material: cinematic-render of a deep-space architectural environment, photographed-feel.",
+    "target": {
+      "nodeId": "page-backdrop",
+      "subtype": "frontend-element",
+      "renderMode": "sprite",
+      "codeRef": "nodes/page-background.js"
+    }
+  },
+  "expected": {
+    "criteria": [
+      {
+        "id": "subtype",
+        "assert": "node subtype matches",
+        "subtype": "frontend-element"
+      },
+      {
+        "id": "completeness-gate",
+        "assert": "passes the schema-completeness gate",
+        "gate": "schema-completeness",
+        "outcome": "pass"
+      },
+      {
+        "id": "renders",
+        "assert": "node renders (no empty-Group placeholder)",
+        "renders": true
+      }
+    ]
+  },
+  "provenance": {
+    "source": "src/lib/prism/mock-app-source/hubs/home-hub.legacy.json",
+    "certifiedBy": "ORRERY mock app (canonical graph)",
+    "harvestedAt": "2026-07-06T03:19:55.900Z",
+    "note": "certified node 'page-backdrop'"
+  }
+}
