@@ -1,0 +1,39 @@
+{
+  "wave": "PRISM-SHELL-W10",
+  "title": "Generative 3D capability family in the editor",
+  "date": "2026-07-05",
+  "branch": "codex/prism-recovery-harness-20260630",
+  "capabilities": {
+    "total_tiles": 11,
+    "live_adapters": ["tripo", "replicate", "flux"],
+    "stub_adapters": ["marble", "meshy", "meshops"],
+    "kinds": ["generate3D", "textureMesh", "rigMesh", "segmentMesh", "generateMaterial", "generateWorld", "meshOps"]
+  },
+  "real_generations": {
+    "tripo_text_to_3d_robot": { "task": "bf932f9a", "credits": 20, "raw_mb": 39.6, "opt_mb": 1.37 },
+    "tripo_8k_texture": { "task": "69f9a747", "credits": 20, "raw_mb": 52.3, "opt_mb": 1.82 },
+    "tripo_auto_rig": { "task": "6d4c6e4e", "credits": 25, "riggable": true, "opt_mb": 1.96 },
+    "tripo_segmentation": { "task": "675c0901", "credits": 40, "parts": 20, "opt_mb": 3.08 },
+    "replicate_hunyuan_teapot_cli": { "task": "03f0mfn4", "usd_est": 0.30, "opt_mb": 2.38 },
+    "flux_pbr_material_brass": { "usd_est": 0.05, "maps": ["albedo", "normal", "rough", "metal", "ao"] },
+    "flux_pbr_material_copper_via_route": { "usd_est": 0.05, "live_route_chain": true },
+    "flux_pbr_material_verdigris_via_ui": { "usd_est": 0.05, "live_from_browser": true },
+    "replicate_hunyuan_owl_via_route": { "usd_est": 0.30, "live_route_chain": true }
+  },
+  "spend": {
+    "tripo_credits_used": 105,
+    "tripo_credits_cap": 120,
+    "tripo_balance_start": 460,
+    "tripo_balance_end": 355,
+    "replicate_usd_est": 1.05,
+    "replicate_usd_cap": 3.0
+  },
+  "metering": { "pattern": "CapabilityUsage (E20)", "store": ".data/capability-usage.json", "records": "capabilityId, model, provider, cost basis, jobId, result ref, live flag, at" },
+  "invariants": {
+    "I-ADDITIVE": "no editor code path deleted/rewritten; Generate section is an additive child of FunctionsTab",
+    "I-PROVIDER": "INV-NEV2-4 — client never imports an adapter; all vendor REST in per-vendor .assetgen clients",
+    "I-SECRETS": "INV-19 — keys read only by spawned children; never in graph/bundle/logs/report",
+    "I-SPEC": "no canonical spec edits; deviations recorded before code in spec-deviations-w10.md"
+  },
+  "static": { "tsc_new_errors": 0, "tsc_baseline": 9 }
+}

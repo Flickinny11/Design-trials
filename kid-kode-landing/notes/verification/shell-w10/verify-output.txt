@@ -1,0 +1,185 @@
+
+> kid-kode-ai-landing@0.2.0 verify
+> npm run verify:prism && npm run verify:repair-loop && npm run verify:galaxy && npm run verify:global-shell && npm run verify:parity-static && npm run verify:schema && npm run verify:tenancy
+
+
+> kid-kode-ai-landing@0.2.0 verify:prism
+> node scripts/verify-prism.mjs
+
+[[32mPASS[0m] forbidden:PIXI.Text            No `new PIXI.Text(` anywhere in src/ (§1.4 / §10.5)
+        [2mzero PIXI.Text usages[0m
+[[32mPASS[0m] forbidden:PIXI.Text.ref        No `PIXI.Text` reference at all in src/
+        [2mzero references[0m
+[[32mPASS[0m] forbidden:PIXI.Graphics        Every `new PIXI.Graphics(` in src/lib/prism/** has ALLOWED-GRAPHICS comment in same file (§10.5, §1.4 exception)
+        [2mGraphics usage all accounted for[0m
+[[32mPASS[0m] forbidden:html-to-image        No references to `html-to-image` in code (§10.21)
+        [2mzero references[0m
+[[32mPASS[0m] forbidden:innerHTML+fillText   No innerHTML/outerHTML/document.write/fillText/strokeText in src/lib/prism/**
+        [2mclean[0m
+[[32mPASS[0m] prism:manifest                 manifest.json present + valid JSON
+        [2mprismVersion=0.1.0, 15 entries[0m
+[[32mPASS[0m] prism:entryHub                 manifest.entryHub matches graph.hubs[0].hubId
+        [2ms1-arrival[0m
+[[32mPASS[0m] prism:nodeCount.consistency    manifest.nodeCount === graph.nodes.length
+        [2m338[0m
+[[32mPASS[0m] prism:artifactHash             artifactHash present + reproducible
+        [2mf59f7c84c619…[0m
+[[32mPASS[0m] prism:asset.sha256             Every asset has sha256 + size
+        [2m12 assets verified[0m
+[[32mPASS[0m] prism:backends.loadable        Backend modules present for every node with backendRef
+        [2mcomplete[0m
+[[32mPASS[0m] prism:text.methods             runtime MSDF text nodes are represented and the font atlas ships in the .prism artifact
+        [2m128 textSpec MSDF nodes; atlas packaged[0m
+[[32mPASS[0m] prism:renderer-graph           every graph.nodes[] has renderMode + scenePosition + cinematicPrimitives[] (migration §7/§8/§schema)
+        [2m338 nodes carry renderer fields[0m
+[[32mPASS[0m] prism:no-pixi.artifact         .prism artifact text entries contain zero Pixi references
+        [2mclean[0m
+
+[32m14/14 passed[0m
+
+> kid-kode-ai-landing@0.2.0 verify:repair-loop
+> node scripts/verify-repair-loop.mjs
+
+[[33mWARN[0m] repair-loop:bounded        §10.11 — repair-loop telemetry present + bounded (repairAttempts ≤ 8 cumulative, fullRegens ≤ 2)
+        [2mno repair-telemetry artifact found in public/prism-assets/ (expected at least one <hub>-repair-telemetry.json)[0m
+
+[33m0/1 passed (1 soft-warn — set VERIFY_REPAIR_LOOP=1 to enforce)[0m
+
+> kid-kode-ai-landing@0.2.0 verify:galaxy
+> node scripts/verify-galaxy-semantics.mjs
+
+[[32mPASS[0m] galaxy:graph-present               live graph has hubs and nodes
+        [2m6 hubs, 338 nodes[0m
+[[32mPASS[0m] galaxy:overview-collapses-helpers  Galaxy overview collapses app-shell and hit-target implementation nodes
+        [2m146 overview nodes, 192 collapsed (107 shell, 72 hit-target)[0m
+[[32mPASS[0m] galaxy:overview-projects-components Galaxy first-level view groups dense component atoms
+        [2m56 first-level nodes (22 clusters) from 146 content atoms; atelier:17, materia:8[0m
+[[32mPASS[0m] galaxy:backgrounds-are-hub-data    ambient star/dust/nebula backgrounds remain hub-owned, not first-class Galaxy nodes
+        [2m6/6 hubs carry background layers[0m
+[[32mPASS[0m] galaxy:overview-excludes-decoration embedded decoration (scrims, panel chrome, rail edges) is collapsed out of the overview — no "Support layers" spheres
+        [2m10 decoration nodes collapsed (spec-rail-edge, text-scrim, panel-chrome); 0 leaked into overview[0m
+[[32mPASS[0m] galaxy:each-hub-has-overview-content each page hub has at least one user-meaningful overview node
+        [2ms1-arrival:8, s2-movement:8, s3-materia:32, s4-celestia:8, s5-acquire:17, s6-atelier:73[0m
+[[33mWARN[0m] galaxy:global-hub-missing          spec wants a global hub for shared every-page elements
+        [2m10 globalSlot nodes are authored; remaining page-local shell variants still await a dedicated global hub cleanup[0m
+
+[32m7/7 passed[0m
+
+> kid-kode-ai-landing@0.2.0 verify:global-shell
+> node scripts/verify-global-shell-semantics.mjs
+
+[[32mPASS[0m] global-shell:files-present           global-slot resolver and root scene exist
+        [2massembled-nodes.ts, GraphScene.tsx, live-graph.json[0m
+[[32mPASS[0m] global-shell:resolver-contract       resolver includes global slots and duplicate chrome suppression
+        [2mresolver contract tokens present[0m
+[[32mPASS[0m] global-shell:root-wired              root GraphScene uses assembled node scope, not editor-shell replacement
+        [2mroot scene keeps existing runtime path[0m
+[[32mPASS[0m] global-shell:graph-readable          live graph has page hubs and app nodes
+        [2m6 hubs, 338 nodes[0m
+[[32mPASS[0m] global-shell:slot-values             globalSlot values are header/footer only when present
+        [2m10 renderable global slot nodes[0m
+[[32mPASS[0m] global-shell:global-slots-authored   global shell slots are authored in the graph
+        [2m10 globalSlot nodes; duplicate chrome signatures remaining: 30[0m
+
+[32m6/6 passed[0m
+
+> kid-kode-ai-landing@0.2.0 verify:parity-static
+> node scripts/galaxy-parity-gate.mjs --static
+
+[[32mPASS[0m] parity.graph-readable                live graph has hubs and nodes
+        [2m6 hubs, 338 nodes[0m
+[[32mPASS[0m] parity.roles-known                   every graph node classifies into a known galaxy role
+        [2m338 nodes across 5 roles[0m
+[[32mPASS[0m] parity.galaxy-covers-content         DIRECTION A (structure): every content node is represented in the galaxy projection (itself or cluster member)
+        [2m146 content atoms → 56 first-class elements, 0 dropped[0m
+[[32mPASS[0m] parity.projection-members-real       DIRECTION B (structure): every galaxy element member maps to a real graph node
+        [2m146 member atoms all real[0m
+[[32mPASS[0m] parity.per-hub-elements              every page hub presents at least one first-class galaxy element
+        [2ms1-arrival:6, s2-movement:8, s3-materia:8, s4-celestia:7, s5-acquire:10, s6-atelier:17[0m
+[[32mPASS[0m] parity.content-built-or-unbuilt      every content node is BUILT (real artifact source) or stage-0 UNBUILT (no artifact)
+        [2mall 146 content nodes are BUILT[0m
+
+[32m6/6 checks ok · 0 hard-fail[0m
+[2mreport → notes/verification/finish-f2/galaxy-parity-gate.static.json[0m
+
+> kid-kode-ai-landing@0.2.0 verify:schema
+> node scripts/schema-completeness-gate.mjs
+
+✓ S1 identity (nodeId/subtype/serviceTag/parentHubId) — PASS
+✓ S2 placement (scenePosition numeric) — PASS
+✓ S3 caption richness (≥40 chars, cold-model comprehensible) — PASS
+✓ S4 behaviorSpec shape (six arrays) — PASS
+✓ S5 behavior coherence (functionBinding mirrored in interactions) — PASS
+✓ S6 motion coherence (bindings/cinematics mirrored in animationSpec) — PASS
+✓ S7 artifact coherence per renderMode — PASS
+✓ S8 contracts (inputs/outputs objects) — PASS
+schema-completeness-gate: PASS — 338/338 nodes self-describing (8 rules green)
+
+> kid-kode-ai-landing@0.2.0 verify:tenancy
+> node scripts/verify-tenant-isolation.mjs
+
+[i11] hermetic scratch: /tmp/prism-i11-probe-VObLR1
+[i11] booting next dev on :4788…
+[[32mPASS[0m] anon.app-redirect                  anonymous /app redirects to sign-in
+        [2mstatus=307 location=/sign-in?next=%2Fapp[0m
+[[32mPASS[0m] anon.project.list                  anonymous project.list is UNAUTHORIZED
+        [2mcode=UNAUTHORIZED[0m
+[[32mPASS[0m] anon.agent.chat                    anonymous agent.chat is UNAUTHORIZED
+        [2mcode=UNAUTHORIZED[0m
+[[32mPASS[0m] anon.asset.post                    anonymous asset upload is 401
+        [2mstatus=401[0m
+[[32mPASS[0m] seed.signup                        two users signed up (email/dev provider path)
+        [2ma=200 b=200[0m
+[[32mPASS[0m] seed.plan-tier                     planTier stub defaults to free, never client-set
+[[32mPASS[0m] seed.signin                        password sign-in yields a working session
+[[32mPASS[0m] owner.project.create               A creates a project
+        [2mid=proj-3b52df34-f86e-4525-a4d7-f760366d3203[0m
+[[32mPASS[0m] owner.graph.save                   A saves a graph
+[[32mPASS[0m] owner.version.create               A snapshots a version (E1 pointer)
+[[32mPASS[0m] owner.asset.put                    A uploads an asset
+[[32mPASS[0m] owner.asset.get                    A reads their asset back
+[[32mPASS[0m] owner.graph.get                    A reads their graph back
+[[32mPASS[0m] cross.tenancy.project.get          B on A's project.get is NOT_FOUND
+        [2mcode=NOT_FOUND[0m
+[[32mPASS[0m] cross.tenancy.project.rename       B on A's project.rename is NOT_FOUND
+        [2mcode=NOT_FOUND[0m
+[[32mPASS[0m] cross.tenancy.project.setModelOverride B on A's project.setModelOverride is NOT_FOUND
+        [2mcode=NOT_FOUND[0m
+[[32mPASS[0m] cross.tenancy.project.duplicate    B on A's project.duplicate is NOT_FOUND
+        [2mcode=NOT_FOUND[0m
+[[32mPASS[0m] cross.tenancy.project.delete       B on A's project.delete is NOT_FOUND
+        [2mcode=NOT_FOUND[0m
+[[32mPASS[0m] cross.tenancy.graph.get            B on A's graph.get is NOT_FOUND
+        [2mcode=NOT_FOUND[0m
+[[32mPASS[0m] cross.tenancy.graph.save           B on A's graph.save is NOT_FOUND
+        [2mcode=NOT_FOUND[0m
+[[32mPASS[0m] cross.tenancy.version.list         B on A's version.list is NOT_FOUND
+        [2mcode=NOT_FOUND[0m
+[[32mPASS[0m] cross.tenancy.version.create       B on A's version.create is NOT_FOUND
+        [2mcode=NOT_FOUND[0m
+[[32mPASS[0m] cross.tenancy.version.restore      B on A's version.restore is NOT_FOUND
+        [2mcode=NOT_FOUND[0m
+[[32mPASS[0m] cross.sharing.project.access       B on A's project.access is NOT_FOUND
+        [2mcode=NOT_FOUND[0m
+[[32mPASS[0m] cross.sharing.project.getShare     B on A's project.getShare is NOT_FOUND
+        [2mcode=NOT_FOUND[0m
+[[32mPASS[0m] cross.sharing.project.setShare     B on A's project.setShare is NOT_FOUND
+        [2mcode=NOT_FOUND[0m
+[[32mPASS[0m] cross.project.list                 B's list contains ONLY B's data (empty)
+[[32mPASS[0m] cross.org.dashboard                B on a fabricated org dashboard is NOT_FOUND
+        [2mcode=NOT_FOUND[0m
+[[32mPASS[0m] cross.org.list                     B's org list is empty (member of none)
+[[32mPASS[0m] cross.usage.get                    B's usage meter counts only B's projects (0)
+        [2mused=0[0m
+[[32mPASS[0m] cross.asset.get                    B on A's asset is 404
+        [2mstatus=404[0m
+[[32mPASS[0m] cross.asset.post                   B upload into A's project is 404
+        [2mstatus=404[0m
+[[32mPASS[0m] cross.no-corruption                A's graph unchanged after B's attempts
+[[32mPASS[0m] wall.traversal-id                  traversal-shaped id is BAD_REQUEST at the edge
+        [2mcode=BAD_REQUEST[0m
+[[32mPASS[0m] wall.owner-smuggle                 injected owner field is REJECTED (.strict())
+        [2mcode=BAD_REQUEST[0m
+
+[i11] 35/35 checks passed
+[i11] TENANT ISOLATION GREEN (I11)
