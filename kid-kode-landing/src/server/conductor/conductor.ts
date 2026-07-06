@@ -46,6 +46,7 @@ import {
   recordNodeAttempt,
   recordVerifySignal,
   recordUserSignal,
+  recordImportEvent,
   type GenAiAttributes,
 } from '../../lib/flight-recorder';
 
@@ -284,6 +285,17 @@ export async function* runConductor(
       outcome: 'built', verified_shippable: latch.verifiedShippable,
       prism: { 'prism.app.archetype': direction.id, 'prism.verify.outcome': latch.verifiedShippable ? 'pass' : 'pending' },
     });
+    // W-IMPORT: when this build regenerated an IMPORTED app (the brief carries a
+    // GitHub import), record the 'regen' import lifecycle stage — the analyzed
+    // repo → synthesized plan → regenerated graph chain is premium corpus data.
+    if (brief.githubImport?.requested) {
+      recordImportEvent({
+        touchpoint: 'import', actor: frActor, stage: 'regen',
+        repo_ref: brief.githubImport.repo, framework: undefined,
+        route_count: counts.hubCount, component_count: counts.nodeCount,
+        ok: true, detail: `regenerated ${counts.hubCount} hubs / ${counts.nodeCount} nodes`,
+      });
+    }
 
     const badge = latch.verifiedShippable
       ? '✓ Verified shippable — behavioral, visual, and deploy checks pass (fresh-context advocate pass still gates final "done").'

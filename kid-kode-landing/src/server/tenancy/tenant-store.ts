@@ -50,6 +50,10 @@ import {
   type BuildBrief,
 } from '../../../packages/shared-interfaces/src/prism-intake';
 import {
+  fidelityReportSchema,
+  type FidelityReport,
+} from '../../../packages/shared-interfaces/src/prism-ingest';
+import {
   connectorRequestSchema,
   githubImportSchema,
   integrationConnectionSchema,
@@ -387,6 +391,48 @@ export async function getBrief(
   const raw = await readJson<unknown>(briefPath(tenantId, projectId));
   if (raw == null) return null;
   const parsed = buildBriefSchema.safeParse(raw);
+  return parsed.success ? parsed.data : null;
+}
+
+// ── Import fidelity report (W-IMPORT — attached to a project at approval, D7) ──
+
+function fidelityPath(tenantId: string, projectId: string): string {
+  return insideTenant(
+    tenantId,
+    'projects',
+    safeId(projectId, 'project'),
+    'fidelity.json',
+  );
+}
+
+const MAX_FIDELITY_BYTES = 256 * 1024;
+
+/** Persist the import fidelity ledger onto a project. Fails closed (not owned ==
+ *  not found), mirroring saveBrief exactly. */
+export async function saveFidelityReport(
+  tenantId: string,
+  projectId: string,
+  report: FidelityReport,
+): Promise<boolean> {
+  const owned = await getProject(tenantId, projectId);
+  if (!owned) return false;
+  const bytes = Buffer.byteLength(JSON.stringify(report), 'utf8');
+  if (bytes > MAX_FIDELITY_BYTES) {
+    throw new Error('tenant-store: fidelity report exceeds size ceiling');
+  }
+  await writeJson(fidelityPath(tenantId, projectId), report);
+  return true;
+}
+
+export async function getFidelityReport(
+  tenantId: string,
+  projectId: string,
+): Promise<FidelityReport | null> {
+  const owned = await getProject(tenantId, projectId);
+  if (!owned) return null;
+  const raw = await readJson<unknown>(fidelityPath(tenantId, projectId));
+  if (raw == null) return null;
+  const parsed = fidelityReportSchema.safeParse(raw);
   return parsed.success ? parsed.data : null;
 }
 

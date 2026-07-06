@@ -22,6 +22,7 @@ import { protectedProcedure, router } from './init';
 import { careRouter } from './routers/care';
 import { conductorRouter } from './routers/conductor';
 import { domainsRouter } from './routers/domains';
+import { ingestRouter } from './routers/ingest';
 import { intakeRouter } from './routers/intake';
 import { integrationsRouter } from './routers/integrations';
 import { sharingRouter } from './routers/sharing';
@@ -40,6 +41,8 @@ export const appRouter = router({
   }),
   tenancy: tenancyRouter,
   intake: intakeRouter,
+  /** W-IMPORT — PRISM INGEST: GitHub repo → synthesized plan + fidelity ledger. */
+  ingest: ingestRouter,
   integrations: integrationsRouter,
   /** W5 — the Conductor build/deploy/verify surface. */
   conductor: conductorRouter,
