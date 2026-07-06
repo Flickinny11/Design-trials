@@ -17,6 +17,10 @@ import type {
   DeployTarget,
   IntakeIntegrationRef,
 } from '../../../../packages/shared-interfaces/src/prism-intake';
+import type {
+  FidelityReport,
+  IngestResult,
+} from '../../../../packages/shared-interfaces/src/prism-ingest';
 import {
   DECK,
   deriveBrief,
@@ -29,6 +33,11 @@ interface IntakeState extends IntakeWorking {
   phase: IntakePhase;
   cardIndex: number;
   brief: BuildBrief | null;
+  /** W-IMPORT: the fidelity ledger, when this brief was synthesized from a repo. */
+  importFidelity: FidelityReport | null;
+  /** W-IMPORT: true when this brief came from GitHub import (drives the fidelity
+   *  panel + attach-on-approve). */
+  importOrigin: boolean;
 
   // Phase 0
   setPrompt: (prompt: string) => void;
@@ -56,12 +65,23 @@ interface IntakeState extends IntakeWorking {
   editBriefTitle: (value: string) => void;
   branch: () => void; // "try a different approach"
   reset: () => void;
+
+  // W-IMPORT — absorb a synthesized-from-repo plan and land at the approval gate.
+  applyImport: (result: IngestResult) => void;
 }
 
-const INITIAL: IntakeWorking & { phase: IntakePhase; cardIndex: number; brief: BuildBrief | null } = {
+const INITIAL: IntakeWorking & {
+  phase: IntakePhase;
+  cardIndex: number;
+  brief: BuildBrief | null;
+  importFidelity: FidelityReport | null;
+  importOrigin: boolean;
+} = {
   phase: 'prompt',
   cardIndex: 0,
   brief: null,
+  importFidelity: null,
+  importOrigin: false,
   prompt: '',
   brandSeed: {},
   answers: {},
@@ -215,4 +235,33 @@ export const useIntakeStore = create<IntakeState>((set, get) => ({
     })),
 
   reset: () => set({ ...INITIAL }),
+
+  applyImport: (result) => {
+    const b = result.brief;
+    set({
+      phase: 'brief',
+      brief: b,
+      // Mirror the synthesized brief into working state so the plan is coherent
+      // if the user hits "try a different approach" — and so the direction board
+      // shows the matched selection. The brief is editable like any other.
+      prompt: b.prompt,
+      brandSeed: {
+        name: b.brandProfile.name,
+        logo: b.brandProfile.logo,
+        palette: b.brandProfile.palette,
+        typePrefs: b.brandProfile.typePrefs,
+        toneDescriptors: b.brandProfile.toneDescriptors,
+      },
+      chosenDirectionId: b.chosenDirectionId,
+      integrations: b.integrations,
+      githubImport: b.githubImport
+        ? { requested: Boolean(b.githubImport.requested), repo: b.githubImport.repo }
+        : undefined,
+      deployTarget: b.deployTarget,
+      seedsUsed: b.seedsUsed.map((s) => ({ kind: s.kind, detail: s.detail })),
+      fastPath: true,
+      importOrigin: true,
+      importFidelity: result.fidelity,
+    });
+  },
 }));

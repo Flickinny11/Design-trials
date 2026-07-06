@@ -14,7 +14,9 @@ import { useRouter } from 'next/navigation';
 import { useIntakeStore } from '@/lib/shell/intake/intake-store';
 import { DIRECTION_BY_ID } from '@/lib/shell/intake/intake-model';
 import { finalizeIntake } from '@/lib/shell/intake-client';
+import { attachFidelity } from '@/lib/shell/ingest-client';
 import PrimaryButton3D from './PrimaryButton3D';
+import FidelityLedger from './FidelityLedger';
 
 export default function BuildBrief() {
   const router = useRouter();
@@ -24,6 +26,8 @@ export default function BuildBrief() {
   const branch = useIntakeStore((s) => s.branch);
   const branchCount = useIntakeStore((s) => s.branchCount);
   const fastPath = useIntakeStore((s) => s.fastPath);
+  const importOrigin = useIntakeStore((s) => s.importOrigin);
+  const importFidelity = useIntakeStore((s) => s.importFidelity);
 
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,6 +42,11 @@ export default function BuildBrief() {
     setError(null);
     try {
       const project = await finalizeIntake(brief!);
+      // W-IMPORT: attach the fidelity ledger to the created project (best-effort —
+      // a failure here never blocks the build handoff, I-FAILOPEN).
+      if (importOrigin && importFidelity) {
+        await attachFidelity(project.id, importFidelity);
+      }
       router.push(`/app/builder/${project.id}`);
     } catch {
       setError('Could not save your brief. Please try again.');
@@ -90,6 +99,8 @@ export default function BuildBrief() {
           </li>
         ))}
       </ul>
+
+      {importOrigin && importFidelity ? <FidelityLedger report={importFidelity} /> : null}
 
       {brief.seedsUsed.length ? (
         <div className="iv-brief-seeds">

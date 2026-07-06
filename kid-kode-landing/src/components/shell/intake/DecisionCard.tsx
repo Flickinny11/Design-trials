@@ -16,6 +16,7 @@ import {
 import CardOptions3D from './CardOptions3D';
 import DirectionBoards3D from './DirectionBoards3D';
 import BrandTiles3D, { type BrandTile } from './BrandTiles3D';
+import GithubImportPanel from './GithubImportPanel';
 
 export default function DecisionCard({ card }: { card: CardDef }) {
   const answer = useIntakeStore((s) => s.answers[card.id]);
@@ -126,16 +127,7 @@ export default function DecisionCard({ card }: { card: CardDef }) {
                 />
                 <span>Import an existing GitHub repo</span>
               </label>
-              {githubImport?.requested ? (
-                <input
-                  type="text"
-                  className="iv-url-input"
-                  value={githubImport.repo ?? ''}
-                  placeholder="owner/repo"
-                  onChange={(e) => setGithub(true, e.target.value)}
-                  aria-label="GitHub repository to import"
-                />
-              ) : null}
+              {githubImport?.requested ? <GithubImportPanel /> : null}
             </div>
 
             <div className="iv-connect-section">
