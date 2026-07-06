@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "prism-dg-v1",
+  "id": "glitch-cyber-fx",
+  "name": "Glitch / Cyber FX",
+  "status": "grounded",
+  "summary": "The 'corrupted signal' aesthetic weaponized as a transition language: RGB channel-split, scanline slicing, and datamosh jitter tear the frame between states, then resolve crisply to a pristine image. The violence is brief and deliberate — chaos as punctuation, never as steady state.",
+  "elementTypes": ["page-transition", "section-transition", "hero", "slider"],
+  "whatMakesItWork": {
+    "composition": [
+      "Full-bleed imagery with an oversized italic/slanted headline pushed off-axis (upper-left) — the slant reinforces speed and tech energy.",
+      "A dark translucent glass copy card floats over the busy imagery as the legibility counterweight — the calm element that keeps chaos readable.",
+      "Thin tracked uppercase eyebrow labels frame the composition like HUD chrome."
+    ],
+    "layering": [
+      "Two planes with strict roles: the photographic/video plane GLITCHES; the UI plane stays rock-stable. Corrupting the UI reads as broken, corrupting the image reads as style.",
+      "Chromatic aberration doubles the subject into offset color ghosts mid-transition, then snaps back into register — the snap-back is the payoff."
+    ],
+    "lighting": [
+      "Practical neon (magenta/cyan rim and kicker light) baked into the photography against deep black — the scene lights itself; no added glows needed.",
+      "Deep shadows preserve the noir mood; the glitch bursts read brightest at the moment of maximum tear."
+    ],
+    "typography": [
+      "Engineered techno/sci-fi geometric display — wide, italic, machined — at poster scale; type may participate in the glitch (flicker, retype-in) in sync with the visual burst.",
+      "One high-chroma accent owns ALL type/UI color so the interface never competes with the neon imagery."
+    ]
+  },
+  "palette": {
+    "logic": ["neon-on-dark", "monochrome-plus-accent", "dark-cinematic"],
+    "rules": [
+      "Near-black base + neon supplied BY the photography's lighting + exactly one non-photographic accent (e.g. an acid hue) owning UI and type.",
+      "The accent must clash-contrast with the photo neons (acid yellow against magenta/cyan) — harmony would dissolve the interface into the scene."
+    ]
+  },
+  "motion": {
+    "character": ["kinetic-energetic", "mechanical-precise"],
+    "easing": [
+      "Aggressively stepped/stuttered — hard cuts and quantized jumps, NOT smooth eases; the corruption must feel digital, then resolve crisply.",
+      "The resolve is the ease: after the burst, the incoming frame locks with a clean settle."
+    ],
+    "pacing": [
+      "Fast punchy bursts (~0.3-0.6s of glitch) between long held slides — the violence is brief so the payoff image reads clean.",
+      "Never idle-glitch continuously; steady-state corruption reads as an actual bug."
+    ],
+    "choreography": [
+      "Transition sequence: image starts to move → RGB channels separate + scanline slices shear → channels re-converge as the incoming slide locks.",
+      "Headline flickers/retypes in sync with the visual burst — one clock drives both."
+    ]
+  },
+  "capabilities": {
+    "renderingRoutes": ["R1", "R2"],
+    "genModels": ["flux-2-pro"],
+    "primitives": ["displacement-transition", "hub-transition-preset", "dissolve-morph", "kinetic-text"],
+    "postFx": ["chromatic-aberration", "scanline-slice", "rgb-split"],
+    "readiness": "gap",
+    "gapNotes": [
+      "None of the glitch post passes exist: RGB channel split, scanline slicing, and quantized-jitter displacement are not in the shipped transition presets (curtain/veil/dissolve/wipe/glass-sweep) or the post stack — a TSL glitch pass family is a W-PHOTO or W-BG candidate.",
+      "Synchronized type flicker/retype bound to a transition clock has no driver.",
+      "Photosensitivity safety: a glitch preset MUST ship with flash-rate limits and a reduced-motion crossfade fallback — this safety rail does not exist yet and is a precondition for offering the family at all."
+    ]
+  },
+  "usage": {
+    "whenToUse": [
+      "Gaming, esports, music/nightlife, streetwear, and cyber-tech brands where aggression is the register.",
+      "As transition punctuation over otherwise-clean cinematic slides — the observed pattern pairs pristine neon-noir footage with brief glitch cuts."
+    ],
+    "whenNotToUse": [
+      "Trust-first brands (finance, health, gov) — corruption aesthetics read as actual malfunction.",
+      "Accessibility-sensitive audiences: flicker risks photosensitive seizure triggers; must honor reduced-motion unconditionally.",
+      "Any context where the site might legitimately break — users cannot tell styled corruption from real errors."
+    ],
+    "archetypeFit": ["community", "content", "marketing"],
+    "moods": ["energetic", "futuristic", "bold", "dark", "technical"]
+  },
+  "pairing": {
+    "pairsWith": ["cinematic-video-hero", "oversized-type-editorial", "dark-stage-single-accent"],
+    "avoidWith": ["gpu-fluid-overlay", "particle-field-hero", "quiet-luxury-monochrome", "editorial-product-gallery"],
+    "notes": [
+      "Glitch is punctuation over a video/photo base — it pairs with footage families and clashes with every calm/luxury register and with other GPU field effects."
+    ]
+  },
+  "antiRepetition": {
+    "clusterId": "transition-fx",
+    "notes": "Transition-language family — offer at most one signature transition FX per option set."
+  },
+  "sources": [
+    {
+      "title": "Cyber Glitch Effect Slider",
+      "url": "https://www.sliderrevolution.com/templates/cyber-glitch-effect-slider/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session, live demo: slide transitions triggered repeatedly; RGB channel separation, scanline shear, ghost-doubling, and the re-register snap observed across the burst sequence; type flicker synced to the visual burst confirmed from the motion.",
+      "observationRef": "analysis/cyber-glitch-effect-slider.json"
+    }
+  ],
+  "exemplars": [],
+  "provenance": {
+    "groundTruth": ["monitor-observation"],
+    "distilledAt": "2026-07-06",
+    "distilledBy": "wdg1-orchestrator"
+  }
+}
