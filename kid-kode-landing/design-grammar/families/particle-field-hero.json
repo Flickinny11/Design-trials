@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "prism-dg-v1",
+  "id": "particle-field-hero",
+  "name": "Particle Field Hero",
+  "status": "grounded",
+  "summary": "A dense GPU point-cloud forms a loose constellation that idles on slow brownian drift and physically reacts to the cursor — particles scatter under pointer proximity and spring back to cohesion. Emergent connective lines between neighbors read as a living network without any literal iconography.",
+  "elementTypes": ["hero", "background"],
+  "whatMakesItWork": {
+    "composition": [
+      "Split emphasis: a stacked condensed headline + stats + CTA column on one side, the particle cluster on the other; or the field envelops centered type as ambient dust.",
+      "The cluster has a shape — a loose sphere/nebula with a dense core and sparse ember edges; a uniform full-screen scatter reads as noise, not an object.",
+      "Type stays static and authoritative; the energy budget is spent entirely in the field."
+    ],
+    "layering": [
+      "The field is a discrete depth plane behind the text plane; text never loses legibility to particles.",
+      "Connective lines are emergent — drawn between nearby particles as a byproduct of position, never keyframed — so the network feels alive.",
+      "Dark/light sibling variants share one engine: invert the ground, keep the accent identical."
+    ],
+    "lighting": [
+      "Additive-glow: particles are self-luminous with soft bloom, brightest at the cluster core, falling off at edges.",
+      "On dark grounds the points read as light emission; on light grounds the same points read as confetti/dust — the ground flips the metaphor for free."
+    ],
+    "typography": [
+      "Condensed bold grotesque headline, tightly stacked 2-3 lines; a single underlined/gradient accent word for emphasis.",
+      "Small clean stats/caption row grounds the spectacle in facts."
+    ]
+  },
+  "palette": {
+    "logic": ["duotone", "neon-on-dark"],
+    "rules": [
+      "Pick ONE gradient duo (e.g. hot-to-cool) and let it be the entire color story: particles, connective lines, and the type accent all share it.",
+      "Dark/light variants change only the ground color, never the accent — proving the system is an engine, not a composition."
+    ]
+  },
+  "motion": {
+    "character": ["ambient-drift", "elastic-playful"],
+    "easing": [
+      "Idle: perpetual low-amplitude brownian float with slow global rotation — the cluster breathes, never rests.",
+      "Interaction: quick repulsion (~200-400ms) followed by a springy elastic return to each particle's cohesion target."
+    ],
+    "pacing": [
+      "Two timescales at once: slow luxurious global drift + fast local pointer reactions — the contrast is the delight.",
+      "Disturbances re-cohere within a second or two so the object never stays broken."
+    ],
+    "choreography": [
+      "Two motion layers: (1) whole-cluster rotation/float, (2) per-particle repulsion by pointer distance; lines form and break as a consequence.",
+      "Sweeping the cursor carves a readable wake through the cluster — input velocity maps to disturbance size."
+    ]
+  },
+  "capabilities": {
+    "renderingRoutes": ["R1"],
+    "genModels": [],
+    "primitives": ["particle-system", "particle-emerge", "magnetic-cursor", "hub-background", "msdf-text"],
+    "postFx": ["bloom"],
+    "readiness": "ready",
+    "gapNotes": []
+  },
+  "usage": {
+    "whenToUse": [
+      "AI/network/data products where 'connecting the dots' is the literal metaphor.",
+      "Dark-stage tech heroes needing GPU craft with tiny asset weight (no imagery required).",
+      "When a brief needs matching dark/light theme variants from one system."
+    ],
+    "whenNotToUse": [
+      "Brands wanting warmth/humanity or print-editorial calm — the field reads clinical.",
+      "Low-end devices: thousands of animated particles with per-frame neighbor-line computation cause jank; needs a static fallback.",
+      "AI-marketing contexts where the pattern is saturated — the family risks cliche precisely because it works; rotate against alternatives."
+    ],
+    "archetypeFit": ["saas", "marketing", "community"],
+    "moods": ["technical", "futuristic", "precise", "dark", "minimal"]
+  },
+  "pairing": {
+    "pairsWith": ["oversized-type-editorial", "dark-stage-single-accent", "custom-cursor-choreography"],
+    "avoidWith": ["gpu-fluid-overlay", "glitch-cyber-fx"],
+    "notes": [
+      "One full-frame GPU field per surface — never stack with fluid or glitch.",
+      "The W9 forge hero (140k-particle TSL compute galaxy) is our in-house demonstration of this family's core mechanic."
+    ]
+  },
+  "antiRepetition": {
+    "clusterId": "shader-field",
+    "notes": "Same cluster as gpu-fluid-overlay and hover-morph-distortion."
+  },
+  "sources": [
+    {
+      "title": "AI Particle Cluster Hero",
+      "url": "https://www.sliderrevolution.com/templates/ai-particle-cluster-hero/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session, live demo: idle drift observed over time; cursor swept through the cluster at varied speeds — repulsion, wake carving, and elastic re-cohesion captured across interaction states; dark and light sibling slides both driven.",
+      "observationRef": "analysis/ai-particle-cluster-hero.json"
+    }
+  ],
+  "exemplars": [],
+  "provenance": {
+    "groundTruth": ["monitor-observation"],
+    "distilledAt": "2026-07-06",
+    "distilledBy": "wdg1-orchestrator"
+  }
+}
