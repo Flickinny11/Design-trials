@@ -1317,3 +1317,132 @@ complete marker: 'PRISM-SHELL-W5B: RUN COMPLETE'
 [02:02:13] SHELL-W5B · 64m · agent=1 · commit d1c27f6d — shell-w5b: advocate follow-up — capture E20 care-card frame (01c) + bran
 [02:04:44] SHELL-W5B · 66m · agent=1 · commit 19f1333c — shell-w5b: run report (+ complete per-adapter env-var list) + pricing hy
 [02:05:14] SHELL-W5B · 67m · agent=1 · commit e49117a2 — shell-w5b: report — BOTH judges PASS 0 MUST-FIX (criteria PASS; advocate
+[02:05:44] SHELL-W5B · 67m · agent=1 · still building · 67m elapsed · agent up · 1142 commits · last: shell-w5b: chain status — RUN COMPLETE marker recorded
+[02:05:44] SHELL-W5B · 67m · agent=1 · commit fe325d0a — shell-w5b: chain status — RUN COMPLETE marker recorded
+[02:06:29] SHELL-W5B · 68m · agent=0 · COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[02:06:29] SHELL-CHAIN-B: SHELL-W5B COMPLETE — Ship Anywhere landed. Full shippable pipeline done.
+
+## SHELL-W9 run — started 2026-07-05 13:28:13 (adaptive v2)
+complete marker: 'PRISM-SHELL-W9: RUN COMPLETE'
+[13:28:13] SHELL-W9 · 0m · agent=0 · ARMED v2 — watching SHELL-W9. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[13:29:04] SHELL-W9 · 0m · agent=1 · launched build agent on claude-fable-5 (resume #1)
+[13:32:34] SHELL-W9 · 4m · agent=1 · still building · 4m elapsed · agent up · 1142 commits · last: shell-w5b: chain status — RUN COMPLETE marker recorded
+[13:33:35] SHELL-W9 · 5m · agent=1 · commit dfc446a5 — shell-w9: run scaffolding — report skeleton + deviations file (before co
+[13:36:05] SHELL-W9 · 7m · agent=1 · still building · 7m elapsed · agent up · 1143 commits · last: shell-w9: run scaffolding — report skeleton + deviations file (before co
+[13:39:35] SHELL-W9 · 11m · agent=1 · still building · 11m elapsed · agent up · 1143 commits · last: shell-w9: run scaffolding — report skeleton + deviations file (before co
+[13:40:06] SHELL-W9 · 11m · agent=1 · commit d79b2214 — shell-w9: bake 4 fresh marketing PBR sets via committed FLUX pipeline (D
+[13:43:06] SHELL-W9 · 14m · agent=1 · still building · 14m elapsed · agent up · 1144 commits · last: shell-w9: bake 4 fresh marketing PBR sets via committed FLUX pipeline (D
+[13:46:36] SHELL-W9 · 18m · agent=1 · still building · 18m elapsed · agent up · 1144 commits · last: shell-w9: bake 4 fresh marketing PBR sets via committed FLUX pipeline (D
+[13:50:07] SHELL-W9 · 21m · agent=1 · still building · 21m elapsed · agent up · 1144 commits · last: shell-w9: bake 4 fresh marketing PBR sets via committed FLUX pipeline (D
+[13:50:07] SHELL-W9 · 21m · agent=1 · FOUNDER SWITCH requested → 'auto'. Cycling agent for clean handoff.
+[13:51:00] SHELL-W9 · 22m · agent=1 · launched build agent on claude-fable-5 (resume #2)
+[13:54:30] SHELL-W9 · 26m · agent=1 · still building · 26m elapsed · agent up · 1144 commits · last: shell-w9: bake 4 fresh marketing PBR sets via committed FLUX pipeline (D
+[13:58:20] SHELL-W9 · 30m · agent=1 · MODEL SWITCH: claude-fable-5 → claude-opus-4-8 (resume #3). Progress carries via commits + resume protocol.
+[13:58:50] SHELL-W9 · 30m · agent=1 · still building · 30m elapsed · agent up · 1144 commits · last: shell-w9: bake 4 fresh marketing PBR sets via committed FLUX pipeline (D
+[14:00:51] SHELL-W9 · 32m · agent=1 · commit 07461a6b — shell-w9: asset-provenance audit discharge (founder addendum 2026-07-05 
+[14:02:21] SHELL-W9 · 34m · agent=1 · still building · 34m elapsed · agent up · 1145 commits · last: shell-w9: asset-provenance audit discharge (founder addendum 2026-07-05 
+[14:05:52] SHELL-W9 · 37m · agent=1 · still building · 37m elapsed · agent up · 1145 commits · last: shell-w9: asset-provenance audit discharge (founder addendum 2026-07-05 
+[14:09:22] SHELL-W9 · 41m · agent=1 · still building · 41m elapsed · agent up · 1145 commits · last: shell-w9: asset-provenance audit discharge (founder addendum 2026-07-05 
+[14:11:52] SHELL-W9 · 43m · agent=1 · commit b0815040 — shell-w9: pricing = W5B shipped truth (req #5) — remove invented $29, ad
+[14:12:53] SHELL-W9 · 44m · agent=1 · still building · 44m elapsed · agent up · 1146 commits · last: shell-w9: pricing = W5B shipped truth (req #5) — remove invented $29, ad
+[14:16:23] SHELL-W9 · 48m · agent=1 · still building · 48m elapsed · agent up · 1146 commits · last: shell-w9: pricing = W5B shipped truth (req #5) — remove invented $29, ad
+[14:18:54] SHELL-W9 · 50m · agent=1 · commit 479c052a — shell-w9: Forge hero (req #1) — full-bleed WebGPU showpiece + missing CS
+[14:19:54] SHELL-W9 · 51m · agent=1 · still building · 51m elapsed · agent up · 1147 commits · last: shell-w9: Forge hero (req #1) — full-bleed WebGPU showpiece + missing CS
+[14:23:24] SHELL-W9 · 55m · agent=1 · still building · 55m elapsed · agent up · 1147 commits · last: shell-w9: Forge hero (req #1) — full-bleed WebGPU showpiece + missing CS
+[14:24:55] SHELL-W9 · 56m · agent=1 · commit 6c0b571a — shell-w9: integrations wall (req #4, DL15) — real colored 3D brand marks
+[14:26:55] SHELL-W9 · 58m · agent=1 · still building · 58m elapsed · agent up · 1148 commits · last: shell-w9: integrations wall (req #4, DL15) — real colored 3D brand marks
+[14:30:26] SHELL-W9 · 62m · agent=1 · still building · 62m elapsed · agent up · 1148 commits · last: shell-w9: integrations wall (req #4, DL15) — real colored 3D brand marks
+[14:33:56] SHELL-W9 · 65m · agent=1 · still building · 65m elapsed · agent up · 1148 commits · last: shell-w9: integrations wall (req #4, DL15) — real colored 3D brand marks
+[14:37:27] SHELL-W9 · 69m · agent=1 · still building · 69m elapsed · agent up · 1148 commits · last: shell-w9: integrations wall (req #4, DL15) — real colored 3D brand marks
+[14:40:57] SHELL-W9 · 72m · agent=1 · still building · 72m elapsed · agent up · 1148 commits · last: shell-w9: integrations wall (req #4, DL15) — real colored 3D brand marks
+[14:44:28] SHELL-W9 · 76m · agent=1 · still building · 76m elapsed · agent up · 1148 commits · last: shell-w9: integrations wall (req #4, DL15) — real colored 3D brand marks
+[14:47:58] SHELL-W9 · 79m · agent=1 · still building · 79m elapsed · agent up · 1149 commits · last: shell-w9: capability showcase (req #2) — one live scene, three states + 
+[14:47:58] SHELL-W9 · 79m · agent=1 · commit b8ae0ae1 — shell-w9: capability showcase (req #2) — one live scene, three states + 
+[14:50:29] SHELL-W9 · 82m · agent=1 · commit e74b98f2 — shell-w9: how-it-works as animated 3D sequence (req #3)
+[14:51:29] SHELL-W9 · 83m · agent=1 · still building · 83m elapsed · agent up · 1150 commits · last: shell-w9: how-it-works as animated 3D sequence (req #3)
+[14:53:59] SHELL-W9 · 85m · agent=1 · commit 1e867d81 — shell-w9: nav 3D-hover language (req #6) + wire reduced-motion into all 
+[14:55:00] SHELL-W9 · 86m · agent=1 · still building · 86m elapsed · agent up · 1151 commits · last: shell-w9: nav 3D-hover language (req #6) + wire reduced-motion into all 
+[14:57:30] SHELL-W9 · 89m · agent=1 · commit af544e92 — shell-w9: tsc 0-new — widen applyGalaxyLook arg typing (TSL Node vs VarN
+[14:58:30] SHELL-W9 · 90m · agent=1 · still building · 90m elapsed · agent up · 1152 commits · last: shell-w9: tsc 0-new — widen applyGalaxyLook arg typing (TSL Node vs VarN
+[15:02:01] SHELL-W9 · 93m · agent=1 · still building · 93m elapsed · agent up · 1152 commits · last: shell-w9: tsc 0-new — widen applyGalaxyLook arg typing (TSL Node vs VarN
+[15:05:31] SHELL-W9 · 97m · agent=1 · still building · 97m elapsed · agent up · 1152 commits · last: shell-w9: tsc 0-new — widen applyGalaxyLook arg typing (TSL Node vs VarN
+[15:07:32] SHELL-W9 · 99m · agent=1 · commit bf0032e1 — shell-w9: responsive (req #7) — FitWidth camera fits wide 3D layouts on 
+[15:09:02] SHELL-W9 · 100m · agent=1 · still building · 100m elapsed · agent up · 1153 commits · last: shell-w9: responsive (req #7) — FitWidth camera fits wide 3D layouts on 
+[15:11:32] SHELL-W9 · 103m · agent=1 · commit 93d19042 — shell-w9: a11y — pricing cadence/elig text to --pp-text-mid (WCAG AA 4.5
+[15:12:32] SHELL-W9 · 104m · agent=1 · still building · 104m elapsed · agent up · 1154 commits · last: shell-w9: a11y — pricing cadence/elig text to --pp-text-mid (WCAG AA 4.5
+[15:16:03] SHELL-W9 · 107m · agent=1 · still building · 107m elapsed · agent up · 1154 commits · last: shell-w9: a11y — pricing cadence/elig text to --pp-text-mid (WCAG AA 4.5
+[15:19:34] SHELL-W9 · 111m · agent=1 · still building · 111m elapsed · agent up · 1154 commits · last: shell-w9: a11y — pricing cadence/elig text to --pp-text-mid (WCAG AA 4.5
+[15:21:34] SHELL-W9 · 113m · agent=1 · commit b6600b6e — shell-w9: advocate polish — integrations marks settle face-forward (spin
+[15:23:04] SHELL-W9 · 114m · agent=1 · still building · 114m elapsed · agent up · 1155 commits · last: shell-w9: advocate polish — integrations marks settle face-forward (spin
+[15:26:35] SHELL-W9 · 118m · agent=1 · still building · 118m elapsed · agent up · 1155 commits · last: shell-w9: advocate polish — integrations marks settle face-forward (spin
+[15:28:35] SHELL-W9 · 120m · agent=1 · commit 53ef2c8d — shell-w9: RUN COMPLETE — finalized report + production evidence (frames,
+[15:29:35] SHELL-W9 · 121m · agent=1 · commit 56c44516 — shell-w9: chain status — PRISM-SHELL-W9 RUN COMPLETE recorded
+[15:30:05] SHELL-W9 · 121m · agent=1 · still building · 121m elapsed · agent up · 1157 commits · last: shell-w9: chain status — PRISM-SHELL-W9 RUN COMPLETE recorded
+[15:32:21] SHELL-W9 · 124m · agent=0 · COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+
+## SHELL-W9A run — started 2026-07-05 15:33:23 (adaptive v2)
+complete marker: 'PRISM-SHELL-W9A: RUN COMPLETE'
+[15:33:23] SHELL-W9A · 0m · agent=0 · ARMED v2 — watching SHELL-W9A. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[15:34:13] SHELL-W9A · 0m · agent=1 · launched build agent on claude-opus-4-8 (resume #1)
+[15:37:43] SHELL-W9A · 4m · agent=1 · still building · 4m elapsed · agent up · 1157 commits · last: shell-w9: chain status — PRISM-SHELL-W9 RUN COMPLETE recorded
+[15:41:14] SHELL-W9A · 7m · agent=1 · still building · 7m elapsed · agent up · 1157 commits · last: shell-w9: chain status — PRISM-SHELL-W9 RUN COMPLETE recorded
+[15:44:44] SHELL-W9A · 11m · agent=1 · still building · 11m elapsed · agent up · 1157 commits · last: shell-w9: chain status — PRISM-SHELL-W9 RUN COMPLETE recorded
+[15:46:44] SHELL-W9A · 13m · agent=1 · commit f74d3543 — shell-w9a: run scaffolding — report skeleton + deviations (before code)
+[15:48:15] SHELL-W9A · 14m · agent=1 · still building · 14m elapsed · agent up · 1158 commits · last: shell-w9a: run scaffolding — report skeleton + deviations (before code)
+[15:51:46] SHELL-W9A · 18m · agent=1 · still building · 18m elapsed · agent up · 1158 commits · last: shell-w9a: run scaffolding — report skeleton + deviations (before code)
+[15:55:16] SHELL-W9A · 21m · agent=1 · still building · 21m elapsed · agent up · 1158 commits · last: shell-w9a: run scaffolding — report skeleton + deviations (before code)
+[15:58:47] SHELL-W9A · 25m · agent=1 · still building · 25m elapsed · agent up · 1158 commits · last: shell-w9a: run scaffolding — report skeleton + deviations (before code)
+[16:02:18] SHELL-W9A · 28m · agent=1 · still building · 28m elapsed · agent up · 1158 commits · last: shell-w9a: run scaffolding — report skeleton + deviations (before code)
+[16:05:49] SHELL-W9A · 32m · agent=1 · still building · 32m elapsed · agent up · 1158 commits · last: shell-w9a: run scaffolding — report skeleton + deviations (before code)
+[16:09:19] SHELL-W9A · 35m · agent=1 · still building · 35m elapsed · agent up · 1158 commits · last: shell-w9a: run scaffolding — report skeleton + deviations (before code)
+[16:12:50] SHELL-W9A · 39m · agent=1 · still building · 39m elapsed · agent up · 1158 commits · last: shell-w9a: run scaffolding — report skeleton + deviations (before code)
+[16:13:20] SHELL-W9A · 39m · agent=1 · commit e0f43416 — shell-w9a: staging — node-local 3-point studio light rig (+ face-lift, n
+[16:14:21] SHELL-W9A · 40m · agent=1 · commit 5dbfc4b5 — shell-w9a: commit load-bearing atelier part GLBs (case/bezel/crown) — DL
+[16:16:21] SHELL-W9A · 42m · agent=1 · still building · 42m elapsed · agent up · 1162 commits · last: shell-w9a: commit load-bearing atelier part GLBs (case/bezel/crown) — DL
+[16:19:52] SHELL-W9A · 46m · agent=1 · still building · 46m elapsed · agent up · 1162 commits · last: shell-w9a: commit load-bearing atelier part GLBs (case/bezel/crown) — DL
+[16:23:23] SHELL-W9A · 50m · agent=1 · still building · 50m elapsed · agent up · 1162 commits · last: shell-w9a: commit load-bearing atelier part GLBs (case/bezel/crown) — DL
+[16:26:53] SHELL-W9A · 53m · agent=1 · still building · 53m elapsed · agent up · 1162 commits · last: shell-w9a: commit load-bearing atelier part GLBs (case/bezel/crown) — DL
+[16:29:24] SHELL-W9A · 56m · agent=1 · commit a9cbd239 — shell-w9a: evidence + report — before/after frames (desktop+mobile), met
+[16:30:24] SHELL-W9A · 57m · agent=1 · still building · 57m elapsed · agent up · 1163 commits · last: shell-w9a: evidence + report — before/after frames (desktop+mobile), met
+[16:33:55] SHELL-W9A · 60m · agent=1 · still building · 60m elapsed · agent up · 1163 commits · last: shell-w9a: evidence + report — before/after frames (desktop+mobile), met
+[16:37:26] SHELL-W9A · 64m · agent=1 · still building · 64m elapsed · agent up · 1164 commits · last: shell-w9a: advocate+criteria polish — face-on default hero (pitch 0.16->
+[16:37:26] SHELL-W9A · 64m · agent=1 · commit 26494682 — shell-w9a: advocate+criteria polish — face-on default hero (pitch 0.16->
+[16:40:11] SHELL-W9A · 66m · agent=0 · COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+
+## SHELL-W10 run — started 2026-07-05 19:38:26 (adaptive v2)
+complete marker: 'PRISM-SHELL-W10: RUN COMPLETE'
+[19:38:26] SHELL-W10 · 0m · agent=0 · ARMED v2 — watching SHELL-W10. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[19:39:17] SHELL-W10 · 0m · agent=0 · PREFLIGHT BLOCKED launch. See /Users/loganbaird/Prototype_Prism/Design-trials/chain-SHELL-W10-run.log.preflight
+
+## SHELL-W10 run — started 2026-07-05 19:41:36 (adaptive v2)
+complete marker: 'PRISM-SHELL-W10: RUN COMPLETE'
+[19:41:36] SHELL-W10 · 0m · agent=0 · ARMED v2 — watching SHELL-W10. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[19:42:26] SHELL-W10 · 0m · agent=1 · launched build agent on claude-fable-5 (resume #1)
+[19:45:57] SHELL-W10 · 4m · agent=1 · still building · 4m elapsed · agent up · 1164 commits · last: shell-w9a: advocate+criteria polish — face-on default hero (pitch 0.16->
+[19:48:57] SHELL-W10 · 7m · agent=1 · commit ea396ebd — shell-w10: run scaffolding — deviations/method record + report skeleton 
+[19:49:27] SHELL-W10 · 7m · agent=1 · still building · 7m elapsed · agent up · 1165 commits · last: shell-w10: run scaffolding — deviations/method record + report skeleton 
+[19:52:58] SHELL-W10 · 11m · agent=1 · still building · 11m elapsed · agent up · 1165 commits · last: shell-w10: run scaffolding — deviations/method record + report skeleton 
+[19:54:23] SHELL-W10 · 12m · agent=1 · MODEL SWITCH: claude-fable-5 → claude-opus-4-8 (resume #2). Progress carries via commits + resume protocol.
+[19:57:23] SHELL-W10 · 15m · agent=1 · still building · 15m elapsed · agent up · 1165 commits · last: shell-w10: run scaffolding — deviations/method record + report skeleton 
+[20:00:54] SHELL-W10 · 19m · agent=1 · still building · 19m elapsed · agent up · 1165 commits · last: shell-w10: run scaffolding — deviations/method record + report skeleton 
+[20:04:24] SHELL-W10 · 22m · agent=1 · still building · 22m elapsed · agent up · 1165 commits · last: shell-w10: run scaffolding — deviations/method record + report skeleton 
+[20:07:55] SHELL-W10 · 26m · agent=1 · still building · 26m elapsed · agent up · 1165 commits · last: shell-w10: run scaffolding — deviations/method record + report skeleton 
+[20:11:25] SHELL-W10 · 29m · agent=1 · still building · 29m elapsed · agent up · 1165 commits · last: shell-w10: run scaffolding — deviations/method record + report skeleton 
+[20:14:56] SHELL-W10 · 33m · agent=1 · still building · 33m elapsed · agent up · 1165 commits · last: shell-w10: run scaffolding — deviations/method record + report skeleton 
+[20:18:26] SHELL-W10 · 36m · agent=1 · still building · 36m elapsed · agent up · 1165 commits · last: shell-w10: run scaffolding — deviations/method record + report skeleton 
+[20:21:57] SHELL-W10 · 40m · agent=1 · still building · 40m elapsed · agent up · 1167 commits · last: shell-w10: Generate section in Functions tab + DL14 glyphs + schema
+[20:21:57] SHELL-W10 · 40m · agent=1 · commit 3ae74487 — shell-w10: Generate section in Functions tab + DL14 glyphs + schema
+[20:22:27] SHELL-W10 · 40m · agent=1 · commit 2d829751 — shell-w10: committed demo fixtures — real Tripo/Hunyuan/FLUX output (DL1
+[20:25:28] SHELL-W10 · 43m · agent=1 · still building · 43m elapsed · agent up · 1168 commits · last: shell-w10: committed demo fixtures — real Tripo/Hunyuan/FLUX output (DL1
+[20:28:58] SHELL-W10 · 47m · agent=1 · still building · 47m elapsed · agent up · 1168 commits · last: shell-w10: committed demo fixtures — real Tripo/Hunyuan/FLUX output (DL1
+[20:32:28] SHELL-W10 · 50m · agent=1 · still building · 50m elapsed · agent up · 1168 commits · last: shell-w10: committed demo fixtures — real Tripo/Hunyuan/FLUX output (DL1
+[20:35:59] SHELL-W10 · 54m · agent=1 · still building · 54m elapsed · agent up · 1168 commits · last: shell-w10: committed demo fixtures — real Tripo/Hunyuan/FLUX output (DL1
+[20:38:59] SHELL-W10 · 57m · agent=1 · commit 2682a5f0 — shell-w10: evidence + report — 8 E2E frames, metrics, verify EXIT 0 (35/
+[20:39:29] SHELL-W10 · 57m · agent=1 · still building · 57m elapsed · agent up · 1169 commits · last: shell-w10: evidence + report — 8 E2E frames, metrics, verify EXIT 0 (35/
+[20:43:00] SHELL-W10 · 61m · agent=1 · still building · 61m elapsed · agent up · 1169 commits · last: shell-w10: evidence + report — 8 E2E frames, metrics, verify EXIT 0 (35/
+[20:46:30] SHELL-W10 · 64m · agent=1 · still building · 64m elapsed · agent up · 1169 commits · last: shell-w10: evidence + report — 8 E2E frames, metrics, verify EXIT 0 (35/
+[20:50:01] SHELL-W10 · 68m · agent=1 · still building · 68m elapsed · agent up · 1169 commits · last: shell-w10: evidence + report — 8 E2E frames, metrics, verify EXIT 0 (35/
+[20:52:01] SHELL-W10 · 70m · agent=1 · commit d1115bd5 — shell-w10: meter every invocation incl. failures (criteria note)
+[20:53:32] SHELL-W10 · 71m · agent=1 · still building · 71m elapsed · agent up · 1172 commits · last: shell-w10: chain status — PRISM-SHELL-W10 RUN COMPLETE recorded
+[20:53:32] SHELL-W10 · 71m · agent=1 · commit c27f2c1e — shell-w10: chain status — PRISM-SHELL-W10 RUN COMPLETE recorded
+[20:56:17] SHELL-W10 · 74m · agent=0 · COMPLETE — marker confirmed, agent quiet. Frames ready to review.

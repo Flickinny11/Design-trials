@@ -29,6 +29,11 @@ WORKSPACE_SPEC="$D/kid-kode-landing/docs/prism/PRISM-WORKSPACE-COMPLETION-SPEC.m
 MODEL_FILE="$D/.harness-model"; SWITCH_FILE="$D/.harness-switch"
 PIDFILE="$D/.agent-$NAME.pid"
 FABLE="claude-fable-5"; OPUS="claude-opus-4-8"
+# Founder-directed 2026-07-05: subagent routing override. Global settings pin
+# CLAUDE_CODE_SUBAGENT_MODEL=inherit, which made every subagent inherit the
+# orchestrator model (fable = paid credits). --settings is the ONLY reliable
+# override (proven: CONSTELLATION). Routes ALL subagents -> subscription Opus.
+SUBAGENT_SETTINGS="$D/.harness-subagent-settings.json"
 MAXRESUMES=10; RESUMES=0; SEEN_COMPLETE=0; SEEN_BLOCKED=0; HB=0
 CUR_MODEL=""
 START_EPOCH=$(date +%s)
@@ -50,7 +55,7 @@ notify(){
 cmark(){ { [ -f "$REPORT" ] && grep -qF "$CMARK" "$REPORT" 2>/dev/null; } || { [ -f "$RUNLOG" ] && grep -qF "$CMARK" "$RUNLOG" 2>/dev/null; }; }
 bmark(){ { [ -f "$REPORT" ] && grep -qF "$BMARK" "$REPORT" 2>/dev/null; } || { [ -f "$RUNLOG" ] && grep -qF "$BMARK" "$RUNLOG" 2>/dev/null; }; }
 terminal(){ cmark || bmark; }
-probe(){ local m="$1"; local p; p=$(unset NODE_ENV; cd /tmp && "$CLAUDE" -p "Say OK" --model "$m" --output-format text < /dev/null 2>&1 | tail -1); echo "$p" | grep -q "OK"; }
+probe(){ local m="$1"; local p; p=$(unset NODE_ENV; cd /tmp && "$CLAUDE" -p "Say OK" --settings "$SUBAGENT_SETTINGS" --model "$m" --output-format text < /dev/null 2>&1 | tail -1); echo "$p" | grep -q "OK"; }
 # resolve_model: returns the model to use for THIS launch attempt, or "" if
 # nothing is open right now. Notifies on any change of active model.
 resolve_model(){
@@ -83,7 +88,7 @@ launch(){
     return 99
   fi
   unset NODE_ENV
-  ( nohup "$CLAUDE" -p "$(cat "$PROMPT")" --model "$m" --permission-mode bypassPermissions --output-format text < /dev/null > "$RUNLOG" 2>&1 & echo $! > "$PIDFILE" )
+  ( nohup "$CLAUDE" -p "$(cat "$PROMPT")" --settings "$SUBAGENT_SETTINGS" --model "$m" --permission-mode bypassPermissions --output-format text < /dev/null > "$RUNLOG" 2>&1 & echo $! > "$PIDFILE" )
   if [ -n "$CUR_MODEL" ] && [ "$m" != "$CUR_MODEL" ]; then
     notify "MODEL SWITCH: $CUR_MODEL → $m (resume #$RESUMES). Progress carries via commits + resume protocol." "Submarine"
   else

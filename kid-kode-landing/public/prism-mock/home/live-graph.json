@@ -1004,7 +1004,7 @@
       "backendRef": null,
       "renderMode": "mesh",
       "depthMapUrl": null,
-      "meshUrl": "/prism-mock/orrery/meshes/watch.glb",
+      "meshUrl": "/prism-mock/editor/models/generated/demo-tripo-robot/model.glb",
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 0,
@@ -1073,7 +1073,23 @@
           "x": 0.5,
           "y": 0.5
         }
-      }
+      },
+      "generativeAssets": [
+        {
+          "id": "ga-dmt4y4",
+          "capabilityId": "tripo.text-3d",
+          "model": "Tripo 3.1",
+          "kind": "glb",
+          "url": "/prism-mock/editor/models/generated/demo-tripo-robot/model.glb",
+          "label": "Robot mascot · Tripo 3.1",
+          "createdAt": "2026-07-06T01:26:23.491Z",
+          "meta": {
+            "jobId": "tripo-mr8jger94fubqk",
+            "live": false,
+            "cost": "10 credits"
+          }
+        }
+      ]
     },
     {
       "nodeId": "shell-header-bar",
