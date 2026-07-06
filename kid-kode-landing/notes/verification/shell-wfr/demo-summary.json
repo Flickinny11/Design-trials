@@ -1,0 +1,44 @@
+{
+  "generatedAt": "2026-07-06",
+  "touchpoints": [
+    "guided-build (conductor)",
+    "W10 generation (usage-ledger)",
+    "node edit (ingest route)",
+    "repair chain (real completeness gate + repairNode)"
+  ],
+  "recordsTotal": 37,
+  "byType": {
+    "node_attempt": 28,
+    "build_session": 1,
+    "capability_usage": 2,
+    "edit_event": 2,
+    "user_signal": 1,
+    "verify_signal": 3
+  },
+  "rewardAxis": {
+    "populatedNodeAttempts": 28,
+    "source": "schema-completeness-gate",
+    "sweRmScore": "null in mock (SWE-RM model wired at W-TR)"
+  },
+  "repairChain": {
+    "attempt0Failed": true,
+    "realViolations": [
+      "MESH_REQUIRES_MESH_URL"
+    ],
+    "attempt1Repaired": true
+  },
+  "codeOutputCaptured": true,
+  "consentQuarantine": {
+    "optOutRecordsInTrainingSink": 0,
+    "optOutRecordsInQuarantineSink": 1
+  },
+  "scrubProof": {
+    "plantedPii": [
+      "buyer@example.com",
+      "founder@nova-atelier.com",
+      "anthropic-api-key-shape (assembled)"
+    ],
+    "survivedInCorpus": 0
+  },
+  "consentStampedAll": true
+}

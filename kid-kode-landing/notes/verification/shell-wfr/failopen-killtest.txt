@@ -1,0 +1,12 @@
+
+ RUN  v2.1.9 /Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing
+
+ ✓ tests/unit/flight-recorder/failopen.test.ts > flight-recorder writer — fail-open (I-FAILOPEN) > enqueue never throws even when the sink is dead
+ ✓ tests/unit/flight-recorder/failopen.test.ts > flight-recorder writer — fail-open (I-FAILOPEN) > drops-with-counter under back-pressure (bounded memory), never blocks
+ ✓ tests/unit/flight-recorder/failopen.test.ts > flight-recorder writer — fail-open (I-FAILOPEN) > enqueue is synchronous — returns without awaiting disk
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  22:58:57
+   Duration  214ms (transform 29ms, setup 0ms, collect 33ms, tests 13ms, environment 0ms, prepare 47ms)
+

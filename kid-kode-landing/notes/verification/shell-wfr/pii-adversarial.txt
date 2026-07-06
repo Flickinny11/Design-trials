@@ -1,0 +1,26 @@
+
+ RUN  v2.1.9 /Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing
+
+ ✓ tests/unit/flight-recorder/scrub.test.ts > flight-recorder scrub — secrets (INV-19) > redacts OpenAI key
+ ✓ tests/unit/flight-recorder/scrub.test.ts > flight-recorder scrub — secrets (INV-19) > redacts Anthropic key
+ ✓ tests/unit/flight-recorder/scrub.test.ts > flight-recorder scrub — secrets (INV-19) > redacts GitHub token
+ ✓ tests/unit/flight-recorder/scrub.test.ts > flight-recorder scrub — secrets (INV-19) > redacts AWS access key
+ ✓ tests/unit/flight-recorder/scrub.test.ts > flight-recorder scrub — secrets (INV-19) > redacts Google API key
+ ✓ tests/unit/flight-recorder/scrub.test.ts > flight-recorder scrub — secrets (INV-19) > redacts Slack token
+ ✓ tests/unit/flight-recorder/scrub.test.ts > flight-recorder scrub — secrets (INV-19) > redacts Stripe live key
+ ✓ tests/unit/flight-recorder/scrub.test.ts > flight-recorder scrub — secrets (INV-19) > redacts Replicate token
+ ✓ tests/unit/flight-recorder/scrub.test.ts > flight-recorder scrub — secrets (INV-19) > redacts JWT
+ ✓ tests/unit/flight-recorder/scrub.test.ts > flight-recorder scrub — secrets (INV-19) > redacts kv secret
+ ✓ tests/unit/flight-recorder/scrub.test.ts > flight-recorder scrub — secrets (INV-19) > redacts hex blob
+ ✓ tests/unit/flight-recorder/scrub.test.ts > flight-recorder scrub — direct PII > redacts email
+ ✓ tests/unit/flight-recorder/scrub.test.ts > flight-recorder scrub — direct PII > redacts phone
+ ✓ tests/unit/flight-recorder/scrub.test.ts > flight-recorder scrub — direct PII > redacts SSN
+ ✓ tests/unit/flight-recorder/scrub.test.ts > flight-recorder scrub — direct PII > redacts credit card
+ ✓ tests/unit/flight-recorder/scrub.test.ts > flight-recorder scrub — known personal identifiers (names) > redacts the actor name + email when supplied, without open-vocab NER
+ ✓ tests/unit/flight-recorder/scrub.test.ts > flight-recorder scrub — structural preservation > preserves object keys + numbers; drops secret-named field values; scrubs string values deep
+
+ Test Files  1 passed (1)
+      Tests  17 passed (17)
+   Start at  22:58:57
+   Duration  204ms (transform 18ms, setup 0ms, collect 17ms, tests 2ms, environment 0ms, prepare 31ms)
+

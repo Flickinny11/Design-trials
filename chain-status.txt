@@ -1,1 +1,1 @@
-[20:56:17] SHELL-W10: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[23:01:34] SHELL-WFR: commit 7237d8d2 — shell-wfr: schema v1 + recorder lib + generated doc + compaction + invar

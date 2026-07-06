@@ -1,0 +1,6 @@
+[training/2026-07-06] 37 rows × 58 cols → .data/flight-recorder/training/_compacted/2026-07-06.parquet (13276 B)
+[quarantine/2026-07-06] 1 rows × 13 cols → .data/flight-recorder/quarantine/_compacted/2026-07-06.parquet (1792 B)
+compacted 38 records.
+
+PARQUET READBACK (2026-07-06.parquet): 37 rows × 58 columns
+first-class reward/training columns: gen_ai.provider.name, prism.cost.amount, prism.repair.class, prism.reward.issues, prism.reward.score, prism.reward.source, prism.swe_rm.score, prism.user.decision
