@@ -11,6 +11,8 @@ import 'server-only';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import type { CapabilityUsageEvent } from '../../../lib/capabilities/generative';
+import { recordCapabilityUsage } from '../../../lib/flight-recorder';
+import type { GenAiProviderName } from '../../../lib/flight-recorder';
 
 const DATA_DIR = path.join(process.cwd(), '.data');
 const DATA_FILE = path.join(DATA_DIR, 'capability-usage.json');
@@ -38,6 +40,32 @@ export async function recordUsage(event: CapabilityUsageEvent): Promise<Capabili
   const all = await load();
   all.push(event);
   await persist();
+  // FLIGHT RECORDER (W-FR): mirror EVERY generative invocation into the training
+  // corpus (additive, fire-and-forget, fail-open — a recorder outage never
+  // breaks metering). The W10 metering event is already non-secret; we map it to
+  // the OTel gen_ai.* + prism.* attribute bags. Every invocation is recorded,
+  // including failed ones (ok=false), preserving the W10 "meter everything" law.
+  recordCapabilityUsage({
+    touchpoint: 'generative-3d',
+    actor: { userRef: event.userId, projectId: event.projectId },
+    otel: {
+      'gen_ai.provider.name': event.provider as GenAiProviderName,
+      'gen_ai.operation.name': 'generate_content',
+      'gen_ai.request.model': event.model,
+    },
+    prism: {
+      'prism.capability.id': event.capabilityId,
+      'prism.node.id': event.nodeId,
+      'prism.cost.unit': event.costBasis.unit,
+      'prism.cost.amount': event.costBasis.amount,
+      'prism.cost.estimated': event.costBasis.estimated,
+      'prism.capability.live': event.live,
+    },
+    capability_id: event.capabilityId,
+    job_id: event.jobId,
+    result_asset_ref: event.resultAssetRef,
+    ok: event.ok,
+  });
   return event;
 }
 

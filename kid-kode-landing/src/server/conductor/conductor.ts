@@ -41,6 +41,13 @@ import {
   pendingAdvocate,
 } from './verify-latch';
 import { runDeploy, buildDeployCheck } from '../deploy/deploy-service';
+import {
+  recordBuildSession,
+  recordNodeAttempt,
+  recordVerifySignal,
+  recordUserSignal,
+  type GenAiAttributes,
+} from '../../lib/flight-recorder';
 
 export interface ConductorContext {
   tenantId: string;
@@ -69,7 +76,7 @@ function resolveModelId(requested?: string): string {
  *  gate is regenerated from spec into a guaranteed-renderable form (never a
  *  broken node into the graph). By construction the node factory already emits
  *  complete nodes, so this is a defensive backstop. */
-function repairNode(node: PrismNode): PrismNode {
+export function repairNode(node: PrismNode): PrismNode {
   const repaired: PrismNode = { ...node };
   if (repaired.renderMode === 'parallax-plane' && !repaired.depthMapUrl) {
     repaired.renderMode = 'plane';
@@ -78,6 +85,54 @@ function repairNode(node: PrismNode): PrismNode {
     repaired.meshPrimitive = { kind: 'plane', params: { width: 1, height: 1 } };
   }
   return repaired;
+}
+
+/** A bounded [0,1] quality reward from the schema-completeness gate: a clean
+ *  node scores 1.0, each error violation deducts 0.25 (floored at 0). This is a
+ *  REAL, reproducible signal from the mock's own verifier — the live reward axis
+ *  until the SWE-RM model is wired (W-TR). NOT invented; NOT labeled SWE-RM. */
+export function rewardFromViolations(errorCount: number): number {
+  return Math.max(0, Math.round((1 - 0.25 * errorCount) * 100) / 100);
+}
+
+/** Build a recordNodeAttempt payload carrying the real reward + code-output
+ *  columns. gen_ai.output.messages carries the ACTUAL authored node config (the
+ *  build artifact — engine invariant 8: code is scene composition). */
+export function nodeAttemptPayload(
+  actor: { tenantId?: string; projectId?: string; sessionId?: string },
+  baseOtel: GenAiAttributes | undefined,
+  hubId: string,
+  node: PrismNode,
+  opts: {
+    attempt: number; succeeded: boolean; rewardScore: number; issues: string[];
+    repairClass: string; repairOutcome: string; verifyOutcome: 'pass' | 'fail';
+  },
+) {
+  const otel: GenAiAttributes = {
+    ...(baseOtel ?? {}),
+    'gen_ai.input.messages': [{ role: 'user', parts: [{ type: 'text', content: node.intent?.caption ?? '' }] }],
+    'gen_ai.output.messages': [{ role: 'assistant', parts: [{ type: 'text', content: JSON.stringify({ nodeId: node.nodeId, subtype: node.subtype, renderMode: node.renderMode, codeRef: node.codeRef, hasMaterial: Boolean(node.materialSpec) }) }] }],
+  };
+  return {
+    touchpoint: 'conductor' as const, actor, otel,
+    spec: { caption: node.intent?.caption, subtype: node.subtype, render_mode: node.renderMode },
+    succeeded: opts.succeeded,
+    prism: {
+      'prism.node.id': node.nodeId,
+      'prism.node.subtype': node.subtype,
+      'prism.node.render_mode': node.renderMode,
+      'prism.hub.id': hubId,
+      'prism.reward.score': opts.rewardScore,
+      'prism.reward.source': 'schema-completeness-gate' as const,
+      'prism.reward.issues': opts.issues,
+      'prism.swe_rm.score': null, // SWE-RM model not wired in the mock (W-TR)
+      'prism.repair.attempt': opts.attempt,
+      'prism.repair.class': opts.repairClass,
+      'prism.repair.outcome': opts.repairOutcome,
+      'prism.verify.gate': 'schema-completeness',
+      'prism.verify.outcome': opts.verifyOutcome,
+    },
+  };
 }
 
 function graphRecord(g: GraphSource): Record<string, unknown> {
@@ -94,6 +149,18 @@ export async function* runConductor(
   const modelId = resolveModelId(input.modelId);
   const nowIso = () => new Date().toISOString();
   const aborted = () => signal?.aborted === true;
+
+  // ── FLIGHT RECORDER (W-FR) ────────────────────────────────────────────────
+  // The Conductor is a SINK for the corpus: it persists the build lifecycle it
+  // already streams (no new realtime channel — I-SSE). All emits are additive,
+  // fire-and-forget, fail-open. Actor scope is the tenant + project + this run.
+  const frActor = { tenantId: ctx.tenantId, projectId: input.projectId, sessionId: messageId };
+  // The planner's provider: 'live' = the resolved model (anthropic), 'stub' =
+  // deterministic (no model call → gen_ai.* are null, honest).
+  const frOtel = (origin: 'stub' | 'live' | null): GenAiAttributes | undefined =>
+    origin === 'live'
+      ? { 'gen_ai.provider.name': 'anthropic', 'gen_ai.operation.name': 'chat', 'gen_ai.request.model': modelId }
+      : undefined;
 
   yield { type: 'message-start', v: AV, messageId, modelId };
 
@@ -166,6 +233,9 @@ export async function* runConductor(
     for (const l of behavioral.evidence) yield line('verify', `● ${l}\n`);
     for (const l of visual.evidence) yield line('verify', `◆ ${l}\n`);
     yield done('verify', behavioral.status === 'pass' && visual.status === 'pass' ? 'ok' : 'error');
+    // Corpus: verification signals (gate outcomes — training reward labels).
+    recordVerifySignal({ touchpoint: 'verify', actor: frActor, gate: 'behavioral', outcome: behavioral.status, evidence: behavioral.evidence, prism: { 'prism.verify.gate': 'behavioral', 'prism.verify.outcome': behavioral.status, 'prism.verify.judge': 'automated' } });
+    recordVerifySignal({ touchpoint: 'verify', actor: frActor, gate: 'visual', outcome: visual.status, evidence: visual.evidence, prism: { 'prism.verify.gate': 'visual', 'prism.verify.outcome': visual.status, 'prism.verify.judge': 'automated' } });
 
     if (aborted()) return;
     yield step('deploy', 'Deploying shareable preview', 'prism-cloud · E14');
@@ -199,6 +269,22 @@ export async function* runConductor(
     await writeStatus('built', counts, planOrigin, latch);
     await store.createVersion(ctx.tenantId, input.projectId, 'conductor: verified');
 
+    // Corpus: deploy verify signal + a 'ship' user-signal on a live preview, and
+    // the whole-build session record (plan → graph shape → outcome).
+    recordVerifySignal({ touchpoint: 'verify', actor: frActor, gate: 'deploy', outcome: deployCheck.status, evidence: deployCheck.evidence, prism: { 'prism.verify.gate': 'deploy', 'prism.verify.outcome': deployCheck.status, 'prism.verify.judge': 'automated' } });
+    if (deployRes && deployCheck.status === 'pass') {
+      let host: string | undefined;
+      try { host = new URL(deployRes.record.previewUrl).host; } catch { host = undefined; }
+      recordUserSignal({ touchpoint: 'session', actor: frActor, signal: 'ship', detail: host });
+    }
+    recordBuildSession({
+      touchpoint: 'conductor', actor: frActor, otel: frOtel(planOrigin),
+      app_name: appName, direction_id: direction.id, plan_origin: planOrigin,
+      hub_count: counts.hubCount, node_count: counts.nodeCount,
+      outcome: 'built', verified_shippable: latch.verifiedShippable,
+      prism: { 'prism.app.archetype': direction.id, 'prism.verify.outcome': latch.verifiedShippable ? 'pass' : 'pending' },
+    });
+
     const badge = latch.verifiedShippable
       ? '✓ Verified shippable — behavioral, visual, and deploy checks pass (fresh-context advocate pass still gates final "done").'
       : '⚠ Build complete, but verification gaps remain — see the checks above.';
@@ -218,6 +304,8 @@ export async function* runConductor(
     const nodes = (existingGraph as { nodes?: unknown[] } | null)?.nodes;
     if (existingGraph && Array.isArray(nodes) && nodes.length > 0) {
       const g = existingGraph as unknown as GraphSource;
+      // Corpus: a return to a previously-built project (session signal).
+      recordUserSignal({ touchpoint: 'session', actor: frActor, signal: 'return', detail: 're-verify existing build' });
       yield* finalize(
         g,
         { hubCount: g.hubs?.length ?? existing?.hubCount ?? 0, nodeCount: g.nodes?.length ?? existing?.nodeCount ?? 0 },
@@ -269,13 +357,32 @@ export async function* runConductor(
     yield step(sid, `Materializing hub: ${batch.hub.title}`, `${batch.nodes.length} nodes`);
     for (const node of batch.nodes) {
       const errs = (batch.violationsByNode[node.nodeId] ?? []).filter((v) => v.severity === 'error');
-      if (errs.length > 0) {
-        builtNodes.push(repairNode(node));
+      const wasRepaired = errs.length > 0;
+      const finalNode = wasRepaired ? repairNode(node) : node;
+      builtNodes.push(finalNode);
+      if (wasRepaired) {
         repaired += 1;
         yield line(sid, `repaired ${node.nodeId} (${errs.map((e) => e.rule).join(', ')})\n`);
-      } else {
-        builtNodes.push(node);
       }
+      // Corpus: node-generation attempt(s) — the volume-king reward-bearing type.
+      // The REAL reward signal in the mock is the schema-completeness gate
+      // (violations → a bounded [0,1] score under prism.reward.source =
+      // 'schema-completeness-gate'); prism.swe_rm.* stays null until the SWE-RM
+      // model is wired (W-TR). gen_ai.output.messages carries the actual authored
+      // node config (the build artifact). A repaired node emits a real two-attempt
+      // repair CHAIN: attempt 0 (failed the gate, its violations) → attempt 1
+      // (the repaired, passing node).
+      if (wasRepaired) {
+        recordNodeAttempt(nodeAttemptPayload(frActor, frOtel(blueprint.origin), batch.hub.hubId, node, {
+          attempt: 0, succeeded: false, rewardScore: rewardFromViolations(errs.length),
+          issues: errs.map((e) => e.rule), repairClass: 'schema-gate', repairOutcome: 'unrepairable', verifyOutcome: 'fail',
+        }));
+      }
+      recordNodeAttempt(nodeAttemptPayload(frActor, frOtel(blueprint.origin), batch.hub.hubId, finalNode, {
+        attempt: wasRepaired ? 1 : 0, succeeded: true, rewardScore: 1,
+        issues: [], repairClass: wasRepaired ? 'schema-gate' : 'none',
+        repairOutcome: wasRepaired ? 'repaired' : 'not-needed', verifyOutcome: 'pass',
+      }));
     }
     // Progressive save — the graph hydrates hub by hub.
     const partial: GraphSource = {

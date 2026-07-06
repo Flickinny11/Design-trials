@@ -99,6 +99,24 @@ function emptyContext(): PromptEditRequest['context'] {
   return { designReferences: '', primitiveCatalog: [], elementLibrary: [], atTags: [] };
 }
 
+// FLIGHT RECORDER (W-FR, D2): fire a minimal, fire-and-forget beacon to the
+// additive server ingest route. Server-side capture only — all recording logic
+// (consent, PII scrub, sink write) runs in the route. This NEVER blocks or
+// errors the editor: it uses sendBeacon when available, else keepalive fetch,
+// and swallows every error. Not a realtime channel — a plain POST (I-SSE).
+function fireFlightBeacon(payload: Record<string, unknown>): void {
+  try {
+    const body = JSON.stringify(payload);
+    if (typeof navigator !== 'undefined' && typeof navigator.sendBeacon === 'function') {
+      navigator.sendBeacon('/api/prism/flight-recorder', new Blob([body], { type: 'application/json' }));
+      return;
+    }
+    void fetch('/api/prism/flight-recorder', { method: 'POST', headers: { 'content-type': 'application/json' }, body, keepalive: true }).catch(() => {});
+  } catch {
+    /* recorder beacon is best-effort — never affects the edit */
+  }
+}
+
 class NodeAgentController {
   private state: NodeAgentControllerState = INITIAL;
   private commit: NodeAgentCommitResult | null = null;
@@ -174,6 +192,8 @@ class NodeAgentController {
       this.commit = commit;
       this.pendingCommitFactory = null;
       this.set({ status: 'applied', report: commit.report, canUndo: true });
+      // Corpus: a KEEP decision (the accept/reject goldmine — Cursor's signal).
+      fireFlightBeacon({ kind: 'keep', nodeIds: commit.touchedNodeIds, planRef: this.state.plan?.id, appliedCount: commit.report.applied, instruction: this.state.instruction });
       try {
         await useGraphSourceStore.getState().saveToServer?.();
       } catch {
@@ -190,8 +210,12 @@ class NodeAgentController {
   /** Revert the last commit to its exact pre-commit state, then persist. */
   async undo(): Promise<{ undone: boolean }> {
     if (!this.commit) return { undone: false };
+    const undoneNodeIds = this.commit.touchedNodeIds;
+    const undonePlanRef = this.state.plan?.id;
     this.commit.undo();
     this.commit = null;
+    // Corpus: an UNDO decision (the reject side of the accept/reject signal).
+    fireFlightBeacon({ kind: 'undo', nodeIds: undoneNodeIds, planRef: undonePlanRef });
     this.set({ status: 'idle', canUndo: false, report: null, plan: null });
     try {
       await useGraphSourceStore.getState().saveToServer?.();
@@ -227,6 +251,8 @@ class NodeAgentController {
       const commit = agent.commit(storeIO(), { suspectReason: reason });
       this.commit = commit;
       this.set({ status: 'applied', report: commit.report, canUndo: true });
+      // Corpus: autonomous self-heal repair (trigger + touched nodes).
+      fireFlightBeacon({ kind: 'self-heal', nodeIds: commit.touchedNodeIds, instruction: reason });
       try {
         await useGraphSourceStore.getState().saveToServer?.();
       } catch {

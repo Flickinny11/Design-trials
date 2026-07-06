@@ -11,9 +11,31 @@ import { NextResponse } from 'next/server';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 import { existsSync } from 'node:fs';
+import { recordCapabilityUsage } from '@/lib/flight-recorder';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+
+// FLIGHT RECORDER (W-FR): mirror each prompt-to-texture invocation into the
+// corpus. Additive + fail-open. The prompt is captured as scrubbed content; the
+// resulting material-def id is the asset reference. `ok` records success/failure
+// so a failed generation is still metered (data honesty).
+function recordMaterialGen(input: { prompt: string; ok: boolean; assetRef?: string }): void {
+  recordCapabilityUsage({
+    touchpoint: 'material-gen',
+    otel: {
+      'gen_ai.provider.name': 'replicate',
+      'gen_ai.operation.name': 'generate_content',
+      'gen_ai.request.model': 'flux-2-pro',
+      'gen_ai.output.type': 'image',
+      'gen_ai.input.messages': [{ role: 'user', parts: [{ type: 'text', content: input.prompt }] }],
+    },
+    prism: { 'prism.capability.id': 'material-gen.prompt-to-texture', 'prism.cost.unit': 'usd', 'prism.cost.estimated': true },
+    capability_id: 'material-gen.prompt-to-texture',
+    result_asset_ref: input.assetRef,
+    ok: input.ok,
+  });
+}
 
 type Kind = 'metal' | 'stone' | 'wood' | 'ceramic' | 'fabric' | 'generic';
 const KINDS: Kind[] = ['metal', 'stone', 'wood', 'ceramic', 'fabric', 'generic'];
@@ -63,6 +85,7 @@ export async function POST(req: Request) {
   });
 
   if (result.code !== 0 || !result.out.includes('MATERIAL-GEN-DONE')) {
+    recordMaterialGen({ prompt, ok: false });
     return NextResponse.json({ ok: false, error: 'generation failed', code: result.code, detail: result.err.slice(-400) || result.out.slice(-400) }, { status: 500 });
   }
 
@@ -72,6 +95,7 @@ export async function POST(req: Request) {
   if (m) { try { params = JSON.parse(m[1]); } catch { /* keep empty */ } }
 
   const dir = `/prism-mock/editor/textures/generated/${id}`;
+  recordMaterialGen({ prompt, ok: true, assetRef: `generated.${id}` });
   return NextResponse.json({
     ok: true,
     def: {
