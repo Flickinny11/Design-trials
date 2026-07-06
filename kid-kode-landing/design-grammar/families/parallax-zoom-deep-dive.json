@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "prism-dg-v1",
+  "id": "parallax-zoom-deep-dive",
+  "name": "Parallax Zoom Deep-Dive",
+  "status": "grounded",
+  "summary": "Slide advances fly the camera FORWARD into the scene instead of sliding sideways: foreground planes separate and rush past while distant layers hold, so every transition reads as a dolly-through — traveling deeper into the world rather than turning a page.",
+  "elementTypes": ["slider", "hero", "scroll-narrative", "section-transition"],
+  "whatMakesItWork": {
+    "composition": [
+      "Full-bleed immersive scene with a centered dominant headline stack; the scene does the work around the type.",
+      "Foreground silhouettes (cliffs, arches, portals) frame the composition like a natural vignette AND give the zoom something to rush past — the transition is only as good as the foreground occluders.",
+      "A slide counter and minimal arrows acknowledge the sequence without breaking immersion."
+    ],
+    "layering": [
+      "Explicit multi-plane depth (near silhouettes → mid haze → far field) built BEFORE the transition: idle cursor-parallax proves the depth that the zoom then exploits.",
+      "On advance, the outgoing scene scales up past the camera while the incoming scene resolves from a deeper zoom — two scenes exist simultaneously mid-flight.",
+      "The headline floats on the frontmost plane and restages per scene."
+    ],
+    "lighting": [
+      "A glowing scene core (nebula, portal light) acts as a backlight behind the headline, giving type a halo.",
+      "Warm center bloom + darkened cool edges = a natural vignette that funnels the eye and hides plane seams during the zoom."
+    ],
+    "typography": [
+      "Editorial pairing: small italic script accent above a colossal slab/serif display — a travel-poster cadence.",
+      "Type staggers in per scene (script leads, slab follows, CTA last) then holds still while the scene breathes."
+    ]
+  },
+  "palette": {
+    "logic": ["dark-cinematic", "monochrome-plus-accent", "photographic-derived"],
+    "rules": [
+      "Deep dark base tinted warm per scene; one luminous accent reserved for the display type and active UI.",
+      "Cool-dark shadows anchor warm midtones — the warm/cool split is what makes the depth read at night."
+    ]
+  },
+  "motion": {
+    "character": ["cinematic-slow", "smooth-luxurious"],
+    "easing": [
+      "Long ease-in-out on the zoom with a slight settle at arrival; parallax layers use expo-out damping to rest.",
+      "No linearity — a linear zoom reads as a scale tween, not a camera move."
+    ],
+    "pacing": [
+      "Slow, ~1s+ per transition; the dive is the spectacle, so it earns real duration.",
+      "Idle scenes keep gentle cursor parallax so depth never disappears between transitions."
+    ],
+    "choreography": [
+      "Transition order: camera pushes → outgoing foreground rushes past and fades → incoming scene resolves from depth → type restages.",
+      "Swipe/drag direction can map to dive depth for a tactile feel."
+    ]
+  },
+  "capabilities": {
+    "renderingRoutes": ["R1", "R2", "R3"],
+    "genModels": ["flux-2-pro"],
+    "primitives": ["fly-through", "parallax-scroll", "hub-transition-preset", "keyframes", "extruded-text", "hub-background"],
+    "postFx": ["bloom", "vignette", "atmospheric-haze"],
+    "readiness": "partial",
+    "gapNotes": [
+      "The fly-through primitive and hub transition presets exist, but a zoom-THROUGH transition that holds two layered scenes simultaneously mid-flight is not among the shipped presets (curtain/veil/dissolve/wipe/glass-sweep) — needs a new preset.",
+      "Depth-plane scene assembly from generated imagery (cutout + depth) is the W-PHOTO R2 pipeline.",
+      "Center-bloom + edge-vignette grading needs the R1 cinematic floor post stack."
+    ]
+  },
+  "usage": {
+    "whenToUse": [
+      "World-building narratives: travel, games, cosmic/nature themes, chaptered storytelling where each slide is a place.",
+      "As the signature transition for a hub whose content is a journey."
+    ],
+    "whenNotToUse": [
+      "Utilitarian, data-dense, or fast-task UIs — slow cinematic zooms cost patience.",
+      "Scenes without strong foreground occluders — the dive reads as a plain scale-up.",
+      "Motion-sensitive audiences: forward zoom is the most vestibularly aggressive transition; must honor reduced-motion with a crossfade."
+    ],
+    "archetypeFit": ["content", "marketing", "community"],
+    "moods": ["cinematic", "ethereal", "warm", "bold", "futuristic"]
+  },
+  "pairing": {
+    "pairsWith": ["layered-photo-parallax-hero", "oversized-type-editorial", "seasonal-theme-shift"],
+    "avoidWith": ["glitch-cyber-fx", "bento-grid-slider"],
+    "notes": [
+      "Builds directly on layered-photo-parallax-hero: the idle parallax establishes the depth model the zoom transition then travels through.",
+      "Clashes with grid/dashboard families — the dive assumes one immersive scene per state."
+    ]
+  },
+  "antiRepetition": {
+    "clusterId": "scene-transition",
+    "notes": "Same cluster as seasonal-theme-shift — both are whole-scene state changes; offer one scene-morph family per set."
+  },
+  "sources": [
+    {
+      "title": "Starry Night Parallax Zoom Slider",
+      "url": "https://www.sliderrevolution.com/templates/starry-night-parallax-zoom-effect-slider/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session, live demo: all 4 slides advanced via swipe/drag in both directions; forward-dive transitions observed with foreground cliffs rushing past; idle cursor-move parallax verified plane separation before each dive.",
+      "observationRef": "analysis/starry-night-parallax-zoom-effect-slider.json"
+    }
+  ],
+  "exemplars": [],
+  "provenance": {
+    "groundTruth": ["monitor-observation"],
+    "distilledAt": "2026-07-06",
+    "distilledBy": "wdg1-orchestrator"
+  }
+}
