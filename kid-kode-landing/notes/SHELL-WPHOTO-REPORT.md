@@ -13,16 +13,16 @@ Requirements ledger: `notes/DESIGN-GRAMMAR-GAP-REPORT.md` + `design-grammar/fami
 
 ## 1. Deliverables checklist
 
-| #   | Deliverable                                                                                                                                | Status         |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------- |
-| D1  | Route planner (`src/lib/render-routes/`) + decision-table doc                                                                              | pending        |
-| D2  | Composite pipeline (`src/lib/photo-pipeline/`): gen → cutout/layer → depth → shadow plate → harmonize → LUT grade → layered parallax scene | pending        |
-| D3  | Carousel driver + loop-column driver (motion exemplars = frame sequences)                                                                  | pending        |
-| D4  | R1 cinematic floor: IBL/HDRI, filmic tone mapping, imperfection maps, contact shadows, DOF/grain/bloom/LUT post chain                      | pending        |
-| D5  | R4 splat viewer: component + loader + asset slot                                                                                           | pending        |
-| D6  | Watch remaster (acceptance test): before/after frames per scene; W5B gate green                                                            | pending        |
-| D7  | Stretch: scroll-video-scrub + cinematic-video-hero                                                                                         | triage pending |
-| D8  | Flight-record all gen/build events                                                                                                         | pending        |
+| #   | Deliverable                                                                                                                                | Status                                                                         |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
+| D1  | Route planner (`src/lib/render-routes/`) + decision-table doc                                                                              | **DONE** (`7e016c70`)                                                          |
+| D2  | Composite pipeline (`src/lib/photo-pipeline/`): gen → cutout/layer → depth → shadow plate → harmonize → LUT grade → layered parallax scene | **DONE** (`7353e0dc`,`ea81210a`) — celestia-hero photoreal, verified on WebGPU |
+| D3  | Carousel driver + loop-column driver (motion exemplars = frame sequences)                                                                  | in progress                                                                    |
+| D4  | R1 cinematic floor: IBL/HDRI, filmic tone mapping, imperfection maps, contact shadows, DOF/grain/bloom/LUT post chain                      | **DONE** (`2c17f158`)                                                          |
+| D5  | R4 splat viewer: component + loader + asset slot                                                                                           | pending                                                                        |
+| D6  | Watch remaster (acceptance test): before/after frames per scene; W5B gate green                                                            | pending                                                                        |
+| D7  | Stretch: scroll-video-scrub + cinematic-video-hero                                                                                         | triage pending                                                                 |
+| D8  | Flight-record all gen/build events                                                                                                         | **DONE** (`c...`, composite events)                                            |
 
 ## 2. Fresh-dated research findings (2026-07-06)
 
@@ -73,9 +73,15 @@ chain needs **no new dependency** (Spark is the only new dep this wave).
 
 ## 3. Spend ledger
 
-| ts  | provider | model | purpose | est. cost | running total               |
-| --- | -------- | ----- | ------- | --------- | --------------------------- |
-| —   | —        | —     | —       | —         | Replicate $0.00 / Tripo 0cr |
+| ts    | provider  | model                     | purpose                                           | est. cost | running total |
+| ----- | --------- | ------------------------- | ------------------------------------------------- | --------- | ------------- |
+| 07-06 | replicate | depth-anything-v2         | endpoint probe ×2                                 | ~$0.006   | ~$0.006       |
+| 07-06 | replicate | flux-2-pro ×4             | celestia-hero plates (backdrop+product+3 garnish) | ~$0.32    | ~$0.33        |
+| 07-06 | replicate | bria/remove-background ×3 | product + garnish cutouts                         | ~$0.06    | ~$0.39        |
+| 07-06 | replicate | depth-anything-v2         | backdrop depth map                                | ~$0.003   | **~$0.39**    |
+
+Replicate spent ~**$0.39** of $10 (>$9.6 remaining — no founder alert). Tripo 0/100cr.
+Every hosted call carries a prediction id in `composite.json` provenance (I-PROVENANCE).
 
 Budget: Replicate ≤ $10, Tripo ≤ 100 credits. Founder alert thresholds: <$5 Replicate remaining / <100 Tripo remaining.
 
