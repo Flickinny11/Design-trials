@@ -36,8 +36,11 @@ function titleOf(url: string): string {
   // read as "Notes" (its collection), not "Id".
   const parts = url.split('/').filter(Boolean);
   const staticParts = parts.filter((p) => !p.startsWith('['));
-  const pick = staticParts.length ? staticParts[staticParts.length - 1] : parts[parts.length - 1];
-  return pick ? titleCase(pick) : 'Home';
+  if (staticParts.length) return titleCase(staticParts[staticParts.length - 1]);
+  const last = parts[parts.length - 1] ?? '';
+  // A root-level catch-all (`/[...slug]`) has no static name — call it "Pages".
+  if (last.startsWith('[...')) return 'Pages';
+  return last ? titleCase(last) : 'Home';
 }
 
 /** Strip a leading `src/` and return path segments after the routing root. */

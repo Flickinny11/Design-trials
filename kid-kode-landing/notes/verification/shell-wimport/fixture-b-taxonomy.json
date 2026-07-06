@@ -1,0 +1,36 @@
+{
+  "repo": "shadcn-ui/taxonomy",
+  "capturedVia": "live UI import over real GitHub fetch (api.github.com git tree + raw.githubusercontent.com file reads, through the SSRF-hardened safe-fetch injected at the ingest.analyze tRPC route)",
+  "capturedOn": "2026-07-06",
+  "title": "taxonomy",
+  "summary": "2 carried · 10 adapted · 4 needs you",
+  "lines": [
+    { "key": "summary", "value": "Imported from shadcn-ui/taxonomy — a Next.js (App Router) app: An open source application built using the new router, server components and everything new in Next.js 13.. Main sections: Home, Slug, Blog, Dashboard, Billing, Settings, Docs, Editor, Guides, Login, Pricing, Register. Structure: 14 pages, 94 components, 7 API routes, 14 data models." },
+    { "key": "archetype", "value": "Content / editorial" },
+    { "key": "direction", "value": "Prism Premium default (Atelier Noir)" },
+    { "key": "sections", "value": "Home, Slug, Blog, Dashboard, Billing, Settings, Docs, Editor, Guides, Login, Pricing, Register" },
+    { "key": "tone", "value": "calm" },
+    { "key": "backend", "value": "Database (14 models detected), Accounts & auth, Payments, 7 API endpoints" },
+    { "key": "integrations", "value": "Prisma / SQL DB, Vercel Analytics, Auth.js, Postmark, Stripe" },
+    { "key": "github", "value": "shadcn-ui/taxonomy" },
+    { "key": "deploy", "value": "Decide at ship time" }
+  ],
+  "fidelityFeatures": [
+    { "status": "adapted", "category": "framework", "name": "nextjs-app project", "reason": "Prism regenerates your app as a node graph (the graph is the app) — it does not run your framework build. Structure, copy, and brand are carried into the regenerated app." },
+    { "status": "carried", "category": "routes", "name": "14 page routes → 12 hubs", "reason": "Each page route becomes a hub in the regenerated Prism app." },
+    { "status": "adapted", "category": "routes", "name": "5 dynamic routes (e.g. /[...slug])", "reason": "A dynamic route becomes one hub template; the per-item data that fills it comes from a data source you connect (needs-you below)." },
+    { "status": "adapted", "category": "routes", "name": "8 layout(s)", "reason": "Shared layouts map onto Prism global slots (header/footer/nav), not arbitrary React layout components." },
+    { "status": "adapted", "category": "components", "name": "94 React components", "reason": "Your components inform the regenerated layout, but Prism authors scene NODES (3D-native), not your React code verbatim — the graph is the app." },
+    { "status": "carried", "category": "copy", "name": "23 copy strings (headings, CTAs)", "reason": "Your headings and calls-to-action seed the regenerated text nodes." },
+    { "status": "adapted", "category": "brand", "name": "Brand palette", "reason": "Not enough distinct colours were found in the repo, so the \"Prism Premium default\" premium direction supplies the palette. Edit it in your brief." },
+    { "status": "adapted", "category": "brand", "name": "Typography (Inter as Font Sans)", "reason": "Your font choices map to the nearest Prism type classification (display/text). Exact webfonts can be wired at ship time." },
+    { "status": "needs-you", "category": "brand", "name": "14 brand image assets", "reason": "Image assets are referenced by path; upload them (or connect the repo asset host) so they render in the regenerated app." },
+    { "status": "adapted", "category": "integrations", "name": "Prisma / SQL DB integration", "reason": "Becomes a Prism capability reference you authorize. No credentials were read from the repo (dep: prisma)." },
+    { "status": "adapted", "category": "integrations", "name": "Vercel Analytics integration", "reason": "Becomes a Prism capability reference you authorize. No credentials were read from the repo (dep: @vercel/analytics)." },
+    { "status": "needs-you", "category": "auth", "name": "Auth.js integration", "reason": "Auth is re-established in Prism — you connect the provider fresh; no credentials are carried from the repo (secrets never import)." },
+    { "status": "adapted", "category": "integrations", "name": "Postmark integration", "reason": "Becomes a Prism capability reference you authorize. No credentials were read from the repo (dep: postmark)." },
+    { "status": "adapted", "category": "integrations", "name": "Stripe integration", "reason": "Becomes a Prism capability reference you authorize. No credentials were read from the repo (dep: stripe)." },
+    { "status": "needs-you", "category": "data", "name": "14 data models (Account, Session, User)", "reason": "Prism does not migrate your database. The models are captured so you can connect your data source; the schema itself stays where it lives." },
+    { "status": "needs-you", "category": "api", "name": "7 API endpoints", "reason": "Server routes are not transplanted (contamination-aware: Prism never runs unverified code). They are listed so you can rebuild them as Prism backend capabilities." }
+  ]
+}
