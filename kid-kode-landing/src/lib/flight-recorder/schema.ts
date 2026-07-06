@@ -26,17 +26,18 @@
 
 /** Corpus schema version. Bump on any breaking record-shape change; the writer
  *  stamps this on every record so a reader can migrate old partitions. */
-export const FLIGHT_RECORDER_SCHEMA_VERSION = 'prism-fr-v1' as const;
+export const FLIGHT_RECORDER_SCHEMA_VERSION = "prism-fr-v1" as const;
 
 /** Provenance pins for the OTel alignment — emitted in the schema doc header and
  *  queryable so an acquirer's ML engineer can see exactly what standard this maps
  *  to and at what version it was authored. */
 export const OTEL_ALIGNMENT = {
-  semconvVersion: '1.43.0',
-  contentCaptureFrom: '1.37.0',
-  genaiStatus: 'development',
-  genaiHome: 'open-telemetry/semantic-conventions-genai (no tagged release yet)',
-  verifiedOn: '2026-07-05',
+  semconvVersion: "1.43.0",
+  contentCaptureFrom: "1.37.0",
+  genaiStatus: "development",
+  genaiHome:
+    "open-telemetry/semantic-conventions-genai (no tagged release yet)",
+  verifiedOn: "2026-07-05",
 } as const;
 
 // ─── OTel GenAI attribute subset (verbatim dotted keys) ──────────────────────
@@ -48,52 +49,59 @@ export const OTEL_ALIGNMENT = {
 /** OTel `gen_ai.provider.name` well-known enum (open — other values allowed).
  *  `gen_ai.provider.name` replaced the deprecated `gen_ai.system` in v1.37.0. */
 export type GenAiProviderName =
-  | 'anthropic'
-  | 'openai'
-  | 'aws.bedrock'
-  | 'azure.ai.inference'
-  | 'azure.ai.openai'
-  | 'cohere'
-  | 'deepseek'
-  | 'gcp.gemini'
-  | 'gcp.gen_ai'
-  | 'gcp.vertex_ai'
-  | 'groq'
-  | 'ibm.watsonx.ai'
-  | 'mistral_ai'
-  | 'perplexity'
-  | 'x_ai'
+  | "anthropic"
+  | "openai"
+  | "aws.bedrock"
+  | "azure.ai.inference"
+  | "azure.ai.openai"
+  | "cohere"
+  | "deepseek"
+  | "gcp.gemini"
+  | "gcp.gen_ai"
+  | "gcp.vertex_ai"
+  | "groq"
+  | "ibm.watsonx.ai"
+  | "mistral_ai"
+  | "perplexity"
+  | "x_ai"
   // Prism extensions to the open enum for its own inference fabric / vendors:
-  | 'replicate'
-  | 'tripo'
-  | 'fal'
-  | 'cerebras'
-  | 'fireworks'
-  | 'deepinfra'
-  | 'openrouter'
-  | 'prism' // Prism's own future fine-tuned models (self-learning flywheel).
+  | "replicate"
+  | "tripo"
+  | "fal"
+  | "cerebras"
+  | "fireworks"
+  | "deepinfra"
+  | "openrouter"
+  | "prism" // Prism's own future fine-tuned models (self-learning flywheel).
   | (string & {});
 
 /** OTel `gen_ai.operation.name` enum (v1.43.0). */
 export type GenAiOperationName =
-  | 'chat'
-  | 'create_agent'
-  | 'embeddings'
-  | 'execute_tool'
-  | 'generate_content'
-  | 'invoke_agent'
-  | 'invoke_workflow'
-  | 'retrieval'
-  | 'text_completion'
+  | "chat"
+  | "create_agent"
+  | "embeddings"
+  | "execute_tool"
+  | "generate_content"
+  | "invoke_agent"
+  | "invoke_workflow"
+  | "retrieval"
+  | "text_completion"
   | (string & {});
 
 /** A GenAI message (OTel `gen_ai.input.messages` / `gen_ai.output.messages`
  *  element): role + typed parts. Content capture is OPT-IN and PII-scrubbed at
  *  write; see recorder scrub.ts. */
 export interface GenAiMessage {
-  role: 'system' | 'user' | 'assistant' | 'tool' | (string & {});
+  role: "system" | "user" | "assistant" | "tool" | (string & {});
   parts: Array<{
-    type: 'text' | 'reasoning' | 'tool_call' | 'tool_call_response' | 'blob' | 'uri' | (string & {});
+    type:
+      | "text"
+      | "reasoning"
+      | "tool_call"
+      | "tool_call_response"
+      | "blob"
+      | "uri"
+      | (string & {});
     /** Free-text content — scrubbed at write. Present only when content capture is on. */
     content?: string;
     [k: string]: unknown;
@@ -106,43 +114,43 @@ export interface GenAiMessage {
  *  — a record carries only what its upstream reported. */
 export interface GenAiAttributes {
   // Provenance
-  'gen_ai.provider.name'?: GenAiProviderName;
-  'gen_ai.operation.name'?: GenAiOperationName;
-  'gen_ai.request.model'?: string;
-  'gen_ai.response.model'?: string;
-  'gen_ai.response.id'?: string;
-  'gen_ai.conversation.id'?: string;
+  "gen_ai.provider.name"?: GenAiProviderName;
+  "gen_ai.operation.name"?: GenAiOperationName;
+  "gen_ai.request.model"?: string;
+  "gen_ai.response.model"?: string;
+  "gen_ai.response.id"?: string;
+  "gen_ai.conversation.id"?: string;
 
   // Request params (nullable — recorded where the caller sets them)
-  'gen_ai.request.temperature'?: number;
-  'gen_ai.request.max_tokens'?: number;
-  'gen_ai.request.top_p'?: number;
-  'gen_ai.request.top_k'?: number;
-  'gen_ai.request.seed'?: number;
-  'gen_ai.request.stop_sequences'?: string[];
-  'gen_ai.request.choice.count'?: number;
+  "gen_ai.request.temperature"?: number;
+  "gen_ai.request.max_tokens"?: number;
+  "gen_ai.request.top_p"?: number;
+  "gen_ai.request.top_k"?: number;
+  "gen_ai.request.seed"?: number;
+  "gen_ai.request.stop_sequences"?: string[];
+  "gen_ai.request.choice.count"?: number;
 
   // Response
-  'gen_ai.response.finish_reasons'?: string[];
-  'gen_ai.output.type'?: 'text' | 'json' | 'image' | 'speech' | (string & {});
+  "gen_ai.response.finish_reasons"?: string[];
+  "gen_ai.output.type"?: "text" | "json" | "image" | "speech" | (string & {});
 
   // Token usage — v1.37.0+ names (input/output; prompt/completion are deprecated)
-  'gen_ai.usage.input_tokens'?: number;
-  'gen_ai.usage.output_tokens'?: number;
-  'gen_ai.usage.cache_creation.input_tokens'?: number;
-  'gen_ai.usage.cache_read.input_tokens'?: number;
-  'gen_ai.usage.reasoning.output_tokens'?: number;
+  "gen_ai.usage.input_tokens"?: number;
+  "gen_ai.usage.output_tokens"?: number;
+  "gen_ai.usage.cache_creation.input_tokens"?: number;
+  "gen_ai.usage.cache_read.input_tokens"?: number;
+  "gen_ai.usage.reasoning.output_tokens"?: number;
 
   // Content capture (opt-in, scrubbed). v1.37.0 shape.
-  'gen_ai.system_instructions'?: string;
-  'gen_ai.input.messages'?: GenAiMessage[];
-  'gen_ai.output.messages'?: GenAiMessage[];
+  "gen_ai.system_instructions"?: string;
+  "gen_ai.input.messages"?: GenAiMessage[];
+  "gen_ai.output.messages"?: GenAiMessage[];
 
   // Agent / multi-agent (DEVELOPMENT — highest-churn subset, recorded when known)
-  'gen_ai.agent.id'?: string;
-  'gen_ai.agent.name'?: string;
-  'gen_ai.tool.name'?: string;
-  'gen_ai.tool.call.id'?: string;
+  "gen_ai.agent.id"?: string;
+  "gen_ai.agent.name"?: string;
+  "gen_ai.tool.name"?: string;
+  "gen_ai.tool.call.id"?: string;
 }
 
 // ─── prism.* extension namespace (top-level root, per OTel naming rule) ───────
@@ -154,39 +162,41 @@ export interface GenAiAttributes {
 
 /** Repair attempt classification (contamination-aware repair, engine INV-3). */
 export type PrismRepairClass =
-  | 'none' // first attempt, no repair
-  | 'schema-gate' // failed the completeness gate → regenerated from spec
-  | 'render-defensive' // renderMode/asset backstop repair
-  | 'frontier-escalation' // attempt ≥3 escalated to a frontier model
+  | "none" // first attempt, no repair
+  | "schema-gate" // failed the completeness gate → regenerated from spec
+  | "render-defensive" // renderMode/asset backstop repair
+  | "frontier-escalation" // attempt ≥3 escalated to a frontier model
   | (string & {});
 
 /** The downstream human decision on a generated/edited node — the Cursor-style
  *  accept/reject goldmine. */
-export type PrismUserDecision = 'keep' | 'edit' | 'regen' | 'undo' | 'accept' | 'pending' | (string & {});
+export type PrismUserDecision =
+  "keep" | "edit" | "regen" | "undo" | "accept" | "pending" | (string & {});
 
 /** Which product touchpoint emitted the record (partition key alongside day). */
 export type PrismTouchpoint =
-  | 'guided-build' // W2 intake
-  | 'conductor' // W5 build pipeline
-  | 'node-edit' // editor prompt-edit / regen
-  | 'self-heal' // autonomous repair (E20)
-  | 'material-gen' // prompt-to-texture route
-  | 'generative-3d' // W10 generative capability family
-  | 'import' // W-IMPORT — PRISM INGEST (GitHub repo → plan source → regen)
-  | 'verify' // judge / gate outcomes
-  | 'session' // ship / abandon / return lifecycle
+  | "guided-build" // W2 intake
+  | "conductor" // W5 build pipeline
+  | "node-edit" // editor prompt-edit / regen
+  | "self-heal" // autonomous repair (E20)
+  | "material-gen" // prompt-to-texture route
+  | "generative-3d" // W10 generative capability family
+  | "import" // W-IMPORT — PRISM INGEST (GitHub repo → plan source → regen)
+  | "verify" // judge / gate outcomes
+  | "session" // ship / abandon / return lifecycle
+  | "design-grammar" // W-DG1 — design-grammar harvest (analysis + distillation)
   | (string & {});
 
 /** The Prism extension attribute bag. All optional; a record carries the columns
  *  its touchpoint produces. Dotted `prism.*` keys, verbatim in emitted JSON. */
 export interface PrismAttributes {
   // Graph provenance (engine invariant 1: the graph is the app)
-  'prism.node.id'?: string;
-  'prism.node.subtype'?: string;
-  'prism.node.render_mode'?: string;
-  'prism.graph.ref'?: string; // project/graph identifier
-  'prism.hub.id'?: string;
-  'prism.app.archetype'?: string; // watch-atelier, dashboard, … (segment key for eval slices)
+  "prism.node.id"?: string;
+  "prism.node.subtype"?: string;
+  "prism.node.render_mode"?: string;
+  "prism.graph.ref"?: string; // project/graph identifier
+  "prism.hub.id"?: string;
+  "prism.app.archetype"?: string; // watch-atelier, dashboard, … (segment key for eval slices)
 
   // Reward + verification signals (the training labels).
   //
@@ -196,39 +206,47 @@ export interface PrismAttributes {
   // the SWE-RM model. `prism.swe_rm.*` is reserved for the canonical SWE-RM 30B
   // reward model specifically (null until that scorer is wired at W-TR) so the
   // SWE-RM lineage stays unambiguous and is never mislabeled from a proxy signal.
-  'prism.reward.score'?: number | null; // [0,1] reward from the scorer named below
-  'prism.reward.source'?: 'swe-rm' | 'schema-completeness-gate' | 'golden-eval' | 'codegen-fixture' | (string & {});
-  'prism.reward.issues'?: string[]; // issue/violation list from that scorer
-  'prism.swe_rm.score'?: number | null; // SWE-RM 30B reward model score; null until wired (W-TR)
-  'prism.swe_rm.issues'?: string[]; // issue list from the SWE-RM reward model
-  'prism.repair.attempt'?: number; // 0-based attempt index in the repair chain
-  'prism.repair.class'?: PrismRepairClass;
-  'prism.repair.outcome'?: 'repaired' | 'unrepairable' | 'not-needed' | (string & {});
-  'prism.convergence.passed'?: boolean; // convergence gate result
-  'prism.verify.gate'?: string; // which gate ('schema-completeness', 'behavioral', 'visual', 'deploy', 'advocate')
-  'prism.verify.outcome'?: 'pass' | 'fail' | 'must-fix' | 'pending' | (string & {});
-  'prism.verify.judge'?: string; // 'criteria-reviewer' | 'user-advocate' | 'automated'
+  "prism.reward.score"?: number | null; // [0,1] reward from the scorer named below
+  "prism.reward.source"?:
+    | "swe-rm"
+    | "schema-completeness-gate"
+    | "golden-eval"
+    | "codegen-fixture"
+    | (string & {});
+  "prism.reward.issues"?: string[]; // issue/violation list from that scorer
+  "prism.swe_rm.score"?: number | null; // SWE-RM 30B reward model score; null until wired (W-TR)
+  "prism.swe_rm.issues"?: string[]; // issue list from the SWE-RM reward model
+  "prism.repair.attempt"?: number; // 0-based attempt index in the repair chain
+  "prism.repair.class"?: PrismRepairClass;
+  "prism.repair.outcome"?:
+    "repaired" | "unrepairable" | "not-needed" | (string & {});
+  "prism.convergence.passed"?: boolean; // convergence gate result
+  "prism.verify.gate"?: string; // which gate ('schema-completeness', 'behavioral', 'visual', 'deploy', 'advocate')
+  "prism.verify.outcome"?:
+    "pass" | "fail" | "must-fix" | "pending" | (string & {});
+  "prism.verify.judge"?: string; // 'criteria-reviewer' | 'user-advocate' | 'automated'
 
   // Human decision signals
-  'prism.user.decision'?: PrismUserDecision;
-  'prism.edit.instruction'?: string; // the natural-language edit request (scrubbed)
-  'prism.edit.fields'?: string[]; // which spec fields changed (before/after keys)
+  "prism.user.decision"?: PrismUserDecision;
+  "prism.edit.instruction"?: string; // the natural-language edit request (scrubbed)
+  "prism.edit.fields"?: string[]; // which spec fields changed (before/after keys)
 
   // Cost basis (the W10 metering columns — cost where tokens aren't reported)
-  'prism.cost.unit'?: 'credits' | 'usd';
-  'prism.cost.amount'?: number;
-  'prism.cost.estimated'?: boolean;
-  'prism.capability.id'?: string; // W10 capability tile id ('tripo.text-to-3d')
-  'prism.capability.live'?: boolean; // ran against a live vendor vs demo-safe path
+  "prism.cost.unit"?: "credits" | "usd";
+  "prism.cost.amount"?: number;
+  "prism.cost.estimated"?: boolean;
+  "prism.capability.id"?: string; // W10 capability tile id ('tripo.text-to-3d')
+  "prism.capability.live"?: boolean; // ran against a live vendor vs demo-safe path
 
   // Timing
-  'prism.latency.ms'?: number;
+  "prism.latency.ms"?: number;
 }
 
 // ─── Record envelope + the six discriminated record types ────────────────────
 
 /** Consent basis — how the consent flag on this record was resolved (D6). */
-export type ConsentBasis = 'override' | 'tenant-flag' | 'env-default' | (string & {});
+export type ConsentBasis =
+  "override" | "tenant-flag" | "env-default" | (string & {});
 
 /** Common envelope on EVERY record. `consent` gates the training sink:
  *  consent=false records are quarantined to a separate non-training sink
@@ -257,25 +275,26 @@ export interface RecordEnvelope {
 }
 
 export type FlightRecordType =
-  | 'build_session'
-  | 'node_attempt'
-  | 'edit_event'
-  | 'capability_usage'
-  | 'verify_signal'
-  | 'user_signal'
-  | 'import_event';
+  | "build_session"
+  | "node_attempt"
+  | "edit_event"
+  | "capability_usage"
+  | "verify_signal"
+  | "user_signal"
+  | "import_event"
+  | "design_analysis_event";
 
 /** A whole build (plan → graph shape → SLA tier → cost → outcome). */
 export interface BuildSessionRecord extends RecordEnvelope {
-  record_type: 'build_session';
+  record_type: "build_session";
   app_name?: string;
   direction_id?: string;
-  plan_origin?: 'stub' | 'live' | null;
+  plan_origin?: "stub" | "live" | null;
   hub_count?: number;
   node_count?: number;
   repaired_count?: number;
   sla_tier?: string;
-  outcome?: 'built' | 'error' | 'aborted' | (string & {});
+  outcome?: "built" | "error" | "aborted" | (string & {});
   verified_shippable?: boolean;
 }
 
@@ -283,9 +302,14 @@ export interface BuildSessionRecord extends RecordEnvelope {
  *  The volume-king record (thousands per build). `prism.swe_rm.*` +
  *  `prism.repair.*` carry the reward + failure labels. */
 export interface NodeAttemptRecord extends RecordEnvelope {
-  record_type: 'node_attempt';
+  record_type: "node_attempt";
   /** The node spec that drove generation (caption/visual/behavior). Scrubbed. */
-  spec?: { caption?: string; subtype?: string; render_mode?: string; [k: string]: unknown };
+  spec?: {
+    caption?: string;
+    subtype?: string;
+    render_mode?: string;
+    [k: string]: unknown;
+  };
   /** Whether the attempt yielded a renderable node. */
   succeeded?: boolean;
 }
@@ -293,7 +317,7 @@ export interface NodeAttemptRecord extends RecordEnvelope {
 /** A node edit: before/after spec diff → regen → keep/undo. The accept/reject
  *  goldmine (Cursor's entire signal). `prism.user.decision` is the label. */
 export interface EditEventRecord extends RecordEnvelope {
-  record_type: 'edit_event';
+  record_type: "edit_event";
   /** Snapshot of the touched spec fields before + after (scrubbed). */
   before?: Record<string, unknown>;
   after?: Record<string, unknown>;
@@ -305,7 +329,7 @@ export interface EditEventRecord extends RecordEnvelope {
 /** Wraps a W10 CapabilityUsage metering event (generative-3D / material-gen).
  *  Recorded now, charged later (E20). Cost where tokens aren't reported (D7). */
 export interface CapabilityUsageRecord extends RecordEnvelope {
-  record_type: 'capability_usage';
+  record_type: "capability_usage";
   capability_id?: string;
   job_id?: string;
   result_asset_ref?: string;
@@ -314,27 +338,27 @@ export interface CapabilityUsageRecord extends RecordEnvelope {
 
 /** A verification signal: a judge or gate outcome (`prism.verify.*`). */
 export interface VerifySignalRecord extends RecordEnvelope {
-  record_type: 'verify_signal';
+  record_type: "verify_signal";
   gate?: string;
-  outcome?: 'pass' | 'fail' | 'must-fix' | 'pending' | (string & {});
+  outcome?: "pass" | "fail" | "must-fix" | "pending" | (string & {});
   evidence?: string[]; // short evidence lines (scrubbed)
 }
 
 /** A session-lifecycle signal: ship / abandon / return (proposal §3). */
 export interface UserSignalRecord extends RecordEnvelope {
-  record_type: 'user_signal';
-  signal?: 'ship' | 'abandon' | 'return' | (string & {});
+  record_type: "user_signal";
+  signal?: "ship" | "abandon" | "return" | (string & {});
   detail?: string; // e.g. deploy url host (scrubbed), resume reason
 }
 
 /** Import lifecycle stage (W-IMPORT — PRISM INGEST). The set is fixed but the
  *  union stays open so a future stage is additive. */
 export type PrismImportStage =
-  | 'analyze' // repo read + framework detect + structural extraction
-  | 'synthesize' // analysis → BuildBrief (the plan)
-  | 'approve' // user approved the imported plan at the existing gate
-  | 'regen' // Conductor regenerated the app as Prism nodes from the plan
-  | 'fidelity' // per-feature carried/adapted/needs-you ledger produced
+  | "analyze" // repo read + framework detect + structural extraction
+  | "synthesize" // analysis → BuildBrief (the plan)
+  | "approve" // user approved the imported plan at the existing gate
+  | "regen" // Conductor regenerated the app as Prism nodes from the plan
+  | "fidelity" // per-feature carried/adapted/needs-you ledger produced
   | (string & {});
 
 /** One import lifecycle event (W-IMPORT). Import traces are premium training
@@ -343,7 +367,7 @@ export type PrismImportStage =
  *  owner/repo identifier (not PII); repo-derived free text is scrubbed at write
  *  like every other string. */
 export interface ImportEventRecord extends RecordEnvelope {
-  record_type: 'import_event';
+  record_type: "import_event";
   stage: PrismImportStage;
   /** owner/repo or host/owner/repo — a public identifier, not personal data. */
   repo_ref?: string;
@@ -365,6 +389,47 @@ export interface ImportEventRecord extends RecordEnvelope {
   detail?: string;
 }
 
+/** Design-grammar harvest lifecycle stage (W-DG1). The set is fixed but the
+ *  union stays open so a future stage is additive. Exemplar *generation* spend
+ *  is metered through the existing `capability_usage` record (DEV-1); this
+ *  record type captures the analysis/distillation/gap lifecycle. */
+export type PrismDesignAnalysisStage =
+  | "enumerate" // gallery/source enumeration (title + url + category)
+  | "analyze" // live motion-protocol analysis of one source
+  | "distill" // one technique FAMILY distilled from ≥1 deep source
+  | "exemplar" // an original exemplar registered against a family
+  | "gap" // a capability gap recorded for the gap report
+  | (string & {});
+
+/** One design-grammar harvest event (W-DG1). These are analysis telemetry, not
+ *  user data: `source_url` is a public template/site URL (not PII) and any
+ *  free text is scrubbed at write like every other string. The distilled
+ *  families are OUR own vocabulary — no source assets or copy are ever carried
+ *  (legal doctrine, PLAN §2). */
+export interface DesignAnalysisEventRecord extends RecordEnvelope {
+  record_type: "design_analysis_event";
+  stage: PrismDesignAnalysisStage;
+  /** Kebab-case family id this event concerns (distill/exemplar/gap stages). */
+  family_id?: string;
+  /** Public source URL analyzed (analyze/enumerate stages) — not PII. */
+  source_url?: string;
+  /** Source kind (mirrors the design-grammar corpus vocabulary; kept inline so
+   *  telemetry never imports the corpus types). Open union. */
+  source_type?: "sr-template" | "awwwards" | "other" | (string & {});
+  /** How deeply the source was analyzed. Open union. */
+  analysis_depth?: "deep" | "listing" | (string & {});
+  /** Honesty gate value for the family (distill/gap stages). Open union. */
+  readiness?: "ready" | "partial" | "gap" | (string & {});
+  /** Element types the family produces (distill stage). */
+  element_types?: string[];
+  /** Exemplars registered against the family (distill/exemplar stages). */
+  exemplar_count?: number;
+  /** Stage outcome (false = failed/degraded, still recorded — data honesty). */
+  ok?: boolean;
+  /** Short human note (scrubbed at write). */
+  detail?: string;
+}
+
 /** The tagged union the writer accepts. */
 export type FlightRecord =
   | BuildSessionRecord
@@ -373,15 +438,17 @@ export type FlightRecord =
   | CapabilityUsageRecord
   | VerifySignalRecord
   | UserSignalRecord
-  | ImportEventRecord;
+  | ImportEventRecord
+  | DesignAnalysisEventRecord;
 
 /** All record type names (drives the schema doc + dev ledger grouping). */
 export const FLIGHT_RECORD_TYPES: FlightRecordType[] = [
-  'build_session',
-  'node_attempt',
-  'edit_event',
-  'capability_usage',
-  'verify_signal',
-  'user_signal',
-  'import_event',
+  "build_session",
+  "node_attempt",
+  "edit_event",
+  "capability_usage",
+  "verify_signal",
+  "user_signal",
+  "import_event",
+  "design_analysis_event",
 ];

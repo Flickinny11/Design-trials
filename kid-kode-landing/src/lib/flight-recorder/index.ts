@@ -17,6 +17,7 @@ import {
   FLIGHT_RECORDER_SCHEMA_VERSION,
   type BuildSessionRecord,
   type CapabilityUsageRecord,
+  type DesignAnalysisEventRecord,
   type EditEventRecord,
   type FlightRecord,
   type GenAiAttributes,
@@ -27,11 +28,11 @@ import {
   type RecordEnvelope,
   type UserSignalRecord,
   type VerifySignalRecord,
-} from './schema';
-import { resolveConsent } from './consent';
-import { makeRecordId } from './ids';
-import { scrubValue } from './scrub';
-import { FlightRecorderWriter, type WriterStats } from './writer';
+} from "./schema";
+import { resolveConsent } from "./consent";
+import { makeRecordId } from "./ids";
+import { scrubValue } from "./scrub";
+import { FlightRecorderWriter, type WriterStats } from "./writer";
 
 // ─── Singleton writer (one per server process) ────────────────────────────────
 let writer: FlightRecorderWriter | null = null;
@@ -69,9 +70,15 @@ export interface EmitCommon {
 }
 
 /** Build the shared envelope from an emit input. */
-function buildEnvelope(common: EmitCommon, recordType: FlightRecord['record_type']): RecordEnvelope {
+function buildEnvelope(
+  common: EmitCommon,
+  recordType: FlightRecord["record_type"],
+): RecordEnvelope {
   const actor = common.actor ?? {};
-  const consent = resolveConsent({ tenantId: actor.tenantId, override: actor.consentOverride });
+  const consent = resolveConsent({
+    tenantId: actor.tenantId,
+    override: actor.consentOverride,
+  });
   return {
     schema_version: FLIGHT_RECORDER_SCHEMA_VERSION,
     record_id: makeRecordId(),
@@ -91,7 +98,11 @@ function buildEnvelope(common: EmitCommon, recordType: FlightRecord['record_type
 }
 
 /** Scrub → re-stamp structural invariants → enqueue. The single write path. */
-function finalize(record: FlightRecord, env: RecordEnvelope, knownIds: string[]): void {
+function finalize(
+  record: FlightRecord,
+  env: RecordEnvelope,
+  knownIds: string[],
+): void {
   try {
     const scrubbed = scrubValue(record, knownIds) as FlightRecord;
     const safe: FlightRecord = {
@@ -120,13 +131,27 @@ function finalize(record: FlightRecord, env: RecordEnvelope, knownIds: string[])
 // ─── Typed emit helpers (one per record type) ─────────────────────────────────
 
 export function recordBuildSession(
-  input: EmitCommon & Partial<Pick<BuildSessionRecord, 'app_name' | 'direction_id' | 'plan_origin' | 'hub_count' | 'node_count' | 'repaired_count' | 'sla_tier' | 'outcome' | 'verified_shippable'>>,
+  input: EmitCommon &
+    Partial<
+      Pick<
+        BuildSessionRecord,
+        | "app_name"
+        | "direction_id"
+        | "plan_origin"
+        | "hub_count"
+        | "node_count"
+        | "repaired_count"
+        | "sla_tier"
+        | "outcome"
+        | "verified_shippable"
+      >
+    >,
 ): void {
   try {
-    const env = buildEnvelope(input, 'build_session');
+    const env = buildEnvelope(input, "build_session");
     const record: BuildSessionRecord = {
       ...env,
-      record_type: 'build_session',
+      record_type: "build_session",
       app_name: input.app_name,
       direction_id: input.direction_id,
       plan_origin: input.plan_origin,
@@ -138,57 +163,109 @@ export function recordBuildSession(
       verified_shippable: input.verified_shippable,
     };
     finalize(record, env, input.actor?.actorIdentifiers ?? []);
-  } catch { /* fail-open */ }
+  } catch {
+    /* fail-open */
+  }
 }
 
 export function recordNodeAttempt(
-  input: EmitCommon & Partial<Pick<NodeAttemptRecord, 'spec' | 'succeeded'>>,
+  input: EmitCommon & Partial<Pick<NodeAttemptRecord, "spec" | "succeeded">>,
 ): void {
   try {
-    const env = buildEnvelope(input, 'node_attempt');
-    const record: NodeAttemptRecord = { ...env, record_type: 'node_attempt', spec: input.spec, succeeded: input.succeeded };
+    const env = buildEnvelope(input, "node_attempt");
+    const record: NodeAttemptRecord = {
+      ...env,
+      record_type: "node_attempt",
+      spec: input.spec,
+      succeeded: input.succeeded,
+    };
     finalize(record, env, input.actor?.actorIdentifiers ?? []);
-  } catch { /* fail-open */ }
+  } catch {
+    /* fail-open */
+  }
 }
 
 export function recordEditEvent(
-  input: EmitCommon & Partial<Pick<EditEventRecord, 'before' | 'after' | 'plan_ref' | 'applied_count'>>,
+  input: EmitCommon &
+    Partial<
+      Pick<EditEventRecord, "before" | "after" | "plan_ref" | "applied_count">
+    >,
 ): void {
   try {
-    const env = buildEnvelope(input, 'edit_event');
-    const record: EditEventRecord = { ...env, record_type: 'edit_event', before: input.before, after: input.after, plan_ref: input.plan_ref, applied_count: input.applied_count };
+    const env = buildEnvelope(input, "edit_event");
+    const record: EditEventRecord = {
+      ...env,
+      record_type: "edit_event",
+      before: input.before,
+      after: input.after,
+      plan_ref: input.plan_ref,
+      applied_count: input.applied_count,
+    };
     finalize(record, env, input.actor?.actorIdentifiers ?? []);
-  } catch { /* fail-open */ }
+  } catch {
+    /* fail-open */
+  }
 }
 
 export function recordCapabilityUsage(
-  input: EmitCommon & Partial<Pick<CapabilityUsageRecord, 'capability_id' | 'job_id' | 'result_asset_ref' | 'ok'>>,
+  input: EmitCommon &
+    Partial<
+      Pick<
+        CapabilityUsageRecord,
+        "capability_id" | "job_id" | "result_asset_ref" | "ok"
+      >
+    >,
 ): void {
   try {
-    const env = buildEnvelope(input, 'capability_usage');
-    const record: CapabilityUsageRecord = { ...env, record_type: 'capability_usage', capability_id: input.capability_id, job_id: input.job_id, result_asset_ref: input.result_asset_ref, ok: input.ok };
+    const env = buildEnvelope(input, "capability_usage");
+    const record: CapabilityUsageRecord = {
+      ...env,
+      record_type: "capability_usage",
+      capability_id: input.capability_id,
+      job_id: input.job_id,
+      result_asset_ref: input.result_asset_ref,
+      ok: input.ok,
+    };
     finalize(record, env, input.actor?.actorIdentifiers ?? []);
-  } catch { /* fail-open */ }
+  } catch {
+    /* fail-open */
+  }
 }
 
 export function recordVerifySignal(
-  input: EmitCommon & Partial<Pick<VerifySignalRecord, 'gate' | 'outcome' | 'evidence'>>,
+  input: EmitCommon &
+    Partial<Pick<VerifySignalRecord, "gate" | "outcome" | "evidence">>,
 ): void {
   try {
-    const env = buildEnvelope(input, 'verify_signal');
-    const record: VerifySignalRecord = { ...env, record_type: 'verify_signal', gate: input.gate, outcome: input.outcome, evidence: input.evidence };
+    const env = buildEnvelope(input, "verify_signal");
+    const record: VerifySignalRecord = {
+      ...env,
+      record_type: "verify_signal",
+      gate: input.gate,
+      outcome: input.outcome,
+      evidence: input.evidence,
+    };
     finalize(record, env, input.actor?.actorIdentifiers ?? []);
-  } catch { /* fail-open */ }
+  } catch {
+    /* fail-open */
+  }
 }
 
 export function recordUserSignal(
-  input: EmitCommon & Partial<Pick<UserSignalRecord, 'signal' | 'detail'>>,
+  input: EmitCommon & Partial<Pick<UserSignalRecord, "signal" | "detail">>,
 ): void {
   try {
-    const env = buildEnvelope(input, 'user_signal');
-    const record: UserSignalRecord = { ...env, record_type: 'user_signal', signal: input.signal, detail: input.detail };
+    const env = buildEnvelope(input, "user_signal");
+    const record: UserSignalRecord = {
+      ...env,
+      record_type: "user_signal",
+      signal: input.signal,
+      detail: input.detail,
+    };
     finalize(record, env, input.actor?.actorIdentifiers ?? []);
-  } catch { /* fail-open */ }
+  } catch {
+    /* fail-open */
+  }
 }
 
 export function recordImportEvent(
@@ -196,27 +273,27 @@ export function recordImportEvent(
     Partial<
       Pick<
         ImportEventRecord,
-        | 'stage'
-        | 'repo_ref'
-        | 'framework'
-        | 'supported'
-        | 'route_count'
-        | 'component_count'
-        | 'api_count'
-        | 'carried_count'
-        | 'adapted_count'
-        | 'needs_you_count'
-        | 'ok'
-        | 'detail'
+        | "stage"
+        | "repo_ref"
+        | "framework"
+        | "supported"
+        | "route_count"
+        | "component_count"
+        | "api_count"
+        | "carried_count"
+        | "adapted_count"
+        | "needs_you_count"
+        | "ok"
+        | "detail"
       >
     >,
 ): void {
   try {
-    const env = buildEnvelope(input, 'import_event');
+    const env = buildEnvelope(input, "import_event");
     const record: ImportEventRecord = {
       ...env,
-      record_type: 'import_event',
-      stage: input.stage ?? 'analyze',
+      record_type: "import_event",
+      stage: input.stage ?? "analyze",
       repo_ref: input.repo_ref,
       framework: input.framework,
       supported: input.supported,
@@ -230,7 +307,49 @@ export function recordImportEvent(
       detail: input.detail,
     };
     finalize(record, env, input.actor?.actorIdentifiers ?? []);
-  } catch { /* fail-open */ }
+  } catch {
+    /* fail-open */
+  }
+}
+
+export function recordDesignAnalysis(
+  input: EmitCommon &
+    Partial<
+      Pick<
+        DesignAnalysisEventRecord,
+        | "stage"
+        | "family_id"
+        | "source_url"
+        | "source_type"
+        | "analysis_depth"
+        | "readiness"
+        | "element_types"
+        | "exemplar_count"
+        | "ok"
+        | "detail"
+      >
+    >,
+): void {
+  try {
+    const env = buildEnvelope(input, "design_analysis_event");
+    const record: DesignAnalysisEventRecord = {
+      ...env,
+      record_type: "design_analysis_event",
+      stage: input.stage ?? "analyze",
+      family_id: input.family_id,
+      source_url: input.source_url,
+      source_type: input.source_type,
+      analysis_depth: input.analysis_depth,
+      readiness: input.readiness,
+      element_types: input.element_types,
+      exemplar_count: input.exemplar_count,
+      ok: input.ok,
+      detail: input.detail,
+    };
+    finalize(record, env, input.actor?.actorIdentifiers ?? []);
+  } catch {
+    /* fail-open */
+  }
 }
 
 /** Flush + stats passthrough for the dev ledger + demo. */
@@ -241,5 +360,5 @@ export function recorderStats(): WriterStats {
   return getWriter().getStats();
 }
 
-export type { WriterStats } from './writer';
-export * from './schema';
+export type { WriterStats } from "./writer";
+export * from "./schema";
