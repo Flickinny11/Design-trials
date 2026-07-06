@@ -4,7 +4,10 @@
   "name": "Cinematic Video Hero",
   "status": "grounded",
   "summary": "A full-viewport muted video loop is treated as an opening film shot — real-time footage as the base plane with staged type assembling over it. The premium tell is restraint: film-grade footage, a legibility scrim, and one disciplined accent instead of effects.",
-  "elementTypes": ["video-hero", "hero"],
+  "elementTypes": [
+    "video-hero",
+    "hero"
+  ],
   "whatMakesItWork": {
     "composition": [
       "Asymmetric split: subject anchored to one side, headline stack over confident negative space on the other — magazine-cover balance, never centered-on-face.",
@@ -26,14 +29,20 @@
     ]
   },
   "palette": {
-    "logic": ["photographic-derived", "monochrome-plus-accent"],
+    "logic": [
+      "photographic-derived",
+      "monochrome-plus-accent"
+    ],
     "rules": [
       "Let the footage own the color; interface chrome stays neutral/dark so any clip drops in without clashing.",
       "One restrained accent (a gold outline, a single violet) owns 100% of the non-photographic saturation and points at the primary action."
     ]
   },
   "motion": {
-    "character": ["cinematic-slow", "smooth-luxurious"],
+    "character": [
+      "cinematic-slow",
+      "smooth-luxurious"
+    ],
     "easing": [
       "The motion is the footage itself, playing at real-world pace; overlay text uses long gentle fades/rises with expo-out settles.",
       "No bounce, no spring — anything springy breaks the film register."
@@ -48,10 +57,22 @@
     ]
   },
   "capabilities": {
-    "renderingRoutes": ["R2"],
+    "renderingRoutes": [
+      "R2"
+    ],
     "genModels": [],
-    "primitives": ["hub-background", "keyframes", "inview-driver", "msdf-text", "extruded-text"],
-    "postFx": ["vignette", "color-grade", "grain"],
+    "primitives": [
+      "hub-background",
+      "keyframes",
+      "inview-driver",
+      "msdf-text",
+      "extruded-text"
+    ],
+    "postFx": [
+      "vignette",
+      "color-grade",
+      "grain"
+    ],
     "readiness": "gap",
     "gapNotes": [
       "No video-texture plane primitive in the prism runtime — hub backgrounds are procedural/3D presets; a video-loop background layer (muted, autoplaying, seamless-loop, reduced-motion-aware) does not exist yet.",
@@ -69,12 +90,30 @@
       "Content-dense pages needing fast scanning; the film pace delays information.",
       "When only stock-feeling footage is available — weak film reads worse than a strong still."
     ],
-    "archetypeFit": ["content", "commerce", "marketing"],
-    "moods": ["cinematic", "luxury", "refined", "timeless", "dark"]
+    "archetypeFit": [
+      "content",
+      "commerce",
+      "marketing"
+    ],
+    "moods": [
+      "cinematic",
+      "luxury",
+      "refined",
+      "timeless",
+      "dark"
+    ]
   },
   "pairing": {
-    "pairsWith": ["quiet-luxury-monochrome", "oversized-type-editorial", "media-showreel-gallery", "glitch-cyber-fx"],
-    "avoidWith": ["gpu-fluid-overlay", "particle-field-hero"],
+    "pairsWith": [
+      "quiet-luxury-monochrome",
+      "oversized-type-editorial",
+      "media-showreel-gallery",
+      "glitch-cyber-fx"
+    ],
+    "avoidWith": [
+      "gpu-fluid-overlay",
+      "particle-field-hero"
+    ],
     "notes": [
       "Pairs with glitch-cyber-fx only as its transition language (footage between glitch bursts); never run a GPU field over playing footage.",
       "The monochrome + single-metallic-accent pairing (see quiet-luxury-monochrome) is the strongest observed premium register for this family."
@@ -110,9 +149,21 @@
       "observationRef": "analysis/cyber-glitch-effect-slider.json"
     }
   ],
-  "exemplars": [],
+  "exemplars": [
+    {
+      "path": "design-grammar/exemplars/cinematic-video-hero-01.webp",
+      "generator": "replicate",
+      "model": "flux-2-pro",
+      "mode": "live",
+      "promptSummary": "Lone hooded silhouette on a rain-slick night street, anamorphic neon bokeh, teal-orange cinematic grade, volumetric haze — original film-still composition of the family dark cinematic register.",
+      "generatedAt": "2026-07-06",
+      "notes": "ORIGINAL render (Replicate black-forest-labs/flux-2-pro, ~$0.06). Subject deliberately distinct from any analyzed source template. Illustrates the family aesthetic target (palette/composition/lighting); does NOT demonstrate runtime motion or in-engine execution."
+    }
+  ],
   "provenance": {
-    "groundTruth": ["monitor-observation"],
+    "groundTruth": [
+      "monitor-observation"
+    ],
     "distilledAt": "2026-07-06",
     "distilledBy": "wdg1-orchestrator"
   }

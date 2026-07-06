@@ -9,9 +9,9 @@
 // mock-app-source). `loadGrammarFromDocs` exists for tests and for callers
 // that bundle the JSON themselves.
 
-import fs from 'node:fs';
-import path from 'node:path';
-import { validateFamilyDoc, validateCorpus } from './validate.mjs';
+import fs from "node:fs";
+import path from "node:path";
+import { validateFamilyDoc, validateCorpus } from "./validate.mjs";
 import type {
   DesignGrammar,
   FamilyDoc,
@@ -20,13 +20,13 @@ import type {
   HubArchetype,
   Readiness,
   SelectOptions,
-} from './types';
+} from "./types";
 
-export * from './types';
+export * from "./types";
 export { validateFamilyDoc, validateCorpus };
 
 /** Default corpus root: the directory this module lives in. */
-const GRAMMAR_ROOT = path.join(process.cwd(), 'design-grammar');
+const GRAMMAR_ROOT = path.join(process.cwd(), "design-grammar");
 
 // ── Loading ──────────────────────────────────────────────────────────────────
 
@@ -42,7 +42,8 @@ export function loadGrammarFromDocs(docs: unknown[]): DesignGrammar {
     else families.push(doc as FamilyDoc);
   });
   const corpus = validateCorpus(families);
-  if (corpus.errors.length > 0) errors.push({ file: '(corpus)', errors: corpus.errors });
+  if (corpus.errors.length > 0)
+    errors.push({ file: "(corpus)", errors: corpus.errors });
   families.sort((a, b) => a.id.localeCompare(b.id));
   return { families, byId: new Map(families.map((f) => [f.id, f])), errors };
 }
@@ -50,19 +51,23 @@ export function loadGrammarFromDocs(docs: unknown[]): DesignGrammar {
 /** Load every families/*.json under rootDir (default: ./design-grammar
  *  relative to process.cwd()). Server-side only. */
 export function loadGrammar(rootDir: string = GRAMMAR_ROOT): DesignGrammar {
-  const famDir = path.join(rootDir, 'families');
-  if (!fs.existsSync(famDir)) return { families: [], byId: new Map(), errors: [] };
+  const famDir = path.join(rootDir, "families");
+  if (!fs.existsSync(famDir))
+    return { families: [], byId: new Map(), errors: [] };
   const files = fs
     .readdirSync(famDir)
-    .filter((f) => f.endsWith('.json'))
+    .filter((f) => f.endsWith(".json"))
     .sort();
   const docs: unknown[] = [];
   const errors: GrammarLoadError[] = [];
   for (const f of files) {
     try {
-      docs.push(JSON.parse(fs.readFileSync(path.join(famDir, f), 'utf8')));
+      docs.push(JSON.parse(fs.readFileSync(path.join(famDir, f), "utf8")));
     } catch (e) {
-      errors.push({ file: f, errors: [`invalid JSON: ${(e as Error).message}`] });
+      errors.push({
+        file: f,
+        errors: [`invalid JSON: ${(e as Error).message}`],
+      });
     }
   }
   const grammar = loadGrammarFromDocs(docs);
@@ -84,17 +89,26 @@ function matchesAny(have: readonly string[], want: string[]): boolean {
 }
 
 /** Archetype match honours the 'any' wildcard on the family side. */
-function matchesArchetype(fit: readonly HubArchetype[], want: HubArchetype | undefined): boolean {
+function matchesArchetype(
+  fit: readonly HubArchetype[],
+  want: HubArchetype | undefined,
+): boolean {
   if (!want) return true;
-  return fit.includes('any') || fit.includes(want);
+  return fit.includes("any") || fit.includes(want);
 }
 
-export function getFamily(grammar: DesignGrammar, id: string): FamilyDoc | undefined {
+export function getFamily(
+  grammar: DesignGrammar,
+  id: string,
+): FamilyDoc | undefined {
   return grammar.byId.get(id);
 }
 
 /** Filter families on the query axes (AND across axes; ANY within an axis). */
-export function queryFamilies(grammar: DesignGrammar, q: GrammarQuery = {}): FamilyDoc[] {
+export function queryFamilies(
+  grammar: DesignGrammar,
+  q: GrammarQuery = {},
+): FamilyDoc[] {
   const readiness = asArray<Readiness>(q.readiness);
   return grammar.families.filter(
     (f) =>
@@ -104,7 +118,7 @@ export function queryFamilies(grammar: DesignGrammar, q: GrammarQuery = {}): Fam
       matchesAny(f.palette.logic, asArray(q.paletteLogic)) &&
       matchesAny(f.motion.character, asArray(q.motionCharacter)) &&
       matchesArchetype(f.usage.archetypeFit, q.archetype) &&
-      (readiness.length === 0 || readiness.includes(f.capabilities.readiness))
+      (readiness.length === 0 || readiness.includes(f.capabilities.readiness)),
   );
 }
 
@@ -122,13 +136,16 @@ export function selectDistinctOptions(
   grammar: DesignGrammar,
   q: GrammarQuery,
   count: number,
-  opts: SelectOptions = {}
+  opts: SelectOptions = {},
 ): FamilyDoc[] {
   const exclude = new Set(opts.exclude ?? []);
   const usage = opts.usageCounts ?? {};
-  const candidates = queryFamilies(grammar, { ...q, status: 'grounded' })
+  const candidates = queryFamilies(grammar, { ...q, status: "grounded" })
     .filter((f) => !exclude.has(f.id))
-    .sort((a, b) => (usage[a.id] ?? 0) - (usage[b.id] ?? 0) || a.id.localeCompare(b.id));
+    .sort(
+      (a, b) =>
+        (usage[a.id] ?? 0) - (usage[b.id] ?? 0) || a.id.localeCompare(b.id),
+    );
   const picked: FamilyDoc[] = [];
   const takenClusters = new Set<string>();
   for (const f of candidates) {
@@ -156,7 +173,11 @@ export interface GrammarStats {
 }
 
 export function grammarStats(grammar: DesignGrammar): GrammarStats {
-  const byReadiness: Record<Readiness, number> = { ready: 0, partial: 0, gap: 0 };
+  const byReadiness: Record<Readiness, number> = {
+    ready: 0,
+    partial: 0,
+    gap: 0,
+  };
   const byElementType: Record<string, number> = {};
   const clusters = new Set<string>();
   let deep = 0;
@@ -164,15 +185,18 @@ export function grammarStats(grammar: DesignGrammar): GrammarStats {
   let exemplars = 0;
   for (const f of grammar.families) {
     byReadiness[f.capabilities.readiness] += 1;
-    for (const t of f.elementTypes) byElementType[t] = (byElementType[t] ?? 0) + 1;
+    for (const t of f.elementTypes)
+      byElementType[t] = (byElementType[t] ?? 0) + 1;
     clusters.add(f.antiRepetition.clusterId);
-    for (const s of f.sources) (s.analysisDepth === 'deep' ? (deep += 1) : (listing += 1));
+    for (const s of f.sources)
+      s.analysisDepth === "deep" ? (deep += 1) : (listing += 1);
     exemplars += f.exemplars.length;
   }
   return {
     total: grammar.families.length,
-    grounded: grammar.families.filter((f) => f.status === 'grounded').length,
-    provisional: grammar.families.filter((f) => f.status === 'provisional').length,
+    grounded: grammar.families.filter((f) => f.status === "grounded").length,
+    provisional: grammar.families.filter((f) => f.status === "provisional")
+      .length,
     byReadiness,
     byElementType,
     clusters: clusters.size,

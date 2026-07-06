@@ -23,7 +23,7 @@
 
 /** Corpus schema version. Bump on any breaking shape change; every family
  *  document stamps this so a reader can migrate old corpora. */
-export const DESIGN_GRAMMAR_SCHEMA_VERSION = 'prism-dg-v1' as const;
+export const DESIGN_GRAMMAR_SCHEMA_VERSION = "prism-dg-v1" as const;
 
 // ── Rendering routes (PLAN §1, the four industry routes + flat composition) ──
 
@@ -32,42 +32,42 @@ export const DESIGN_GRAMMAR_SCHEMA_VERSION = 'prism-dg-v1' as const;
  *  interaction (incl. layered photographic cutout composites) · R3 baked-
  *  lighting hybrids · R4 Gaussian splats · '2d-composition' = flat/graphic
  *  composition in the prism runtime, no photoreal route required. */
-export type RenderingRoute = 'R1' | 'R2' | 'R3' | 'R4' | '2d-composition';
+export type RenderingRoute = "R1" | "R2" | "R3" | "R4" | "2d-composition";
 
 export const RENDERING_ROUTES: readonly RenderingRoute[] = [
-  'R1',
-  'R2',
-  'R3',
-  'R4',
-  '2d-composition',
+  "R1",
+  "R2",
+  "R3",
+  "R4",
+  "2d-composition",
 ];
 
 // ── Classification axes (the query API filters on these) ────────────────────
 
 /** What kind of element/surface the family produces. Open union. */
 export type ElementType =
-  | 'hero'
-  | 'carousel'
-  | 'slider'
-  | 'gallery'
-  | 'grid'
-  | 'bento-grid'
-  | 'navigation'
-  | 'background'
-  | 'page-transition'
-  | 'section-transition'
-  | 'cursor'
-  | 'typography'
-  | 'product-showcase'
-  | 'scroll-narrative'
-  | 'video-hero'
-  | 'filmstrip'
-  | 'card-stack'
-  | 'marquee'
-  | 'loader'
-  | 'footer'
-  | 'cta'
-  | 'full-page-theme'
+  | "hero"
+  | "carousel"
+  | "slider"
+  | "gallery"
+  | "grid"
+  | "bento-grid"
+  | "navigation"
+  | "background"
+  | "page-transition"
+  | "section-transition"
+  | "cursor"
+  | "typography"
+  | "product-showcase"
+  | "scroll-narrative"
+  | "video-hero"
+  | "filmstrip"
+  | "card-stack"
+  | "marquee"
+  | "loader"
+  | "footer"
+  | "cta"
+  | "full-page-theme"
   | (string & {});
 
 /** Mood adjectives. Seeded from the intake direction-board tone vocabulary
@@ -75,74 +75,74 @@ export type ElementType =
  *  intake already collects, plus harvest-observed additions. Open union. */
 export type MoodTag =
   // intake direction-board tones:
-  | 'precise'
-  | 'luxury'
-  | 'technical'
-  | 'editorial'
-  | 'refined'
-  | 'timeless'
-  | 'bold'
-  | 'industrial'
-  | 'grounded'
-  | 'ethereal'
-  | 'calm'
-  | 'futuristic'
-  | 'warm'
-  | 'crafted'
-  | 'human'
+  | "precise"
+  | "luxury"
+  | "technical"
+  | "editorial"
+  | "refined"
+  | "timeless"
+  | "bold"
+  | "industrial"
+  | "grounded"
+  | "ethereal"
+  | "calm"
+  | "futuristic"
+  | "warm"
+  | "crafted"
+  | "human"
   // harvest additions:
-  | 'cinematic'
-  | 'playful'
-  | 'energetic'
-  | 'organic'
-  | 'minimal'
-  | 'brutalist'
-  | 'retro'
-  | 'dark'
-  | 'airy'
+  | "cinematic"
+  | "playful"
+  | "energetic"
+  | "organic"
+  | "minimal"
+  | "brutalist"
+  | "retro"
+  | "dark"
+  | "airy"
   | (string & {});
 
 /** The RULE behind a palette — never specific colors. Open union. */
 export type PaletteLogicTag =
-  | 'monochrome-plus-accent'
-  | 'duotone'
-  | 'dark-cinematic'
-  | 'high-key-airy'
-  | 'pastel-multi-accent'
-  | 'neon-on-dark'
-  | 'editorial-neutral'
-  | 'earthy-natural'
-  | 'seasonal-shift'
-  | 'photographic-derived'
-  | 'brand-locked'
-  | 'high-contrast-print'
+  | "monochrome-plus-accent"
+  | "duotone"
+  | "dark-cinematic"
+  | "high-key-airy"
+  | "pastel-multi-accent"
+  | "neon-on-dark"
+  | "editorial-neutral"
+  | "earthy-natural"
+  | "seasonal-shift"
+  | "photographic-derived"
+  | "brand-locked"
+  | "high-contrast-print"
   | (string & {});
 
 /** Easing/pacing personality of the family's motion. Open union. */
 export type MotionCharacterTag =
-  | 'smooth-luxurious'
-  | 'snappy-technical'
-  | 'elastic-playful'
-  | 'cinematic-slow'
-  | 'kinetic-energetic'
-  | 'mechanical-precise'
-  | 'organic-fluid'
-  | 'weighty-physical'
-  | 'ambient-drift'
-  | 'scroll-locked'
+  | "smooth-luxurious"
+  | "snappy-technical"
+  | "elastic-playful"
+  | "cinematic-slow"
+  | "kinetic-energetic"
+  | "mechanical-precise"
+  | "organic-fluid"
+  | "weighty-physical"
+  | "ambient-drift"
+  | "scroll-locked"
   | (string & {});
 
 /** Hub archetypes, matching the intake deck's archetype card options
  *  (saas/commerce/content/community) plus grammar-level extensions.
  *  'any' means the family is archetype-neutral. Open union. */
 export type HubArchetype =
-  | 'saas'
-  | 'commerce'
-  | 'content'
-  | 'community'
-  | 'portfolio'
-  | 'marketing'
-  | 'any'
+  | "saas"
+  | "commerce"
+  | "content"
+  | "community"
+  | "portfolio"
+  | "marketing"
+  | "any"
   | (string & {});
 
 // ── Capability mapping (our stack) ───────────────────────────────────────────
@@ -151,12 +151,12 @@ export type HubArchetype =
  *  family + FLUX pipelines). Open union; entries name the REAL adapter/model,
  *  never a vendor platform tile. */
 export type GenModel =
-  | 'flux-2-pro'
-  | 'tripo-v3.1'
-  | 'hunyuan3d-3.1'
-  | 'rodin-gen2'
-  | 'fal-image'
-  | 'derive-material-pbr'
+  | "flux-2-pro"
+  | "tripo-v3.1"
+  | "hunyuan3d-3.1"
+  | "rodin-gen2"
+  | "fal-image"
+  | "derive-material-pbr"
   | (string & {});
 
 /** Runtime primitives/systems in our stack a family maps onto: the 9 seed
@@ -164,57 +164,55 @@ export type GenModel =
  *  systems shipped in prior waves. Open union. */
 export type PrimitiveRef =
   // 9 seed cinematic primitives:
-  | 'orbit'
-  | 'depth-rotate'
-  | 'dissolve-morph'
-  | 'displacement-transition'
-  | 'parallax-scroll'
-  | 'magnetic-cursor'
-  | 'particle-emerge'
-  | 'fly-through'
-  | 'kinetic-text'
+  | "orbit"
+  | "depth-rotate"
+  | "dissolve-morph"
+  | "displacement-transition"
+  | "parallax-scroll"
+  | "magnetic-cursor"
+  | "particle-emerge"
+  | "fly-through"
+  | "kinetic-text"
   // shipped runtime systems:
-  | 'hub-background'
-  | 'hub-transition-preset'
-  | 'custom-cursor-layer'
-  | 'scroll-scrub-driver'
-  | 'inview-driver'
-  | 'msdf-text'
-  | 'extruded-text'
-  | 'physics-sim'
-  | 'fluid-sim'
-  | 'particle-system'
-  | 'keyframes'
-  | 'pbr-material'
+  | "hub-background"
+  | "hub-transition-preset"
+  | "custom-cursor-layer"
+  | "scroll-scrub-driver"
+  | "inview-driver"
+  | "msdf-text"
+  | "extruded-text"
+  | "physics-sim"
+  | "fluid-sim"
+  | "particle-system"
+  | "keyframes"
+  | "pbr-material"
   | (string & {});
 
 /** Honesty gate for capability claims: 'ready' only with a demonstrated
  *  exemplar; 'partial' = executable with visible quality gaps; 'gap' = our
  *  stack cannot execute this family at parity yet (feeds the gap report). */
-export type Readiness = 'ready' | 'partial' | 'gap';
+export type Readiness = "ready" | "partial" | "gap";
 
 // ── Provenance / evidence ────────────────────────────────────────────────────
 
 /** 'grounded' requires ≥1 deep-analyzed source with motion evidence
  *  (MOTION-EVIDENCE LAW). 'provisional' = listing-level classification only —
  *  usable for breadth stats, never for option generation. */
-export type FamilyStatus = 'grounded' | 'provisional';
+export type FamilyStatus = "grounded" | "provisional";
 
-export type SourceType = 'sr-template' | 'awwwards' | 'other';
+export type SourceType = "sr-template" | "awwwards" | "other";
 
 /** How deeply a source was analyzed. 'deep' = live browser with the motion
  *  protocol (scroll sequence, hover states, slider interaction, and/or video
  *  frames). 'listing' = classified from gallery metadata only. */
-export type AnalysisDepth = 'deep' | 'listing';
+export type AnalysisDepth = "deep" | "listing";
 
 /** Where the ground truth came from. 'monitor-observation' = the founder's
  *  interactive monitor session seeds; 'founder-plan' = live analysis recorded
  *  in PRISM-DESIGN-SUPREMACY-PLAN.md §1; 'orchestrator-protocol' = this
  *  session's own Playwright motion-protocol run. */
 export type GroundTruthKind =
-  | 'monitor-observation'
-  | 'founder-plan'
-  | 'orchestrator-protocol';
+  "monitor-observation" | "founder-plan" | "orchestrator-protocol";
 
 /** One analyzed source behind a family. Descriptive citation only — title,
  *  URL, and OUR observations. Never carries source assets. */
@@ -235,7 +233,7 @@ export interface FamilySource {
   observationRef?: string;
 }
 
-export type ExemplarMode = 'live' | 'demo-fixture';
+export type ExemplarMode = "live" | "demo-fixture";
 
 /** An ORIGINAL render we generated ourselves illustrating the family.
  *  I-PROVENANCE: `generator`/`model`/`mode` state the REAL generation source. */

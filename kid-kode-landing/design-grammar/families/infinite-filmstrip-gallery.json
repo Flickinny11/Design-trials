@@ -26,7 +26,11 @@
     ]
   },
   "palette": {
-    "logic": ["monochrome-plus-accent", "high-contrast-print", "seasonal-shift"],
+    "logic": [
+      "monochrome-plus-accent",
+      "high-contrast-print",
+      "seasonal-shift"
+    ],
     "rules": [
       "Pure black base + exactly ONE saturated hue per theme, governing both the type and the curated imagery — each mood is one color story.",
       "Theme swaps re-skin every cell at once; partial recolors read as errors."
@@ -50,7 +54,13 @@
   "capabilities": {
     "renderingRoutes": ["R1", "2d-composition"],
     "genModels": ["flux-2-pro"],
-    "primitives": ["parallax-scroll", "keyframes", "hub-background", "msdf-text", "extruded-text"],
+    "primitives": [
+      "parallax-scroll",
+      "keyframes",
+      "hub-background",
+      "msdf-text",
+      "extruded-text"
+    ],
     "postFx": ["bloom"],
     "readiness": "partial",
     "gapNotes": [

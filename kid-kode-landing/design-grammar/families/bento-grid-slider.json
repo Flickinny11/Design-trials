@@ -51,7 +51,13 @@
   "capabilities": {
     "renderingRoutes": ["2d-composition", "R1"],
     "genModels": ["flux-2-pro"],
-    "primitives": ["keyframes", "msdf-text", "hub-background", "pbr-material", "inview-driver"],
+    "primitives": [
+      "keyframes",
+      "msdf-text",
+      "hub-background",
+      "pbr-material",
+      "inview-driver"
+    ],
     "postFx": [],
     "readiness": "partial",
     "gapNotes": [
@@ -76,7 +82,11 @@
   },
   "pairing": {
     "pairsWith": ["editorial-product-gallery", "quiet-luxury-monochrome"],
-    "avoidWith": ["parallax-zoom-deep-dive", "gpu-fluid-overlay", "filmstrip-3d-carousel"],
+    "avoidWith": [
+      "parallax-zoom-deep-dive",
+      "gpu-fluid-overlay",
+      "filmstrip-3d-carousel"
+    ],
     "notes": [
       "Bento is the anti-spectacle family: it pairs with calm editorial registers and clashes with every full-frame motion family.",
       "Category tiles can deep-link into hubs rendered by other families — bento as the map, immersive families as the territory."
@@ -96,7 +106,17 @@
       "observationRef": "analysis/bento-grid-travel-slider.json"
     }
   ],
-  "exemplars": [],
+  "exemplars": [
+    {
+      "path": "design-grammar/exemplars/bento-grid-slider-01.webp",
+      "generator": "replicate",
+      "model": "flux-2-pro",
+      "mode": "live",
+      "promptSummary": "Mixed-size rounded tiles with uniform gutters on a warm off-white canvas — a large travel-photo feature tile beside a soft 3D gradient orb, a muted map, and a stat card — the bento layout language as a still.",
+      "generatedAt": "2026-07-06",
+      "notes": "ORIGINAL render (Replicate black-forest-labs/flux-2-pro, ~$0.06). Subject deliberately distinct from any analyzed source template. Illustrates the family aesthetic target (palette/composition/lighting); does NOT demonstrate runtime motion or in-engine execution."
+    }
+  ],
   "provenance": {
     "groundTruth": ["monitor-observation"],
     "distilledAt": "2026-07-06",

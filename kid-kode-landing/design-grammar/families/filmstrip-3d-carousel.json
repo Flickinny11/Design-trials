@@ -26,7 +26,11 @@
     ]
   },
   "palette": {
-    "logic": ["dark-cinematic", "monochrome-plus-accent", "photographic-derived"],
+    "logic": [
+      "dark-cinematic",
+      "monochrome-plus-accent",
+      "photographic-derived"
+    ],
     "rules": [
       "Near-black base + one hot gradient accent for the wash and CTA; ALL other vibrancy is delegated to the photography inside the frames.",
       "The chrome stays quiet so any image set drops in without re-theming."
@@ -50,7 +54,13 @@
   "capabilities": {
     "renderingRoutes": ["R1"],
     "genModels": ["flux-2-pro"],
-    "primitives": ["orbit", "parallax-scroll", "keyframes", "extruded-text", "pbr-material"],
+    "primitives": [
+      "orbit",
+      "parallax-scroll",
+      "keyframes",
+      "extruded-text",
+      "pbr-material"
+    ],
     "postFx": ["motion-blur", "bloom"],
     "readiness": "partial",
     "gapNotes": [
@@ -72,7 +82,11 @@
     "moods": ["cinematic", "editorial", "dark", "luxury", "bold"]
   },
   "pairing": {
-    "pairsWith": ["oversized-type-editorial", "dark-stage-single-accent", "custom-cursor-choreography"],
+    "pairsWith": [
+      "oversized-type-editorial",
+      "dark-stage-single-accent",
+      "custom-cursor-choreography"
+    ],
     "avoidWith": ["infinite-filmstrip-gallery", "coverflow-3d-carousel"],
     "notes": [
       "Never pair two filmstrip/carousel families on one surface — they share the same visual grammar and read as repetition (anti-repetition law exists for exactly this)."

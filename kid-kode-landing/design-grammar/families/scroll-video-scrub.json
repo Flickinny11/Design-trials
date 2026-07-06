@@ -50,7 +50,12 @@
   "capabilities": {
     "renderingRoutes": ["R2"],
     "genModels": [],
-    "primitives": ["scroll-scrub-driver", "keyframes", "hub-background", "extruded-text"],
+    "primitives": [
+      "scroll-scrub-driver",
+      "keyframes",
+      "hub-background",
+      "extruded-text"
+    ],
     "postFx": ["color-grade", "vignette"],
     "readiness": "gap",
     "gapNotes": [
@@ -73,7 +78,11 @@
     "moods": ["cinematic", "energetic", "bold", "dark"]
   },
   "pairing": {
-    "pairsWith": ["oversized-type-editorial", "kinetic-typography-hero", "sticky-pin-narrative"],
+    "pairsWith": [
+      "oversized-type-editorial",
+      "kinetic-typography-hero",
+      "sticky-pin-narrative"
+    ],
     "avoidWith": ["gpu-fluid-overlay", "particle-field-hero"],
     "notes": [
       "The scrub owns the scroll axis — never combine with a second scroll-hijacking family on the same page.",

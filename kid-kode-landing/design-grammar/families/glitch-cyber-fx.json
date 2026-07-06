@@ -4,7 +4,12 @@
   "name": "Glitch / Cyber FX",
   "status": "grounded",
   "summary": "The 'corrupted signal' aesthetic weaponized as a transition language: RGB channel-split, scanline slicing, and datamosh jitter tear the frame between states, then resolve crisply to a pristine image. The violence is brief and deliberate — chaos as punctuation, never as steady state.",
-  "elementTypes": ["page-transition", "section-transition", "hero", "slider"],
+  "elementTypes": [
+    "page-transition",
+    "section-transition",
+    "hero",
+    "slider"
+  ],
   "whatMakesItWork": {
     "composition": [
       "Full-bleed imagery with an oversized italic/slanted headline pushed off-axis (upper-left) — the slant reinforces speed and tech energy.",
@@ -25,14 +30,21 @@
     ]
   },
   "palette": {
-    "logic": ["neon-on-dark", "monochrome-plus-accent", "dark-cinematic"],
+    "logic": [
+      "neon-on-dark",
+      "monochrome-plus-accent",
+      "dark-cinematic"
+    ],
     "rules": [
       "Near-black base + neon supplied BY the photography's lighting + exactly one non-photographic accent (e.g. an acid hue) owning UI and type.",
       "The accent must clash-contrast with the photo neons (acid yellow against magenta/cyan) — harmony would dissolve the interface into the scene."
     ]
   },
   "motion": {
-    "character": ["kinetic-energetic", "mechanical-precise"],
+    "character": [
+      "kinetic-energetic",
+      "mechanical-precise"
+    ],
     "easing": [
       "Aggressively stepped/stuttered — hard cuts and quantized jumps, NOT smooth eases; the corruption must feel digital, then resolve crisply.",
       "The resolve is the ease: after the burst, the incoming frame locks with a clean settle."
@@ -47,10 +59,24 @@
     ]
   },
   "capabilities": {
-    "renderingRoutes": ["R1", "R2"],
-    "genModels": ["flux-2-pro"],
-    "primitives": ["displacement-transition", "hub-transition-preset", "dissolve-morph", "kinetic-text"],
-    "postFx": ["chromatic-aberration", "scanline-slice", "rgb-split"],
+    "renderingRoutes": [
+      "R1",
+      "R2"
+    ],
+    "genModels": [
+      "flux-2-pro"
+    ],
+    "primitives": [
+      "displacement-transition",
+      "hub-transition-preset",
+      "dissolve-morph",
+      "kinetic-text"
+    ],
+    "postFx": [
+      "chromatic-aberration",
+      "scanline-slice",
+      "rgb-split"
+    ],
     "readiness": "gap",
     "gapNotes": [
       "None of the glitch post passes exist: RGB channel split, scanline slicing, and quantized-jitter displacement are not in the shipped transition presets (curtain/veil/dissolve/wipe/glass-sweep) or the post stack — a TSL glitch pass family is a W-PHOTO or W-BG candidate.",
@@ -68,12 +94,31 @@
       "Accessibility-sensitive audiences: flicker risks photosensitive seizure triggers; must honor reduced-motion unconditionally.",
       "Any context where the site might legitimately break — users cannot tell styled corruption from real errors."
     ],
-    "archetypeFit": ["community", "content", "marketing"],
-    "moods": ["energetic", "futuristic", "bold", "dark", "technical"]
+    "archetypeFit": [
+      "community",
+      "content",
+      "marketing"
+    ],
+    "moods": [
+      "energetic",
+      "futuristic",
+      "bold",
+      "dark",
+      "technical"
+    ]
   },
   "pairing": {
-    "pairsWith": ["cinematic-video-hero", "oversized-type-editorial", "dark-stage-single-accent"],
-    "avoidWith": ["gpu-fluid-overlay", "particle-field-hero", "quiet-luxury-monochrome", "editorial-product-gallery"],
+    "pairsWith": [
+      "cinematic-video-hero",
+      "oversized-type-editorial",
+      "dark-stage-single-accent"
+    ],
+    "avoidWith": [
+      "gpu-fluid-overlay",
+      "particle-field-hero",
+      "quiet-luxury-monochrome",
+      "editorial-product-gallery"
+    ],
     "notes": [
       "Glitch is punctuation over a video/photo base — it pairs with footage families and clashes with every calm/luxury register and with other GPU field effects."
     ]
@@ -92,9 +137,21 @@
       "observationRef": "analysis/cyber-glitch-effect-slider.json"
     }
   ],
-  "exemplars": [],
+  "exemplars": [
+    {
+      "path": "design-grammar/exemplars/glitch-cyber-fx-01.webp",
+      "generator": "replicate",
+      "model": "flux-2-pro",
+      "mode": "live",
+      "promptSummary": "Neon-noir portrait half-lit magenta/cyan on black with a faint RGB channel-split ghost, scanline texture, and one acid-yellow accent shape — corrupt-the-image/keep-the-UI aesthetic as a still.",
+      "generatedAt": "2026-07-06",
+      "notes": "ORIGINAL render (Replicate black-forest-labs/flux-2-pro, ~$0.06). Subject deliberately distinct from any analyzed source template. Illustrates the family aesthetic target (palette/composition/lighting); does NOT demonstrate runtime motion or in-engine execution."
+    }
+  ],
   "provenance": {
-    "groundTruth": ["monitor-observation"],
+    "groundTruth": [
+      "monitor-observation"
+    ],
     "distilledAt": "2026-07-06",
     "distilledBy": "wdg1-orchestrator"
   }

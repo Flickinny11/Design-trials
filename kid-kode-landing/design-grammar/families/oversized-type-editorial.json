@@ -4,7 +4,10 @@
   "name": "Oversized Editorial Type",
   "status": "grounded",
   "summary": "One colossal display word or two-line headline is used as a compositional PLATE — a graphic layer other elements occlude, inlay into, or float over — with a deliberately bimodal type scale: the giant word plus tiny supporting labels, and almost nothing in between.",
-  "elementTypes": ["typography", "hero"],
+  "elementTypes": [
+    "typography",
+    "hero"
+  ],
   "whatMakesItWork": {
     "composition": [
       "The giant word spans edge-to-edge (or nearly) and behaves as layout architecture, not a caption — it sets the horizon line or central axis the rest of the scene hangs on.",
@@ -28,14 +31,21 @@
     ]
   },
   "palette": {
-    "logic": ["monochrome-plus-accent", "dark-cinematic", "photographic-derived"],
+    "logic": [
+      "monochrome-plus-accent",
+      "dark-cinematic",
+      "photographic-derived"
+    ],
     "rules": [
       "The giant word either owns the single accent hue (dark stage) or holds a constant neutral so it reads over any scene behind it (photographic stage).",
       "When themes/scenes swap behind it, the word's color is the stable element — or it adopts exactly the theme accent, never a second hue."
     ]
   },
   "motion": {
-    "character": ["ambient-drift", "smooth-luxurious"],
+    "character": [
+      "ambient-drift",
+      "smooth-luxurious"
+    ],
     "easing": [
       "The word itself: slow crossfades or a gentle settle; no bounce, no elastic — mass implies inertia.",
       "Surrounding layers do the kinetic work with soft damping while the word anchors."
@@ -50,9 +60,18 @@
     ]
   },
   "capabilities": {
-    "renderingRoutes": ["R1", "2d-composition"],
+    "renderingRoutes": [
+      "R1",
+      "2d-composition"
+    ],
     "genModels": [],
-    "primitives": ["extruded-text", "msdf-text", "kinetic-text", "parallax-scroll", "keyframes"],
+    "primitives": [
+      "extruded-text",
+      "msdf-text",
+      "kinetic-text",
+      "parallax-scroll",
+      "keyframes"
+    ],
     "postFx": [],
     "readiness": "ready",
     "gapNotes": []
@@ -68,8 +87,16 @@
       "When the headline must stay fully legible at all times: the occlusion sandwich deliberately covers letters.",
       "Very long names/headlines — the plate effect dies past ~2 short lines."
     ],
-    "archetypeFit": ["any"],
-    "moods": ["bold", "editorial", "cinematic", "minimal", "energetic"]
+    "archetypeFit": [
+      "any"
+    ],
+    "moods": [
+      "bold",
+      "editorial",
+      "cinematic",
+      "minimal",
+      "energetic"
+    ]
   },
   "pairing": {
     "pairsWith": [
@@ -148,9 +175,21 @@
       "observationRef": "analysis/dj-website-template-with-scroll-video.json"
     }
   ],
-  "exemplars": [],
+  "exemplars": [
+    {
+      "path": "design-grammar/exemplars/oversized-type-editorial-01.webp",
+      "generator": "replicate",
+      "model": "flux-2-pro",
+      "mode": "live",
+      "promptSummary": "A single enormous serif word breaking the grid over bone-white space with a monochrome portrait interleaved through the letterforms and one vermilion accent rule — editorial scale-contrast + type-as-depth-plane.",
+      "generatedAt": "2026-07-06",
+      "notes": "ORIGINAL render (Replicate black-forest-labs/flux-2-pro, ~$0.06). Subject deliberately distinct from any analyzed source template. Illustrates the family aesthetic target (palette/composition/lighting); does NOT demonstrate runtime motion or in-engine execution."
+    }
+  ],
   "provenance": {
-    "groundTruth": ["monitor-observation"],
+    "groundTruth": [
+      "monitor-observation"
+    ],
     "distilledAt": "2026-07-06",
     "distilledBy": "wdg1-orchestrator"
   }

@@ -4,7 +4,10 @@
   "name": "GPU Fluid Overlay",
   "status": "grounded",
   "summary": "A realtime GPU fluid simulation runs OVER photographic plates or a dark stage: the cursor injects dye and momentum, so smoke-like neon vapor swirls, lingers, and dissipates in the visitor's wake. The visitor co-authors the hero in real time while a pinned monumental headline anchors the frame.",
-  "elementTypes": ["hero", "background"],
+  "elementTypes": [
+    "hero",
+    "background"
+  ],
   "whatMakesItWork": {
     "composition": [
       "One monumental anchored word is the only fixed typographic mass; the fluid needs a still element to swirl against or the frame reads as chaos.",
@@ -26,14 +29,20 @@
     ]
   },
   "palette": {
-    "logic": ["neon-on-dark", "monochrome-plus-accent"],
+    "logic": [
+      "neon-on-dark",
+      "monochrome-plus-accent"
+    ],
     "rules": [
       "Near-black base + ONE emissive dye family per scene; the palette swaps with the scene preset rather than mixing hues in one frame.",
       "The dye color doubles as brand accent — CTA and highlights borrow it."
     ]
   },
   "motion": {
-    "character": ["organic-fluid", "ambient-drift"],
+    "character": [
+      "organic-fluid",
+      "ambient-drift"
+    ],
     "easing": [
       "No keyframed easing — the sim's own physics (velocity advection, diffusion, decay) IS the ease; damping constants are the design surface.",
       "Dissipation should linger ~1-2s after input stops: the wake is the delight."
@@ -48,10 +57,24 @@
     ]
   },
   "capabilities": {
-    "renderingRoutes": ["R1", "R2"],
-    "genModels": ["flux-2-pro"],
-    "primitives": ["fluid-sim", "magnetic-cursor", "custom-cursor-layer", "hub-background", "extruded-text"],
-    "postFx": ["bloom", "vignette"],
+    "renderingRoutes": [
+      "R1",
+      "R2"
+    ],
+    "genModels": [
+      "flux-2-pro"
+    ],
+    "primitives": [
+      "fluid-sim",
+      "magnetic-cursor",
+      "custom-cursor-layer",
+      "hub-background",
+      "extruded-text"
+    ],
+    "postFx": [
+      "bloom",
+      "vignette"
+    ],
     "readiness": "partial",
     "gapNotes": [
       "The physics/fluid pack ships 36 TSL sim primitives, but a cursor-driven dye-injection Navier-Stokes field composited OVER photographic plates has not been demonstrated as a hub background — needs a pointer-force + dye-source binding into the hub background layer.",
@@ -70,12 +93,30 @@
       "Low-power/mobile GPUs: per-frame sim is a battery/jank risk; needs a static-gradient fallback.",
       "Calm, editorial, or trust-first registers (finance, health) — reads as spectacle."
     ],
-    "archetypeFit": ["saas", "marketing", "community"],
-    "moods": ["futuristic", "energetic", "technical", "dark", "cinematic"]
+    "archetypeFit": [
+      "saas",
+      "marketing",
+      "community"
+    ],
+    "moods": [
+      "futuristic",
+      "energetic",
+      "technical",
+      "dark",
+      "cinematic"
+    ]
   },
   "pairing": {
-    "pairsWith": ["oversized-type-editorial", "dark-stage-single-accent", "custom-cursor-choreography"],
-    "avoidWith": ["layered-photo-parallax-hero", "glitch-cyber-fx", "particle-field-hero"],
+    "pairsWith": [
+      "oversized-type-editorial",
+      "dark-stage-single-accent",
+      "custom-cursor-choreography"
+    ],
+    "avoidWith": [
+      "layered-photo-parallax-hero",
+      "glitch-cyber-fx",
+      "particle-field-hero"
+    ],
     "notes": [
       "One full-frame GPU effect per surface — fluid, particles, and glitch compete for the same motion budget and GPU frame time.",
       "The pinned headline is not optional: every observed instance anchors the turbulence with one still monumental word."
@@ -95,9 +136,22 @@
       "observationRef": "analysis/fluid-dynamics-effect-showcase.json"
     }
   ],
-  "exemplars": [],
+  "exemplars": [
+    {
+      "path": "design-grammar/exemplars/gpu-fluid-overlay-01.webp",
+      "generator": "replicate",
+      "model": "flux-2-pro",
+      "mode": "live",
+      "promptSummary": "Viscous oily ink folding across a dark field with thin-film soap-bubble iridescence through magenta/teal/gold — the iridescent fluid-bloom look.",
+      "generatedAt": "2026-07-06",
+      "notes": "ORIGINAL render (Replicate black-forest-labs/flux-2-pro, ~$0.06). Subject deliberately distinct from any analyzed source template. Illustrates the family aesthetic target (palette/composition/lighting); does NOT demonstrate runtime motion or in-engine execution."
+    }
+  ],
   "provenance": {
-    "groundTruth": ["founder-plan", "monitor-observation"],
+    "groundTruth": [
+      "founder-plan",
+      "monitor-observation"
+    ],
     "distilledAt": "2026-07-06",
     "distilledBy": "wdg1-orchestrator"
   }

@@ -4,7 +4,11 @@
   "name": "Hover Morph Distortion",
   "status": "grounded",
   "summary": "A shader-driven liquid warp liquefies the hero photograph under the cursor — displacement trails the pointer path with viscous, damped follow, and warp intensity scales with cursor velocity. The layout never moves; motion lives entirely inside the image plane while type and subject cutouts stay razor-sharp.",
-  "elementTypes": ["hero", "background", "gallery"],
+  "elementTypes": [
+    "hero",
+    "background",
+    "gallery"
+  ],
   "whatMakesItWork": {
     "composition": [
       "A stable graphic anchor is mandatory: a giant flat display word and/or a crisp cutout subject that the liquefying photo plays against.",
@@ -26,13 +30,19 @@
     ]
   },
   "palette": {
-    "logic": ["high-key-airy", "monochrome-plus-accent"],
+    "logic": [
+      "high-key-airy",
+      "monochrome-plus-accent"
+    ],
     "rules": [
       "Neutral desaturated photographic base + ONE loud saturated hue owning the type — the accent is the brand voice; everything else stays muted so the morph reads clearly."
     ]
   },
   "motion": {
-    "character": ["organic-fluid", "ambient-drift"],
+    "character": [
+      "organic-fluid",
+      "ambient-drift"
+    ],
     "easing": [
       "Viscous damped follow — the distortion LAGS the cursor and relaxes back slowly (~0.6-1s decay); no snap, no bounce.",
       "Warp intensity maps to cursor VELOCITY: fast sweeps tear, slow drifts gently swell."
@@ -47,9 +57,19 @@
     ]
   },
   "capabilities": {
-    "renderingRoutes": ["R1", "R2"],
-    "genModels": ["flux-2-pro"],
-    "primitives": ["displacement-transition", "magnetic-cursor", "pbr-material", "extruded-text"],
+    "renderingRoutes": [
+      "R1",
+      "R2"
+    ],
+    "genModels": [
+      "flux-2-pro"
+    ],
+    "primitives": [
+      "displacement-transition",
+      "magnetic-cursor",
+      "pbr-material",
+      "extruded-text"
+    ],
     "postFx": [],
     "readiness": "partial",
     "gapNotes": [
@@ -67,12 +87,30 @@
       "Text-dense or data-heavy pages; per-frame displacement is a battery/jank risk on weak GPUs.",
       "Brands wanting institutional restraint — liquefying imagery reads experimental."
     ],
-    "archetypeFit": ["content", "commerce", "marketing"],
-    "moods": ["bold", "playful", "airy", "crafted", "energetic"]
+    "archetypeFit": [
+      "content",
+      "commerce",
+      "marketing"
+    ],
+    "moods": [
+      "bold",
+      "playful",
+      "airy",
+      "crafted",
+      "energetic"
+    ]
   },
   "pairing": {
-    "pairsWith": ["oversized-type-editorial", "layered-photo-parallax-hero", "custom-cursor-choreography"],
-    "avoidWith": ["gpu-fluid-overlay", "particle-field-hero", "glitch-cyber-fx"],
+    "pairsWith": [
+      "oversized-type-editorial",
+      "layered-photo-parallax-hero",
+      "custom-cursor-choreography"
+    ],
+    "avoidWith": [
+      "gpu-fluid-overlay",
+      "particle-field-hero",
+      "glitch-cyber-fx"
+    ],
     "notes": [
       "Shares the pointer-reactive-field cluster: never combine two pointer-driven GPU effects — the cursor can only author one field at a time."
     ]
@@ -91,9 +129,21 @@
       "observationRef": "analysis/hover-morph-effect-hero-collection.json"
     }
   ],
-  "exemplars": [],
+  "exemplars": [
+    {
+      "path": "design-grammar/exemplars/hover-morph-distortion-01.webp",
+      "generator": "replicate",
+      "model": "flux-2-pro",
+      "mode": "live",
+      "promptSummary": "High-key airy fashion subject cutout on a pale sky backdrop with a giant flat coral shape behind, soft daylight, one loud accent hue — the stable-anchor-plus-clean-plane setup the liquid warp plays against.",
+      "generatedAt": "2026-07-06",
+      "notes": "ORIGINAL render (Replicate black-forest-labs/flux-2-pro, ~$0.06). Subject deliberately distinct from any analyzed source template. Illustrates the family aesthetic target (palette/composition/lighting); does NOT demonstrate runtime motion or in-engine execution."
+    }
+  ],
   "provenance": {
-    "groundTruth": ["monitor-observation"],
+    "groundTruth": [
+      "monitor-observation"
+    ],
     "distilledAt": "2026-07-06",
     "distilledBy": "wdg1-orchestrator"
   }

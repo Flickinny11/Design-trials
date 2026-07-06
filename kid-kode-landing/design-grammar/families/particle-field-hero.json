@@ -4,7 +4,10 @@
   "name": "Particle Field Hero",
   "status": "grounded",
   "summary": "A dense GPU point-cloud forms a loose constellation that idles on slow brownian drift and physically reacts to the cursor — particles scatter under pointer proximity and spring back to cohesion. Emergent connective lines between neighbors read as a living network without any literal iconography.",
-  "elementTypes": ["hero", "background"],
+  "elementTypes": [
+    "hero",
+    "background"
+  ],
   "whatMakesItWork": {
     "composition": [
       "Split emphasis: a stacked condensed headline + stats + CTA column on one side, the particle cluster on the other; or the field envelops centered type as ambient dust.",
@@ -26,14 +29,20 @@
     ]
   },
   "palette": {
-    "logic": ["duotone", "neon-on-dark"],
+    "logic": [
+      "duotone",
+      "neon-on-dark"
+    ],
     "rules": [
       "Pick ONE gradient duo (e.g. hot-to-cool) and let it be the entire color story: particles, connective lines, and the type accent all share it.",
       "Dark/light variants change only the ground color, never the accent — proving the system is an engine, not a composition."
     ]
   },
   "motion": {
-    "character": ["ambient-drift", "elastic-playful"],
+    "character": [
+      "ambient-drift",
+      "elastic-playful"
+    ],
     "easing": [
       "Idle: perpetual low-amplitude brownian float with slow global rotation — the cluster breathes, never rests.",
       "Interaction: quick repulsion (~200-400ms) followed by a springy elastic return to each particle's cohesion target."
@@ -48,10 +57,20 @@
     ]
   },
   "capabilities": {
-    "renderingRoutes": ["R1"],
+    "renderingRoutes": [
+      "R1"
+    ],
     "genModels": [],
-    "primitives": ["particle-system", "particle-emerge", "magnetic-cursor", "hub-background", "msdf-text"],
-    "postFx": ["bloom"],
+    "primitives": [
+      "particle-system",
+      "particle-emerge",
+      "magnetic-cursor",
+      "hub-background",
+      "msdf-text"
+    ],
+    "postFx": [
+      "bloom"
+    ],
     "readiness": "ready",
     "gapNotes": []
   },
@@ -66,12 +85,29 @@
       "Low-end devices: thousands of animated particles with per-frame neighbor-line computation cause jank; needs a static fallback.",
       "AI-marketing contexts where the pattern is saturated — the family risks cliche precisely because it works; rotate against alternatives."
     ],
-    "archetypeFit": ["saas", "marketing", "community"],
-    "moods": ["technical", "futuristic", "precise", "dark", "minimal"]
+    "archetypeFit": [
+      "saas",
+      "marketing",
+      "community"
+    ],
+    "moods": [
+      "technical",
+      "futuristic",
+      "precise",
+      "dark",
+      "minimal"
+    ]
   },
   "pairing": {
-    "pairsWith": ["oversized-type-editorial", "dark-stage-single-accent", "custom-cursor-choreography"],
-    "avoidWith": ["gpu-fluid-overlay", "glitch-cyber-fx"],
+    "pairsWith": [
+      "oversized-type-editorial",
+      "dark-stage-single-accent",
+      "custom-cursor-choreography"
+    ],
+    "avoidWith": [
+      "gpu-fluid-overlay",
+      "glitch-cyber-fx"
+    ],
     "notes": [
       "One full-frame GPU field per surface — never stack with fluid or glitch.",
       "The W9 forge hero (140k-particle TSL compute galaxy) is our in-house demonstration of this family's core mechanic."
@@ -91,9 +127,21 @@
       "observationRef": "analysis/ai-particle-cluster-hero.json"
     }
   ],
-  "exemplars": [],
+  "exemplars": [
+    {
+      "path": "design-grammar/exemplars/particle-field-hero-01.webp",
+      "generator": "replicate",
+      "model": "flux-2-pro",
+      "mode": "live",
+      "promptSummary": "Thousands of fine points converging into a soft luminous nucleus with link-lines, single cyan-to-violet gradient on deep space black — emergent-order particle field.",
+      "generatedAt": "2026-07-06",
+      "notes": "ORIGINAL render (Replicate black-forest-labs/flux-2-pro, ~$0.06). Subject deliberately distinct from any analyzed source template. Illustrates the family aesthetic target (palette/composition/lighting); does NOT demonstrate runtime motion or in-engine execution."
+    }
+  ],
   "provenance": {
-    "groundTruth": ["monitor-observation"],
+    "groundTruth": [
+      "monitor-observation"
+    ],
     "distilledAt": "2026-07-06",
     "distilledBy": "wdg1-orchestrator"
   }
