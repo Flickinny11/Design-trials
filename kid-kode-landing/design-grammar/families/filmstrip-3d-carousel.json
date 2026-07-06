@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "prism-dg-v1",
+  "id": "filmstrip-3d-carousel",
+  "name": "Filmstrip 3D Carousel",
+  "status": "grounded",
+  "summary": "Portrait image frames drift and rescale continuously along an implied Z-arc like film cells sliding past a lens. The frames never fully settle — a perpetual physics-like drift keeps the hero alive between interactions, with motion-blur smears selling the pans as camera moves.",
+  "elementTypes": ["carousel", "filmstrip", "hero", "gallery"],
+  "whatMakesItWork": {
+    "composition": [
+      "Asymmetric frame placement: one dominant portrait cell center-right, smaller counterweight cells offset opposite — never a symmetric row.",
+      "A giant background headline spans edge-to-edge BEHIND the frames and is partly occluded by them (see oversized-type-editorial).",
+      "Slide-index counter and arrows pinned bottom keep the spectacle navigable."
+    ],
+    "layering": [
+      "Three explicit planes: background headline plate → drifting frame stack midground → small foreground counterweight frame.",
+      "Depth is expressed by scale + opacity + slight blur on trailing cells, not hard shadows.",
+      "The hero cell leads and satellite cells trail at reduced scale — a depth-staggered convoy."
+    ],
+    "lighting": [
+      "Gradient-as-light: a single hot gradient wash behaves like a rim glow behind the frames on a near-black stage.",
+      "No hard cast shadows; edges are softened by motion blur so the frames feel filmic, not card-like."
+    ],
+    "typography": [
+      "Heavy sans display at enormous scale treated as a graphic plate the images pass in front of.",
+      "Supporting copy is quiet lowercase sans — the frames and the big word carry everything."
+    ]
+  },
+  "palette": {
+    "logic": ["dark-cinematic", "monochrome-plus-accent", "photographic-derived"],
+    "rules": [
+      "Near-black base + one hot gradient accent for the wash and CTA; ALL other vibrancy is delegated to the photography inside the frames.",
+      "The chrome stays quiet so any image set drops in without re-theming."
+    ]
+  },
+  "motion": {
+    "character": ["ambient-drift", "smooth-luxurious"],
+    "easing": [
+      "Continuous drifting glide with soft ease-in-out on advances; no hard stops ever — frames remain subtly in motion at rest.",
+      "Motion-blur smears on frame edges during advances sell velocity and hide re-layout."
+    ],
+    "pacing": [
+      "Slow luxurious perpetual drift punctuated by ~0.8-1s advances on interaction.",
+      "The idle drift must be barely perceptible — visible looping reads as a screensaver."
+    ],
+    "choreography": [
+      "Frames stagger by depth: hero cell leads, satellites trail at reduced scale/opacity.",
+      "The background headline lags behind the frame layer on advances, creating parallax separation."
+    ]
+  },
+  "capabilities": {
+    "renderingRoutes": ["R1"],
+    "genModels": ["flux-2-pro"],
+    "primitives": ["orbit", "parallax-scroll", "keyframes", "extruded-text", "pbr-material"],
+    "postFx": ["motion-blur", "bloom"],
+    "readiness": "partial",
+    "gapNotes": [
+      "Textured plane cells on a Z-arc with per-cell drift are directly expressible (plane nodes + keyframes + orbit), but per-object MOTION BLUR is not in the post stack — without the smear the advance reads as a slide, not a pan (R1 cinematic floor, W-PHOTO).",
+      "A reusable 'carousel driver' (advance/retreat state machine binding N cells to arc positions) does not exist as a primitive — each instance must be hand-choreographed today."
+    ]
+  },
+  "usage": {
+    "whenToUse": [
+      "Portfolio, fashion, photography, and campaign heroes where imagery quality is the product.",
+      "When the brief wants 'alive at rest' — this family's perpetual drift is the strongest idle presence in the corpus."
+    ],
+    "whenNotToUse": [
+      "Content-dense marketing pages or text-first products — the frames constantly cover the headline.",
+      "Catalogs needing many visible items with fast scanning (see coverflow-3d-carousel's same weakness).",
+      "Low-motion registers: the never-resting drift cannot be disabled without losing the family's identity."
+    ],
+    "archetypeFit": ["content", "commerce", "marketing"],
+    "moods": ["cinematic", "editorial", "dark", "luxury", "bold"]
+  },
+  "pairing": {
+    "pairsWith": ["oversized-type-editorial", "dark-stage-single-accent", "custom-cursor-choreography"],
+    "avoidWith": ["infinite-filmstrip-gallery", "coverflow-3d-carousel"],
+    "notes": [
+      "Never pair two filmstrip/carousel families on one surface — they share the same visual grammar and read as repetition (anti-repetition law exists for exactly this)."
+    ]
+  },
+  "antiRepetition": {
+    "clusterId": "carousel",
+    "notes": "Same cluster as coverflow-3d-carousel, bento-grid-slider, and swatch-variant-swap — one carousel mechanic per option set."
+  },
+  "sources": [
+    {
+      "title": "Filmstrip Hero 3D Image Carousel Collection",
+      "url": "https://www.sliderrevolution.com/templates/filmstrip-hero-3d-image-carousel-collection/",
+      "sourceType": "sr-template",
+      "analysisDepth": "deep",
+      "motionEvidence": "Founder monitor session, live demo: idle drift observed at rest; carousel advanced repeatedly — depth-staggered convoy motion, edge motion-blur during advances, and headline parallax lag all captured from the sequence.",
+      "observationRef": "analysis/filmstrip-hero-3d-image-carousel-collection.json"
+    }
+  ],
+  "exemplars": [],
+  "provenance": {
+    "groundTruth": ["monitor-observation"],
+    "distilledAt": "2026-07-06",
+    "distilledBy": "wdg1-orchestrator"
+  }
+}
