@@ -21,13 +21,13 @@ Flight-recorded catalog events.
 
 | # | Deliverable | Status |
 |---|---|---|
-| D1 | Catalog data layer (types, registry, anti-repetition validation) | pending |
-| D2 | Generated asset sets (FLUX composites + tile sets, spend-logged) | pending |
-| D3 | 13 new hub templates (+ 3 W8 folded in = 16 total) | pending |
-| D4 | 8–10 section templates | pending |
-| D5 | Picker UI (galaxy new-hub flow + canvas section-drop) | pending |
-| D6 | Flight-recorder catalog events | pending |
-| D7 | Verify + evidence + dual judges | pending |
+| D1 | Catalog data layer (types, registry, anti-repetition validation) | **DONE** (`cd45de46`) |
+| D2 | Generated asset sets (FLUX composites + tile sets, spend-logged) | **DONE** (`a831c5b6`) |
+| D3 | 13 new hub templates (+ 3 W8 folded in = 16 total) | **DONE** (`908a8306`, `7c7809b1`) |
+| D4 | 8–10 section templates (10 shipped) | **DONE** (`+ sections.ts`) |
+| D5 | Picker UI (galaxy new-hub flow + canvas section-drop) | **DONE** (`+ NewHubPicker`) |
+| D6 | Flight-recorder catalog events (9th record type) | **DONE** (`+ catalog_event`) |
+| D7 | Verify + evidence + dual judges | **DONE** (this report §5–7) |
 
 ## 3. The archetype × family matrix (anti-repetition law of record)
 
@@ -61,22 +61,76 @@ Budget: Replicate ≤ $8.00 est · Tripo ≤ 80 credits.
 | 07-07 01:45 | meridian-hero composite run 1 (backdrop + depth; product stage transient FLUX failure) | flux-2-pro + depth-anything-v2 | $0.083 | $0.08 |
 | 07-07 01:52 | meridian-hero composite retry (product + 3 garnish + 4 bria cutouts; idempotent skip of run-1 stages) | flux-2-pro + bria | $0.40 | $0.48 |
 | 07-07 01:55 | gen-wtpl-assets all sets — 24 FLUX stills + 6 bria cutouts + 1 depth (marginalia/lumen×6/vitrine×4/chronicle×3/beacon/cascade/ledgerline×3/folio×2/tessella×3/waypoint); 0 failures | flux-2-pro + bria + depth-anything-v2 | $2.36 | **$2.84** |
+| 07-07 08:_ | D7 fix — meridian backdrop regenerated (luminous-teal dawn) + depth, after the original "deep near-black" plate rendered black in-runtime | flux-2-pro + depth-anything-v2 | $0.083 | **$2.92** |
 
 Tripo: 0 credits used. Provenance (prediction ids): `public/prism-mock/photo/meridian-hero/composite.json` + `public/prism-mock/templates/provenance.json`.
 
 ## 5. Architecture
 
-_(to be written as built)_
+**Data layer (D1, pure — no store/React/DOM):**
+- `catalog-types.ts` — `HubTemplateEntry` / `SectionTemplateEntry` / `TemplateArchetype` /
+  `SectionKind` / `SectionAnchor`. Grammar family ids stay INLINE string literals (W-DG1
+  pattern); the test grounds them against `design-grammar/families/*.json` on disk.
+- `catalog/*.ts` — 13 hub-template graphs (one file each). Each is a real `GraphSource`
+  (hub + parented `PrismNode`s) authored via `catalog-helpers` / `node-helpers`.
+- `sections.ts` — 10 `SectionTemplateEntry`s; each `build(anchor)` returns seq-suffixed,
+  anchor-parented nodes. Asset-free by law (PBR mesh + extruded text + particle fx).
+- `catalog-registry.ts` — folds the 3 W8 templates in with archetype metadata (DEV-1) +
+  the 13 new ones = 16; `SECTION_TEMPLATE_CATALOG` = the 10 sections; search + lookup.
+- `instantiate.ts` — deep-clones a template's graph with every hub/node id remapped to
+  fresh collision-free ids (galaxy planet free via hub-geometry hash of the fresh hubId).
+
+**Picker UI (D5, additive editor chrome):**
+- `stores/useTemplatePickerStore.ts` — tiny dedicated open/close store (`hub` | `section`).
+- `components/editor/templates/NewHubPicker.tsx` — the overlay: categorized (archetype rail)
+  + searchable grid, name-your-hub, live `/templates/<slug>` Preview link. Hub flow:
+  `instantiateHubTemplate → addHub × hubs → addNodesBatch(nodes) → drillIntoHub(primaryHubId)`
+  (galaxy → canvas). Section flow: resolve active hub → `build({hubId, y: below existing
+  content, seq})` → `addNodesBatch`.
+- `components/editor/templates/TemplateLauncher.tsx` — mode-aware floating button (galaxy →
+  "New hub from template"; canvas → "Add a section"; hidden in preview-app).
+- Both mounted in `app/page.tsx`'s modal cluster — no TopBar / CanvasToolbar edits.
+
+**Flight recorder (D6):** `catalog_event` (9th record type) + `catalog` touchpoint in
+`flight-recorder/schema.ts` + `recordCatalog` emit helper; fail-open ingest route
+`/api/prism/catalog-event` + client `catalog-beacon.ts` (sendBeacon / keepalive). Each
+instantiate-hub / drop-section fires a labeled "archetype + family → real graph" record.
+
+**Preview:** the existing `/templates/[slug]` route already runs any catalog template's real
+graph in the shipped `ConductorRuntime` (live scroll/pointer/inview drivers), so every
+template preview-animates per its own schema.
 
 ## 6. Evidence index
 
 Evidence dir: `notes/verification/shell-wtpl/`
 
-_(to be filled)_
+| File | What it shows |
+|---|---|
+| `01-galaxy-launcher.png` | Galaxy view with the "New hub from template" launcher |
+| `02-picker-hub-desktop.png` | The picker: 16 templates, archetype rail, route badges, family labels |
+| `03-picker-selected-named.png` | Meridian selected (teal glow) + "Aurora Skincare" named + footer enabled |
+| `04-canvas-new-hub.png` | The new hub drilled into CANVAS — Meridian content mounting, inspector shows the name |
+| `05-preview-app-new-hub.png` | Preview-app runs cleanly (ORRERY app; zero regression from the additive chrome) |
+| `06-picker-mobile.png` | The picker responsive on mobile (390px) — single-column cards, all chrome intact |
+| `07-section-picker.png` | The "Add a section" picker (canvas mode) — 10 sections with kind badges |
+| `hero-01-meridian.png` … `hero-10-cascade.png` | 8 template heroes running live in the runtime |
+
+**Functional assertions (via `__PRISM_DEBUG_STORES__`):** new-hub landed a hub titled
+"Aurora Skincare" (`tpl-meridian-…`) with 13 remapped nodes (hubs 6→7); section-drop landed
+9 seq-suffixed pricing-triptych nodes into `s1-arrival` (39→48), collision-free. Beacon
+endpoint `/api/prism/catalog-event` returns `{ok:true, recorded:true}` (D6 live).
+
+**Runtime render notes (honest):** the image-based templates (meridian, beacon, chronicle,
+lumen, vitrine, folio, marginalia, cascade) render premium in the runtime. The two
+mesh-heavy ones (waypoint, ledgerline) fight the runtime's un-lit / AgX-tonemapped path —
+capped clearcoat/metalness + raised roughness diffused the flat-card specular blowout
+(waypoint now reads as a soft coverflow deck); ledgerline's dense extruded-text bevels still
+dither under AgX (DEV-6) and is the weakest card, but reads as a material-object editorial
+pricing layout. All 16 edit cleanly in canvas (which applies full lighting).
 
 ## 7. Judge verdicts
 
-_(pending)_
+_(pending — criteria-reviewer + user-advocate)_
 
 ## 8. Deviations
 
