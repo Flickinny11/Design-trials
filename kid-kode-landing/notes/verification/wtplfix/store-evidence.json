@@ -1,0 +1,116 @@
+{
+  "capturedAt": "live store after picker instantiation, port 3009",
+  "totals": {
+    "hubs": 7,
+    "nodes": 355
+  },
+  "hubsWithBackground": [
+    {
+      "hubId": "s1-arrival",
+      "backgroundLayers": [
+        "brass-nebula-env",
+        "brass-nebula-scatter",
+        "brass-nebula-motes"
+      ]
+    },
+    {
+      "hubId": "s2-movement",
+      "backgroundLayers": [
+        "mvmt-brass-env",
+        "mvmt-brass-scatter",
+        "mvmt-brass-motes",
+        "bg-macro"
+      ]
+    },
+    {
+      "hubId": "s3-materia",
+      "backgroundLayers": [
+        "materia-ice-env",
+        "materia-ice-scatter",
+        "bg-still"
+      ]
+    },
+    {
+      "hubId": "s4-celestia",
+      "backgroundLayers": [
+        "celestia-deep-env",
+        "celestia-deep-scatter",
+        "celestia-deep-motes",
+        "bg-planetarium"
+      ]
+    },
+    {
+      "hubId": "s5-acquire",
+      "backgroundLayers": [
+        "acquire-brass-env",
+        "acquire-brass-motes",
+        "bg-gallery"
+      ]
+    },
+    {
+      "hubId": "s6-atelier",
+      "backgroundLayers": [
+        "atelier-deep-env",
+        "atelier-deep-scatter",
+        "atelier-deep-motes",
+        "atelier-bg-gallery"
+      ]
+    },
+    {
+      "hubId": "tpl-meridian-9fc5f2b2",
+      "backgroundLayers": [
+        "mer-bg-plate",
+        "mer-bg-motes"
+      ]
+    }
+  ],
+  "wholeGraphAmbientIdMatches": [],
+  "instantiatedHub": {
+    "hubId": "tpl-meridian-9fc5f2b2",
+    "background": [
+      {
+        "id": "mer-bg-plate",
+        "attachment": "parallax",
+        "sourceUrl": "/prism-mock/photo/meridian-hero/backdrop.png",
+        "z": -3.2,
+        "parallaxDepth": 0.12,
+        "opacity": 1
+      },
+      {
+        "id": "mer-bg-motes",
+        "attachment": "camera-locked",
+        "kind": "particle-field",
+        "z": -30,
+        "opacity": 0.8,
+        "parallaxDepth": 0.1,
+        "params": {
+          "palette": "ice",
+          "density": 0.4,
+          "drift": 0.4,
+          "intensity": 0.55,
+          "variant": "motes"
+        }
+      }
+    ],
+    "nodeCount": 17,
+    "nodeIds": [
+      "mer-headline--9fc5f2b2",
+      "mer-shadow--9fc5f2b2",
+      "mer-flacon--9fc5f2b2",
+      "mer-garnish-sprig--9fc5f2b2",
+      "mer-garnish-seaglass--9fc5f2b2",
+      "mer-garnish-droplet--9fc5f2b2",
+      "mer-brand--9fc5f2b2",
+      "mer-manifesto--9fc5f2b2",
+      "mer-cta--9fc5f2b2",
+      "mer-cta-bar--9fc5f2b2",
+      "mer-scroll-cue--9fc5f2b2",
+      "mer-notes-title--9fc5f2b2",
+      "mer-note-1--9fc5f2b2",
+      "mer-note-2--9fc5f2b2",
+      "mer-note-3--9fc5f2b2",
+      "mer-accent-sprig--9fc5f2b2",
+      "mer-accent-droplet--9fc5f2b2"
+    ]
+  }
+}

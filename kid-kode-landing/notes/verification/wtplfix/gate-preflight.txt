@@ -1,0 +1,74 @@
+PRISM AUTONOMY PREFLIGHT
+[PASS] repo-root
+[PASS] chain-stop
+[PASS] guard-files
+11 files present
+[PASS] real-editor-root
+root / is not wired to editor-shell
+[WARN] spec-intent
+no --prompt/--spec file supplied; skipping content gate.
+[WARN] remote-assets
+[PASS] galaxy-semantics
+[[32mPASS[0m] galaxy:graph-present               live graph has hubs and nodes
+        [2m6 hubs, 338 nodes[0m
+[[32mPASS[0m] galaxy:overview-collapses-helpers  Galaxy overview collapses app-shell and hit-target implementation nodes
+        [2m146 overview nodes, 192 collapsed (107 shell, 72 hit-target)[0m
+[[32mPASS[0m] galaxy:overview-projects-components Galaxy first-level view groups dense component atoms
+        [2m56 first-level nodes (22 clusters) from 146 content atoms; atelier:17, materia:8[0m
+[[32mPASS[0m] galaxy:backgrounds-are-hub-data    ambient star/dust/nebula backgrounds remain hub-owned, not first-class Galaxy nodes
+        [2m6/6 hubs carry background layers[0m
+[[32mPASS[0m] galaxy:overview-excludes-decoration embedded decoration (scrims, panel chrome, rail edges) is collapsed out of the overview — no "Support layers" spheres
+        [2m10 decoration nodes collapsed (spec-rail-edge, text-scrim, panel-chrome); 0 leaked into overview[0m
+[[32mPASS[0m] galaxy:each-hub-has-overview-content each page hub has at least one user-meaningful overview node
+        [2ms1-arrival:8, s2-movement:8, s3-materia:32, s4-celestia:8, s5-acquire:17, s6-atelier:73[0m
+[[33mWARN[0m] galaxy:global-hub-missing          spec wants a global hub for shared every-page elements
+        [2m10 globalSlot nodes are authored; remaining page-local shell variants still await a dedicated global hub cleanup[0m
+
+[32m7/7 passed[0m
+[PASS] global-shell
+[[32mPASS[0m] global-shell:files-present           global-slot resolver and root scene exist
+        [2massembled-nodes.ts, GraphScene.tsx, live-graph.json[0m
+[[32mPASS[0m] global-shell:resolver-contract       resolver includes global slots and duplicate chrome suppression
+        [2mresolver contract tokens present[0m
+[[32mPASS[0m] global-shell:root-wired              root GraphScene uses assembled node scope, not editor-shell replacement
+        [2mroot scene keeps existing runtime path[0m
+[[32mPASS[0m] global-shell:graph-readable          live graph has page hubs and app nodes
+        [2m6 hubs, 338 nodes[0m
+[[32mPASS[0m] global-shell:slot-values             globalSlot values are header/footer only when present
+        [2m10 renderable global slot nodes[0m
+[[32mPASS[0m] global-shell:global-slots-authored   global shell slots are authored in the graph
+        [2m10 globalSlot nodes; duplicate chrome signatures remaining: 30[0m
+
+[32m6/6 passed[0m
+[PASS] rejected-toolbar
+[WARN] worktree
+M chain-W2D.sh
+ M chain-WBG.sh
+ M chain-WUXV.sh
+ M chain-status.txt
+ M kid-kode-landing/notes/MONITOR-FEED.md
+ M kid-kode-landing/notes/SENTINEL-LIVE.md
+ M kid-kode-landing/notes/prism-mock-progress.md
+ M kid-kode-landing/notes/spec-deviations-wtplfix.md
+ M kid-kode-landing/notes/verification/catalog-prep/controls/accordion-y-controls.png
+ M kid-kode-landing/notes/verification/catalog-prep/gallery/catalog-full.png
+ M kid-kode-landing/notes/verification/catalog-prep/gallery/hover-plays-proof.png
+ M kid-kode-landing/notes/verification/catalog-prep/tiles/accordion-y.png
+ M kid-kode-landing/notes/verification/shell-w5b/01-ship-desktop.png
+ M kid-kode-landing/notes/verification/shell-w5b/01a-ship-panel.png
+ M kid-kode-landing/src/lib/templates/catalog/cascade.ts
+ M kid-kode-landing/src/lib/templates/catalog/constellation.ts
+ M kid-kode-landing/src/lib/templates/catalog/marginalia.ts
+ M kid-kode-landing/src/lib/templates/catalog/meridian.ts
+ M kid-kode-landing/src/lib/templates/graphs/cursor-gallery.ts
+ M kid-kode-landing/src/lib/templates/graphs/particle-showpiece.ts
+ M kid-kode-landing/src/lib/templates/graphs/scroll-hero.ts
+ M kid-kode-landing/src/lib/templates/node-helpers.ts
+ M kid-kode-landing/src/lib/templates/sections.ts
+ M kid-kode-landing/tests/unit/wtpl-catalog.test.ts
+?? SHELL-WPROD-PROMPT.md
+?? SHELL-WTPLFIX-PROMPT.md
+?? chain-WPROD.sh
+?? kid-kode-landing/notes/verification/wtplfix/
+
+CLEAR: preflight passed.

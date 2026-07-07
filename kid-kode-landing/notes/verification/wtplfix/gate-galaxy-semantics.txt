@@ -1,0 +1,16 @@
+[[32mPASS[0m] galaxy:graph-present               live graph has hubs and nodes
+        [2m6 hubs, 338 nodes[0m
+[[32mPASS[0m] galaxy:overview-collapses-helpers  Galaxy overview collapses app-shell and hit-target implementation nodes
+        [2m146 overview nodes, 192 collapsed (107 shell, 72 hit-target)[0m
+[[32mPASS[0m] galaxy:overview-projects-components Galaxy first-level view groups dense component atoms
+        [2m56 first-level nodes (22 clusters) from 146 content atoms; atelier:17, materia:8[0m
+[[32mPASS[0m] galaxy:backgrounds-are-hub-data    ambient star/dust/nebula backgrounds remain hub-owned, not first-class Galaxy nodes
+        [2m6/6 hubs carry background layers[0m
+[[32mPASS[0m] galaxy:overview-excludes-decoration embedded decoration (scrims, panel chrome, rail edges) is collapsed out of the overview — no "Support layers" spheres
+        [2m10 decoration nodes collapsed (spec-rail-edge, text-scrim, panel-chrome); 0 leaked into overview[0m
+[[32mPASS[0m] galaxy:each-hub-has-overview-content each page hub has at least one user-meaningful overview node
+        [2ms1-arrival:8, s2-movement:8, s3-materia:32, s4-celestia:8, s5-acquire:17, s6-atelier:73[0m
+[[33mWARN[0m] galaxy:global-hub-missing          spec wants a global hub for shared every-page elements
+        [2m10 globalSlot nodes are authored; remaining page-local shell variants still await a dedicated global hub cleanup[0m
+
+[32m7/7 passed[0m
