@@ -130,7 +130,34 @@ pricing layout. All 16 edit cleanly in canvas (which applies full lighting).
 
 ## 7. Judge verdicts
 
-_(pending — criteria-reviewer + user-advocate)_
+Two fresh-context judges, 0 MUST-FIX each.
+
+**criteria-reviewer — PASS (0 MUST-FIX).** All 9 success criteria pass with executed
+test/code evidence: 16 hubs across exactly 8 archetypes (2 each, anti-repetition holds),
+10 sections (seq-suffixed, collision-free), grammar grounding on disk, picker additive (2
+imports + 2 mounts in page.tsx, nothing removed; W8 `registry.ts` untouched), real graphs
+mount in the shipped ConductorRuntime (no static mockups; 49 asset URLs resolve),
+`catalog_event` is a real 9th record type (consent-quarantine + PII scrub proven), INV-19 /
+I-PROVENANCE (35 real Replicate prediction ids) / I-ENGINE / I-ADDITIVE all clean, DEV-1..6
+honest and code-matched. `wtpl-catalog.test.ts` 8/8, `wtpl-catalog-event.test.ts` 4/4, tsc
+0 new. No forbidden patterns. Two cosmetic SHOULD-FIX nits (section stacking read, a stray
+space in a test) — non-blocking.
+
+**user-advocate (picky founder building three businesses) — PLEASED (0 MUST-FIX).**
+Premium: YES ("read as things a top studio would ship, not a demo"). Distinct: YES
+("emphatically… photo diorama vs oversized type vs coverflow vs filmstrip vs gallery-grid vs
+depth-parallax vs terrain-relief — structurally different templates"). Mine-able: YES
+("original compositions with swappable slots… swap the palette + drop in your own imagery and
+it becomes your brand"). Strongest 3: **meridian, folio, cascade**. The pick→name→land→preview
+flow "works." Flagged ledgerline as the one weak card ("acceptable… the other 9 carry the
+catalog, NOT a dealbreaker, not a MUST-FIX").
+
+**Post-verdict polish:** ledgerline (the advocate's one flagged card) was then reworked — each
+tier now a full-bleed material photograph with clean type over the dark-slate half (DEV-6
+addendum) — resolving the extruded-text-over-mesh dither. Re-verified clean + premium in the
+runtime (`hero-05-ledgerline.png`).
+
+**STATUS: PRISM-WTPL: RUN COMPLETE**
 
 ## 8. Deviations
 
