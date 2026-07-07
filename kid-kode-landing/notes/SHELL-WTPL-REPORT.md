@@ -157,7 +157,11 @@ tier now a full-bleed material photograph with clean type over the dark-slate ha
 addendum) — resolving the extruded-text-over-mesh dither. Re-verified clean + premium in the
 runtime (`hero-05-ledgerline.png`).
 
-**STATUS: PRISM-WTPL: RUN COMPLETE**
+Marker lines (verbatim, for the chain sentinels — run-surface-v2.sh watches the
+SHELL-prefixed form, chain-W2D.sh watches the un-prefixed form):
+
+PRISM-SHELL-WTPL: RUN COMPLETE
+PRISM-WTPL: RUN COMPLETE
 
 ## 8. Deviations
 
