@@ -1,0 +1,345 @@
+[
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "b2wchcn5wdrmw0cz7d9rkgew7r",
+    "out": "/public/prism-mock/templates/marginalia/valley-plate.webp",
+    "seed": 51,
+    "prompt": "a vast mist-layered mountain valley at first light, ridgelines receding in soft blue-grey haze bands, a winding river catching pale gold dawn light, cinematic aerial photograph, strong atmospheric depth, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:46:18.532Z"
+  },
+  {
+    "stage": "depth",
+    "model": "chenxwh/depth-anything-v2",
+    "mode": "live",
+    "predictionId": "p7thd36xv5rne0cz7d9t2wtr4c",
+    "predictTime": 0.73913851,
+    "out": "/public/prism-mock/templates/marginalia/valley-plate.depth.png",
+    "at": "2026-07-07T06:46:21.456Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "nm26dyz53drmw0cz7d9rqxn8t4",
+    "out": "/public/prism-mock/templates/lumen/vessel-1.webp",
+    "seed": 61,
+    "prompt": "a tall handthrown ceramic bottle vase with a narrow neck, deep indigo-blue glaze with graphite speckle, on a dark charcoal studio backdrop, single soft cool key light from the left, consistent editorial product photograph, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:46:33.482Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "b0t4dmrm2srmy0cz7daar4cgr0",
+    "out": "/public/prism-mock/templates/lumen/vessel-2.webp",
+    "seed": 62,
+    "prompt": "a wide shallow handthrown ceramic bowl with an unglazed rim, deep indigo-blue glaze with graphite speckle, on a dark charcoal studio backdrop, single soft cool key light from the left, consistent editorial product photograph, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:46:43.047Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "wne35tssd5rmy0cz7dabm3reh8",
+    "out": "/public/prism-mock/templates/lumen/vessel-3.webp",
+    "seed": 63,
+    "prompt": "a round-bellied handthrown ceramic teapot without markings, deep indigo-blue glaze with graphite speckle, on a dark charcoal studio backdrop, single soft cool key light from the left, consistent editorial product photograph, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:46:53.054Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "zvbvntb0fsrmt0cz7daaw2nrhm",
+    "out": "/public/prism-mock/templates/lumen/vessel-4.webp",
+    "seed": 64,
+    "prompt": "a stack of three small handthrown ceramic cups, deep indigo-blue glaze with graphite speckle, on a dark charcoal studio backdrop, single soft cool key light from the left, consistent editorial product photograph, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:47:05.273Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "tv1g11wgb9rmt0cz7daa4w1gfw",
+    "out": "/public/prism-mock/templates/lumen/vessel-5.webp",
+    "seed": 65,
+    "prompt": "a sculptural handthrown ceramic vessel with a folded rim, deep indigo-blue glaze with graphite speckle, on a dark charcoal studio backdrop, single soft cool key light from the left, consistent editorial product photograph, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:47:14.061Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "xwjstsnjjxrmw0cz7daaxntw2c",
+    "out": "/public/prism-mock/templates/lumen/vessel-6.webp",
+    "seed": 66,
+    "prompt": "a slender handthrown ceramic pitcher with a pulled handle, deep indigo-blue glaze with graphite speckle, on a dark charcoal studio backdrop, single soft cool key light from the left, consistent editorial product photograph, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:47:25.417Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "3kvjs2pywxrmy0cz7dab906jcg",
+    "out": "/public/prism-mock/templates/vitrine/frame-1.webp",
+    "seed": 71,
+    "prompt": "round tortoiseshell acetate frame glasses, folded, three-quarter view, warm amber studio light on a warm dark-taupe seamless backdrop, shallow depth of field, premium eyewear campaign photograph, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:47:35.477Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "azvkyr8671rmt0cz7davff30tm",
+    "out": "/public/prism-mock/templates/vitrine/frame-2.webp",
+    "seed": 72,
+    "prompt": "the same round tortoiseshell acetate glasses standing open, front view, warm amber studio light on a warm dark-taupe seamless backdrop, shallow depth of field, premium eyewear campaign photograph, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:47:43.709Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "ngn8sg16c1rmt0cz7dar0pnrzm",
+    "out": "/public/prism-mock/templates/vitrine/frame-3.webp",
+    "seed": 73,
+    "prompt": "a macro detail of a tortoiseshell acetate glasses hinge and temple, warm amber studio light on a warm dark-taupe seamless backdrop, shallow depth of field, premium eyewear campaign photograph, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:47:52.264Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "9ws2jd27s9rmr0cz7datmy3chw",
+    "out": "/public/prism-mock/templates/vitrine/frame-4.webp",
+    "seed": 74,
+    "prompt": "round tortoiseshell acetate glasses resting on a folded soft grey cloth, warm amber studio light on a warm dark-taupe seamless backdrop, shallow depth of field, premium eyewear campaign photograph, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:48:01.394Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "m9k9br3bd9rmr0cz7dar39r1jc",
+    "out": "/public/prism-mock/templates/chronicle/era-1.webp",
+    "seed": 81,
+    "prompt": "a small woodworker's bench with hand planes and curled shavings, morning window light, warm sepia-amber grade, honest documentary photograph, cinematic haze, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:48:10.578Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "p72kd4mf9nrmy0cz7davw820wg",
+    "out": "/public/prism-mock/templates/chronicle/era-2.webp",
+    "seed": 82,
+    "prompt": "rows of chisels and calipers hung on a workshop wall, warm tungsten light, warm sepia-amber grade, honest documentary photograph, cinematic haze, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:48:21.092Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "j8g68ndrcnrmw0cz7darxqyb98",
+    "out": "/public/prism-mock/templates/chronicle/era-3.webp",
+    "seed": 83,
+    "prompt": "hands shaping a curved wooden chair back on a workbench, sawdust in the light beam, warm sepia-amber grade, honest documentary photograph, cinematic haze, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:48:31.201Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "q246hpezx1rmr0cz7dasj17vsg",
+    "out": "/public/prism-mock/templates/beacon/sky-plate.webp",
+    "seed": 91,
+    "prompt": "a moody dusk sky over a dark sea horizon, deep indigo clouds with a warm coral afterglow band, faint stars appearing, cinematic seascape photograph, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:48:41.472Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "1q3gezr81xrmr0cz7db8ngp3sc",
+    "out": "/public/prism-mock/templates/beacon/lighthouse.png",
+    "seed": 92,
+    "prompt": "a photoreal white-and-coral striped lighthouse on a rocky outcrop, warm lamp glow at the top, dusk light, isolated on a pure solid black background, studio composite plate, ultra sharp, no text, no letters, no labels",
+    "at": "2026-07-07T06:48:49.668Z"
+  },
+  {
+    "stage": "cutout",
+    "model": "bria/remove-background",
+    "mode": "live",
+    "predictionId": "b4r61f9e3hrmw0cz7dbb5kvcdm",
+    "predictTime": 1.422996909,
+    "out": "/public/prism-mock/templates/beacon/lighthouse.cut.png",
+    "at": "2026-07-07T06:48:53.641Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "x59k231qh1rmy0cz7dbb6r2aq4",
+    "out": "/public/prism-mock/templates/cascade/deep-backdrop.webp",
+    "seed": 101,
+    "prompt": "looking down an endless dark colonnade toward a distant luminous amber doorway, volumetric light shafts, deep perspective, cinematic architectural photograph, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:49:04.742Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "ctxq3n32wnrmw0cz7db9jpbx70",
+    "out": "/public/prism-mock/templates/cascade/arch-1.png",
+    "seed": 102,
+    "prompt": "a photoreal weathered dark stone archway seen straight on, the opening in the center completely empty, isolated on a pure solid black background showing through the opening, dramatic amber edge light, no text, no letters, no labels",
+    "at": "2026-07-07T06:49:15.312Z"
+  },
+  {
+    "stage": "cutout",
+    "model": "bria/remove-background",
+    "mode": "live",
+    "predictionId": "2x1838wj75rmr0cz7db9k7p290",
+    "predictTime": 2.014032739,
+    "out": "/public/prism-mock/templates/cascade/arch-1.cut.png",
+    "at": "2026-07-07T06:49:19.991Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "1cgw70myfxrmt0cz7db8jvqf48",
+    "out": "/public/prism-mock/templates/cascade/arch-2.png",
+    "seed": 103,
+    "prompt": "a photoreal brushed bronze circular portal ring seen straight on, the center completely open and empty, isolated on a pure solid black background showing through the center, cool rim light, no text, no letters, no labels",
+    "at": "2026-07-07T06:49:29.086Z"
+  },
+  {
+    "stage": "cutout",
+    "model": "bria/remove-background",
+    "mode": "live",
+    "predictionId": "swrjnb65dxrmt0cz7dbbvvqabm",
+    "predictTime": 1.391635339,
+    "out": "/public/prism-mock/templates/cascade/arch-2.cut.png",
+    "at": "2026-07-07T06:49:32.333Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "0ryc7xpenhrmr0cz7dbbqntj50",
+    "out": "/public/prism-mock/templates/ledgerline/marble.png",
+    "seed": 111,
+    "prompt": "a small carved white carrara marble cube with soft veining, resting on a dark slate surface, single warm gallery spotlight from above, deep shadow, consistent editorial still-life photograph, isolated composition, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:49:42.122Z"
+  },
+  {
+    "stage": "cutout",
+    "model": "bria/remove-background",
+    "mode": "live",
+    "predictionId": "gb5pnjqsxnrmt0cz7db9k42kqm",
+    "predictTime": 1.819909379,
+    "out": "/public/prism-mock/templates/ledgerline/marble.cut.png",
+    "at": "2026-07-07T06:49:46.284Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "msg81gg55xrmt0cz7dbv8hkn0m",
+    "out": "/public/prism-mock/templates/ledgerline/brass.png",
+    "seed": 112,
+    "prompt": "a polished solid brass sphere with a single soft highlight, resting on a dark slate surface, single warm gallery spotlight from above, deep shadow, consistent editorial still-life photograph, isolated composition, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:49:54.551Z"
+  },
+  {
+    "stage": "cutout",
+    "model": "bria/remove-background",
+    "mode": "live",
+    "predictionId": "fwr95hsa35rmw0cz7dbtfjjvnm",
+    "predictTime": 1.771463035,
+    "out": "/public/prism-mock/templates/ledgerline/brass.cut.png",
+    "at": "2026-07-07T06:49:58.593Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "32xsh91n81rmy0cz7dbv10xz3c",
+    "out": "/public/prism-mock/templates/ledgerline/obsidian.png",
+    "seed": 113,
+    "prompt": "a faceted black obsidian prism with glassy edges, resting on a dark slate surface, single warm gallery spotlight from above, deep shadow, consistent editorial still-life photograph, isolated composition, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:50:08.128Z"
+  },
+  {
+    "stage": "cutout",
+    "model": "bria/remove-background",
+    "mode": "live",
+    "predictionId": "jwbytpjya9rmy0cz7dbv6b5jec",
+    "predictTime": 1.820689794,
+    "out": "/public/prism-mock/templates/ledgerline/obsidian.cut.png",
+    "at": "2026-07-07T06:50:11.973Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "66tzwyb9ghrmy0cz7dbrd4x19c",
+    "out": "/public/prism-mock/templates/folio/cover-plate.webp",
+    "seed": 121,
+    "prompt": "a dancer mid-leap wrapped in flowing crimson fabric against a deep charcoal studio backdrop, dramatic single side light, high-contrast editorial fashion photograph, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:50:22.667Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "jnjz1zmkbsrmr0cz7dbrecrg0r",
+    "out": "/public/prism-mock/templates/folio/detail-plate.webp",
+    "seed": 122,
+    "prompt": "a macro study of crimson silk fabric folds catching a single warm light, deep shadows, abstract editorial photograph, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:50:32.698Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "8zhxjjntg1rmy0cz7dbsqhhh34",
+    "out": "/public/prism-mock/templates/tessella/tile-1.webp",
+    "seed": 131,
+    "prompt": "a macro of liquid chrome rippling in slow waves, moody studio light, premium abstract material photograph, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:50:40.700Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "mxyg61psrdrmy0cz7dbrbyp02c",
+    "out": "/public/prism-mock/templates/tessella/tile-2.webp",
+    "seed": 132,
+    "prompt": "a macro of deep emerald glass with internal refracted light lines, moody studio light, premium abstract material photograph, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:50:49.808Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "7j850cfxanrmr0cz7dbrxhh5z4",
+    "out": "/public/prism-mock/templates/tessella/tile-3.webp",
+    "seed": 133,
+    "prompt": "a macro of dark basalt columns with a thin gold seam of light, moody studio light, premium abstract material photograph, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:51:01.227Z"
+  },
+  {
+    "stage": "generate",
+    "model": "black-forest-labs/flux-2-pro",
+    "mode": "live",
+    "predictionId": "vepzy6s9ynrmy0cz7dc971wajg",
+    "out": "/public/prism-mock/templates/waypoint/relief-map.webp",
+    "seed": 141,
+    "prompt": "a macro of an embossed brass topographic relief map, contour ridges catching warm raking light on dark patina, premium object photograph, photoreal, no text, no letters, no labels",
+    "at": "2026-07-07T06:51:10.818Z"
+  }
+]

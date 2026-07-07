@@ -19,7 +19,7 @@
 import { Group, Mesh, MeshBasicMaterial, PlaneGeometry } from "three";
 import type { PrimitiveDefinition } from "../contract";
 import { defineAnimatable } from "../base";
-import { num } from "../contract";
+import { num, str } from "../contract";
 import {
   buildLayeredPhotoScene,
   loadCompositeManifest,
@@ -110,7 +110,10 @@ export const layeredPhotoScenePrimitive: PrimitiveDefinition = {
       let scene: LayeredPhotoScene | null = null;
       let lastT = 0;
 
-      const manifestUrl = DEFAULT_MANIFEST_URL;
+      // W-TPL (additive): a binding may point at its own composite —
+      // `params.manifestUrl` (string) survives resolveParams passthrough.
+      // Default unchanged (celestia-hero) so every existing use is untouched.
+      const manifestUrl = str(params.manifestUrl, DEFAULT_MANIFEST_URL);
       loadCompositeManifest(manifestUrl)
         .then((manifest) => {
           const built = buildLayeredPhotoScene(manifest);

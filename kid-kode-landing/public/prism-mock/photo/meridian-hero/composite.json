@@ -1,0 +1,261 @@
+{
+  "schemaVersion": "prism-photo-v1",
+  "id": "meridian-hero",
+  "createdAt": "2026-07-07T06:47:38.886Z",
+  "route": "R2",
+  "themeHue": "#2fb7c9",
+  "layers": [
+    {
+      "id": "backdrop",
+      "kind": "backdrop",
+      "assetUrl": "/prism-mock/photo/meridian-hero/backdrop.png",
+      "depthMapUrl": "/prism-mock/photo/meridian-hero/backdrop.depth.png",
+      "z": -8,
+      "x": 0,
+      "y": 0,
+      "parallaxRate": 0.12,
+      "scale": 1.6,
+      "opacity": 1
+    },
+    {
+      "id": "headline",
+      "kind": "headline",
+      "assetUrl": "",
+      "z": -3.2,
+      "x": -2.2,
+      "y": 1.3,
+      "parallaxRate": 0.4,
+      "scale": 0.9,
+      "text": "MERIDIAN"
+    },
+    {
+      "id": "shadow",
+      "kind": "shadow",
+      "assetUrl": "/prism-mock/photo/meridian-hero/product.shadow.png",
+      "z": -2.55,
+      "x": 1.5,
+      "y": -0.35,
+      "parallaxRate": 0.5,
+      "scale": 0.5,
+      "opacity": 0.9,
+      "float": {
+        "ampX": 0,
+        "ampY": 0.015,
+        "rotate": 0,
+        "period": 7,
+        "phase": 0
+      }
+    },
+    {
+      "id": "product",
+      "kind": "product",
+      "assetUrl": "/prism-mock/photo/meridian-hero/product.png",
+      "z": -2.4,
+      "x": 1.5,
+      "y": -0.2,
+      "parallaxRate": 0.5,
+      "scale": 0.5,
+      "opacity": 1,
+      "float": {
+        "ampX": 0.02,
+        "ampY": 0.06,
+        "rotate": 0.008,
+        "period": 6.5,
+        "phase": 0
+      }
+    },
+    {
+      "id": "garnish-sprig",
+      "kind": "garnish",
+      "assetUrl": "/prism-mock/photo/meridian-hero/garnish-sprig.png",
+      "z": -1.3,
+      "x": -3.9,
+      "y": 2,
+      "parallaxRate": 0.85,
+      "scale": 0.16,
+      "blur": 0,
+      "opacity": 0.95,
+      "float": {
+        "ampX": 0.05,
+        "ampY": 0.08,
+        "rotate": 0.04,
+        "period": 5,
+        "phase": 0
+      }
+    },
+    {
+      "id": "garnish-seaglass",
+      "kind": "garnish",
+      "assetUrl": "/prism-mock/photo/meridian-hero/garnish-seaglass.png",
+      "z": -1.1,
+      "x": 3.9,
+      "y": -1.5,
+      "parallaxRate": 0.9,
+      "scale": 0.2,
+      "blur": 2,
+      "opacity": 0.95,
+      "float": {
+        "ampX": 0.07,
+        "ampY": 0.11,
+        "rotate": 0.04,
+        "period": 5.8,
+        "phase": 2.0943951023931953
+      }
+    },
+    {
+      "id": "garnish-droplet",
+      "kind": "garnish",
+      "assetUrl": "/prism-mock/photo/meridian-hero/garnish-droplet.png",
+      "z": -1.5,
+      "x": -3.4,
+      "y": -1.9,
+      "parallaxRate": 0.95,
+      "scale": 0.13,
+      "blur": 0,
+      "opacity": 0.95,
+      "float": {
+        "ampX": 0.09,
+        "ampY": 0.08,
+        "rotate": 0.04,
+        "period": 6.6,
+        "phase": 4.1887902047863905
+      }
+    }
+  ],
+  "provenance": [
+    {
+      "stage": "generate",
+      "mode": "live",
+      "provider": "replicate",
+      "model": "black-forest-labs/flux-2-pro",
+      "note": "reused existing",
+      "costUsd": 0,
+      "costEstimated": true
+    },
+    {
+      "stage": "depth",
+      "mode": "live",
+      "provider": "replicate",
+      "model": "chenxwh/depth-anything-v2",
+      "note": "reused existing",
+      "costUsd": 0,
+      "costEstimated": true
+    },
+    {
+      "stage": "grade",
+      "mode": "local",
+      "provider": "local",
+      "model": "filmic-lut",
+      "note": "backdrop",
+      "costUsd": 0
+    },
+    {
+      "stage": "generate",
+      "mode": "live",
+      "provider": "replicate",
+      "model": "black-forest-labs/flux-2-pro",
+      "note": "a3ay5mrkgnrmr0cz7da84sfsgm",
+      "costUsd": 0.08,
+      "costEstimated": true
+    },
+    {
+      "stage": "cutout",
+      "mode": "live",
+      "provider": "replicate",
+      "model": "bria/remove-background",
+      "predictionId": "k1cv4a28axrmw0cz7daa35d5t4",
+      "predictTime": 1.625732529,
+      "costUsd": 0.02,
+      "costEstimated": true
+    },
+    {
+      "stage": "shadow-plate",
+      "mode": "local",
+      "provider": "local",
+      "model": "alpha-cast",
+      "note": "product",
+      "costUsd": 0
+    },
+    {
+      "stage": "grade",
+      "mode": "local",
+      "provider": "local",
+      "model": "filmic-lut",
+      "note": "product",
+      "costUsd": 0
+    },
+    {
+      "stage": "generate",
+      "mode": "live",
+      "provider": "replicate",
+      "model": "black-forest-labs/flux-2-pro",
+      "note": "mh7ajvjjxhrmt0cz7da9dwd3wg",
+      "costUsd": 0.08,
+      "costEstimated": true
+    },
+    {
+      "stage": "cutout",
+      "mode": "live",
+      "provider": "replicate",
+      "model": "bria/remove-background",
+      "predictionId": "ybv4dam7s9rmw0cz7da9vgyvkc",
+      "predictTime": 1.560946905,
+      "costUsd": 0.02,
+      "costEstimated": true
+    },
+    {
+      "stage": "generate",
+      "mode": "live",
+      "provider": "replicate",
+      "model": "black-forest-labs/flux-2-pro",
+      "note": "88eh7qwj39rmr0cz7da9bw7y3r",
+      "costUsd": 0.08,
+      "costEstimated": true
+    },
+    {
+      "stage": "cutout",
+      "mode": "live",
+      "provider": "replicate",
+      "model": "bria/remove-background",
+      "predictionId": "b4gmgne7bsrmt0cz7daa9cv0zr",
+      "predictTime": 2.41366417,
+      "costUsd": 0.02,
+      "costEstimated": true
+    },
+    {
+      "stage": "generate",
+      "mode": "live",
+      "provider": "replicate",
+      "model": "black-forest-labs/flux-2-pro",
+      "note": "m978zmemt1rmr0cz7daagsb48c",
+      "costUsd": 0.08,
+      "costEstimated": true
+    },
+    {
+      "stage": "cutout",
+      "mode": "live",
+      "provider": "replicate",
+      "model": "bria/remove-background",
+      "predictionId": "yz6mvk082nrmt0cz7davzq58pc",
+      "predictTime": 1.7565405410000001,
+      "costUsd": 0.02,
+      "costEstimated": true
+    }
+  ],
+  "grade": {
+    "lift": [
+      0.97,
+      1,
+      1.02
+    ],
+    "gamma": 1.05,
+    "gain": [
+      0.92,
+      1.04,
+      1.1
+    ],
+    "saturation": 1.1,
+    "contrast": 1.15,
+    "vignette": 0.32
+  }
+}

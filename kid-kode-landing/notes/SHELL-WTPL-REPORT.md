@@ -58,9 +58,11 @@ Budget: Replicate ≤ $8.00 est · Tripo ≤ 80 credits.
 
 | when | what | model | est cost | running total |
 |---|---|---|---|---|
-| — | — | — | — | $0.00 |
+| 07-07 01:45 | meridian-hero composite run 1 (backdrop + depth; product stage transient FLUX failure) | flux-2-pro + depth-anything-v2 | $0.083 | $0.08 |
+| 07-07 01:52 | meridian-hero composite retry (product + 3 garnish + 4 bria cutouts; idempotent skip of run-1 stages) | flux-2-pro + bria | $0.40 | $0.48 |
+| 07-07 01:55 | gen-wtpl-assets all sets — 24 FLUX stills + 6 bria cutouts + 1 depth (marginalia/lumen×6/vitrine×4/chronicle×3/beacon/cascade/ledgerline×3/folio×2/tessella×3/waypoint); 0 failures | flux-2-pro + bria + depth-anything-v2 | $2.36 | **$2.84** |
 
-Tripo: 0 credits used.
+Tripo: 0 credits used. Provenance (prediction ids): `public/prism-mock/photo/meridian-hero/composite.json` + `public/prism-mock/templates/provenance.json`.
 
 ## 5. Architecture
 
