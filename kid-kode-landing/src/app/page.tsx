@@ -50,6 +50,9 @@ import TransitionVeil from '@/components/editor/overlays/TransitionVeil';
 import AddNodeDialog from '@/components/editor/overlays/AddNodeDialog';
 import ChangeArtifactWizard from '@/components/editor/change-artifact/ChangeArtifactWizard';
 import ElementLibraryBrowser from '@/components/editor/elements/ElementLibraryBrowser';
+// W-TPL D5 — template catalog picker (new hub from template + section drop).
+import NewHubPicker from '@/components/editor/templates/NewHubPicker';
+import TemplateLauncher from '@/components/editor/templates/TemplateLauncher';
 import GalaxyFilterOverlay from '@/components/editor/overlays/GalaxyFilterOverlay';
 import MagneticCursor from '@/components/editor/overlays/MagneticCursor';
 import GuidedTipsLightbulb from '@/components/editor/walkthrough/GuidedTipsLightbulb';
@@ -932,6 +935,10 @@ export default function Page() {
       <AddNodeDialog />
       <ChangeArtifactWizard />
       <ElementLibraryBrowser />
+      {/* W-TPL D5 — template catalog. Launcher self-gates (hidden in preview-app);
+          the picker only renders when opened. Both are additive editor chrome. */}
+      <TemplateLauncher />
+      <NewHubPicker />
       {/* F4a-fix — EDITOR / authoring chrome hidden in the shipped-app
           (preview-app) view so it reads as the running app, not the editor.
           The demo's own authored shell (header nav rail + footer + per-node
