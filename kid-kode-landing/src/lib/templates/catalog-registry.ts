@@ -26,6 +26,7 @@ import { ledgerlineGraph } from './catalog/ledgerline';
 import { vitrineGraph } from './catalog/vitrine';
 import { folioGraph } from './catalog/folio';
 import { marginaliaGraph } from './catalog/marginalia';
+import { SECTION_TEMPLATES } from './sections';
 
 // ---------------------------------------------------------------------------
 // W8 fold-ins (DEV-1). `legacy:` family tags mark pre-corpus compositions.
@@ -344,7 +345,8 @@ export const HUB_TEMPLATE_CATALOG: readonly HubTemplateEntry[] = [
 // W-TPL section templates — appended per authoring batch.
 // ---------------------------------------------------------------------------
 
-export const SECTION_TEMPLATE_CATALOG: readonly SectionTemplateEntry[] = [];
+export const SECTION_TEMPLATE_CATALOG: readonly SectionTemplateEntry[] =
+  SECTION_TEMPLATES;
 
 // ---------------------------------------------------------------------------
 // Lookup + search
