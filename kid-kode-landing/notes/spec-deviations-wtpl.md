@@ -90,3 +90,16 @@ detached shadow, garnish swarm at varied depth/blur), just assembled from
 graph nodes instead of one composite primitive. The primitive + the
 composite.json remain committed for the celestia baked path and a future
 WebGPU-map-rebuild fix.
+
+## DEV-6 addendum — Ledgerline resolved via photographic grounds (not mesh stages)
+
+The red extruded-text dither on Ledgerline was root-caused in D7: extruded text
+renders CRISP over a photographic plane but DITHERS red over an emissive/dark
+MESH plane under the runtime's AgX path (every other template grounds its text
+on a real photo; Ledgerline was the only one grounding on mesh stages). Fix:
+each spread now uses its generated material still (`<material>.png` - the object
+on dark slate under a warm gallery spotlight) as a FULL-BLEED environment
+photograph, with the tier name/price/line set over the dark-slate half. This is
+both the correct fix (text over photo = clean) AND more on-family
+(editorial-product-gallery IS "a full-bleed environment photograph"). Ledgerline
+now reads as a premium editorial pricing spread; the mesh-stage version is gone.

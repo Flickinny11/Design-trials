@@ -14,7 +14,7 @@
 // cutouts on graded stages), byteBudget=moderate, motion=ambient, source=photo R2.
 
 import type { GraphSource, PrismNode } from '@/lib/prism-graph/types';
-import { bind, imageNode, meshNode, templateHub, textNode } from '../catalog-helpers';
+import { bind, imageNode, templateHub, textNode } from '../catalog-helpers';
 
 const HUB = 'ledgerline';
 const A = '/prism-mock/templates/ledgerline';
@@ -70,42 +70,42 @@ const SPREADS: Spread[] = [
 ];
 
 function spreadNodes(s: Spread): PrismNode[] {
-  const objX = s.objLeft ? -3.7 : 3.7;
-  const txtX = s.objLeft ? 2.5 : -2.5;
+  const objLeft = s.objLeft;
+  const photoX = objLeft ? -3.6 : 3.6;
+  const txtX = objLeft ? 2.6 : -2.6;
   return [
-    // Full-bleed graded "page" behind the spread. ConductorRuntime applies no
-    // hub lighting, so a self-lit emissive tint makes the page visible (a subtle
-    // ground the object + type sit on) without over-lighting the type bevels.
-    meshNode(
+    // The spread's full-bleed environment PHOTOGRAPH (the family's ground): the
+    // generated material still (object on dark slate, warm gallery spotlight).
+    // Text sits over the dark-slate half - text over a photo renders crisp in
+    // ConductorRuntime, where text over an emissive mesh dithered red (DEV-6).
+    imageNode(
       {
-        id: `led-stage-${s.id}`,
+        id: `led-photo-${s.id}`,
         hub: HUB,
-        caption: `${s.name} spread page - a graded editorial ground.`,
+        caption: `${s.name} spread - full-bleed ${s.material} environment photograph.`,
         x: 0,
         y: s.y,
-        z: -1.5,
+        z: -1.2,
         w: 15,
-        h: 4.4,
+        h: 4.6,
+        bindings: [bind('parallax', 'pointer', { params: { strength: 0.12 } })],
       },
-      { kind: 'plane', params: { width: 15, height: 4.4 } },
-      // A subtle DARK graded ground (very low emissive so it reads as a tinted
-      // band, not pure black). Light-emissive type over it stays crisp - a bright
-      // emissive page made extruded text bevels bloom red under AgX (DEV-6).
-      { baseColor: s.stage, emissive: s.stage, emissiveIntensity: 0.3, metalness: 0.1, roughness: 0.8 },
+      `${A}/${s.material}.png`,
     ),
+    // The isolated material object, forward, floating over its own environment.
     imageNode(
       {
         id: `led-obj-${s.id}`,
         hub: HUB,
         caption: `${s.name} tier object - ${s.material} cutout, floats + parallax.`,
-        x: objX,
+        x: photoX,
         y: s.y,
-        z: 0.3,
-        w: 4.6,
-        h: 4.2,
+        z: 0.4,
+        w: 4.4,
+        h: 4,
         bindings: [
           bind('float', 'time', { params: { amplitude: 0.06, periodSec: 7 } }),
-          bind('parallax', 'pointer', { params: { strength: 0.35 } }),
+          bind('parallax', 'pointer', { params: { strength: 0.4 } }),
         ],
       },
       `${A}/${s.material}.cut.png`,
@@ -176,8 +176,8 @@ export const ledgerlineGraph: GraphSource = {
         hub: HUB,
         caption: 'Pricing masthead.',
         x: 0,
-        y: 3.9,
-        z: 0.5,
+        y: 3.2,
+        z: 0.6,
         w: 12,
         h: 0.9,
       },
