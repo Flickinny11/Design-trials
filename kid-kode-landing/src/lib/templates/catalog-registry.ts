@@ -20,6 +20,12 @@ import { cascadeGraph } from './catalog/cascade';
 import { tessellaGraph } from './catalog/tessella';
 import { chronicleGraph } from './catalog/chronicle';
 import { beaconGraph } from './catalog/beacon';
+import { waypointGraph } from './catalog/waypoint';
+import { lumenGraph } from './catalog/lumen';
+import { ledgerlineGraph } from './catalog/ledgerline';
+import { vitrineGraph } from './catalog/vitrine';
+import { folioGraph } from './catalog/folio';
+import { marginaliaGraph } from './catalog/marginalia';
 
 // ---------------------------------------------------------------------------
 // W8 fold-ins (DEV-1). `legacy:` family tags mark pre-corpus compositions.
@@ -212,6 +218,120 @@ const WTPL_ENTRIES: HubTemplateEntry[] = [
         'A photographic plate warped live under the pointer — R2 composite driven by the mountable displacement primitive.',
     },
     graph: beaconGraph,
+  },
+  {
+    slug: 'waypoint',
+    name: 'Waypoint',
+    archetype: 'contact',
+    primaryFamily: 'coverflow-3d-carousel',
+    supportingFamilies: [],
+    tagline: 'Ways to reach us, dealt like a coverflow deck.',
+    blurb:
+      'Three contact cards ride a perspective arc over a topographic relief — the active card faces flat while the flankers tilt, shrink, and step back. The warmest carousel grammar, for a contact page.',
+    tags: ['Contact', 'Coverflow', 'Carousel', '3D'],
+    moods: ['warm', 'approachable', 'topographic'],
+    accent: '#f2794b',
+    route: {
+      hero: 'R2',
+      rationale:
+        'Photoreal relief backdrop (R2) under composed PBR cards (R1) on a perspective arc.',
+    },
+    graph: waypointGraph,
+  },
+  {
+    slug: 'lumen',
+    name: 'Lumen',
+    archetype: 'gallery',
+    primaryFamily: 'infinite-filmstrip-gallery',
+    supportingFamilies: ['oversized-type-editorial'],
+    tagline: 'A moving wall of work around a still headline.',
+    blurb:
+      'Six distinct vessels float in two flanking columns on their own phases while a rock-steady headline holds the centre — the moving mood-board wall, made of real generated work.',
+    tags: ['Gallery', 'Filmstrip', 'Grid', 'Ceramics'],
+    moods: ['nocturnal', 'crafted', 'alive'],
+    accent: '#6f7fd6',
+    route: {
+      hero: 'R2',
+      rationale:
+        'Studio product stills composed as a living wall — photoreal plates with per-tile drift.',
+    },
+    graph: lumenGraph,
+  },
+  {
+    slug: 'ledgerline',
+    name: 'Ledgerline',
+    archetype: 'pricing',
+    primaryFamily: 'editorial-product-gallery',
+    supportingFamilies: [],
+    tagline: 'Pricing tiers turned like pages of a design catalog.',
+    blurb:
+      'Each tier is a full magazine spread — a material object (obsidian, marble, brass) as the hero, a light display headline, and a museum-label inclusion block. Premium pacing over a checkout grid.',
+    tags: ['Pricing', 'Editorial', 'Spreads', 'Museum'],
+    moods: ['editorial', 'museum', 'considered'],
+    accent: '#e6c583',
+    route: {
+      hero: 'R2',
+      rationale:
+        'Material object cutouts on graded stages — photoreal spreads, R2.',
+    },
+    graph: ledgerlineGraph,
+  },
+  {
+    slug: 'vitrine',
+    name: 'Vitrine',
+    archetype: 'product-showcase',
+    primaryFamily: 'filmstrip-3d-carousel',
+    supportingFamilies: [],
+    tagline: 'Frames that drift past the lens, alive between glances.',
+    blurb:
+      'Four eyewear frames drift and rescale continuously along an implied Z-arc like film cells sliding past a lens — the strongest "alive at rest" grammar in the corpus, made of distinct campaign stills.',
+    tags: ['Product', 'Filmstrip', 'Carousel', 'Eyewear'],
+    moods: ['campaign', 'cinematic', 'alive'],
+    accent: '#e0a558',
+    route: {
+      hero: 'R2',
+      rationale:
+        'Campaign stills drifting on a Z-arc — photoreal frames with perpetual per-frame drift.',
+    },
+    graph: vitrineGraph,
+  },
+  {
+    slug: 'folio',
+    name: 'Folio',
+    archetype: 'editorial',
+    primaryFamily: 'oversized-type-editorial',
+    supportingFamilies: ['layered-photo-parallax-hero'],
+    tagline: 'A masthead word big enough to be the artwork.',
+    blurb:
+      'A colossal masthead plate over a full-bleed cover photo, with an inlaid detail plate and the giant-word / tiny-label rhythm — issue line, standfirst, plate caption. A magazine cover as a hub.',
+    tags: ['Editorial', 'Cover', 'Masthead', 'Type'],
+    moods: ['editorial', 'bold', 'print'],
+    accent: '#e2402f',
+    route: {
+      hero: 'R2',
+      rationale:
+        'Extruded masthead type over photoreal cover + detail plates (R2).',
+    },
+    graph: folioGraph,
+  },
+  {
+    slug: 'marginalia',
+    name: 'Marginalia',
+    archetype: 'editorial',
+    primaryFamily: 'layered-photo-parallax-hero',
+    supportingFamilies: ['oversized-type-editorial'],
+    tagline: 'A single valley plate with real depth, annotated in the margins.',
+    blurb:
+      'One photographic plate plus its depth map on the parallax-plane lane — the image tilts to the pointer with true depth while title, byline, and margin notes float around it like printed annotations.',
+    tags: ['Editorial', 'Essay', 'Depth', 'Photo'],
+    moods: ['contemplative', 'atmospheric', 'literary'],
+    accent: '#d9b877',
+    route: {
+      hero: 'R2',
+      rationale:
+        'Single plate + depth map on the parallax-plane displacement lane — the cheapest R2 depth form.',
+    },
+    graph: marginaliaGraph,
   },
 ];
 

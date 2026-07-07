@@ -37,3 +37,32 @@ bento-grid-slider's gap notes call out tile-grid keystoning at frame edges in
 grids at shallow depth and modest FOV impact, accepting the slight perspective
 as part of the premium 3D read rather than simulating a flat mode that does
 not exist yet.
+
+## DEV-5 — distinct-image galleries are COMPOSED, not single-subject echoes
+
+The `carousel-3d` and `loop-column` primitives (W-PHOTO D3) are echo-based:
+they clone the mounted subject into N cells with `makeEcho` (shared geometry,
+cloned materials), so every cell is the SAME image. That is correct for an
+ambient repeat but wrong for a gallery whose whole point is showing DISTINCT
+work (Lumen's six vessels, Vitrine's four frames, Waypoint's contact cards).
+
+So the carousel/filmstrip/coverflow templates express their family's grammar
+COMPOSITIONALLY — distinct image nodes arranged on the grammar's signature
+layout (a perspective Z-arc for coverflow/filmstrip; opposing vertical columns
+for the infinite filmstrip) with per-node continuous motion (float phase-
+desynced, pointer parallax, scroll-driven drift/tilt) for the "alive at rest"
+read. This is both the honest choice (real distinct generated imagery, not one
+picture repeated) and the better-looking one. The echo primitives remain in the
+catalog and are exercised by /photo-lab; a future wave can add a
+multi-source carousel primitive that accepts a list of textures.
+
+## DEV-2 addendum — beacon uses hover-liquid-distort (the mountable primitive)
+
+Audit of the binding player (src/lib/prism/animatable/bindings.ts): the
+`displacement` category is in UNMOUNTABLE_CATEGORIES and is skipped on a mounted
+artifact UNLESS the primitive declares `mountable:true`. `displacement-transition`
+does NOT; `hover-liquid-distort` and `hover-displacement-map` DO. Beacon
+therefore binds `hover-liquid-distort` (pointer driver) so the sky plate
+actually liquefies on hover in the shipped preview — honoring DEV-2's intent
+(one-shot pointer-driven displacement, not a velocity warp field) with the
+primitive that genuinely runs.
