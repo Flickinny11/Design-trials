@@ -6,7 +6,7 @@
 // asset-free — every particle field is a node the runtime factory realizes.
 
 import type { GraphSource } from '@/lib/prism-graph/types';
-import { bind, fxNode, imageNode, textNode, templateHub } from '../node-helpers';
+import { bind, fxNode, textNode, templateHub } from '../node-helpers';
 
 const HUB = 'showpiece';
 
@@ -19,48 +19,43 @@ export const particleShowpieceGraph: GraphSource = {
       backgroundColor: '#030309',
       cursor: { style: 'halo', magnetic: false, accent: '#7fb2ff' },
       transitionPreset: { kind: 'glass-sweep' },
+      // Hub-owned ambience/backdrop stack (galaxy law: passive star/nebula/
+      // backdrop layers are hub DATA, never first-class nodes) — deep plate,
+      // slow galaxy starfield, nebula glow. The cursor attract/repel field
+      // below stays a NODE: it is the interactive star of the showpiece, not
+      // stage ambience.
+      background: [
+        {
+          id: 'nova-bg-plate',
+          attachment: 'parallax',
+          sourceUrl: '/prism-mock/orrery/materia/backdrop.png',
+          z: -6,
+          parallaxDepth: 0.05,
+          opacity: 1,
+        },
+        {
+          id: 'nova-bg-galaxy',
+          attachment: 'world',
+          kind: 'particle-field',
+          z: -150,
+          opacity: 1,
+          parallaxDepth: 0.6,
+          params: { palette: 'deep', density: 0.6, drift: 0.3, intensity: 0.6, variant: 'starfield' },
+        },
+        {
+          id: 'nova-bg-nebula',
+          attachment: 'infinite-environment',
+          kind: 'volumetric-nebula',
+          z: -400,
+          opacity: 0.8,
+          parallaxDepth: 0.95,
+          params: { palette: 'ice', density: 0.5, drift: 0.4, intensity: 0.5 },
+        },
+      ],
     }),
   ],
   nodes: [
-    // Deep atmospheric backdrop far behind the particle layers — gives the
-    // scene a base tone and lets the extruded (metallic) headline catch light.
-    imageNode(
-      {
-        id: 'nova-backdrop',
-        hub: HUB,
-        caption: 'Deep atmospheric backdrop behind the particle layers.',
-        x: 0,
-        y: 0,
-        z: -6,
-        w: 20,
-        h: 12,
-      },
-      '/prism-mock/orrery/materia/backdrop.png',
-    ),
-    // Deep galaxy field — slow rotation, the backdrop.
-    fxNode({
-      id: 'nova-galaxy',
-      hub: HUB,
-      caption: 'Deep galaxy particle field — the backdrop.',
-      x: 0,
-      y: 0,
-      z: -4,
-      w: 20,
-      h: 12,
-      bindings: [bind('galaxy-particles', 'time', { params: { count: 1600 } })],
-    }),
-    // Nebula glow mid-layer.
-    fxNode({
-      id: 'nova-nebula',
-      hub: HUB,
-      caption: 'Nebula glow mid-layer.',
-      x: 0,
-      y: 0,
-      z: -2,
-      w: 14,
-      h: 9,
-      bindings: [bind('nebula', 'time', {})],
-    }),
+    // (Deep plate + galaxy starfield + nebula glow live on hub.background.)
     // Cursor-reactive attract/repel field — the star of the showpiece. As the
     // pointer moves, this field's particles are pulled toward / pushed from it.
     fxNode({

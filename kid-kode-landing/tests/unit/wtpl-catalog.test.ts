@@ -22,6 +22,7 @@ import {
 } from '@/lib/templates/catalog-registry';
 import { TEMPLATE_ARCHETYPES } from '@/lib/templates/catalog-types';
 import { instantiateHubTemplate } from '@/lib/templates/instantiate';
+import { getGalaxyNodeRole } from '@/lib/prism-graph/galaxy-semantics';
 
 const FAMILIES_DIR = join(process.cwd(), 'design-grammar', 'families');
 
@@ -126,6 +127,48 @@ describe('W-TPL catalog — sections', () => {
       const first = new Set(nodes.map((n) => n.nodeId));
       for (const n of again) expect(first.has(n.nodeId), s.slug).toBe(false);
       expect(s.height, s.slug).toBeGreaterThan(0);
+    }
+  });
+});
+
+// W-TPLFIX — the galaxy law: ambient star/dust/nebula backgrounds are hub-owned
+// DATA (`hub.background[]`), never first-class graph nodes. The preflight gate
+// (`scripts/verify-galaxy-semantics.mjs`, READ-ONLY LAW) enforces this on the
+// live graph; this block enforces it at the SOURCE — every catalog template
+// instantiation and every section drop must be incapable of landing an
+// ambient-classified node in a saved graph.
+describe('W-TPLFIX catalog — galaxy law (backgrounds are hub data)', () => {
+  it('no hub-template instantiation yields first-class ambient-background nodes', () => {
+    for (const t of HUB_TEMPLATE_CATALOG) {
+      const inst = instantiateHubTemplate(t, { suffix: 'glaw0001' });
+      const ambient = inst.nodes
+        .filter((n) => getGalaxyNodeRole(n) === 'ambient-background')
+        .map((n) => n.nodeId);
+      expect(ambient, `${t.slug} ambient nodes`).toEqual([]);
+    }
+  });
+
+  it('hub-owned ambience/backdrop layers survive instantiation verbatim', () => {
+    const withBg = HUB_TEMPLATE_CATALOG.filter((t) =>
+      t.graph.hubs.some((h) => (h.background?.length ?? 0) > 0),
+    );
+    // meridian, marginalia, constellation, cascade + the 3 W8 fold-ins.
+    expect(withBg.length).toBeGreaterThanOrEqual(7);
+    for (const t of withBg) {
+      const inst = instantiateHubTemplate(t, { suffix: 'glaw0002' });
+      expect(inst.hubs[0].background, `${t.slug} background survives`).toEqual(
+        t.graph.hubs[0].background,
+      );
+    }
+  });
+
+  it('no section drop injects ambient-background nodes into the host hub', () => {
+    for (const s of SECTION_TEMPLATE_CATALOG) {
+      const nodes = s.build({ hubId: 'host-hub', x: 0, y: -4, seq: 'glaw0003' });
+      const ambient = nodes
+        .filter((n) => getGalaxyNodeRole(n) === 'ambient-background')
+        .map((n) => n.nodeId);
+      expect(ambient, `${s.slug} ambient nodes`).toEqual([]);
     }
   });
 });

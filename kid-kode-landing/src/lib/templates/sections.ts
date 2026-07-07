@@ -18,7 +18,7 @@ import type {
   SectionAnchor,
   SectionTemplateEntry,
 } from './catalog-types';
-import { bind, fxNode, meshNode, textNode } from './catalog-helpers';
+import { bind, meshNode, textNode } from './catalog-helpers';
 
 const GOLD = '#c9a25f';
 const PAPER = '#ece6d9';
@@ -60,14 +60,14 @@ const heroSection: SectionTemplateEntry = {
   name: 'Aurora Hero',
   kind: 'hero',
   primaryFamily: 'oversized-type-editorial',
-  tagline: 'A bold headline + dek + CTA over a dust field.',
+  // Galaxy law: hub-level ambience (dust fields) is the HOST hub's
+  // background[] data — a droppable section must not inject ambience nodes
+  // into someone else's hub. The hero rides the host hub's own atmosphere.
+  tagline: 'A bold headline + dek + CTA.',
   tags: ['Hero', 'Headline', 'CTA'],
   accent: GOLD,
   height: 5,
   build: (a) => [
-    fxNode({
-      ...place(a, { id: 'hero-dust', caption: 'Hero dust field.', dx: 0, dy: 0, z: -1, w: 13, h: 5, bindings: [bind('dust-particles', 'time', { params: { density: 0.4 } })] }),
-    }),
     textNode(place(a, { id: 'hero-h', caption: 'Section hero headline.', dx: 0, dy: 1.1, z: 0.3, w: 11, h: 1 }), 'A headline worth the scroll.', { family: 'Fraunces', weight: 600, size: 0.6, color: PAPER, glow: 1.8 }),
     textNode(place(a, { id: 'hero-dek', caption: 'Section hero dek.', dx: 0, dy: 0.2, z: 0.3, w: 8, h: 0.4, bindings: [bind('text-fade-up-each', 'inview', { params: { stagger: 0.02 } })] }), 'One clear line about why this matters.', { family: 'JetBrains Mono', weight: 400, size: 0.16, color: '#c3bcaa', glow: 1.2 }),
     textNode(place(a, { id: 'hero-cta', caption: 'Section hero CTA - magnetic.', dx: 0, dy: -1, z: 0.3, w: 5, h: 0.4, bindings: [bind('magnetic', 'pointer', { params: { strength: 0.55 } }), bind('hover-lift', 'pointer', {})] }), 'GET STARTED', { family: 'JetBrains Mono', weight: 400, size: 0.18, color: GOLD, glow: 2.1, reveal: false }),

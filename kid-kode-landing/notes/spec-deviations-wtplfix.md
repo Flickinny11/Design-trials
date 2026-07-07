@@ -126,12 +126,43 @@ templates simply never registered onto it:
    - `con-fireflies` (constellation): does not match the ambient classifier
      and is a mid-scene signature motion element of the family, not stage
      ambience. Left as a node.
-   - W8-era `graphs/` templates (`cursor-gallery`, `scroll-hero`,
-     `particle-showpiece` carry `*-backdrop`/`*-nebula` node ids): these
-     predate W-TPL, and their only live path (`store.remixTemplate`) forks
-     into tenant-scoped server graphs — they cannot reach the gate-checked
-     mock artifact. Flagged here as a **known deviation for a future wave**;
-     conforming them is out of the WTPLFIX minimal-diff scope.
+
+**CORRECTION (2026-07-07, during Fix B):** this diagnosis originally scoped
+the W8-era `graphs/` templates (`cursor-gallery`, `scroll-hero`,
+`particle-showpiece`) out as "cannot reach the gate-checked mock artifact —
+their only live path is `store.remixTemplate`". That premise is **stale**: the
+W-TPL `catalog-registry.ts` folded all three into `HUB_TEMPLATE_CATALOG` as
+`legacy:`-family picker entries (DEV-1), so they are instantiable through the
+same `instantiateHubTemplate → addHub → addNodesBatch` flow into the live
+graph — the exact failure mode that produced the residue. They are therefore
+**in scope for Fix B** and were conformed in the same pattern:
+
+   | File | Was (node) | Now (hub `background[]`) |
+   |---|---|---|
+   | `graphs/scroll-hero.ts` | `hero-backdrop` image plate | parallax image layer (`hero-bg-plate`) |
+   | `graphs/particle-showpiece.ts` | `nova-backdrop` plate, `nova-galaxy` deep field, `nova-nebula` glow | image plate + `particle-field` starfield + `volumetric-nebula` (mirrors the mock app's own s1-arrival stack) |
+   | `graphs/cursor-gallery.ts` | `gallery-backdrop` image plate | parallax image layer (`gallery-bg-plate`) |
+
+   `nova-field` (the cursor attract/repel field) stays a NODE — it is the
+   interactive star of the showpiece, not passive ambience (the
+   `con-fireflies` principle). `nova-galaxy` moved to hub data even though its
+   id does not trip the classifier: it is described and used as a passive deep
+   backdrop, and leaving it a node while moving its siblings would restore the
+   letter of the law but not the law.
+
+   One honest RENAME (not a migration): cursor-gallery's `g-backdrop` is a
+   CONTENT tile in the six-tile grid (pointer-tilt + magnetic + reveal, peer
+   of `g-brass`/`g-sapphire`) whose id happened to trip the ambient
+   classifier — as named, the Galaxy overview would silently collapse a real
+   content tile. Renamed `g-atmos` so the graph semantics are true. This is
+   the one place WTPLFIX changes an id rather than moving data to the hub,
+   and it is the correct direction: the node IS content; the name was the lie.
+
+   Enforcement at the source: `tests/unit/wtpl-catalog.test.ts` gained a
+   "galaxy law" block — every catalog instantiation and every section drop is
+   asserted to yield ZERO `ambient-background`-classified nodes (via the real
+   `getGalaxyNodeRole` classifier), and hub `background[]` is asserted to
+   survive `instantiateHubTemplate` verbatim.
 
 ## Process note (for the founder/monitor)
 

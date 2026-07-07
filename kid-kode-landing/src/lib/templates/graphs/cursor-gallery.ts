@@ -16,7 +16,11 @@ const TILES: Array<{ id: string; asset: string; x: number; y: number }> = [
   { id: 'g-meteor', asset: '/prism-mock/orrery/materia/meteorite-macro.png', x: 3.6, y: 1.5 },
   { id: 'g-meteor-dark', asset: '/prism-mock/orrery/materia/meteorite-dark.png', x: -3.6, y: -1.4 },
   { id: 'g-plate', asset: '/prism-mock/orrery/materia/meteorite-plate.png', x: 0, y: -1.4 },
-  { id: 'g-backdrop', asset: '/prism-mock/orrery/materia/backdrop.png', x: 3.6, y: -1.4 },
+  // W-TPLFIX rename (was `g-backdrop`): this is a CONTENT tile in the grid —
+  // an atmospheric macro study — not stage ambience. The old id tripped the
+  // galaxy ambient classifier and would have wrongly collapsed a real tile
+  // out of the Galaxy overview.
+  { id: 'g-atmos', asset: '/prism-mock/orrery/materia/backdrop.png', x: 3.6, y: -1.4 },
 ];
 
 const tileNodes: PrismNode[] = TILES.map((t, i) =>
@@ -50,25 +54,23 @@ export const cursorGalleryGraph: GraphSource = {
       backgroundColor: '#08070c',
       cursor: { style: 'beam', magnetic: true, accent: '#e7c98a' },
       transitionPreset: { kind: 'veil' },
+      // Hub-owned backdrop (galaxy law: the atmospheric plate is hub DATA, not
+      // a node). Gives the grid depth AND lets the extruded (metallic)
+      // title/footer catch light so they read on the dark page.
+      background: [
+        {
+          id: 'gallery-bg-plate',
+          attachment: 'parallax',
+          sourceUrl: '/prism-mock/orrery/materia/backdrop.png',
+          z: -5,
+          parallaxDepth: 0.08,
+          opacity: 1,
+        },
+      ],
     }),
   ],
   nodes: [
-    // Atmospheric backdrop — gives the grid depth AND lets the extruded
-    // (metallic) title/footer catch light so they read on the dark page.
-    imageNode(
-      {
-        id: 'gallery-backdrop',
-        hub: HUB,
-        caption: 'Atmospheric backdrop behind the grid.',
-        x: 0,
-        y: 0,
-        z: -5,
-        w: 17,
-        h: 10,
-        bindings: [bind('parallax', 'pointer', { params: { strength: 0.08 } })],
-      },
-      '/prism-mock/orrery/materia/backdrop.png',
-    ),
+    // (The atmospheric backdrop plate lives on hub.background above.)
     textNode(
       {
         id: 'gallery-title',

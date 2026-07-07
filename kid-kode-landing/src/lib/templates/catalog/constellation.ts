@@ -56,11 +56,24 @@ export const constellationGraph: GraphSource = {
       cursor: { style: 'halo', magnetic: false, accent: GLOW },
       transitionPreset: { kind: 'glass-sweep' },
       contentHeight: 2200,
+      // Hub-owned ambience (galaxy law: dust is hub DATA, not a node): the
+      // far, slow galaxy-dust field behind the constellation.
+      background: [
+        {
+          id: 'con-bg-dust',
+          attachment: 'world',
+          kind: 'particle-field',
+          z: -150,
+          opacity: 1,
+          parallaxDepth: 0.6,
+          params: { palette: 'deep', density: 0.4, drift: 0.3, intensity: 0.55, variant: 'motes' },
+        },
+      ],
     }),
   ],
   nodes: [
-    // The field: a constellation net + fireflies + slow galaxy dust, all
-    // pointer-aware. Three layers at different depths = parallax for free.
+    // The field: a constellation net + fireflies, pointer-aware, over the
+    // hub-background dust. Layers at different depths = parallax for free.
     fxNode({
       id: 'con-net',
       hub: HUB,
@@ -83,17 +96,7 @@ export const constellationGraph: GraphSource = {
       h: 7.5,
       bindings: [bind('fireflies', 'time', { params: { count: 26 } })],
     }),
-    fxNode({
-      id: 'con-dust',
-      hub: HUB,
-      caption: 'Far dust field.',
-      x: 0,
-      y: 0,
-      z: -2.6,
-      w: 16,
-      h: 9,
-      bindings: [bind('dust-particles', 'time', { params: { density: 0.4 } })],
-    }),
+    // (The far galaxy-dust field lives on hub.background above.)
     // Headline + dek.
     textNode(
       {

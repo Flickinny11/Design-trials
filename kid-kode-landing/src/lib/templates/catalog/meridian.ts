@@ -15,7 +15,6 @@
 import type { GraphSource } from '@/lib/prism-graph/types';
 import {
   bind,
-  fxNode,
   imageNode,
   meshNode,
   templateHub,
@@ -38,25 +37,33 @@ export const meridianGraph: GraphSource = {
       cursor: { style: 'ring', magnetic: true, accent: TEAL },
       transitionPreset: { kind: 'veil' },
       contentHeight: 2400,
+      // Hub-owned ambience/backdrop (galaxy law: backgrounds are hub DATA,
+      // never first-class nodes). The luminous teal stage plate is a parallax
+      // background layer; the inter-plane dust is a camera-locked mote field.
+      background: [
+        {
+          id: 'mer-bg-plate',
+          attachment: 'parallax',
+          sourceUrl: `${A}/backdrop.png`,
+          z: -3.2,
+          parallaxDepth: 0.12,
+          opacity: 1,
+        },
+        {
+          id: 'mer-bg-motes',
+          attachment: 'camera-locked',
+          kind: 'particle-field',
+          z: -30,
+          opacity: 0.8,
+          parallaxDepth: 0.1,
+          params: { palette: 'ice', density: 0.4, drift: 0.4, intensity: 0.55, variant: 'motes' },
+        },
+      ],
     }),
   ],
   nodes: [
-    // ── The diorama: backdrop occluded headline shadow flacon garnish ──
-    // Luminous teal backdrop, held far, slow pointer parallax.
-    imageNode(
-      {
-        id: 'mer-backdrop',
-        hub: HUB,
-        caption: 'Teal atelier backdrop plate - held far, slow parallax.',
-        x: 0,
-        y: 0.4,
-        z: -2.6,
-        w: 18,
-        h: 11,
-        bindings: [bind('parallax', 'pointer', { params: { strength: 0.12 } })],
-      },
-      `${A}/backdrop.png`,
-    ),
+    // ── The diorama: occluded headline shadow flacon garnish ──
+    // (Backdrop plate + atmospheric dust live on hub.background above.)
     // Colossal headline routed BEHIND the flacon (the family's occlusion move).
     textNode(
       {
@@ -72,18 +79,6 @@ export const meridianGraph: GraphSource = {
       'MERIDIAN',
       { family: 'Fraunces', weight: 600, size: 1.35, color: '#eaf6f8', glow: 2.3 },
     ),
-    // Atmospheric dust between the planes - hides seams, adds air.
-    fxNode({
-      id: 'mer-dust',
-      hub: HUB,
-      caption: 'Atmospheric dust motes between the photo planes.',
-      x: 0,
-      y: 0.4,
-      z: -0.9,
-      w: 13,
-      h: 8,
-      bindings: [bind('dust-particles', 'time', { params: { density: 0.4 } })],
-    }),
     // Detached soft shadow plate under the flacon (photoreal grounding).
     imageNode(
       {

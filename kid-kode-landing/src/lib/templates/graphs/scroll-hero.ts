@@ -21,24 +21,22 @@ export const scrollHeroGraph: GraphSource = {
       cursor: { style: 'ring', magnetic: true, accent: '#d8a24a' },
       transitionPreset: { kind: 'dissolve' },
       contentHeight: 2200,
+      // Hub-owned backdrop (galaxy law: the atmospheric plate is hub DATA, not
+      // a node). Slight parallax keeps the cursor-depth read.
+      background: [
+        {
+          id: 'hero-bg-plate',
+          attachment: 'parallax',
+          sourceUrl: '/prism-mock/orrery/materia/backdrop.png',
+          z: -4,
+          parallaxDepth: 0.12,
+          opacity: 1,
+        },
+      ],
     }),
   ],
   nodes: [
-    // Rich atmospheric backdrop plane (parallaxes gently to the cursor for depth).
-    imageNode(
-      {
-        id: 'hero-backdrop',
-        hub: HUB,
-        caption: 'Atmospheric backdrop — subtle cursor parallax for depth.',
-        x: 0,
-        y: 0,
-        z: -4,
-        w: 15,
-        h: 9,
-        bindings: [bind('parallax', 'pointer', { params: { strength: 0.12 } })],
-      },
-      '/prism-mock/orrery/materia/backdrop.png',
-    ),
+    // (The atmospheric backdrop plate lives on hub.background above.)
     // The product hero — floats on idle, tilts toward the cursor, and scales
     // through the scroll scrub as you descend.
     glbNode(

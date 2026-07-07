@@ -13,6 +13,7 @@ import type {
   MeshPrimitive,
   PrismBehaviorSpec,
   PrismHub,
+  PrismHubBackgroundLayer,
   PrismNode,
   ScenePosition,
   TextSpec,
@@ -261,6 +262,9 @@ export interface HubSpec {
   transitionPreset?: HubTransitionPreset;
   contentHeight?: number;
   lightingSpec?: LightingSpec;
+  /** Hub-owned ambience/backdrop layers (galaxy law: ambient star/dust/nebula
+   *  backgrounds are hub DATA, never first-class graph nodes). */
+  background?: PrismHubBackgroundLayer[];
 }
 
 export function templateHub(spec: HubSpec): PrismHub {
@@ -277,5 +281,6 @@ export function templateHub(spec: HubSpec): PrismHub {
     lightingSpec: spec.lightingSpec ?? DEFAULT_TEMPLATE_LIGHTING,
     ...(spec.cursor ? { cursor: spec.cursor } : {}),
     ...(spec.transitionPreset ? { transitionPreset: spec.transitionPreset } : {}),
+    ...(spec.background && spec.background.length > 0 ? { background: spec.background } : {}),
   };
 }

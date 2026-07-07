@@ -30,25 +30,23 @@ export const cascadeGraph: GraphSource = {
       cursor: { style: 'ring', magnetic: true, accent: AMBER },
       transitionPreset: { kind: 'dissolve' },
       contentHeight: 2600,
+      // Hub-owned backdrop (galaxy law: the deep stage plate is hub DATA, not
+      // a node). Held far with slight parallax so the near planes read as
+      // rushing past it (the dolly tell).
+      background: [
+        {
+          id: 'cas-bg-plate',
+          attachment: 'parallax',
+          sourceUrl: `${A}/deep-backdrop.webp`,
+          z: -3.2,
+          parallaxDepth: 0.12,
+          opacity: 1,
+        },
+      ],
     }),
   ],
   nodes: [
-    // The deep backdrop - held far back, drifts only slightly to the pointer so
-    // the near planes read as rushing past it (the dolly tell).
-    imageNode(
-      {
-        id: 'cas-backdrop',
-        hub: HUB,
-        caption: 'Deep valley backdrop - holds far, slow pointer parallax.',
-        x: 0,
-        y: 0,
-        z: -3.2,
-        w: 18,
-        h: 10.5,
-        bindings: [bind('parallax', 'pointer', { params: { strength: 0.12 } })],
-      },
-      `${A}/deep-backdrop.webp`,
-    ),
+    // (The deep valley backdrop plate lives on hub.background above.)
     // Mid arch - separates and dollies forward on scroll.
     imageNode(
       {

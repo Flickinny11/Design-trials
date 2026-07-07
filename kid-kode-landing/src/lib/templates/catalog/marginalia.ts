@@ -17,7 +17,6 @@ import type { GraphSource } from '@/lib/prism-graph/types';
 import {
   bind,
   depthPlateNode,
-  fxNode,
   templateHub,
   textNode,
 } from '../catalog-helpers';
@@ -38,6 +37,19 @@ export const marginaliaGraph: GraphSource = {
       cursor: { style: 'ring', magnetic: false, accent: GOLD },
       transitionPreset: { kind: 'dissolve' },
       contentHeight: 2400,
+      // Hub-owned ambience (galaxy law: dust is hub DATA, not a node): the
+      // fine atmospheric drift over the valley stage.
+      background: [
+        {
+          id: 'mar-bg-motes',
+          attachment: 'camera-locked',
+          kind: 'particle-field',
+          z: -30,
+          opacity: 0.75,
+          parallaxDepth: 0.1,
+          params: { palette: 'bone', density: 0.35, drift: 0.35, intensity: 0.5, variant: 'motes' },
+        },
+      ],
     }),
   ],
   nodes: [
@@ -57,18 +69,7 @@ export const marginaliaGraph: GraphSource = {
       `${A}/valley-plate.webp`,
       `${A}/valley-plate.depth.png`,
     ),
-    // Fine dust so the stage breathes even without a cursor.
-    fxNode({
-      id: 'mar-dust',
-      hub: HUB,
-      caption: 'Atmospheric dust over the valley.',
-      x: 0,
-      y: 0.6,
-      z: 0.2,
-      w: 12,
-      h: 7,
-      bindings: [bind('dust-particles', 'time', { params: { density: 0.35 } })],
-    }),
+    // (Fine dust over the stage lives on hub.background above.)
     // Title, upper-left margin.
     textNode(
       {
