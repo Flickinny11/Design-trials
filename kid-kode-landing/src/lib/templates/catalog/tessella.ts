@@ -123,7 +123,7 @@ export const tessellaGraph: GraphSource = {
         bindings: [rise(), lift()],
       },
       { kind: 'cube', params: { width: 3.2, height: 1.6, depth: 0.14 } },
-      { baseColor: '#0e2b25', metalness: 0.25, roughness: 0.14, clearcoat: 0.9, emissive: MINT, emissiveIntensity: 0.35, envMapIntensity: 1.1 },
+      { baseColor: '#0e2b25', metalness: 0.25, roughness: 0.5, clearcoat: 0.25, emissive: MINT, emissiveIntensity: 0.3, envMapIntensity: 1.1 },
     ),
     // Copy tile over the accent slab.
     textNode(
@@ -162,7 +162,7 @@ export const tessellaGraph: GraphSource = {
           bindings: [rise(), lift()],
         },
         { kind: 'cube', params: { width: 3.3, height: 1.2, depth: 0.1 } },
-        { baseColor: '#14171d', metalness: 0.3, roughness: 0.45, clearcoat: 0.5, envMapIntensity: 0.9 },
+        { baseColor: '#14171d', metalness: 0.3, roughness: 0.5, clearcoat: 0.25, envMapIntensity: 0.9 },
       ),
       textNode(
         {

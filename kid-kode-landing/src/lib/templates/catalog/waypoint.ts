@@ -61,8 +61,8 @@ function cardNodes(c: CardSpec): PrismNode[] {
       },
       { kind: 'cube', params: { width: 3, height: 3.7, depth: 0.12 } },
       active
-        ? { baseColor: '#161c1a', metalness: 0.3, roughness: 0.28, clearcoat: 0.8, emissive: ORANGE, emissiveIntensity: 0.18, envMapIntensity: 1.1 }
-        : { baseColor: '#10130f', metalness: 0.25, roughness: 0.4, clearcoat: 0.5, envMapIntensity: 0.85 },
+        ? { baseColor: '#161c1a', metalness: 0.3, roughness: 0.5, clearcoat: 0.25, emissive: ORANGE, emissiveIntensity: 0.18, envMapIntensity: 1.1 }
+        : { baseColor: '#10130f', metalness: 0.25, roughness: 0.5, clearcoat: 0.25, envMapIntensity: 0.85 },
     ),
     textNode(
       {

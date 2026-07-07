@@ -234,7 +234,7 @@ export const meridianGraph: GraphSource = {
         h: 0.05,
       },
       { kind: 'cube', params: { width: 3.2, height: 0.05, depth: 0.04 } },
-      { baseColor: TEAL, metalness: 0.75, roughness: 0.25, emissive: TEAL, emissiveIntensity: 0.55 },
+      { baseColor: TEAL, metalness: 0.55, roughness: 0.5, emissive: TEAL, emissiveIntensity: 0.3 },
     ),
     textNode(
       {

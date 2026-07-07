@@ -94,8 +94,8 @@ const carouselSection: SectionTemplateEntry = {
         place(a, { id: `cf-${c.id}`, caption: `Coverflow card ${c.id}.`, dx: c.dx, dy: 0, z: c.z, w: 2.8, h: 3.4, scale: c.s, rot: [0, c.rotY, 0], bindings: [bind('spring-arrive', 'inview', {}), bind('hover-lift', 'pointer', {}), bind('float', 'time', { params: { amplitude: 0.04, periodSec: 6 + c.dx } })] }),
         { kind: 'cube', params: { width: 2.8, height: 3.4, depth: 0.12 } },
         c.active
-          ? { baseColor: '#1a1712', metalness: 0.3, roughness: 0.3, clearcoat: 0.8, emissive: '#f2794b', emissiveIntensity: 0.15, envMapIntensity: 1.1 }
-          : { baseColor: '#121016', metalness: 0.25, roughness: 0.42, clearcoat: 0.5, envMapIntensity: 0.85 },
+          ? { baseColor: '#1a1712', metalness: 0.3, roughness: 0.5, clearcoat: 0.25, emissive: '#f2794b', emissiveIntensity: 0.15, envMapIntensity: 1.1 }
+          : { baseColor: '#121016', metalness: 0.25, roughness: 0.5, clearcoat: 0.25, envMapIntensity: 0.85 },
       ),
     );
   },
@@ -121,7 +121,7 @@ const bentoSection: SectionTemplateEntry = {
       meshNode(
         place(a, { id: `bento-${t.id}`, caption: `Bento tile ${t.id}.`, dx: t.dx, dy: t.dy, z: 0, w: t.w, h: t.h, bindings: [bind('spring-arrive', 'inview', {}), bind('hover-lift', 'pointer', {})] }),
         { kind: 'cube', params: { width: t.w, height: t.h, depth: 0.12 } },
-        { baseColor: t.c, metalness: 0.3, roughness: 0.4, clearcoat: 0.55, envMapIntensity: 0.95 },
+        { baseColor: t.c, metalness: 0.3, roughness: 0.5, clearcoat: 0.25, envMapIntensity: 0.95 },
       ),
     );
   },
@@ -137,9 +137,9 @@ const testimonialSection: SectionTemplateEntry = {
   accent: GOLD,
   height: 3.4,
   build: (a) => [
-    meshNode(place(a, { id: 'test-slab', caption: 'Testimonial slab.', dx: 0, dy: 0, z: 0, w: 8.4, h: 2.8, bindings: [bind('spring-arrive', 'inview', {}), bind('hover-lift', 'pointer', {})] }), { kind: 'cube', params: { width: 8.4, height: 2.8, depth: 0.1 } }, { baseColor: '#13161c', metalness: 0.25, roughness: 0.42, clearcoat: 0.6, envMapIntensity: 0.9 }),
+    meshNode(place(a, { id: 'test-slab', caption: 'Testimonial slab.', dx: 0, dy: 0, z: 0, w: 8.4, h: 2.8, bindings: [bind('spring-arrive', 'inview', {}), bind('hover-lift', 'pointer', {})] }), { kind: 'cube', params: { width: 8.4, height: 2.8, depth: 0.1 } }, { baseColor: '#13161c', metalness: 0.25, roughness: 0.5, clearcoat: 0.25, envMapIntensity: 0.9 }),
     textNode(place(a, { id: 'test-quote', caption: 'Testimonial quote.', dx: 0, dy: 0.35, z: 0.25, w: 7.4, h: 1, bindings: [bind('text-cascade', 'inview', { params: { stagger: 0.03 } })] }), '"It shipped in a day and looked like a month."', { family: 'Fraunces', weight: 400, size: 0.26, color: PAPER, glow: 1.4 }),
-    meshNode(place(a, { id: 'test-avatar', caption: 'Avatar chip.', dx: -2.9, dy: -0.75, z: 0.25, w: 0.5, h: 0.5, bindings: [bind('spin', 'time', { params: { speed: 0.2 } })] }), { kind: 'sphere', params: { radius: 0.25 } }, { baseColor: GOLD, metalness: 0.9, roughness: 0.25, envMapIntensity: 1.2 }),
+    meshNode(place(a, { id: 'test-avatar', caption: 'Avatar chip.', dx: -2.9, dy: -0.75, z: 0.25, w: 0.5, h: 0.5, bindings: [bind('spin', 'time', { params: { speed: 0.2 } })] }), { kind: 'sphere', params: { radius: 0.25 } }, { baseColor: GOLD, metalness: 0.55, roughness: 0.5, envMapIntensity: 1.2 }),
     textNode(place(a, { id: 'test-name', caption: 'Attribution.', dx: -1.2, dy: -0.75, z: 0.25, w: 5, h: 0.3, bindings: [bind('text-fade-up-each', 'inview', { params: { stagger: 0.02 } })] }), 'MAYA T. - FOUNDER, NORTHWIND', { family: 'JetBrains Mono', weight: 400, size: 0.13, color: GOLD, glow: 1.5, reveal: false }),
   ],
 };
@@ -160,7 +160,7 @@ const pricingSection: SectionTemplateEntry = {
       { id: 'c', dx: 3.4, price: '99', name: 'Scale', accent: '#8fd0dc' },
     ];
     return tiers.flatMap((t): PrismNode[] => [
-      meshNode(place(a, { id: `price-${t.id}`, caption: `${t.name} tier slab.`, dx: t.dx, dy: 0, z: 0, w: 3, h: 3.4, bindings: [bind('spring-arrive', 'inview', {}), bind('hover-lift', 'pointer', {})] }), { kind: 'cube', params: { width: 3, height: 3.4, depth: 0.14 } }, { baseColor: '#141821', metalness: 0.3, roughness: 0.36, clearcoat: 0.6, envMapIntensity: 1 }),
+      meshNode(place(a, { id: `price-${t.id}`, caption: `${t.name} tier slab.`, dx: t.dx, dy: 0, z: 0, w: 3, h: 3.4, bindings: [bind('spring-arrive', 'inview', {}), bind('hover-lift', 'pointer', {})] }), { kind: 'cube', params: { width: 3, height: 3.4, depth: 0.14 } }, { baseColor: '#141821', metalness: 0.3, roughness: 0.5, clearcoat: 0.25, envMapIntensity: 1 }),
       textNode(place(a, { id: `price-${t.id}-n`, caption: `${t.name} name.`, dx: t.dx, dy: 1, z: 0.25, w: 2.6, h: 0.35 }), t.name, { family: 'Fraunces', weight: 600, size: 0.24, color: PAPER, glow: 1.5, reveal: false }),
       textNode(place(a, { id: `price-${t.id}-p`, caption: `${t.name} price.`, dx: t.dx, dy: 0, z: 0.25, w: 2.6, h: 0.8, bindings: [bind('text-counter-roll', 'inview', {})] }), `$${t.price}`, { family: 'JetBrains Mono', weight: 400, size: 0.56, color: t.accent, glow: 2, reveal: false }),
     ]);
@@ -177,7 +177,7 @@ const ctaSection: SectionTemplateEntry = {
   accent: GOLD,
   height: 2.6,
   build: (a) => [
-    meshNode(place(a, { id: 'cta-bar', caption: 'CTA banner slab - light sweep.', dx: 0, dy: 0, z: 0, w: 11, h: 2, bindings: [bind('spring-arrive', 'inview', {}), bind('hover-lift', 'pointer', {})] }), { kind: 'cube', params: { width: 11, height: 2, depth: 0.12 } }, { baseColor: '#171310', metalness: 0.4, roughness: 0.3, clearcoat: 0.7, emissive: GOLD, emissiveIntensity: 0.12, envMapIntensity: 1 }),
+    meshNode(place(a, { id: 'cta-bar', caption: 'CTA banner slab - light sweep.', dx: 0, dy: 0, z: 0, w: 11, h: 2, bindings: [bind('spring-arrive', 'inview', {}), bind('hover-lift', 'pointer', {})] }), { kind: 'cube', params: { width: 11, height: 2, depth: 0.12 } }, { baseColor: '#171310', metalness: 0.4, roughness: 0.5, clearcoat: 0.25, emissive: GOLD, emissiveIntensity: 0.12, envMapIntensity: 1 }),
     textNode(place(a, { id: 'cta-h', caption: 'CTA line.', dx: -0.6, dy: 0.2, z: 0.25, w: 7.5, h: 0.7 }), 'Ready when you are.', { family: 'Fraunces', weight: 600, size: 0.36, color: PAPER, glow: 1.6 }),
     textNode(place(a, { id: 'cta-btn', caption: 'CTA button - magnetic.', dx: 3.6, dy: -0.1, z: 0.28, w: 3, h: 0.5, bindings: [bind('magnetic', 'pointer', { params: { strength: 0.6 } }), bind('hover-lift', 'pointer', {})] }), 'START FREE', { family: 'JetBrains Mono', weight: 400, size: 0.18, color: GOLD, glow: 2.2, reveal: false }),
   ],
@@ -198,7 +198,7 @@ const galleryStripSection: SectionTemplateEntry = {
       meshNode(
         place(a, { id: `strip-${i}`, caption: `Gallery tile ${i}.`, dx, dy: 0, z: 0, w: 1.9, h: 2.4, bindings: [bind('spring-arrive', 'inview', {}), bind('float', 'time', { params: { amplitude: i % 2 ? 0.06 : -0.06, periodSec: 6 + i } }), bind('hover-lift', 'pointer', {})] }),
         { kind: 'cube', params: { width: 1.9, height: 2.4, depth: 0.1 } },
-        { baseColor: '#12131b', metalness: 0.28, roughness: 0.4, clearcoat: 0.5, emissive: '#6f7fd6', emissiveIntensity: 0.06, envMapIntensity: 0.9 },
+        { baseColor: '#12131b', metalness: 0.28, roughness: 0.5, clearcoat: 0.25, emissive: '#6f7fd6', emissiveIntensity: 0.06, envMapIntensity: 0.9 },
       ),
     );
   },
@@ -252,7 +252,7 @@ const marqueeSection: SectionTemplateEntry = {
   accent: GOLD,
   height: 1.6,
   build: (a) => [
-    meshNode(place(a, { id: 'mq-rail', caption: 'Marquee rail.', dx: 0, dy: 0, z: -0.1, w: 13, h: 1, bindings: [bind('spring-arrive', 'inview', {})] }), { kind: 'cube', params: { width: 13, height: 1, depth: 0.08 } }, { baseColor: '#0f1114', metalness: 0.35, roughness: 0.4, clearcoat: 0.4, envMapIntensity: 0.8 }),
+    meshNode(place(a, { id: 'mq-rail', caption: 'Marquee rail.', dx: 0, dy: 0, z: -0.1, w: 13, h: 1, bindings: [bind('spring-arrive', 'inview', {})] }), { kind: 'cube', params: { width: 13, height: 1, depth: 0.08 } }, { baseColor: '#0f1114', metalness: 0.35, roughness: 0.5, clearcoat: 0.25, envMapIntensity: 0.8 }),
     textNode(place(a, { id: 'mq-text', caption: 'Marquee word belt - scroll-steered.', dx: 0, dy: 0, z: 0.2, w: 12, h: 0.5, bindings: [bind('scroll-marquee', 'scroll', { params: { speed: 0.6 } })] }), 'DESIGN / BUILD / SHIP / REPEAT / DESIGN / BUILD / SHIP / REPEAT', { family: 'JetBrains Mono', weight: 400, size: 0.2, color: GOLD, glow: 1.8, reveal: false }),
   ],
 };

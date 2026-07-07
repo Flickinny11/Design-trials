@@ -91,7 +91,7 @@ function spreadNodes(s: Spread): PrismNode[] {
       // A subtle DARK graded ground (very low emissive so it reads as a tinted
       // band, not pure black). Light-emissive type over it stays crisp - a bright
       // emissive page made extruded text bevels bloom red under AgX (DEV-6).
-      { baseColor: s.stage, emissive: s.stage, emissiveIntensity: 0.6, metalness: 0.1, roughness: 0.8 },
+      { baseColor: s.stage, emissive: s.stage, emissiveIntensity: 0.3, metalness: 0.1, roughness: 0.8 },
     ),
     imageNode(
       {

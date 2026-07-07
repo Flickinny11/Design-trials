@@ -39,7 +39,7 @@ const TIERS: TierSpec[] = [
     x: -3.9,
     w: 3.3,
     h: 3.4,
-    mat: { baseColor: '#22252c', metalness: 0.15, roughness: 0.55, clearcoat: 0.4, envMapIntensity: 0.9 },
+    mat: { baseColor: '#22252c', metalness: 0.15, roughness: 0.55, clearcoat: 0.25, envMapIntensity: 0.9 },
     accent: '#9fb2cc',
   },
   {
@@ -50,7 +50,7 @@ const TIERS: TierSpec[] = [
     x: 0,
     w: 3.6,
     h: 3.9,
-    mat: { baseColor: BRASS, metalness: 0.92, roughness: 0.28, envMapIntensity: 1.25 },
+    mat: { baseColor: BRASS, metalness: 0.55, roughness: 0.5, envMapIntensity: 1.25 },
     accent: '#f3dfae',
     sweep: true,
   },
@@ -62,7 +62,7 @@ const TIERS: TierSpec[] = [
     x: 3.9,
     w: 3.3,
     h: 3.4,
-    mat: { baseColor: '#0d1016', metalness: 0.2, roughness: 0.12, clearcoat: 0.9, clearcoatRoughness: 0.15, envMapIntensity: 1.1 },
+    mat: { baseColor: '#0d1016', metalness: 0.2, roughness: 0.5, clearcoat: 0.25, clearcoatRoughness: 0.15, envMapIntensity: 1.1 },
     accent: '#8fd0dc',
   },
 ];
@@ -194,7 +194,7 @@ export const abacusGraph: GraphSource = {
         bindings: [bind('spring-arrive', 'inview', {}), bind('hover-lift', 'pointer', {})],
       },
       { kind: 'cube', params: { width: 11.1, height: 1.1, depth: 0.12 } },
-      { baseColor: '#14161c', metalness: 0.3, roughness: 0.45, clearcoat: 0.5, envMapIntensity: 0.9 },
+      { baseColor: '#14161c', metalness: 0.3, roughness: 0.5, clearcoat: 0.25, envMapIntensity: 0.9 },
     ),
     textNode(
       {
