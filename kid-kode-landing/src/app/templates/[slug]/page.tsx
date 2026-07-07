@@ -9,6 +9,7 @@ import { notFound } from 'next/navigation';
 import { shellDisplay, shellMono } from '@/components/shell/design/shell-fonts';
 import ConductorRuntime from '@/components/prism-player/ConductorRuntime';
 import { getTemplate } from '@/lib/templates/registry';
+import { getHubTemplate } from '@/lib/templates/catalog-registry';
 import type { GraphSource } from '@/lib/prism-graph/types';
 import './template-preview.css';
 
@@ -22,8 +23,20 @@ export default async function TemplatePreviewPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const template = getTemplate(slug);
-  if (!template) notFound();
+  // W8 entry first; the W-TPL catalog (which folds the W8 three in with
+  // archetype metadata) resolves the rest. Additive — W8 slugs unchanged.
+  const w8 = getTemplate(slug);
+  const catalog = w8 ? undefined : getHubTemplate(slug);
+  if (!w8 && !catalog) notFound();
+  const template = w8 ?? {
+    name: catalog!.name,
+    graph: catalog!.graph,
+    capabilities: [
+      `${catalog!.archetype} archetype`,
+      `family: ${catalog!.primaryFamily}`,
+      `route: ${catalog!.route.hero}`,
+    ] as readonly string[],
+  };
 
   const remixHref = `/sign-up?next=${encodeURIComponent(`/app?remix=${slug}`)}`;
 

@@ -109,25 +109,44 @@ export const layeredPhotoScenePrimitive: PrimitiveDefinition = {
 
       let scene: LayeredPhotoScene | null = null;
       let lastT = 0;
+      let placeholderAlive = true;
+      let reqSeq = 0;
 
-      // W-TPL (additive): a binding may point at its own composite —
-      // `params.manifestUrl` (string) survives resolveParams passthrough.
-      // Default unchanged (celestia-hero) so every existing use is untouched.
-      const manifestUrl = str(params.manifestUrl, DEFAULT_MANIFEST_URL);
-      loadCompositeManifest(manifestUrl)
-        .then((manifest) => {
-          const built = buildLayeredPhotoScene(manifest);
+      function clearMounted(): void {
+        if (scene) {
+          root.remove(scene.group);
+          scene.dispose();
+          scene = null;
+        } else if (placeholderAlive) {
           root.remove(backdrop, proxy);
           backdrop.geometry.dispose();
           (backdrop.material as MeshBasicMaterial).dispose();
           (proxy.material as MeshBasicMaterial).dispose();
-          root.add(built.group);
-          scene = built;
-          apply(lastT);
-        })
-        .catch(() => {
-          /* keep the placeholder; the tile still parallaxes the two proxy planes */
-        });
+          placeholderAlive = false;
+        }
+      }
+
+      // W-TPL (additive): a binding may point at its own composite via the
+      // `manifestUrl` param. Binding params land AFTER create() through
+      // setControl (bindings.ts), so the load is re-entrant: onParamChange
+      // reloads, and a stale in-flight load loses to the latest request.
+      // Default unchanged (celestia-hero) so every existing use is untouched.
+      function loadInto(url: string): void {
+        const mine = ++reqSeq;
+        loadCompositeManifest(url)
+          .then((manifest) => {
+            if (mine !== reqSeq) return; // superseded by a newer manifestUrl
+            const built = buildLayeredPhotoScene(manifest);
+            clearMounted();
+            root.add(built.group);
+            scene = built;
+            apply(lastT);
+          })
+          .catch(() => {
+            /* keep whatever is mounted; the tile still parallaxes */
+          });
+      }
+      loadInto(str(params.manifestUrl, DEFAULT_MANIFEST_URL));
 
       function apply(t: number): void {
         lastT = t;
@@ -148,9 +167,15 @@ export const layeredPhotoScenePrimitive: PrimitiveDefinition = {
       return {
         duration: () => Infinity,
         seek: (t: number) => apply(t),
+        onParamChange: (id: string) => {
+          if (id === "manifestUrl") {
+            loadInto(str(params.manifestUrl, DEFAULT_MANIFEST_URL));
+          }
+        },
         dispose: () => {
+          reqSeq += 1; // orphan any in-flight load
           if (scene) scene.dispose();
-          else {
+          else if (placeholderAlive) {
             backdrop.geometry.dispose();
             (backdrop.material as MeshBasicMaterial).dispose();
             (proxy.material as MeshBasicMaterial).dispose();

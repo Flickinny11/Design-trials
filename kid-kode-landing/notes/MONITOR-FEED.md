@@ -1633,3 +1633,246 @@ Toolbar fully REBUILT from GENERATED Tripo v3.1 GLBs (procedural forms discarded
 [20:53:32] CHAIN/SHELL-W10: still building · 71m elapsed · agent up · 1172 commits · last: shell-w10: chain status — PRISM-SHELL-W10 RUN COMPLETE recorded
 [20:53:32] CHAIN/SHELL-W10: commit c27f2c1e — shell-w10: chain status — PRISM-SHELL-W10 RUN COMPLETE recorded
 [20:56:17] CHAIN/SHELL-W10: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[21:39:34] CHAIN/SHELL-WFR: ARMED v2 — watching SHELL-WFR. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[21:40:25] CHAIN/SHELL-WFR: launched build agent on claude-fable-5 (resume #1)
+[21:43:55] CHAIN/SHELL-WFR: still building · 4m elapsed · agent up · 1173 commits · last: boundary: harness routing fix (subagents->subscription opus via --settin
+[21:46:50] CHAIN/SHELL-WFR: MODEL SWITCH: claude-fable-5 → claude-opus-4-8 (resume #2). Progress carries via commits + resume protocol.
+[21:46:50] CHAIN/SHELL-WFR: commit 398afe7a — shell-wfr: run scaffolding — deviations record (D1-D7) + report skeleton
+[21:48:20] CHAIN/SHELL-WFR: still building · 8m elapsed · agent up · 1174 commits · last: shell-wfr: run scaffolding — deviations record (D1-D7) + report skeleton
+[21:51:51] CHAIN/SHELL-WFR: still building · 12m elapsed · agent up · 1174 commits · last: shell-wfr: run scaffolding — deviations record (D1-D7) + report skeleton
+[21:55:22] CHAIN/SHELL-WFR: still building · 15m elapsed · agent up · 1174 commits · last: shell-wfr: run scaffolding — deviations record (D1-D7) + report skeleton
+[21:58:52] CHAIN/SHELL-WFR: still building · 19m elapsed · agent up · 1174 commits · last: shell-wfr: run scaffolding — deviations record (D1-D7) + report skeleton
+[22:02:23] CHAIN/SHELL-WFR: still building · 22m elapsed · agent up · 1174 commits · last: shell-wfr: run scaffolding — deviations record (D1-D7) + report skeleton
+[22:05:53] CHAIN/SHELL-WFR: still building · 26m elapsed · agent up · 1174 commits · last: shell-wfr: run scaffolding — deviations record (D1-D7) + report skeleton
+[22:07:23] CHAIN/SHELL-WFR: commit 4e7f01f9 — shell-wfr: schema v1 + recorder lib + generated doc + compaction + invar
+[22:09:24] CHAIN/SHELL-WFR: still building · 29m elapsed · agent up · 1175 commits · last: shell-wfr: schema v1 + recorder lib + generated doc + compaction + invar
+[22:12:24] CHAIN/SHELL-WFR: commit 9a8ae86b — shell-wfr: wiring (deliverable 3) — instrument the four touchpoints, add
+[22:12:54] CHAIN/SHELL-WFR: still building · 33m elapsed · agent up · 1176 commits · last: shell-wfr: wiring (deliverable 3) — instrument the four touchpoints, add
+[22:16:25] CHAIN/SHELL-WFR: still building · 36m elapsed · agent up · 1176 commits · last: shell-wfr: wiring (deliverable 3) — instrument the four touchpoints, add
+[22:19:55] CHAIN/SHELL-WFR: still building · 40m elapsed · agent up · 1176 commits · last: shell-wfr: wiring (deliverable 3) — instrument the four touchpoints, add
+[22:21:26] CHAIN/SHELL-WFR: commit f2a23140 — shell-wfr: dev ledger + golden eval seed + ToS data-rights draft (delive
+[22:23:26] CHAIN/SHELL-WFR: still building · 43m elapsed · agent up · 1177 commits · last: shell-wfr: dev ledger + golden eval seed + ToS data-rights draft (delive
+[22:26:56] CHAIN/SHELL-WFR: still building · 47m elapsed · agent up · 1177 commits · last: shell-wfr: dev ledger + golden eval seed + ToS data-rights draft (delive
+[22:30:27] CHAIN/SHELL-WFR: still building · 50m elapsed · agent up · 1178 commits · last: shell-wfr: E2E demo + evidence + scrub/join-key refinements (deliverable
+[22:30:27] CHAIN/SHELL-WFR: commit 549283bf — shell-wfr: E2E demo + evidence + scrub/join-key refinements (deliverable
+[22:31:57] CHAIN/SHELL-WFR: commit 10b27e56 — shell-wfr: finalize report — deliverables 1-8 DONE, invariants PASS, ver
+[22:33:58] CHAIN/SHELL-WFR: still building · 54m elapsed · agent up · 1179 commits · last: shell-wfr: finalize report — deliverables 1-8 DONE, invariants PASS, ver
+[22:37:28] CHAIN/SHELL-WFR: still building · 57m elapsed · agent up · 1179 commits · last: shell-wfr: finalize report — deliverables 1-8 DONE, invariants PASS, ver
+[22:40:59] CHAIN/SHELL-WFR: still building · 61m elapsed · agent up · 1179 commits · last: shell-wfr: finalize report — deliverables 1-8 DONE, invariants PASS, ver
+[22:44:29] CHAIN/SHELL-WFR: still building · 64m elapsed · agent up · 1179 commits · last: shell-wfr: finalize report — deliverables 1-8 DONE, invariants PASS, ver
+[22:45:59] CHAIN/SHELL-WFR: commit 2a8a84e1 — shell-wfr: fix round (advocate MUST-FIX) — populate reward axis + real r
+[22:48:00] CHAIN/SHELL-WFR: still building · 68m elapsed · agent up · 1180 commits · last: shell-wfr: fix round (advocate MUST-FIX) — populate reward axis + real r
+[22:51:30] CHAIN/SHELL-WFR: still building · 71m elapsed · agent up · 1180 commits · last: shell-wfr: fix round (advocate MUST-FIX) — populate reward axis + real r
+[22:52:00] CHAIN/SHELL-WFR: commit d078ea09 — shell-wfr: post-gate polish — enterprise opt-out live-data proof + final
+[22:53:01] CHAIN/SHELL-WFR: commit 7c5ce665 — shell-wfr: chain status — PRISM-WFR RUN COMPLETE recorded
+[22:55:02] CHAIN/SHELL-WFR: still building · 75m elapsed · agent up · 1182 commits · last: shell-wfr: chain status — PRISM-WFR RUN COMPLETE recorded
+[22:58:33] CHAIN/SHELL-WFR: still building · 78m elapsed · agent up · 1182 commits · last: shell-wfr: chain status — PRISM-WFR RUN COMPLETE recorded
+[23:01:34] CHAIN/SHELL-WFR: commit 7237d8d2 — shell-wfr: schema v1 + recorder lib + generated doc + compaction + invar
+[23:02:04] CHAIN/SHELL-WFR: still building · 82m elapsed · agent up · 1178 commits · last: shell-wfr: E2E demo + evidence + report + RUN COMPLETE (deliverables 7,8
+[23:02:04] CHAIN/SHELL-WFR: commit 9e00103f — shell-wfr: E2E demo + evidence + report + RUN COMPLETE (deliverables 7,8
+[23:04:49] CHAIN/SHELL-WFR: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[23:53:10] CHAIN/SHELL-WIMPORT: ARMED v2 — watching SHELL-WIMPORT. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[23:54:00] CHAIN/SHELL-WIMPORT: launched build agent on claude-fable-5 (resume #1)
+[23:57:31] CHAIN/SHELL-WIMPORT: still building · 4m elapsed · agent up · 1178 commits · last: shell-wfr: E2E demo + evidence + report + RUN COMPLETE (deliverables 7,8
+[00:00:55] CHAIN/SHELL-WIMPORT: MODEL SWITCH: claude-fable-5 → claude-opus-4-8 (resume #2). Progress carries via commits + resume protocol.
+[00:01:55] CHAIN/SHELL-WIMPORT: still building · 8m elapsed · agent up · 1178 commits · last: shell-wfr: E2E demo + evidence + report + RUN COMPLETE (deliverables 7,8
+[00:05:26] CHAIN/SHELL-WIMPORT: still building · 12m elapsed · agent up · 1178 commits · last: shell-wfr: E2E demo + evidence + report + RUN COMPLETE (deliverables 7,8
+[00:08:56] CHAIN/SHELL-WIMPORT: still building · 15m elapsed · agent up · 1178 commits · last: shell-wfr: E2E demo + evidence + report + RUN COMPLETE (deliverables 7,8
+[00:12:27] CHAIN/SHELL-WIMPORT: still building · 19m elapsed · agent up · 1178 commits · last: shell-wfr: E2E demo + evidence + report + RUN COMPLETE (deliverables 7,8
+[00:12:57] CHAIN/SHELL-WIMPORT: commit e764d48f — shell-wimport: scaffolding — spec deviations (D1-D9) + report skeleton (
+[00:15:27] CHAIN/SHELL-WIMPORT: commit 72c97df4 — shell-wimport: flight-recorder — 7th record type import_event (analyze/s
+[00:15:58] CHAIN/SHELL-WIMPORT: still building · 22m elapsed · agent up · 1180 commits · last: shell-wimport: flight-recorder — 7th record type import_event (analyze/s
+[00:19:28] CHAIN/SHELL-WIMPORT: still building · 26m elapsed · agent up · 1180 commits · last: shell-wimport: flight-recorder — 7th record type import_event (analyze/s
+[00:22:59] CHAIN/SHELL-WIMPORT: still building · 29m elapsed · agent up · 1180 commits · last: shell-wimport: flight-recorder — 7th record type import_event (analyze/s
+[00:26:29] CHAIN/SHELL-WIMPORT: still building · 33m elapsed · agent up · 1180 commits · last: shell-wimport: flight-recorder — 7th record type import_event (analyze/s
+[00:30:00] CHAIN/SHELL-WIMPORT: still building · 36m elapsed · agent up · 1180 commits · last: shell-wimport: flight-recorder — 7th record type import_event (analyze/s
+[00:33:00] CHAIN/SHELL-WIMPORT: commit 79ceb5b7 — shell-wimport: analyzer + plan synthesis + fidelity ledger (src/lib/inge
+[00:33:30] CHAIN/SHELL-WIMPORT: still building · 40m elapsed · agent up · 1181 commits · last: shell-wimport: analyzer + plan synthesis + fidelity ledger (src/lib/inge
+[00:36:31] CHAIN/SHELL-WIMPORT: commit 6816e265 — shell-wimport: server wiring — ingest tRPC router (streaming analyze ove
+[00:37:01] CHAIN/SHELL-WIMPORT: still building · 43m elapsed · agent up · 1182 commits · last: shell-wimport: server wiring — ingest tRPC router (streaming analyze ove
+[00:40:31] CHAIN/SHELL-WIMPORT: still building · 47m elapsed · agent up · 1182 commits · last: shell-wimport: server wiring — ingest tRPC router (streaming analyze ove
+[00:41:31] CHAIN/SHELL-WIMPORT: commit 77fcc7a3 — shell-wimport: intake wiring (client) — GithubImportPanel (analyze+strea
+[00:44:02] CHAIN/SHELL-WIMPORT: still building · 50m elapsed · agent up · 1183 commits · last: shell-wimport: intake wiring (client) — GithubImportPanel (analyze+strea
+[00:47:32] CHAIN/SHELL-WIMPORT: still building · 54m elapsed · agent up · 1183 commits · last: shell-wimport: intake wiring (client) — GithubImportPanel (analyze+strea
+[00:51:03] CHAIN/SHELL-WIMPORT: still building · 57m elapsed · agent up · 1183 commits · last: shell-wimport: intake wiring (client) — GithubImportPanel (analyze+strea
+[00:52:33] CHAIN/SHELL-WIMPORT: commit d71e3106 — shell-wimport: honesty fixes from browser proof — dynamic route /notes/[
+[00:54:33] CHAIN/SHELL-WIMPORT: still building · 61m elapsed · agent up · 1184 commits · last: shell-wimport: honesty fixes from browser proof — dynamic route /notes/[
+[00:57:04] CHAIN/SHELL-WIMPORT: commit 8e959ee9 — shell-wimport: fixture-b proof — real public repo shadcn-ui/taxonomy imp
+[00:58:04] CHAIN/SHELL-WIMPORT: still building · 64m elapsed · agent up · 1185 commits · last: shell-wimport: fixture-b proof — real public repo shadcn-ui/taxonomy imp
+[00:58:34] CHAIN/SHELL-WIMPORT: commit 6f5fe458 — shell-wimport: fixture-b regen proof — network-gated (WIMPORT_LIVE) dete
+[01:01:04] CHAIN/SHELL-WIMPORT: commit fa8cc1a5 — shell-wimport: full live E2E — approved taxonomy import -> real project 
+[01:01:35] CHAIN/SHELL-WIMPORT: still building · 68m elapsed · agent up · 1187 commits · last: shell-wimport: full live E2E — approved taxonomy import -> real project 
+[01:05:05] CHAIN/SHELL-WIMPORT: still building · 71m elapsed · agent up · 1187 commits · last: shell-wimport: full live E2E — approved taxonomy import -> real project 
+[01:08:06] CHAIN/SHELL-WIMPORT: commit 726f7508 — shell-wimport: final report — PRISM-WIMPORT RUN COMPLETE (both judges 0 
+[01:08:36] CHAIN/SHELL-WIMPORT: still building · 75m elapsed · agent up · 1189 commits · last: shell-wimport: commit verify-output.txt evidence (full npm run verify ch
+[01:08:36] CHAIN/SHELL-WIMPORT: commit ae358813 — shell-wimport: commit verify-output.txt evidence (full npm run verify ch
+[01:09:21] CHAIN/SHELL-WIMPORT: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[10:15:26] CHAIN/SHELL-WDG1: ARMED v2 — watching SHELL-WDG1. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[10:16:20] CHAIN/SHELL-WDG1: launched build agent on claude-fable-5 (resume #1)
+[10:19:51] CHAIN/SHELL-WDG1: still building · 4m elapsed · agent up · 1189 commits · last: shell-wimport: commit verify-output.txt evidence (full npm run verify ch
+[10:23:21] CHAIN/SHELL-WDG1: still building · 7m elapsed · agent up · 1189 commits · last: shell-wimport: commit verify-output.txt evidence (full npm run verify ch
+[10:26:52] CHAIN/SHELL-WDG1: still building · 11m elapsed · agent up · 1189 commits · last: shell-wimport: commit verify-output.txt evidence (full npm run verify ch
+[10:30:22] CHAIN/SHELL-WDG1: still building · 14m elapsed · agent up · 1189 commits · last: shell-wimport: commit verify-output.txt evidence (full npm run verify ch
+[10:33:53] CHAIN/SHELL-WDG1: still building · 18m elapsed · agent up · 1189 commits · last: shell-wimport: commit verify-output.txt evidence (full npm run verify ch
+[10:37:23] CHAIN/SHELL-WDG1: still building · 21m elapsed · agent up · 1189 commits · last: shell-wimport: commit verify-output.txt evidence (full npm run verify ch
+[10:40:54] CHAIN/SHELL-WDG1: still building · 25m elapsed · agent up · 1189 commits · last: shell-wimport: commit verify-output.txt evidence (full npm run verify ch
+[10:44:24] CHAIN/SHELL-WDG1: still building · 28m elapsed · agent up · 1189 commits · last: shell-wimport: commit verify-output.txt evidence (full npm run verify ch
+[10:45:24] CHAIN/SHELL-WDG1: FOUNDER SWITCH requested → 'auto'. Cycling agent for clean handoff.
+[10:46:16] CHAIN/SHELL-WDG1: launched build agent on claude-fable-5 (resume #2)
+[10:48:47] CHAIN/SHELL-WDG1: still building · 33m elapsed · agent up · 1189 commits · last: shell-wimport: commit verify-output.txt evidence (full npm run verify ch
+[10:52:17] CHAIN/SHELL-WDG1: still building · 36m elapsed · agent up · 1189 commits · last: shell-wimport: commit verify-output.txt evidence (full npm run verify ch
+[10:55:48] CHAIN/SHELL-WDG1: still building · 40m elapsed · agent up · 1190 commits · last: shell-wdg1: corpus schema + typed loader/query API — design-grammar/ v1 
+[10:55:48] CHAIN/SHELL-WDG1: commit 4c074c3a — shell-wdg1: corpus schema + typed loader/query API — design-grammar/ v1 
+[10:59:18] CHAIN/SHELL-WDG1: still building · 43m elapsed · agent up · 1192 commits · last: shell-wdg1: family layered-photo-parallax-hero — grounded on PLAN §1 zer
+[10:59:18] CHAIN/SHELL-WDG1: commit 3c0a6547 — shell-wdg1: family layered-photo-parallax-hero — grounded on PLAN §1 zer
+[11:00:48] CHAIN/SHELL-WDG1: commit 32a416dd — shell-wdg1: family cinematic-video-hero — grounded on 3 monitor deep sou
+[11:01:48] CHAIN/SHELL-WDG1: commit f4c9fd94 — shell-wdg1: family scroll-video-scrub — grounded on monitor live demo (d
+[11:02:49] CHAIN/SHELL-WDG1: still building · 47m elapsed · agent up · 1196 commits · last: shell-wdg1: family scroll-video-scrub — grounded on monitor live demo (d
+[11:03:19] CHAIN/SHELL-WDG1: commit e69af76a — shell-wdg1: family filmstrip-3d-carousel — grounded on monitor live demo
+[11:04:19] CHAIN/SHELL-WDG1: commit 8c23ca5b — shell-wdg1: family editorial-product-gallery — grounded on 2 monitor dee
+[11:05:49] CHAIN/SHELL-WDG1: commit 5c7b0a69 — shell-wdg1: family coverflow-3d-carousel — grounded on monitor live demo
+[11:06:19] CHAIN/SHELL-WDG1: still building · 50m elapsed · agent up · 1202 commits · last: shell-wdg1: family coverflow-3d-carousel — grounded on monitor live demo
+[11:07:09] CHAIN/SHELL-WDG1: MODEL SWITCH: claude-fable-5 → claude-opus-4-8 (resume #3). Progress carries via commits + resume protocol.
+[11:10:40] CHAIN/SHELL-WDG1: still building · 55m elapsed · agent up · 1203 commits · last: shell-wdg1: family glitch-cyber-fx — grounded on monitor live demo (cybe
+[11:10:40] CHAIN/SHELL-WDG1: commit 34877aa8 — shell-wdg1: family glitch-cyber-fx — grounded on monitor live demo (cybe
+[11:11:10] CHAIN/SHELL-WDG1: commit 61dade46 — shell-wdg1: family hover-morph-distortion — grounded on monitor live dem
+[11:12:10] CHAIN/SHELL-WDG1: commit 010ed7c3 — shell-wdg1: enrich layered-photo-parallax-hero from monitor seed — headl
+[11:14:11] CHAIN/SHELL-WDG1: still building · 58m elapsed · agent up · 1205 commits · last: shell-wdg1: enrich layered-photo-parallax-hero from monitor seed — headl
+[11:16:11] CHAIN/SHELL-WDG1: commit e1bb77a1 — shell-wdg1: DESIGN-GRAMMAR-GAP-REPORT (D5) — 2 ready/9 partial/3 gap acr
+[11:17:41] CHAIN/SHELL-WDG1: still building · 62m elapsed · agent up · 1206 commits · last: shell-wdg1: DESIGN-GRAMMAR-GAP-REPORT (D5) — 2 ready/9 partial/3 gap acr
+[11:21:12] CHAIN/SHELL-WDG1: still building · 65m elapsed · agent up · 1206 commits · last: shell-wdg1: DESIGN-GRAMMAR-GAP-REPORT (D5) — 2 ready/9 partial/3 gap acr
+[11:24:42] CHAIN/SHELL-WDG1: still building · 69m elapsed · agent up · 1206 commits · last: shell-wdg1: DESIGN-GRAMMAR-GAP-REPORT (D5) — 2 ready/9 partial/3 gap acr
+[11:26:43] CHAIN/SHELL-WDG1: commit 91865e3b — shell-wdg1: 11 original exemplar renders (D4) — Replicate flux-2-pro, ~$
+[11:27:13] CHAIN/SHELL-WDG1: commit 7d7eb94e — shell-wdg1: flight-record the harvest (D7, per DEV-1) — additive 8th rec
+[11:28:13] CHAIN/SHELL-WDG1: still building · 72m elapsed · agent up · 1208 commits · last: shell-wdg1: flight-record the harvest (D7, per DEV-1) — additive 8th rec
+[11:30:43] CHAIN/SHELL-WDG1: commit 81a03efd — shell-wdg1: report §4-8 filled + evidence (corpus-stats, family-taxonomy
+[11:31:44] CHAIN/SHELL-WDG1: still building · 76m elapsed · agent up · 1209 commits · last: shell-wdg1: report §4-8 filled + evidence (corpus-stats, family-taxonomy
+[11:35:14] CHAIN/SHELL-WDG1: still building · 79m elapsed · agent up · 1209 commits · last: shell-wdg1: report §4-8 filled + evidence (corpus-stats, family-taxonomy
+[11:38:15] CHAIN/SHELL-WDG1: commit 3ffe7034 — shell-wdg1: PRISM-WDG1 RUN COMPLETE — both judges PASS 0 MUST-FIX (crite
+[11:38:45] CHAIN/SHELL-WDG1: still building · 83m elapsed · agent up · 1210 commits · last: shell-wdg1: PRISM-WDG1 RUN COMPLETE — both judges PASS 0 MUST-FIX (crite
+[11:40:00] CHAIN/SHELL-WDG1: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[12:24:34] CHAIN/SHELL-WPHOTO: ARMED v2 — watching SHELL-WPHOTO. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[12:25:24] CHAIN/SHELL-WPHOTO: launched build agent on claude-fable-5 (resume #1)
+[12:28:55] CHAIN/SHELL-WPHOTO: still building · 4m elapsed · agent up · 1210 commits · last: shell-wdg1: PRISM-WDG1 RUN COMPLETE — both judges PASS 0 MUST-FIX (crite
+[12:32:25] CHAIN/SHELL-WPHOTO: still building · 7m elapsed · agent up · 1210 commits · last: shell-wdg1: PRISM-WDG1 RUN COMPLETE — both judges PASS 0 MUST-FIX (crite
+[12:35:26] CHAIN/SHELL-WPHOTO: commit 9636dc2e — shell-wphoto: report skeleton + pre-declared deviations/interpretations 
+[12:35:56] CHAIN/SHELL-WPHOTO: still building · 11m elapsed · agent up · 1211 commits · last: shell-wphoto: report skeleton + pre-declared deviations/interpretations 
+[12:39:26] CHAIN/SHELL-WPHOTO: still building · 14m elapsed · agent up · 1211 commits · last: shell-wphoto: report skeleton + pre-declared deviations/interpretations 
+[12:41:46] CHAIN/SHELL-WPHOTO: MODEL SWITCH: claude-fable-5 → claude-opus-4-8 (resume #2). Progress carries via commits + resume protocol.
+[12:43:46] CHAIN/SHELL-WPHOTO: still building · 19m elapsed · agent up · 1211 commits · last: shell-wphoto: report skeleton + pre-declared deviations/interpretations 
+[12:47:17] CHAIN/SHELL-WPHOTO: still building · 22m elapsed · agent up · 1211 commits · last: shell-wphoto: report skeleton + pre-declared deviations/interpretations 
+[12:50:47] CHAIN/SHELL-WPHOTO: still building · 26m elapsed · agent up · 1211 commits · last: shell-wphoto: report skeleton + pre-declared deviations/interpretations 
+[12:54:18] CHAIN/SHELL-WPHOTO: still building · 29m elapsed · agent up · 1211 commits · last: shell-wphoto: report skeleton + pre-declared deviations/interpretations 
+[12:57:48] CHAIN/SHELL-WPHOTO: still building · 33m elapsed · agent up · 1211 commits · last: shell-wphoto: report skeleton + pre-declared deviations/interpretations 
+[12:58:18] CHAIN/SHELL-WPHOTO: commit 7e016c70 — shell-wphoto: D1 route planner (src/lib/render-routes) — typed 4-route d
+[13:01:19] CHAIN/SHELL-WPHOTO: still building · 36m elapsed · agent up · 1212 commits · last: shell-wphoto: D1 route planner (src/lib/render-routes) — typed 4-route d
+[13:04:49] CHAIN/SHELL-WPHOTO: still building · 40m elapsed · agent up · 1212 commits · last: shell-wphoto: D1 route planner (src/lib/render-routes) — typed 4-route d
+[13:08:20] CHAIN/SHELL-WPHOTO: still building · 43m elapsed · agent up · 1212 commits · last: shell-wphoto: D1 route planner (src/lib/render-routes) — typed 4-route d
+[13:11:50] CHAIN/SHELL-WPHOTO: still building · 47m elapsed · agent up · 1212 commits · last: shell-wphoto: D1 route planner (src/lib/render-routes) — typed 4-route d
+[13:15:21] CHAIN/SHELL-WPHOTO: still building · 50m elapsed · agent up · 1213 commits · last: shell-wphoto: D2 composite pipeline + R2 layered-photo scene — .assetgen
+[13:15:21] CHAIN/SHELL-WPHOTO: commit 7353e0dc — shell-wphoto: D2 composite pipeline + R2 layered-photo scene — .assetgen
+[13:18:51] CHAIN/SHELL-WPHOTO: still building · 54m elapsed · agent up · 1213 commits · last: shell-wphoto: D2 composite pipeline + R2 layered-photo scene — .assetgen
+[13:22:22] CHAIN/SHELL-WPHOTO: still building · 57m elapsed · agent up · 1213 commits · last: shell-wphoto: D2 composite pipeline + R2 layered-photo scene — .assetgen
+[13:25:05] SHELL-CHAIN-WTPL: QUEUED — waiting for PRISM-WPHOTO: RUN COMPLETE.
+[13:25:52] CHAIN/SHELL-WPHOTO: still building · 61m elapsed · agent up · 1213 commits · last: shell-wphoto: D2 composite pipeline + R2 layered-photo scene — .assetgen
+[13:26:52] CHAIN/SHELL-WPHOTO: commit ea81210a — shell-wphoto: D2 composition + R1 floor verified on real WebGPU — per-la
+[13:28:53] CHAIN/SHELL-WPHOTO: commit a414bbbf — shell-wphoto: D8 flight-record composite generation events — vitest repl
+[13:29:23] CHAIN/SHELL-WPHOTO: still building · 64m elapsed · agent up · 1215 commits · last: shell-wphoto: D8 flight-record composite generation events — vitest repl
+[13:32:53] CHAIN/SHELL-WPHOTO: still building · 68m elapsed · agent up · 1215 commits · last: shell-wphoto: D8 flight-record composite generation events — vitest repl
+[13:36:24] CHAIN/SHELL-WPHOTO: still building · 71m elapsed · agent up · 1215 commits · last: shell-wphoto: D8 flight-record composite generation events — vitest repl
+[13:39:54] CHAIN/SHELL-WPHOTO: still building · 75m elapsed · agent up · 1215 commits · last: shell-wphoto: D8 flight-record composite generation events — vitest repl
+[13:40:24] CHAIN/SHELL-WPHOTO: commit 2c17f158 — shell-wphoto: D4 R1 cinematic floor — src/lib/prism/cinematic-floor libr
+[13:40:54] CHAIN/SHELL-WPHOTO: commit ca6766e0 — shell-wphoto: D4 fixup — cast texture data to Uint8Array for Buffer.from
+[13:42:55] CHAIN/SHELL-WPHOTO: commit 50830c89 — shell-wphoto: report progress — D1/D2/D4/D8 DONE, spend ledger (~$0.39 R
+[13:43:25] CHAIN/SHELL-WPHOTO: still building · 78m elapsed · agent up · 1218 commits · last: shell-wphoto: report progress — D1/D2/D4/D8 DONE, spend ledger (~$0.39 R
+[13:46:55] CHAIN/SHELL-WPHOTO: still building · 82m elapsed · agent up · 1218 commits · last: shell-wphoto: report progress — D1/D2/D4/D8 DONE, spend ledger (~$0.39 R
+[13:50:26] CHAIN/SHELL-WPHOTO: still building · 85m elapsed · agent up · 1218 commits · last: shell-wphoto: report progress — D1/D2/D4/D8 DONE, spend ledger (~$0.39 R
+[13:51:56] CHAIN/SHELL-WPHOTO: commit c74e8495 — shell-wphoto: D3 carousel-3d + loop-column drivers — coverflow carousel 
+[13:53:56] CHAIN/SHELL-WPHOTO: still building · 89m elapsed · agent up · 1219 commits · last: shell-wphoto: D3 carousel-3d + loop-column drivers — coverflow carousel 
+[13:57:27] CHAIN/SHELL-WPHOTO: still building · 92m elapsed · agent up · 1219 commits · last: shell-wphoto: D3 carousel-3d + loop-column drivers — coverflow carousel 
+[14:00:27] CHAIN/SHELL-WPHOTO: commit d483e110 — shell-wphoto: D5 R4 gaussian-splat viewer — @sparkjsdev/spark@2.1.0 (all
+[14:00:57] CHAIN/SHELL-WPHOTO: still building · 96m elapsed · agent up · 1220 commits · last: shell-wphoto: D5 R4 gaussian-splat viewer — @sparkjsdev/spark@2.1.0 (all
+[14:04:28] CHAIN/SHELL-WPHOTO: still building · 99m elapsed · agent up · 1220 commits · last: shell-wphoto: D5 R4 gaussian-splat viewer — @sparkjsdev/spark@2.1.0 (all
+[14:07:58] CHAIN/SHELL-WPHOTO: still building · 103m elapsed · agent up · 1220 commits · last: shell-wphoto: D5 R4 gaussian-splat viewer — @sparkjsdev/spark@2.1.0 (all
+[14:11:29] CHAIN/SHELL-WPHOTO: still building · 106m elapsed · agent up · 1220 commits · last: shell-wphoto: D5 R4 gaussian-splat viewer — @sparkjsdev/spark@2.1.0 (all
+[14:14:59] CHAIN/SHELL-WPHOTO: still building · 110m elapsed · agent up · 1220 commits · last: shell-wphoto: D5 R4 gaussian-splat viewer — @sparkjsdev/spark@2.1.0 (all
+[14:17:30] CHAIN/SHELL-WPHOTO: commit 1fb0514d — shell-wphoto: D6 watch remaster (acceptance test) — route planner APPLIE
+[14:18:30] CHAIN/SHELL-WPHOTO: still building · 113m elapsed · agent up · 1221 commits · last: shell-wphoto: D6 watch remaster (acceptance test) — route planner APPLIE
+[14:19:30] CHAIN/SHELL-WPHOTO: commit 4508e7cc — shell-wphoto: D7 stretch triage — media-gen provider adapters (Replicate
+[14:21:00] CHAIN/SHELL-WPHOTO: commit 9e10615b — shell-wphoto: report §4-8 finalized (architecture, evidence index, gap-r
+[14:22:00] CHAIN/SHELL-WPHOTO: still building · 117m elapsed · agent up · 1223 commits · last: shell-wphoto: report §4-8 finalized (architecture, evidence index, gap-r
+[14:25:31] CHAIN/SHELL-WPHOTO: still building · 120m elapsed · agent up · 1223 commits · last: shell-wphoto: report §4-8 finalized (architecture, evidence index, gap-r
+[14:29:01] CHAIN/SHELL-WPHOTO: still building · 124m elapsed · agent up · 1223 commits · last: shell-wphoto: report §4-8 finalized (architecture, evidence index, gap-r
+[14:32:31] CHAIN/SHELL-WPHOTO: still building · 127m elapsed · agent up · 1223 commits · last: shell-wphoto: report §4-8 finalized (architecture, evidence index, gap-r
+[14:33:02] CHAIN/SHELL-WPHOTO: commit 581b3dac — shell-wphoto: I-PROVENANCE fixup (criteria-reviewer SHOULD-FIX) — orches
+[14:34:02] CHAIN/SHELL-WPHOTO: commit 4498b8b2 — shell-wphoto: report §7 judge verdicts (BOTH PASS 0 MUST-FIX — criteria 
+[14:36:02] CHAIN/SHELL-WPHOTO: still building · 131m elapsed · agent up · 1225 commits · last: shell-wphoto: report §7 judge verdicts (BOTH PASS 0 MUST-FIX — criteria 
+[14:39:32] CHAIN/SHELL-WPHOTO: still building · 134m elapsed · agent up · 1225 commits · last: shell-wphoto: report §7 judge verdicts (BOTH PASS 0 MUST-FIX — criteria 
+[14:41:03] CHAIN/SHELL-WPHOTO: commit 17cf2f94 — shell-wphoto: commit watch-before frames (D6 before/after evidence — the
+[14:42:18] CHAIN/SHELL-WPHOTO: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[01:27:12] SHELL-CHAIN-WTPL: W9 verified complete + agents quiet — arming SHELL-WTPL.
+[01:27:12] CHAIN/SHELL-WTPL: ARMED v2 — watching SHELL-WTPL. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[01:28:04] CHAIN/SHELL-WTPL: launched build agent on claude-fable-5 (resume #1)
+[01:31:34] CHAIN/SHELL-WTPL: still building · 4m elapsed · agent up · 1226 commits · last: shell-wphoto: commit watch-before frames (D6 before/after evidence — the
+[01:32:06] SHELL-CHAIN-W2D: QUEUED — waiting for PRISM-WTPL: RUN COMPLETE.
+[01:32:07] SHELL-CHAIN-WBG: QUEUED — waiting for PRISM-W2D: RUN COMPLETE.
+[01:32:07] SHELL-CHAIN-WUXV: QUEUED — waiting for PRISM-WBG: RUN COMPLETE.
+[01:35:05] CHAIN/SHELL-WTPL: still building · 7m elapsed · agent up · 1226 commits · last: shell-wphoto: commit watch-before frames (D6 before/after evidence — the
+[01:36:35] CHAIN/SHELL-WTPL: commit 53496e1c — shell-wtpl: report skeleton + deviations of record (DEV-1 W8 fold-in, DE
+[01:38:35] CHAIN/SHELL-WTPL: still building · 11m elapsed · agent up · 1227 commits · last: shell-wtpl: report skeleton + deviations of record (DEV-1 W8 fold-in, DE
+[01:42:06] CHAIN/SHELL-WTPL: still building · 14m elapsed · agent up · 1227 commits · last: shell-wtpl: report skeleton + deviations of record (DEV-1 W8 fold-in, DE
+[01:42:36] CHAIN/SHELL-WTPL: commit cd45de46 — shell-wtpl: D1 catalog data layer — archetype/family types (inline famil
+[01:45:36] CHAIN/SHELL-WTPL: still building · 18m elapsed · agent up · 1228 commits · last: shell-wtpl: D1 catalog data layer — archetype/family types (inline famil
+[01:49:07] CHAIN/SHELL-WTPL: still building · 21m elapsed · agent up · 1228 commits · last: shell-wtpl: D1 catalog data layer — archetype/family types (inline famil
+[01:52:37] CHAIN/SHELL-WTPL: still building · 25m elapsed · agent up · 1229 commits · last: shell-wtpl: D2 generated asset sets via the committed pipelines — meridi
+[01:52:37] CHAIN/SHELL-WTPL: commit a831c5b6 — shell-wtpl: D2 generated asset sets via the committed pipelines — meridi
+[01:56:08] CHAIN/SHELL-WTPL: still building · 28m elapsed · agent up · 1229 commits · last: shell-wtpl: D2 generated asset sets via the committed pipelines — meridi
+[01:59:38] CHAIN/SHELL-WTPL: still building · 32m elapsed · agent up · 1229 commits · last: shell-wtpl: D2 generated asset sets via the committed pipelines — meridi
+[02:03:09] CHAIN/SHELL-WTPL: still building · 35m elapsed · agent up · 1229 commits · last: shell-wtpl: D2 generated asset sets via the committed pipelines — meridi
+[02:06:39] CHAIN/SHELL-WTPL: still building · 39m elapsed · agent up · 1229 commits · last: shell-wtpl: D2 generated asset sets via the committed pipelines — meridi
+[02:09:59] CHAIN/SHELL-WTPL: MODEL SWITCH: claude-fable-5 → claude-opus-4-8 (resume #2). Progress carries via commits + resume protocol.
+[02:11:00] CHAIN/SHELL-WTPL: still building · 43m elapsed · agent up · 1229 commits · last: shell-wtpl: D2 generated asset sets via the committed pipelines — meridi
+[02:14:30] CHAIN/SHELL-WTPL: still building · 47m elapsed · agent up · 1229 commits · last: shell-wtpl: D2 generated asset sets via the committed pipelines — meridi
+[02:18:01] CHAIN/SHELL-WTPL: still building · 50m elapsed · agent up · 1229 commits · last: shell-wtpl: D2 generated asset sets via the committed pipelines — meridi
+[02:21:31] CHAIN/SHELL-WTPL: still building · 54m elapsed · agent up · 1229 commits · last: shell-wtpl: D2 generated asset sets via the committed pipelines — meridi
+[02:23:02] CHAIN/SHELL-WTPL: commit 908a8306 — shell-wtpl: D3 batch 1 — 4 hub templates (cascade/tessella/chronicle/bea
+[02:25:02] CHAIN/SHELL-WTPL: still building · 57m elapsed · agent up · 1230 commits · last: shell-wtpl: D3 batch 1 — 4 hub templates (cascade/tessella/chronicle/bea
+[02:28:33] CHAIN/SHELL-WTPL: still building · 61m elapsed · agent up · 1230 commits · last: shell-wtpl: D3 batch 1 — 4 hub templates (cascade/tessella/chronicle/bea
+[02:29:03] CHAIN/SHELL-WTPL: commit 7c7809b1 — shell-wtpl: D3 complete — remaining 6 hub templates (waypoint/lumen/ledg
+[02:31:33] CHAIN/SHELL-WTPL: commit 90641044 — shell-wtpl: D4 — 10 droppable section templates (hero/coverflow/bento/te
+[02:32:03] CHAIN/SHELL-WTPL: still building · 64m elapsed · agent up · 1232 commits · last: shell-wtpl: D4 — 10 droppable section templates (hero/coverflow/bento/te
+[02:35:34] CHAIN/SHELL-WTPL: still building · 68m elapsed · agent up · 1233 commits · last: shell-wtpl: D6 — catalog_event (9th flight-recorder record type) + 'cata
+[02:35:34] CHAIN/SHELL-WTPL: commit ec38094d — shell-wtpl: D6 — catalog_event (9th flight-recorder record type) + 'cata
+[02:39:04] CHAIN/SHELL-WTPL: still building · 71m elapsed · agent up · 1233 commits · last: shell-wtpl: D6 — catalog_event (9th flight-recorder record type) + 'cata
+[02:40:05] CHAIN/SHELL-WTPL: commit af6e0821 — shell-wtpl: D5 — template picker UI. Dedicated picker store + NewHubPick
+[02:42:35] CHAIN/SHELL-WTPL: still building · 75m elapsed · agent up · 1234 commits · last: shell-wtpl: D5 — template picker UI. Dedicated picker store + NewHubPick
+[02:46:05] CHAIN/SHELL-WTPL: still building · 78m elapsed · agent up · 1234 commits · last: shell-wtpl: D5 — template picker UI. Dedicated picker store + NewHubPick
+[02:49:36] CHAIN/SHELL-WTPL: still building · 82m elapsed · agent up · 1234 commits · last: shell-wtpl: D5 — template picker UI. Dedicated picker store + NewHubPick
+[02:53:06] CHAIN/SHELL-WTPL: still building · 85m elapsed · agent up · 1234 commits · last: shell-wtpl: D5 — template picker UI. Dedicated picker store + NewHubPick
+[02:56:37] CHAIN/SHELL-WTPL: still building · 89m elapsed · agent up · 1234 commits · last: shell-wtpl: D5 — template picker UI. Dedicated picker store + NewHubPick
+[03:00:07] CHAIN/SHELL-WTPL: still building · 92m elapsed · agent up · 1234 commits · last: shell-wtpl: D5 — template picker UI. Dedicated picker store + NewHubPick
+[03:03:07] CHAIN/SHELL-WTPL: commit 3b12a563 — shell-wtpl: D7 fix — Meridian hero rendered black in ConductorRuntime. (
+[03:03:37] CHAIN/SHELL-WTPL: still building · 96m elapsed · agent up · 1235 commits · last: shell-wtpl: D7 fix — Meridian hero rendered black in ConductorRuntime. (
+[03:07:08] CHAIN/SHELL-WTPL: still building · 99m elapsed · agent up · 1235 commits · last: shell-wtpl: D7 fix — Meridian hero rendered black in ConductorRuntime. (
+[03:10:38] CHAIN/SHELL-WTPL: still building · 103m elapsed · agent up · 1235 commits · last: shell-wtpl: D7 fix — Meridian hero rendered black in ConductorRuntime. (
+[03:14:09] CHAIN/SHELL-WTPL: still building · 106m elapsed · agent up · 1235 commits · last: shell-wtpl: D7 fix — Meridian hero rendered black in ConductorRuntime. (
+[03:17:39] CHAIN/SHELL-WTPL: still building · 110m elapsed · agent up · 1235 commits · last: shell-wtpl: D7 fix — Meridian hero rendered black in ConductorRuntime. (
+[03:21:10] CHAIN/SHELL-WTPL: still building · 113m elapsed · agent up · 1235 commits · last: shell-wtpl: D7 fix — Meridian hero rendered black in ConductorRuntime. (
+[03:24:40] CHAIN/SHELL-WTPL: still building · 117m elapsed · agent up · 1235 commits · last: shell-wtpl: D7 fix — Meridian hero rendered black in ConductorRuntime. (
+[03:27:10] CHAIN/SHELL-WTPL: commit 1e2a66d8 — shell-wtpl: D7 text-legibility pass — (1) moderate glow boost capped at 
+[03:28:10] CHAIN/SHELL-WTPL: still building · 120m elapsed · agent up · 1236 commits · last: shell-wtpl: D7 text-legibility pass — (1) moderate glow boost capped at 
+[03:31:41] CHAIN/SHELL-WTPL: still building · 124m elapsed · agent up · 1236 commits · last: shell-wtpl: D7 text-legibility pass — (1) moderate glow boost capped at 
+[03:33:41] CHAIN/SHELL-WTPL: commit 355f94d9 — shell-wtpl: D7 mesh-material polish — capped clearcoat (<=0.25) + metaln
+[03:35:11] CHAIN/SHELL-WTPL: still building · 127m elapsed · agent up · 1237 commits · last: shell-wtpl: D7 mesh-material polish — capped clearcoat (<=0.25) + metaln
+[03:38:12] CHAIN/SHELL-WTPL: commit aaa064e9 — shell-wtpl: D7 report §5-6 (architecture + evidence index) + verificatio
+[03:38:42] CHAIN/SHELL-WTPL: still building · 131m elapsed · agent up · 1238 commits · last: shell-wtpl: D7 report §5-6 (architecture + evidence index) + verificatio
+[03:42:12] CHAIN/SHELL-WTPL: still building · 135m elapsed · agent up · 1238 commits · last: shell-wtpl: D7 report §5-6 (architecture + evidence index) + verificatio
+[03:45:43] CHAIN/SHELL-WTPL: still building · 138m elapsed · agent up · 1238 commits · last: shell-wtpl: D7 report §5-6 (architecture + evidence index) + verificatio
+[03:46:13] CHAIN/SHELL-WTPL: commit b1066510 — shell-wtpl: D7 ledgerline resolved — root-caused the red extruded-text d
+[03:48:13] CHAIN/SHELL-WTPL: commit bb3af0a1 — shell-wtpl: report §7 judge verdicts + RUN COMPLETE — criteria-reviewer 
+[03:49:13] CHAIN/SHELL-WTPL: still building · 142m elapsed · agent up · 1241 commits · last: shell-wtpl: add verbatim chain marker lines (PRISM-SHELL-WTPL + PRISM-WT
+[03:49:14] CHAIN/SHELL-WTPL: commit d691aee1 — shell-wtpl: add verbatim chain marker lines (PRISM-SHELL-WTPL + PRISM-WT
+[03:52:59] CHAIN/SHELL-WTPL: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[03:54:08] SHELL-CHAIN-W2D: W9 verified complete + agents quiet — arming SHELL-W2D.
+[03:54:08] CHAIN/SHELL-W2D: ARMED v2 — watching SHELL-W2D. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[03:54:59] CHAIN/SHELL-W2D: PREFLIGHT BLOCKED launch. See /Users/loganbaird/Prototype_Prism/Design-trials/chain-SHELL-W2D-run.log.preflight

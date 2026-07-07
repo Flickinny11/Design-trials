@@ -215,3 +215,7 @@ motion exemplars for the drivers:
 
 No readiness field in the committed corpus is edited by this report; upgrades are
 a per-family future-wave verification (the corpus honesty law).
+
+
+PRISM-WPHOTO: RUN COMPLETE
+_(Marker line appended 2026-07-07 01:27 by founder-monitor after independent verification — judges PASS verdicts in §7, watch-after/composite/driver/gate evidence confirmed on disk. The 14:42 report declared RUN COMPLETE but omitted this exact machine-readable line, stalling the chain watcher ~10.5h. No content above this line was changed.)_

@@ -1,1 +1,1 @@
-[23:01:34] SHELL-WFR: commit 7237d8d2 — shell-wfr: schema v1 + recorder lib + generated doc + compaction + invar
+[03:54:59] SHELL-W2D: PREFLIGHT BLOCKED launch. See /Users/loganbaird/Prototype_Prism/Design-trials/chain-SHELL-W2D-run.log.preflight
