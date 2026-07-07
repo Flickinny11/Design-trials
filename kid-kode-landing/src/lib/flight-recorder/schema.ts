@@ -185,6 +185,7 @@ export type PrismTouchpoint =
   | "verify" // judge / gate outcomes
   | "session" // ship / abandon / return lifecycle
   | "design-grammar" // W-DG1 — design-grammar harvest (analysis + distillation)
+  | "catalog" // W-TPL — template catalog (new-hub-from-template + section drop)
   | (string & {});
 
 /** The Prism extension attribute bag. All optional; a record carries the columns
@@ -282,7 +283,8 @@ export type FlightRecordType =
   | "verify_signal"
   | "user_signal"
   | "import_event"
-  | "design_analysis_event";
+  | "design_analysis_event"
+  | "catalog_event";
 
 /** A whole build (plan → graph shape → SLA tier → cost → outcome). */
 export interface BuildSessionRecord extends RecordEnvelope {
@@ -430,6 +432,47 @@ export interface DesignAnalysisEventRecord extends RecordEnvelope {
   detail?: string;
 }
 
+/** Template-catalog lifecycle stage (W-TPL). The set is fixed but the union
+ *  stays open so a future stage is additive. */
+export type PrismCatalogStage =
+  | "browse" // picker opened / template searched
+  | "instantiate-hub" // a hub template dropped as a new planet in the galaxy
+  | "drop-section" // a section template dropped into an existing hub
+  | (string & {});
+
+/** One template-catalog event (W-TPL). These are premium training data: a
+ *  labeled example of "archetype + grammar family → a real Prism graph the user
+ *  chose to instantiate", plus which sections users reach for. The template slug
+ *  and family id are OUR own catalog vocabulary (no third-party assets/copy are
+ *  ever carried — legal doctrine, PLAN §2); user hub names are free text and are
+ *  scrubbed at write like every other string. */
+export interface CatalogEventRecord extends RecordEnvelope {
+  record_type: "catalog_event";
+  stage: PrismCatalogStage;
+  /** Hub-template slug (instantiate-hub / browse). */
+  template_slug?: string;
+  /** Archetype shelf (landing | marketing | … ). */
+  archetype?: string;
+  /** Primary grammar family id (kebab, or `legacy:` tag). */
+  primary_family?: string;
+  /** Section-template slug + kind (drop-section). */
+  section_slug?: string;
+  section_kind?: string;
+  /** Render-route decision of record for the template hero (R1..R4). */
+  route?: string;
+  /** Nodes minted by the instantiation / section drop. */
+  node_count?: number;
+  /** Remapped id of the new hub (instantiate-hub) or target hub (drop-section) —
+   *  a server/session id, not PII. */
+  hub_ref?: string;
+  /** Search query on a browse event (scrubbed at write). */
+  query?: string;
+  /** Stage outcome (false = failed/degraded, still recorded — data honesty). */
+  ok?: boolean;
+  /** Short human note (scrubbed at write). */
+  detail?: string;
+}
+
 /** The tagged union the writer accepts. */
 export type FlightRecord =
   | BuildSessionRecord
@@ -439,7 +482,8 @@ export type FlightRecord =
   | VerifySignalRecord
   | UserSignalRecord
   | ImportEventRecord
-  | DesignAnalysisEventRecord;
+  | DesignAnalysisEventRecord
+  | CatalogEventRecord;
 
 /** All record type names (drives the schema doc + dev ledger grouping). */
 export const FLIGHT_RECORD_TYPES: FlightRecordType[] = [
@@ -451,4 +495,5 @@ export const FLIGHT_RECORD_TYPES: FlightRecordType[] = [
   "user_signal",
   "import_event",
   "design_analysis_event",
+  "catalog_event",
 ];

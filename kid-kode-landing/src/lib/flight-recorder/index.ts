@@ -17,6 +17,7 @@ import {
   FLIGHT_RECORDER_SCHEMA_VERSION,
   type BuildSessionRecord,
   type CapabilityUsageRecord,
+  type CatalogEventRecord,
   type DesignAnalysisEventRecord,
   type EditEventRecord,
   type FlightRecord,
@@ -343,6 +344,50 @@ export function recordDesignAnalysis(
       readiness: input.readiness,
       element_types: input.element_types,
       exemplar_count: input.exemplar_count,
+      ok: input.ok,
+      detail: input.detail,
+    };
+    finalize(record, env, input.actor?.actorIdentifiers ?? []);
+  } catch {
+    /* fail-open */
+  }
+}
+
+export function recordCatalog(
+  input: EmitCommon &
+    Partial<
+      Pick<
+        CatalogEventRecord,
+        | "stage"
+        | "template_slug"
+        | "archetype"
+        | "primary_family"
+        | "section_slug"
+        | "section_kind"
+        | "route"
+        | "node_count"
+        | "hub_ref"
+        | "query"
+        | "ok"
+        | "detail"
+      >
+    >,
+): void {
+  try {
+    const env = buildEnvelope(input, "catalog_event");
+    const record: CatalogEventRecord = {
+      ...env,
+      record_type: "catalog_event",
+      stage: input.stage ?? "browse",
+      template_slug: input.template_slug,
+      archetype: input.archetype,
+      primary_family: input.primary_family,
+      section_slug: input.section_slug,
+      section_kind: input.section_kind,
+      route: input.route,
+      node_count: input.node_count,
+      hub_ref: input.hub_ref,
+      query: input.query,
       ok: input.ok,
       detail: input.detail,
     };
