@@ -1,7 +1,7 @@
 {
   "schemaVersion": "prism-photo-v1",
   "id": "meridian-hero",
-  "createdAt": "2026-07-07T06:47:38.886Z",
+  "createdAt": "2026-07-07T07:57:37.292Z",
   "route": "R2",
   "themeHue": "#2fb7c9",
   "layers": [
@@ -128,8 +128,8 @@
       "mode": "live",
       "provider": "replicate",
       "model": "black-forest-labs/flux-2-pro",
-      "note": "reused existing",
-      "costUsd": 0,
+      "note": "5yg5mpfa59rmw0cz7eab7wes30",
+      "costUsd": 0.08,
       "costEstimated": true
     },
     {
@@ -137,8 +137,9 @@
       "mode": "live",
       "provider": "replicate",
       "model": "chenxwh/depth-anything-v2",
-      "note": "reused existing",
-      "costUsd": 0,
+      "predictionId": "ay8g298v3xrn80cz7eatta86nr",
+      "predictTime": 0.774531522,
+      "costUsd": 0.003,
       "costEstimated": true
     },
     {
@@ -154,8 +155,8 @@
       "mode": "live",
       "provider": "replicate",
       "model": "black-forest-labs/flux-2-pro",
-      "note": "a3ay5mrkgnrmr0cz7da84sfsgm",
-      "costUsd": 0.08,
+      "note": "reused existing",
+      "costUsd": 0,
       "costEstimated": true
     },
     {
@@ -165,8 +166,9 @@
       "model": "bria/remove-background",
       "predictionId": "k1cv4a28axrmw0cz7daa35d5t4",
       "predictTime": 1.625732529,
-      "costUsd": 0.02,
-      "costEstimated": true
+      "costUsd": 0,
+      "costEstimated": true,
+      "note": "reused existing (id preserved)"
     },
     {
       "stage": "shadow-plate",
@@ -189,8 +191,8 @@
       "mode": "live",
       "provider": "replicate",
       "model": "black-forest-labs/flux-2-pro",
-      "note": "mh7ajvjjxhrmt0cz7da9dwd3wg",
-      "costUsd": 0.08,
+      "note": "reused existing",
+      "costUsd": 0,
       "costEstimated": true
     },
     {
@@ -200,16 +202,17 @@
       "model": "bria/remove-background",
       "predictionId": "ybv4dam7s9rmw0cz7da9vgyvkc",
       "predictTime": 1.560946905,
-      "costUsd": 0.02,
-      "costEstimated": true
+      "costUsd": 0,
+      "costEstimated": true,
+      "note": "reused existing (id preserved)"
     },
     {
       "stage": "generate",
       "mode": "live",
       "provider": "replicate",
       "model": "black-forest-labs/flux-2-pro",
-      "note": "88eh7qwj39rmr0cz7da9bw7y3r",
-      "costUsd": 0.08,
+      "note": "reused existing",
+      "costUsd": 0,
       "costEstimated": true
     },
     {
@@ -219,16 +222,17 @@
       "model": "bria/remove-background",
       "predictionId": "b4gmgne7bsrmt0cz7daa9cv0zr",
       "predictTime": 2.41366417,
-      "costUsd": 0.02,
-      "costEstimated": true
+      "costUsd": 0,
+      "costEstimated": true,
+      "note": "reused existing (id preserved)"
     },
     {
       "stage": "generate",
       "mode": "live",
       "provider": "replicate",
       "model": "black-forest-labs/flux-2-pro",
-      "note": "m978zmemt1rmr0cz7daagsb48c",
-      "costUsd": 0.08,
+      "note": "reused existing",
+      "costUsd": 0,
       "costEstimated": true
     },
     {
@@ -238,24 +242,25 @@
       "model": "bria/remove-background",
       "predictionId": "yz6mvk082nrmt0cz7davzq58pc",
       "predictTime": 1.7565405410000001,
-      "costUsd": 0.02,
-      "costEstimated": true
+      "costUsd": 0,
+      "costEstimated": true,
+      "note": "reused existing (id preserved)"
     }
   ],
   "grade": {
     "lift": [
-      0.97,
       1,
-      1.02
-    ],
-    "gamma": 1.05,
-    "gain": [
-      0.92,
       1.04,
+      1.07
+    ],
+    "gamma": 0.92,
+    "gain": [
+      0.95,
+      1.05,
       1.1
     ],
-    "saturation": 1.1,
-    "contrast": 1.15,
-    "vignette": 0.32
+    "saturation": 1.12,
+    "contrast": 1.08,
+    "vignette": 0.22
   }
 }

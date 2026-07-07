@@ -11,21 +11,29 @@ export default {
   themeHue: "#2fb7c9", // deep teal — one saturated hue per scene
   aspect: "3:2",
   grade: {
-    // cool teal key on deep near-black; lifted cyan shadows, restrained gain.
-    lift: [0.97, 1.0, 1.02],
-    gamma: 1.05,
-    gain: [0.92, 1.04, 1.1],
-    saturation: 1.1,
-    contrast: 1.15,
-    vignette: 0.32,
+    // cool teal key, shadows LIFTED (WTPL D7) so the brighter dawn backdrop
+    // survives grading instead of being crushed back toward black; midtones
+    // lifted (gamma<1), gentler vignette.
+    lift: [1.0, 1.04, 1.07],
+    gamma: 0.92,
+    gain: [0.95, 1.05, 1.1],
+    saturation: 1.12,
+    contrast: 1.08,
+    vignette: 0.22,
   },
   backdrop: {
+    // Brightened for the landing archetype (WTPL D7 fix): the original
+    // "deep near-black" prompt rendered at avg luma ~10 and read as pure black
+    // behind the flacon. This luminous-teal dawn variant keeps the single-hue
+    // teal discipline + moody depth while giving the hero a visible, premium
+    // stage. Same teal grade → harmonizes with the existing product/garnish.
     prompt:
-      "moody dark atelier interior at night, deep near-black scene, cool teal " +
-      "rim light raking across rippled glass shelves, soft aqueous caustic " +
-      "reflections drifting on a dark stone wall, volumetric mist, cinematic " +
-      "depth, shallow focus, photoreal, no text, no letters, no labels",
-    seed: 31,
+      "a serene luminous atelier interior at first light, soft glowing aqua and " +
+      "pale-cyan daylight washing across rippled glass shelves, gentle teal " +
+      "caustic reflections shimmering on a pale stone wall, soft volumetric haze " +
+      "catching bright dawn light, airy cinematic depth, shallow focus, bright " +
+      "and clean, photoreal, no text, no letters, no labels",
+    seed: 71,
   },
   headline: { text: "MERIDIAN" },
   product: {

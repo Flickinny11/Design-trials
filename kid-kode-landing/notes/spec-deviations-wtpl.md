@@ -66,3 +66,27 @@ therefore binds `hover-liquid-distort` (pointer driver) so the sky plate
 actually liquefies on hover in the shipped preview — honoring DEV-2's intent
 (one-shot pointer-driven displacement, not a velocity warp field) with the
 primitive that genuinely runs.
+
+## DEV-6 — Meridian layers its plates as imageNodes, not the layered-photo-scene primitive
+
+D7 browser verification found Meridian's hero rendering near-black in
+ConductorRuntime. Two causes: (1) the original backdrop prompt was "deep
+near-black" (avg luma ~10) — regenerated as a luminous-teal dawn (luma ~163)
+through the committed pipeline (scripts/photo-composites/meridian-hero.mjs,
++$0.08 Replicate); (2) the `layered-photo-scene` primitive's plates still did
+not reveal their textures under the WebGPU backend — its owned assembly swaps
+`material.map` AFTER the MeshBasicMaterial is first compiled, which the WebGL
+path recompiles but the WebGPU node path does not reliably rebuild, so the
+plates stayed at their near-black placeholder colour.
+
+Rather than change the shared W-PHOTO primitive (celestia depends on it) under
+the wave's time budget, Meridian composes the SAME baked plates (bright teal
+backdrop + flacon cutout + detached shadow + three garnish cutouts) as
+individual `imageNode` layers at distinct depths with per-plane parallax — the
+proven runtime image-plane path (renderMode 'plane') that every other template
+uses and that verifies premium in-browser. This is still the
+layered-photo-parallax-hero grammar (backdrop held, cutout product forward,
+detached shadow, garnish swarm at varied depth/blur), just assembled from
+graph nodes instead of one composite primitive. The primitive + the
+composite.json remain committed for the celestia baked path and a future
+WebGPU-map-rebuild fix.

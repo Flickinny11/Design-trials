@@ -1,21 +1,20 @@
 // W-TPL hub template — "Meridian" (landing · layered-photo-parallax-hero).
 //
-// The R2 flagship: a photographic diorama hero assembled from OUR generated
-// plates (public/prism-mock/photo/meridian-hero — FLUX → bria cutout → depth →
-// shadow plate → teal grade; provenance in composite.json). The composite
-// carries the family's signature moves: headline routed BEHIND the product,
-// detached shadow plate, garnish swarm at varied scale/blur, single-hue teal
-// rim discipline. Template nodes add the brand voice: manifesto, CTA with a
-// glint underline, ingredient notes that cascade in on scroll, and reused
-// garnish cutouts as floating accents (differentiated parallax).
+// A photographic diorama landing hero assembled from OUR generated plates
+// (public/prism-mock/photo/meridian-hero — FLUX backdrop + bria cutouts + depth
+// + shadow plate + teal grade; provenance in composite.json). The family's
+// signature moves are composed from real graph nodes (DEV-6): a luminous teal
+// backdrop held far back, a colossal headline routed BEHIND the flacon, the
+// flacon cutout forward with its detached soft shadow, and a garnish swarm at
+// varied depth/scale — every plane parallaxing at its own rate on the pointer.
+// Single-hue teal discipline throughout.
 //
 // Route decision (planner): interaction=parallax, realism=photoreal,
-// byteBudget=moderate, motion=ambient, source=photo → R2 (photo composite).
+// byteBudget=moderate, motion=ambient, source=photo → R2 (photo plates).
 
 import type { GraphSource } from '@/lib/prism-graph/types';
 import {
   bind,
-  compositeSceneNode,
   fxNode,
   imageNode,
   meshNode,
@@ -24,6 +23,7 @@ import {
 } from '../catalog-helpers';
 
 const HUB = 'meridian';
+const A = '/prism-mock/photo/meridian-hero';
 const TEAL = '#2fb7c9';
 const MIST = '#bfe3e9';
 const INK = '#04070a';
@@ -41,35 +41,140 @@ export const meridianGraph: GraphSource = {
     }),
   ],
   nodes: [
-    // The R2 diorama — backdrop, occluded headline, cutout product, detached
-    // shadow, garnish swarm — parallaxing per layer on scroll.
-    compositeSceneNode(
+    // ── The diorama: backdrop → occluded headline → shadow → flacon → garnish ──
+    // Luminous teal backdrop, held far, slow pointer parallax.
+    imageNode(
       {
-        id: 'mer-hero-composite',
+        id: 'mer-backdrop',
         hub: HUB,
-        caption: 'Layered-photo hero diorama — per-plane parallax, teal rim.',
+        caption: 'Teal atelier backdrop plate — held far, slow parallax.',
         x: 0,
-        y: 0.1,
-        z: -0.5,
-        w: 15,
-        h: 9,
+        y: 0.4,
+        z: -2.6,
+        w: 18,
+        h: 11,
+        bindings: [bind('parallax', 'pointer', { params: { strength: 0.12 } })],
       },
-      '/prism-mock/photo/meridian-hero/composite.json',
-      { parallaxDepth: 1.35, floatAmount: 1, driftSpeed: 0.3 },
+      `${A}/backdrop.png`,
     ),
-    // Fine atmospheric dust between the plates — hides seams, adds air.
+    // Colossal headline routed BEHIND the flacon (the family's occlusion move).
+    textNode(
+      {
+        id: 'mer-headline',
+        hub: HUB,
+        caption: 'Colossal headline — occluded by the flacon.',
+        x: -0.6,
+        y: 1.2,
+        z: -1,
+        w: 13,
+        h: 2,
+      },
+      'MERIDIAN',
+      { family: 'Fraunces', weight: 600, size: 1.35, color: '#eaf6f8', glow: 1.7 },
+    ),
+    // Atmospheric dust between the planes — hides seams, adds air.
     fxNode({
       id: 'mer-dust',
       hub: HUB,
       caption: 'Atmospheric dust motes between the photo planes.',
       x: 0,
-      y: 0,
-      z: -1.2,
+      y: 0.4,
+      z: -0.9,
       w: 13,
       h: 8,
-      bindings: [bind('dust-particles', 'time', { params: { density: 0.5 } })],
+      bindings: [bind('dust-particles', 'time', { params: { density: 0.4 } })],
     }),
-    // Brand voice, upper left — small serif wordmark line.
+    // Detached soft shadow plate under the flacon (photoreal grounding).
+    imageNode(
+      {
+        id: 'mer-shadow',
+        hub: HUB,
+        caption: 'Detached soft shadow plate — grounds the flacon.',
+        x: 2.7,
+        y: -2.5,
+        z: -0.4,
+        w: 5,
+        h: 2.2,
+        bindings: [bind('parallax', 'pointer', { params: { strength: 0.3 } })],
+      },
+      `${A}/product.shadow.png`,
+      false,
+    ),
+    // The flacon cutout, forward — floats + parallaxes fastest (nearest).
+    imageNode(
+      {
+        id: 'mer-flacon',
+        hub: HUB,
+        caption: 'Handblown teal flacon cutout — floats, forward parallax.',
+        x: 2.7,
+        y: -0.1,
+        z: 0.5,
+        w: 5.2,
+        h: 6.6,
+        bindings: [
+          bind('float', 'time', { params: { amplitude: 0.05, periodSec: 7 } }),
+          bind('parallax', 'pointer', { params: { strength: 0.55 } }),
+        ],
+      },
+      `${A}/product.png`,
+      false,
+    ),
+    // Garnish swarm at varied depth/scale.
+    imageNode(
+      {
+        id: 'mer-garnish-sprig',
+        hub: HUB,
+        caption: 'Eucalyptus sprig cutout — mid depth, slow float.',
+        x: -3.6,
+        y: 1.9,
+        z: -0.2,
+        w: 2.6,
+        h: 2.6,
+        bindings: [
+          bind('float', 'time', { params: { amplitude: 0.07, periodSec: 8 } }),
+          bind('parallax', 'pointer', { params: { strength: 0.28 } }),
+        ],
+      },
+      `${A}/garnish-sprig.png`,
+      false,
+    ),
+    imageNode(
+      {
+        id: 'mer-garnish-seaglass',
+        hub: HUB,
+        caption: 'Sea-glass pebble cutout — near, faster parallax.',
+        x: -1.6,
+        y: -2.7,
+        z: 0.6,
+        w: 1.5,
+        h: 1.5,
+        bindings: [
+          bind('float', 'time', { params: { amplitude: 0.09, periodSec: 5.5 } }),
+          bind('parallax', 'pointer', { params: { strength: 0.5 } }),
+        ],
+      },
+      `${A}/garnish-seaglass.png`,
+      false,
+    ),
+    imageNode(
+      {
+        id: 'mer-garnish-droplet',
+        hub: HUB,
+        caption: 'Water droplet cutout — nearest, strongest parallax.',
+        x: 5.4,
+        y: 2.4,
+        z: 0.7,
+        w: 1.2,
+        h: 1.2,
+        bindings: [
+          bind('float', 'time', { params: { amplitude: 0.1, periodSec: 5 } }),
+          bind('parallax', 'pointer', { params: { strength: 0.6 } }),
+        ],
+      },
+      `${A}/garnish-droplet.png`,
+      false,
+    ),
+    // ── Brand voice ──
     textNode(
       {
         id: 'mer-brand',
@@ -84,7 +189,6 @@ export const meridianGraph: GraphSource = {
       'Meridian Atelier',
       { family: 'Fraunces', weight: 400, size: 0.2, color: MIST, align: 'left', glow: 1.2, reveal: false },
     ),
-    // Manifesto, lower left — under the diorama's clear zone.
     textNode(
       {
         id: 'mer-manifesto',
@@ -100,7 +204,6 @@ export const meridianGraph: GraphSource = {
       'A scent formed where day meets sea.',
       { family: 'Fraunces', weight: 400, size: 0.3, color: '#e8f4f6', align: 'left', glow: 1.5 },
     ),
-    // CTA — data-mono utility, magnetic pull, over a glinting teal bar.
     textNode(
       {
         id: 'mer-cta',
@@ -123,18 +226,16 @@ export const meridianGraph: GraphSource = {
       {
         id: 'mer-cta-bar',
         hub: HUB,
-        caption: 'CTA underline bar — periodic light sweep.',
+        caption: 'CTA underline bar.',
         x: -4.05,
         y: -2.78,
         z: 0.45,
         w: 3.2,
         h: 0.05,
-        bindings: [bind('light-sweep', 'time', { params: { period: 4 } })],
       },
       { kind: 'cube', params: { width: 3.2, height: 0.05, depth: 0.04 } },
       { baseColor: TEAL, metalness: 0.75, roughness: 0.25, emissive: TEAL, emissiveIntensity: 0.55 },
     ),
-    // Scroll cue.
     textNode(
       {
         id: 'mer-scroll-cue',
@@ -211,8 +312,7 @@ export const meridianGraph: GraphSource = {
       'Rain, held mid-fall',
       { family: 'Fraunces', weight: 400, size: 0.22, color: MIST, glow: 1.3 },
     ),
-    // Reused garnish cutouts as floating accents flanking the notes — the
-    // plates are already background-free, so they read as objects in air.
+    // Reused garnish cutouts as floating accents flanking the notes.
     imageNode(
       {
         id: 'mer-accent-sprig',
@@ -228,7 +328,7 @@ export const meridianGraph: GraphSource = {
           bind('parallax', 'pointer', { params: { strength: 0.3 } }),
         ],
       },
-      '/prism-mock/photo/meridian-hero/garnish-sprig.png',
+      `${A}/garnish-sprig.png`,
       false,
     ),
     imageNode(
@@ -246,7 +346,7 @@ export const meridianGraph: GraphSource = {
           bind('parallax', 'pointer', { params: { strength: 0.5 } }),
         ],
       },
-      '/prism-mock/photo/meridian-hero/garnish-droplet.png',
+      `${A}/garnish-droplet.png`,
       false,
     ),
   ],
