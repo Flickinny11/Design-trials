@@ -1,14 +1,14 @@
-// W-TPL hub template — "Waypoint" (contact · coverflow-3d-carousel).
+// W-TPL hub template - "Waypoint" (contact / coverflow-3d-carousel).
 //
 // The coverflow grammar (corpus): cards travel a perspective arc with real 3D
-// rotation — the active card faces flat at centre while flankers tilt away,
+// rotation - the active card faces flat at centre while flankers tilt away,
 // shrink, dim, and step back. Waypoint is a contact page: three ways-to-reach
 // laid out as a coverflow deck over a topographic relief map. Distinct cards
-// (not one echoed subject — DEV-5), each composed on the arc with a hover lift
+// (not one echoed subject - DEV-5), each composed on the arc with a hover lift
 // and gentle idle drift so the deck is alive at rest.
 //
 // Route decision (planner): interaction=hover/parallax, realism=high (relief
-// backdrop + PBR cards), byteBudget=moderate, motion=ambient, source=mixed →
+// backdrop + PBR cards), byteBudget=moderate, motion=ambient, source=mixed
 // R2 backdrop, R1 cards.
 
 import type { GraphSource, PrismNode } from '@/lib/prism-graph/types';
@@ -45,7 +45,7 @@ function cardNodes(c: CardSpec): PrismNode[] {
       {
         id: `way-card-${c.id}`,
         hub: HUB,
-        caption: `Contact card — ${c.tag}; ${active ? 'active, faces flat' : 'flanker, tilted + receded'}.`,
+        caption: `Contact card - ${c.tag}; ${active ? 'active, faces flat' : 'flanker, tilted + receded'}.`,
         x: c.x,
         y: 0,
         z: c.z,
@@ -77,7 +77,7 @@ function cardNodes(c: CardSpec): PrismNode[] {
         rot: [0, c.rotY, 0],
       },
       c.tag,
-      { family: 'JetBrains Mono', weight: 400, size: 0.13, color: ORANGE, glow: 1.6, reveal: false },
+      { family: 'JetBrains Mono', weight: 400, size: 0.13, color: ORANGE, glow: 2.3, reveal: false },
     ),
     textNode(
       {
@@ -93,7 +93,7 @@ function cardNodes(c: CardSpec): PrismNode[] {
         bindings: [bind('text-fade-up-each', 'inview', { params: { stagger: 0.02 } })],
       },
       c.value,
-      { family: 'Fraunces', weight: active ? 600 : 400, size: 0.22, color: PAPER, glow: 1.3 },
+      { family: 'Fraunces', weight: active ? 600 : 400, size: 0.22, color: PAPER, glow: 2.2 },
     ),
   ];
 }
@@ -102,7 +102,7 @@ export const waypointGraph: GraphSource = {
   hubs: [
     templateHub({
       hubId: HUB,
-      title: 'Waypoint — Coverflow Contact',
+      title: 'Waypoint - Coverflow Contact',
       caption: 'Ways to reach us, dealt like a coverflow deck.',
       backgroundColor: INK,
       cursor: { style: 'ring', magnetic: true, accent: ORANGE },
@@ -115,7 +115,7 @@ export const waypointGraph: GraphSource = {
       {
         id: 'way-relief',
         hub: HUB,
-        caption: 'Topographic relief backdrop — slow pointer parallax.',
+        caption: 'Topographic relief backdrop - slow pointer parallax.',
         x: 0,
         y: -0.3,
         z: -2.6,
@@ -137,7 +137,7 @@ export const waypointGraph: GraphSource = {
         h: 1,
       },
       'Find your way to us.',
-      { family: 'Fraunces', weight: 600, size: 0.58, color: '#f4ede0', glow: 1.8 },
+      { family: 'Fraunces', weight: 600, size: 0.58, color: '#f4ede0', glow: 2.3 },
     ),
     textNode(
       {
@@ -152,14 +152,14 @@ export const waypointGraph: GraphSource = {
         bindings: [bind('text-fade-up-each', 'inview', { params: { stagger: 0.02 } })],
       },
       'Three routes in. Pick the one that suits the day.',
-      { family: 'JetBrains Mono', weight: 400, size: 0.16, color: '#b7c4b3', glow: 1.2 },
+      { family: 'JetBrains Mono', weight: 400, size: 0.16, color: '#b7c4b3', glow: 2 },
     ),
     ...CARDS.flatMap(cardNodes),
     textNode(
       {
         id: 'way-cta',
         hub: HUB,
-        caption: 'CTA — magnetic.',
+        caption: 'CTA - magnetic.',
         x: 0,
         y: -3.2,
         z: 0.8,
@@ -167,8 +167,8 @@ export const waypointGraph: GraphSource = {
         h: 0.45,
         bindings: [bind('magnetic', 'pointer', { params: { strength: 0.55 } })],
       },
-      'OR JUST WAVE — WE SEE YOU',
-      { family: 'JetBrains Mono', weight: 400, size: 0.16, color: ORANGE, glow: 2.0, reveal: false },
+      'OR JUST WAVE - WE SEE YOU',
+      { family: 'JetBrains Mono', weight: 400, size: 0.16, color: ORANGE, glow: 2.3, reveal: false },
     ),
   ],
   edges: [],

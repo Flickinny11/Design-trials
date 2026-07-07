@@ -1,16 +1,16 @@
-// W-TPL hub template — "Meridian" (landing · layered-photo-parallax-hero).
+// W-TPL hub template - "Meridian" (landing / layered-photo-parallax-hero).
 //
 // A photographic diorama landing hero assembled from OUR generated plates
-// (public/prism-mock/photo/meridian-hero — FLUX backdrop + bria cutouts + depth
+// (public/prism-mock/photo/meridian-hero - FLUX backdrop + bria cutouts + depth
 // + shadow plate + teal grade; provenance in composite.json). The family's
 // signature moves are composed from real graph nodes (DEV-6): a luminous teal
 // backdrop held far back, a colossal headline routed BEHIND the flacon, the
 // flacon cutout forward with its detached soft shadow, and a garnish swarm at
-// varied depth/scale — every plane parallaxing at its own rate on the pointer.
+// varied depth/scale - every plane parallaxing at its own rate on the pointer.
 // Single-hue teal discipline throughout.
 //
 // Route decision (planner): interaction=parallax, realism=photoreal,
-// byteBudget=moderate, motion=ambient, source=photo → R2 (photo plates).
+// byteBudget=moderate, motion=ambient, source=photo R2 (photo plates).
 
 import type { GraphSource } from '@/lib/prism-graph/types';
 import {
@@ -32,7 +32,7 @@ export const meridianGraph: GraphSource = {
   hubs: [
     templateHub({
       hubId: HUB,
-      title: 'Meridian — Layered Photo Hero',
+      title: 'Meridian - Layered Photo Hero',
       caption: 'A photographic diorama landing page in a single teal hue.',
       backgroundColor: INK,
       cursor: { style: 'ring', magnetic: true, accent: TEAL },
@@ -41,13 +41,13 @@ export const meridianGraph: GraphSource = {
     }),
   ],
   nodes: [
-    // ── The diorama: backdrop → occluded headline → shadow → flacon → garnish ──
+    // ── The diorama: backdrop occluded headline shadow flacon garnish ──
     // Luminous teal backdrop, held far, slow pointer parallax.
     imageNode(
       {
         id: 'mer-backdrop',
         hub: HUB,
-        caption: 'Teal atelier backdrop plate — held far, slow parallax.',
+        caption: 'Teal atelier backdrop plate - held far, slow parallax.',
         x: 0,
         y: 0.4,
         z: -2.6,
@@ -62,7 +62,7 @@ export const meridianGraph: GraphSource = {
       {
         id: 'mer-headline',
         hub: HUB,
-        caption: 'Colossal headline — occluded by the flacon.',
+        caption: 'Colossal headline - occluded by the flacon.',
         x: -0.6,
         y: 1.2,
         z: -1,
@@ -70,9 +70,9 @@ export const meridianGraph: GraphSource = {
         h: 2,
       },
       'MERIDIAN',
-      { family: 'Fraunces', weight: 600, size: 1.35, color: '#eaf6f8', glow: 1.7 },
+      { family: 'Fraunces', weight: 600, size: 1.35, color: '#eaf6f8', glow: 2.3 },
     ),
-    // Atmospheric dust between the planes — hides seams, adds air.
+    // Atmospheric dust between the planes - hides seams, adds air.
     fxNode({
       id: 'mer-dust',
       hub: HUB,
@@ -89,7 +89,7 @@ export const meridianGraph: GraphSource = {
       {
         id: 'mer-shadow',
         hub: HUB,
-        caption: 'Detached soft shadow plate — grounds the flacon.',
+        caption: 'Detached soft shadow plate - grounds the flacon.',
         x: 2.7,
         y: -2.5,
         z: -0.4,
@@ -100,12 +100,12 @@ export const meridianGraph: GraphSource = {
       `${A}/product.shadow.png`,
       false,
     ),
-    // The flacon cutout, forward — floats + parallaxes fastest (nearest).
+    // The flacon cutout, forward - floats + parallaxes fastest (nearest).
     imageNode(
       {
         id: 'mer-flacon',
         hub: HUB,
-        caption: 'Handblown teal flacon cutout — floats, forward parallax.',
+        caption: 'Handblown teal flacon cutout - floats, forward parallax.',
         x: 2.7,
         y: -0.1,
         z: 0.5,
@@ -124,7 +124,7 @@ export const meridianGraph: GraphSource = {
       {
         id: 'mer-garnish-sprig',
         hub: HUB,
-        caption: 'Eucalyptus sprig cutout — mid depth, slow float.',
+        caption: 'Eucalyptus sprig cutout - mid depth, slow float.',
         x: -3.6,
         y: 1.9,
         z: -0.2,
@@ -142,7 +142,7 @@ export const meridianGraph: GraphSource = {
       {
         id: 'mer-garnish-seaglass',
         hub: HUB,
-        caption: 'Sea-glass pebble cutout — near, faster parallax.',
+        caption: 'Sea-glass pebble cutout - near, faster parallax.',
         x: -1.6,
         y: -2.7,
         z: 0.6,
@@ -160,7 +160,7 @@ export const meridianGraph: GraphSource = {
       {
         id: 'mer-garnish-droplet',
         hub: HUB,
-        caption: 'Water droplet cutout — nearest, strongest parallax.',
+        caption: 'Water droplet cutout - nearest, strongest parallax.',
         x: 5.4,
         y: 2.4,
         z: 0.7,
@@ -187,13 +187,13 @@ export const meridianGraph: GraphSource = {
         h: 0.4,
       },
       'Meridian Atelier',
-      { family: 'Fraunces', weight: 400, size: 0.2, color: MIST, align: 'left', glow: 1.2, reveal: false },
+      { family: 'Fraunces', weight: 400, size: 0.2, color: MIST, align: 'left', glow: 2, reveal: false },
     ),
     textNode(
       {
         id: 'mer-manifesto',
         hub: HUB,
-        caption: 'Manifesto line — fades up on in-view.',
+        caption: 'Manifesto line - fades up on in-view.',
         x: -3.35,
         y: -1.7,
         z: 0.4,
@@ -202,13 +202,13 @@ export const meridianGraph: GraphSource = {
         bindings: [bind('text-fade-up-each', 'inview', { params: { stagger: 0.03 } })],
       },
       'A scent formed where day meets sea.',
-      { family: 'Fraunces', weight: 400, size: 0.3, color: '#e8f4f6', align: 'left', glow: 1.5 },
+      { family: 'Fraunces', weight: 400, size: 0.3, color: '#e8f4f6', align: 'left', glow: 2.3 },
     ),
     textNode(
       {
         id: 'mer-cta',
         hub: HUB,
-        caption: 'CTA — magnetic hover with lift.',
+        caption: 'CTA - magnetic hover with lift.',
         x: -4.05,
         y: -2.5,
         z: 0.5,
@@ -220,7 +220,7 @@ export const meridianGraph: GraphSource = {
         ],
       },
       'DISCOVER THE FIRST POUR',
-      { family: 'JetBrains Mono', weight: 400, size: 0.17, color: '#f2fbfc', align: 'left', glow: 2.2, reveal: false },
+      { family: 'JetBrains Mono', weight: 400, size: 0.17, color: '#f2fbfc', align: 'left', glow: 2.3, reveal: false },
     ),
     meshNode(
       {
@@ -240,7 +240,7 @@ export const meridianGraph: GraphSource = {
       {
         id: 'mer-scroll-cue',
         hub: HUB,
-        caption: 'Scroll cue — slow pulse.',
+        caption: 'Scroll cue - slow pulse.',
         x: 0,
         y: -3.85,
         z: 0.4,
@@ -249,7 +249,7 @@ export const meridianGraph: GraphSource = {
         bindings: [bind('fade-pulse', 'time', { params: { period: 2.6 } })],
       },
       'SCROLL',
-      { family: 'JetBrains Mono', weight: 400, size: 0.13, color: '#9fd4dc', glow: 1.4, reveal: false },
+      { family: 'JetBrains Mono', weight: 400, size: 0.13, color: '#9fd4dc', glow: 2.3, reveal: false },
     ),
     // ── Section 2: ingredient notes (cascade in as they enter view) ──
     textNode(
@@ -265,13 +265,13 @@ export const meridianGraph: GraphSource = {
         bindings: [bind('text-cascade', 'inview', { params: { stagger: 0.04 } })],
       },
       'Three notes. One line of light.',
-      { family: 'Fraunces', weight: 600, size: 0.44, color: '#eef8f9', glow: 1.6 },
+      { family: 'Fraunces', weight: 600, size: 0.44, color: '#eef8f9', glow: 2.3 },
     ),
     textNode(
       {
         id: 'mer-note-1',
         hub: HUB,
-        caption: 'Note — eucalyptus.',
+        caption: 'Note - eucalyptus.',
         x: -4.2,
         y: -7,
         z: 0.3,
@@ -280,13 +280,13 @@ export const meridianGraph: GraphSource = {
         bindings: [bind('text-fade-up-each', 'inview', { params: { stagger: 0.02 } })],
       },
       'Eucalyptus, cut at dawn',
-      { family: 'Fraunces', weight: 400, size: 0.22, color: MIST, glow: 1.3 },
+      { family: 'Fraunces', weight: 400, size: 0.22, color: MIST, glow: 2.2 },
     ),
     textNode(
       {
         id: 'mer-note-2',
         hub: HUB,
-        caption: 'Note — sea glass.',
+        caption: 'Note - sea glass.',
         x: 0,
         y: -7.5,
         z: 0.3,
@@ -295,13 +295,13 @@ export const meridianGraph: GraphSource = {
         bindings: [bind('text-fade-up-each', 'inview', { params: { stagger: 0.02 } })],
       },
       'Sea glass, tide-worn',
-      { family: 'Fraunces', weight: 400, size: 0.22, color: MIST, glow: 1.3 },
+      { family: 'Fraunces', weight: 400, size: 0.22, color: MIST, glow: 2.2 },
     ),
     textNode(
       {
         id: 'mer-note-3',
         hub: HUB,
-        caption: 'Note — rain.',
+        caption: 'Note - rain.',
         x: 4.2,
         y: -8,
         z: 0.3,
@@ -310,14 +310,14 @@ export const meridianGraph: GraphSource = {
         bindings: [bind('text-fade-up-each', 'inview', { params: { stagger: 0.02 } })],
       },
       'Rain, held mid-fall',
-      { family: 'Fraunces', weight: 400, size: 0.22, color: MIST, glow: 1.3 },
+      { family: 'Fraunces', weight: 400, size: 0.22, color: MIST, glow: 2.2 },
     ),
     // Reused garnish cutouts as floating accents flanking the notes.
     imageNode(
       {
         id: 'mer-accent-sprig',
         hub: HUB,
-        caption: 'Eucalyptus cutout accent — slow float + cursor parallax.',
+        caption: 'Eucalyptus cutout accent - slow float + cursor parallax.',
         x: -5.6,
         y: -6.6,
         z: -0.3,
@@ -335,7 +335,7 @@ export const meridianGraph: GraphSource = {
       {
         id: 'mer-accent-droplet',
         hub: HUB,
-        caption: 'Droplet cutout accent — slow float, faster parallax (nearer).',
+        caption: 'Droplet cutout accent - slow float, faster parallax (nearer).',
         x: 5.5,
         y: -7.4,
         z: 0.6,

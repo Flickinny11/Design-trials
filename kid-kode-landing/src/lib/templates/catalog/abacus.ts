@@ -1,13 +1,13 @@
-// W-TPL hub template — "Abacus" (pricing · bento-grid-slider).
+// W-TPL hub template - "Abacus" (pricing / bento-grid-slider).
 //
 // Asset-free pricing page as a bento board: mixed-span PBR slabs (the material
-// tells the tier story — slate, brass, deep glass), data-mono numerals, a wide
+// tells the tier story - slate, brass, deep glass), data-mono numerals, a wide
 // "everything ships with" tile, staggered rise on entry, hover lift per tile.
 // The grid sits at shallow depth so the 3D perspective reads premium without
 // the keystone excess (DEV-4).
 //
 // Route decision (planner): interaction=parallax, realism=high, byteBudget=
-// tight, motion=ambient, source=procedural → R1 (asset-free PBR).
+// tight, motion=ambient, source=procedural R1 (asset-free PBR).
 
 import type { GraphSource, PrismNode } from '@/lib/prism-graph/types';
 import { bind, meshNode, templateHub, textNode } from '../catalog-helpers';
@@ -75,7 +75,7 @@ function tierNodes(t: TierSpec): PrismNode[] {
       {
         id: `aba-tile-${t.id}`,
         hub: HUB,
-        caption: `${t.name} tier slab — ${t.id} material carries the tier story.`,
+        caption: `${t.name} tier slab - ${t.id} material carries the tier story.`,
         x: t.x,
         y,
         w: t.w,
@@ -102,13 +102,13 @@ function tierNodes(t: TierSpec): PrismNode[] {
         h: 0.4,
       },
       t.name,
-      { family: 'Fraunces', weight: 600, size: 0.28, color: PAPER, glow: 1.5, reveal: false },
+      { family: 'Fraunces', weight: 600, size: 0.28, color: PAPER, glow: 2.3, reveal: false },
     ),
     textNode(
       {
         id: `aba-price-${t.id}`,
         hub: HUB,
-        caption: `${t.name} price numeral — rolls up on entry.`,
+        caption: `${t.name} price numeral - rolls up on entry.`,
         x: t.x,
         y: y + 0.25,
         z: 0.25,
@@ -117,7 +117,7 @@ function tierNodes(t: TierSpec): PrismNode[] {
         bindings: [bind('text-counter-roll', 'inview', {})],
       },
       `$${t.price}`,
-      { family: 'JetBrains Mono', weight: 400, size: 0.62, color: t.accent, glow: 2.0, reveal: false },
+      { family: 'JetBrains Mono', weight: 400, size: 0.62, color: t.accent, glow: 2.3, reveal: false },
     ),
     textNode(
       {
@@ -132,7 +132,7 @@ function tierNodes(t: TierSpec): PrismNode[] {
         bindings: [bind('text-fade-up-each', 'inview', { params: { stagger: 0.02 } })],
       },
       t.line,
-      { family: 'JetBrains Mono', weight: 400, size: 0.13, color: '#c9c4b8', glow: 1.2 },
+      { family: 'JetBrains Mono', weight: 400, size: 0.13, color: '#c9c4b8', glow: 2 },
     ),
   ];
 }
@@ -141,7 +141,7 @@ export const abacusGraph: GraphSource = {
   hubs: [
     templateHub({
       hubId: HUB,
-      title: 'Abacus — Bento Pricing',
+      title: 'Abacus - Bento Pricing',
       caption: 'A pricing board where the material is the tier.',
       backgroundColor: INK,
       cursor: { style: 'dot', magnetic: true, accent: BRASS },
@@ -162,7 +162,7 @@ export const abacusGraph: GraphSource = {
         h: 0.9,
       },
       'Pick your pace.',
-      { family: 'Playfair Display', weight: 600, size: 0.58, color: PAPER, glow: 1.7 },
+      { family: 'Playfair Display', weight: 600, size: 0.58, color: PAPER, glow: 2.3 },
     ),
     textNode(
       {
@@ -177,7 +177,7 @@ export const abacusGraph: GraphSource = {
         bindings: [bind('text-fade-up-each', 'inview', { params: { stagger: 0.02 } })],
       },
       'Monthly. No meters ticking behind your back.',
-      { family: 'JetBrains Mono', weight: 400, size: 0.16, color: '#b9b2a2', glow: 1.2 },
+      { family: 'JetBrains Mono', weight: 400, size: 0.16, color: '#b9b2a2', glow: 2 },
     ),
     ...TIERS.flatMap(tierNodes),
     // The wide "ships with" bento bar under the tiers.
@@ -185,7 +185,7 @@ export const abacusGraph: GraphSource = {
       {
         id: 'aba-ships-bar',
         hub: HUB,
-        caption: 'Wide bento bar — everything every tier ships with.',
+        caption: 'Wide bento bar - everything every tier ships with.',
         x: 0,
         y: -3.35,
         w: 11.1,
@@ -208,15 +208,15 @@ export const abacusGraph: GraphSource = {
         h: 0.3,
         bindings: [bind('text-fade-up-each', 'inview', { params: { stagger: 0.012 } })],
       },
-      'Every tier: unlimited viewers · version history · export anytime · humans on support',
-      { family: 'JetBrains Mono', weight: 400, size: 0.15, color: PAPER, glow: 1.4 },
+      'Every tier: unlimited viewers / version history / export anytime / humans on support',
+      { family: 'JetBrains Mono', weight: 400, size: 0.15, color: PAPER, glow: 2.3 },
     ),
     // Footnote CTA.
     textNode(
       {
         id: 'aba-cta',
         hub: HUB,
-        caption: 'Footnote CTA — magnetic.',
+        caption: 'Footnote CTA - magnetic.',
         x: 0,
         y: -4.6,
         z: 0.2,
@@ -224,8 +224,8 @@ export const abacusGraph: GraphSource = {
         h: 0.3,
         bindings: [bind('magnetic', 'pointer', { params: { strength: 0.5 } })],
       },
-      'START ON ESSENTIAL — MOVE WHEN READY',
-      { family: 'JetBrains Mono', weight: 400, size: 0.15, color: BRASS, glow: 2.0, reveal: false },
+      'START ON ESSENTIAL - MOVE WHEN READY',
+      { family: 'JetBrains Mono', weight: 400, size: 0.15, color: BRASS, glow: 2.3, reveal: false },
     ),
   ],
   edges: [],

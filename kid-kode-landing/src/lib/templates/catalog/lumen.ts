@@ -1,15 +1,15 @@
-// W-TPL hub template — "Lumen" (gallery · infinite-filmstrip-gallery).
+// W-TPL hub template - "Lumen" (gallery / infinite-filmstrip-gallery).
 //
 // The family (corpus): vertical columns of media tiles crawl endlessly in
 // opposing directions forming a continuously moving mood-board wall, while a
 // rock-steady oversized headline holds the centre. Lumen is a ceramics gallery:
-// six DISTINCT generated vessels (not one echoed subject — DEV-5) flank a still
+// six DISTINCT generated vessels (not one echoed subject - DEV-5) flank a still
 // centre headline in two columns, each tile floating on its own phase with
 // pointer parallax so the wall is alive; a scroll colour-shift nods to the
 // family's whole-board theme swap.
 //
 // Route decision (planner): interaction=parallax/scroll, realism=photoreal
-// (studio product stills), byteBudget=moderate, motion=ambient, source=photo → R2.
+// (studio product stills), byteBudget=moderate, motion=ambient, source=photo R2.
 
 import type { GraphSource, PrismNode } from '@/lib/prism-graph/types';
 import { bind, imageNode, templateHub, textNode } from '../catalog-helpers';
@@ -45,7 +45,7 @@ function tileNode(t: Tile): PrismNode {
     {
       id: `lum-v${t.n}`,
       hub: HUB,
-      caption: `Vessel ${t.n} — floats on its own phase (${t.up ? 'up' : 'down'} column).`,
+      caption: `Vessel ${t.n} - floats on its own phase (${t.up ? 'up' : 'down'} column).`,
       x: t.x,
       y: t.y,
       z: -0.4,
@@ -65,7 +65,7 @@ export const lumenGraph: GraphSource = {
   hubs: [
     templateHub({
       hubId: HUB,
-      title: 'Lumen — Infinite Filmstrip Gallery',
+      title: 'Lumen - Infinite Filmstrip Gallery',
       caption: 'A moving wall of work around a still headline.',
       backgroundColor: INK,
       cursor: { style: 'halo', magnetic: false, accent: INDIGO },
@@ -75,12 +75,12 @@ export const lumenGraph: GraphSource = {
   ],
   nodes: [
     ...TILES.map(tileNode),
-    // The rock-steady centre — the headline the moving wall orbits.
+    // The rock-steady centre - the headline the moving wall orbits.
     textNode(
       {
         id: 'lum-h1',
         hub: HUB,
-        caption: 'Steady gallery headline — the still centre.',
+        caption: 'Steady gallery headline - the still centre.',
         x: 0,
         y: 1.1,
         z: 0.6,
@@ -88,7 +88,7 @@ export const lumenGraph: GraphSource = {
         h: 2.2,
       },
       'Held\nin\nclay',
-      { family: 'Fraunces', weight: 600, size: 0.72, color: PAPER, glow: 1.8 },
+      { family: 'Fraunces', weight: 600, size: 0.72, color: PAPER, glow: 2.3 },
     ),
     textNode(
       {
@@ -103,13 +103,13 @@ export const lumenGraph: GraphSource = {
         bindings: [bind('text-fade-up-each', 'inview', { params: { stagger: 0.02 } })],
       },
       'Fifty vessels. One glaze. A wall that never sits still.',
-      { family: 'JetBrains Mono', weight: 400, size: 0.15, color: '#b6bde0', glow: 1.2 },
+      { family: 'JetBrains Mono', weight: 400, size: 0.15, color: '#b6bde0', glow: 2 },
     ),
     textNode(
       {
         id: 'lum-cta',
         hub: HUB,
-        caption: 'Gallery CTA — magnetic.',
+        caption: 'Gallery CTA - magnetic.',
         x: 0,
         y: -3,
         z: 0.6,
@@ -117,8 +117,8 @@ export const lumenGraph: GraphSource = {
         h: 0.4,
         bindings: [bind('magnetic', 'pointer', { params: { strength: 0.5 } })],
       },
-      'ENTER THE COLLECTION →',
-      { family: 'JetBrains Mono', weight: 400, size: 0.15, color: INDIGO, glow: 2.0, reveal: false },
+      'ENTER THE COLLECTION',
+      { family: 'JetBrains Mono', weight: 400, size: 0.15, color: INDIGO, glow: 2.3, reveal: false },
     ),
   ],
   edges: [],

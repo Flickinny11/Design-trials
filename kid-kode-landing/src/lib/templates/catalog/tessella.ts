@@ -1,14 +1,14 @@
-// W-TPL hub template — "Tessella" (marketing · bento-grid-slider).
+// W-TPL hub template - "Tessella" (marketing / bento-grid-slider).
 //
 // The bento grammar as a MARKETING feature wall (distinct from Abacus's pricing
-// use of the same family, different archetype — anti-repetition holds): mixed-
+// use of the same family, different archetype - anti-repetition holds): mixed-
 // span tiles, some carrying a generated feature image, some asset-free PBR
 // slabs whose material IS the accent. Tiles rise staggered on entry and lift to
 // the pointer; a keystone hero tile anchors the top-left. Shallow depth keeps
 // the 3D read premium without the perspective excess (DEV-4).
 //
 // Route decision (planner): interaction=parallax/hover, realism=high (PBR +
-// generated tile imagery), byteBudget=moderate, motion=ambient, source=mixed →
+// generated tile imagery), byteBudget=moderate, motion=ambient, source=mixed
 // R2 for the imagery tiles, R1 for the material slabs.
 
 import type { GraphSource, PrismNode } from '@/lib/prism-graph/types';
@@ -27,7 +27,7 @@ export const tessellaGraph: GraphSource = {
   hubs: [
     templateHub({
       hubId: HUB,
-      title: 'Tessella — Bento Feature Wall',
+      title: 'Tessella - Bento Feature Wall',
       caption: 'A marketing grid where every tile earns its span.',
       backgroundColor: INK,
       cursor: { style: 'ring', magnetic: true, accent: MINT },
@@ -48,7 +48,7 @@ export const tessellaGraph: GraphSource = {
         h: 0.9,
       },
       'Everything, arranged.',
-      { family: 'Fraunces', weight: 600, size: 0.56, color: PAPER, glow: 1.7 },
+      { family: 'Fraunces', weight: 600, size: 0.56, color: PAPER, glow: 2.3 },
     ),
     textNode(
       {
@@ -63,14 +63,14 @@ export const tessellaGraph: GraphSource = {
         bindings: [bind('text-fade-up-each', 'inview', { params: { stagger: 0.02 } })],
       },
       'One board. Every capability, sized to how much it matters.',
-      { family: 'JetBrains Mono', weight: 400, size: 0.16, color: '#a7c4bd', glow: 1.2 },
+      { family: 'JetBrains Mono', weight: 400, size: 0.16, color: '#a7c4bd', glow: 2 },
     ),
-    // Keystone image tile — the biggest span, top-left, carries the flagship shot.
+    // Keystone image tile - the biggest span, top-left, carries the flagship shot.
     imageNode(
       {
         id: 'tes-tile-hero',
         hub: HUB,
-        caption: 'Keystone feature tile — generated flagship image.',
+        caption: 'Keystone feature tile - generated flagship image.',
         x: -3.1,
         y: 0.55,
         z: 0,
@@ -85,7 +85,7 @@ export const tessellaGraph: GraphSource = {
       {
         id: 'tes-tile-b',
         hub: HUB,
-        caption: 'Feature tile B — generated image.',
+        caption: 'Feature tile B - generated image.',
         x: 1.7,
         y: 1.55,
         z: 0,
@@ -99,7 +99,7 @@ export const tessellaGraph: GraphSource = {
       {
         id: 'tes-tile-c',
         hub: HUB,
-        caption: 'Feature tile C — generated image.',
+        caption: 'Feature tile C - generated image.',
         x: 4.35,
         y: 1.55,
         z: 0,
@@ -109,12 +109,12 @@ export const tessellaGraph: GraphSource = {
       },
       `${A}/tile-3.webp`,
     ),
-    // Asset-free PBR accent slab — the material IS the accent (mint glass).
+    // Asset-free PBR accent slab - the material IS the accent (mint glass).
     meshNode(
       {
         id: 'tes-slab-accent',
         hub: HUB,
-        caption: 'Mint glass accent slab — material carries the brand colour.',
+        caption: 'Mint glass accent slab - material carries the brand colour.',
         x: 2.55,
         y: -0.55,
         z: 0,
@@ -139,9 +139,9 @@ export const tessellaGraph: GraphSource = {
         bindings: [bind('text-fade-up-each', 'inview', { params: { stagger: 0.02 } })],
       },
       'Ships in a day, not a quarter.',
-      { family: 'Fraunces', weight: 600, size: 0.22, color: PAPER, glow: 1.5, reveal: false },
+      { family: 'Fraunces', weight: 600, size: 0.22, color: PAPER, glow: 2.3, reveal: false },
     ),
-    // Dark utility slabs, bottom row — three even spans, mono labels.
+    // Dark utility slabs, bottom row - three even spans, mono labels.
     ...(
       [
         { id: 'sla', x: -3.6, label: 'Version history' },
@@ -153,7 +153,7 @@ export const tessellaGraph: GraphSource = {
         {
           id: `tes-${t.id}`,
           hub: HUB,
-          caption: `Utility tile — ${t.label}.`,
+          caption: `Utility tile - ${t.label}.`,
           x: t.x,
           y: -2.55,
           z: 0,
@@ -168,7 +168,7 @@ export const tessellaGraph: GraphSource = {
         {
           id: `tes-${t.id}-t`,
           hub: HUB,
-          caption: `Utility label — ${t.label}.`,
+          caption: `Utility label - ${t.label}.`,
           x: t.x,
           y: -2.55,
           z: 0.25,
@@ -177,7 +177,7 @@ export const tessellaGraph: GraphSource = {
           bindings: [bind('text-fade-up-each', 'inview', { params: { stagger: 0.02 } })],
         },
         t.label,
-        { family: 'JetBrains Mono', weight: 400, size: 0.15, color: '#cfe6df', glow: 1.3 },
+        { family: 'JetBrains Mono', weight: 400, size: 0.15, color: '#cfe6df', glow: 2.2 },
       ),
     ]),
   ],

@@ -1,14 +1,14 @@
-// W-TPL hub template — "Constellation" (about · particle-field-hero).
+// W-TPL hub template - "Constellation" (about / particle-field-hero).
 //
 // Asset-free about page: the team/values story told as a living constellation.
 // A GPU constellation net + firefly field carries the family's core mechanic
 // (particle field with pointer response); the values are extruded serif words
 // pinned at net vertices, glowing as the cursor nears (proximity-rim-glow) and
 // floating phase-desynced so the field never freezes. Stats roll in with a
-// counter on scroll — data-mono per DL3.
+// counter on scroll - data-mono per DL3.
 //
 // Route decision (planner): interaction=parallax, realism=stylized (procedural
-// field), byteBudget=tight, motion=responsive, source=procedural → R1.
+// field), byteBudget=tight, motion=responsive, source=procedural R1.
 
 import type { GraphSource } from '@/lib/prism-graph/types';
 import { bind, fxNode, templateHub, textNode } from '../catalog-helpers';
@@ -29,7 +29,7 @@ function valueNode(
     {
       id,
       hub: HUB,
-      caption: `Value — ${word}; glows on approach, drifts on its own phase.`,
+      caption: `Value - ${word}; glows on approach, drifts on its own phase.`,
       x,
       y,
       z: 0.2,
@@ -42,7 +42,7 @@ function valueNode(
       ],
     },
     word,
-    { family: 'Fraunces', weight: 600, size: 0.3, color: STAR, glow: 1.7 },
+    { family: 'Fraunces', weight: 600, size: 0.3, color: STAR, glow: 2.3 },
   );
 }
 
@@ -50,7 +50,7 @@ export const constellationGraph: GraphSource = {
   hubs: [
     templateHub({
       hubId: HUB,
-      title: 'Constellation — Living About',
+      title: 'Constellation - Living About',
       caption: 'An about page as a constellation of values and people.',
       backgroundColor: INK,
       cursor: { style: 'halo', magnetic: false, accent: GLOW },
@@ -64,7 +64,7 @@ export const constellationGraph: GraphSource = {
     fxNode({
       id: 'con-net',
       hub: HUB,
-      caption: 'Constellation net — vertices link as lines, pointer-aware.',
+      caption: 'Constellation net - vertices link as lines, pointer-aware.',
       x: 0,
       y: 0.3,
       z: -1.6,
@@ -99,7 +99,7 @@ export const constellationGraph: GraphSource = {
       {
         id: 'con-headline',
         hub: HUB,
-        caption: 'About headline — kinetic wave reveal.',
+        caption: 'About headline - kinetic wave reveal.',
         x: 0,
         y: 2.3,
         z: 0.3,
@@ -107,13 +107,13 @@ export const constellationGraph: GraphSource = {
         h: 1,
       },
       'Formed from points of light.',
-      { family: 'Fraunces', weight: 600, size: 0.62, color: STAR, glow: 1.8 },
+      { family: 'Fraunces', weight: 600, size: 0.62, color: STAR, glow: 2.3 },
     ),
     textNode(
       {
         id: 'con-dek',
         hub: HUB,
-        caption: 'Dek — the studio one-liner.',
+        caption: 'Dek - the studio one-liner.',
         x: 0,
         y: 1.45,
         z: 0.3,
@@ -122,7 +122,7 @@ export const constellationGraph: GraphSource = {
         bindings: [bind('text-fade-up-each', 'inview', { params: { stagger: 0.02 } })],
       },
       'A small studio. A long orbit. Work that holds together.',
-      { family: 'JetBrains Mono', weight: 400, size: 0.18, color: '#aebfe4', glow: 1.3 },
+      { family: 'JetBrains Mono', weight: 400, size: 0.18, color: '#aebfe4', glow: 2.2 },
     ),
     // The four values pinned at net vertices.
     valueNode('con-val-craft', 'Craft', -4.4, -0.4, 6.5),
@@ -143,7 +143,7 @@ export const constellationGraph: GraphSource = {
         bindings: [bind('text-cascade', 'inview', { params: { stagger: 0.035 } })],
       },
       'Twelve years in one sentence',
-      { family: 'Fraunces', weight: 600, size: 0.42, color: STAR, glow: 1.6 },
+      { family: 'Fraunces', weight: 600, size: 0.42, color: STAR, glow: 2.3 },
     ),
     textNode(
       {
@@ -158,14 +158,14 @@ export const constellationGraph: GraphSource = {
         bindings: [bind('text-fade-up-each', 'inview', { params: { stagger: 0.015 } })],
       },
       'We kept the team small so the standard could stay tall.',
-      { family: 'Fraunces', weight: 400, size: 0.24, color: '#cfdbf4', glow: 1.4 },
+      { family: 'Fraunces', weight: 400, size: 0.24, color: '#cfdbf4', glow: 2.3 },
     ),
-    // Stats band — mono numerals rolling up on entry.
+    // Stats band - mono numerals rolling up on entry.
     textNode(
       {
         id: 'con-stat-years',
         hub: HUB,
-        caption: 'Stat — years, counter-rolls on in-view.',
+        caption: 'Stat - years, counter-rolls on in-view.',
         x: -3.6,
         y: -7,
         z: 0.3,
@@ -174,13 +174,13 @@ export const constellationGraph: GraphSource = {
         bindings: [bind('text-counter-roll', 'inview', {})],
       },
       '12 YEARS',
-      { family: 'JetBrains Mono', weight: 400, size: 0.34, color: GLOW, glow: 2.1, reveal: false },
+      { family: 'JetBrains Mono', weight: 400, size: 0.34, color: GLOW, glow: 2.3, reveal: false },
     ),
     textNode(
       {
         id: 'con-stat-hands',
         hub: HUB,
-        caption: 'Stat — hands, counter-rolls on in-view.',
+        caption: 'Stat - hands, counter-rolls on in-view.',
         x: 0,
         y: -7,
         z: 0.3,
@@ -189,13 +189,13 @@ export const constellationGraph: GraphSource = {
         bindings: [bind('text-counter-roll', 'inview', {})],
       },
       '40 HANDS',
-      { family: 'JetBrains Mono', weight: 400, size: 0.34, color: GLOW, glow: 2.1, reveal: false },
+      { family: 'JetBrains Mono', weight: 400, size: 0.34, color: GLOW, glow: 2.3, reveal: false },
     ),
     textNode(
       {
         id: 'con-stat-promise',
         hub: HUB,
-        caption: 'Stat — one promise.',
+        caption: 'Stat - one promise.',
         x: 3.6,
         y: -7,
         z: 0.3,
@@ -204,7 +204,7 @@ export const constellationGraph: GraphSource = {
         bindings: [bind('text-counter-roll', 'inview', {})],
       },
       '1 PROMISE',
-      { family: 'JetBrains Mono', weight: 400, size: 0.34, color: GLOW, glow: 2.1, reveal: false },
+      { family: 'JetBrains Mono', weight: 400, size: 0.34, color: GLOW, glow: 2.3, reveal: false },
     ),
   ],
   edges: [],

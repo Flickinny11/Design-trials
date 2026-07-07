@@ -1,14 +1,14 @@
-// W-TPL hub template — "Vitrine" (product-showcase · filmstrip-3d-carousel).
+// W-TPL hub template - "Vitrine" (product-showcase / filmstrip-3d-carousel).
 //
 // The family (corpus): portrait image frames drift and rescale continuously
 // along an implied Z-arc like film cells sliding past a lens; the frames never
-// fully settle — a perpetual drift keeps the hero alive between interactions.
+// fully settle - a perpetual drift keeps the hero alive between interactions.
 // Vitrine is an eyewear showcase: four DISTINCT generated frames (not one
-// echoed subject — DEV-5) composed on a Z-arc, each drifting weightlessly on
+// echoed subject - DEV-5) composed on a Z-arc, each drifting weightlessly on
 // its own phase with pointer parallax, so the hero is alive at rest.
 //
 // Route decision (planner): interaction=parallax/ambient, realism=photoreal
-// (campaign stills), byteBudget=moderate, motion=perpetual drift, source=photo → R2.
+// (campaign stills), byteBudget=moderate, motion=perpetual drift, source=photo R2.
 
 import type { GraphSource, PrismNode } from '@/lib/prism-graph/types';
 import { bind, imageNode, templateHub, textNode } from '../catalog-helpers';
@@ -43,7 +43,7 @@ function frameNode(f: Frame): PrismNode {
     {
       id: `vit-f${f.n}`,
       hub: HUB,
-      caption: `Eyewear frame ${f.n} — drifts weightlessly along the Z-arc.`,
+      caption: `Eyewear frame ${f.n} - drifts weightlessly along the Z-arc.`,
       x: f.x,
       y: f.y,
       z: f.z,
@@ -65,7 +65,7 @@ export const vitrineGraph: GraphSource = {
   hubs: [
     templateHub({
       hubId: HUB,
-      title: 'Vitrine — Filmstrip Product Showcase',
+      title: 'Vitrine - Filmstrip Product Showcase',
       caption: 'Frames that drift past the lens, alive between glances.',
       backgroundColor: INK,
       cursor: { style: 'ring', magnetic: true, accent: AMBER },
@@ -87,7 +87,7 @@ export const vitrineGraph: GraphSource = {
         h: 1,
       },
       'The new season, in frame.',
-      { family: 'Fraunces', weight: 600, size: 0.56, color: PAPER, glow: 1.8 },
+      { family: 'Fraunces', weight: 600, size: 0.56, color: PAPER, glow: 2.3 },
     ),
     textNode(
       {
@@ -102,13 +102,13 @@ export const vitrineGraph: GraphSource = {
         bindings: [bind('text-fade-up-each', 'inview', { params: { stagger: 0.02 } })],
       },
       'Four silhouettes. Hand-polished acetate. Made to be looked through.',
-      { family: 'JetBrains Mono', weight: 400, size: 0.15, color: '#c9b79a', glow: 1.2 },
+      { family: 'JetBrains Mono', weight: 400, size: 0.15, color: '#c9b79a', glow: 2 },
     ),
     textNode(
       {
         id: 'vit-price',
         hub: HUB,
-        caption: 'From-price — rolls up.',
+        caption: 'From-price - rolls up.',
         x: 0,
         y: -2.7,
         z: 0.9,
@@ -117,13 +117,13 @@ export const vitrineGraph: GraphSource = {
         bindings: [bind('text-counter-roll', 'inview', {})],
       },
       'FROM $180',
-      { family: 'JetBrains Mono', weight: 400, size: 0.22, color: AMBER, glow: 2.0, reveal: false },
+      { family: 'JetBrains Mono', weight: 400, size: 0.22, color: AMBER, glow: 2.3, reveal: false },
     ),
     textNode(
       {
         id: 'vit-cta',
         hub: HUB,
-        caption: 'Showcase CTA — magnetic + lift.',
+        caption: 'Showcase CTA - magnetic + lift.',
         x: 0,
         y: -3.5,
         z: 0.9,
@@ -134,8 +134,8 @@ export const vitrineGraph: GraphSource = {
           bind('hover-lift', 'pointer', {}),
         ],
       },
-      'TRY THE COLLECTION →',
-      { family: 'JetBrains Mono', weight: 400, size: 0.17, color: PAPER, glow: 1.6, reveal: false },
+      'TRY THE COLLECTION',
+      { family: 'JetBrains Mono', weight: 400, size: 0.17, color: PAPER, glow: 2.3, reveal: false },
     ),
   ],
   edges: [],
