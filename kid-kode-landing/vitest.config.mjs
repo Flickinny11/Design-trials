@@ -19,6 +19,13 @@ export default defineConfig({
     include: ['tests/{unit,integration,shaders,editor-build,material-lighting,text}/**/*.test.{ts,tsx,mjs}'],
     exclude: ['tests/browser/**', 'node_modules/**', '.next/**'],
     testTimeout: 15000,
+    env: {
+      // W-PROD hermeticity: the founder key-drop (../.assetgen) makes the
+      // inference cascade live-capable on this machine. Tests must NEVER
+      // reach real keys implicitly — point the key dir at a void. The
+      // WPROD_LIVE=1 proof suite opts back in explicitly.
+      PRISM_KEYS_DIR: '/nonexistent/prism-hermetic-tests',
+    },
   },
   resolve: {
     alias: {

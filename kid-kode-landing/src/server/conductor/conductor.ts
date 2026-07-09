@@ -157,11 +157,17 @@ export async function* runConductor(
   // already streams (no new realtime channel — I-SSE). All emits are additive,
   // fire-and-forget, fail-open. Actor scope is the tenant + project + this run.
   const frActor = { tenantId: ctx.tenantId, projectId: input.projectId, sessionId: messageId };
-  // The planner's provider: 'live' = the resolved model (anthropic), 'stub' =
-  // deterministic (no model call → gen_ai.* are null, honest).
+  // The planner's provider: 'live' = the provider that actually shaped the
+  // copy (anthropic OR a W-PROD cascade provider — set after resolveBlueprint),
+  // 'stub' = deterministic (no model call → gen_ai.* are null, honest).
+  let planProvider: { name: string; model: string } | null = null;
   const frOtel = (origin: 'stub' | 'live' | null): GenAiAttributes | undefined =>
     origin === 'live'
-      ? { 'gen_ai.provider.name': 'anthropic', 'gen_ai.operation.name': 'chat', 'gen_ai.request.model': modelId }
+      ? {
+          'gen_ai.provider.name': (planProvider?.name ?? 'anthropic') as GenAiAttributes['gen_ai.provider.name'],
+          'gen_ai.operation.name': 'chat',
+          'gen_ai.request.model': planProvider?.model ?? modelId,
+        }
       : undefined;
 
   yield { type: 'message-start', v: AV, messageId, modelId };
@@ -334,8 +340,11 @@ export async function* runConductor(
   yield step('plan', 'Planning app structure', `${direction.name} · ${direction.materialFamily}`);
   await store.setBuildState(ctx.tenantId, input.projectId, 'planning');
   const blueprint = await resolveBlueprint(brief, direction, { modelId, signal });
+  if (blueprint.origin === 'live') {
+    planProvider = { name: blueprint.provider ?? 'anthropic', model: blueprint.providerModel ?? modelId };
+  }
   const assembled = assembleGraph(blueprint, direction, Date.now());
-  yield line('plan', `planner: ${blueprint.origin}${blueprint.origin === 'live' ? ` (${modelId})` : ' (deterministic, no API key)'}\n`);
+  yield line('plan', `planner: ${blueprint.origin}${blueprint.origin === 'live' ? ` (${blueprint.provider ?? 'anthropic'} · ${blueprint.providerModel ?? modelId})` : ' (deterministic, no API key)'}\n`);
   yield line('plan', `hubs: ${blueprint.hubs.map((h) => h.title).join(' · ')}\n`);
   // W-2D — surface + record the planner's composition-mode decisions: data-
   // heavy sections plan as flat 2d hubs (the assembler flattened their nodes).

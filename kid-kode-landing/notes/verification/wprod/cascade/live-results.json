@@ -1,0 +1,129 @@
+{
+  "at": "2026-07-09T19:24:06.340Z",
+  "perProvider": {
+    "cerebras": {
+      "ok": false,
+      "httpStatus": 402,
+      "latencyMs": 409,
+      "model": "gpt-oss-120b",
+      "promptTokens": null,
+      "completionTokens": null,
+      "costEstimateUsd": null,
+      "textPreview": null,
+      "attempts": [
+        {
+          "provider": "cerebras",
+          "model": "gpt-oss-120b",
+          "ok": false,
+          "httpStatus": 402,
+          "latencyMs": 409,
+          "error": "HTTP 402"
+        }
+      ]
+    },
+    "fireworks": {
+      "ok": true,
+      "httpStatus": 200,
+      "latencyMs": 484,
+      "model": "accounts/fireworks/models/gpt-oss-120b",
+      "promptTokens": 74,
+      "completionTokens": 76,
+      "costEstimateUsd": 0.0000567,
+      "textPreview": "The color is typically described as a bright, clear blue.",
+      "attempts": [
+        {
+          "provider": "fireworks",
+          "model": "accounts/fireworks/models/gpt-oss-120b",
+          "ok": true,
+          "httpStatus": 200,
+          "latencyMs": 484
+        }
+      ]
+    },
+    "deepinfra": {
+      "ok": false,
+      "httpStatus": 402,
+      "latencyMs": 226,
+      "model": "openai/gpt-oss-120b",
+      "promptTokens": null,
+      "completionTokens": null,
+      "costEstimateUsd": null,
+      "textPreview": null,
+      "attempts": [
+        {
+          "provider": "deepinfra",
+          "model": "openai/gpt-oss-120b",
+          "ok": false,
+          "httpStatus": 402,
+          "latencyMs": 226,
+          "error": "HTTP 402"
+        }
+      ]
+    },
+    "groq": {
+      "ok": true,
+      "httpStatus": 200,
+      "latencyMs": 552,
+      "model": "openai/gpt-oss-120b",
+      "promptTokens": 90,
+      "completionTokens": 116,
+      "costEstimateUsd": 0.0000831,
+      "textPreview": "It is blue.",
+      "attempts": [
+        {
+          "provider": "groq",
+          "model": "openai/gpt-oss-120b",
+          "ok": true,
+          "httpStatus": 200,
+          "latencyMs": 552
+        }
+      ]
+    }
+  },
+  "naturalFailover": {
+    "answeredBy": "fireworks",
+    "attempts": [
+      {
+        "provider": "cerebras",
+        "model": "gpt-oss-120b",
+        "ok": false,
+        "httpStatus": 402,
+        "latencyMs": 194,
+        "error": "HTTP 402"
+      },
+      {
+        "provider": "fireworks",
+        "model": "accounts/fireworks/models/gpt-oss-120b",
+        "ok": true,
+        "httpStatus": 200,
+        "latencyMs": 514
+      }
+    ],
+    "latencyMs": 514,
+    "costEstimateUsd": 0.0000567
+  },
+  "failoverDrill": {
+    "forcedFailure": "cerebras",
+    "answeredBy": "fireworks",
+    "attempts": [
+      {
+        "provider": "cerebras",
+        "model": "gpt-oss-120b",
+        "ok": false,
+        "httpStatus": null,
+        "latencyMs": 0,
+        "error": "forced failure (failover drill)",
+        "skipped": "forced-failure"
+      },
+      {
+        "provider": "fireworks",
+        "model": "accounts/fireworks/models/gpt-oss-120b",
+        "ok": true,
+        "httpStatus": 200,
+        "latencyMs": 441
+      }
+    ],
+    "latencyMs": 441,
+    "costEstimateUsd": 0.0000567
+  }
+}

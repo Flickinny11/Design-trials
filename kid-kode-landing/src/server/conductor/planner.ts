@@ -22,6 +22,11 @@ import type { BuildBrief } from '../../../packages/shared-interfaces/src/prism-i
 import type { ResolvedDirection } from './directions';
 import { optionalImport } from '../optional-import';
 import {
+  cascadeAvailable,
+  completeWithCascade,
+  type InferenceProviderId,
+} from '../inference';
+import {
   buildDeterministicBlueprint,
   type BuildBlueprint,
   type BlueprintNode,
@@ -59,20 +64,102 @@ const COPY_JSON_SCHEMA = {
 } as const;
 
 /** Resolve the blueprint — live when keyed + reachable, else the deterministic
- *  stub. Never throws (fails to the stub), so a build always proceeds. */
+ *  stub. Never throws (fails to the stub), so a build always proceeds.
+ *  Live order (W-PROD): Anthropic when keyed, else the founder-keyed provider
+ *  cascade (Cerebras → Fireworks → DeepInfra → Groq) refining the SAME
+ *  bounded copy over the SAME deterministic structure. */
 export async function resolveBlueprint(
   brief: BuildBrief,
   direction: ResolvedDirection,
   opts: ResolveBlueprintOpts = {},
 ): Promise<BuildBlueprint> {
   const stub = buildDeterministicBlueprint(brief, direction);
-  if (!process.env.ANTHROPIC_API_KEY) return stub;
+  if (process.env.ANTHROPIC_API_KEY) {
+    try {
+      const copy = await planCopyLive(brief, direction, opts);
+      if (copy) {
+        const planned = applyCopyPlan(stub, copy);
+        planned.provider = 'anthropic';
+        planned.providerModel = opts.modelId || CONDUCTOR_MODEL;
+        return planned;
+      }
+    } catch {
+      /* fall through — cascade, then the proven stub */
+    }
+  }
+  if (cascadeAvailable()) {
+    try {
+      const refined = await planCopyCascade(brief, direction, opts);
+      if (refined) {
+        const planned = applyCopyPlan(stub, refined.copy);
+        planned.provider = refined.provider;
+        planned.providerModel = refined.model;
+        return planned;
+      }
+    } catch {
+      /* cascade failure → the proven stub (never blocks a build) */
+    }
+  }
+  return stub;
+}
+
+/** Cascade copy refinement — the same CopyPlan bounds as the Anthropic path,
+ *  produced by the first healthy cascade provider. Prompt-engineered JSON
+ *  (no vendor-specific structured-output dependency) parsed leniently and
+ *  validated against the same shape; any miss → null → stub. */
+async function planCopyCascade(
+  brief: BuildBrief,
+  direction: ResolvedDirection,
+  opts: ResolveBlueprintOpts,
+): Promise<{ copy: CopyPlan; provider: InferenceProviderId; model: string } | null> {
+  const system =
+    'You are the Prism Conductor copywriter. Given an approved build brief and a ' +
+    'chosen visual Direction, write crisp, on-brand launch copy. Respond with ONLY ' +
+    'a JSON object — no markdown fences, no commentary. Never emit code, secrets, or markup.';
+  const payload = JSON.stringify(
+    {
+      title: brief.title,
+      prompt: brief.prompt,
+      direction: { name: direction.name, tone: direction.tone, motion: direction.motion },
+      lines: brief.lines.map((l) => ({ key: l.key, value: l.value })),
+    },
+    null,
+    0,
+  );
+  const prompt =
+    `${payload}\n\nReturn ONLY this JSON shape: {"headline": string (max 64 chars), ` +
+    `"subhead": string (max 90 chars), "ctaLabel": string (max 24 chars), ` +
+    `"sectionTitles": string[] (max 4 items, each max 32 chars)}`;
+  const result = await completeWithCascade(
+    { system, prompt, maxTokens: 600, temperature: 0.5 },
+    { signal: opts.signal },
+  );
+  if (!result.text || !result.provider || !result.model) return null;
+  const obj = extractJsonObject(result.text) as Partial<CopyPlan> | null;
+  if (!obj || typeof obj.headline !== 'string' || obj.headline.trim().length === 0) return null;
+  return {
+    provider: result.provider,
+    model: result.model,
+    copy: {
+      headline: String(obj.headline).slice(0, 64),
+      subhead: String(obj.subhead ?? '').slice(0, 90),
+      ctaLabel: String(obj.ctaLabel ?? 'Get started').slice(0, 24),
+      sectionTitles: Array.isArray(obj.sectionTitles)
+        ? obj.sectionTitles.map((s) => String(s).slice(0, 32))
+        : [],
+    },
+  };
+}
+
+/** First balanced {...} block in a completion, parsed or null (never throws). */
+function extractJsonObject(text: string): unknown | null {
+  const start = text.indexOf('{');
+  const end = text.lastIndexOf('}');
+  if (start < 0 || end <= start) return null;
   try {
-    const copy = await planCopyLive(brief, direction, opts);
-    if (!copy) return stub;
-    return applyCopyPlan(stub, copy);
+    return JSON.parse(text.slice(start, end + 1));
   } catch {
-    return stub; // live failure → the proven stub (never blocks a build)
+    return null;
   }
 }
 

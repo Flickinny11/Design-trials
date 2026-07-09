@@ -81,6 +81,11 @@ export interface BuildBlueprint {
   edges: BlueprintEdge[];
   /** Which planner produced this (honest provenance, like prompt-edit). */
   origin: 'stub' | 'live';
+  /** W-PROD (additive): the live provider + model that shaped the copy —
+   *  'anthropic' or a cascade provider (cerebras/fireworks/deepinfra/groq).
+   *  Absent on stub plans. */
+  provider?: string;
+  providerModel?: string;
 }
 
 // ── Derivation helpers ────────────────────────────────────────────────────────
