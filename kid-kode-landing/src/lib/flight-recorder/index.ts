@@ -28,6 +28,7 @@ import {
   type PrismTouchpoint,
   type RecordEnvelope,
   type RenderModeEventRecord,
+  type BackgroundEventRecord,
   type UserSignalRecord,
   type VerifySignalRecord,
 } from "./schema";
@@ -423,6 +424,50 @@ export function recordRenderMode(
       from_mode: input.from_mode,
       to_mode: input.to_mode,
       hub_hint: input.hub_hint,
+      ok: input.ok,
+      detail: input.detail,
+    };
+    finalize(record, env, input.actor?.actorIdentifiers ?? []);
+  } catch {
+    /* fail-open */
+  }
+}
+
+export function recordBackgroundEvent(
+  input: EmitCommon &
+    Partial<
+      Pick<
+        BackgroundEventRecord,
+        | "surface"
+        | "hub_ref"
+        | "prompt"
+        | "grammar_family"
+        | "anti_repetition_cluster"
+        | "route"
+        | "palette"
+        | "render_mode"
+        | "preset_ref"
+        | "downgraded"
+        | "ok"
+        | "detail"
+      >
+    >,
+): void {
+  try {
+    const env = buildEnvelope(input, "background_event");
+    const record: BackgroundEventRecord = {
+      ...env,
+      record_type: "background_event",
+      surface: input.surface ?? "picker-generate",
+      hub_ref: input.hub_ref,
+      prompt: input.prompt,
+      grammar_family: input.grammar_family,
+      anti_repetition_cluster: input.anti_repetition_cluster,
+      route: input.route,
+      palette: input.palette,
+      render_mode: input.render_mode,
+      preset_ref: input.preset_ref,
+      downgraded: input.downgraded,
       ok: input.ok,
       detail: input.detail,
     };

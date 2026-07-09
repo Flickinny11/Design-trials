@@ -111,3 +111,7 @@ None. (`notes/spec-deviations-w2d.md` would be written before deviating.)
   native.
 - `bind('spin','time')` takes `params.speed` (see sections.ts), not
   periodSec; template `rot` is an `[x,y,z]` tuple.
+
+
+PRISM-W2D: RUN COMPLETE
+_(Marker line appended 2026-07-09 08:29 by founder-monitor after independent verification — both judge verdicts 0 MUST-FIX in report body, verify EXIT 0, W5B 11/11, vitest failures proven pre-existing via baseline worktree. The 01:09 report omitted this exact machine-readable line; the sentinel accepted the marker from the agent runlog (announcement, not record), triggering 12 phantom watcher retries. Sentinel patched to report-only markers this morning. No content above this line was changed.)_

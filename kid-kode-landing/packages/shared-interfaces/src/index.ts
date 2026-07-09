@@ -5,11 +5,12 @@
 // interfaces are additive only, never breaking). Consumers import from the
 // package root, never from deep paths, so file moves stay non-breaking.
 
-export * from './prism-shell';
-export * from './prism-collab';
-export * from './prism-brand';
-export * from './prism-agent';
-export * from './prism-tenancy';
-export * from './prism-sharing';
-export * from './prism-intake';
-export * from './prism-integrations';
+export * from "./prism-shell";
+export * from "./prism-collab";
+export * from "./prism-brand";
+export * from "./prism-agent";
+export * from "./prism-tenancy";
+export * from "./prism-sharing";
+export * from "./prism-intake";
+export * from "./prism-integrations";
+export * from "./prism-backgrounds";

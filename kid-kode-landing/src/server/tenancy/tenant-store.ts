@@ -26,10 +26,10 @@
 // serialized per process through a per-tenant promise chain. Fine for the
 // dev/CI scale W1A ships at; a real DB takes over transactions in the swap.
 
-import 'server-only';
-import { createHash, randomUUID } from 'node:crypto';
-import { promises as fs } from 'node:fs';
-import path from 'node:path';
+import "server-only";
+import { createHash, randomUUID } from "node:crypto";
+import { promises as fs } from "node:fs";
+import path from "node:path";
 import {
   PRISM_DEFAULT_NOTIFICATION_PREFS,
   PRISM_TENANCY_CONTRACT_VERSION,
@@ -44,15 +44,15 @@ import {
   type PrismProject,
   type PrismProjectVersion,
   type PrismTenantAsset,
-} from '../../../packages/shared-interfaces/src/prism-tenancy';
+} from "../../../packages/shared-interfaces/src/prism-tenancy";
 import {
   buildBriefSchema,
   type BuildBrief,
-} from '../../../packages/shared-interfaces/src/prism-intake';
+} from "../../../packages/shared-interfaces/src/prism-intake";
 import {
   fidelityReportSchema,
   type FidelityReport,
-} from '../../../packages/shared-interfaces/src/prism-ingest';
+} from "../../../packages/shared-interfaces/src/prism-ingest";
 import {
   connectorRequestSchema,
   githubImportSchema,
@@ -62,18 +62,22 @@ import {
   type GithubImport,
   type IntegrationConnection,
   type ProjectCapabilityBinding,
-} from '../../../packages/shared-interfaces/src/prism-integrations';
+} from "../../../packages/shared-interfaces/src/prism-integrations";
+import {
+  savedBackgroundItemSchema,
+  type SavedBackgroundItemRecord,
+} from "../../../packages/shared-interfaces/src/prism-backgrounds";
 import {
   conductorStatusSchema,
   deployRecordSchema,
   type ConductorStatus,
   type DeployRecord,
-} from '../../../packages/shared-interfaces/src/prism-conductor';
+} from "../../../packages/shared-interfaces/src/prism-conductor";
 import {
   careConfigSchema,
   type CareConfig,
-} from '../../../packages/shared-interfaces/src/prism-care';
-import { getTemplate, templateGraph } from '@/lib/templates/registry';
+} from "../../../packages/shared-interfaces/src/prism-care";
+import { getTemplate, templateGraph } from "@/lib/templates/registry";
 
 const MAX_GRAPH_BYTES = 16 * 1024 * 1024; // 16 MB graph JSON ceiling
 const MAX_ASSET_BYTES = 64 * 1024 * 1024; // matches assets/store.ts ceiling
@@ -82,7 +86,7 @@ function tenancyRoot(): string {
   // PRISM_TENANCY_DIR override keeps the isolation probe hermetic.
   return (
     process.env.PRISM_TENANCY_DIR ??
-    path.join(process.cwd(), '.data', 'tenancy')
+    path.join(process.cwd(), ".data", "tenancy")
   );
 }
 
@@ -98,21 +102,21 @@ function safeId(id: string, label: string): string {
 /** Wall #1 + #3 — every path starts at the tenant root and must still be
  *  inside it after resolution. */
 function tenantRoot(tenantId: string): string {
-  return path.join(tenancyRoot(), 'tenants', safeId(tenantId, 'tenant'));
+  return path.join(tenancyRoot(), "tenants", safeId(tenantId, "tenant"));
 }
 
 function insideTenant(tenantId: string, ...segments: string[]): string {
   const root = tenantRoot(tenantId);
   const joined = path.resolve(root, ...segments);
   if (joined !== root && !joined.startsWith(root + path.sep)) {
-    throw new Error('tenant-store: path escaped tenant root');
+    throw new Error("tenant-store: path escaped tenant root");
   }
   return joined;
 }
 
 async function readJson<T>(file: string): Promise<T | null> {
   try {
-    return JSON.parse(await fs.readFile(file, 'utf8')) as T;
+    return JSON.parse(await fs.readFile(file, "utf8")) as T;
   } catch {
     return null; // wall #4 — absent and unreadable look identical
   }
@@ -121,7 +125,7 @@ async function readJson<T>(file: string): Promise<T | null> {
 async function writeJson(file: string, value: unknown): Promise<void> {
   await fs.mkdir(path.dirname(file), { recursive: true });
   const tmp = `${file}.tmp-${randomUUID()}`;
-  await fs.writeFile(tmp, JSON.stringify(value, null, 2), 'utf8');
+  await fs.writeFile(tmp, JSON.stringify(value, null, 2), "utf8");
   await fs.rename(tmp, file);
 }
 
@@ -141,7 +145,7 @@ function nowIso(): string {
 // ── Projects ─────────────────────────────────────────────────────────────────
 
 function projectsIndexPath(tenantId: string): string {
-  return insideTenant(tenantId, 'projects.json');
+  return insideTenant(tenantId, "projects.json");
 }
 
 async function readProjects(tenantId: string): Promise<PrismProject[]> {
@@ -161,7 +165,7 @@ export async function getProject(
   tenantId: string,
   projectId: string,
 ): Promise<PrismProject | null> {
-  const pid = safeId(projectId, 'project');
+  const pid = safeId(projectId, "project");
   const all = await readProjects(tenantId);
   // Ownership is structural: only THIS tenant's index is ever read, so a
   // foreign projectId simply is not found (wall #4).
@@ -175,7 +179,7 @@ export async function createProject(
   return serialized(tenantId, async () => {
     const project: PrismProject = prismProjectSchema.parse({
       id: `proj-${randomUUID()}`,
-      ownerUserId: safeId(tenantId, 'tenant'),
+      ownerUserId: safeId(tenantId, "tenant"),
       orgId: null,
       name: input.name,
       graphRef: null,
@@ -195,7 +199,7 @@ async function updateProject(
   patch: (p: PrismProject) => PrismProject,
 ): Promise<PrismProject | null> {
   return serialized(tenantId, async () => {
-    const pid = safeId(projectId, 'project');
+    const pid = safeId(projectId, "project");
     const all = await readProjects(tenantId);
     const idx = all.findIndex((p) => p.id === pid);
     if (idx < 0) return null;
@@ -247,7 +251,7 @@ export async function setBuildState(
 }
 
 function projectDir(tenantId: string, projectId: string): string {
-  return insideTenant(tenantId, 'projects', safeId(projectId, 'project'));
+  return insideTenant(tenantId, "projects", safeId(projectId, "project"));
 }
 
 /** Delete a project and all its tenant-keyed bytes (graph, brief, versions,
@@ -257,7 +261,7 @@ export async function deleteProject(
   tenantId: string,
   projectId: string,
 ): Promise<boolean> {
-  const pid = safeId(projectId, 'project');
+  const pid = safeId(projectId, "project");
   return serialized(tenantId, async () => {
     const all = await readProjects(tenantId);
     const idx = all.findIndex((p) => p.id === pid);
@@ -289,7 +293,7 @@ export async function duplicateProject(
     const graphRef = graph ? `tenancy:${cloneId}/graph.json` : null;
     const clone: PrismProject = prismProjectSchema.parse({
       id: cloneId,
-      ownerUserId: safeId(tenantId, 'tenant'),
+      ownerUserId: safeId(tenantId, "tenant"),
       orgId: owned.orgId ?? null,
       name: `${owned.name} copy`.slice(0, 200),
       graphRef,
@@ -328,7 +332,7 @@ export async function remixTemplate(
     const graphRef = `tenancy:${cloneId}/graph.json`;
     const project: PrismProject = prismProjectSchema.parse({
       id: cloneId,
-      ownerUserId: safeId(tenantId, 'tenant'),
+      ownerUserId: safeId(tenantId, "tenant"),
       orgId: null,
       name: `${tpl.name} (remix)`.slice(0, 200),
       graphRef,
@@ -352,9 +356,9 @@ export async function remixTemplate(
 function briefPath(tenantId: string, projectId: string): string {
   return insideTenant(
     tenantId,
-    'projects',
-    safeId(projectId, 'project'),
-    'brief.json',
+    "projects",
+    safeId(projectId, "project"),
+    "brief.json",
   );
 }
 
@@ -369,15 +373,15 @@ export async function saveBrief(
 ): Promise<{ project: PrismProject } | null> {
   const owned = await getProject(tenantId, projectId);
   if (!owned) return null;
-  const bytes = Buffer.byteLength(JSON.stringify(brief), 'utf8');
+  const bytes = Buffer.byteLength(JSON.stringify(brief), "utf8");
   if (bytes > MAX_BRIEF_BYTES) {
-    throw new Error('tenant-store: brief exceeds size ceiling');
+    throw new Error("tenant-store: brief exceeds size ceiling");
   }
   await writeJson(briefPath(tenantId, projectId), brief);
   const project = await updateProject(tenantId, projectId, (p) => ({
     ...p,
     name: brief.title.slice(0, 200),
-    buildState: 'plan-pending' as const,
+    buildState: "plan-pending" as const,
   }));
   return project ? { project } : null;
 }
@@ -399,9 +403,9 @@ export async function getBrief(
 function fidelityPath(tenantId: string, projectId: string): string {
   return insideTenant(
     tenantId,
-    'projects',
-    safeId(projectId, 'project'),
-    'fidelity.json',
+    "projects",
+    safeId(projectId, "project"),
+    "fidelity.json",
   );
 }
 
@@ -416,9 +420,9 @@ export async function saveFidelityReport(
 ): Promise<boolean> {
   const owned = await getProject(tenantId, projectId);
   if (!owned) return false;
-  const bytes = Buffer.byteLength(JSON.stringify(report), 'utf8');
+  const bytes = Buffer.byteLength(JSON.stringify(report), "utf8");
   if (bytes > MAX_FIDELITY_BYTES) {
-    throw new Error('tenant-store: fidelity report exceeds size ceiling');
+    throw new Error("tenant-store: fidelity report exceeds size ceiling");
   }
   await writeJson(fidelityPath(tenantId, projectId), report);
   return true;
@@ -441,9 +445,9 @@ export async function getFidelityReport(
 function graphPath(tenantId: string, projectId: string): string {
   return insideTenant(
     tenantId,
-    'projects',
-    safeId(projectId, 'project'),
-    'graph.json',
+    "projects",
+    safeId(projectId, "project"),
+    "graph.json",
   );
 }
 
@@ -454,9 +458,9 @@ export async function saveGraph(
 ): Promise<{ graphRef: string } | null> {
   const owned = await getProject(tenantId, projectId);
   if (!owned) return null; // fail closed — not owned == not found
-  const bytes = Buffer.byteLength(JSON.stringify(graph), 'utf8');
+  const bytes = Buffer.byteLength(JSON.stringify(graph), "utf8");
   if (bytes > MAX_GRAPH_BYTES) {
-    throw new Error('tenant-store: graph exceeds size ceiling');
+    throw new Error("tenant-store: graph exceeds size ceiling");
   }
   await writeJson(graphPath(tenantId, projectId), graph);
   const graphRef = `tenancy:${owned.id}/graph.json`;
@@ -478,9 +482,9 @@ export async function getGraph(
 function versionsIndexPath(tenantId: string, projectId: string): string {
   return insideTenant(
     tenantId,
-    'projects',
-    safeId(projectId, 'project'),
-    'versions.json',
+    "projects",
+    safeId(projectId, "project"),
+    "versions.json",
   );
 }
 
@@ -507,14 +511,15 @@ export async function createVersion(
   if (!owned) return null;
   return serialized(tenantId, async () => {
     const graph =
-      (await readJson<Record<string, unknown>>(graphPath(tenantId, projectId))) ??
-      {};
+      (await readJson<Record<string, unknown>>(
+        graphPath(tenantId, projectId),
+      )) ?? {};
     const versionId = `ver-${randomUUID()}`;
     const snapshotFile = insideTenant(
       tenantId,
-      'projects',
-      safeId(projectId, 'project'),
-      'versions',
+      "projects",
+      safeId(projectId, "project"),
+      "versions",
       `${versionId}.json`,
     );
     await writeJson(snapshotFile, graph); // immutable snapshot bytes
@@ -523,7 +528,7 @@ export async function createVersion(
       projectId: owned.id,
       label,
       graphSnapshotRef: `tenancy:${owned.id}/versions/${versionId}.json`,
-      createdByUserId: safeId(tenantId, 'tenant'),
+      createdByUserId: safeId(tenantId, "tenant"),
       createdAt: nowIso(),
     });
     const raw =
@@ -542,7 +547,10 @@ export async function restoreVersion(
   tenantId: string,
   projectId: string,
   versionId: string,
-): Promise<{ version: PrismProjectVersion; graph: Record<string, unknown> } | null> {
+): Promise<{
+  version: PrismProjectVersion;
+  graph: Record<string, unknown>;
+} | null> {
   const owned = await getProject(tenantId, projectId);
   if (!owned) return null;
   const versions = await listVersions(tenantId, projectId);
@@ -555,10 +563,10 @@ export async function restoreVersion(
   const snapshot = await serialized(tenantId, async () => {
     const snapshotFile = insideTenant(
       tenantId,
-      'projects',
-      safeId(projectId, 'project'),
-      'versions',
-      `${safeId(versionId, 'version')}.json`,
+      "projects",
+      safeId(projectId, "project"),
+      "versions",
+      `${safeId(versionId, "version")}.json`,
     );
     const snap = await readJson<Record<string, unknown>>(snapshotFile);
     if (snap == null) return null;
@@ -586,7 +594,7 @@ export async function countUsage(
   let builds = 0;
   let checkpoints = 0;
   for (const p of projects) {
-    if (p.buildState === 'built') builds += 1;
+    if (p.buildState === "built") builds += 1;
     const versions = await readJson<unknown[]>(
       versionsIndexPath(tenantId, p.id),
     );
@@ -598,7 +606,7 @@ export async function countUsage(
 // ── Account settings (W7 — settings depth; tenant-keyed like everything) ─────
 
 function accountSettingsPath(tenantId: string): string {
-  return insideTenant(tenantId, 'account-settings.json');
+  return insideTenant(tenantId, "account-settings.json");
 }
 
 const DEFAULT_ACCOUNT_SETTINGS: PrismAccountSettings = {
@@ -659,18 +667,18 @@ export async function deleteAllTenantData(tenantId: string): Promise<boolean> {
 function assetsDir(tenantId: string, projectId: string): string {
   return insideTenant(
     tenantId,
-    'projects',
-    safeId(projectId, 'project'),
-    'assets',
+    "projects",
+    safeId(projectId, "project"),
+    "assets",
   );
 }
 
 function assetsIndexPath(tenantId: string, projectId: string): string {
   return insideTenant(
     tenantId,
-    'projects',
-    safeId(projectId, 'project'),
-    'assets.json',
+    "projects",
+    safeId(projectId, "project"),
+    "assets.json",
   );
 }
 
@@ -682,10 +690,10 @@ export async function putAsset(
   const owned = await getProject(tenantId, projectId);
   if (!owned) return null;
   if (input.data.byteLength > MAX_ASSET_BYTES) {
-    throw new Error('tenant-store: asset exceeds size ceiling');
+    throw new Error("tenant-store: asset exceeds size ceiling");
   }
   return serialized(tenantId, async () => {
-    const hash = createHash('sha256').update(input.data).digest('hex');
+    const hash = createHash("sha256").update(input.data).digest("hex");
     const dir = assetsDir(tenantId, projectId);
     await fs.mkdir(dir, { recursive: true });
     await fs.writeFile(path.join(dir, hash), input.data);
@@ -701,9 +709,17 @@ export async function putAsset(
     const raw =
       (await readJson<unknown[]>(assetsIndexPath(tenantId, projectId))) ?? [];
     const withoutDupe = raw.filter(
-      (a) => !(typeof a === 'object' && a !== null && (a as { id?: string }).id === hash),
+      (a) =>
+        !(
+          typeof a === "object" &&
+          a !== null &&
+          (a as { id?: string }).id === hash
+        ),
     );
-    await writeJson(assetsIndexPath(tenantId, projectId), [...withoutDupe, asset]);
+    await writeJson(assetsIndexPath(tenantId, projectId), [
+      ...withoutDupe,
+      asset,
+    ]);
     return asset;
   });
 }
@@ -726,7 +742,9 @@ export async function getAsset(
     .find((a) => a.id === assetId);
   if (!meta) return null;
   try {
-    const data = await fs.readFile(path.join(assetsDir(tenantId, projectId), assetId));
+    const data = await fs.readFile(
+      path.join(assetsDir(tenantId, projectId), assetId),
+    );
     return { meta, data };
   } catch {
     return null;
@@ -742,7 +760,7 @@ export async function getAsset(
 // REFERENCE only; the store never sees a token to persist.
 
 function connectionsIndexPath(tenantId: string): string {
-  return insideTenant(tenantId, 'integrations', 'connections.json');
+  return insideTenant(tenantId, "integrations", "connections.json");
 }
 
 export async function listConnections(
@@ -760,7 +778,7 @@ export async function getConnection(
   tenantId: string,
   connectionId: string,
 ): Promise<IntegrationConnection | null> {
-  const cid = safeId(connectionId, 'connection');
+  const cid = safeId(connectionId, "connection");
   const all = await listConnections(tenantId);
   return all.find((c) => c.id === cid) ?? null;
 }
@@ -785,7 +803,7 @@ export async function updateConnection(
   patch: (c: IntegrationConnection) => IntegrationConnection,
 ): Promise<IntegrationConnection | null> {
   return serialized(tenantId, async () => {
-    const cid = safeId(connectionId, 'connection');
+    const cid = safeId(connectionId, "connection");
     const all = await listConnections(tenantId);
     const idx = all.findIndex((c) => c.id === cid);
     if (idx < 0) return null;
@@ -806,7 +824,7 @@ export async function removeConnection(
   connectionId: string,
 ): Promise<boolean> {
   return serialized(tenantId, async () => {
-    const cid = safeId(connectionId, 'connection');
+    const cid = safeId(connectionId, "connection");
     const all = await listConnections(tenantId);
     const next = all.filter((c) => c.id !== cid);
     if (next.length === all.length) return false;
@@ -816,7 +834,7 @@ export async function removeConnection(
 }
 
 function connectorRequestsIndexPath(tenantId: string): string {
-  return insideTenant(tenantId, 'integrations', 'connector-requests.json');
+  return insideTenant(tenantId, "integrations", "connector-requests.json");
 }
 
 export async function listConnectorRequests(
@@ -842,14 +860,46 @@ export async function addConnectorRequest(
   });
 }
 
+// ── Generated background library (W-BG) ─────────────────────────────────────
+// Prompt-to-background results persist per tenant (same collection idiom as
+// connector requests): a JSON list validated item-by-item on read, appended
+// under the per-tenant write chain. Layer assets are public urls only.
+
+function backgroundPresetsIndexPath(tenantId: string): string {
+  return insideTenant(tenantId, "backgrounds", "background-presets.json");
+}
+
+export async function listBackgroundPresets(
+  tenantId: string,
+): Promise<SavedBackgroundItemRecord[]> {
+  const raw = await readJson<unknown[]>(backgroundPresetsIndexPath(tenantId));
+  if (!Array.isArray(raw)) return [];
+  return raw.flatMap((r) => {
+    const parsed = savedBackgroundItemSchema.safeParse(r);
+    return parsed.success ? [parsed.data] : [];
+  });
+}
+
+export async function addBackgroundPreset(
+  tenantId: string,
+  item: SavedBackgroundItemRecord,
+): Promise<SavedBackgroundItemRecord> {
+  const parsed = savedBackgroundItemSchema.parse(item);
+  return serialized(tenantId, async () => {
+    const all = await listBackgroundPresets(tenantId);
+    await writeJson(backgroundPresetsIndexPath(tenantId), [...all, parsed]);
+    return parsed;
+  });
+}
+
 // ── Per-project capability bindings + GitHub import (E5) ─────────────────────
 
 function projectIntegrationsPath(tenantId: string, projectId: string): string {
   return insideTenant(
     tenantId,
-    'projects',
-    safeId(projectId, 'project'),
-    'integrations.json',
+    "projects",
+    safeId(projectId, "project"),
+    "integrations.json",
   );
 }
 
@@ -914,7 +964,7 @@ export async function removeProjectBinding(
 ): Promise<boolean> {
   const owned = await getProject(tenantId, projectId);
   if (!owned) return false;
-  const bid = safeId(bindingId, 'binding');
+  const bid = safeId(bindingId, "binding");
   return serialized(tenantId, async () => {
     const cur = await readProjectIntegrations(tenantId, projectId);
     const bindings = cur.bindings.filter((b) => b.id !== bid);
@@ -955,9 +1005,9 @@ export async function setGithubImport(
 function conductorStatusPath(tenantId: string, projectId: string): string {
   return insideTenant(
     tenantId,
-    'projects',
-    safeId(projectId, 'project'),
-    'conductor-status.json',
+    "projects",
+    safeId(projectId, "project"),
+    "conductor-status.json",
   );
 }
 
@@ -988,7 +1038,12 @@ export async function getConductorStatus(
 // ── E20 managed-care config (per project) ─────────────────────────────────────
 
 function careConfigPath(tenantId: string, projectId: string): string {
-  return insideTenant(tenantId, 'projects', safeId(projectId, 'project'), 'care-config.json');
+  return insideTenant(
+    tenantId,
+    "projects",
+    safeId(projectId, "project"),
+    "care-config.json",
+  );
 }
 
 export async function saveCareConfig(
@@ -1018,9 +1073,9 @@ export async function getCareConfig(
 function deploysIndexPath(tenantId: string, projectId: string): string {
   return insideTenant(
     tenantId,
-    'projects',
-    safeId(projectId, 'project'),
-    'deploys.json',
+    "projects",
+    safeId(projectId, "project"),
+    "deploys.json",
   );
 }
 
@@ -1059,12 +1114,15 @@ export async function updateDeploy(
 ): Promise<DeployRecord | null> {
   const owned = await getProject(tenantId, projectId);
   if (!owned) return null;
-  const did = safeId(deployId, 'deploy');
+  const did = safeId(deployId, "deploy");
   return serialized(tenantId, async () => {
     const all = await readDeploys(tenantId, projectId);
     const idx = all.findIndex((d) => d.id === did);
     if (idx < 0) return null;
-    const updated = deployRecordSchema.parse({ ...patch(all[idx]), id: all[idx].id });
+    const updated = deployRecordSchema.parse({
+      ...patch(all[idx]),
+      id: all[idx].id,
+    });
     const next = [...all];
     next[idx] = updated;
     await writeJson(deploysIndexPath(tenantId, projectId), next);
@@ -1089,7 +1147,7 @@ export async function getDeploy(
   const owned = await getProject(tenantId, projectId);
   if (!owned) return null;
   const all = await readDeploys(tenantId, projectId);
-  return all.find((d) => d.id === safeId(deployId, 'deploy')) ?? null;
+  return all.find((d) => d.id === safeId(deployId, "deploy")) ?? null;
 }
 
 /** Read an immutable version SNAPSHOT without touching the live graph — the
@@ -1104,10 +1162,10 @@ export async function getVersionSnapshot(
   if (!owned) return null;
   const snapshotFile = insideTenant(
     tenantId,
-    'projects',
-    safeId(projectId, 'project'),
-    'versions',
-    `${safeId(versionId, 'version')}.json`,
+    "projects",
+    safeId(projectId, "project"),
+    "versions",
+    `${safeId(versionId, "version")}.json`,
   );
   return readJson<Record<string, unknown>>(snapshotFile);
 }

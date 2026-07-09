@@ -187,6 +187,7 @@ export type PrismTouchpoint =
   | "design-grammar" // W-DG1 — design-grammar harvest (analysis + distillation)
   | "catalog" // W-TPL — template catalog (new-hub-from-template + section drop)
   | "render-mode" // W-2D — per-hub 2d/3d render-mode toggles + authoring
+  | "background" // W-BG — background library + prompt-to-background
   | (string & {});
 
 /** The Prism extension attribute bag. All optional; a record carries the columns
@@ -286,7 +287,8 @@ export type FlightRecordType =
   | "import_event"
   | "design_analysis_event"
   | "catalog_event"
-  | "render_mode_event";
+  | "render_mode_event"
+  | "background_event";
 
 /** A whole build (plan → graph shape → SLA tier → cost → outcome). */
 export interface BuildSessionRecord extends RecordEnvelope {
@@ -506,6 +508,44 @@ export interface RenderModeEventRecord extends RecordEnvelope {
   detail?: string;
 }
 
+/** Which surface produced a background event (W-BG). */
+export type PrismBackgroundSurface =
+  | "picker-generate" // prompt-to-background in the background picker
+  | "picker-apply" // a catalog/library entry applied to a hub
+  | (string & {});
+
+/** One background-library event (W-BG). Prompt-to-background is taste
+ *  training data: "this prompt + this hub context chose this grammar family
+ *  via this render route" is a labeled example of background-composition
+ *  intent in our own vocabulary. The prompt free text is scrubbed at write;
+ *  hub/preset refs are session/server ids, not PII. */
+export interface BackgroundEventRecord extends RecordEnvelope {
+  record_type: "background_event";
+  surface: PrismBackgroundSurface;
+  /** The hub the background was generated for / applied to. */
+  hub_ref?: string;
+  /** The user's prompt (scrubbed at write). */
+  prompt?: string;
+  /** design-grammar family the generation drew on (the mission's per-
+   *  generation family log — the anti-repetition axis). */
+  grammar_family?: string;
+  /** The family's antiRepetition cluster at selection time. */
+  anti_repetition_cluster?: string;
+  /** Render route that realized it ('R1' | 'R2' | 'R3'). */
+  route?: string;
+  /** Background palette id + hub render mode at generation time. */
+  palette?: string;
+  render_mode?: string;
+  /** Generated/applied item or preset id. */
+  preset_ref?: string;
+  /** True when a photo route downgraded to R1 (no provider key). */
+  downgraded?: boolean;
+  /** Stage outcome (false = failed/degraded, still recorded — data honesty). */
+  ok?: boolean;
+  /** Short human note (scrubbed at write). */
+  detail?: string;
+}
+
 /** The tagged union the writer accepts. */
 export type FlightRecord =
   | BuildSessionRecord
@@ -517,7 +557,8 @@ export type FlightRecord =
   | ImportEventRecord
   | DesignAnalysisEventRecord
   | CatalogEventRecord
-  | RenderModeEventRecord;
+  | RenderModeEventRecord
+  | BackgroundEventRecord;
 
 /** All record type names (drives the schema doc + dev ledger grouping). */
 export const FLIGHT_RECORD_TYPES: FlightRecordType[] = [
@@ -531,4 +572,5 @@ export const FLIGHT_RECORD_TYPES: FlightRecordType[] = [
   "design_analysis_event",
   "catalog_event",
   "render_mode_event",
+  "background_event",
 ];

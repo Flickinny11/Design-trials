@@ -1876,3 +1876,120 @@ Toolbar fully REBUILT from GENERATED Tripo v3.1 GLBs (procedural forms discarded
 [03:54:08] SHELL-CHAIN-W2D: W9 verified complete + agents quiet — arming SHELL-W2D.
 [03:54:08] CHAIN/SHELL-W2D: ARMED v2 — watching SHELL-W2D. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
 [03:54:59] CHAIN/SHELL-W2D: PREFLIGHT BLOCKED launch. See /Users/loganbaird/Prototype_Prism/Design-trials/chain-SHELL-W2D-run.log.preflight
+[09:16:25] CHAIN/SHELL-W2D: ARMED v2 — watching SHELL-W2D. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[09:16:25] SHELL-CHAIN-WBG: QUEUED(v2 retry) — waiting for PRISM-W2D: RUN COMPLETE.
+[09:16:25] SHELL-CHAIN-WUXV: QUEUED(v2 retry) — waiting for PRISM-WBG: RUN COMPLETE.
+[09:17:16] CHAIN/SHELL-W2D: PREFLIGHT BLOCKED launch. See /Users/loganbaird/Prototype_Prism/Design-trials/chain-SHELL-W2D-run.log.preflight
+[09:18:50] CHAIN/SHELL-WTPLFIX: ARMED v2 — watching SHELL-WTPLFIX. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[09:18:50] SHELL-CHAIN-W2D: QUEUED(v2 retry) — waiting for PRISM-WTPLFIX: RUN COMPLETE.
+[09:19:40] CHAIN/SHELL-WTPLFIX: PREFLIGHT BLOCKED launch. See /Users/loganbaird/Prototype_Prism/Design-trials/chain-SHELL-WTPLFIX-run.log.preflight
+[14:02:40] SHELL-CHAIN-WPROD: QUEUED(v2 retry) — waiting for PRISM-WUXV: RUN COMPLETE.
+[18:15:31] CHAIN/SHELL-WTPLFIX: ARMED v2 — watching SHELL-WTPLFIX. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[18:16:23] CHAIN/SHELL-WTPLFIX: launched build agent on claude-fable-5 (resume #1)
+[18:19:54] CHAIN/SHELL-WTPLFIX: still building · 4m elapsed · agent up · 1244 commits · last: shell-wtplfix: Fix A — restore live-graph.json to pre-residue 98342e31^ 
+[18:23:24] CHAIN/SHELL-WTPLFIX: still building · 7m elapsed · agent up · 1244 commits · last: shell-wtplfix: Fix A — restore live-graph.json to pre-residue 98342e31^ 
+[18:26:55] CHAIN/SHELL-WTPLFIX: still building · 11m elapsed · agent up · 1245 commits · last: shell-wtplfix: Fix B — templates register ambience as hub background[] d
+[18:26:55] CHAIN/SHELL-WTPLFIX: commit 37b5b091 — shell-wtplfix: Fix B — templates register ambience as hub background[] d
+[18:30:25] CHAIN/SHELL-WTPLFIX: still building · 14m elapsed · agent up · 1245 commits · last: shell-wtplfix: Fix B — templates register ambience as hub background[] d
+[18:32:55] CHAIN/SHELL-WTPLFIX: commit f11e4bbd — shell-wtplfix: report + evidence + RUN COMPLETE — criteria-reviewer PASS
+[18:34:11] CHAIN/SHELL-WTPLFIX: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[23:48:06] SHELL-CHAIN-W2D: arming SHELL-W2D (attempt 1).
+[23:48:06] CHAIN/SHELL-W2D: ARMED v2 — watching SHELL-W2D. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[23:48:57] CHAIN/SHELL-W2D: launched build agent on claude-fable-5 (resume #1)
+[23:52:27] CHAIN/SHELL-W2D: still building · 4m elapsed · agent up · 1246 commits · last: shell-wtplfix: report + evidence + RUN COMPLETE — criteria-reviewer PASS
+[23:55:58] CHAIN/SHELL-W2D: still building · 7m elapsed · agent up · 1246 commits · last: shell-wtplfix: report + evidence + RUN COMPLETE — criteria-reviewer PASS
+[23:59:29] CHAIN/SHELL-W2D: still building · 11m elapsed · agent up · 1246 commits · last: shell-wtplfix: report + evidence + RUN COMPLETE — criteria-reviewer PASS
+[00:02:59] CHAIN/SHELL-W2D: still building · 14m elapsed · agent up · 1246 commits · last: shell-wtplfix: report + evidence + RUN COMPLETE — criteria-reviewer PASS
+[00:06:30] CHAIN/SHELL-W2D: still building · 18m elapsed · agent up · 1246 commits · last: shell-wtplfix: report + evidence + RUN COMPLETE — criteria-reviewer PASS
+[00:07:30] CHAIN/SHELL-W2D: commit 53df29f7 — shell-w2d: report skeleton — design of record (flattened-perspective 2D 
+[00:10:01] CHAIN/SHELL-W2D: still building · 21m elapsed · agent up · 1247 commits · last: shell-w2d: report skeleton — design of record (flattened-perspective 2D 
+[00:12:01] CHAIN/SHELL-W2D: commit 3f9fabbb — shell-w2d: D1+D2 — PrismHub.renderMode '3d'|'2d' (INV-18 additive, read-
+[00:13:31] CHAIN/SHELL-W2D: still building · 25m elapsed · agent up · 1248 commits · last: shell-w2d: D1+D2 — PrismHub.renderMode '3d'|'2d' (INV-18 additive, read-
+[00:16:02] CHAIN/SHELL-W2D: commit f39fdb57 — shell-w2d: D3 — mode-aware SceneControlsBridge (additive tool-state per 
+[00:17:02] CHAIN/SHELL-W2D: still building · 28m elapsed · agent up · 1249 commits · last: shell-w2d: D3 — mode-aware SceneControlsBridge (additive tool-state per 
+[00:20:33] CHAIN/SHELL-W2D: still building · 32m elapsed · agent up · 1249 commits · last: shell-w2d: D3 — mode-aware SceneControlsBridge (additive tool-state per 
+[00:22:03] CHAIN/SHELL-W2D: commit f5640064 — shell-w2d: D4+D6 — mode UI + flight-recorder. HubRenderModeToggle (3D De
+[00:24:03] CHAIN/SHELL-W2D: still building · 35m elapsed · agent up · 1250 commits · last: shell-w2d: D4+D6 — mode UI + flight-recorder. HubRenderModeToggle (3D De
+[00:27:34] CHAIN/SHELL-W2D: still building · 39m elapsed · agent up · 1250 commits · last: shell-w2d: D4+D6 — mode UI + flight-recorder. HubRenderModeToggle (3D De
+[00:29:35] CHAIN/SHELL-W2D: commit 85aabc50 — shell-w2d: D5 — grammar + Conductor + prompt-edit read hub render mode. 
+[00:31:05] CHAIN/SHELL-W2D: still building · 42m elapsed · agent up · 1251 commits · last: shell-w2d: D5 — grammar + Conductor + prompt-edit read hub render mode. 
+[00:34:35] CHAIN/SHELL-W2D: still building · 46m elapsed · agent up · 1251 commits · last: shell-w2d: D5 — grammar + Conductor + prompt-edit read hub render mode. 
+[00:36:36] CHAIN/SHELL-W2D: commit 5a7982fa — shell-w2d: D7 (code) — mixed-app demo fixture + /w2d-demo lab route + 21
+[00:38:06] CHAIN/SHELL-W2D: still building · 50m elapsed · agent up · 1252 commits · last: shell-w2d: D7 (code) — mixed-app demo fixture + /w2d-demo lab route + 21
+[00:41:37] CHAIN/SHELL-W2D: still building · 53m elapsed · agent up · 1252 commits · last: shell-w2d: D7 (code) — mixed-app demo fixture + /w2d-demo lab route + 21
+[00:45:08] CHAIN/SHELL-W2D: still building · 57m elapsed · agent up · 1252 commits · last: shell-w2d: D7 (code) — mixed-app demo fixture + /w2d-demo lab route + 21
+[00:48:38] CHAIN/SHELL-W2D: still building · 60m elapsed · agent up · 1252 commits · last: shell-w2d: D7 (code) — mixed-app demo fixture + /w2d-demo lab route + 21
+[00:52:08] CHAIN/SHELL-W2D: still building · 64m elapsed · agent up · 1252 commits · last: shell-w2d: D7 (code) — mixed-app demo fixture + /w2d-demo lab route + 21
+[00:55:39] CHAIN/SHELL-W2D: still building · 67m elapsed · agent up · 1252 commits · last: shell-w2d: D7 (code) — mixed-app demo fixture + /w2d-demo lab route + 21
+[00:59:09] CHAIN/SHELL-W2D: still building · 71m elapsed · agent up · 1252 commits · last: shell-w2d: D7 (code) — mixed-app demo fixture + /w2d-demo lab route + 21
+[01:01:10] CHAIN/SHELL-W2D: commit d03c37c8 — shell-w2d: D7 evidence — live browser proof pack. /w2d-demo mixed app: 3
+[01:02:40] CHAIN/SHELL-W2D: still building · 74m elapsed · agent up · 1253 commits · last: shell-w2d: D7 evidence — live browser proof pack. /w2d-demo mixed app: 3
+[01:06:10] CHAIN/SHELL-W2D: still building · 78m elapsed · agent up · 1253 commits · last: shell-w2d: D7 evidence — live browser proof pack. /w2d-demo mixed app: 3
+[01:09:41] CHAIN/SHELL-W2D: still building · 81m elapsed · agent up · 1254 commits · last: shell-w2d: report + RUN COMPLETE — criteria-reviewer PASS (0 MUST-FIX, a
+[01:09:41] CHAIN/SHELL-W2D: commit b211a678 — shell-w2d: report + RUN COMPLETE — criteria-reviewer PASS (0 MUST-FIX, a
+[01:11:26] CHAIN/SHELL-W2D: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[01:11:26] SHELL-CHAIN-W2D: surface exited without marker — retry in 10m.
+[01:21:26] SHELL-CHAIN-W2D: arming SHELL-W2D (attempt 2).
+[01:21:26] CHAIN/SHELL-W2D: ARMED v2 — watching SHELL-W2D. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[01:21:26] CHAIN/SHELL-W2D: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[01:21:26] SHELL-CHAIN-W2D: surface exited without marker — retry in 10m.
+[01:31:26] SHELL-CHAIN-W2D: arming SHELL-W2D (attempt 3).
+[01:31:26] CHAIN/SHELL-W2D: ARMED v2 — watching SHELL-W2D. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[01:31:27] CHAIN/SHELL-W2D: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[01:31:27] SHELL-CHAIN-W2D: surface exited without marker — retry in 10m.
+[01:41:27] SHELL-CHAIN-W2D: arming SHELL-W2D (attempt 4).
+[01:41:27] CHAIN/SHELL-W2D: ARMED v2 — watching SHELL-W2D. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[01:41:27] CHAIN/SHELL-W2D: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[01:41:27] SHELL-CHAIN-W2D: surface exited without marker — retry in 10m.
+[01:51:27] SHELL-CHAIN-W2D: arming SHELL-W2D (attempt 5).
+[01:51:27] CHAIN/SHELL-W2D: ARMED v2 — watching SHELL-W2D. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[01:51:27] CHAIN/SHELL-W2D: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[01:51:27] SHELL-CHAIN-W2D: surface exited without marker — retry in 10m.
+[02:01:27] SHELL-CHAIN-W2D: arming SHELL-W2D (attempt 6).
+[02:01:27] CHAIN/SHELL-W2D: ARMED v2 — watching SHELL-W2D. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[02:01:27] CHAIN/SHELL-W2D: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[02:01:27] SHELL-CHAIN-W2D: surface exited without marker — retry in 10m.
+[02:11:27] SHELL-CHAIN-W2D: arming SHELL-W2D (attempt 7).
+[02:11:27] CHAIN/SHELL-W2D: ARMED v2 — watching SHELL-W2D. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[02:11:27] CHAIN/SHELL-W2D: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[02:11:27] SHELL-CHAIN-W2D: surface exited without marker — retry in 10m.
+[02:21:27] SHELL-CHAIN-W2D: arming SHELL-W2D (attempt 8).
+[02:21:27] CHAIN/SHELL-W2D: ARMED v2 — watching SHELL-W2D. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[02:21:28] CHAIN/SHELL-W2D: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[02:21:28] SHELL-CHAIN-W2D: surface exited without marker — retry in 10m.
+[02:31:28] SHELL-CHAIN-W2D: arming SHELL-W2D (attempt 9).
+[02:31:28] CHAIN/SHELL-W2D: ARMED v2 — watching SHELL-W2D. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[02:31:28] CHAIN/SHELL-W2D: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[02:31:28] SHELL-CHAIN-W2D: surface exited without marker — retry in 10m.
+[02:41:28] SHELL-CHAIN-W2D: arming SHELL-W2D (attempt 10).
+[02:41:28] CHAIN/SHELL-W2D: ARMED v2 — watching SHELL-W2D. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[02:41:28] CHAIN/SHELL-W2D: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[02:41:28] SHELL-CHAIN-W2D: surface exited without marker — retry in 10m.
+[02:51:28] SHELL-CHAIN-W2D: arming SHELL-W2D (attempt 11).
+[02:51:28] CHAIN/SHELL-W2D: ARMED v2 — watching SHELL-W2D. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[02:51:28] CHAIN/SHELL-W2D: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[02:51:28] SHELL-CHAIN-W2D: surface exited without marker — retry in 10m.
+[03:01:28] SHELL-CHAIN-W2D: arming SHELL-W2D (attempt 12).
+[03:01:28] CHAIN/SHELL-W2D: ARMED v2 — watching SHELL-W2D. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[03:01:28] CHAIN/SHELL-W2D: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[03:01:28] SHELL-CHAIN-W2D: 12 attempts — standing down.
+[08:24:51] SHELL-CHAIN-WBG: arming SHELL-WBG (attempt 1).
+[08:24:51] CHAIN/SHELL-WBG: ARMED v2 — watching SHELL-WBG. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[08:25:44] CHAIN/SHELL-WBG: launched build agent on claude-fable-5 (resume #1)
+[08:29:15] CHAIN/SHELL-WBG: still building · 4m elapsed · agent up · 1254 commits · last: shell-w2d: report + RUN COMPLETE — criteria-reviewer PASS (0 MUST-FIX, a
+[08:31:15] CHAIN/SHELL-WBG: commit a6b7e227 — shell-wbg: D0 — spec deviations of record + report skeleton (authored fi
+[08:32:45] CHAIN/SHELL-WBG: still building · 7m elapsed · agent up · 1255 commits · last: shell-wbg: D0 — spec deviations of record + report skeleton (authored fi
+[08:35:46] CHAIN/SHELL-WBG: commit f9d57bf3 — shell-wbg: D1 — catalog schema (additive). BackgroundLayerKind +gradient
+[08:36:16] CHAIN/SHELL-WBG: still building · 11m elapsed · agent up · 1256 commits · last: shell-wbg: D1 — catalog schema (additive). BackgroundLayerKind +gradient
+[08:39:47] CHAIN/SHELL-WBG: still building · 14m elapsed · agent up · 1256 commits · last: shell-wbg: D1 — catalog schema (additive). BackgroundLayerKind +gradient
+[08:42:17] CHAIN/SHELL-WBG: commit 64b8156f — shell-wbg: D2 — two new TSL layer renderers + 5 particle variants. Gradi
+[08:43:17] CHAIN/SHELL-WBG: still building · 18m elapsed · agent up · 1257 commits · last: shell-wbg: D2 — two new TSL layer renderers + 5 particle variants. Gradi
+[08:46:48] CHAIN/SHELL-WBG: still building · 21m elapsed · agent up · 1257 commits · last: shell-wbg: D2 — two new TSL layer renderers + 5 particle variants. Gradi
+[08:50:18] CHAIN/SHELL-WBG: still building · 25m elapsed · agent up · 1257 commits · last: shell-wbg: D2 — two new TSL layer renderers + 5 particle variants. Gradi
+[08:51:49] CHAIN/SHELL-WBG: commit 8b96ca8d — shell-wbg: D3+D4 — 60-entry grammar-derived background catalog + 9 gener
+[08:53:49] CHAIN/SHELL-WBG: still building · 28m elapsed · agent up · 1258 commits · last: shell-wbg: D3+D4 — 60-entry grammar-derived background catalog + 9 gener
+[08:56:50] CHAIN/SHELL-WBG: commit 3df3df37 — shell-wbg: D5 — catalog picker upgrade. Search + category chips over the
+[08:57:20] CHAIN/SHELL-WBG: still building · 32m elapsed · agent up · 1259 commits · last: shell-wbg: D5 — catalog picker upgrade. Search + category chips over the
+[09:00:50] CHAIN/SHELL-WBG: still building · 35m elapsed · agent up · 1259 commits · last: shell-wbg: D5 — catalog picker upgrade. Search + category chips over the
+[09:04:21] CHAIN/SHELL-WBG: still building · 39m elapsed · agent up · 1259 commits · last: shell-wbg: D5 — catalog picker upgrade. Search + category chips over the
+[09:07:52] CHAIN/SHELL-WBG: still building · 43m elapsed · agent up · 1259 commits · last: shell-wbg: D5 — catalog picker upgrade. Search + category chips over the
