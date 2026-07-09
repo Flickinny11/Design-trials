@@ -1,6 +1,6 @@
 # SHELL W-BG — 3D Background Library + Prompt-to-Background — RUN REPORT
 
-Status: EVIDENCE CAPTURE IN PROGRESS
+Status: COMPLETE — BOTH JUDGES PASS, 0 MUST-FIX
 Branch: codex/prism-recovery-harness-20260630
 Mission: SHELL-WBG-PROMPT.md (authored 2026-07-07)
 Deviations of record: notes/spec-deviations-wbg.md (authored first)
@@ -69,19 +69,34 @@ Deviations of record: notes/spec-deviations-wbg.md (authored first)
       brief/family/synthesis, flight-recorder round-trip + PII scrub +
       I-CONSENT). W5B ship gate + all flight-recorder + W2D + W-TPL suites:
       84 passed / 1 skipped. tsc 9 = baseline throughout.
-- [ ] D10 evidence pack (in progress)
-- [ ] D11 judges (criteria-reviewer + user-advocate, 0 MUST-FIX) + marker
+- [x] D10 evidence pack (`763713a1`) — live picker drive (catalog/search/
+      hover-triptych/apply/2D-gate/R1+R2 generation through the real UI/
+      library), 18 T2 renders across all 8 categories, 60/60 pixel-verified
+      real-render thumbs, anti-repetition rotation (3 distinct families for
+      one neutral prompt), runtime proofs in the REAL ConductorRuntime
+      (catalog preset + the newest generated stack), live flight-recorder
+      NDJSON + tenant library + generated R2 assets archived, perf control
+      analysis. verify EXIT 0 post-capture; live-graph.json restored.
+- [x] D11 judges — BOTH PASS, 0 MUST-FIX (see §5).
 
 ## 3. Spend ledger
 
 | Provider | Budget | Spent | Notes |
 |---|---|---|---|
-| Replicate | $8.00 | ~$0.63 + live-evidence gens | 9 plates (flux-2-pro ~$0.06 ea + depth ~$0.01 ea, ledgered); evidence R2 generation adds ~$0.07 per run |
+| Replicate | $8.00 | ~$0.70 | 9 plates ($0.63, ledgered w/ prediction ids) + 1 live R2 evidence generation (~$0.07) |
 | Tripo | 60 cr | 0 cr | DEV-6: splats not a generation target |
 
 ## 4. Evidence index
 
 notes/verification/shell-wbg/
+- editor/00..12 + generation-evidence.json + runtime-evidence.json — the
+  full live drive (picker, hover triptych, 2D gate, R1+R2 generation,
+  library, runtime proofs)
+- flight-recorder-background-events.ndjson — 5 live background_event records
+  (incl. the R2 generation + the 3-generation rotation)
+- library-background-presets.json — the tenant library after the drive
+- generated-assets/ — the live R2 plate + depth (archived; runtime copies
+  under public/three-d-bg/generated/ are gitignored)
 - plates-ledger.json — D4 provenance (prediction ids per stage)
 - renders/ — 18 representative full-frame renders across all 8 categories
 - editor/ — live picker drive: catalog, search, hover-live-preview
@@ -92,7 +107,37 @@ notes/verification/shell-wbg/
 
 ## 5. Judge verdicts
 
-(filled at D11)
+**criteria-reviewer (fresh context): PASS — 0 MUST-FIX.** All 7 criteria
+graded PASS with self-executed evidence: independent registry audit (60
+entries / 0 duplicate ids / 0 missing axes / 0 ungrounded grammar families /
+60 thumbs present), plate prompts confirmed authored originals with ledgered
+provenance, hover-preview proven transient (persistedLayerIds unchanged
+during hover), route planner + baked-public-URL + secrets greps clean,
+anti-repetition + 11th record type re-tested (14/14), 18 renders counted,
+perf control analysis accepted as an honest treatment of the documented
+environment cap, `npm run verify` EXIT 0 re-executed, tsc 9 = baseline, W5B
+11/11, I-ADDITIVE diff-verified, spend ~$0.70 of $8. One nit (TSL `TNode =
+any` typing seam — documented, not a violation). No Law-0 drift.
+
+**user-advocate (fresh context, "user who hates default-looking sites"):
+PLEASED — gate PASS, 0 MUST-FIX.** Verdict validated (`valid: true`,
+`computedGate: PASS`). Judged from all 18 renders + broad thumb sampling +
+the full editor drive + measured JSON. Findings: the 60 "span real hue
+families and real structures (rain streaks, aurora, caustics, chrome swirl,
+starfields, concentric rings, and genuinely photographic R2 plates), not
+recolors of one effect"; the R2 ask "misty pine forest at dawn" produced "an
+actual photoreal forest plate with a correct depth pass, palette=verdant";
+the identical neutral prompt 3x produced three different families/names;
+hover previews without writing the graph; the 2D gate self-explains; and the
+generated background "runs behind my real app" (frames 11/12). Three
+non-blocking taste FLAGS recorded as founder-visible follow-ups:
+1. Four neutral-NAMED entries read off-name (ashfall renders red, noir-wash
+   red glow, slate navy+cyan, linen near-black) — thumbnail-first browsing
+   makes it harmless; a palette/naming pass is a cheap future polish.
+2. Fine speckle grain on some flat shader washes (paper/slate/stage-light) —
+   organic, subtle; a smoothing knob is a taste follow-up.
+3. Provenance note: runtime frames captured on the WebGL2 fallback per the
+   documented W2D dither law (colors render true).
 
 ## 6. Gotchas / learnings
 
@@ -111,3 +156,5 @@ notes/verification/shell-wbg/
   everything; backgrounds must derive planner INPUTS from the brief
   (stylized+responsive → R1; photoreal → R2) — live camera-responsiveness is
   the honest motion classification for procedural backgrounds.
+
+PRISM-WBG: RUN COMPLETE
