@@ -72,6 +72,7 @@ import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { usePreviewStateStore } from '@/stores/usePreviewStateStore';
 import { useBuiltSnapshotStore } from '@/stores/useBuiltSnapshotStore';
 import { commitPreviewToSource } from '@/lib/editor/preview-commit';
+import { resolveHubRenderMode } from '@/lib/prism-graph/hub-render-mode';
 import { rebuildNode } from '@/lib/editor/rebuild-node';
 import { addNodeToSystem } from '@/lib/editor/add-to-system';
 import { Icon } from '@/components/editor/icons/Icon';
@@ -357,22 +358,31 @@ function StepperKey({
 }
 
 function StepperRow({
-  label, value, onDec, onInc, accent, testId,
+  label, value, onDec, onInc, accent, testId, disabled, disabledTitle,
 }: {
   label: string; value: string; onDec: () => void; onInc: () => void; accent?: string; testId?: string;
+  // W-2D — depth-specific rows grey out (not hide) on a 2d hub: the value
+  // stays readable (data preserved, unused) but the steppers don't fire.
+  disabled?: boolean; disabledTitle?: string;
 }) {
   const a = accent ?? DS_ACCENT;
+  const guard = (fn: () => void) => () => { if (!disabled) fn(); };
   return (
-    <div className="flex items-center gap-1.5">
+    <div
+      className="flex items-center gap-1.5"
+      data-disabled={disabled || undefined}
+      title={disabled ? disabledTitle : undefined}
+      style={disabled ? { opacity: 0.35 } : undefined}
+    >
       <span className="w-5 text-[10px] font-mono" style={{ color: 'var(--ds-text-mid)' }}>{label}</span>
-      <StepperKey glyph="−" onClick={onDec} testId={testId ? `${testId}-dec` : undefined} />
+      <StepperKey glyph="−" onClick={guard(onDec)} testId={testId ? `${testId}-dec` : undefined} />
       <span
         className="flex-1 text-center text-[10px] font-mono tabular-nums px-1 py-1 rounded-ds-xs"
         style={{ color: a, background: WELL_BG, boxShadow: WELL_SHADOW }}
       >
         {value}
       </span>
-      <StepperKey glyph="+" onClick={onInc} testId={testId ? `${testId}-inc` : undefined} />
+      <StepperKey glyph="+" onClick={guard(onInc)} testId={testId ? `${testId}-inc` : undefined} />
     </div>
   );
 }
@@ -485,6 +495,10 @@ export default function CanvasToolbar() {
   }, [activeHubId, hubs, selectedNode]);
 
   const lightingSpec = useMemo(() => readLightingSpec(lightingHub), [lightingHub]);
+
+  // W-2D — the active hub's composition mode. Depth-specific authoring (the
+  // Z-position stepper) greys out on a 2d hub; the data itself is preserved.
+  const is2dHub = resolveHubRenderMode(lightingHub) === '2d';
   const selectedLight = useMemo(
     () => (selectedLightId ? lightingSpec.lights?.find((l) => l.id === selectedLightId) ?? null : null),
     [selectedLightId, lightingSpec],
@@ -862,6 +876,7 @@ export default function CanvasToolbar() {
                 hasSelection={hasSelection}
                 isGroup={isGroup}
                 isLocked={isLocked}
+                is2d={is2dHub}
                 editorMode={editorMode}
                 gizmoMode={gizmoMode}
                 selectionLabel={selectionLabel}
@@ -1194,6 +1209,7 @@ function TransformFlyout({
   hasSelection, isGroup, isLocked, editorMode, gizmoMode, selectionLabel, sp, snap, setSnap,
   gizmoSpace, setGizmoSpace,
   onEditToggle, onMode, onNudge, onScale, onRotate, onReset, onAlign,
+  is2d,
 }: {
   hasSelection: boolean; isGroup: boolean; isLocked: boolean;
   editorMode: 'idle' | 'edit'; gizmoMode: GizmoMode; selectionLabel: string; sp: ScenePosition;
@@ -1204,6 +1220,8 @@ function TransformFlyout({
   onNudge: (axis: 'x' | 'y' | 'z', dir: 1 | -1) => void;
   onScale: (dir: 1 | -1) => void; onRotate: (dir: 1 | -1) => void;
   onReset: () => void; onAlign: (axis: 'x' | 'y') => void;
+  // W-2D — the active hub is 2d: the Z-depth stepper greys out (data kept).
+  is2d?: boolean;
 }) {
   if (!hasSelection) {
     return (
@@ -1282,7 +1300,16 @@ function TransformFlyout({
       <div className="flex flex-col gap-1.5">
         <StepperRow label="X" testId="tt-pos-x" value={fmt(sp.x)} onDec={() => onNudge('x', -1)} onInc={() => onNudge('x', 1)} />
         <StepperRow label="Y" testId="tt-pos-y" value={fmt(sp.y)} onDec={() => onNudge('y', -1)} onInc={() => onNudge('y', 1)} />
-        <StepperRow label="Z" testId="tt-pos-z" value={fmt(sp.z)} onDec={() => onNudge('z', -1)} onInc={() => onNudge('z', 1)} accent={DS.ice300} />
+        <StepperRow
+          label="Z"
+          testId="tt-pos-z"
+          value={fmt(sp.z)}
+          onDec={() => onNudge('z', -1)}
+          onInc={() => onNudge('z', 1)}
+          accent={DS.ice300}
+          disabled={is2d}
+          disabledTitle="Z depth is a 3D tool — this hub is 2D (depth data kept, unused)"
+        />
       </div>
 
       <SectionLabel>Scale · Rotate</SectionLabel>

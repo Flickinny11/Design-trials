@@ -186,6 +186,7 @@ export type PrismTouchpoint =
   | "session" // ship / abandon / return lifecycle
   | "design-grammar" // W-DG1 — design-grammar harvest (analysis + distillation)
   | "catalog" // W-TPL — template catalog (new-hub-from-template + section drop)
+  | "render-mode" // W-2D — per-hub 2d/3d render-mode toggles + authoring
   | (string & {});
 
 /** The Prism extension attribute bag. All optional; a record carries the columns
@@ -284,7 +285,8 @@ export type FlightRecordType =
   | "user_signal"
   | "import_event"
   | "design_analysis_event"
-  | "catalog_event";
+  | "catalog_event"
+  | "render_mode_event";
 
 /** A whole build (plan → graph shape → SLA tier → cost → outcome). */
 export interface BuildSessionRecord extends RecordEnvelope {
@@ -473,6 +475,37 @@ export interface CatalogEventRecord extends RecordEnvelope {
   detail?: string;
 }
 
+/** Which surface flipped/assigned the hub render mode (W-2D). The set is
+ *  fixed but the union stays open so a future surface is additive. */
+export type PrismRenderModeSurface =
+  | "canvas-hud" // the canvas camera-HUD mode chip toggle
+  | "hub-inspector" // the galaxy/canvas Hub Inspector Visual-tab toggle
+  | "conductor" // the planner assigned the mode while authoring a hub
+  | "template" // a hub template declared the mode at instantiation
+  | (string & {});
+
+/** One per-hub render-mode event (W-2D). Mode choices are taste training
+ *  data: "this hub's content wanted a flat 2d composition" is a labeled
+ *  example of composition intent, keyed by our own vocabulary (hub ids are
+ *  session/server ids, not PII; free text is scrubbed at write). Toggles are
+ *  non-destructive by law, so from/to pairs are safe to learn from. */
+export interface RenderModeEventRecord extends RecordEnvelope {
+  record_type: "render_mode_event";
+  surface: PrismRenderModeSurface;
+  /** The hub whose composition mode changed / was assigned. */
+  hub_ref?: string;
+  /** Mode before the change ('3d' | '2d'; absent for a fresh assignment). */
+  from_mode?: string;
+  /** Mode after the change ('3d' | '2d'). */
+  to_mode?: string;
+  /** Hub archetype/title hint when known (scrubbed at write). */
+  hub_hint?: string;
+  /** Stage outcome (false = failed/degraded, still recorded — data honesty). */
+  ok?: boolean;
+  /** Short human note (scrubbed at write). */
+  detail?: string;
+}
+
 /** The tagged union the writer accepts. */
 export type FlightRecord =
   | BuildSessionRecord
@@ -483,7 +516,8 @@ export type FlightRecord =
   | UserSignalRecord
   | ImportEventRecord
   | DesignAnalysisEventRecord
-  | CatalogEventRecord;
+  | CatalogEventRecord
+  | RenderModeEventRecord;
 
 /** All record type names (drives the schema doc + dev ledger grouping). */
 export const FLIGHT_RECORD_TYPES: FlightRecordType[] = [
@@ -496,4 +530,5 @@ export const FLIGHT_RECORD_TYPES: FlightRecordType[] = [
   "import_event",
   "design_analysis_event",
   "catalog_event",
+  "render_mode_event",
 ];

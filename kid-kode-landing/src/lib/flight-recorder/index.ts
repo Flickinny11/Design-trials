@@ -27,6 +27,7 @@ import {
   type PrismAttributes,
   type PrismTouchpoint,
   type RecordEnvelope,
+  type RenderModeEventRecord,
   type UserSignalRecord,
   type VerifySignalRecord,
 } from "./schema";
@@ -388,6 +389,40 @@ export function recordCatalog(
       node_count: input.node_count,
       hub_ref: input.hub_ref,
       query: input.query,
+      ok: input.ok,
+      detail: input.detail,
+    };
+    finalize(record, env, input.actor?.actorIdentifiers ?? []);
+  } catch {
+    /* fail-open */
+  }
+}
+
+export function recordRenderMode(
+  input: EmitCommon &
+    Partial<
+      Pick<
+        RenderModeEventRecord,
+        | "surface"
+        | "hub_ref"
+        | "from_mode"
+        | "to_mode"
+        | "hub_hint"
+        | "ok"
+        | "detail"
+      >
+    >,
+): void {
+  try {
+    const env = buildEnvelope(input, "render_mode_event");
+    const record: RenderModeEventRecord = {
+      ...env,
+      record_type: "render_mode_event",
+      surface: input.surface ?? "hub-inspector",
+      hub_ref: input.hub_ref,
+      from_mode: input.from_mode,
+      to_mode: input.to_mode,
+      hub_hint: input.hub_hint,
       ok: input.ok,
       detail: input.detail,
     };

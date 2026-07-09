@@ -16,6 +16,7 @@ import { useEditorDensity } from '@/stores/useEditorLayoutStore';
 import { BottomSheet } from '@/components/editor/layout/BottomSheet';
 import { HubBackgroundPicker } from './HubBackgroundPicker';
 import { SceneFxPicker } from './SceneFxPicker';
+import { HubRenderModeToggle } from './HubRenderModeToggle';
 
 const TABS: { id: InspectorTab; label: string; icon: string }[] = [
   { id: 'visual', label: 'Visual', icon: 'eye' },
@@ -147,6 +148,9 @@ function HubVisualTab({ hub }: { hub: PrismHub }) {
   const breakpoints = hub.responsiveBreakpoints ?? {};
   return (
     <div className="p-5 space-y-4">
+      {/* W-2D — per-hub 2d/3d composition mode (galaxy + canvas inspector). */}
+      <HubRenderModeToggle hub={hub} surface="hub-inspector" />
+
       {/* THREE-D-BACKGROUNDS — droppable, customizable 3D background asset picker. */}
       <HubBackgroundPicker hub={hub} />
 

@@ -19,6 +19,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { SIGNAL_RED, rbwAlpha } from '@/components/editor/design-system/premium';
+import type { HubRenderMode } from '@/lib/prism-graph/types';
+import { resolveHubRenderMode } from '@/lib/prism-graph/hub-render-mode';
+import { beaconRenderModeEvent } from '@/lib/editor/render-mode-beacon';
 
 const ZERO_TOL = 1.5;
 
@@ -45,6 +48,26 @@ export default function CanvasCameraHud() {
   const journeyCount = useGraphSourceStore(
     (s) => s.hubs.find((h) => h.hubId === activeHubId)?.cameraKeyframes?.length ?? 0,
   );
+  // W-2D — the active hub's composition mode drives the HUD: on a 2d hub the
+  // orbit instrument reads FLAT, camera staging (JOURNEY) greys out, and the
+  // mode chip offers the live 3D⇄2D toggle. `find` returns a stable ref, so
+  // this selector never loops useSyncExternalStore (the W7 gotcha).
+  const activeHub = useGraphSourceStore(
+    (s) => s.hubs.find((h) => h.hubId === activeHubId) ?? null,
+  );
+  const hubMode = resolveHubRenderMode(activeHub);
+  const is2d = hubMode === '2d';
+  const setHubMode = (mode: HubRenderMode) => {
+    if (!activeHubId || !activeHub || mode === hubMode) return;
+    updateHub(activeHubId, { renderMode: mode });
+    beaconRenderModeEvent({
+      surface: 'canvas-hud',
+      hub_ref: activeHubId,
+      from_mode: hubMode,
+      to_mode: mode,
+      hub_hint: activeHub.title,
+    });
+  };
   // FINISH F-1 — the open keyframe strip owns the bottom band on desktop; the
   // HUD lifts above it (was overlapping the lanes) with a smooth transition.
   // FINISH F-2 (advocate MUST-FIX) — the resting HUD stack used to sit at
@@ -150,13 +173,28 @@ export default function CanvasCameraHud() {
         </svg>
 
         <div role="status" aria-live="polite" className="flex flex-col leading-none font-mono tabular-nums" style={{ minWidth: 84 }}>
-          <div className="flex items-center gap-2 text-[10px]" style={{ color: 'var(--ds-metal-200)' }}>
-            <span>AZ {az >= 0 ? '+' : ''}{az.toFixed(0)}°</span>
-            <span style={{ color: 'var(--ds-text-mid)' }}>TILT {tilt >= 0 ? '+' : ''}{tilt.toFixed(0)}°</span>
-          </div>
-          <div className="text-[8.5px] mt-0.5 tracking-wide" style={{ color: atZero ? 'var(--ds-metal-200)' : 'var(--ds-text-mid)' }}>
-            {atZero ? 'STRAIGHT ON' : `ZOOM ${dist.toFixed(1)}`}
-          </div>
+          {is2d ? (
+            // W-2D — flat hub: orbit is off (the instrument would only ever
+            // read zero), so the readout states the mode instead.
+            <>
+              <div className="flex items-center gap-2 text-[10px]" style={{ color: 'var(--ds-metal-200)' }}>
+                <span data-testid="hud-flat-readout">2D · FLAT</span>
+              </div>
+              <div className="text-[8.5px] mt-0.5 tracking-wide" style={{ color: 'var(--ds-text-mid)' }}>
+                PAN + ZOOM · DEPTH OFF
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center gap-2 text-[10px]" style={{ color: 'var(--ds-metal-200)' }}>
+                <span>AZ {az >= 0 ? '+' : ''}{az.toFixed(0)}°</span>
+                <span style={{ color: 'var(--ds-text-mid)' }}>TILT {tilt >= 0 ? '+' : ''}{tilt.toFixed(0)}°</span>
+              </div>
+              <div className="text-[8.5px] mt-0.5 tracking-wide" style={{ color: atZero ? 'var(--ds-metal-200)' : 'var(--ds-text-mid)' }}>
+                {atZero ? 'STRAIGHT ON' : `ZOOM ${dist.toFixed(1)}`}
+              </div>
+            </>
+          )}
         </div>
 
         <button type="button" onClick={resetViewToZero} aria-label="Reset view to straight-on" title="Reset view — straight on"
@@ -173,8 +211,46 @@ export default function CanvasCameraHud() {
         </button>
       </div>
 
-      {/* ── P2: camera-journey strip ──────────────────────────────────────── */}
-      <div className="ds-glass ds-edge--metal ds-reveal pointer-events-auto flex items-center gap-2 rounded-full pl-2.5 pr-1.5 py-1">
+      {/* ── W-2D: the mode chip — the hub's 2d/3d composition, toggleable live.
+             Subtle segmented pill; the same source-store write the Hub
+             Inspector toggle uses. Non-destructive both directions. ───────── */}
+      <div
+        data-testid="hud-mode-chip"
+        className="ds-glass ds-edge--metal ds-reveal pointer-events-auto flex items-center gap-1.5 rounded-full pl-2.5 pr-1.5 py-1"
+      >
+        <span className="text-[8.5px] font-mono tracking-[0.12em] max-md:hidden" style={{ color: 'var(--ds-text-mid)' }}>MODE</span>
+        {(['3d', '2d'] as const).map((m) => {
+          const active = hubMode === m;
+          return (
+            <button
+              key={m}
+              type="button"
+              data-testid={`hud-mode-${m}`}
+              onClick={() => setHubMode(m)}
+              title={m === '2d'
+                ? 'Flat composition — same renderer, depth data preserved (unused); 3D accents still render'
+                : 'Perspective composition — depth staging, orbit, camera journeys'}
+              className="ds-press flex items-center gap-1 h-6 px-2 rounded-full"
+              style={active
+                ? { background: 'var(--ds-grad-metal)', border: '1px solid rgba(var(--ds-metal-200-rgb),0.4)' }
+                : { background: 'rgba(var(--ds-metal-200-rgb),0.06)', border: '1px solid rgba(var(--ds-metal-200-rgb),0.2)' }}
+            >
+              <span className="text-[9px] font-ui font-semibold tracking-wide" style={{ color: active ? '#0d1117' : 'var(--ds-text-mid)' }}>
+                {m === '3d' ? '3D' : '2D'}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* ── P2: camera-journey strip (W-2D: camera staging is a 3D tool — the
+             whole strip greys out on a 2d hub; journey DATA stays intact). ── */}
+      <div
+        className="ds-glass ds-edge--metal ds-reveal pointer-events-auto flex items-center gap-2 rounded-full pl-2.5 pr-1.5 py-1"
+        data-journey-disabled={is2d || undefined}
+        title={is2d ? 'Camera staging is 3D-only — switch the hub to 3D to stage the camera (your journey is preserved)' : undefined}
+        style={is2d ? { opacity: 0.38 } : undefined}
+      >
         {/* M-1 compact narrowing (advocate MUST-FIX): the strip's left edge ran
             under the toolbar rail at 390px — drop the word labels on compact so
             the whole strip fits the space right of the rail. */}
@@ -183,14 +259,15 @@ export default function CanvasCameraHud() {
           style={{ color: journeyCount >= 2 ? 'var(--ds-metal-200)' : 'var(--ds-text-mid)', background: 'rgba(var(--ds-metal-200-rgb),0.08)' }}>
           {journeyCount}<span className="max-md:hidden"> pt{journeyCount === 1 ? '' : 's'}</span>
         </span>
-        <button type="button" onClick={captureCameraKeyframe} title="Record this camera angle as a journey waypoint"
-          className="ds-press flex items-center gap-1.5 h-7 pl-1.5 pr-2.5 rounded-full"
+        <button type="button" onClick={captureCameraKeyframe} disabled={is2d}
+          title={is2d ? 'Camera staging is 3D-only on this hub' : 'Record this camera angle as a journey waypoint'}
+          className="ds-press flex items-center gap-1.5 h-7 pl-1.5 pr-2.5 rounded-full disabled:opacity-30 disabled:pointer-events-none"
           style={{ background: rbwAlpha(SIGNAL_RED, 0.1), border: `1px solid ${rbwAlpha(SIGNAL_RED, 0.4)}`, boxShadow: `0 0 10px -4px ${rbwAlpha(SIGNAL_RED, 0.5)}` }}>
           <span className="w-2 h-2 rounded-full" style={{ background: SIGNAL_RED, boxShadow: `0 0 7px ${rbwAlpha(SIGNAL_RED, 0.85)}` }} />
           <span className="text-[9.5px] font-ui font-medium" style={{ color: 'var(--ds-metal-200)' }}>REC</span>
         </button>
         <button type="button" onClick={() => activeHubId && updateHub(activeHubId, { cameraKeyframes: [] })}
-          disabled={journeyCount === 0} aria-label="Clear camera journey" title="Clear journey"
+          disabled={journeyCount === 0 || is2d} aria-label="Clear camera journey" title="Clear journey"
           className="ds-press grid place-items-center w-7 h-7 rounded-full disabled:opacity-30"
           style={{ border: '1px solid rgba(var(--ds-metal-200-rgb),0.22)' }}>
           <svg width="11" height="11" viewBox="0 0 11 11" aria-hidden>
@@ -199,7 +276,7 @@ export default function CanvasCameraHud() {
           </svg>
         </button>
         <button type="button" onClick={() => setViewMode('preview-app')}
-          disabled={journeyCount < 2} title="Play the journey in Preview"
+          disabled={journeyCount < 2 || is2d} title={is2d ? 'Camera staging is 3D-only on this hub' : 'Play the journey in Preview'}
           className="ds-press flex items-center gap-1.5 h-7 pl-2 pr-2.5 rounded-full disabled:opacity-30"
           style={{ background: journeyCount >= 2 ? 'var(--ds-grad-metal)' : 'rgba(var(--ds-metal-200-rgb),0.06)', border: '1px solid rgba(var(--ds-metal-200-rgb),0.3)' }}>
           <svg width="9" height="10" viewBox="0 0 9 10" aria-hidden>
