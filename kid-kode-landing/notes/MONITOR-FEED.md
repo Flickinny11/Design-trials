@@ -1996,3 +1996,5 @@ Toolbar fully REBUILT from GENERATED Tripo v3.1 GLBs (procedural forms discarded
 [09:08:22] CHAIN/SHELL-WBG: commit a7b16ce9 — shell-wbg: D6+D7 — prompt-to-background + flight-recorder 11th record ty
 [09:11:22] CHAIN/SHELL-WBG: still building · 46m elapsed · agent up · 1260 commits · last: shell-wbg: D6+D7 — prompt-to-background + flight-recorder 11th record ty
 [09:14:53] CHAIN/SHELL-WBG: still building · 50m elapsed · agent up · 1260 commits · last: shell-wbg: D6+D7 — prompt-to-background + flight-recorder 11th record ty
+[09:17:23] CHAIN/SHELL-WBG: commit 9e3c20ad — shell-wbg: D8a — runtime backgrounds + shared render-core + thumbs harne
+[09:18:24] CHAIN/SHELL-WBG: still building · 53m elapsed · agent up · 1261 commits · last: shell-wbg: D8a — runtime backgrounds + shared render-core + thumbs harne

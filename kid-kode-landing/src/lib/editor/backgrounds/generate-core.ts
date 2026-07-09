@@ -164,7 +164,11 @@ const IDENTITY_PALETTE: Record<string, string> = {
 };
 
 function matchTokens(text: string, hints: string[]): string[] {
-  return hints.filter((h) => text.includes(h));
+  // Word-boundary matching — plain substring matching false-positives on
+  // fragments ("something nICE" is not a request for the ice palette).
+  return hints.filter((h) =>
+    new RegExp(`\\b${h.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`).test(text),
+  );
 }
 
 /** Nearest background palette to a set of node base colours (average hue /

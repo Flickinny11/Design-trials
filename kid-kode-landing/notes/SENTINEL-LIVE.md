@@ -1840,3 +1840,5 @@ complete marker: 'PRISM-WBG: RUN COMPLETE'
 [09:08:22] SHELL-WBG · 43m · agent=1 · commit a7b16ce9 — shell-wbg: D6+D7 — prompt-to-background + flight-recorder 11th record ty
 [09:11:22] SHELL-WBG · 46m · agent=1 · still building · 46m elapsed · agent up · 1260 commits · last: shell-wbg: D6+D7 — prompt-to-background + flight-recorder 11th record ty
 [09:14:53] SHELL-WBG · 50m · agent=1 · still building · 50m elapsed · agent up · 1260 commits · last: shell-wbg: D6+D7 — prompt-to-background + flight-recorder 11th record ty
+[09:17:23] SHELL-WBG · 52m · agent=1 · commit 9e3c20ad — shell-wbg: D8a — runtime backgrounds + shared render-core + thumbs harne
+[09:18:24] SHELL-WBG · 53m · agent=1 · still building · 53m elapsed · agent up · 1261 commits · last: shell-wbg: D8a — runtime backgrounds + shared render-core + thumbs harne
