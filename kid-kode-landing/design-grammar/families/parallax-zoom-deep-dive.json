@@ -4,12 +4,7 @@
   "name": "Parallax Zoom Deep-Dive",
   "status": "grounded",
   "summary": "Slide advances fly the camera FORWARD into the scene instead of sliding sideways: foreground planes separate and rush past while distant layers hold, so every transition reads as a dolly-through — traveling deeper into the world rather than turning a page.",
-  "elementTypes": [
-    "slider",
-    "hero",
-    "scroll-narrative",
-    "section-transition"
-  ],
+  "elementTypes": ["slider", "hero", "scroll-narrative", "section-transition"],
   "whatMakesItWork": {
     "composition": [
       "Full-bleed immersive scene with a centered dominant headline stack; the scene does the work around the type.",
@@ -42,10 +37,7 @@
     ]
   },
   "motion": {
-    "character": [
-      "cinematic-slow",
-      "smooth-luxurious"
-    ],
+    "character": ["cinematic-slow", "smooth-luxurious"],
     "easing": [
       "Long ease-in-out on the zoom with a slight settle at arrival; parallax layers use expo-out damping to rest.",
       "No linearity — a linear zoom reads as a scale tween, not a camera move."
@@ -60,14 +52,9 @@
     ]
   },
   "capabilities": {
-    "renderingRoutes": [
-      "R1",
-      "R2",
-      "R3"
-    ],
-    "genModels": [
-      "flux-2-pro"
-    ],
+    "renderingRoutes": ["R1", "R2", "R3"],
+    "renderModes": ["3d"],
+    "genModels": ["flux-2-pro"],
     "primitives": [
       "fly-through",
       "parallax-scroll",
@@ -76,11 +63,7 @@
       "extruded-text",
       "hub-background"
     ],
-    "postFx": [
-      "bloom",
-      "vignette",
-      "atmospheric-haze"
-    ],
+    "postFx": ["bloom", "vignette", "atmospheric-haze"],
     "readiness": "partial",
     "gapNotes": [
       "The fly-through primitive and hub transition presets exist, but a zoom-THROUGH transition that holds two layered scenes simultaneously mid-flight is not among the shipped presets (curtain/veil/dissolve/wipe/glass-sweep) — needs a new preset.",
@@ -98,18 +81,8 @@
       "Scenes without strong foreground occluders — the dive reads as a plain scale-up.",
       "Motion-sensitive audiences: forward zoom is the most vestibularly aggressive transition; must honor reduced-motion with a crossfade."
     ],
-    "archetypeFit": [
-      "content",
-      "marketing",
-      "community"
-    ],
-    "moods": [
-      "cinematic",
-      "ethereal",
-      "warm",
-      "bold",
-      "futuristic"
-    ]
+    "archetypeFit": ["content", "marketing", "community"],
+    "moods": ["cinematic", "ethereal", "warm", "bold", "futuristic"]
   },
   "pairing": {
     "pairsWith": [
@@ -117,10 +90,7 @@
       "oversized-type-editorial",
       "seasonal-theme-shift"
     ],
-    "avoidWith": [
-      "glitch-cyber-fx",
-      "bento-grid-slider"
-    ],
+    "avoidWith": ["glitch-cyber-fx", "bento-grid-slider"],
     "notes": [
       "Builds directly on layered-photo-parallax-hero: the idle parallax establishes the depth model the zoom transition then travels through.",
       "Clashes with grid/dashboard families — the dive assumes one immersive scene per state."
@@ -152,9 +122,7 @@
     }
   ],
   "provenance": {
-    "groundTruth": [
-      "monitor-observation"
-    ],
+    "groundTruth": ["monitor-observation"],
     "distilledAt": "2026-07-06",
     "distilledBy": "wdg1-orchestrator"
   }

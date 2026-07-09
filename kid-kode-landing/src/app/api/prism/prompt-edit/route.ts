@@ -30,16 +30,20 @@ export async function POST(req: Request): Promise<Response> {
   if (prompt.length > 4000) return err('prompt too long (max 4000 chars)');
 
   const scope: PromptEditScope = SCOPES.includes(body.scope as PromptEditScope) ? (body.scope as PromptEditScope) : 'canvas';
-  const selRaw = (body.selection ?? {}) as { nodeIds?: unknown; hubId?: unknown };
+  const selRaw = (body.selection ?? {}) as { nodeIds?: unknown; hubId?: unknown; hubRenderMode?: unknown };
   const nodeIds = Array.isArray(selRaw.nodeIds) ? selRaw.nodeIds.filter((x): x is string => typeof x === 'string') : [];
   const hubId = typeof selRaw.hubId === 'string' ? selRaw.hubId : undefined;
+  // W-2D — the hub's composition mode rides along so the planner styles flat
+  // on 2d hubs (unknown/invalid values drop to undefined = legacy behavior).
+  const hubRenderMode =
+    selRaw.hubRenderMode === '2d' || selRaw.hubRenderMode === '3d' ? selRaw.hubRenderMode : undefined;
   const nodes = Array.isArray(body.nodes) ? (body.nodes as PromptEditRequest['nodes']) : [];
 
   const atTags = extractAtTags(prompt);
   const request: PromptEditRequest = {
     prompt,
     scope,
-    selection: { nodeIds, hubId },
+    selection: { nodeIds, hubId, hubRenderMode },
     context: buildCatalogContext(atTags),
     nodes,
   };

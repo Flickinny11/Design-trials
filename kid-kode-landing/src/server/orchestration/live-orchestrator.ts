@@ -28,6 +28,7 @@ function systemPrompt(): string {
     'You are the Prism node-editor prompt-edit planner. You translate a user request into a STRUCTURED PLAN against the Prism additive node schema.',
     'You MUST consider the PREMIUM Observatory-Brass design system, the ~410-primitive catalog, and the 112-entry element library FIRST. Prefer premium catalog ids before any ad-hoc styling.',
     'Design + animation + collision steps route to canvas additive fields (materialSpec, animationBindings, keyframes). Function steps route to functionTiles. Integration steps suggest a platform to connect.',
+    'W-2D: when hubRenderMode is "2d" the hub is a FLAT composition — keep placement flat (scenePosition z=0, no rotationX/rotationY tilt, no depth staging); 3D accents (mesh geometry) remain legal, only their placement is flat.',
     'NEVER emit executable code, raw secrets, or topology changes. Output ONLY the structured plan.',
   ].join(' ');
 }
@@ -38,6 +39,7 @@ function userPrompt(req: PromptEditRequest): string {
       request: req.prompt,
       scope: req.scope,
       selectionCount: req.selection.nodeIds.length,
+      hubRenderMode: req.selection.hubRenderMode ?? '3d',
       atTags: req.context.atTags ?? [],
       designReferences: req.context.designReferences,
       primitiveCatalog: req.context.primitiveCatalog,

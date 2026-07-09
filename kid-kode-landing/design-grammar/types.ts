@@ -42,6 +42,19 @@ export const RENDERING_ROUTES: readonly RenderingRoute[] = [
   "2d-composition",
 ];
 
+// ── Hub render modes (W-2D — per-hub 2d/3d composition) ─────────────────────
+
+/** Which hub composition modes the family is appropriate for. Mirrors
+ *  `PrismHub.renderMode` ('3d' perspective / '2d' flat telephoto composition
+ *  in the same renderer). Every family renders inside a 3d hub; '2d' is an
+ *  AFFIRMATIVE claim that the family reads correctly under the flat
+ *  composition (no perspective-depth dependence — e.g. grids, editorial type,
+ *  full-bleed plates, screen-space fx). Corpus honesty law: absent → ["3d"]
+ *  (2d-appropriateness must be claimed, never assumed). */
+export type HubRenderModeTag = "2d" | "3d";
+
+export const HUB_RENDER_MODES: readonly HubRenderModeTag[] = ["2d", "3d"];
+
 // ── Classification axes (the query API filters on these) ────────────────────
 
 /** What kind of element/surface the family produces. Open union. */
@@ -291,6 +304,9 @@ export interface FamilyMotion {
 /** Capability requirements mapped to OUR stack. */
 export interface FamilyCapabilities {
   renderingRoutes: RenderingRoute[];
+  /** W-2D — hub composition modes the family suits ('2d' is an affirmative
+   *  claim; absent → ["3d"], the honest legacy default). */
+  renderModes?: HubRenderModeTag[];
   genModels: GenModel[];
   primitives: PrimitiveRef[];
   /** Post-processing requirements (bloom, grain, DOF, LUT, vignette…). */
@@ -384,6 +400,9 @@ export interface GrammarQuery {
   motionCharacter?: MotionCharacterTag | MotionCharacterTag[];
   readiness?: Readiness | Readiness[];
   status?: FamilyStatus;
+  /** W-2D — only families appropriate for this hub composition mode. A
+   *  family with no `renderModes` counts as ["3d"] (honesty default). */
+  renderMode?: HubRenderModeTag;
 }
 
 /** Options for anti-repetition selection. `usageCounts` is the rotation seam:

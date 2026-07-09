@@ -47,6 +47,7 @@ import {
   recordVerifySignal,
   recordUserSignal,
   recordImportEvent,
+  recordRenderMode,
   type GenAiAttributes,
 } from '../../lib/flight-recorder';
 
@@ -336,6 +337,19 @@ export async function* runConductor(
   const assembled = assembleGraph(blueprint, direction, Date.now());
   yield line('plan', `planner: ${blueprint.origin}${blueprint.origin === 'live' ? ` (${modelId})` : ' (deterministic, no API key)'}\n`);
   yield line('plan', `hubs: ${blueprint.hubs.map((h) => h.title).join(' · ')}\n`);
+  // W-2D — surface + record the planner's composition-mode decisions: data-
+  // heavy sections plan as flat 2d hubs (the assembler flattened their nodes).
+  const flatHubs = blueprint.hubs.filter((h) => h.renderMode === '2d');
+  if (flatHubs.length > 0) {
+    yield line('plan', `2d flat hubs: ${flatHubs.map((h) => h.title).join(' · ')}\n`);
+    for (const fh of flatHubs) {
+      recordRenderMode({
+        touchpoint: 'render-mode', actor: frActor, surface: 'conductor',
+        hub_ref: fh.hubId, to_mode: '2d', hub_hint: fh.title,
+        detail: 'planner assigned flat composition (data-heavy section)',
+      });
+    }
+  }
   yield line('plan', `nodes planned: ${assembled.graph.nodes.length}\n`);
   yield done('plan', 'ok');
 

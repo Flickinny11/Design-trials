@@ -53,6 +53,7 @@
   },
   "capabilities": {
     "renderingRoutes": ["R1"],
+    "renderModes": ["3d"],
     "genModels": ["flux-2-pro"],
     "primitives": [
       "depth-rotate",

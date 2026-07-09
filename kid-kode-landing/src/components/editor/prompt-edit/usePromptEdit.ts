@@ -62,10 +62,16 @@ export function usePromptEdit(scope: PromptEditScope, onToast?: (m: string) => v
         const n = nodeById(id);
         return { nodeId: id, subtype: n?.subtype, renderMode: n?.renderMode };
       });
+      // W-2D — the planner styles for the hub's composition mode: on a 2d
+      // hub it keeps placement flat (z=0, no tilt); 3D accents remain legal.
+      const activeHub = activeHubId
+        ? useGraphSourceStore.getState().hubs.find((h) => h.hubId === activeHubId)
+        : undefined;
+      const hubRenderMode = activeHub?.renderMode === '2d' ? '2d' : '3d';
       const res = await fetch('/api/prism/prompt-edit', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ prompt: p, scope, selection: { nodeIds: effectiveIds, hubId: activeHubId ?? undefined }, nodes: snapshots }),
+        body: JSON.stringify({ prompt: p, scope, selection: { nodeIds: effectiveIds, hubId: activeHubId ?? undefined, hubRenderMode }, nodes: snapshots }),
       });
       const data = await res.json();
       if (!data.ok) throw new Error(data.error || 'orchestration failed');

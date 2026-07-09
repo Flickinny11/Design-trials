@@ -265,6 +265,9 @@ export interface HubSpec {
   /** Hub-owned ambience/backdrop layers (galaxy law: ambient star/dust/nebula
    *  backgrounds are hub DATA, never first-class graph nodes). */
   background?: PrismHubBackgroundLayer[];
+  /** W-2D — the template's declared composition mode (additive; absent →
+   *  '3d'). A data/table template ships as a flat 2d hub. */
+  renderMode?: PrismHub['renderMode'];
 }
 
 export function templateHub(spec: HubSpec): PrismHub {
@@ -272,6 +275,7 @@ export function templateHub(spec: HubSpec): PrismHub {
     hubId: spec.hubId,
     title: spec.title,
     caption: spec.caption,
+    ...(spec.renderMode === '2d' ? { renderMode: spec.renderMode } : {}),
     layout: {
       viewportWidth: 1280,
       viewportHeight: 720,

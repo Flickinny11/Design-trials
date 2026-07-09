@@ -4,10 +4,7 @@
   "name": "GPU Fluid Overlay",
   "status": "grounded",
   "summary": "A realtime GPU fluid simulation runs OVER photographic plates or a dark stage: the cursor injects dye and momentum, so smoke-like neon vapor swirls, lingers, and dissipates in the visitor's wake. The visitor co-authors the hero in real time while a pinned monumental headline anchors the frame.",
-  "elementTypes": [
-    "hero",
-    "background"
-  ],
+  "elementTypes": ["hero", "background"],
   "whatMakesItWork": {
     "composition": [
       "One monumental anchored word is the only fixed typographic mass; the fluid needs a still element to swirl against or the frame reads as chaos.",
@@ -29,20 +26,14 @@
     ]
   },
   "palette": {
-    "logic": [
-      "neon-on-dark",
-      "monochrome-plus-accent"
-    ],
+    "logic": ["neon-on-dark", "monochrome-plus-accent"],
     "rules": [
       "Near-black base + ONE emissive dye family per scene; the palette swaps with the scene preset rather than mixing hues in one frame.",
       "The dye color doubles as brand accent — CTA and highlights borrow it."
     ]
   },
   "motion": {
-    "character": [
-      "organic-fluid",
-      "ambient-drift"
-    ],
+    "character": ["organic-fluid", "ambient-drift"],
     "easing": [
       "No keyframed easing — the sim's own physics (velocity advection, diffusion, decay) IS the ease; damping constants are the design surface.",
       "Dissipation should linger ~1-2s after input stops: the wake is the delight."
@@ -57,13 +48,9 @@
     ]
   },
   "capabilities": {
-    "renderingRoutes": [
-      "R1",
-      "R2"
-    ],
-    "genModels": [
-      "flux-2-pro"
-    ],
+    "renderingRoutes": ["R1", "R2"],
+    "renderModes": ["2d", "3d"],
+    "genModels": ["flux-2-pro"],
     "primitives": [
       "fluid-sim",
       "magnetic-cursor",
@@ -71,10 +58,7 @@
       "hub-background",
       "extruded-text"
     ],
-    "postFx": [
-      "bloom",
-      "vignette"
-    ],
+    "postFx": ["bloom", "vignette"],
     "readiness": "partial",
     "gapNotes": [
       "The physics/fluid pack ships 36 TSL sim primitives, but a cursor-driven dye-injection Navier-Stokes field composited OVER photographic plates has not been demonstrated as a hub background — needs a pointer-force + dye-source binding into the hub background layer.",
@@ -93,18 +77,8 @@
       "Low-power/mobile GPUs: per-frame sim is a battery/jank risk; needs a static-gradient fallback.",
       "Calm, editorial, or trust-first registers (finance, health) — reads as spectacle."
     ],
-    "archetypeFit": [
-      "saas",
-      "marketing",
-      "community"
-    ],
-    "moods": [
-      "futuristic",
-      "energetic",
-      "technical",
-      "dark",
-      "cinematic"
-    ]
+    "archetypeFit": ["saas", "marketing", "community"],
+    "moods": ["futuristic", "energetic", "technical", "dark", "cinematic"]
   },
   "pairing": {
     "pairsWith": [
@@ -148,10 +122,7 @@
     }
   ],
   "provenance": {
-    "groundTruth": [
-      "founder-plan",
-      "monitor-observation"
-    ],
+    "groundTruth": ["founder-plan", "monitor-observation"],
     "distilledAt": "2026-07-06",
     "distilledBy": "wdg1-orchestrator"
   }

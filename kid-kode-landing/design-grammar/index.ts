@@ -18,6 +18,7 @@ import type {
   GrammarLoadError,
   GrammarQuery,
   HubArchetype,
+  HubRenderModeTag,
   Readiness,
   SelectOptions,
 } from "./types";
@@ -97,6 +98,16 @@ function matchesArchetype(
   return fit.includes("any") || fit.includes(want);
 }
 
+/** W-2D — render-mode match. A family with no `renderModes` counts as
+ *  ["3d"]: 2d-appropriateness is an affirmative claim (corpus honesty). */
+function matchesRenderMode(
+  have: readonly HubRenderModeTag[] | undefined,
+  want: HubRenderModeTag | undefined,
+): boolean {
+  if (!want) return true;
+  return (have ?? ["3d"]).includes(want);
+}
+
 export function getFamily(
   grammar: DesignGrammar,
   id: string,
@@ -118,6 +129,7 @@ export function queryFamilies(
       matchesAny(f.palette.logic, asArray(q.paletteLogic)) &&
       matchesAny(f.motion.character, asArray(q.motionCharacter)) &&
       matchesArchetype(f.usage.archetypeFit, q.archetype) &&
+      matchesRenderMode(f.capabilities.renderModes, q.renderMode) &&
       (readiness.length === 0 || readiness.includes(f.capabilities.readiness)),
   );
 }

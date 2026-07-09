@@ -131,6 +131,18 @@ export function validateFamilyDoc(doc, opts = {}) {
           );
       }
     }
+    // W-2D — renderModes is OPTIONAL (absent → ["3d"], the honesty default);
+    // when present it must be a non-empty subset of {2d, 3d}.
+    if (c.renderModes !== undefined) {
+      if (!Array.isArray(c.renderModes) || c.renderModes.length === 0) {
+        err("capabilities.renderModes must be a non-empty array when present");
+      } else {
+        for (const rm of c.renderModes) {
+          if (rm !== "2d" && rm !== "3d")
+            err(`capabilities.renderModes: unknown mode '${rm}' (2d|3d)`);
+        }
+      }
+    }
     if (!isStrArray(c.genModels))
       err("capabilities.genModels must be a string array");
     if (!isStrArray(c.primitives))

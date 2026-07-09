@@ -50,6 +50,7 @@
   },
   "capabilities": {
     "renderingRoutes": ["2d-composition", "R1"],
+    "renderModes": ["2d", "3d"],
     "genModels": ["flux-2-pro"],
     "primitives": [
       "keyframes",

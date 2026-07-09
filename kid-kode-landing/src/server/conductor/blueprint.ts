@@ -20,7 +20,7 @@
 
 import type { BuildBrief } from '../../../packages/shared-interfaces/src/prism-intake';
 import type { ResolvedDirection } from './directions';
-import type { ScenePosition } from '../../lib/prism-graph/types';
+import type { HubRenderMode, ScenePosition } from '../../lib/prism-graph/types';
 
 /** Which palette tone a node wears. */
 export type ColorRole = 'primary' | 'secondary' | 'accent' | 'surface';
@@ -60,6 +60,10 @@ export interface BlueprintHub {
   hubId: string;
   title: string;
   role: 'home' | 'section';
+  /** W-2D — the planner's composition-mode decision for this hub. Absent →
+   *  '3d'. Data-heavy pages (tables, dashboards, docs, admin) plan as '2d'
+   *  flat composition; landing/showcase pages stay '3d'. */
+  renderMode?: HubRenderMode;
   nodes: BlueprintNode[];
 }
 
@@ -115,6 +119,17 @@ function titleCase(s: string): string {
     .split(/\s+/)
     .map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w))
     .join(' ');
+}
+
+// W-2D — the planner reads the SECTION'S OWN nature to pick its composition
+// mode: content that is fundamentally tabular/textual/administrative wants
+// the flat 2d composition (native, not crippled — depth tools grey out, 3D
+// accents still layerable); showcase/landing content stays 3d. Deterministic
+// and name-grounded so the stub planner and tests agree.
+const DATA_HEAVY_SECTION = /\b(data|table|dashboard|docs?|documentation|admin|settings|reports?|analytics|ledger|inventory|list|log|sheet|records?|board)\b/i;
+
+export function deriveHubRenderMode(sectionTitle: string): HubRenderMode {
+  return DATA_HEAVY_SECTION.test(sectionTitle) ? '2d' : '3d';
 }
 
 function hubId(name: string, i: number): string {
@@ -269,7 +284,16 @@ export function buildDeterministicBlueprint(
         },
       });
     });
-    hubs.push({ hubId: id, title, role: 'section', nodes });
+    // W-2D — data-heavy sections plan as flat 2d hubs; the assembler styles
+    // their nodes accordingly (z flattened) and stamps hub.renderMode.
+    const renderMode = deriveHubRenderMode(title);
+    hubs.push({
+      hubId: id,
+      title,
+      role: 'section',
+      ...(renderMode === '2d' ? { renderMode } : {}),
+      nodes,
+    });
     // Nav edge home → section.
     edges.push({ from: homeId, to: id, type: 'navigation', event: 'navigate' });
   });

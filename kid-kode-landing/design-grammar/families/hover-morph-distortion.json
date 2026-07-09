@@ -4,11 +4,7 @@
   "name": "Hover Morph Distortion",
   "status": "grounded",
   "summary": "A shader-driven liquid warp liquefies the hero photograph under the cursor — displacement trails the pointer path with viscous, damped follow, and warp intensity scales with cursor velocity. The layout never moves; motion lives entirely inside the image plane while type and subject cutouts stay razor-sharp.",
-  "elementTypes": [
-    "hero",
-    "background",
-    "gallery"
-  ],
+  "elementTypes": ["hero", "background", "gallery"],
   "whatMakesItWork": {
     "composition": [
       "A stable graphic anchor is mandatory: a giant flat display word and/or a crisp cutout subject that the liquefying photo plays against.",
@@ -30,19 +26,13 @@
     ]
   },
   "palette": {
-    "logic": [
-      "high-key-airy",
-      "monochrome-plus-accent"
-    ],
+    "logic": ["high-key-airy", "monochrome-plus-accent"],
     "rules": [
       "Neutral desaturated photographic base + ONE loud saturated hue owning the type — the accent is the brand voice; everything else stays muted so the morph reads clearly."
     ]
   },
   "motion": {
-    "character": [
-      "organic-fluid",
-      "ambient-drift"
-    ],
+    "character": ["organic-fluid", "ambient-drift"],
     "easing": [
       "Viscous damped follow — the distortion LAGS the cursor and relaxes back slowly (~0.6-1s decay); no snap, no bounce.",
       "Warp intensity maps to cursor VELOCITY: fast sweeps tear, slow drifts gently swell."
@@ -57,13 +47,9 @@
     ]
   },
   "capabilities": {
-    "renderingRoutes": [
-      "R1",
-      "R2"
-    ],
-    "genModels": [
-      "flux-2-pro"
-    ],
+    "renderingRoutes": ["R1", "R2"],
+    "renderModes": ["2d", "3d"],
+    "genModels": ["flux-2-pro"],
     "primitives": [
       "displacement-transition",
       "magnetic-cursor",
@@ -87,18 +73,8 @@
       "Text-dense or data-heavy pages; per-frame displacement is a battery/jank risk on weak GPUs.",
       "Brands wanting institutional restraint — liquefying imagery reads experimental."
     ],
-    "archetypeFit": [
-      "content",
-      "commerce",
-      "marketing"
-    ],
-    "moods": [
-      "bold",
-      "playful",
-      "airy",
-      "crafted",
-      "energetic"
-    ]
+    "archetypeFit": ["content", "commerce", "marketing"],
+    "moods": ["bold", "playful", "airy", "crafted", "energetic"]
   },
   "pairing": {
     "pairsWith": [
@@ -141,9 +117,7 @@
     }
   ],
   "provenance": {
-    "groundTruth": [
-      "monitor-observation"
-    ],
+    "groundTruth": ["monitor-observation"],
     "distilledAt": "2026-07-06",
     "distilledBy": "wdg1-orchestrator"
   }

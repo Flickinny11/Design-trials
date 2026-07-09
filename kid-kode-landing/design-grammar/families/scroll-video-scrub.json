@@ -49,6 +49,7 @@
   },
   "capabilities": {
     "renderingRoutes": ["R2"],
+    "renderModes": ["2d", "3d"],
     "genModels": [],
     "primitives": [
       "scroll-scrub-driver",

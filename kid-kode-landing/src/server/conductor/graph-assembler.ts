@@ -18,7 +18,7 @@ import type {
 } from '../../lib/prism-graph/types';
 import type { PrismRootNode } from '../../lib/prism-graph/root-node';
 import type { VerifierViolation } from '../../lib/prism/codegen/verifier';
-import type { BuildBlueprint } from './blueprint';
+import type { BlueprintNode, BuildBlueprint } from './blueprint';
 import type { ResolvedDirection } from './directions';
 import { authorNode } from './node-factory';
 
@@ -39,10 +39,14 @@ function buildHub(
   hubId: string,
   title: string,
   direction: ResolvedDirection,
+  renderMode?: PrismHub['renderMode'],
 ): PrismHub {
   return {
     hubId,
     title,
+    // W-2D — the planner's composition-mode decision rides onto the hub
+    // (additive; absent = '3d' by the read-side default).
+    ...(renderMode === '2d' ? { renderMode } : {}),
     layout: {
       viewportWidth: 1920,
       viewportHeight: 1080,
@@ -50,6 +54,18 @@ function buildHub(
       // The board's darkest tone is the page ground (nodes read against it).
       backgroundColor: direction.palette.surface,
     },
+  };
+}
+
+/** W-2D — style a blueprint node for a FLAT hub: the conductor reads the
+ *  hub's renderMode and authors 2d-appropriate placement (z + tilt flattened
+ *  at the SOURCE, before the certified node path). 3D accents stay legal —
+ *  a mesh render keeps its geometry; only its composition placement is flat. */
+function flattenBlueprintNodeFor2d(bn: BlueprintNode): BlueprintNode {
+  const sp = bn.scenePosition ?? {};
+  return {
+    ...bn,
+    scenePosition: { ...sp, z: 0, rotationX: 0, rotationY: 0 },
   };
 }
 
@@ -113,11 +129,14 @@ export function assembleGraph(
   const allNodes: PrismNode[] = [];
 
   for (const bh of blueprint.hubs) {
-    const hub = buildHub(bh.hubId, bh.title, direction);
+    const hub = buildHub(bh.hubId, bh.title, direction, bh.renderMode);
+    const is2d = bh.renderMode === '2d';
     const nodes: PrismNode[] = [];
     const violationsByNode: Record<string, VerifierViolation[]> = {};
     const skippedFieldsByNode: Record<string, string[]> = {};
-    for (const bn of bh.nodes) {
+    for (const rawBn of bh.nodes) {
+      // W-2D — flat hubs get flat authoring (z/tilt zeroed at the source).
+      const bn = is2d ? flattenBlueprintNodeFor2d(rawBn) : rawBn;
       const { node, violations, skippedFields } = authorNode(bn, bh.hubId, direction);
       nodes.push(node);
       violationsByNode[node.nodeId] = violations;

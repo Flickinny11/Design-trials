@@ -53,6 +53,7 @@
   },
   "capabilities": {
     "renderingRoutes": ["R1", "2d-composition"],
+    "renderModes": ["2d", "3d"],
     "genModels": ["flux-2-pro"],
     "primitives": [
       "parallax-scroll",

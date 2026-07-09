@@ -34,6 +34,10 @@ export interface PromptEditSelection {
   nodeIds: string[];
   /** The active hub, when the edit is hub-scoped. */
   hubId?: string;
+  /** W-2D — the active hub's composition mode ('3d' | '2d'). The planner
+   *  styles accordingly: on a 2d hub, keep composition FLAT (z=0, no
+   *  rotationX/Y tilt, no depth staging); 3D accents remain legal. */
+  hubRenderMode?: '3d' | '2d';
 }
 
 /**
