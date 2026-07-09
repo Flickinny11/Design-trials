@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 // PRISM SHELL — CONDUCTOR RUNTIME HOST (SHELL W5, 2026-07-04)
 //
@@ -13,16 +13,26 @@
 // (W5-D3). It renders EITHER here OR the certified engine-frame, never both at
 // once, so there is one visible scene (FP-R1/FP-R6).
 
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Vector3 } from 'three';
-import { getSharedNodeContext, getSharedDriverHub } from '@/lib/prism/runtime/shared-context';
-import { mountFromGraphSource, type MountGraphResult } from '@/lib/prism/runtime/mount-graph';
-import { makeNodeDrivers } from '@/lib/prism/runtime/shared/driver-dispatch';
-import { viewportFromNdc } from '@/lib/prism/runtime/shared/inview';
-import { resolveTextOutlines } from '@/lib/prism/runtime/shared/text-atlas';
-import { attachAnimationBindings } from '@/lib/prism/animatable/bindings';
-import CustomCursorLayer from '@/components/shell/fx/CustomCursorLayer';
-import type { CursorLayerConfig, GraphSource } from '@/lib/prism-graph/types';
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Vector3 } from "three";
+import {
+  getSharedNodeContext,
+  getSharedDriverHub,
+} from "@/lib/prism/runtime/shared-context";
+import {
+  mountFromGraphSource,
+  type MountGraphResult,
+} from "@/lib/prism/runtime/mount-graph";
+import {
+  mountProceduralBackground,
+  type ProceduralBackgroundHandle,
+} from "@/lib/prism/runtime/shared/procedural-background";
+import { makeNodeDrivers } from "@/lib/prism/runtime/shared/driver-dispatch";
+import { viewportFromNdc } from "@/lib/prism/runtime/shared/inview";
+import { resolveTextOutlines } from "@/lib/prism/runtime/shared/text-atlas";
+import { attachAnimationBindings } from "@/lib/prism/animatable/bindings";
+import CustomCursorLayer from "@/components/shell/fx/CustomCursorLayer";
+import type { CursorLayerConfig, GraphSource } from "@/lib/prism-graph/types";
 
 // W8 E8/E9 — the shipped preview route is NOT the editor's GraphScene, so nothing
 // feeds the shared DriverHub here. Without this feed, scroll/pointer/inview-driven
@@ -51,7 +61,8 @@ function startDriverFeed(
   const bindingDetachers: Array<() => void> = [];
   const drivers = makeNodeDrivers(hub);
   for (const node of graph.nodes) {
-    if (!node.animationBindings || node.animationBindings.length === 0) continue;
+    if (!node.animationBindings || node.animationBindings.length === 0)
+      continue;
     const root = nodes.get(node.nodeId);
     if (!root) continue;
     try {
@@ -75,14 +86,16 @@ function startDriverFeed(
     hub.scroll.set(scrollProgress);
     result.setScrollProgress(scrollProgress);
   };
-  el.addEventListener('pointermove', onPointerMove, { passive: true });
-  el.addEventListener('pointerleave', onPointerLeave);
-  el.addEventListener('wheel', onWheel, { passive: true });
+  el.addEventListener("pointermove", onPointerMove, { passive: true });
+  el.addEventListener("pointerleave", onPointerLeave);
+  el.addEventListener("wheel", onWheel, { passive: true });
 
   // Verification handle for the shipped preview (mirrors the editor's
   // __prismDrivers): lets a verifier prove reactivity — scroll, pointer,
   // in-view, and frame-tick count — without reaching into the scene graph.
-  (window as unknown as { __prismPreviewDrivers?: unknown }).__prismPreviewDrivers = {
+  (
+    window as unknown as { __prismPreviewDrivers?: unknown }
+  ).__prismPreviewDrivers = {
     hub,
     ticks: 0,
     setScroll: (p: number) => {
@@ -101,24 +114,28 @@ function startDriverFeed(
     raf = requestAnimationFrame(loop);
     const dt = now - last;
     last = now;
-    const dh = (window as unknown as { __prismPreviewDrivers?: { ticks: number } })
-      .__prismPreviewDrivers;
+    const dh = (
+      window as unknown as { __prismPreviewDrivers?: { ticks: number } }
+    ).__prismPreviewDrivers;
     if (dh) dh.ticks += 1;
     hub.frame.tick(dt);
     nodes.forEach((obj, nodeId) => {
       obj.updateWorldMatrix(true, false);
       obj.getWorldPosition(probe);
       probe.project(camera);
-      hub.inview.set(nodeId, viewportFromNdc({ x: probe.x, y: probe.y, z: probe.z }));
+      hub.inview.set(
+        nodeId,
+        viewportFromNdc({ x: probe.x, y: probe.y, z: probe.z }),
+      );
     });
   };
   raf = requestAnimationFrame(loop);
 
   return () => {
     cancelAnimationFrame(raf);
-    el.removeEventListener('pointermove', onPointerMove);
-    el.removeEventListener('pointerleave', onPointerLeave);
-    el.removeEventListener('wheel', onWheel);
+    el.removeEventListener("pointermove", onPointerMove);
+    el.removeEventListener("pointerleave", onPointerLeave);
+    el.removeEventListener("wheel", onWheel);
     for (const d of bindingDetachers) {
       try {
         d();
@@ -133,12 +150,15 @@ function startDriverFeed(
  *  factory's 3D-text path resolves synchronously (no flat-MSDF fallback). Groups
  *  the requested chars per (family, weight) and awaits all resolves. */
 async function warmTemplateOutlines(graph: GraphSource): Promise<void> {
-  const byKey = new Map<string, { family: string; weight: number; chars: Set<string> }>();
+  const byKey = new Map<
+    string,
+    { family: string; weight: number; chars: Set<string> }
+  >();
   for (const node of graph.nodes) {
-    if (node.renderMode !== 'text') continue;
+    if (node.renderMode !== "text") continue;
     const content = node.textSpec?.content;
-    if (typeof content !== 'string' || content.length === 0) continue;
-    const family = node.textSpec?.fontFamily ?? 'Playfair Display';
+    if (typeof content !== "string" || content.length === 0) continue;
+    const family = node.textSpec?.fontFamily ?? "Playfair Display";
     const weight = node.textSpec?.fontWeight ?? 600;
     const key = `${family}|${weight}`;
     let e = byKey.get(key);
@@ -150,7 +170,7 @@ async function warmTemplateOutlines(graph: GraphSource): Promise<void> {
   }
   await Promise.all(
     [...byKey.values()].map((e) =>
-      resolveTextOutlines(e.family, e.weight, [...e.chars].join('')),
+      resolveTextOutlines(e.family, e.weight, [...e.chars].join("")),
     ),
   );
 }
@@ -166,7 +186,9 @@ function resolveCursor(graph: GraphSource): CursorLayerConfig | null {
 export default function ConductorRuntime({ graph }: { graph: GraphSource }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [status, setStatus] = useState<"loading" | "ready" | "error">(
+    "loading",
+  );
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -176,6 +198,8 @@ export default function ConductorRuntime({ graph }: { graph: GraphSource }) {
     let result: MountGraphResult | null = null;
     let cancelled = false;
     let feedTeardown: (() => void) | null = null;
+    let bgHandle: ProceduralBackgroundHandle | null = null;
+    let bgRaf = 0;
 
     const observer = new ResizeObserver((entries) => {
       const entry = entries[0];
@@ -191,8 +215,8 @@ export default function ConductorRuntime({ graph }: { graph: GraphSource }) {
         const ctx = getSharedNodeContext({ runPrimitives: true });
         try {
           await ctx.fontAtlas.load(
-            '/prism-assets/font-inter.msdf.png',
-            '/prism-assets/font-inter.msdf.json',
+            "/prism-assets/font-inter.msdf.png",
+            "/prism-assets/font-inter.msdf.json",
           );
         } catch {
           // Atlas warm is best-effort; text nodes soft-fail like a missing asset.
@@ -222,11 +246,44 @@ export default function ConductorRuntime({ graph }: { graph: GraphSource }) {
         } catch {
           /* input feed is best-effort; a static preview still renders */
         }
-        setStatus('ready');
+        // W-BG — mount the landing hub's procedural background in the SHIPPED
+        // runtime (same law as resolveCursor: the first hub that declares
+        // one). Renders through the shared render-core so it matches the
+        // editor pixel-for-pixel; splat layers stay editor-only. Best-effort:
+        // a background failure never blocks the app mount.
+        try {
+          const bgHub = graph.hubs.find((h) =>
+            (h.background ?? []).some((l) => !!l.kind && l.kind !== "splat"),
+          );
+          if (bgHub?.background && result) {
+            bgHandle = mountProceduralBackground(
+              result.sceneRoot.scene,
+              result.sceneRoot.camera,
+              bgHub.background,
+            );
+            (
+              window as unknown as { __PRISM_RUNTIME_BG__?: unknown }
+            ).__PRISM_RUNTIME_BG__ = {
+              hubId: bgHub.hubId,
+              layerCount: bgHandle.layerCount,
+              kinds: bgHandle.kinds,
+            };
+            let bgLast = performance.now();
+            const bgLoop = (now: number) => {
+              bgRaf = requestAnimationFrame(bgLoop);
+              bgHandle?.tick((now - bgLast) / 1000);
+              bgLast = now;
+            };
+            bgRaf = requestAnimationFrame(bgLoop);
+          }
+        } catch {
+          /* background is best-effort; the app still renders */
+        }
+        setStatus("ready");
       } catch (e) {
         if (!cancelled) {
-          setError(e instanceof Error ? e.message : 'runtime mount failed');
-          setStatus('error');
+          setError(e instanceof Error ? e.message : "runtime mount failed");
+          setStatus("error");
         }
       }
     })();
@@ -236,6 +293,12 @@ export default function ConductorRuntime({ graph }: { graph: GraphSource }) {
       observer.disconnect();
       try {
         feedTeardown?.();
+      } catch {
+        /* ignore */
+      }
+      cancelAnimationFrame(bgRaf);
+      try {
+        bgHandle?.dispose();
       } catch {
         /* ignore */
       }
@@ -252,16 +315,18 @@ export default function ConductorRuntime({ graph }: { graph: GraphSource }) {
   return (
     <div ref={containerRef} className="cr-runtime" data-status={status}>
       <canvas ref={canvasRef} className="cr-canvas" />
-      {status === 'ready' && cursor ? <CustomCursorLayer config={cursor} /> : null}
-      {status === 'loading' ? (
+      {status === "ready" && cursor ? (
+        <CustomCursorLayer config={cursor} />
+      ) : null}
+      {status === "loading" ? (
         <div className="cr-overlay" role="status">
           <span className="cr-bead" aria-hidden />
           Booting the Prism runtime…
         </div>
       ) : null}
-      {status === 'error' ? (
+      {status === "error" ? (
         <div className="cr-overlay cr-overlay--error" role="alert">
-          Preview could not render{error ? `: ${error}` : ''}.
+          Preview could not render{error ? `: ${error}` : ""}.
         </div>
       ) : null}
     </div>

@@ -9,9 +9,9 @@
 // falloff) so it composites behind the procedural layers with no hard seam /
 // pasted-oval edge; corners read as atmosphere (C5). One renderer, TSL only.
 
-import { useEffect, useMemo, useRef, useState } from 'react';
-import * as THREE from 'three';
-import { MeshBasicNodeMaterial } from 'three/webgpu';
+import { useEffect, useMemo, useRef, useState } from "react";
+import * as THREE from "three";
+import { MeshBasicNodeMaterial } from "three/webgpu";
 import {
   texture as tslTexture,
   uv,
@@ -22,8 +22,8 @@ import {
   smoothstep,
   length as tslLength,
   clamp as tslClamp,
-} from 'three/tsl';
-import type { BackgroundLayerParams } from '@/lib/prism-graph/types';
+} from "three/tsl";
+import type { BackgroundLayerParams } from "@/lib/prism-graph/types";
 
 type TNode = any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
@@ -87,7 +87,8 @@ export function ParallaxPlaneLayer({
   const imageTex = useImageTexture(sourceUrl);
   const depthTex = useImageTexture(depthMapUrl);
 
-  const depthSpread = typeof params.depthSpread === 'number' ? params.depthSpread : 0.6;
+  const depthSpread =
+    typeof params.depthSpread === "number" ? params.depthSpread : 0.6;
   const amplitude = (flat ? 0 : 1) * (8 + depthSpread * 22); // world-Z displacement range.
 
   const material = useMemo(() => {
@@ -110,18 +111,23 @@ export function ParallaxPlaneLayer({
     // Radial edge feather → corners fade into atmosphere (no hard seam, C5).
     const d: TNode = tslLength(u.sub(vec2(0.5, 0.5)));
     const feather: TNode = smoothstep(float(0.72), float(0.34), d);
-    (material as unknown as { colorNode: unknown }).colorNode = (tslTexture(imageTex) as TNode).rgb;
-    (material as unknown as { opacityNode: unknown }).opacityNode = feather.mul(float(opacity));
+    (material as unknown as { colorNode: unknown }).colorNode = (
+      tslTexture(imageTex) as TNode
+    ).rgb;
+    (material as unknown as { opacityNode: unknown }).opacityNode = feather.mul(
+      float(opacity),
+    );
     if (depthTex && !flat) {
       const depthVal: TNode = (tslTexture(depthTex, u) as TNode).r;
       // Center the displacement so the plate straddles its z (near pulls toward
       // camera, far pushes away) → symmetric parallax about the plane.
       const disp: TNode = depthVal.sub(0.5).mul(amplitude * 2);
-      (material as unknown as { positionNode: unknown }).positionNode = (positionLocal as TNode).add(
-        vec3(0, 0, disp),
-      );
+      (material as unknown as { positionNode: unknown }).positionNode = (
+        positionLocal as TNode
+      ).add(vec3(0, 0, disp));
     } else {
-      (material as unknown as { positionNode: unknown }).positionNode = positionLocal;
+      (material as unknown as { positionNode: unknown }).positionNode =
+        positionLocal;
     }
     (material as unknown as { needsUpdate: boolean }).needsUpdate = true;
     void tslClamp;
@@ -133,7 +139,10 @@ export function ParallaxPlaneLayer({
   // camera flies PAST it → near displaced regions parallax more than far ones
   // (C6). Large size + edge feather keep the plate covering the frame across the
   // bounded camera journey without exposing an edge.
-  const geometry = useMemo(() => new THREE.PlaneGeometry(PLANE_W, PLANE_H, 160, 96), []);
+  const geometry = useMemo(
+    () => new THREE.PlaneGeometry(PLANE_W, PLANE_H, 160, 96),
+    [],
+  );
   useEffect(() => () => geometry.dispose(), [geometry]);
 
   if (!imageTex) return null;

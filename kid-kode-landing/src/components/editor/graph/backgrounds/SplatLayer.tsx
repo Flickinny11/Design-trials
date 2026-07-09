@@ -19,10 +19,10 @@
 // arrays instead of the depth texture) under a WebGL2 renderer.
 // Gated to T2 (`minTier`), with the procedural nebula as the T0/T1 fallback.
 
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
-import { SpriteNodeMaterial } from 'three/webgpu';
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useFrame } from "@react-three/fiber";
+import * as THREE from "three";
+import { SpriteNodeMaterial } from "three/webgpu";
 import {
   uniform,
   instanceIndex,
@@ -35,9 +35,9 @@ import {
   sin,
   length as tslLength,
   smoothstep,
-} from 'three/tsl';
-import type { BackgroundLayerParams } from '@/lib/prism-graph/types';
-import type { TierBudget } from '@/lib/editor/backgrounds/tier';
+} from "three/tsl";
+import type { BackgroundLayerParams } from "@/lib/prism-graph/types";
+import type { TierBudget } from "@/lib/editor/backgrounds/tier";
 
 type TNode = any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
@@ -52,16 +52,24 @@ function useImageTexture(url: string | null | undefined): THREE.Texture | null {
     new THREE.TextureLoader().load(
       url,
       (t) => {
-        if (cancelled) { t.dispose(); return; }
+        if (cancelled) {
+          t.dispose();
+          return;
+        }
         t.colorSpace = THREE.SRGBColorSpace;
         t.minFilter = THREE.LinearFilter;
         t.magFilter = THREE.LinearFilter;
-        setTex((p) => { p?.dispose(); return t; });
+        setTex((p) => {
+          p?.dispose();
+          return t;
+        });
       },
       undefined,
       () => !cancelled && setTex(null),
     );
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [url]);
   useEffect(() => () => tex?.dispose(), [tex]);
   return tex;
@@ -76,19 +84,32 @@ export interface SplatLayerProps {
   renderOrder?: number;
 }
 
-export function SplatLayer({ sourceUrl, depthMapUrl, params, budget, z = -26, renderOrder = -2 }: SplatLayerProps) {
+export function SplatLayer({
+  sourceUrl,
+  depthMapUrl,
+  params,
+  budget,
+  z = -26,
+  renderOrder = -2,
+}: SplatLayerProps) {
   const imageTex = useImageTexture(sourceUrl);
   const depthTex = useImageTexture(depthMapUrl);
   const meshRef = useRef<THREE.InstancedMesh | null>(null);
   const uniforms = useMemo(() => ({ uTime: uniform(0) }), []);
 
-  const depthSpread = typeof params.depthSpread === 'number' ? params.depthSpread : 0.7;
+  const depthSpread =
+    typeof params.depthSpread === "number" ? params.depthSpread : 0.7;
 
   const built = useMemo(() => {
     if (!imageTex || !depthTex) return null;
     // Grid resolution scales with the tier budget (gaussian count). Each grid
     // sample → one unprojected gaussian. (~T2 320×180 ≈ 57.6k, T1 ~28k.)
-    const gw = budget.particleCount >= 12000 ? 320 : budget.particleCount >= 6000 ? 224 : 150;
+    const gw =
+      budget.particleCount >= 12000
+        ? 320
+        : budget.particleCount >= 6000
+          ? 224
+          : 150;
     const gh = Math.round(gw * (PLANE_H / PLANE_W));
     const count = gw * gh;
     // Less z-explosion so adjacent samples don't separate into visible rows; the
@@ -97,7 +118,10 @@ export function SplatLayer({ sourceUrl, depthMapUrl, params, budget, z = -26, re
     const depthRange = 10 + depthSpread * 16;
     const gaussSize = (PLANE_W / gw) * 5.0;
 
-    const mat = new SpriteNodeMaterial({ transparent: true, depthWrite: false });
+    const mat = new SpriteNodeMaterial({
+      transparent: true,
+      depthWrite: false,
+    });
 
     // Per-instance grid uv from instanceIndex (GPU): gx = i % gw, gy = i / gw.
     const fi: TNode = (instanceIndex as TNode).toFloat();
@@ -113,15 +137,27 @@ export function SplatLayer({ sourceUrl, depthMapUrl, params, budget, z = -26, re
     const py: TNode = float(0.5).sub(sv).mul(PLANE_H);
     const pz: TNode = depthVal.sub(0.5).mul(depthRange);
     // A whisper of GPU drift so the captured volume breathes (not frozen).
-    const drift: TNode = sin(uniforms.uTime.mul(0.2).add(fi.mul(0.013))).mul(0.18);
-    (mat as unknown as { positionNode: unknown }).positionNode = vec3(px, py.add(drift), pz);
+    const drift: TNode = sin(uniforms.uTime.mul(0.2).add(fi.mul(0.013))).mul(
+      0.18,
+    );
+    (mat as unknown as { positionNode: unknown }).positionNode = vec3(
+      px,
+      py.add(drift),
+      pz,
+    );
     (mat as unknown as { scaleNode: unknown }).scaleNode = float(gaussSize);
 
     // Colour from the captured image at this gaussian's grid uv.
-    (mat as unknown as { colorNode: unknown }).colorNode = (tslTexture(imageTex, sampleUv) as TNode).rgb;
+    (mat as unknown as { colorNode: unknown }).colorNode = (
+      tslTexture(imageTex, sampleUv) as TNode
+    ).rgb;
     // Soft round gaussian falloff over the billboard quad.
     const q: TNode = uv() as TNode;
-    const disc: TNode = smoothstep(float(0.5), float(0.08), tslLength(q.sub(vec2(0.5, 0.5))));
+    const disc: TNode = smoothstep(
+      float(0.5),
+      float(0.08),
+      tslLength(q.sub(vec2(0.5, 0.5))),
+    );
     (mat as unknown as { opacityNode: unknown }).opacityNode = disc;
 
     const geo = new THREE.PlaneGeometry(1, 1);
@@ -141,14 +177,23 @@ export function SplatLayer({ sourceUrl, depthMapUrl, params, budget, z = -26, re
     return () => {
       built.mesh.geometry.dispose();
       (built.mesh.material as THREE.Material).dispose();
-      delete (globalThis as { __PRISM_BG_SPLAT_COUNT__?: number }).__PRISM_BG_SPLAT_COUNT__;
+      delete (globalThis as { __PRISM_BG_SPLAT_COUNT__?: number })
+        .__PRISM_BG_SPLAT_COUNT__;
     };
   }, [built]);
 
   useFrame((_, delta) => {
-    uniforms.uTime.value += delta * (typeof params.drift === 'number' ? 0.4 + params.drift : 0.6);
+    uniforms.uTime.value +=
+      delta * (typeof params.drift === "number" ? 0.4 + params.drift : 0.6);
   });
 
   if (!built) return null;
-  return <primitive ref={meshRef} object={built.mesh} position={[0, 0, z]} renderOrder={renderOrder} />;
+  return (
+    <primitive
+      ref={meshRef}
+      object={built.mesh}
+      position={[0, 0, z]}
+      renderOrder={renderOrder}
+    />
+  );
 }

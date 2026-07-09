@@ -1837,3 +1837,6 @@ complete marker: 'PRISM-WBG: RUN COMPLETE'
 [09:00:50] SHELL-WBG · 35m · agent=1 · still building · 35m elapsed · agent up · 1259 commits · last: shell-wbg: D5 — catalog picker upgrade. Search + category chips over the
 [09:04:21] SHELL-WBG · 39m · agent=1 · still building · 39m elapsed · agent up · 1259 commits · last: shell-wbg: D5 — catalog picker upgrade. Search + category chips over the
 [09:07:52] SHELL-WBG · 43m · agent=1 · still building · 43m elapsed · agent up · 1259 commits · last: shell-wbg: D5 — catalog picker upgrade. Search + category chips over the
+[09:08:22] SHELL-WBG · 43m · agent=1 · commit a7b16ce9 — shell-wbg: D6+D7 — prompt-to-background + flight-recorder 11th record ty
+[09:11:22] SHELL-WBG · 46m · agent=1 · still building · 46m elapsed · agent up · 1260 commits · last: shell-wbg: D6+D7 — prompt-to-background + flight-recorder 11th record ty
+[09:14:53] SHELL-WBG · 50m · agent=1 · still building · 50m elapsed · agent up · 1260 commits · last: shell-wbg: D6+D7 — prompt-to-background + flight-recorder 11th record ty
