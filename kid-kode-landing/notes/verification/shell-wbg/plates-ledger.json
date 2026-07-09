@@ -1,0 +1,284 @@
+{
+  "plates": {
+    "ridge-dusk": {
+      "id": "ridge-dusk",
+      "calls": [
+        {
+          "stage": "generate",
+          "model": "black-forest-labs/flux-2-pro",
+          "prov": {
+            "prediction_id": "ppjdgqnw2xrmr0cz8wfte71nec"
+          },
+          "estUsd": 0.06
+        },
+        {
+          "stage": "depth",
+          "model": "chenxwh/depth-anything-v2",
+          "prov": {
+            "provider": "replicate",
+            "model": "chenxwh/depth-anything-v2",
+            "prediction_id": "rwh2pnqpwhrn80cz8wfv6se4t4",
+            "predict_time": 0.900050323,
+            "out": "/Users/loganbaird/Prototype_Prism/Design-trials/.assetgen/out/wbg-plates/ridge-dusk-depth.png",
+            "bytes": 65620
+          },
+          "estUsd": 0.01
+        }
+      ],
+      "baked": {
+        "plate": "/three-d-bg/plates/ridge-dusk.webp",
+        "depth": "/three-d-bg/plates/ridge-dusk-depth.webp",
+        "gradedAt": "2026-07-09T13:45:34.407Z"
+      }
+    },
+    "rain-bokeh": {
+      "id": "rain-bokeh",
+      "calls": [
+        {
+          "stage": "generate",
+          "model": "black-forest-labs/flux-2-pro",
+          "prov": {
+            "prediction_id": "137g7m3b71rmy0cz8wgb9jj4xw"
+          },
+          "estUsd": 0.06
+        },
+        {
+          "stage": "depth",
+          "model": "chenxwh/depth-anything-v2",
+          "prov": {
+            "provider": "replicate",
+            "model": "chenxwh/depth-anything-v2",
+            "prediction_id": "vb0k8vnkxnrnc0cz8wg8tmw1tg",
+            "predict_time": 0.776227199,
+            "out": "/Users/loganbaird/Prototype_Prism/Design-trials/.assetgen/out/wbg-plates/rain-bokeh-depth.png",
+            "bytes": 85949
+          },
+          "estUsd": 0.01
+        }
+      ],
+      "baked": {
+        "plate": "/three-d-bg/plates/rain-bokeh.webp",
+        "depth": "/three-d-bg/plates/rain-bokeh-depth.webp",
+        "gradedAt": "2026-07-09T13:45:55.231Z"
+      }
+    },
+    "marble-atrium": {
+      "id": "marble-atrium",
+      "calls": [
+        {
+          "stage": "generate",
+          "model": "black-forest-labs/flux-2-pro",
+          "prov": {
+            "prediction_id": "az4cmedwbdrmt0cz8wgadkp20g"
+          },
+          "estUsd": 0.06
+        },
+        {
+          "stage": "depth",
+          "model": "chenxwh/depth-anything-v2",
+          "prov": {
+            "provider": "replicate",
+            "model": "chenxwh/depth-anything-v2",
+            "prediction_id": "y5znsnqpf9rna0cz8wg81279kg",
+            "predict_time": 0.704952061,
+            "out": "/Users/loganbaird/Prototype_Prism/Design-trials/.assetgen/out/wbg-plates/marble-atrium-depth.png",
+            "bytes": 49501
+          },
+          "estUsd": 0.01
+        }
+      ],
+      "baked": {
+        "plate": "/three-d-bg/plates/marble-atrium.webp",
+        "depth": "/three-d-bg/plates/marble-atrium-depth.webp",
+        "gradedAt": "2026-07-09T13:46:12.227Z"
+      }
+    },
+    "dune-sea": {
+      "id": "dune-sea",
+      "calls": [
+        {
+          "stage": "generate",
+          "model": "black-forest-labs/flux-2-pro",
+          "prov": {
+            "prediction_id": "fd896vqytxrmy0cz8wg9j3kmqr"
+          },
+          "estUsd": 0.06
+        },
+        {
+          "stage": "depth",
+          "model": "chenxwh/depth-anything-v2",
+          "prov": {
+            "provider": "replicate",
+            "model": "chenxwh/depth-anything-v2",
+            "prediction_id": "1x56vz9z39rnc0cz8wgrxhmt7g",
+            "predict_time": 0.711902773,
+            "out": "/Users/loganbaird/Prototype_Prism/Design-trials/.assetgen/out/wbg-plates/dune-sea-depth.png",
+            "bytes": 50820
+          },
+          "estUsd": 0.01
+        }
+      ],
+      "baked": {
+        "plate": "/three-d-bg/plates/dune-sea.webp",
+        "depth": "/three-d-bg/plates/dune-sea-depth.webp",
+        "gradedAt": "2026-07-09T13:46:30.855Z"
+      }
+    },
+    "harbor-fog": {
+      "id": "harbor-fog",
+      "calls": [
+        {
+          "stage": "generate",
+          "model": "black-forest-labs/flux-2-pro",
+          "prov": {
+            "prediction_id": "41t3jta7h1rmy0cz8wgvw7etdc"
+          },
+          "estUsd": 0.06
+        },
+        {
+          "stage": "depth",
+          "model": "chenxwh/depth-anything-v2",
+          "prov": {
+            "provider": "replicate",
+            "model": "chenxwh/depth-anything-v2",
+            "prediction_id": "p5yyjc41ehrne0cz8wgv752zc8",
+            "predict_time": 0.617697578,
+            "out": "/Users/loganbaird/Prototype_Prism/Design-trials/.assetgen/out/wbg-plates/harbor-fog-depth.png",
+            "bytes": 24255
+          },
+          "estUsd": 0.01
+        }
+      ],
+      "baked": {
+        "plate": "/three-d-bg/plates/harbor-fog.webp",
+        "depth": "/three-d-bg/plates/harbor-fog-depth.webp",
+        "gradedAt": "2026-07-09T13:46:47.690Z"
+      }
+    },
+    "canopy-light": {
+      "id": "canopy-light",
+      "calls": [
+        {
+          "stage": "generate",
+          "model": "black-forest-labs/flux-2-pro",
+          "prov": {
+            "prediction_id": "081w2gc995rmy0cz8wgsg681c0"
+          },
+          "estUsd": 0.06
+        },
+        {
+          "stage": "depth",
+          "model": "chenxwh/depth-anything-v2",
+          "prov": {
+            "provider": "replicate",
+            "model": "chenxwh/depth-anything-v2",
+            "prediction_id": "aqre77y621rnc0cz8wgr8hj9rm",
+            "predict_time": 1.060660415,
+            "out": "/Users/loganbaird/Prototype_Prism/Design-trials/.assetgen/out/wbg-plates/canopy-light-depth.png",
+            "bytes": 381317
+          },
+          "estUsd": 0.01
+        }
+      ],
+      "baked": {
+        "plate": "/three-d-bg/plates/canopy-light.webp",
+        "depth": "/three-d-bg/plates/canopy-light-depth.webp",
+        "gradedAt": "2026-07-09T13:47:06.106Z"
+      }
+    },
+    "basalt-coast": {
+      "id": "basalt-coast",
+      "calls": [
+        {
+          "stage": "generate",
+          "model": "black-forest-labs/flux-2-pro",
+          "prov": {
+            "prediction_id": "75v33tyhd5rmr0cz8wgvt42hcc"
+          },
+          "estUsd": 0.06
+        },
+        {
+          "stage": "depth",
+          "model": "chenxwh/depth-anything-v2",
+          "prov": {
+            "provider": "replicate",
+            "model": "chenxwh/depth-anything-v2",
+            "prediction_id": "kh3sn9gbw1rna0cz8wha073f34",
+            "predict_time": 0.712127975,
+            "out": "/Users/loganbaird/Prototype_Prism/Design-trials/.assetgen/out/wbg-plates/basalt-coast-depth.png",
+            "bytes": 64524
+          },
+          "estUsd": 0.01
+        }
+      ],
+      "baked": {
+        "plate": "/three-d-bg/plates/basalt-coast.webp",
+        "depth": "/three-d-bg/plates/basalt-coast-depth.webp",
+        "gradedAt": "2026-07-09T13:47:23.222Z"
+      }
+    },
+    "city-dusk": {
+      "id": "city-dusk",
+      "calls": [
+        {
+          "stage": "generate",
+          "model": "black-forest-labs/flux-2-pro",
+          "prov": {
+            "prediction_id": "fbt7q98mjnrmt0cz8wh9zrw78r"
+          },
+          "estUsd": 0.06
+        },
+        {
+          "stage": "depth",
+          "model": "chenxwh/depth-anything-v2",
+          "prov": {
+            "provider": "replicate",
+            "model": "chenxwh/depth-anything-v2",
+            "prediction_id": "tme4nc2g0xrna0cz8whbqpw79m",
+            "predict_time": 0.620618627,
+            "out": "/Users/loganbaird/Prototype_Prism/Design-trials/.assetgen/out/wbg-plates/city-dusk-depth.png",
+            "bytes": 35262
+          },
+          "estUsd": 0.01
+        }
+      ],
+      "baked": {
+        "plate": "/three-d-bg/plates/city-dusk.webp",
+        "depth": "/three-d-bg/plates/city-dusk-depth.webp",
+        "gradedAt": "2026-07-09T13:47:40.673Z"
+      }
+    },
+    "polar-ridge": {
+      "id": "polar-ridge",
+      "calls": [
+        {
+          "stage": "generate",
+          "model": "black-forest-labs/flux-2-pro",
+          "prov": {
+            "prediction_id": "dv51qe2r8drmy0cz8wh8gn24gg"
+          },
+          "estUsd": 0.06
+        },
+        {
+          "stage": "depth",
+          "model": "chenxwh/depth-anything-v2",
+          "prov": {
+            "provider": "replicate",
+            "model": "chenxwh/depth-anything-v2",
+            "prediction_id": "bttgnw4nanrn80cz8wh85sb6t4",
+            "predict_time": 0.600470808,
+            "out": "/Users/loganbaird/Prototype_Prism/Design-trials/.assetgen/out/wbg-plates/polar-ridge-depth.png",
+            "bytes": 30092
+          },
+          "estUsd": 0.01
+        }
+      ],
+      "baked": {
+        "plate": "/three-d-bg/plates/polar-ridge.webp",
+        "depth": "/three-d-bg/plates/polar-ridge-depth.webp",
+        "gradedAt": "2026-07-09T13:47:58.400Z"
+      }
+    }
+  },
+  "totalEstUsd": 0.6300000000000001
+}

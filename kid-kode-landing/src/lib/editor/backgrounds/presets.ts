@@ -17,6 +17,13 @@ import type {
 } from "../../prism-graph/types";
 import type { BackgroundPreset, BackgroundParamControl } from "./types";
 import { BACKGROUND_PALETTE_IDS, getBackgroundPalette } from "./palettes";
+import { NEBULAE_PRESETS } from "./library/nebulae";
+import { PARTICLES_PRESETS } from "./library/particles";
+import { DEEP_SPACE_PRESETS } from "./library/deep-space";
+import { GRADIENT_LIGHT_PRESETS } from "./library/gradient-light";
+import { FLUID_PRESETS } from "./library/fluid";
+import { PLATES_PRESETS } from "./library/plates";
+import { MINIMAL_PRESETS } from "./library/minimal";
 
 // Shared control set — every preset exposes the same four live knobs plus its
 // palette select (the palette OPTIONS differ per preset so each stays on-brand).
@@ -389,12 +396,22 @@ const capturedObservatory: BackgroundPreset = {
   },
 };
 
+// W-BG: the launch five + the catalog library modules, ordered by category
+// (nebulae, particles, deep-space, gradient-light, fluid, plates, captured,
+// minimal). Entry ids are globally unique — the registry test enforces it.
 export const BACKGROUND_PRESETS: readonly BackgroundPreset[] = Object.freeze([
   brassNebula,
   iceField,
+  ...NEBULAE_PRESETS,
+  ...PARTICLES_PRESETS,
   observatoryDeep,
+  ...DEEP_SPACE_PRESETS,
+  ...GRADIENT_LIGHT_PRESETS,
+  ...FLUID_PRESETS,
   cosmicDrift,
+  ...PLATES_PRESETS,
   capturedObservatory,
+  ...MINIMAL_PRESETS,
 ]);
 
 export function getBackgroundPreset(
