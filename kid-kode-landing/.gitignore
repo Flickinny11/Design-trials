@@ -8,3 +8,7 @@ test-results/
 
 # F5.3 raw fal GLBs (large, regenerate via scripts/provision-watch-parts.mjs)
 public/prism-mock/orrery/meshes/atelier/*.glb
+
+# W-BG — live prompt-to-background output (runtime user content; evidence
+# copies live under notes/verification/shell-wbg/)
+/public/three-d-bg/generated/

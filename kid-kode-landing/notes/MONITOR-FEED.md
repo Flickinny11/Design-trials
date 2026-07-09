@@ -1998,3 +1998,24 @@ Toolbar fully REBUILT from GENERATED Tripo v3.1 GLBs (procedural forms discarded
 [09:14:53] CHAIN/SHELL-WBG: still building · 50m elapsed · agent up · 1260 commits · last: shell-wbg: D6+D7 — prompt-to-background + flight-recorder 11th record ty
 [09:17:23] CHAIN/SHELL-WBG: commit 9e3c20ad — shell-wbg: D8a — runtime backgrounds + shared render-core + thumbs harne
 [09:18:24] CHAIN/SHELL-WBG: still building · 53m elapsed · agent up · 1261 commits · last: shell-wbg: D8a — runtime backgrounds + shared render-core + thumbs harne
+[09:21:54] CHAIN/SHELL-WBG: still building · 57m elapsed · agent up · 1262 commits · last: shell-wbg: D9 (tests) — 29 W-BG tests green. Catalog registry (50-60 ent
+[09:21:54] CHAIN/SHELL-WBG: commit 677e5725 — shell-wbg: D9 (tests) — 29 W-BG tests green. Catalog registry (50-60 ent
+[09:25:25] CHAIN/SHELL-WBG: still building · 60m elapsed · agent up · 1262 commits · last: shell-wbg: D9 (tests) — 29 W-BG tests green. Catalog registry (50-60 ent
+[09:28:56] CHAIN/SHELL-WBG: still building · 64m elapsed · agent up · 1262 commits · last: shell-wbg: D9 (tests) — 29 W-BG tests green. Catalog registry (50-60 ent
+[09:32:26] CHAIN/SHELL-WBG: still building · 67m elapsed · agent up · 1262 commits · last: shell-wbg: D9 (tests) — 29 W-BG tests green. Catalog registry (50-60 ent
+[09:35:57] CHAIN/SHELL-WBG: still building · 71m elapsed · agent up · 1262 commits · last: shell-wbg: D9 (tests) — 29 W-BG tests green. Catalog registry (50-60 ent
+[09:39:28] CHAIN/SHELL-WBG: still building · 74m elapsed · agent up · 1262 commits · last: shell-wbg: D9 (tests) — 29 W-BG tests green. Catalog registry (50-60 ent
+[09:42:58] CHAIN/SHELL-WBG: still building · 78m elapsed · agent up · 1262 commits · last: shell-wbg: D9 (tests) — 29 W-BG tests green. Catalog registry (50-60 ent
+[09:46:29] CHAIN/SHELL-WBG: still building · 81m elapsed · agent up · 1262 commits · last: shell-wbg: D9 (tests) — 29 W-BG tests green. Catalog registry (50-60 ent
+[09:49:59] CHAIN/SHELL-WBG: still building · 85m elapsed · agent up · 1262 commits · last: shell-wbg: D9 (tests) — 29 W-BG tests green. Catalog registry (50-60 ent
+[09:53:30] CHAIN/SHELL-WBG: still building · 88m elapsed · agent up · 1262 commits · last: shell-wbg: D9 (tests) — 29 W-BG tests green. Catalog registry (50-60 ent
+[09:57:00] CHAIN/SHELL-WBG: still building · 92m elapsed · agent up · 1262 commits · last: shell-wbg: D9 (tests) — 29 W-BG tests green. Catalog registry (50-60 ent
+[10:00:31] CHAIN/SHELL-WBG: still building · 95m elapsed · agent up · 1262 commits · last: shell-wbg: D9 (tests) — 29 W-BG tests green. Catalog registry (50-60 ent
+[10:04:01] CHAIN/SHELL-WBG: still building · 99m elapsed · agent up · 1262 commits · last: shell-wbg: D9 (tests) — 29 W-BG tests green. Catalog registry (50-60 ent
+[10:07:32] CHAIN/SHELL-WBG: still building · 102m elapsed · agent up · 1262 commits · last: shell-wbg: D9 (tests) — 29 W-BG tests green. Catalog registry (50-60 ent
+[10:11:02] CHAIN/SHELL-WBG: still building · 106m elapsed · agent up · 1262 commits · last: shell-wbg: D9 (tests) — 29 W-BG tests green. Catalog registry (50-60 ent
+[10:14:33] CHAIN/SHELL-WBG: still building · 109m elapsed · agent up · 1262 commits · last: shell-wbg: D9 (tests) — 29 W-BG tests green. Catalog registry (50-60 ent
+[10:18:03] CHAIN/SHELL-WBG: still building · 113m elapsed · agent up · 1262 commits · last: shell-wbg: D9 (tests) — 29 W-BG tests green. Catalog registry (50-60 ent
+[10:21:34] CHAIN/SHELL-WBG: still building · 116m elapsed · agent up · 1262 commits · last: shell-wbg: D9 (tests) — 29 W-BG tests green. Catalog registry (50-60 ent
+[10:25:04] CHAIN/SHELL-WBG: still building · 120m elapsed · agent up · 1262 commits · last: shell-wbg: D9 (tests) — 29 W-BG tests green. Catalog registry (50-60 ent
+[10:28:35] CHAIN/SHELL-WBG: still building · 123m elapsed · agent up · 1262 commits · last: shell-wbg: D9 (tests) — 29 W-BG tests green. Catalog registry (50-60 ent

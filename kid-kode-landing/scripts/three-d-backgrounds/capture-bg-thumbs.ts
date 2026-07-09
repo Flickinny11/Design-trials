@@ -28,15 +28,32 @@ const THUMB_H = 192;
 
 async function main() {
   await mkdir(OUT_DIR, { recursive: true });
+  // HEADED on the real GPU: Playwright's headless compositor screenshots a
+  // WebGPU canvas as BLANK WHITE (alpha-0 pixels) while the scene renders
+  // fine — the W2D capture blind spot in a new costume. Fresh page per
+  // preset (WebGPU page reuse across many navigations degrades the GPU
+  // process) and the Next dev badge is hidden.
   const browser = await chromium.launch({
-    args: ["--enable-unsafe-webgpu", "--enable-features=Vulkan"],
+    headless: false,
+    args: ["--enable-unsafe-webgpu"],
   });
-  const page = await browser.newPage({ viewport: { width: 960, height: 384 } });
 
   let done = 0;
   for (const preset of BACKGROUND_PRESETS) {
     if (only && preset.id !== only) continue;
-    const url = `${argBase}/bg-lab?preset=${encodeURIComponent(preset.id)}&thumb=1`;
+    const page = await browser.newPage({
+      viewport: { width: 960, height: 384 },
+    });
+    await page.addInitScript(() => {
+      const style = document.createElement("style");
+      style.textContent = "nextjs-portal{display:none!important}";
+      document.addEventListener("DOMContentLoaded", () =>
+        document.head.appendChild(style),
+      );
+    });
+    // tier=T2: bake the FULL desktop look (a 960px backing store would
+    // otherwise resolve T0 and under-sell the entry).
+    const url = `${argBase}/bg-lab?preset=${encodeURIComponent(preset.id)}&thumb=1&tier=T2`;
     try {
       await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
       // Wait for the frame-time probe (= the scene is rendering), then settle
@@ -60,6 +77,8 @@ async function main() {
       console.error(
         `FAIL ${preset.id}: ${err instanceof Error ? err.message : err}`,
       );
+    } finally {
+      await page.close();
     }
   }
   await browser.close();

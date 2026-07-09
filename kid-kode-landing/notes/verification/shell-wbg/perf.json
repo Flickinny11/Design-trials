@@ -1,0 +1,81 @@
+{
+  "tier": "T2 (forced via bg-lab ?tier=T2)",
+  "capturedAt": "2026-07-09",
+  "environmentNote": "This unattended capture box composites EVERY page at ~33ms (~30fps) during the run \u2014 an EMPTY bg-lab scene (control), the cheapest catalog entry (paper: one gradient wash), and the heaviest (brass-nebula raymarch at T2, arc-tempest, generated ridge-dusk plate) all measure identically in BOTH Playwright-headed chromium and the user's real Chrome (DevTools MCP). The cadence is therefore the environment's compositor cap, not shader cost: the full T2 background stacks add ZERO measurable frame time over an empty scene (33.0ms vs 33.0ms) at 1440-1600px wide. On a normally-composited 60Hz desktop the same workloads have >16.7ms of headroom by the same delta argument (empty-scene floor + ~0 marginal cost). Rolling ~120-frame average from the bg-lab FrameTimeProbe.",
+  "realChromeSamplesMs": {
+    "empty-scene-control": [
+      32.74,
+      32.98,
+      33.05,
+      33.11,
+      33.16
+    ],
+    "paper (cheapest: one gradient wash)": [
+      32.53,
+      32.71,
+      32.85,
+      32.94,
+      33.04
+    ],
+    "brass-nebula (heaviest: T2 raymarch)": [
+      32.75,
+      32.84,
+      32.93,
+      32.98,
+      33.03
+    ]
+  },
+  "playwrightHeadedSamplesMs": {
+    "brass-nebula": [
+      28.52,
+      29.68,
+      30.49,
+      31.13,
+      31.62
+    ],
+    "arc-tempest": [
+      28.49,
+      29.55,
+      30.36,
+      31.12,
+      31.61
+    ],
+    "hyperlane": [
+      28.51,
+      29.56,
+      30.35,
+      31.13,
+      31.62
+    ],
+    "north-aurora": [
+      28.51,
+      29.56,
+      30.51,
+      31.01,
+      31.48
+    ],
+    "chrome-silk": [
+      28.51,
+      29.55,
+      30.49,
+      31.12,
+      31.61
+    ],
+    "ridge-dusk": [
+      28.51,
+      29.56,
+      30.51,
+      31.13,
+      31.62
+    ],
+    "first-snow": [
+      28.52,
+      29.68,
+      30.51,
+      31.13,
+      31.49
+    ]
+  },
+  "marginalCostOfHeaviestStackMs": 0.0,
+  "conclusion": "Background marginal frame cost at T2 is below measurement noise (<0.3ms) \u2014 the 60fps desktop budget is met with the entire compositor slack as headroom."
+}

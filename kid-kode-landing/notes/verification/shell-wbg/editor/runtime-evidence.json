@@ -1,0 +1,21 @@
+{
+  "runtimePreset": {
+    "hubId": "hero",
+    "layerCount": 3,
+    "kinds": [
+      "parallax-plane",
+      "gradient-volume",
+      "particle-field"
+    ]
+  },
+  "runtimePresetBackend": "webgl2-fallback (navigator.gpu undefined — W2D capture law)",
+  "runtimeGenerated": {
+    "hubId": "hero",
+    "layerCount": 2,
+    "kinds": [
+      "gradient-volume",
+      "fluid-overlay"
+    ]
+  },
+  "runtimeGeneratedBackend": "webgl2-fallback (navigator.gpu undefined — W2D capture law)"
+}

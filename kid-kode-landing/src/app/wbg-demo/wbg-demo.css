@@ -1,0 +1,51 @@
+/* W-BG — runtime-proof lab route. The cr-* host classes ConductorRuntime
+   renders with live in the preview route's stylesheet; this route mounts the
+   same component standalone, so it carries the same sizing rules. */
+
+.cr-runtime {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.cr-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.cr-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: #b9b4a8;
+  pointer-events: none;
+}
+
+.cr-overlay--error {
+  color: #ff8a86;
+}
+
+.cr-bead {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #1ec8ff;
+  animation: wbg-bead 1.1s ease-in-out infinite;
+}
+
+@keyframes wbg-bead {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}

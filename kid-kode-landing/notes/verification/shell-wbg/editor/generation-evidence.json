@@ -1,0 +1,249 @@
+{
+  "hoverState": {
+    "persistedLayerIds": [
+      "brass-nebula-env",
+      "brass-nebula-scatter",
+      "brass-nebula-motes"
+    ]
+  },
+  "appliedState": [
+    {
+      "id": "emberfall-env",
+      "kind": "volumetric-nebula"
+    },
+    {
+      "id": "emberfall-embers",
+      "kind": "particle-field"
+    },
+    {
+      "id": "emberfall-ash",
+      "kind": "particle-field"
+    }
+  ],
+  "rotation": [
+    {
+      "ok": true,
+      "family": "cinematic-video-hero",
+      "cluster": "video-hero",
+      "route": "R1",
+      "palette": "deep",
+      "name": "Deep Light"
+    },
+    {
+      "ok": true,
+      "family": "editorial-product-gallery",
+      "cluster": "gallery-wall",
+      "route": "R1",
+      "palette": "deep",
+      "name": "Deep Studio"
+    },
+    {
+      "ok": true,
+      "family": "glitch-cyber-fx",
+      "cluster": "transition-fx",
+      "route": "R1",
+      "palette": "deep",
+      "name": "Deep Signal"
+    }
+  ],
+  "library": {
+    "ok": true,
+    "items": [
+      {
+        "id": "bg-mrdno0z9-wdds",
+        "name": "Deep Signal",
+        "prompt": "a tasteful ambient backdrop",
+        "route": "R1",
+        "grammarFamily": "glitch-cyber-fx",
+        "clusterId": "transition-fx",
+        "palette": "deep",
+        "renderMode": "3d",
+        "createdAt": "2026-07-09T15:22:25.653Z",
+        "layers": [
+          {
+            "id": "bg-mrdno0z9-wdds-rings",
+            "attachment": "infinite-environment",
+            "kind": "gradient-volume",
+            "z": -430,
+            "opacity": 1,
+            "parallaxDepth": 0.7,
+            "params": {
+              "palette": "deep",
+              "density": 0.5,
+              "drift": 0.45,
+              "depthSpread": 0.65,
+              "intensity": 0.55,
+              "variant": "rings"
+            }
+          },
+          {
+            "id": "bg-mrdno0z9-wdds-plasma",
+            "attachment": "world",
+            "kind": "fluid-overlay",
+            "z": -55,
+            "opacity": 0.6,
+            "parallaxDepth": 0.7,
+            "params": {
+              "palette": "deep",
+              "density": 0.5,
+              "drift": 0.45,
+              "depthSpread": 0.65,
+              "intensity": 0.55,
+              "variant": "plasma"
+            }
+          }
+        ]
+      },
+      {
+        "id": "bg-mrdno0yk-ooj2",
+        "name": "Deep Studio",
+        "prompt": "a tasteful ambient backdrop",
+        "route": "R1",
+        "grammarFamily": "editorial-product-gallery",
+        "clusterId": "gallery-wall",
+        "palette": "deep",
+        "renderMode": "3d",
+        "createdAt": "2026-07-09T15:22:25.628Z",
+        "layers": [
+          {
+            "id": "bg-mrdno0yk-ooj2-spot",
+            "attachment": "infinite-environment",
+            "kind": "gradient-volume",
+            "z": -430,
+            "opacity": 1,
+            "parallaxDepth": 0.7,
+            "params": {
+              "palette": "deep",
+              "density": 0.5,
+              "drift": 0.45,
+              "depthSpread": 0.65,
+              "intensity": 0.55,
+              "variant": "spot"
+            }
+          },
+          {
+            "id": "bg-mrdno0yk-ooj2-dust",
+            "attachment": "world",
+            "kind": "particle-field",
+            "z": -100,
+            "opacity": 0.6,
+            "parallaxDepth": 0.7,
+            "params": {
+              "palette": "deep",
+              "density": 0.3,
+              "drift": 0.45,
+              "depthSpread": 0.65,
+              "intensity": 0.55,
+              "variant": "dust"
+            }
+          }
+        ]
+      },
+      {
+        "id": "bg-mrdno0y6-ekkd",
+        "name": "Deep Light",
+        "prompt": "a tasteful ambient backdrop",
+        "route": "R1",
+        "grammarFamily": "cinematic-video-hero",
+        "clusterId": "video-hero",
+        "palette": "deep",
+        "renderMode": "3d",
+        "createdAt": "2026-07-09T15:22:25.614Z",
+        "layers": [
+          {
+            "id": "bg-mrdno0y6-ekkd-light",
+            "attachment": "infinite-environment",
+            "kind": "gradient-volume",
+            "z": -430,
+            "opacity": 1,
+            "parallaxDepth": 0.7,
+            "params": {
+              "palette": "deep",
+              "density": 0.5,
+              "drift": 0.45,
+              "depthSpread": 0.65,
+              "intensity": 0.55,
+              "variant": "wash"
+            }
+          }
+        ]
+      },
+      {
+        "id": "bg-mrdnnhme-s12j",
+        "name": "Verdant Scene",
+        "prompt": "a photoreal misty pine forest at dawn, calm and quiet",
+        "route": "R2",
+        "grammarFamily": "layered-photo-parallax-hero",
+        "clusterId": "photo-composite-hero",
+        "palette": "verdant",
+        "renderMode": "3d",
+        "createdAt": "2026-07-09T15:22:20.107Z",
+        "layers": [
+          {
+            "id": "bg-mrdnnhme-s12j-plate",
+            "attachment": "world",
+            "kind": "parallax-plane",
+            "sourceUrl": "/three-d-bg/generated/bg-mrdnnhme-s12j/plate.webp",
+            "depthMapUrl": "/three-d-bg/generated/bg-mrdnnhme-s12j/depth.webp",
+            "z": -46,
+            "opacity": 1,
+            "parallaxDepth": 0.8,
+            "renderMode": "parallax-plane",
+            "params": {
+              "palette": "verdant",
+              "density": 0.35,
+              "drift": 0.3,
+              "depthSpread": 0.7,
+              "intensity": 0.5
+            }
+          },
+          {
+            "id": "bg-mrdnnhme-s12j-accent",
+            "attachment": "world",
+            "kind": "particle-field",
+            "z": -110,
+            "opacity": 0.55,
+            "parallaxDepth": 0.7,
+            "params": {
+              "palette": "verdant",
+              "density": 0.24,
+              "drift": 0.25,
+              "depthSpread": 0.65,
+              "intensity": 0.5,
+              "variant": "fireflies"
+            }
+          }
+        ]
+      },
+      {
+        "id": "bg-mrdnnfab-elm3",
+        "name": "Verdant Ground",
+        "prompt": "quiet green fireflies over a calm meadow at night",
+        "route": "R1",
+        "grammarFamily": "oversized-type-editorial",
+        "clusterId": "typography",
+        "palette": "verdant",
+        "renderMode": "3d",
+        "createdAt": "2026-07-09T15:21:57.539Z",
+        "layers": [
+          {
+            "id": "bg-mrdnnfab-elm3-wash",
+            "attachment": "infinite-environment",
+            "kind": "gradient-volume",
+            "z": -430,
+            "opacity": 1,
+            "parallaxDepth": 0.7,
+            "params": {
+              "palette": "verdant",
+              "density": 0.4,
+              "drift": 0.25,
+              "depthSpread": 0.65,
+              "intensity": 0.4,
+              "variant": "wash"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
