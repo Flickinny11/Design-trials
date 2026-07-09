@@ -58,6 +58,10 @@ import type {
   PrismNode,
   ScenePosition,
 } from '@/lib/prism-graph/types';
+import {
+  hubCameraComposition,
+  resolveHubRenderMode,
+} from '@/lib/prism-graph/hub-render-mode';
 import { applyScrollBindings } from '@/lib/prism-graph/scroll-timeline';
 
 export interface MountGraphOpts {
@@ -147,6 +151,17 @@ export interface MountGraphResult {
    *  camera and scene root are never modified by this call (SC-040: scrolling
    *  reads as app UI / per-element response, not whole-scene movement). */
   setScrollProgress(progress: number): void;
+
+  /** W-2D — apply the given hub's `renderMode` composition to the runtime
+   *  camera: '3d' restores the mount's base fov/distance; '2d' drops to the
+   *  telephoto flat composition with framing-preserving distance (renderer
+   *  CONFIG on the SAME PerspectiveCamera — see hub-render-mode.ts). With
+   *  `animate` (default) the change tweens over ~650ms so 2d↔3d hub
+   *  transitions stay smooth; without it (or with no renderer) it snaps.
+   *  Applied automatically for the entry hub at mount and on every
+   *  `hubManager.activate()` through this result. No-op when the caller owns
+   *  the camera (injected `sceneRoot`) or installed a `cameraRail`. */
+  applyHubComposition(hubId: string, animate?: boolean): void;
 }
 
 const BACKDROP_Z = -2;
@@ -228,6 +243,9 @@ function buildViewportFixedMesh(
   mesh.renderOrder = -1000;
   mesh.userData.role = 'viewport-fixed-background';
   mesh.userData.layerId = layer.id;
+  // W-2D — the fov the geometry was sized for, so a composition fov change
+  // (2d flat ↔ 3d) can re-cover the frustum by scaling instead of rebuilding.
+  mesh.userData.builtFov = camera.fov;
   // Read `mesh.geometry` at cleanup time so a post-resize geometry swap
   // (see `resize()`) doesn't strand the live PlaneGeometry. The material is
   // not swapped on resize, so closing over `mat` is safe.
@@ -324,6 +342,8 @@ function buildCameraLockedMesh(
   mesh.renderOrder = -900;
   mesh.userData.role = 'camera-locked-background';
   mesh.userData.layerId = layer.id;
+  // W-2D — sizing fov stamp (see buildViewportFixedMesh).
+  mesh.userData.builtFov = camera.fov;
   // EB-07-03: read `mesh.geometry` at cleanup time so a post-resize geometry
   // swap doesn't strand the live PlaneGeometry.
   mesh.userData.cleanup = () => {
@@ -398,6 +418,24 @@ export async function mountFromGraphSource(
   if (entryHubId && adapterResult.hubs.has(entryHubId)) {
     hubManager.activate(entryHubId);
   }
+
+  // W-2D — composition-driver state, declared BEFORE the camera-rail install
+  // below because composeBeforeRender() (called there) reads it. The driver
+  // functions themselves live after the background-layer section; see the
+  // "per-hub 2d/3d composition driver" block.
+  const baseComposition = {
+    fov: sceneRoot.camera.fov,
+    distance: sceneRoot.camera.position.z,
+  };
+  const ownsComposition = opts.sceneRoot == null && opts.cameraRail == null;
+  let compositionTween: {
+    fromFov: number;
+    toFov: number;
+    fromZ: number;
+    toZ: number;
+    start: number | null;
+    durMs: number;
+  } | null = null;
 
   // EB-06-05 (SC-032 / INV-23): install the cinematic camera-rail driver on
   // the scene root's beforeRender hook when the caller has compiled a rail.
@@ -523,6 +561,9 @@ export async function mountFromGraphSource(
       const oldGeo = viewportFixedMesh.geometry;
       viewportFixedMesh.geometry = new PlaneGeometry(width, height);
       oldGeo.dispose();
+      // W-2D — geometry now matches the live fov; reset the scale-refit.
+      viewportFixedMesh.userData.builtFov = sceneRoot.camera.fov;
+      viewportFixedMesh.scale.set(1, 1, 1);
     }
     // EB-07-03 — same scale-to-cover treatment for camera-locked HUD planes.
     if (cameraLockedMesh) {
@@ -534,6 +575,9 @@ export async function mountFromGraphSource(
       const oldGeo = cameraLockedMesh.geometry;
       cameraLockedMesh.geometry = new PlaneGeometry(width, height);
       oldGeo.dispose();
+      // W-2D — geometry now matches the live fov; reset the scale-refit.
+      cameraLockedMesh.userData.builtFov = sceneRoot.camera.fov;
+      cameraLockedMesh.scale.set(1, 1, 1);
     }
   }
 
@@ -716,19 +760,22 @@ export async function mountFromGraphSource(
     }
   }
 
-  // Compose the cameraRail driver tick + tickBackgroundDrivers into a single
-  // beforeRender callback. SceneRoot's setBeforeRender takes one callback;
-  // we replace it whenever either driver set changes.
+  // Compose the cameraRail driver tick + tickBackgroundDrivers + the W-2D
+  // composition tween into a single beforeRender callback. SceneRoot's
+  // setBeforeRender takes one callback; we replace it whenever a driver set
+  // changes.
   function composeBeforeRender(): void {
     const hasRail = cameraRailDriver != null;
     const hasParallax = parallaxMeshes.length > 0;
-    if (!hasRail && !hasParallax) {
+    const hasCompositionTween = compositionTween != null;
+    if (!hasRail && !hasParallax && !hasCompositionTween) {
       sceneRoot.setBeforeRender(null);
       return;
     }
     sceneRoot.setBeforeRender(() => {
       if (cameraRailDriver) cameraRailDriver.tick();
       if (parallaxMeshes.length > 0) tickBackgroundDrivers();
+      if (compositionTween) tickCompositionTween();
     });
   }
 
@@ -758,6 +805,8 @@ export async function mountFromGraphSource(
       cameraRailDriver.dispose();
       cameraRailDriver = null;
     }
+    // W-2D — drop any in-flight composition tween with the mount.
+    compositionTween = null;
     sceneRoot.setBeforeRender(null);
     // EB-07-02: tear down every background-layer mount type, not just the
     // viewport-fixed slot. When PrismHost owns the SceneRoot we never call
@@ -821,9 +870,113 @@ export async function mountFromGraphSource(
     }
   }
 
+  // ── W-2D — per-hub 2d/3d composition driver ────────────────────────────────
+  //
+  // Renderer CONFIG, not an engine rewrite (I-ENGINE): the SAME
+  // PerspectiveCamera drops to the telephoto flat composition for a '2d' hub
+  // (framing-preserving distance; hub-render-mode.ts) and restores the base
+  // for '3d'. Camera-attached background planes are re-covered by scale (the
+  // builtFov stamp) so a fov change never exposes an edge. Fov + distance
+  // tween over ~650ms so 2d↔3d hub transitions stay smooth in preview.
+  //
+  // Ownership: skipped entirely when the caller injected its own sceneRoot
+  // (the editor's shared scene owns its camera via SceneControlsBridge) or
+  // installed a cameraRail (the rail is the sole camera authority, SC-032).
+  // State (baseComposition / ownsComposition / compositionTween) is declared
+  // above the camera-rail install.
+  function refitCameraPlaneScales(): void {
+    const fov = sceneRoot.camera.fov;
+    for (const mesh of [viewportFixedMesh, cameraLockedMesh]) {
+      if (!mesh) continue;
+      const built = (mesh.userData as { builtFov?: number }).builtFov;
+      if (typeof built !== 'number' || built <= 0) continue;
+      const k = Math.tan((fov * Math.PI) / 360) / Math.tan((built * Math.PI) / 360);
+      mesh.scale.set(k, k, 1);
+    }
+  }
+
+  function applyCompositionNow(fov: number, z: number): void {
+    const cam = sceneRoot.camera;
+    cam.fov = fov;
+    cam.position.z = z;
+    cam.updateProjectionMatrix();
+    refitCameraPlaneScales();
+  }
+
+  function tickCompositionTween(): void {
+    const tween = compositionTween;
+    if (!tween) return;
+    const now =
+      typeof performance !== 'undefined' && typeof performance.now === 'function'
+        ? performance.now()
+        : null;
+    if (now == null) {
+      // No monotonic clock (bare test env) — snap to the target.
+      applyCompositionNow(tween.toFov, tween.toZ);
+      compositionTween = null;
+      composeBeforeRender();
+      return;
+    }
+    if (tween.start == null) tween.start = now;
+    const t = Math.min(1, (now - tween.start) / tween.durMs);
+    const e = 1 - Math.pow(1 - t, 3); // cubic ease-out
+    applyCompositionNow(
+      tween.fromFov + (tween.toFov - tween.fromFov) * e,
+      tween.fromZ + (tween.toZ - tween.fromZ) * e,
+    );
+    if (t >= 1) {
+      compositionTween = null;
+      composeBeforeRender();
+    }
+  }
+
+  function applyHubComposition(hubId: string, animate = true): void {
+    if (!ownsComposition) return;
+    const hub = source.hubs.find((h) => h.hubId === hubId);
+    const target = hubCameraComposition(resolveHubRenderMode(hub), baseComposition);
+    const cam = sceneRoot.camera;
+    const already =
+      Math.abs(cam.fov - target.fov) < 0.01 &&
+      Math.abs(cam.position.z - target.distance) < 0.01 &&
+      compositionTween == null;
+    if (already) return;
+    if (!animate || !sceneRoot.renderer) {
+      compositionTween = null;
+      applyCompositionNow(target.fov, target.distance);
+      composeBeforeRender();
+      return;
+    }
+    compositionTween = {
+      fromFov: cam.fov,
+      toFov: target.fov,
+      fromZ: cam.position.z,
+      toZ: target.distance,
+      start: null,
+      durMs: 650,
+    };
+    composeBeforeRender();
+  }
+
+  // Land the entry hub in its declared composition (no tween — this is the
+  // configured landing view, same idiom as the P1 preview entry snap).
+  if (entryHubId) {
+    applyHubComposition(entryHubId, false);
+  }
+
+  // Route every later activation through the composition driver so a hub
+  // navigation between a 3d and a 2d hub tweens the flat/deep composition
+  // along with the reparent. The raw manager is untouched (same handle shape).
+  const hubManagerWithComposition: HubManagerHandle = {
+    ...hubManager,
+    activate(hubId: string) {
+      hubManager.activate(hubId);
+      applyHubComposition(hubId, true);
+    },
+  };
+
   return {
     sceneRoot,
-    hubManager,
+    hubManager: hubManagerWithComposition,
     adapterResult,
     hubBackdrops,
     upsertNode,
@@ -835,6 +988,7 @@ export async function mountFromGraphSource(
     tickBackgroundDrivers,
     setEnvironmentFog,
     setScrollProgress,
+    applyHubComposition,
     resize,
     unmount,
   };

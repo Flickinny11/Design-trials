@@ -609,10 +609,31 @@ export interface HubTransitionPreset {
   accent?: string;
 }
 
+// W-2D — per-hub render mode (INV-18 additive). '3d' (default) is the
+// perspective composition every hub has always had. '2d' selects the
+// flat/orthographic-equivalent composition path in the SAME renderer: the
+// hub camera drops to a telephoto FOV with distance compensated so framing is
+// identical (see `hub-render-mode.ts`), collapsing perspective depth scaling.
+// The invariant is the graph + self-contained nodes, NOT perspective
+// rendering: node `scenePosition.z`, `cameraKeyframes`, and all other depth
+// data are PRESERVED verbatim while a hub is 2d — just unused — so toggling
+// is non-destructive in both directions. Absent → '3d' (the read-side
+// migration for every legacy hub; `resolveHubRenderMode`). The galaxy never
+// reads this field (planets are identical in either mode).
+export type HubRenderMode = '3d' | '2d';
+
+export const HUB_RENDER_MODE_VALUES: readonly HubRenderMode[] = Object.freeze([
+  '3d',
+  '2d',
+] as const);
+
 export interface PrismHub {
   hubId: string;
   title: string;
   caption?: string;
+  // W-2D — per-hub 2d/3d composition mode (INV-18 additive). Absent → '3d'.
+  // Non-destructive: depth data is preserved (unused) while '2d'.
+  renderMode?: HubRenderMode;
   // W8 E9 — optional custom-cursor layer for this hub's built view (additive).
   cursor?: CursorLayerConfig;
   // W8 E10 — optional one-click transition preset for navigating INTO this hub.
