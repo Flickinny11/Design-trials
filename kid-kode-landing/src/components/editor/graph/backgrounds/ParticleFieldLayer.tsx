@@ -15,10 +15,10 @@
 // `world` attachment = world-anchored (camera flies through → parallax).
 // `camera-locked` attachment = near-FX motes that follow the camera.
 
-import { useEffect, useMemo, useRef } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
-import * as THREE from 'three';
-import { SpriteNodeMaterial } from 'three/webgpu';
+import { useEffect, useMemo, useRef } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import * as THREE from "three";
+import { SpriteNodeMaterial } from "three/webgpu";
 import {
   uniform,
   instanceIndex,
@@ -28,16 +28,26 @@ import {
   vec3,
   float,
   sin,
+  fract,
   length as tslLength,
   smoothstep,
-} from 'three/tsl';
-import type { BackgroundPalette } from '@/lib/editor/backgrounds/palettes';
-import type { BackgroundLayerParams } from '@/lib/prism-graph/types';
-import type { TierBudget } from '@/lib/editor/backgrounds/tier';
+} from "three/tsl";
+import type { BackgroundPalette } from "@/lib/editor/backgrounds/palettes";
+import type { BackgroundLayerParams } from "@/lib/prism-graph/types";
+import type { TierBudget } from "@/lib/editor/backgrounds/tier";
 
 type TNode = any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
-export type ParticleVariant = 'embers' | 'crystals' | 'motes' | 'starfield';
+export type ParticleVariant =
+  | "embers"
+  | "crystals"
+  | "motes"
+  | "starfield"
+  | "snow"
+  | "rain"
+  | "fireflies"
+  | "dust"
+  | "ash";
 
 interface VariantSpec {
   countScale: number;
@@ -49,6 +59,12 @@ interface VariantSpec {
   driftSpeed: number;
   twinkle: number;
   opacity: number;
+  /** Continuous fall speed (fraction of the Y span per second at drift=1;
+   *  0 = sinusoid drift only). Falling variants wrap via fract so the field
+   *  never empties. */
+  fall?: number;
+  /** Vertical quad elongation (rain streaks); 1 = round sprite. */
+  stretchY?: number;
 }
 
 // Scale: hub-scene content sits at ~10–20 units (camera at z≈10–18, fov 45). The
@@ -57,10 +73,111 @@ interface VariantSpec {
 // sprites stay small (C1/C3). Sprite sizes are world units (real geometry → true
 // perspective attenuation).
 const VARIANTS: Record<ParticleVariant, VariantSpec> = {
-  embers: { countScale: 0.32, baseSize: 0.085, spreadXY: 32, zNear: 6, zFar: -90, driftAmp: 0.55, driftSpeed: 0.25, twinkle: 0.45, opacity: 0.6 },
-  crystals: { countScale: 0.7, baseSize: 0.07, spreadXY: 36, zNear: 4, zFar: -120, driftAmp: 0.3, driftSpeed: 0.18, twinkle: 0.75, opacity: 0.8 },
-  starfield: { countScale: 1.0, baseSize: 0.052, spreadXY: 48, zNear: 2, zFar: -170, driftAmp: 0.16, driftSpeed: 0.08, twinkle: 0.6, opacity: 0.85 },
-  motes: { countScale: 0.14, baseSize: 0.13, spreadXY: 9, zNear: 8, zFar: -14, driftAmp: 0.35, driftSpeed: 0.45, twinkle: 0.55, opacity: 0.45 },
+  embers: {
+    countScale: 0.32,
+    baseSize: 0.085,
+    spreadXY: 32,
+    zNear: 6,
+    zFar: -90,
+    driftAmp: 0.55,
+    driftSpeed: 0.25,
+    twinkle: 0.45,
+    opacity: 0.6,
+  },
+  crystals: {
+    countScale: 0.7,
+    baseSize: 0.07,
+    spreadXY: 36,
+    zNear: 4,
+    zFar: -120,
+    driftAmp: 0.3,
+    driftSpeed: 0.18,
+    twinkle: 0.75,
+    opacity: 0.8,
+  },
+  starfield: {
+    countScale: 1.0,
+    baseSize: 0.052,
+    spreadXY: 48,
+    zNear: 2,
+    zFar: -170,
+    driftAmp: 0.16,
+    driftSpeed: 0.08,
+    twinkle: 0.6,
+    opacity: 0.85,
+  },
+  motes: {
+    countScale: 0.14,
+    baseSize: 0.13,
+    spreadXY: 9,
+    zNear: 8,
+    zFar: -14,
+    driftAmp: 0.35,
+    driftSpeed: 0.45,
+    twinkle: 0.55,
+    opacity: 0.45,
+  },
+  // W-BG catalog variants — weather + ambience.
+  snow: {
+    countScale: 0.5,
+    baseSize: 0.08,
+    spreadXY: 30,
+    zNear: 6,
+    zFar: -80,
+    driftAmp: 0.8,
+    driftSpeed: 0.3,
+    twinkle: 0.2,
+    opacity: 0.7,
+    fall: 0.045,
+  },
+  rain: {
+    countScale: 0.6,
+    baseSize: 0.03,
+    spreadXY: 26,
+    zNear: 6,
+    zFar: -60,
+    driftAmp: 0.06,
+    driftSpeed: 0.1,
+    twinkle: 0.1,
+    opacity: 0.5,
+    fall: 0.5,
+    stretchY: 14,
+  },
+  fireflies: {
+    countScale: 0.06,
+    baseSize: 0.16,
+    spreadXY: 22,
+    zNear: 6,
+    zFar: -50,
+    driftAmp: 1.6,
+    driftSpeed: 0.5,
+    twinkle: 0.95,
+    opacity: 0.8,
+  },
+  dust: {
+    countScale: 0.8,
+    baseSize: 0.035,
+    spreadXY: 34,
+    zNear: 4,
+    zFar: -110,
+    driftAmp: 0.5,
+    driftSpeed: 0.12,
+    twinkle: 0.3,
+    opacity: 0.35,
+    fall: 0.008,
+  },
+  ash: {
+    countScale: 0.3,
+    baseSize: 0.075,
+    spreadXY: 28,
+    zNear: 6,
+    zFar: -70,
+    driftAmp: 0.9,
+    driftSpeed: 0.2,
+    twinkle: 0.35,
+    opacity: 0.55,
+    fall: 0.03,
+  },
 };
 
 export interface ParticleFieldLayerProps {
@@ -88,14 +205,17 @@ export function ParticleFieldLayer({
     [],
   );
 
-  const density = typeof params.density === 'number' ? params.density : 0.6;
-  const depthSpread = typeof params.depthSpread === 'number' ? params.depthSpread : 0.6;
+  const density = typeof params.density === "number" ? params.density : 0.6;
+  const depthSpread =
+    typeof params.depthSpread === "number" ? params.depthSpread : 0.6;
 
   const { mesh, count } = useMemo(() => {
     const spec = VARIANTS[variant];
     const target = Math.max(
       400,
-      Math.round(budget.particleCount * spec.countScale * (0.4 + density * 0.6)),
+      Math.round(
+        budget.particleCount * spec.countScale * (0.4 + density * 0.6),
+      ),
     );
     const zSpan = (spec.zFar - spec.zNear) * (0.4 + depthSpread * 0.9);
 
@@ -115,8 +235,21 @@ export function ParticleFieldLayer({
     const h = (salt: number): TNode => hash((instanceIndex as TNode).add(salt));
     const tt = uniforms.uTime as TNode;
 
-    const baseX: TNode = h(0).sub(0.5).mul(2 * spec.spreadXY);
-    const baseY: TNode = h(11).sub(0.5).mul(2 * spec.spreadXY * 0.8);
+    const baseX: TNode = h(0)
+      .sub(0.5)
+      .mul(2 * spec.spreadXY);
+    // Falling variants (snow/rain/ash/dust) wrap the Y coordinate continuously
+    // via fract so the field rains forever without a reset pop; still variants
+    // keep the static hashed Y.
+    const fall = spec.fall ?? 0;
+    const baseY: TNode =
+      fall > 0
+        ? fract(h(11).sub((uniforms.uTime as TNode).mul(fall)))
+            .sub(0.5)
+            .mul(2 * spec.spreadXY * 0.8)
+        : h(11)
+            .sub(0.5)
+            .mul(2 * spec.spreadXY * 0.8);
     const baseZ: TNode = float(spec.zNear).add(h(23).mul(zSpan));
     const seed: TNode = h(37).mul(100);
     // Size: squared bias → many small, a few bright big.
@@ -126,11 +259,23 @@ export function ParticleFieldLayer({
     // GPU vertex-stage drift: per-instance base position + small sinusoid.
     const drift: TNode = vec3(
       sin(tt.mul(spec.driftSpeed).add(seed)).mul(spec.driftAmp),
-      sin(tt.mul(spec.driftSpeed * 0.8).add(seed.mul(1.3))).mul(spec.driftAmp * 1.4),
-      sin(tt.mul(spec.driftSpeed * 0.6).add(seed.mul(0.7))).mul(spec.driftAmp * 0.5),
+      sin(tt.mul(spec.driftSpeed * 0.8).add(seed.mul(1.3))).mul(
+        spec.driftAmp * 1.4,
+      ),
+      sin(tt.mul(spec.driftSpeed * 0.6).add(seed.mul(0.7))).mul(
+        spec.driftAmp * 0.5,
+      ),
     );
-    (mat as unknown as { positionNode: unknown }).positionNode = vec3(baseX, baseY, baseZ).add(drift);
-    (mat as unknown as { scaleNode: unknown }).scaleNode = size.mul(uniforms.uSize as TNode);
+    (mat as unknown as { positionNode: unknown }).positionNode = vec3(
+      baseX,
+      baseY,
+      baseZ,
+    ).add(drift);
+    // Rain streaks: elongate the quad vertically; everything else stays round.
+    const stretchY = spec.stretchY ?? 1;
+    const scale: TNode = size.mul(uniforms.uSize as TNode);
+    (mat as unknown as { scaleNode: unknown }).scaleNode =
+      stretchY === 1 ? scale : vec2(scale, scale.mul(stretchY));
 
     // Round soft glow (quad uv → real disc) + per-instance twinkle.
     const pUv = uv() as TNode;
@@ -141,7 +286,11 @@ export function ParticleFieldLayer({
       .add(0.5)
       .mul(uniforms.uTwinkle as TNode)
       .add(float(1).sub(uniforms.uTwinkle as TNode));
-    (mat as unknown as { colorNode: unknown }).colorNode = vec3(star.r, star.g, star.b)
+    (mat as unknown as { colorNode: unknown }).colorNode = vec3(
+      star.r,
+      star.g,
+      star.b,
+    )
       .mul(0.7)
       .add(vec3(glow.r, glow.g, glow.b).mul(0.45))
       .mul(twk);
@@ -173,11 +322,13 @@ export function ParticleFieldLayer({
   useEffect(() => {
     const spec = VARIANTS[variant];
     uniforms.uTwinkle.value = spec.twinkle;
-    uniforms.uSize.value = 1 + (typeof params.intensity === 'number' ? params.intensity : 0.7) * 0.6;
+    uniforms.uSize.value =
+      1 + (typeof params.intensity === "number" ? params.intensity : 0.7) * 0.6;
   }, [variant, params.intensity, uniforms]);
 
   useFrame((_, delta) => {
-    uniforms.uTime.value += delta * (typeof params.drift === 'number' ? 0.4 + params.drift : 0.7);
+    uniforms.uTime.value +=
+      delta * (typeof params.drift === "number" ? 0.4 + params.drift : 0.7);
     if (cameraLocked && meshRef.current) {
       meshRef.current.position.copy(camera.position);
     }
@@ -185,12 +336,15 @@ export function ParticleFieldLayer({
 
   // Expose the live count for the numeric harness (C3).
   useEffect(() => {
-    const w = globalThis as { __PRISM_BG_PARTICLE_COUNTS__?: Record<string, number> };
+    const w = globalThis as {
+      __PRISM_BG_PARTICLE_COUNTS__?: Record<string, number>;
+    };
     w.__PRISM_BG_PARTICLE_COUNTS__ = w.__PRISM_BG_PARTICLE_COUNTS__ || {};
     w.__PRISM_BG_PARTICLE_COUNTS__[variant] = count;
     return () => {
-      const m = (globalThis as { __PRISM_BG_PARTICLE_COUNTS__?: Record<string, number> })
-        .__PRISM_BG_PARTICLE_COUNTS__;
+      const m = (
+        globalThis as { __PRISM_BG_PARTICLE_COUNTS__?: Record<string, number> }
+      ).__PRISM_BG_PARTICLE_COUNTS__;
       if (m) delete m[variant];
     };
   }, [variant, count]);

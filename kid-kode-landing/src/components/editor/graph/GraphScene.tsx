@@ -4612,7 +4612,9 @@ function GalaxyHubBackdrop({ quality }: { quality: GalaxyQuality }) {
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
   const hubs = useGraphSourceStore((s) => s.hubs);
   const active = hubs.find((h) => h.hubId === activeHubId) ?? null;
-  const hubHasNebula = !!active?.background?.some((l) => l.kind === 'volumetric-nebula');
+  const hubHasNebula = !!active?.background?.some(
+    (l) => l.kind === 'volumetric-nebula' || l.kind === 'gradient-volume',
+  );
   return (
     <>
       <GalaxyStarfield quality={quality} />
