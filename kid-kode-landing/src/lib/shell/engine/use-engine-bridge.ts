@@ -30,6 +30,12 @@ export function useEngineBridge(opts: {
   containerId: string;
   /** Opaque graph reference (never inline data — contract discipline). */
   graphRef: string;
+  /** UXV-F3: when the project is already built at page load, PreviewRegion
+   *  renders ConductorPreview and the engine container is never in the DOM —
+   *  requesting a mount can only ever fail (CONTAINER_MISSING on every
+   *  reload of a built project). Suppress the mount/unmount commands; the
+   *  session, wire log, and event subscription stay live. */
+  suppressMount?: boolean;
 }): EngineBridge {
   const hostRef = useRef<PrismEngineHost | null>(null);
 
@@ -51,7 +57,7 @@ export function useEngineBridge(opts: {
     host.send(wire);
   }, []);
 
-  const { containerId, graphRef } = opts;
+  const { containerId, graphRef, suppressMount = false } = opts;
 
   useEffect(() => {
     const host = resolveEngineHost();
@@ -90,20 +96,22 @@ export function useEngineBridge(opts: {
     });
 
     // Mount AFTER subscribing so the `mounted` event is never missed.
-    sendCommand({
-      type: 'mount',
-      containerId,
-      graphRef,
-      initialMode: 'preview-app',
-    });
+    if (!suppressMount) {
+      sendCommand({
+        type: 'mount',
+        containerId,
+        graphRef,
+        initialMode: 'preview-app',
+      });
+    }
 
     return () => {
-      sendCommand({ type: 'unmount' });
+      if (!suppressMount) sendCommand({ type: 'unmount' });
       unsubscribe();
       host.dispose();
       hostRef.current = null;
     };
-  }, [containerId, graphRef, sendCommand]);
+  }, [containerId, graphRef, sendCommand, suppressMount]);
 
   return { sendCommand };
 }

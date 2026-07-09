@@ -238,8 +238,8 @@ export default function ChatRegion({ projectId }: { projectId: string }) {
             <p className="bw1-chat-empty-title">Tell Prism what to build.</p>
             <p className="bw1-chat-empty-body">
               The agent streams its thinking and its tool steps here — every step is
-              inspectable, and you can stop it at any moment. In W5 the Verify phase will
-              stream its evidence into these same steps.
+              inspectable, and you can stop it at any moment. When you run a build, the
+              Verify phase streams its evidence into these same steps.
             </p>
           </div>
         ) : (

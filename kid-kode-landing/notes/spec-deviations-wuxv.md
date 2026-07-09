@@ -41,3 +41,35 @@
   scored above mood words (so "deep indigo" beats "aurora"). A user asking
   for indigo gets deep blue, not green. A TRUE indigo identity remains a
   founder decision (INV-9 exception).
+
+## DEV-WUXV-3 — WalkthroughHost mounts in ALL view modes (including
+  preview-app)
+- Timing note (honest provenance): unlike DEV-WUXV-1/2 this entry is written
+  in the SAME session as the change, immediately after the fix-round RE-TEST
+  exposed the regression and before anything was committed — the record and
+  the code land in the same commit.
+- Prior posture: the F4a-fix rule "editor/authoring chrome is hidden in the
+  shipped-app (preview-app) view" gated the entire guided-tips cluster —
+  lightbulb AND WalkthroughHost — behind `!isPreviewApp` in src/app/page.tsx.
+- Deviation: `<WalkthroughHost />` moves OUTSIDE that gate and mounts in every
+  view mode (it renders nothing while idle). The lightbulb chrome stays
+  hidden in preview-app.
+- Why (re-test evidence): the tour's own step 6 drives `preview-app`, which
+  unmounted the host mid-run — popup gone, store status stuck 'running', no
+  terminal status ever reached. Consequences measured live: (a) the UXV-F5/P7
+  seen-flag persist (which fires on terminal status) could never fire, so the
+  tour re-triggered on every reload (wuxv-p4-11); (b) every attempt to leave
+  preview-app remounted the host, whose per-step orchestration effect
+  instantly re-asserted the stuck step's `preview-app` — a remount-thrash
+  loop that mode-locked the whole editor (P4's wuxv-p4-09/10 "buttons flip,
+  view frozen"; reproduced live pre-fix: store viewMode reverts 22ms after
+  every setViewMode call, fix-round re-test log).
+- Consequence accepted: the first-visit tour now auto-launches from the boot
+  (preview-app) view instead of waiting for the first mode switch, and the
+  step-6 popup renders over the shipped-app view (that step's entire point).
+  Whether first-boot auto-launch is the desired first-run is on the founder
+  decision list.
+- Proof after fix: full 7-step run incl. step-6 popup over preview-app
+  (wuxv-r1-36), Finish → status 'done' + seen persisted (wuxv-r1-37), all
+  three mode buttons switch and stick post-tour (wuxv-r1-38), reload does NOT
+  re-trigger (wuxv-r1-39).

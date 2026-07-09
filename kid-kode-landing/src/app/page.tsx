@@ -953,9 +953,9 @@ export default function Page() {
           <PreviewDeviceFrame />
           {/* APP-REALITY P6 — preview hub nav rail (the duplicate section nav). */}
           <PreviewHubNav />
-          {/* GUIDED-TIPS — glowing help lightbulb + first-visit walkthrough. */}
+          {/* GUIDED-TIPS — glowing help lightbulb (chrome; hidden in the
+              shipped-app view like the rest of the editor chrome). */}
           <GuidedTipsLightbulb />
-          <WalkthroughHost />
           {/* WORKSPACE-COMPLETION W-3 — unified per-node agent. Self-gates to
               canvas + a selected node (editing is in canvas, never preview); it
               also installs the __PRISM_NODE_AGENT__ verification hook on mount.
@@ -963,6 +963,15 @@ export default function Page() {
           <NodeAgentPanel />
         </>
       )}
+      {/* GUIDED-TIPS — the walkthrough host mounts in EVERY view mode (it
+          renders nothing while idle). UXV-F5/P7 root cause: the F4a-fix
+          chrome gate above unmounted it when the tour's own step 6 drove
+          preview-app, killing the tour mid-run with status stuck 'running' —
+          no terminal status was ever reached, so the seen-flag persist could
+          not fire and the tour re-triggered on every reload
+          (notes/verification/wuxv/p4-designer/ wuxv-p4-09..11). The tour must
+          survive its own preview-app step to reach Finish. */}
+      <WalkthroughHost />
       {/* PHASE3 (P3-1) — the Phase-2 DOM-overlay curtain (HubMorphTransition,
           z-45 CSS) is RETIRED. The hub→hub morph is now a TRUE in-WebGPU
           transition (HubSceneTransition, a camera-parented brass curtain

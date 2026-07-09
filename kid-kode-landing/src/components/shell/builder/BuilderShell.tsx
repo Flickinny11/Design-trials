@@ -74,6 +74,10 @@ export default function BuilderShell({
   const { sendCommand } = useEngineBridge({
     containerId: ENGINE_CONTAINER_ID,
     graphRef: project.graphRef,
+    // UXV-F3: a project that is already built at page load renders
+    // ConductorPreview — the engine container is never in the DOM, so a
+    // mount request can only fail with CONTAINER_MISSING on every reload.
+    suppressMount: buildState === 'built',
   });
 
   const [activeTab, setActiveTab] = useState<BuilderTab>('inspector');
