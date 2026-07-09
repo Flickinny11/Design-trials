@@ -15,11 +15,14 @@ import { titleFromPrompt } from '@/lib/shell/intake/intake-model';
 import { extractPaletteFromImage } from '@/lib/shell/intake/image-seed';
 import { seedFromUrl } from '@/lib/shell/intake-client';
 import PrimaryButton3D from './PrimaryButton3D';
+import GithubImportPanel from './GithubImportPanel';
 
 export default function PromptCapture() {
   const prompt = useIntakeStore((s) => s.prompt);
   const brandSeed = useIntakeStore((s) => s.brandSeed);
   const seedsUsed = useIntakeStore((s) => s.seedsUsed);
+  const githubImport = useIntakeStore((s) => s.githubImport);
+  const setGithub = useIntakeStore((s) => s.setGithub);
   const setPrompt = useIntakeStore((s) => s.setPrompt);
   const patchBrandSeed = useIntakeStore((s) => s.patchBrandSeed);
   const addSeed = useIntakeStore((s) => s.addSeed);
@@ -173,6 +176,26 @@ export default function PromptCapture() {
           </span>
         </div>
       ) : null}
+
+      {/* UXV-F1 — the repo importer surfaces on Phase 0 so "Import from
+          GitHub" is reachable without hunting through the card deck. The
+          panel itself (analyze stream, fidelity, applyImport) is unchanged. */}
+      <div className="iv-attach iv-import-entry">
+        <p className="iv-attach-kicker">Already have this app on GitHub?</p>
+        {githubImport?.requested ? (
+          <GithubImportPanel />
+        ) : (
+          <button
+            type="button"
+            className="iv-attach-btn"
+            onClick={() => setGithub(true, '')}
+            aria-label="Import an existing GitHub repo"
+          >
+            <span className="iv-attach-title">Import a repo</span>
+            <span className="iv-attach-hint">Prism analyzes it and drafts your plan</span>
+          </button>
+        )}
+      </div>
 
       <div className="iv-phase0-actions">
         <PrimaryButton3D

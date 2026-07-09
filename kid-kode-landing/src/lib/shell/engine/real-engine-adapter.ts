@@ -108,9 +108,23 @@ export class RealEngineHost implements PrismEngineHost {
 
   // ── Frame lifecycle ────────────────────────────────────────────────────────
 
-  private attach(containerId: string, mountWire: string): void {
+  private attach(containerId: string, mountWire: string, attempt = 0): void {
     const container = document.getElementById(containerId);
     if (!container) {
+      // UXV-F3: on a fresh page load the mount command can race the React
+      // commit of the conditional container div — retry over a few frames
+      // before declaring the container missing (persona evidence:
+      // notes/verification/wuxv/p3-developer/ CONTAINER_MISSING on reload).
+      if (attempt < 5 && !this.disposed) {
+        const raf =
+          typeof requestAnimationFrame === 'function'
+            ? requestAnimationFrame
+            : (cb: FrameRequestCallback) => window.setTimeout(() => cb(0), 32);
+        raf(() => {
+          if (!this.disposed) this.attach(containerId, mountWire, attempt + 1);
+        });
+        return;
+      }
       this.emit(
         serializeEngineEvent({
           type: 'error',

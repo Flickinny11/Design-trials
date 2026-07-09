@@ -91,6 +91,10 @@ export interface MountGraphOpts {
    *  'preview-app'. Omitted → camera retains its default unconstrained pose
    *  (used by canvas editor surface that needs free orbiting). */
   cameraRail?: CompiledCameraRail;
+  /** DEV-WUXV-1: forwarded to createSceneRoot — backend selection for the
+   *  default renderer factory (WebGL2 backend by default; hosts pass `false`
+   *  on `?webgpu=1`). See notes/spec-deviations-wuxv.md. */
+  forceWebGL?: boolean;
 }
 
 export interface MountGraphResult {
@@ -363,6 +367,7 @@ export async function mountFromGraphSource(
     canvas,
     noRenderer: opts.noRenderer,
     rendererFactory: opts.rendererFactory,
+    forceWebGL: opts.forceWebGL,
     size:
       opts.width != null && opts.height != null
         ? { width: opts.width, height: opts.height }

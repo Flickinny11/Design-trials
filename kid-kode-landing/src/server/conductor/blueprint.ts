@@ -91,13 +91,20 @@ function briefLine(brief: BuildBrief, key: string): string | undefined {
   return v && v.length > 0 ? v : undefined;
 }
 
-/** Split a "Home, Features, Pricing" style line into clean section names. */
+/** Split a "Home, Features, Pricing" style line into clean section names.
+ *  UXV-B2: intake option labels are compound ("Home / landing",
+ *  "Catalog / library") — treat "A / b" as ONE section named A, never split
+ *  on `/` (splitting shredded the labels into phantom hubs whose fragments
+ *  crowded the user's own typed sections out of the cap). The home hub is
+ *  always seeded separately, so "Home"-ish names are dropped here, names are
+ *  deduped case-insensitively, and the cap applies AFTER filtering so custom
+ *  sections survive. */
 function deriveSections(brief: BuildBrief): string[] {
   const raw = briefLine(brief, 'sections');
   const fromLine = raw
     ? raw
-        .split(/[,\n•·|/]+/)
-        .map((s) => s.trim())
+        .split(/[,\n•·|]+/)
+        .map((s) => s.trim().replace(/\s*\/.*$/, '').trim())
         .filter((s) => s.length > 0 && s.length <= 40)
     : [];
   // Archetype-aware defaults when the brief left sections open.
@@ -110,8 +117,14 @@ function deriveSections(brief: BuildBrief): string[] {
         : /dashboard|saas|app|tool/.test(archetype)
           ? ['Features', 'How it works', 'Pricing']
           : ['Features', 'Showcase', 'Pricing'];
-  const names = (fromLine.length > 0 ? fromLine : defaults).slice(0, 4);
-  return names;
+  const seen = new Set<string>(['home', 'landing']); // home hub is always seeded
+  const names = (fromLine.length > 0 ? fromLine : defaults).filter((name) => {
+    const key = name.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+  return names.slice(0, 4);
 }
 
 function titleCase(s: string): string {
@@ -239,8 +252,13 @@ export function buildDeterministicBlueprint(
   hubs.push(home);
 
   // ── Section hubs — title + content cards ────────────────────────────────────
+  // UXV-B2 belt-and-suspenders: never materialize two hubs with the same id
+  // (deriveSections dedupes names, this guards the slugged ids too).
+  const usedHubIds = new Set<string>([homeId]);
   sections.forEach((name, i) => {
     const id = hubId(name, i);
+    if (usedHubIds.has(id)) return;
+    usedHubIds.add(id);
     const title = titleCase(name);
     const nodes: BlueprintNode[] = [
       {

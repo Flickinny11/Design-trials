@@ -14,17 +14,32 @@ import PromptCapture from './PromptCapture';
 import DecisionDeck from './DecisionDeck';
 import BuildBrief from './BuildBrief';
 
-export default function IntakeShell({ initialPrompt }: { initialPrompt?: string }) {
+export default function IntakeShell({
+  initialPrompt,
+  initialImport,
+}: {
+  initialPrompt?: string;
+  /** UXV-F1: ?import=github pre-opens the GitHub repo importer on Phase 0. */
+  initialImport?: boolean;
+}) {
   const phase = useIntakeStore((s) => s.phase);
   const setPrompt = useIntakeStore((s) => s.setPrompt);
+  const setGithub = useIntakeStore((s) => s.setGithub);
   const reset = useIntakeStore((s) => s.reset);
 
   // Fresh intake per mount; seed from the launchpad prompt if present.
   useEffect(() => {
     reset();
     if (initialPrompt && initialPrompt.trim()) setPrompt(initialPrompt.trim());
+    if (initialImport) setGithub(true, '');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // UXV-F4: phase transitions (prompt → cards → brief) keep the previous
+  // scroll offset; land each phase at its heading.
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [phase]);
 
   return (
     <div className="iv-root">

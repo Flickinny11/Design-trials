@@ -14,7 +14,7 @@ import { useWalkthroughStore } from '@/stores/useWalkthroughStore';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { WALKTHROUGH_STEPS, WALKTHROUGH_STEP_COUNT } from '@/lib/editor/walkthrough/steps';
-import { hasSeenWalkthrough, clearWalkthroughSeen } from '@/lib/editor/walkthrough/seen-store';
+import { hasSeenWalkthrough, clearWalkthroughSeen, markWalkthroughSeen } from '@/lib/editor/walkthrough/seen-store';
 import type { ArtifactFrameRect } from '@/lib/editor/walkthrough/types';
 import WalkthroughScrim, { type ScrimHole } from './WalkthroughScrim';
 import DrivenCursor from './DrivenCursor';
@@ -105,6 +105,13 @@ export default function WalkthroughHost() {
     mq.addEventListener?.('change', apply);
     return () => mq.removeEventListener?.('change', apply);
   }, [setReducedMotion]);
+
+  // UXV-P7 belt-and-suspenders: any terminal status persists the seen flag,
+  // so no dismissal/finish path (or a mid-write reload) can re-trigger the
+  // tour on the next visit.
+  useEffect(() => {
+    if (status === 'done' || status === 'skipped') markWalkthroughSeen();
+  }, [status]);
 
   // ── first-visit auto-launch (once) ────────────────────────────────────────
   useEffect(() => {

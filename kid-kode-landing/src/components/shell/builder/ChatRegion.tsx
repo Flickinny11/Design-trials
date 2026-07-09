@@ -229,7 +229,7 @@ export default function ChatRegion({ projectId }: { projectId: string }) {
     <div className="bw1-chat-inner">
       <header className="bw1-region-head">
         <span className="bw1-region-kicker">Build chat</span>
-        <span className="bw1-region-note">Echo agent · W1 — orchestrator lands in W5</span>
+        <span className="bw1-region-note">Chat is a scripted preview — the real build runs via “Build this app”</span>
       </header>
 
       <div className="bw1-turns" ref={listRef} onScroll={onListScroll} aria-live="polite">

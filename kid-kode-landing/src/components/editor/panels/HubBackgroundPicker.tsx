@@ -229,6 +229,13 @@ export function HubBackgroundPicker({ hub }: { hub: PrismHub }) {
         <span className="text-ds-text-mid">{hub.title}</span> → click to apply →
         tune with the sliders. Or describe your own below — Generate reads
         what&apos;s already on this hub.
+        {/* UXV-F8: on hubs with a full-bleed hero the background layer sits
+            BEHIND the hero, so the live hover-preview can be invisible —
+            say so instead of letting the promise read as broken. */}
+        <span className="block pt-0.5 opacity-80">
+          Backgrounds sit behind everything — on a hub with a full-bleed hero
+          the preview may only peek around its edges.
+        </span>
       </div>
 
       {/* Search + category chips */}

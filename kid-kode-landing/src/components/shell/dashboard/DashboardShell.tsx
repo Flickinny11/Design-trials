@@ -184,7 +184,7 @@ export default function DashboardShell({
                   <button type="button" className="dw-chip" onClick={() => setPanel('templates')}>
                     From a template
                   </button>
-                  <a className="dw-chip" href="/app/integrations">
+                  <a className="dw-chip" href="/app/build?import=github">
                     Import from GitHub
                   </a>
                   <a className="dw-chip" href="/app/integrations">

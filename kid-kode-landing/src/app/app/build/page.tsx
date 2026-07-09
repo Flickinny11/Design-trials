@@ -16,15 +16,19 @@ export const metadata = { title: 'Guided build — Prism' };
 export default async function BuildPage({
   searchParams,
 }: {
-  searchParams: Promise<{ prompt?: string | string[] }>;
+  searchParams: Promise<{ prompt?: string | string[]; import?: string | string[] }>;
 }) {
   const sp = await searchParams;
   const raw = Array.isArray(sp.prompt) ? sp.prompt[0] : sp.prompt;
   const initialPrompt = typeof raw === 'string' ? raw.slice(0, 8000) : undefined;
+  // UXV-F1: ?import=github deep-links straight into the repo importer
+  // (the dashboard "Import from GitHub" chip lands here).
+  const rawImport = Array.isArray(sp.import) ? sp.import[0] : sp.import;
+  const initialImport = rawImport === 'github';
 
   return (
     <div className={`iv-viewport ${shellDisplay.variable} ${shellMono.variable}`}>
-      <IntakeShell initialPrompt={initialPrompt} />
+      <IntakeShell initialPrompt={initialPrompt} initialImport={initialImport} />
     </div>
   );
 }

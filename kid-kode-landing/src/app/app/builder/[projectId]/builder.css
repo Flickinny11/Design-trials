@@ -1457,6 +1457,10 @@
   align-items: center;
   gap: var(--pp-space-3);
   min-width: 0;
+  /* UXV-F6: let the title column shrink so .bw2-frame-name's ellipsis
+     actually engages when the right-hand controls compete for width */
+  flex: 1 1 auto;
+  overflow: hidden;
 }
 .bw2-frame-title {
   display: flex;
@@ -1472,6 +1476,8 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  /* UXV-F6: hard cap so a very long app name can never push the controls */
+  max-width: 46ch;
 }
 .bw2-frame-sub {
   display: flex;

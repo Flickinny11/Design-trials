@@ -69,6 +69,32 @@ export interface BackgroundBrief {
   moodTokens: string[];
 }
 
+// UXV-F7 — EXPLICIT hue words, checked BEFORE the mood/scene hints below so
+// a literal color ask ("deep indigo") beats a scene word that happens to
+// carry a palette vote ("aurora" → verdant). indigo/violet/etc. map to the
+// nearest sanctioned identity (anodized deep blue) — a true indigo palette
+// would be an INV-9 exception (see notes/spec-deviations-wuxv.md DEV-WUXV-2).
+const PALETTE_COLOR_WORDS: Record<string, string[]> = {
+  ember: ["orange", "amber"],
+  garnet: ["red", "crimson", "ruby", "scarlet"],
+  verdant: ["green", "emerald"],
+  anodized: [
+    "blue",
+    "navy",
+    "cobalt",
+    "indigo",
+    "violet",
+    "amethyst",
+    "aubergine",
+    "lavender",
+    "ultramarine",
+  ],
+  arc: ["cyan", "teal"],
+  mercury: ["silver", "white"],
+  noir: ["black"],
+  bone: ["beige", "cream", "ivory"],
+};
+
 const PALETTE_HINTS: Record<string, string[]> = {
   ember: [
     "warm",
@@ -220,13 +246,24 @@ export function deriveBackgroundBrief(
   const moodTokens: string[] = [];
 
   // 1. Palette: prompt words → node colours → active palette → planet identity.
+  // UXV-F7: explicit hue words first, then mood/scene hints.
   let palette: string | null = null;
-  for (const [id, hints] of Object.entries(PALETTE_HINTS)) {
-    const hit = matchTokens(text, hints);
+  for (const [id, words] of Object.entries(PALETTE_COLOR_WORDS)) {
+    const hit = matchTokens(text, words);
     if (hit.length > 0) {
       moodTokens.push(...hit);
       palette = id;
       break;
+    }
+  }
+  if (!palette) {
+    for (const [id, hints] of Object.entries(PALETTE_HINTS)) {
+      const hit = matchTokens(text, hints);
+      if (hit.length > 0) {
+        moodTokens.push(...hit);
+        palette = id;
+        break;
+      }
     }
   }
   if (!palette) {

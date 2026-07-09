@@ -163,9 +163,15 @@ export default function PrismHost({
           }
           if (cancelled) return;
           let prevSource = snapshotSource();
+          // DEV-WUXV-1: WebGL2 backend by default (WebGPU red-dithers in
+          // current Chromium); `?webgpu=1` opts back in.
+          const wantWebGPU =
+            typeof window !== 'undefined' &&
+            new URLSearchParams(window.location.search).get('webgpu') === '1';
           liveResult = await mountFromGraphSource(canvas, prevSource, ctx, {
             width: initialW,
             height: initialH,
+            forceWebGL: !wantWebGPU,
           });
           if (cancelled) { liveResult.unmount(); return; }
           if (pendingSize) liveResult.resize(pendingSize.w, pendingSize.h);

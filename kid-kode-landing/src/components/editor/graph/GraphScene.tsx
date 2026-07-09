@@ -2124,6 +2124,23 @@ function SceneControlsBridge({
     return () => { cancelled = true; window.clearTimeout(id); };
   }, [viewMode, activeHubId, deviceMode]);
 
+  // UXV-F5 — release the Atelier head-on clamp when LEAVING the clamped
+  // state. The clamp above mutates the controls instance imperatively; the
+  // free-orbit limits are only static JSX props, so React never re-applies
+  // them and the camera stayed angle-frozen after e.g. the guided tour
+  // passed through preview-app — mode buttons flipped but the view couldn't
+  // move until a reload (persona evidence:
+  // notes/verification/wuxv/p4-designer/ wuxv-p4-09/10).
+  useEffect(() => {
+    if (viewMode === 'preview-app' && activeHubId === 's6-atelier') return;
+    const cur = controlsRef.current;
+    if (!cur) return;
+    cur.minPolarAngle = 0;
+    cur.maxPolarAngle = Math.PI;
+    cur.minAzimuthAngle = -Infinity;
+    cur.maxAzimuthAngle = Infinity;
+  }, [viewMode, activeHubId]);
+
   // PHASE3 (P3-1) — camera DOLLY-THROUGH on a hub transition. When the curtain
   // begins closing (token bump), pull the camera back along its view direction
   // (and rise a touch) so the OUTGOING hub recedes into depth behind the

@@ -63,6 +63,14 @@ export interface CreateSceneRootOptions {
   isMobile?: boolean;
   /** Initial per-scene lighting spec applied to the LightingRig. */
   lightingSpec?: LightingSpec;
+  /** DEV-WUXV-1: backend selection for the DEFAULT renderer factory only
+   *  (injected factories are untouched). The runtime player defaults to the
+   *  WebGL2 backend of three/webgpu (`forceWebGL: true`) because the WebGPU
+   *  backend renders corrupted (red-dithered MSDF/emissive, missing
+   *  background layers) in current Chromium — see
+   *  notes/spec-deviations-wuxv.md. Pass `false` (hosts do this on
+   *  `?webgpu=1`) to opt back into the WebGPU backend. */
+  forceWebGL?: boolean;
 }
 
 export interface SceneRootHandle {
@@ -118,11 +126,11 @@ function pickPixelRatio(override?: number): number {
 
 /** Construct the default WebGPU renderer from `three/webgpu`. Lazy-imported so
  *  test environments can opt out via `noRenderer: true`. */
-async function defaultRendererFactory(canvas?: HTMLCanvasElement): Promise<SceneRootRenderer> {
+async function defaultRendererFactory(canvas?: HTMLCanvasElement, forceWebGL = true): Promise<SceneRootRenderer> {
   const mod = (await import('three/webgpu')) as unknown as {
-    WebGPURenderer: new (params: { canvas?: HTMLCanvasElement; antialias?: boolean }) => SceneRootRenderer;
+    WebGPURenderer: new (params: { canvas?: HTMLCanvasElement; antialias?: boolean; forceWebGL?: boolean }) => SceneRootRenderer;
   };
-  const renderer = new mod.WebGPURenderer({ canvas, antialias: true });
+  const renderer = new mod.WebGPURenderer({ canvas, antialias: true, forceWebGL });
   if (typeof renderer.init === 'function') {
     await renderer.init();
   }
@@ -153,7 +161,9 @@ export async function createSceneRoot(
 
   let renderer: SceneRootRenderer | null = null;
   if (!options.noRenderer) {
-    const factory = options.rendererFactory ?? defaultRendererFactory;
+    const factory =
+      options.rendererFactory ??
+      ((canvas?: HTMLCanvasElement) => defaultRendererFactory(canvas, options.forceWebGL !== false));
     renderer = await factory(options.canvas);
     // Always await init() if the renderer exposes it. The default factory
     // already does this; awaiting it again here is idempotent for Three's

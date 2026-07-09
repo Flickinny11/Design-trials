@@ -71,6 +71,9 @@
   border: 1px solid rgba(232, 236, 242, 0.12);
   font-size: 0.72rem;
   letter-spacing: 0.03em;
+  /* UXV-F6: long app names must ellipsize, not run off the viewport */
+  max-width: min(60vw, 420px);
+  min-width: 0;
 }
 
 .cr-badge-dot {
@@ -84,6 +87,10 @@
   font-family: var(--font-shell-display, ui-serif, serif);
   font-weight: 600;
   color: #f4f1ea;
+  /* UXV-F6 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .cr-badge-tag {

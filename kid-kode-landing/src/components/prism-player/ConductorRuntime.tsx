@@ -232,9 +232,16 @@ export default function ConductorRuntime({ graph }: { graph: GraphSource }) {
           /* best-effort */
         }
         if (cancelled) return;
+        // DEV-WUXV-1: the runtime player renders on the WebGL2 backend by
+        // default (WebGPU backend red-dithers in current Chromium);
+        // `?webgpu=1` opts back into the WebGPU backend.
+        const wantWebGPU =
+          typeof window !== 'undefined' &&
+          new URLSearchParams(window.location.search).get('webgpu') === '1';
         result = await mountFromGraphSource(canvas, graph, ctx, {
           width: rect.width > 0 ? rect.width : 1280,
           height: rect.height > 0 ? rect.height : 720,
+          forceWebGL: !wantWebGPU,
         });
         if (cancelled) {
           result.unmount();

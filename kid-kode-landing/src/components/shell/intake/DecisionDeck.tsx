@@ -7,6 +7,7 @@
 // the rail's colour coding. Every card is skippable, and "skip questions —
 // just build" is reachable at all times — the deck is a guide, never a gate.
 
+import { useEffect } from 'react';
 import { useIntakeStore } from '@/lib/shell/intake/intake-store';
 import { DECK } from '@/lib/shell/intake/intake-model';
 import DecisionCard from './DecisionCard';
@@ -22,6 +23,13 @@ export default function DecisionDeck() {
 
   const card = DECK[cardIndex];
   const isLast = cardIndex === DECK.length - 1;
+
+  // UXV-F4: each card retains the previous card's scroll offset, landing the
+  // user mid-card with the question heading above the fold (worst on mobile).
+  // Reset to the top on every card change.
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [cardIndex]);
 
   const answeredCount = Object.values(answers).filter(
     (a) => a.skipped || (a.optionIds && a.optionIds.length) || (a.freeText && a.freeText.trim()),

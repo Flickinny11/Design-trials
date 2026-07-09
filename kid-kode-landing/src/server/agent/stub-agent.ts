@@ -140,9 +140,9 @@ export async function* runStubAgent(
   yield { type: 'tool-step-end', stepId: `${messageId}-plan`, status: 'ok' };
 
   const closer =
-    ' When the build orchestrator lands (W5), this is where I would execute the plan wave by wave — ' +
-    'and stream the verification evidence into these steps as they pass. ' +
-    'For now I am the W1 echo agent: same contract, scripted hands.';
+    ' Heads up: this chat is still a scripted preview — it narrates the contract but does not change your app. ' +
+    'The real orchestrator is live behind the “Build this app” button (it plans, materializes hubs, verifies, and deploys); ' +
+    'chat-driven edits are not wired up yet.';
   for (const delta of chunks(closer)) {
     if (signal?.aborted) return;
     yield { type: 'text-delta', delta };
