@@ -161,7 +161,10 @@ bakery build: 27 records for `proj-c3d83695…`), `verify.ndjson` 207,
 aurora over deep indigo" generations — P4's original and the re-test),
 `catalog.ndjson` 2 (P4's template instantiation), `render-mode.ndjson` 4
 (P4's 2D/3D toggles). Records carry the standard schema (consent basis,
-scrub) — premium UX training data as mandated.
+scrub) — premium UX training data as mandated. (Counts are a point-in-time
+snapshot; the append-only recorder continues to grow while the server runs —
+the criteria-reviewer independently re-counted higher totals on disk with
+the same per-project/per-event contents.)
 
 ## 8. Gates
 
@@ -174,12 +177,16 @@ scrub) — premium UX training data as mandated.
 
 ## 9. Judges (fresh-context, 0 MUST-FIX required)
 
-- criteria-reviewer: **PASS — 0 MUST-FIX** (verdict below)
+- criteria-reviewer: **PASS — 0 MUST-FIX** (all 8 criteria PASS; one
+  non-blocking nit — the §7 snapshot caveat above — addressed in place).
 - user-advocate ("UX research lead — are these findings honest, evidenced,
   and were the fixes verified by re-test rather than asserted?"):
-  **PASS — 0 MUST-FIX** (verdict below)
+  **PASS — 0 MUST-FIX, PLEASED.** Three non-blocking taste flags recorded
+  (in-frame surface labels on canvas element shots; higher-res tour frames;
+  DEV-WUXV-1 is a mitigation with the WebGPU root cause correctly deferred
+  to W-PROD).
 
-(Verdicts appended verbatim at the end of this file.)
+Verdicts appended verbatim in Appendix A/B below.
 
 ## 10. Invariants
 
@@ -191,3 +198,44 @@ scrub) — premium UX training data as mandated.
 - **I-PROVENANCE**: persona reports committed verbatim and unsoftened;
   re-test failures of two committed fixes are reported as failures (§5);
   DEV-WUXV-3 carries an explicit same-session timing note.
+
+---
+
+## Appendix A — criteria-reviewer verdict (verbatim)
+
+**SCOPE:** Wave-required outputs + invariants (I-CANVAS, I-ENGINE, I-SECRETS, I-PROVENANCE) for commits `054bf3ae..HEAD` (c8dd0be1, ce646f73, 048df489). This is a persona-UX-verification + additive-fix wave; the canonical-3 runtime touchpoint in scope is INV-R9/R11 (renderer + DOM discipline) via the DEV-WUXV-1 backend default.
+
+**Criterion 1 — Ranked findings file — PASS.** `notes/UXV-FINDINGS.md` exists (10.9KB): 2 BLOCKER, 9 FRICTION, 7 POLISH, 4 delights. Each finding carries evidence frame ids, verbatim persona quotes, root-cause, and a proposed fix. Root-cause triage explicitly marked as done post-session by reading code (personas never saw source) — honest method statement.
+
+**Criterion 2 — Fix round + honest re-test — PASS.** The two critical honesty checks both verify in code: F3: `src/lib/shell/engine/use-engine-bridge.ts` lines 33-38, 60, 99-109 add `suppressMount`; `src/components/shell/builder/BuilderShell.tsx` passes `suppressMount: buildState === 'built'`. F5/P7: `src/app/page.tsx` moves `<WalkthroughHost />` outside the `!isPreviewApp` gate (mounts in every view mode); `WalkthroughHost.tsx` lines 109-114 persist the seen-flag on any terminal status. Report §5 openly records that F3 and F5/P7 **FAILED re-test as committed** and were root-caused + re-fixed in 048df489. All after-evidence frames exist on disk: r1-33/34 (F3), r1-36/37/38/39 (F5/P7). 47 fix-round frames (>42 required). B1 (`forceWebGL` default) and B2 (blueprint `deriveSections` rewrite) both verified in code with the 3/3 regression suite green.
+
+**Criterion 3 — Founder decision list + env-key table — PASS.** Report §6: 8 structural decisions (incl. B1-secondary visual-latch, DEV-WUXV-1 root cause, UXV-F9 editor surface, INV-9 indigo palette) + a complete names-only env-key table covering every key-gated path (W-PROD input).
+
+**Criterion 4 — Flight-recorded sessions on disk — PASS.** `.data/flight-recorder/training/2026-07-09/` (gitignored, checked on disk) contains all 6 required ndjson types: conductor 2175, session 78, verify 234, background 7, catalog 2, render-mode 4. The report §7 snapshot numbers (1932/69/207) are lower than current disk — consistent with an append-only recorder that kept running, not a fabrication. Content claims verify: both indigo generations in background.ndjson, exactly 27 conductor records for the re-test build `proj-c3d83695`.
+
+**Criterion 5 — spec-deviations-wuxv.md + DEV-WUXV-3 timing — PASS.** DEV-WUXV-1/2/3 all present. DEV-WUXV-3 carries an explicit honest same-session timing note (lines 47-50). I-PROVENANCE satisfied.
+
+**Criterion 6 — Invariants — PASS.** I-ENGINE: runtime lib modules (`scene-root.ts`, `mount-graph.ts`) touched only to thread a typed additive `forceWebGL?` option — no logic/behavior rewrite, no DOM access added (the sanctioned DEV-WUXV-1 plumbing, already committed in ce646f73). INV-R11 / DOM rule: the `?webgpu=1` reads live exclusively in the React host wrappers `ConductorRuntime.tsx` / `PrismHost.tsx` (the legitimate DOM boundary), guarded by `typeof window !== 'undefined'`. Zero DOM access in the runtime lib. I-SECRETS: diff scan finds no raw secret values in client code; §6 env table is names-only. I-PROVENANCE: all 4 persona reports (1389–2712 words each) are verbatim/unsoftened — P3's report retains every dead end, "no-op state flip", and "erodes trust" quote matching the findings verbatim.
+
+**Criterion 7 — Gates — PASS.** `gates.log` ends in clear success markers: `VERIFY AGGREGATE: EXIT 0`, `W5B SHIP GATE: 11/11`, `tsc: 9 errors (baseline 9)`, flight-recorder verify PASS. Independently spot-checked: `tsc --noEmit` → **9** (baseline), `wuxv-blueprint-sections` → **3/3**.
+
+**Criterion 8 — Skeleton-first report — PASS.** Fully filled §1–§8, §10; only §9 judge verdicts appended after review, as specified.
+
+**MUST-FIX: None.** NITS: Report §7 snapshot-count caveat (addressed in place). **OVERALL: PASS**
+
+## Appendix B — user-advocate ("UX research lead") verdict (verbatim)
+
+**Feature:** WUXV persona-simulated whole-app UX verification (P1 novice / P2 mobile / P3 dev / P4 designer) + fix round + re-test round.
+**Net:** PLEASED. **Gate:** PASS. **MUST-FIX:** none.
+
+**1. HONESTY — genuinely critical, unsoftened (verified against 3 persona reports).** P1 keeps the worst quotes verbatim: "this is broken, I'm wasting my afternoon" (§4 Q3), "I can't recommend a tool that won't show me the thing it built" (§4 Q5), and criticizes the "Verified shippable" green badge over a black screen as "a false promise" (§3.2). P3 is harsh and specific: 6 dead ends, "'Verified shippable' over an empty preview actually makes me *more* skeptical", "Import from GitHub… leads to a sandbox with three fake repos and no place to paste my URL." Crucially, the POST-SESSION TRIAGE NOTE honestly re-classifies the persona's dead-end as a discoverability failure (importer exists but is buried) WITHOUT rewriting the persona's frustration — the correct, non-sanitizing move. P4/P2 keep "almost gave up" hover-preview dead end, "deep indigo → Verdant green," and "dark screen with some red static — where's my storefront?" verbatim. `UXV-FINDINGS.md` softens nothing — every finding carries the raw persona quote and a code-triaged cause. Delights are kept for balance, not to dilute criticism.
+
+**2. EVIDENCE — before/after frames match the claims (read with my own eyes).** B1 before: `p1-novice/wuxv-p1-25-building-02.png` (embedded preview solid black under a green "Verified shippable" badge), `wuxv-p1-28-preview-newtab.png` (standalone tab fully black, tiny "PRISM PREVIEW" pill only). B1 after: `fix-round/wuxv-r1-25-b1-standalone-preview.png` and `-22-b1-galaxy-mode.png` render REAL content — headline "a warm, inviting website for my bakery with an online cake order," the "Walnut Studio — warm · crafted · human" direction line, a warm 3D product tile, "Shop now." Real transformation, not asserted. B2 before: `wuxv-p1-36-chat-detail.png` shows "hubs: Home · Home · Landing · Catalog · Library" — dup Home, phantom Library, customs dropped. B2 after: `fix-round/wuxv-r1-19-b2-hub-list.png` shows Home · Catalog · **Cake Ordering Page · About Us** — no dup, no phantom Library, both user-typed sections built ("Built 26 nodes across 4 hubs"). F1: `wuxv-r1-07-f1-import-panel-preopened.png` surfaces "ALREADY HAVE THIS APP ON GITHUB? owner/repo… ANALYZE REPO" on Phase 0 — the surface Sam dead-ended looking for.
+
+**3. RE-TEST vs ASSERTION — the two-fixes-failed story is TRUE and frame-backed (strongest signal).** F3: `wuxv-r1-26-f3-builder-reload.png` shows the CONTAINER_MISSING banner STILL firing after the first committed fix (re-test caught the failure honestly); `wuxv-r1-34-f3-builder-reload-full.png` after the correct `suppressMount` fix shows NO banner and a rendering preview. The residual F2 copy fix is corroborated across the two frames (stale "In W5 the Verify phase will…" in r1-26 → present-tense "When you run a build, the Verify phase streams…" in r1-34). F5/P7: `wuxv-r1-36` (step-6 popup rendered over preview-app), `-37` (tour reaches galaxy/done), `-38` (post-tour mode switch sticks), `-39` (reload does NOT re-trigger the tour). Backs the "chrome gate unmounted WalkthroughHost mid-tour" root cause and re-fix.
+
+**4. Gates corroborated** (`fix-round/gates.log`, `rebuild2.log`): tsc 9 = baseline 9; VERIFY AGGREGATE EXIT 0; W5B ship gate 11/11; flight-recorder suites green; rebuild2 "Compiled successfully"; `notes/spec-deviations-wuxv.md` present (DEV-WUXV-1..3).
+
+**Non-blocking FLAGs (taste/structural — not MUST-FIX):** (a) several after-frames (r1-20/22/23) are semantically labeled for the surface tested but visually resemble the standalone preview — a mini in-frame surface label would strengthen provenance; (b) the F5 tour frames (r1-36/37) are small thumbnails — legible enough to confirm the popup-over-preview-app and tour-complete states, but higher-res captures would be more decisive; (c) B1's root fix ships the runtime on the WebGL2 backend (DEV-WUXV-1); the actual WebGPU red-dither root cause is correctly deferred to W-PROD per the founder list — honest, not swept.
+
+**Conclusion:** Findings are honest and unsoftened; the cited before-frames genuinely show a broken/black app where the after-frames show a rendering one; the two committed fixes that failed re-test (F3, F5/P7) were disclosed as failures, root-caused, re-fixed, and re-verified against a fresh production build with frames that back every step. This wave meets the re-test-not-assertion bar. **PASS, 0 MUST-FIX.**
