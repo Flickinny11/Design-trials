@@ -1,6 +1,6 @@
 # SHELL-WPROD REPORT — Production Readiness Gate (keys live)
 
-Status: IN PROGRESS (skeleton — sections fill as evidence lands)
+Status: COMPLETE (judge verdicts in §9)
 Wave: PRISM-WPROD, authored 2026-07-07, executed 2026-07-09
 Branch: codex/prism-recovery-harness-20260630
 Method: REAL credentials (../.assetgen/, chmod 600, gitignored; INV-19 —
@@ -217,6 +217,12 @@ Dev ledger `.data/flight-recorder/training/2026-07-09/` (counts by type):
 captured with honest OTel provenance, proving the new inference fabric is
 day-1 recorded (the self-learning flywheel's substrate, per the proposal §3).
 
+(Counts are a point-in-time snapshot; the recorder is append-only and keeps
+growing while the server runs — the criteria-reviewer's independent recount
+landed slightly higher, e.g. conductor 2411 / verify 261 / session 87, with
+the same per-project/provenance contents. The 13-fireworks-records-for-the-
+barbershop-build and 5-import-stages claims recount exactly.)
+
 ## 6. Founder decision list
 
 See `notes/WPROD-DECISION-LIST.md` — the SHIP-BRAND cutover input.
@@ -246,10 +252,12 @@ estimates appear anywhere; no key value was logged, reported, or committed.
 - [x] **verify aggregate EXIT 0** (`notes/verification/wprod/verify.log` —
       prism, repair-loop, galaxy, global-shell, parity-static, schema,
       tenancy, flight-recorder all PASS).
-- [x] **W5B ship gate EXIT 0** (`notes/verification/wprod/w5b.log` — built
+- [x] **W5B ship-anywhere frame capture EXIT 0** (`notes/verification/wprod/
+      w5b.log` — the §11/§14.1 evidence-capture script; content checks: built
       badge ✓, 7 hosts, 2 verified recs, Managed Care $39/mo, 7 capability
-      cards, 5 domain results; one mobile-frame capture timed out — a known
-      Playwright flake, frame still saved, gate exited 0).
+      cards, 5 domain results). Not a pass/fail suite — one mobile Ship-tab
+      capture threw a caught Playwright `TimeoutError` (frame still saved);
+      the script exited 0.
 - [x] **W-PROD + affected suites green** — `wprod-inference-cascade` (10),
       `wprod-planner-cascade` (3), `wuxv-blueprint-sections` (3),
       `shell-w5-conductor` (1); `wprod-cascade-live-proof` (4) green under
@@ -258,8 +266,26 @@ estimates appear anywhere; no key value was logged, reported, or committed.
 
 ## 9. Judges (fresh-context, 0 MUST-FIX required)
 
-_(criteria-reviewer + user-advocate as release manager — verdicts appended
-verbatim on completion)_
+- **criteria-reviewer: PASS — 0 MUST-FIX.** All 9 criteria PASS with cited,
+  independently-verified evidence (code read, artifacts recounted, frames
+  read, tsc re-run = 9, WPROD suites re-run 13/13). Two cosmetic NITS: (a) the
+  W5B log is the frame-capture script not a pass/fail suite (re-labeled in §8
+  this revision); (b) the FR snapshot counts are stale vs the append-only
+  recorder (caveat added to §5). Full verdict in Appendix A.
+- **user-advocate (release manager — "would I sign the production go?"):
+  PLEASED — Gate PASS — 0 MUST-FIX — "Would I sign the go: YES."** Read all
+  10 frames with own eyes: cascade genuinely live with real spend + honest
+  402s; UXV-B1 black-preview regression "provably dead — real fireworks copy
+  on the pixels" (frame 04); secret discipline survived an independent scan;
+  every gap named with an executable fix. 4 non-blocking FLAGs (model badge
+  label "Claude Fable 5"; the W5B mobile-frame flake; a scrolled ship-frame
+  would put $39/mo on pixels not just the log; GitHub/Google interactive
+  sign-in remains correctly human-gated for cutover). Full verdict in
+  Appendix B.
+
+Both NITS the reviewer raised are addressed in this revision (§8 W5B
+re-labeled; §5 FR-count caveat added). The advocate's FLAGs are non-blocking
+and routed to the decision list / SHIP-BRAND cutover.
 
 ## 10. Invariants
 
@@ -283,3 +309,47 @@ verbatim on completion)_
   `resolveBlueprint` that only runs when Anthropic is absent AND the cascade
   is keyed. No existing field deleted/renamed; the stub path is unchanged
   when no keys are present. tsc 9 = baseline 9.
+
+---
+
+## Appendix A — criteria-reviewer verdict (verbatim)
+
+**VERDICT: PASS (changes-not-required) — OVERALL: PASS — 0 MUST-FIX.** Two NITS, both cosmetic/documentation. Every criterion is backed by independently-verified evidence (code read, artifact contents recounted, frames read with my own eyes, tsc re-run, tests re-run). Note: the canonical-3 runtime/node-editor/canvas success criteria are largely irrelevant to this diff — WPROD is a server-side inference/auth/journeys wave that adds no rendered graph-node artifacts.
+
+**1. PROVIDER CASCADE LIVE — PASS.** Four adapters wired in `providers.ts:48-93` (Cerebras→Fireworks→DeepInfra→Groq, one gpt-oss-120b family, OpenAI-compat). `cascade.ts:97-227` runs ordered failover, records every attempt (status/latency/cost) with keys never entering the ledger. `live-results.json` proves one live completion per provider: fireworks 200/484ms/$0.0000567, groq 200/552ms/$0.0000831, and the two 402s reported honestly. Failover proven twice (naturalFailover + failoverDrill). Actually wired into the product: `planner.ts:90-102` calls `completeWithCascade` inside `resolveBlueprint`, which `conductor.ts:342` invokes on the real build path; provenance threads to FR `gen_ai.provider.name`.
+
+**2. GITHUB OAUTH REAL — PASS.** `auth/auth.ts:44-62` config-only (no literal secret — grep clean). Frame `oauth/02-*.png` is the real github.com login ("Sign in to GitHub — to continue to KripTik AI"). D-06 records the kriptik.app callback as a SHIP-BRAND line. D-07 honestly discloses the human-credential boundary — not papered over.
+
+**3. VERCEL HARVEST — PASS.** `../.assetgen` and `../.assetgen/harvest` gitignored (`git check-ignore` confirmed). No SUPABASE_*/POSTGRES_* VALUE wired anywhere. `.env.local` gitignored + untracked. I-POISON documented in §10.
+
+**4. FULL REAL JOURNEYS — PASS.** Barbershop build went LIVE via cascade: 13 records for proj-4cda67b1* all with `gen_ai.provider.name=fireworks`. Frame `journeys/04-preview-rendered.png` shows cascade copy rendering, no black screen. Import: `import.ndjson` all 5 stages for vercel/next-learn. LIVE 3D: ledger job `use-tripo-mrdx1og55hr62e` (live:true, 10 credits) + real glTF-v2 GLB 1.34MB (magic bytes verified).
+
+**5. FLIGHT RECORDER LIVE CHECK — PASS.** Independent recount: conductor 2411, verify 261, session 87, import 5, generative-3d 1, render-mode 5, background 7, catalog 2. (Report's snapshot is off by 40-60 — records written after the report snapshot; directionally honest.) 40 conductor records carry fireworks provenance.
+
+**6. FOUNDER DECISION LIST — PASS.** D-01..D-09 each carry what / exact console path / why / blocking?, plus a 6-line SHIP-BRAND cutover checklist.
+
+**7. SPEC-DEVIATIONS — PASS.** File exists, correctly reads "None yet" — the diff is genuinely additive.
+
+**8. INVARIANTS — PASS.** INV-19: no inference key VALUE and no GitHub/Google secret in any tracked file; public client_id truncated. I-POISON clean. I-PROVENANCE: 402s + stub fallback + human-credential boundary disclosed. I-ADDITIVE: zero fields deleted/renamed; tsc 9=baseline.
+
+**9. GATES — PASS.** tsc independently re-run = 9 = baseline. `verify.log` PASS (tenancy 35/35). WPROD hermetic suites independently re-run 13/13.
+
+**NITS (non-blocking):** (a) "W5B ship gate EXIT 0" is the frame-capture script, not a pass/fail suite; the mobile-tab TimeoutError is disclosed but "gate exited 0" slightly over-characterizes — recommend re-labeling. (b) FR report counts stale vs on-disk recount (cosmetic; provenance claims recount exactly). **MUST-FIX: None.**
+
+## Appendix B — user-advocate (release manager) verdict (verbatim)
+
+**Net: PLEASED · Gate: PASS · Would I sign the production go: YES** (to proceed to the downstream SHIP-BRAND cutover wave — not that the app is already live at kriptik.app). Every claim I could check, I checked with my own eyes or against a committed artifact.
+
+**1. Is the provider cascade REALLY live and honest about funding? YES.** `live-results.json` matches §1 byte-for-byte: fireworks 200/484ms/74+76tok/$0.0000567 ("…bright, clear blue"); groq 200/552ms/90+116tok/$0.0000831 ("It is blue."). Two providers 402'd honestly (D-01/D-02). Failover proven twice live. Module is committed real code. Two live providers funded, two honestly not — exactly the funded-vs-not honesty a release manager needs.
+
+**2. Does the app deliver end-to-end, and is UXV-B1 (black preview) actually fixed? YES — the load-bearing finding.** `journeys/04-preview-rendered.png` renders real content: headline "Reserve Your Cut in Downtown's Premier Barbershop", subhead, red 3D cube, CTA "Book Your Slot" — the exact fireworks live-cascade copy on the pixels, not the stub, not black. UXV-B1 is dead. Full journey holds across frames 01/03/05/06/07/08 (reopen-after-relogin, no CONTAINER_MISSING, F3 holds). Live Tripo 3D (10 credits, 1.34MB GLB) documented.
+
+**3. Is the honesty bar met? YES.** GitHub human-credential boundary (D-07), import stub fallback (D-09), two unfunded providers (D-01/D-02), Resend absent (D-03) all disclosed, not swept. INV-19 verified by my own git grep for sk-/AKIA/ghp_/gho_/private-key/client_secret= across committed WPROD artifacts → empty. .assetgen + .env.local gitignored. I-POISON respected.
+
+**4. Is the decision list executable by Logan? YES.** Exact console paths per item, blocking flag per item, consolidated SHIP-BRAND checklist. A founder could-execute-tomorrow list.
+
+**Gates independently confirmed:** build "✓ Compiled successfully" 52/52; verify tenancy 35/35 + flight-recorder 45 pass; w5b careLabel "Managed Care — $39/mo per app" (W5B truth, not invented).
+
+**MUST-FIX (blocking): None.** **Non-blocking FLAGs:** (1) model badge "Claude Fable 5" — confirm intentional; (2) W5B mobile ship-tab frame timed out (disclosed); (3) $39/mo not directly legible in the ship-panel crop (proven by w5b.log); (4) GitHub/Google interactive sign-in human-gated (correctly scoped as cutover step — the single most common OAuth launch break).
+
+**Bottom line:** The strongest honesty-under-real-credentials evidence bundle I have reviewed. The cascade is genuinely live with real spend logged, the black-preview regression is provably dead, secret discipline survived an independent scan, and every gap is named with an executable fix. I would sign the go to proceed to SHIP-BRAND cutover.
