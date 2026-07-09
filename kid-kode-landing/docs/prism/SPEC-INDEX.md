@@ -165,5 +165,8 @@ Boundary in the shell spec (§0/I0) defines the line.
 | `PRISM-SHELL-DECISIONS-2026-07-04.md` | Record of founder ratifications: decisions A–E LOCKED, multi-tenant vs enterprise-multiplayer scoping, runtime law reaffirmation. Binding interpretation source for the shell spec. | Founder record |
 
 Ruler precedence unchanged: `PRISM-INTENT-ANCHOR.md` still wins every
-conflict. Non-ratified drafts (swarm dispatch spec + amendment, research
-memos, post-run agenda) remain deliberately OFF this index.
+conflict. Swarm-dispatch status: `PRISM-SWARM-DISPATCH-SPEC.md` is
+**v0.2 — RATIFIED 2026-07-09 per `RATIFICATION-2026-07-09.md`**, together with
+`PRISM-SWARM-DISPATCH-AMENDMENT-B.md` (OD8–OD13, same record); Amendment A
+remains a non-ratified draft. Other non-ratified drafts (research memos,
+post-run agenda) remain deliberately OFF this index.

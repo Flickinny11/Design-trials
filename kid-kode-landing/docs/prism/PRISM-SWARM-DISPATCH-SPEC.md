@@ -1,10 +1,11 @@
-# PRISM-SWARM-DISPATCH-SPEC.md — v0.1
+# PRISM-SWARM-DISPATCH-SPEC.md — v0.2
 
-> **STATUS: DRAFT — NOT RATIFIED. NOT CANONICAL.**
-> This document does not appear in `SPEC-INDEX.md` and no build prompt may cite
-> it until founder ratification (I9). Ratification is a written act by Logan only.
-> Any session that treats this document as canonical before ratification
-> is in violation of drift protections.
+> **STATUS: v0.2 — RATIFIED 2026-07-09 per RATIFICATION-2026-07-09.md.**
+> Ratification is the founder's written act, recorded in
+> `RATIFICATION-2026-07-09.md`. §12 Open Decisions OD1–OD7 are DECIDED — the
+> ratified dispositions are inline in §12 below. OD8–OD13 are ratified in
+> `PRISM-SWARM-DISPATCH-AMENDMENT-B.md` (same record, same date).
+> `PRISM-SWARM-DISPATCH-AMENDMENT-A.md` remains a non-ratified draft.
 
 > **PROVENANCE NOTE (2026-07-03):** v0.1 was authored 2026-07-01 in-session while
 > Desktop Commander was unresponsive; the file was delivered in-chat and never
@@ -384,21 +385,15 @@ export interface PrismDispatchConfig {
    as evidence (raw outputs + verifier logs attached), for sign-off before any
    config lands.
 
-## 12. Open Decisions — reserved for Logan
+## 12. Open Decisions — DECIDED (RATIFIED 2026-07-09 per RATIFICATION-2026-07-09.md)
 
-- **OD1.** Stage-2 cloud pair (Azure PTU + Vertex provisioned is the draft's
-  default; Bedrock now also carries OpenAI + Anthropic models).
-- **OD2.** Mercury 2 (diffusion LM, was in spec v1.0): include in bakeoff only, or
-  pre-approve a pool if it wins the simple tier?
-- **OD3.** Couple wave size to assembly-animation pacing (scheduler feeds the
-  animation) or keep animation independent?
-- **OD4.** Cost band per plan tier (G6) — the fast/balanced/quality dial and its
-  pricing exposure to users.
-- **OD5.** Stage-3 owned-baseline timing: pre-commit a utilization trigger now, or
-  decide when Stage-2 data exists?
-- **OD6.** Adopt Cloudflare AI Gateway spend limits as the C10 backstop, or keep
-  spend enforcement ledger-only?
-- **OD7.** L2 WORLD token budget target (draft: 2–3K typical, 5K hard cap).
+- **OD1. RATIFIED** — Stage-2 cloud pair: provisional = Vertex provisioned + Anthropic Priority Tier direct; final selection deferred to post-bakeoff evidence; Azure PTU remains alternate if MAI/GPT lanes win bakeoff.
+- **OD2. RATIFIED** — Mercury 2: include in bakeoff AND pool pre-approved contingent on winning the simple tier (Bedrock/Baseten enterprise serving paths exist).
+- **OD3. RATIFIED** — wave scheduler COUPLED to assembly animation (the scheduler feeds it).
+- **OD4. RATIFIED** — cost band per plan tier ships with W-COST (plan-approval credit estimate + live burn meter); founder sets the pricing dial values.
+- **OD5. RATIFIED** — Stage-3 owned-baseline trigger decided on Stage-2 data, not now.
+- **OD6. RATIFIED** — Cloudflare AI Gateway spend limits ADOPTED as the C10 backstop (defense-in-depth under the ledger's own spend guard).
+- **OD7. RATIFIED** — L2 WORLD budget 2–3K typical / 5K hard cap APPROVED, amended with a byte-stability requirement on L1+L2 across all nodes of a build (captures cache-exempt rate-limit multipliers: Anthropic, Groq).
 
 ## 13. Deviation Protocol
 
@@ -407,6 +402,7 @@ protocol in `CLAUDE.md` and logs to `spec-deviations-prism.md` BEFORE code is
 written. No silent deviations.
 
 ---
-*Draft v0.1 — 2026-07-01 — authored for founder review. Not ratified.*
-*Recovered to repo 2026-07-03. See Amendment A (PRISM-SWARM-DISPATCH-AMENDMENT-A.md)
-for the proposed v0.2 delta — also not ratified.*
+*v0.2 — RATIFIED 2026-07-09 per RATIFICATION-2026-07-09.md.*
+*Draft v0.1 authored 2026-07-01; recovered to repo 2026-07-03. Amendment A
+(PRISM-SWARM-DISPATCH-AMENDMENT-A.md) remains a non-ratified draft; Amendment B
+(PRISM-SWARM-DISPATCH-AMENDMENT-B.md) carries OD8–OD13, RATIFIED 2026-07-09.*
