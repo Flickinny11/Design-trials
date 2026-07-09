@@ -84,6 +84,11 @@ import {
 } from '@/lib/prism-graph/galaxy-semantics';
 import { resolveAssembledNodesForHub } from '@/lib/prism-graph/assembled-nodes';
 import {
+  FLAT_HUB_FOV,
+  distanceForFovChange,
+  resolveHubRenderMode,
+} from '@/lib/prism-graph/hub-render-mode';
+import {
   computeCanvasCameraPose,
   resolveCanvasCameraPose,
 } from '@/lib/editor/canvas-camera';
@@ -1786,6 +1791,12 @@ function applyCameraFov(c: CameraControls, fov: number) {
   }
 }
 
+// W-2D — the assembled-scene Canvas base fov (the `camera` prop below). The
+// 2d flat composition tweens between this and FLAT_HUB_FOV on the SAME
+// camera (renderer CONFIG — no ortho swap, no remount; galaxy/topology uses
+// its own Canvas content key and never sees this).
+const CANVAS_BASE_FOV = 45;
+
 function SceneControlsBridge({
   nodes,
   hub,
@@ -1826,6 +1837,15 @@ function SceneControlsBridge({
   // landing/transition that owns the camera right after a hub change).
   const driftHubRef = useRef<string | null>(null);
   const hubSettleClockRef = useRef(0);
+
+  // W-2D — per-hub 2d flat composition (renderer CONFIG; additive tool-state
+  // per I-CANVAS). A 2d hub keeps this same camera + controls: orbit input is
+  // disabled (speeds→0), the view straightens front-on, and the fov eases to
+  // the telephoto flat composition with framing-preserving distance. All
+  // depth DATA (node z, cameraKeyframes) is preserved — just unused: the
+  // authored camera journey is 3d staging, so it is ineligible while 2d.
+  const is2dHub = resolveHubRenderMode(hub) === '2d';
+  const journeyEligible = hasJourney(hub) && !is2dHub;
 
   // EBR2-D-02 / §R2-D SC-071 — canvas rail is RETAINED only to feed the dev
   // hook (`__PRISM_EDITOR_GET_CANVAS_RAIL__`). APP-REALITY P1 DELIBERATELY
@@ -1881,7 +1901,8 @@ function SceneControlsBridge({
     // APP-REALITY P2 — if this hub has an authored camera JOURNEY, land on its
     // first waypoint and start the deterministic play (the per-frame block
     // below drives it). Otherwise snap to the static configured front pose.
-    if (hasJourney(hub)) {
+    // W-2D: journeys are 3d camera staging — ineligible while the hub is 2d.
+    if (journeyEligible) {
       const first = sampleJourney(hub!.cameraKeyframes, 0);
       if (first) {
         c.setLookAt(
@@ -1905,6 +1926,27 @@ function SceneControlsBridge({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewMode, hub?.hubId]);
 
+  // W-2D — canvas framing compensation + straighten when the ACTIVE hub's
+  // render mode flips (live toggle, or entering the canvas of a 2d hub). The
+  // fov itself eases in the per-frame block; this dollies the distance so the
+  // framed height is preserved through the fov change, and faces the flat
+  // composition front-on. Additive tool-state only (I-CANVAS).
+  const prevCanvasFovTarget = useRef<number | null>(null);
+  useEffect(() => {
+    const c = controlsRef.current;
+    if (!c || viewMode !== 'canvas' || editInPreview) return;
+    const targetFov = is2dHub ? FLAT_HUB_FOV : CANVAS_BASE_FOV;
+    const prev = prevCanvasFovTarget.current ?? CANVAS_BASE_FOV;
+    prevCanvasFovTarget.current = targetFov;
+    if (prev === targetFov) return;
+    void c.dollyTo(distanceForFovChange(prev, c.distance, targetFov), true);
+    if (is2dHub) {
+      // Flat composition faces front — orbit angles are 3d staging.
+      void c.rotateTo(0, Math.PI / 2, true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [is2dHub, viewMode, editInPreview]);
+
   // APP-REALITY P2 — CAPTURE the current free canvas-camera pose as a journey
   // waypoint on the active hub (canvas writes the SHARED source graph). The
   // live pose is read here (the bridge owns the controls), so the HUD button
@@ -1913,6 +1955,9 @@ function SceneControlsBridge({
     if (captureKeyframeSignal === 0) return;
     const c = controlsRef.current;
     if (!c || viewMode !== 'canvas') return;
+    // W-2D — camera staging is a 3d tool; the HUD greys REC on a 2d hub and
+    // this guard keeps a stray signal from writing 3d staging into a 2d hub.
+    if (is2dHub) return;
     const hubId = useGraphEditorStore.getState().activeHubId;
     if (!hubId) return;
     const pos = new THREE.Vector3();
@@ -1935,7 +1980,7 @@ function SceneControlsBridge({
   // APP-REALITY P2 — replay the journey from t=0 (Preview "replay" button).
   useEffect(() => {
     if (journeyReplaySignal === 0) return;
-    if (viewMode !== 'preview-app' || !hasJourney(hub)) return;
+    if (viewMode !== 'preview-app' || !journeyEligible) return;
     journeyStartRef.current = null;
     journeyActiveRef.current = true;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1946,7 +1991,7 @@ function SceneControlsBridge({
   // fill the tall portrait window). Skips when a journey owns the camera.
   useEffect(() => {
     const c = controlsRef.current;
-    if (!c || viewMode !== 'preview-app' || hasJourney(hub)) return;
+    if (!c || viewMode !== 'preview-app' || journeyEligible) return;
     // PROD-FINISH Phase B — pull the locked preview camera CLOSER on every
     // device so the authored composition FILLS the frame and the product hero
     // reads punchy (the prior desktop z=14 left the composition at ~34% of frame
@@ -1954,9 +1999,13 @@ function SceneControlsBridge({
     // tallest composition (acquire: reserve text y≈2.05 → pedestal y≈-2.3) still
     // clears the frame at fov 45 (half-height = z·0.414): z=10.5 → ±4.35.
     const z = deviceMode === 'mobile' ? 9.2 : 10.5; // FINISH-F3: mobile rides closer (shell rows pull inward via authored mobile poses) so type reads at phone size
-    c.setLookAt(0, 0, z, 0, 0, 0, true);
+    // W-2D — a 2d hub ships the flat telephoto composition: same framed
+    // height, compensated distance (the fov itself eases in the per-frame
+    // block below).
+    const zShip = is2dHub ? distanceForFovChange(CANVAS_BASE_FOV, z, FLAT_HUB_FOV) : z;
+    c.setLookAt(0, 0, zShip, 0, 0, 0, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deviceMode, viewMode, hub?.hubId]);
+  }, [deviceMode, viewMode, hub?.hubId, is2dHub]);
 
   // APP-REALITY P3 — entering Edit-in-Preview snaps the (now locked) canvas
   // camera to the configured shipped framing: the journey landing pose if the
@@ -1965,7 +2014,7 @@ function SceneControlsBridge({
   useEffect(() => {
     const c = controlsRef.current;
     if (!c || viewMode !== 'canvas' || !editInPreview) return;
-    if (hasJourney(hub)) {
+    if (journeyEligible) {
       const first = sampleJourney(hub!.cameraKeyframes, 0);
       if (first) {
         c.setLookAt(
@@ -2086,7 +2135,7 @@ function SceneControlsBridge({
     const c = controlsRef.current;
     if (!c || viewMode !== 'preview-app') return;
     if (activeHubId === 's6-atelier') return;
-    if (hasJourney(hub)) return;
+    if (journeyEligible) return;
     const pos = new THREE.Vector3();
     const tgt = new THREE.Vector3();
     c.getPosition(pos, false);
@@ -2100,7 +2149,7 @@ function SceneControlsBridge({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hubTransitionToken]);
 
-  useFrame((state) => {
+  useFrame((state, frameDelta) => {
     const c = controlsRef.current;
     if (!c) return;
     // EDITOR-EXP P4 (C21) — drei <TransformControls> toggles controls.enabled
@@ -2117,8 +2166,27 @@ function SceneControlsBridge({
     const shouldLock = !atelierInspect && (viewMode === 'preview-app' || (viewMode === 'canvas' && editInPreview));
     if (shouldLock && c.enabled) c.enabled = false;
     setCameraDistance(c.distance);
+    // W-2D — ease the fov to the hub's composition (flat telephoto for 2d,
+    // the canvas base for 3d) every frame the journey isn't driving it. This
+    // is the smooth half of a 2d↔3d hub transition / live toggle; distance is
+    // owned by the reframe/drift/effect paths above (all mode-aware).
+    if (!(journeyActiveRef.current && journeyEligible)) {
+      const cam = c.camera as THREE.PerspectiveCamera;
+      if (cam && cam.isPerspectiveCamera) {
+        const targetFov = is2dHub ? FLAT_HUB_FOV : CANVAS_BASE_FOV;
+        const diff = targetFov - cam.fov;
+        if (Math.abs(diff) > 0.05) {
+          const dt = Math.min(0.1, frameDelta || 0.016);
+          cam.fov += diff * Math.min(1, dt * 6);
+          cam.updateProjectionMatrix();
+        } else if (Math.abs(diff) > 0.0001) {
+          cam.fov = targetFov;
+          cam.updateProjectionMatrix();
+        }
+      }
+    }
     // APP-REALITY P2 — drive the deterministic camera journey in preview-app.
-    if (viewMode === 'preview-app' && journeyActiveRef.current && hasJourney(hub)) {
+    if (viewMode === 'preview-app' && journeyActiveRef.current && journeyEligible) {
       const dur = journeyDurationSeconds(hub!.cameraKeyframes);
       if (journeyStartRef.current == null) journeyStartRef.current = state.clock.elapsedTime;
       const elapsed = state.clock.elapsedTime - journeyStartRef.current;
@@ -2143,7 +2211,7 @@ function SceneControlsBridge({
     if (
       viewMode === 'preview-app' &&
       !atelierInspect &&
-      !hasJourney(hub) &&
+      !journeyEligible &&
       useHubTransitionStore.getState().phase === 'idle'
     ) {
       const tt = state.clock.elapsedTime;
@@ -2157,7 +2225,16 @@ function SceneControlsBridge({
         const dx = (Math.sin(tt * 0.16) * 0.42 + Math.sin(tt * 0.41) * 0.12) * ramp;
         const dy = Math.sin(tt * 0.12 + 1.3) * 0.24 * ramp;
         const dz = Math.sin(tt * 0.09) * 0.32 * ramp;
-        c.setLookAt(dx, dy, zHero + dz, dx * 0.18, dy * 0.1, 0, false);
+        if (is2dHub) {
+          // W-2D — a flat hub still breathes, but PLANAR: pure truck sway
+          // (target mirrors the position offset — zero angular change, zero
+          // dolly) at the telephoto's compensated distance. A data page must
+          // never read as a swimming 3D stage.
+          const zFlat = distanceForFovChange(CANVAS_BASE_FOV, zHero, FLAT_HUB_FOV);
+          c.setLookAt(dx, dy, zFlat, dx, dy, 0, false);
+        } else {
+          c.setLookAt(dx, dy, zHero + dz, dx * 0.18, dy * 0.1, 0, false);
+        }
       }
     }
     // APP-REALITY P1 — feed the live canvas angle read-out (CanvasCameraHud).
@@ -2283,8 +2360,10 @@ function SceneControlsBridge({
       draggingSmoothTime={0.12}
       dollyToCursor={!atelierInspect}
       truckSpeed={atelierInspect ? 0 : 1.1}
-      azimuthRotateSpeed={0.7}
-      polarRotateSpeed={0.7}
+      // W-2D — a 2d hub's canvas keeps pan + zoom but not orbit (orbit is 3d
+      // staging; the flat composition faces front). Config-only lock.
+      azimuthRotateSpeed={is2dHub && !isPreview ? 0 : 0.7}
+      polarRotateSpeed={is2dHub && !isPreview ? 0 : 0.7}
       dollySpeed={0.75}
       infinityDolly={false}
     />
