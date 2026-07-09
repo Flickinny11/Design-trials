@@ -239,3 +239,5 @@ Verdicts appended verbatim in Appendix A/B below.
 **Non-blocking FLAGs (taste/structural — not MUST-FIX):** (a) several after-frames (r1-20/22/23) are semantically labeled for the surface tested but visually resemble the standalone preview — a mini in-frame surface label would strengthen provenance; (b) the F5 tour frames (r1-36/37) are small thumbnails — legible enough to confirm the popup-over-preview-app and tour-complete states, but higher-res captures would be more decisive; (c) B1's root fix ships the runtime on the WebGL2 backend (DEV-WUXV-1); the actual WebGPU red-dither root cause is correctly deferred to W-PROD per the founder list — honest, not swept.
 
 **Conclusion:** Findings are honest and unsoftened; the cited before-frames genuinely show a broken/black app where the after-frames show a rendering one; the two committed fixes that failed re-test (F3, F5/P7) were disclosed as failures, root-caused, re-fixed, and re-verified against a fresh production build with frames that back every step. This wave meets the re-test-not-assertion bar. **PASS, 0 MUST-FIX.**
+
+PRISM-WUXV: RUN COMPLETE
