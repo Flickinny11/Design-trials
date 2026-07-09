@@ -1,0 +1,53 @@
+{
+  "capturedAt": "2026-07-09",
+  "captureBackend": "webgl2 (runtime's own automatic fallback — see webgpu-env-note in EVIDENCE.md; the pre-existing WebGPU red-dither probe frames are included)",
+  "runtimeDemo_w2dDemoRoute": {
+    "entry": { "hub": "landing", "camera": { "fov": 50, "z": 10 } },
+    "ledger2d": { "hub": "ledger", "camera": { "fov": 10, "z": 53.29920921889791 } },
+    "framedHeightInvariant": "2*10*tan(25deg) = 9.326 = 2*53.299*tan(5deg) — framing preserved exactly",
+    "transitionTweenSamples_ledgerToLanding_msFovZ": [
+      { "t": 36, "fov": 13.022066288418173, "z": 50.02788220650799 },
+      { "t": 127, "fov": 27.920443629630086, "z": 33.90068326852742 },
+      { "t": 255, "fov": 39.476385307237145, "z": 21.391604858025175 },
+      { "t": 409, "fov": 47.726899223760824, "z": 12.460586652150482 },
+      { "t": 550, "fov": 49.765521647316845, "z": 10.253818181253259 },
+      { "t": 808, "fov": 50, "z": 10 }
+    ],
+    "note": "smooth ~650ms cubic ease-out on the SAME PerspectiveCamera (no ortho swap, no remount); sampled live via window.__W2D_DEMO__"
+  },
+  "editorRoundTrip_s1Arrival": {
+    "before": { "renderMode": null, "nodeCount": 39, "journeyPts": 0 },
+    "canvas3d": { "camZ": 18.0, "polarDeg": 90.0 },
+    "toggledTo2dViaHudChip": {
+      "camZ": 85.22,
+      "expectedCompensation": "18 * tan(22.5deg)/tan(5deg) = 85.22 — framing preserved",
+      "polarDeg": 90.0,
+      "hubRenderMode": "2d",
+      "hudFlatReadout": true,
+      "journeyStripGreyed": true
+    },
+    "zStepperFunctionalProof": { "zBefore": null, "zAfterTwoClicks": null, "zStepperInert": true, "xStepperStillStages": 0.06 },
+    "toggledBackTo3dViaHudChip": { "camZ": 18.0, "hubRenderMode": "3d", "hudFlatReadout": false },
+    "nonDestructiveComparison": {
+      "hubIdenticalExceptRenderMode": true,
+      "renderModeBefore": null,
+      "renderModeAfter": "3d",
+      "nodeCountBefore": 39,
+      "nodeCountAfter": 39,
+      "allNodeScenePositionsIdentical": true
+    }
+  },
+  "editorPreviewApp_s1Arrival": {
+    "with2d": { "camZ": 49.71, "note": "= distanceForFovChange(45, 10.5, 10) — flat shipped composition, planar drift" },
+    "restored3d": { "camZ": 10.65, "note": "~10.5 hero pose + live idle drift dz" }
+  },
+  "galaxyInvariance": "G1 (s1 3d) vs G2 (s1 2d): same planets/orbits/labels — HubPlanet reads only identity/radius, never renderMode",
+  "flightRecorder": {
+    "sink": ".data/flight-recorder/training/2026-07-09/render-mode.ndjson (archived alongside this file)",
+    "records": [
+      { "surface": "canvas-hud", "from": "3d", "to": "2d", "hub": "s1-arrival", "consent": true },
+      { "surface": "canvas-hud", "from": "2d", "to": "3d", "hub": "s1-arrival", "consent": true }
+    ]
+  },
+  "hygiene": "public/prism-mock/home/live-graph.json git-checkout restored after evidence capture (EDIT-I2); staged preview patches cleared during the session"
+}
