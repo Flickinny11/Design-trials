@@ -14,25 +14,26 @@
 // scenePosition — are additive and optional. Legacy graphs without them
 // render in 'sprite' mode at the identity pose with no primitives applied.
 
-import type { CinematicPrimitiveRef } from './cinematic-primitives.ts';
-import type { CapabilityRef, PrismRootNode } from './root-node.ts';
-import type { UiAnchor } from './compile-anchors.ts';
+import type { CinematicPrimitiveRef } from "./cinematic-primitives.ts";
+import type { CapabilityRef, PrismRootNode } from "./root-node.ts";
+import type { UiAnchor } from "./compile-anchors.ts";
 
-export type { CinematicPrimitiveRef } from './cinematic-primitives.ts';
-export type { CapabilityRef, PrismRootNode } from './root-node.ts';
-export type { UiAnchor } from './compile-anchors.ts';
+export type { CinematicPrimitiveRef } from "./cinematic-primitives.ts";
+export type { CapabilityRef, PrismRootNode } from "./root-node.ts";
+export type { UiAnchor } from "./compile-anchors.ts";
 
 // Canvas-spec §7 / criterion 26 (INV-18 additive): 'text' renders REAL MSDF
 // font glyphs via the Prism TextObject (src/lib/prism/text/), styled by the
 // node's `textSpec`. Letterforms are never synthesized (INV-11).
-export type RenderMode = 'sprite' | 'plane' | 'parallax-plane' | 'mesh' | 'text';
+export type RenderMode =
+  "sprite" | "plane" | "parallax-plane" | "mesh" | "text";
 
 // POLISH pass / galaxy glance-icon (INV-18 additive). The coarse content KIND a
 // node carries, used to pick the small per-node badge shown at galaxy glance.
 // Distinct from RenderMode (which is the runtime render path) — a 'mesh' render
 // mode and a primitive both map to the '3d-object' content kind, etc. When a
 // node's `contentType` is unset, callers derive it via `deriveContentType`.
-export type NodeContentType = 'image' | 'text' | '3d-object' | 'integration';
+export type NodeContentType = "image" | "text" | "3d-object" | "integration";
 
 export interface ScenePosition {
   x: number;
@@ -46,7 +47,7 @@ export interface ScenePosition {
   scaleZ: number;
 }
 
-export const RENDER_MODE_DEFAULT: RenderMode = 'sprite';
+export const RENDER_MODE_DEFAULT: RenderMode = "sprite";
 
 export const SCENE_POSITION_DEFAULT: ScenePosition = {
   x: 0,
@@ -120,23 +121,23 @@ export const COMPILED_TRANSFORM_DEFAULT: CompiledTransform = {
 // runtime layer compositor (Phase 7) groups nodes into these six z-buckets;
 // `content` is the default for legacy graphs that pre-date this field.
 export type DepthLayer =
-  | 'environment'
-  | 'background'
-  | 'midground'
-  | 'content'
-  | 'foreground-FX'
-  | 'overlay';
+  | "environment"
+  | "background"
+  | "midground"
+  | "content"
+  | "foreground-FX"
+  | "overlay";
 
 export const DEPTH_LAYER_VALUES: readonly DepthLayer[] = Object.freeze([
-  'environment',
-  'background',
-  'midground',
-  'content',
-  'foreground-FX',
-  'overlay',
+  "environment",
+  "background",
+  "midground",
+  "content",
+  "foreground-FX",
+  "overlay",
 ] as const);
 
-export const DEPTH_LAYER_DEFAULT: DepthLayer = 'content';
+export const DEPTH_LAYER_DEFAULT: DepthLayer = "content";
 
 // ===========================================================================
 // Material + Lighting subsystem (PRISM-CANVAS-EDITOR-SPEC §10/§11, INV-8/INV-9).
@@ -150,23 +151,18 @@ export const DEPTH_LAYER_DEFAULT: DepthLayer = 'content';
 // T1 + screen-space GI/AO (+ optional SSR/TRAA), WebGPU desktop only. `'auto'`
 // asks the runtime capability detector to pick the highest tier the device can
 // hold. Heavy effects are NEVER the default path — `'auto'` degrades to T0/T1.
-export type LightingTier = 'T0' | 'T1' | 'T2';
-export type LightingTierPreference = LightingTier | 'auto';
+export type LightingTier = "T0" | "T1" | "T2";
+export type LightingTierPreference = LightingTier | "auto";
 
 export const LIGHTING_TIER_VALUES: readonly LightingTier[] = Object.freeze([
-  'T0',
-  'T1',
-  'T2',
+  "T0",
+  "T1",
+  "T2",
 ] as const);
 
 // §10 light types. `rim` is a back-positioned directional preset (edge light).
 export type PrismLightType =
-  | 'ambient'
-  | 'hemisphere'
-  | 'directional'
-  | 'point'
-  | 'spot'
-  | 'rim';
+  "ambient" | "hemisphere" | "directional" | "point" | "spot" | "rim";
 
 export interface PrismVec3 {
   x: number;
@@ -218,7 +214,7 @@ export interface LightingSpec {
 }
 
 export const LIGHTING_SPEC_DEFAULT: LightingSpec = {
-  tier: 'auto',
+  tier: "auto",
   lights: [],
   envMapUrl: null,
   envIntensity: 1,
@@ -273,7 +269,7 @@ export interface MaterialSpec {
 }
 
 export const MATERIAL_SPEC_DEFAULT: MaterialSpec = {
-  baseColor: '#c8ccd8',
+  baseColor: "#c8ccd8",
   metalness: 0,
   roughness: 0.5,
   transmission: 0,
@@ -284,7 +280,7 @@ export const MATERIAL_SPEC_DEFAULT: MaterialSpec = {
   iridescence: 0,
   iridescenceIOR: 1.3,
   thickness: 0.5,
-  emissive: '#000000',
+  emissive: "#000000",
   emissiveIntensity: 0,
   normalScale: 1,
   displacementScale: 0,
@@ -304,17 +300,17 @@ export const MATERIAL_SPEC_DEFAULT: MaterialSpec = {
 /** How a text fill paints the glyph coverage. The MSDF coverage is ALWAYS the
  *  mask — every fill kind pours pigment into real letterforms (INV-11). */
 export type TextFill =
-  | { kind: 'solid'; color: string }
+  | { kind: "solid"; color: string }
   | {
-      kind: 'gradient';
+      kind: "gradient";
       from: string;
       to: string;
       /** Gradient angle in degrees over the text block (0 = left→right). */
       angleDeg?: number;
     }
-  | { kind: 'texture'; url: string }
+  | { kind: "texture"; url: string }
   | {
-      kind: 'ai-texture';
+      kind: "ai-texture";
       /** Natural-language look description ("molten gold", "hairy moss"). */
       prompt: string;
       /** Resolved texture URL once generated; absent while pending. */
@@ -414,7 +410,7 @@ export interface TextSpec {
   letterSpacing?: number;
   /** Line height multiplier (1 = font default). */
   lineHeight?: number;
-  align?: 'left' | 'center' | 'right';
+  align?: "left" | "center" | "right";
   fill?: TextFill;
   outline?: TextOutlineSpec;
   glow?: TextGlowSpec;
@@ -422,7 +418,7 @@ export interface TextSpec {
   /** 0..1 whole-object opacity. */
   opacity?: number;
   /** Animation unit granularity for text-animation primitives (§7.5). */
-  decompose?: 'glyph' | 'word' | 'line';
+  decompose?: "glyph" | "word" | "line";
   /** Real-or-synthesized style flags (§7 extended styling, additive INV-18).
    *  `bold` prefers a real heavier weight face, else faux-bold; `italic`
    *  prefers a real italic face, else a synthesized shear. `strikethrough` /
@@ -437,16 +433,16 @@ export interface TextSpec {
 }
 
 export const TEXT_SPEC_DEFAULT: TextSpec = {
-  content: 'Text',
-  fontFamily: 'Inter',
+  content: "Text",
+  fontFamily: "Inter",
   fontSize: 0.4,
   fontWeight: 400,
   letterSpacing: 0,
   lineHeight: 1,
-  align: 'center',
-  fill: { kind: 'solid', color: '#e8e4da' },
+  align: "center",
+  fill: { kind: "solid", color: "#e8e4da" },
   opacity: 1,
-  decompose: 'glyph',
+  decompose: "glyph",
 };
 
 // §10 decision 7 / §10 `receivesLighting` SAFE DEFAULT. Image-bearing render
@@ -455,7 +451,7 @@ export const TEXT_SPEC_DEFAULT: TextSpec = {
 // are image planes → unlit. Text opts in elsewhere (textSpec), default unlit.
 // Splats are lit by default but have no `RenderMode` literal yet (mesh-routed).
 export function receivesLightingDefault(renderMode?: RenderMode): boolean {
-  return renderMode === 'mesh';
+  return renderMode === "mesh";
 }
 
 export interface PrismHubLayout {
@@ -490,11 +486,11 @@ export interface PrismHubResponsiveBreakpoints {
 // `'world'` anchors in hub-scene world space. `'infinite-environment'`
 // reserves for skybox-style infinite-distance environments.
 export type PrismHubBackgroundAttachment =
-  | 'viewport-fixed'
-  | 'camera-locked'
-  | 'parallax'
-  | 'world'
-  | 'infinite-environment';
+  | "viewport-fixed"
+  | "camera-locked"
+  | "parallax"
+  | "world"
+  | "infinite-environment";
 
 // THREE-D-BACKGROUNDS (3DBG) — the KIND of a background layer. `'image'` (the
 // implicit default when a layer carries only a `sourceUrl`) renders the legacy
@@ -504,15 +500,30 @@ export type PrismHubBackgroundAttachment =
 // plate, and a Gaussian splat. Additive (INV-18 / INV-2): legacy layers with no
 // `kind` behave exactly as before. Appearance/behaviour come from the schema
 // only (INV-4) — there is no per-hub hard-coded background in component code.
+// W-BG additive kinds: `'gradient-volume'` renders layered gradient-light
+// volumes (washes / beams / aurora / horizon glows — variant via params);
+// `'fluid-overlay'` renders a flowing TSL noise-advection sheet (silk / ink /
+// caustic / smoke — variant via params). Both are pure DATA like the rest:
+// legacy graphs never carry them, and unknown kinds render as nothing.
 export type BackgroundLayerKind =
-  | 'image'
-  | 'volumetric-nebula'
-  | 'particle-field'
-  | 'parallax-plane'
-  | 'splat';
+  | "image"
+  | "volumetric-nebula"
+  | "particle-field"
+  | "parallax-plane"
+  | "splat"
+  | "gradient-volume"
+  | "fluid-overlay";
 
 export const BACKGROUND_LAYER_KIND_VALUES: readonly BackgroundLayerKind[] =
-  Object.freeze(['image', 'volumetric-nebula', 'particle-field', 'parallax-plane', 'splat'] as const);
+  Object.freeze([
+    "image",
+    "volumetric-nebula",
+    "particle-field",
+    "parallax-plane",
+    "splat",
+    "gradient-volume",
+    "fluid-overlay",
+  ] as const);
 
 // 3DBG — customizable, round-trippable params for a procedural background layer.
 // All optional and numeric/string so a layer is a pure DATA description the
@@ -567,17 +578,17 @@ export interface PrismHubBackgroundLayer {
 // deterministic per-hub default is chosen by the galaxy renderer (e.g. hashed
 // from `hubId`), so legacy graphs stay stable.
 export type HubPlanetIdentity =
-  | 'brass-gas-giant'
-  | 'bone-rock'
-  | 'ice-crystal'
-  | 'deep-ocean'
-  | 'ember-forge';
+  | "brass-gas-giant"
+  | "bone-rock"
+  | "ice-crystal"
+  | "deep-ocean"
+  | "ember-forge";
 
 // W8 E9 — optional custom-cursor layer for the BUILT app (generalizes the
 // editor's MagneticCursor into a config-driven, per-app cursor). Additive
 // (INV-18): absent → the OS cursor, unchanged. Rendered by the runtime hosts
 // (preview route + canvas preview-app), reduced-motion + coarse-pointer aware.
-export type CursorLayerStyle = 'ring' | 'halo' | 'dot' | 'beam';
+export type CursorLayerStyle = "ring" | "halo" | "dot" | "beam";
 
 export interface CursorLayerConfig {
   /** Visual style of the cursor layer. */
@@ -595,11 +606,11 @@ export interface CursorLayerConfig {
 // TARGET hub's preset to pick the reveal look, veil, speed, and accent. Additive
 // (INV-18): absent → the default brass curtain, unchanged.
 export type HubTransitionKind =
-  | 'curtain' // pleated brass curtain closing from both edges (default)
-  | 'veil' // soft branded veil fade
-  | 'dissolve' // noise-threshold dissolve
-  | 'wipe' // directional linear WebGL wipe
-  | 'glass-sweep'; // refractive chrome slab sweep
+  | "curtain" // pleated brass curtain closing from both edges (default)
+  | "veil" // soft branded veil fade
+  | "dissolve" // noise-threshold dissolve
+  | "wipe" // directional linear WebGL wipe
+  | "glass-sweep"; // refractive chrome slab sweep
 
 export interface HubTransitionPreset {
   kind: HubTransitionKind;
@@ -620,11 +631,11 @@ export interface HubTransitionPreset {
 // is non-destructive in both directions. Absent → '3d' (the read-side
 // migration for every legacy hub; `resolveHubRenderMode`). The galaxy never
 // reads this field (planets are identical in either mode).
-export type HubRenderMode = '3d' | '2d';
+export type HubRenderMode = "3d" | "2d";
 
 export const HUB_RENDER_MODE_VALUES: readonly HubRenderMode[] = Object.freeze([
-  '3d',
-  '2d',
+  "3d",
+  "2d",
 ] as const);
 
 export interface PrismHub {
@@ -676,7 +687,7 @@ export interface PrismVisualTransform {
 export interface PrismVisual {
   sourceAsset?: string;
   transform: PrismVisualTransform;
-  shape?: 'rect' | 'rounded' | 'circle' | 'pill' | string;
+  shape?: "rect" | "rounded" | "circle" | "pill" | string;
   shapeRadius?: number;
   alpha?: number;
   // POLISH PC (matte) — when true the image-plane material renders OPAQUE
@@ -714,7 +725,7 @@ export interface PrismTextContent {
 
 export interface PrismLayer {
   id: string;
-  type: 'sprite' | 'overlay' | 'text' | string;
+  type: "sprite" | "overlay" | "text" | string;
   z?: number;
   region?: string;
   overlayRegion?: string;
@@ -732,7 +743,12 @@ export interface PrismVisualSpec {
   sourceAsset?: string;
   textContent: PrismTextContent[];
   layers: PrismLayer[];
-  animationSpec?: { method?: number; fps?: number; frameCount?: number; [k: string]: unknown };
+  animationSpec?: {
+    method?: number;
+    fps?: number;
+    frameCount?: number;
+    [k: string]: unknown;
+  };
   [k: string]: unknown;
 }
 
@@ -785,7 +801,7 @@ export interface PrismSamHints {
 }
 
 export interface PrismAlphaCutout {
-  necessity: 'none' | 'soft' | 'hard' | string;
+  necessity: "none" | "soft" | "hard" | string;
   backgroundAffinity?: string;
   antialiasHint?: string;
   [k: string]: unknown;
@@ -801,7 +817,10 @@ export interface PrismAnimationKeyframe {
   [k: string]: unknown;
 }
 
-export type PrismAnimationSpec = Record<string, PrismAnimationKeyframe[] | unknown>;
+export type PrismAnimationSpec = Record<
+  string,
+  PrismAnimationKeyframe[] | unknown
+>;
 
 export interface PrismVisualNeighbors {
   parentSection: string | null;
@@ -815,7 +834,12 @@ export interface PrismInteractionNeighbors {
 }
 
 export interface PrismResponsiveSizing {
-  [breakpoint: string]: { width?: number; height?: number; scale?: number; [k: string]: unknown };
+  [breakpoint: string]: {
+    width?: number;
+    height?: number;
+    scale?: number;
+    [k: string]: unknown;
+  };
 }
 
 export interface PrismVisibility {
@@ -943,7 +967,7 @@ export interface PrismNode {
   // Absent → the node is ordinary page content composed inside the active hub.
   // Editable in the Inspector; round-trips through save/reload. Never alters the
   // node's representation in galaxy/canvas (it is still one backing graph node).
-  globalSlot?: 'header' | 'footer';
+  globalSlot?: "header" | "footer";
   // STEP8 canvas-toolbar Selection group (canvas-spec §5 "lock/unlock"; INV-18
   // additive). `locked === true` removes the node from transform authoring: the
   // CanvasTransformGizmo skips it and the toolbar Transform tools refuse to
@@ -1082,37 +1106,37 @@ export function deriveContentType(node: PrismNode): NodeContentType {
   // integration — connected platform hookups / branded action tiles. (A node
   // that owns only a data/backend model also reads as 'integration' for the
   // galaxy glance-badge until W-4 introduces a dedicated data glyph.)
-  if (node.integrationRefs?.length || node.functionTiles?.length || node.dataModel?.persistence) return 'integration';
+  if (
+    node.integrationRefs?.length ||
+    node.functionTiles?.length ||
+    node.dataModel?.persistence
+  )
+    return "integration";
   // 3d-object — a GLB mesh, an in-canvas primitive, or mesh render mode.
-  if (node.meshUrl || node.meshPrimitive || node.renderMode === 'mesh') return '3d-object';
+  if (node.meshUrl || node.meshPrimitive || node.renderMode === "mesh")
+    return "3d-object";
   // text — MSDF text render mode or a per-node text contract.
-  if (node.renderMode === 'text' || node.textSpec) return 'text';
+  if (node.renderMode === "text" || node.textSpec) return "text";
   // image — a per-node image presentation, a source texture, or an image plane.
   if (
     node.imageSpec ||
     node.visual?.sourceAsset ||
-    node.renderMode === 'sprite' ||
-    node.renderMode === 'plane' ||
-    node.renderMode === 'parallax-plane'
+    node.renderMode === "sprite" ||
+    node.renderMode === "plane" ||
+    node.renderMode === "parallax-plane"
   ) {
-    return 'image';
+    return "image";
   }
   // serviceTag soft hints (legacy graphs predating the richer artifact fields).
-  if (node.serviceTag === 'ui-text') return 'text';
-  if (node.serviceTag === 'ui-3d') return '3d-object';
+  if (node.serviceTag === "ui-text") return "text";
+  if (node.serviceTag === "ui-3d") return "3d-object";
   // default fallback.
-  return 'image';
+  return "image";
 }
 
 // P4 3D-OBJECT — the frozen primitive-mesh contract (additive only).
 export type MeshPrimitiveKind =
-  | 'cube'
-  | 'sphere'
-  | 'plane'
-  | 'cylinder'
-  | 'cone'
-  | 'torus'
-  | 'capsule';
+  "cube" | "sphere" | "plane" | "cylinder" | "cone" | "torus" | "capsule";
 
 export interface MeshPrimitive {
   kind: MeshPrimitiveKind;
@@ -1131,14 +1155,73 @@ export interface MeshPrimitive {
   };
 }
 
-export const MESH_PRIMITIVE_DEFAULTS: Record<MeshPrimitiveKind, Required<NonNullable<MeshPrimitive['params']>>> = {
-  cube: { width: 0.6, height: 0.6, depth: 0.6, radius: 0, tube: 0, length: 0, segments: 1 },
-  sphere: { width: 0, height: 0, depth: 0, radius: 0.38, tube: 0, length: 0, segments: 48 },
-  plane: { width: 0.9, height: 0.9, depth: 0, radius: 0, tube: 0, length: 0, segments: 1 },
-  cylinder: { width: 0, height: 0.7, depth: 0, radius: 0.3, tube: 0, length: 0, segments: 48 },
-  cone: { width: 0, height: 0.7, depth: 0, radius: 0.34, tube: 0, length: 0, segments: 48 },
-  torus: { width: 0, height: 0, depth: 0, radius: 0.34, tube: 0.12, length: 0, segments: 48 },
-  capsule: { width: 0, height: 0, depth: 0, radius: 0.22, tube: 0, length: 0.45, segments: 24 },
+export const MESH_PRIMITIVE_DEFAULTS: Record<
+  MeshPrimitiveKind,
+  Required<NonNullable<MeshPrimitive["params"]>>
+> = {
+  cube: {
+    width: 0.6,
+    height: 0.6,
+    depth: 0.6,
+    radius: 0,
+    tube: 0,
+    length: 0,
+    segments: 1,
+  },
+  sphere: {
+    width: 0,
+    height: 0,
+    depth: 0,
+    radius: 0.38,
+    tube: 0,
+    length: 0,
+    segments: 48,
+  },
+  plane: {
+    width: 0.9,
+    height: 0.9,
+    depth: 0,
+    radius: 0,
+    tube: 0,
+    length: 0,
+    segments: 1,
+  },
+  cylinder: {
+    width: 0,
+    height: 0.7,
+    depth: 0,
+    radius: 0.3,
+    tube: 0,
+    length: 0,
+    segments: 48,
+  },
+  cone: {
+    width: 0,
+    height: 0.7,
+    depth: 0,
+    radius: 0.34,
+    tube: 0,
+    length: 0,
+    segments: 48,
+  },
+  torus: {
+    width: 0,
+    height: 0,
+    depth: 0,
+    radius: 0.34,
+    tube: 0.12,
+    length: 0,
+    segments: 48,
+  },
+  capsule: {
+    width: 0,
+    height: 0,
+    depth: 0,
+    radius: 0.22,
+    tube: 0,
+    length: 0.45,
+    segments: 24,
+  },
 };
 
 // CANVAS-FINAL / Change Artifact Upload wizard — per-face image mapping
@@ -1175,7 +1258,8 @@ export const FACE_SLOT_COUNT: Record<MeshPrimitiveKind, number> = {
 
 // CANVAS-FINAL / Change Artifact wizard — how an artifact originated. Plain
 // vocabulary; surfaced in the artifact-library tile label (no machine ids).
-export type ArtifactSource = 'upload' | 'url' | 'generated' | 'prebuilt' | 'initial';
+export type ArtifactSource =
+  "upload" | "url" | "generated" | "prebuilt" | "initial";
 
 // CANVAS-FINAL / Change Artifact wizard (canvas-spec §12.2 + §11, criterion
 // 20; additive only). One retired artifact in a node's append-only library.
@@ -1215,11 +1299,7 @@ export interface ArtifactLibraryEntry {
 // auto-fix dispatched); `fixed` after an in-place repair; `valid` when the live
 // test passed. The status is surfaced as a badge in the Functions tab.
 export type FunctionTileValidationStatus =
-  | 'unvalidated'
-  | 'validating'
-  | 'valid'
-  | 'broken'
-  | 'fixed';
+  "unvalidated" | "validating" | "valid" | "broken" | "fixed";
 
 export interface FunctionTileValidation {
   status: FunctionTileValidationStatus;
@@ -1250,7 +1330,7 @@ export interface FunctionTile {
   /** Plain-language platform name ("Stripe"). */
   platform: string;
   /** Where this tile came from: the provider catalog, or a saved user snippet. */
-  source: 'catalog' | 'snippet';
+  source: "catalog" | "snippet";
   /** When `source === 'snippet'`, the SnippetStore id it was instantiated from. */
   snippetId?: string;
   /** Free-form, NON-SECRET params the action takes (amounts, ids, modes — never tokens). */
@@ -1298,7 +1378,7 @@ export interface IntegrationAsset {
 
 // The auth method used to connect a platform (criteria C2). All resolve to a
 // CapabilityRef in the vault/provider — Prism never holds the raw credential.
-export type IntegrationAuthMethod = 'oauth2.1' | 'mcp' | 'api-token' | 'cli';
+export type IntegrationAuthMethod = "oauth2.1" | "mcp" | "api-token" | "cli";
 
 // A connected third-party integration on a node (criteria C). SECURITY: carries
 // a CAPABILITY REFERENCE only (INV-NEV2-2 / INV-R13 / FP-NE-7) — never a raw
@@ -1382,7 +1462,7 @@ export interface PromptEditLogEntry {
   /** The kinds of steps applied (e.g. ['design','animation','function']). */
   stepKinds: string[];
   /** Which orchestrator produced it ('stub' | 'live'), for honest provenance. */
-  origin: 'stub' | 'live';
+  origin: "stub" | "live";
 }
 
 // WORKSPACE-COMPLETION W-3 — provenance + trust record for the unified per-node
@@ -1396,7 +1476,7 @@ export interface NodeAgentLogEntry {
   /** ISO timestamp the plan was committed. */
   at: string;
   /** Which trigger ran the shared engine. */
-  trigger: 'prompt-edit' | 'self-heal';
+  trigger: "prompt-edit" | "self-heal";
   /** The validated plan id the orchestrator returned. */
   planId: string;
   /** The orchestrator's one-line summary of the plan. */
@@ -1404,13 +1484,13 @@ export interface NodeAgentLogEntry {
   /** The step kinds actually applied to this node (e.g. ['design']). */
   appliedStepKinds: string[];
   /** Which orchestrator produced the plan, for honest provenance. */
-  origin: 'stub' | 'live';
+  origin: "stub" | "live";
   /** Self-heal only: the telemetry trust signal recorded after re-validation. */
   trust?: {
     /** Why the node was marked suspect by runtime telemetry. */
     suspectReason: string;
     /** Whether the validated-plan loop changed the node or left it as-is. */
-    outcome: 'repaired' | 'unchanged';
+    outcome: "repaired" | "unchanged";
   };
 }
 
@@ -1420,7 +1500,7 @@ export interface NodeAgentLogEntry {
 // a hidden flag per device, so the built composition genuinely RE-LAYS-OUT for
 // the device (not merely a resized viewport). Absent device / absent field →
 // the authored desktop layout (no change). Never mutated by compile/preview.
-export type DeviceMode = 'desktop' | 'tablet' | 'mobile';
+export type DeviceMode = "desktop" | "tablet" | "mobile";
 
 export interface ResponsiveDevicePose {
   /** Absolute scene-position overrides for this device (omit = keep authored). */
@@ -1451,9 +1531,9 @@ export interface ResponsiveScenePos {
 // OVERLAY on the current hub (customizable size + location). Deeper behaviour
 // (live data/API/submit) remains node-editor scope.
 export type FunctionBinding =
-  | { kind: 'navigate'; hubId: string }
+  | { kind: "navigate"; hubId: string }
   | {
-      kind: 'overlay';
+      kind: "overlay";
       /** The global element (nodeId, isGlobalElement) to open as an overlay. */
       elementId: string;
       /** Overlay size as viewport fractions (0..1). Default ~0.34 × 0.62. */
@@ -1465,10 +1545,10 @@ export type FunctionBinding =
   // `configure` applies a variant to a layer (tap-to-apply finish swap);
   // `configure-layer` makes a layer the active catalog tab. Both drive
   // useConfiguratorStore; the visible swap rides AtelierApplier. Additive only.
-  | { kind: 'configure'; layer: string; variant: string }
-  | { kind: 'configure-layer'; layer: string }
+  | { kind: "configure"; layer: string; variant: string }
+  | { kind: "configure-layer"; layer: string }
   // F5 Atelier — save / share / reset the watch build (spec §3.5).
-  | { kind: 'atelier-action'; action: 'save' | 'reset' | 'share' };
+  | { kind: "atelier-action"; action: "save" | "reset" | "share" };
 
 // APP-REALITY P7 — a GLOBAL ELEMENT's overlay presentation. The element's
 // VISUAL design (a premium holographic detail card with glitch/transparency
@@ -1476,7 +1556,7 @@ export type FunctionBinding =
 // DATA content (pricing, manufacturer copy) is node-editor scope. Additive.
 export interface OverlaySpec {
   /** Overlay component kind. 'holographic-detail' = the premium glitch/holo card. */
-  kind?: 'holographic-detail';
+  kind?: "holographic-detail";
   title?: string;
   tagline?: string;
   specs?: { label: string; value: string }[];
@@ -1498,7 +1578,7 @@ export interface ImageCrop {
 export interface ImageSpec {
   /** How the (cropped) texture fills the node's plane. 'cover' crops to
    *  fill; 'contain' letterboxes (transparent margins); 'fill' stretches. */
-  fit?: 'cover' | 'contain' | 'fill';
+  fit?: "cover" | "contain" | "fill";
   crop?: ImageCrop;
   /** Rounded-corner radius as a fraction of the plane's half-min-dimension,
    *  0 (square) .. 1 (fully pill/circular). Cut in the shader (TSL mask) —
@@ -1509,7 +1589,7 @@ export interface ImageSpec {
 }
 
 export const IMAGE_SPEC_DEFAULT: ImageSpec = {
-  fit: 'cover',
+  fit: "cover",
   cornerRadius: 0,
   opacity: 1,
 };
@@ -1521,12 +1601,7 @@ export const IMAGE_SPEC_DEFAULT: ImageSpec = {
 // camera; the timeline fires on the rising edge). Additive; legacy graphs that
 // only used the original 5 kinds parse unchanged.
 export type AnimationDriverKind =
-  | 'time'
-  | 'scroll'
-  | 'pointer'
-  | 'state'
-  | 'event'
-  | 'inview';
+  "time" | "scroll" | "pointer" | "state" | "event" | "inview";
 
 // W8 E8 — optional per-binding driver configuration (INV-18 additive). Absent →
 // the driver's default behavior (byte-stable for legacy bindings).
@@ -1563,20 +1638,16 @@ export interface AnimationBinding {
 // `coordinateSpace` is implicit (`scroll-timeline`); ScrollBindings are not
 // keyframes, so FP-08 doesn't apply.
 export type ScrollBindingProperty =
-  | 'translateX'
-  | 'translateY'
-  | 'translateZ'
-  | 'rotateX'
-  | 'rotateY'
-  | 'rotateZ'
-  | 'scale'
-  | 'opacity';
+  | "translateX"
+  | "translateY"
+  | "translateZ"
+  | "rotateX"
+  | "rotateY"
+  | "rotateZ"
+  | "scale"
+  | "opacity";
 
-export type ScrollBindingEase =
-  | 'linear'
-  | 'easeIn'
-  | 'easeOut'
-  | 'easeInOut';
+export type ScrollBindingEase = "linear" | "easeIn" | "easeOut" | "easeInOut";
 
 export interface ScrollBinding {
   property: ScrollBindingProperty;
@@ -1591,11 +1662,11 @@ export interface ScrollBinding {
 // the five into a single matrix is forbidden (INV-22). Tuple order mirrors
 // the spec table at §4.
 export const KEYFRAME_COORDINATE_SPACES = [
-  'universe',
-  'hub-scene',
-  'viewport-composition',
-  'scroll-timeline',
-  'camera',
+  "universe",
+  "hub-scene",
+  "viewport-composition",
+  "scroll-timeline",
+  "camera",
 ] as const;
 
 export type PrismKeyframeCoordinateSpace =
@@ -1605,11 +1676,11 @@ export type PrismKeyframeCoordinateSpace =
 // Phase 8 Animation Inspector tab (SC-045) and the three baseline primitives
 // (`load` fade-in, `in-view` slide, `hover` lift; SC-046).
 export const KEYFRAME_TRIGGERS = [
-  'load',
-  'scroll',
-  'hover',
-  'click',
-  'in-view',
+  "load",
+  "scroll",
+  "hover",
+  "click",
+  "in-view",
 ] as const;
 
 export type PrismKeyframeTrigger = (typeof KEYFRAME_TRIGGERS)[number];
@@ -1641,7 +1712,8 @@ export interface PrismKeyframe {
   trigger?: PrismKeyframeTrigger;
 }
 
-export type PrismEdgeType = 'triggers' | 'state-update' | 'data-flow' | 'event-bubble' | string;
+export type PrismEdgeType =
+  "triggers" | "state-update" | "data-flow" | "event-bubble" | string;
 
 export interface PrismEdge {
   from: string;
