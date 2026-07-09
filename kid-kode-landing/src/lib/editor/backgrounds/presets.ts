@@ -94,6 +94,7 @@ export function mergeParams(
 // ── Brass Nebula ─────────────────────────────────────────────────────────────
 const brassNebula: BackgroundPreset = {
   id: "brass-nebula",
+  thumbUrl: "/three-d-bg/thumbs/brass-nebula.webp",
   category: "nebulae",
   motion: "drift",
   renderModes: ["3d"],
@@ -152,6 +153,7 @@ const brassNebula: BackgroundPreset = {
 // ── Ice Field ────────────────────────────────────────────────────────────────
 const iceField: BackgroundPreset = {
   id: "ice-field",
+  thumbUrl: "/three-d-bg/thumbs/ice-field.webp",
   category: "nebulae",
   motion: "calm",
   renderModes: ["3d"],
@@ -207,6 +209,7 @@ const iceField: BackgroundPreset = {
 // minTier 'T2'); until then this is the procedural deep-space preset.
 const observatoryDeep: BackgroundPreset = {
   id: "observatory-deep",
+  thumbUrl: "/three-d-bg/thumbs/observatory-deep.webp",
   category: "deep-space",
   motion: "calm",
   renderModes: ["3d"],
@@ -266,6 +269,7 @@ const COSMIC_PLATE = "/three-d-bg/cosmic-plate.png";
 const COSMIC_DEPTH = "/three-d-bg/cosmic-plate-depth.png";
 const cosmicDrift: BackgroundPreset = {
   id: "cosmic-drift",
+  thumbUrl: "/three-d-bg/thumbs/cosmic-drift.webp",
   category: "plates",
   motion: "drift",
   renderModes: ["3d"],
@@ -340,6 +344,7 @@ const CAPTURE_PLATE = "/three-d-bg/capture-observatory.png";
 const CAPTURE_DEPTH = "/three-d-bg/capture-observatory-depth.png";
 const capturedObservatory: BackgroundPreset = {
   id: "captured-observatory",
+  thumbUrl: "/three-d-bg/thumbs/captured-observatory.webp",
   category: "captured",
   motion: "calm",
   renderModes: ["3d"],

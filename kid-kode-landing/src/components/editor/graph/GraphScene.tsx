@@ -28,6 +28,7 @@ import { GalaxyStarfield, GalaxyNebula, GalaxyOrbitRings, SunCorona, type Galaxy
 import { gsap } from 'gsap';
 
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
+import { useBackgroundPreviewStore } from '@/stores/useBackgroundPreviewStore';
 import { ChromeSlabLayer } from '@/components/editor/chrome-layer';
 import { HubSceneTransition } from '@/components/editor/transition/HubSceneTransition';
 import {
@@ -4612,7 +4613,13 @@ function GalaxyHubBackdrop({ quality }: { quality: GalaxyQuality }) {
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
   const hubs = useGraphSourceStore((s) => s.hubs);
   const active = hubs.find((h) => h.hubId === activeHubId) ?? null;
-  const hubHasNebula = !!active?.background?.some(
+  // W-BG hover preview: the picker's transient stack counts too, so hovering
+  // a catalog card previews live even while standing in galaxy.
+  const previewLayers = useBackgroundPreviewStore((s) =>
+    active?.hubId && s.hubId === active.hubId ? s.layers : null,
+  );
+  const bg = previewLayers ?? active?.background;
+  const hubHasNebula = !!bg?.some(
     (l) => l.kind === 'volumetric-nebula' || l.kind === 'gradient-volume',
   );
   return (

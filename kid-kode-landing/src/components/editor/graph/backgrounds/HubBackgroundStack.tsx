@@ -17,6 +17,7 @@ import type {
 import { getBackgroundPalette } from "@/lib/editor/backgrounds/palettes";
 import { tierMeets, type DeviceTier } from "@/lib/editor/backgrounds/tier";
 import { useBackgroundTier } from "./useBackgroundTier";
+import { useBackgroundPreviewStore } from "@/stores/useBackgroundPreviewStore";
 import { VolumetricNebulaLayer } from "./VolumetricNebulaLayer";
 import { ParticleFieldLayer, type ParticleVariant } from "./ParticleFieldLayer";
 import { ParallaxPlaneLayer } from "./ParallaxPlaneLayer";
@@ -224,17 +225,29 @@ export function HubBackgroundStack({
    *  plate / splat layers are hub-interior and omitted (C8 galaxy). */
   envOnly?: boolean;
 }) {
+  // W-BG hover preview: while the picker previews a preset for THIS hub, its
+  // transient layer stack substitutes for `hub.background` (never persisted).
+  const previewLayers = useBackgroundPreviewStore((s) =>
+    hub?.hubId && s.hubId === hub.hubId ? s.layers : null,
+  );
+  const effective = previewLayers ?? hub?.background;
   const layers = useMemo(
     () =>
-      (hub?.background ?? []).filter(
+      (effective ?? []).filter(
         (l) =>
           l.kind &&
           PROCEDURAL_KINDS.has(l.kind) &&
           (!envOnly || ENV_KINDS.has(l.kind)),
       ),
-    [hub?.background, envOnly],
+    [effective, envOnly],
   );
-  const overBackdrop = useMemo(() => hubHasBackdropPlate(hub), [hub]);
+  const overBackdrop = useMemo(
+    () =>
+      !!effective?.some(
+        (l) => l.kind === "image" || l.kind === "parallax-plane",
+      ),
+    [effective],
+  );
   if (layers.length === 0) return null;
   return (
     <group name="hub:procedural-background">
