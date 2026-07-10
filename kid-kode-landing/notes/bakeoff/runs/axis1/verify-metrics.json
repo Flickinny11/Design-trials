@@ -1,6 +1,6 @@
 {
   "verifier": "src/lib/prism/codegen/verifier.ts::verifyNodeModule (shipped)",
-  "gradedAt": "2026-07-10T03:29:24.380Z",
+  "gradedAt": "2026-07-10T06:17:03.226Z",
   "summary": {
     "claude-haiku-4.5": {
       "generations": 150,
@@ -138,7 +138,7 @@
       },
       "p50WallMs": 19523,
       "p95WallMs": 44984,
-      "meanCostPerNodeUsd": 0.0038430495652173914,
+      "meanCostPerNodeUsd": 0.0010179229565217393,
       "topViolationRules": [
         [
           "MISSING_TEXT_CONTENT",
@@ -6185,7 +6185,7 @@
       ],
       "wallMs": 19326,
       "apiMs": null,
-      "costUsd": 0.0040752
+      "costUsd": 0.00106988
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6201,7 +6201,7 @@
       "violations": [],
       "wallMs": 31674,
       "apiMs": null,
-      "costUsd": 0.005505599999999999
+      "costUsd": 0.00140364
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6217,7 +6217,7 @@
       "violations": [],
       "wallMs": 16271,
       "apiMs": null,
-      "costUsd": 0.003546
+      "costUsd": 0.0009464000000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6233,7 +6233,7 @@
       "violations": [],
       "wallMs": 18212,
       "apiMs": null,
-      "costUsd": 0.0036596999999999997
+      "costUsd": 0.00097314
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6249,7 +6249,7 @@
       "violations": [],
       "wallMs": 21569,
       "apiMs": null,
-      "costUsd": 0.0044889
+      "costUsd": 0.0011666200000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6265,7 +6265,7 @@
       "violations": [],
       "wallMs": 13478,
       "apiMs": null,
-      "costUsd": 0.0028641
+      "costUsd": 0.0007875
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6281,7 +6281,7 @@
       "violations": [],
       "wallMs": 35911,
       "apiMs": null,
-      "costUsd": 0.005250899999999999
+      "costUsd": 0.00134386
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6297,7 +6297,7 @@
       "violations": [],
       "wallMs": 44984,
       "apiMs": null,
-      "costUsd": 0.006356099999999999
+      "costUsd": 0.00160174
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6313,7 +6313,7 @@
       "violations": [],
       "wallMs": 12692,
       "apiMs": null,
-      "costUsd": 0.0026121
+      "costUsd": 0.0007281400000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6329,7 +6329,7 @@
       "violations": [],
       "wallMs": 8560,
       "apiMs": null,
-      "costUsd": 0.0018338999999999999
+      "costUsd": 0.00054558
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6345,7 +6345,7 @@
       "violations": [],
       "wallMs": 12107,
       "apiMs": null,
-      "costUsd": 0.0023139
+      "costUsd": 0.0006575800000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6379,7 +6379,7 @@
       "violations": [],
       "wallMs": 13008,
       "apiMs": null,
-      "costUsd": 0.002778
+      "costUsd": 0.0007666400000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6395,7 +6395,7 @@
       "violations": [],
       "wallMs": 21776,
       "apiMs": null,
-      "costUsd": 0.004308
+      "costUsd": 0.0011236400000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6419,7 +6419,7 @@
       ],
       "wallMs": 28901,
       "apiMs": null,
-      "costUsd": 0.005122799999999999
+      "costUsd": 0.00131488
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6443,7 +6443,7 @@
       ],
       "wallMs": 32866,
       "apiMs": null,
-      "costUsd": 0.0054096
+      "costUsd": 0.0013818
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6468,7 +6468,7 @@
       "violations": [],
       "wallMs": 8099,
       "apiMs": null,
-      "costUsd": 0.0019401
+      "costUsd": 0.0005707800000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6492,7 +6492,7 @@
       ],
       "wallMs": 6076,
       "apiMs": null,
-      "costUsd": 0.0015285
+      "costUsd": 0.0004747400000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6508,7 +6508,7 @@
       "violations": [],
       "wallMs": 12396,
       "apiMs": null,
-      "costUsd": 0.0026157
+      "costUsd": 0.00072842
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6532,7 +6532,7 @@
       ],
       "wallMs": 17819,
       "apiMs": null,
-      "costUsd": 0.0035243999999999996
+      "costUsd": 0.0009416400000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6556,7 +6556,7 @@
       ],
       "wallMs": 13783,
       "apiMs": null,
-      "costUsd": 0.0026531999999999997
+      "costUsd": 0.0007383600000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6580,7 +6580,7 @@
       ],
       "wallMs": 17299,
       "apiMs": null,
-      "costUsd": 0.0033204
+      "costUsd": 0.00089404
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6596,7 +6596,7 @@
       "violations": [],
       "wallMs": 20297,
       "apiMs": null,
-      "costUsd": 0.0025721999999999997
+      "costUsd": 0.0007190400000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6612,7 +6612,7 @@
       "violations": [],
       "wallMs": 19572,
       "apiMs": null,
-      "costUsd": 0.0025998
+      "costUsd": 0.00072548
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6628,7 +6628,7 @@
       "violations": [],
       "wallMs": 22541,
       "apiMs": null,
-      "costUsd": 0.0033161999999999996
+      "costUsd": 0.0008926400000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6652,7 +6652,7 @@
       ],
       "wallMs": 34364,
       "apiMs": null,
-      "costUsd": 0.005505599999999999
+      "costUsd": 0.00140364
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6676,7 +6676,7 @@
       ],
       "wallMs": 25618,
       "apiMs": null,
-      "costUsd": 0.004377600000000001
+      "costUsd": 0.0011404400000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6701,7 +6701,7 @@
       "violations": [],
       "wallMs": 12376,
       "apiMs": null,
-      "costUsd": 0.0019812
+      "costUsd": 0.0005804400000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6726,7 +6726,7 @@
       "violations": [],
       "wallMs": 11643,
       "apiMs": null,
-      "costUsd": 0.0026256
+      "costUsd": 0.0007308000000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6750,7 +6750,7 @@
       ],
       "wallMs": 28292,
       "apiMs": null,
-      "costUsd": 0.0044481
+      "costUsd": 0.00115794
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6766,7 +6766,7 @@
       "violations": [],
       "wallMs": 29841,
       "apiMs": null,
-      "costUsd": 0.0049149
+      "costUsd": 0.00126686
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6799,7 +6799,7 @@
       ],
       "wallMs": 17334,
       "apiMs": null,
-      "costUsd": 0.0034517999999999997
+      "costUsd": 0.000924
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6823,7 +6823,7 @@
       ],
       "wallMs": 22971,
       "apiMs": null,
-      "costUsd": 0.0046565999999999995
+      "costUsd": 0.00120512
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6848,7 +6848,7 @@
       "violations": [],
       "wallMs": 15097,
       "apiMs": null,
-      "costUsd": 0.0029193
+      "costUsd": 0.0007995400000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6864,7 +6864,7 @@
       "violations": [],
       "wallMs": 14062,
       "apiMs": null,
-      "costUsd": 0.0012369000000000002
+      "costUsd": 0.00040698000000000004
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6880,7 +6880,7 @@
       "violations": [],
       "wallMs": 15542,
       "apiMs": null,
-      "costUsd": 0.0024261
+      "costUsd": 0.00068446
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6913,7 +6913,7 @@
       ],
       "wallMs": 37458,
       "apiMs": null,
-      "costUsd": 0.005922299999999999
+      "costUsd": 0.0015017799999999999
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6929,7 +6929,7 @@
       "violations": [],
       "wallMs": 42973,
       "apiMs": null,
-      "costUsd": 0.006655499999999999
+      "costUsd": 0.0016728600000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6953,7 +6953,7 @@
       ],
       "wallMs": 15231,
       "apiMs": null,
-      "costUsd": 0.0028038000000000004
+      "costUsd": 0.00077224
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6969,7 +6969,7 @@
       "violations": [],
       "wallMs": 13281,
       "apiMs": null,
-      "costUsd": 0.0026921999999999996
+      "costUsd": 0.0007462
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -6985,7 +6985,7 @@
       "violations": [],
       "wallMs": 12414,
       "apiMs": null,
-      "costUsd": 0.0025206
+      "costUsd": 0.0007061600000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7009,7 +7009,7 @@
       ],
       "wallMs": 21400,
       "apiMs": null,
-      "costUsd": 0.004296
+      "costUsd": 0.0011214
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7033,7 +7033,7 @@
       ],
       "wallMs": 20608,
       "apiMs": null,
-      "costUsd": 0.004002
+      "costUsd": 0.0010528000000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7057,7 +7057,7 @@
       ],
       "wallMs": 15695,
       "apiMs": null,
-      "costUsd": 0.0027467999999999998
+      "costUsd": 0.0007599200000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7073,7 +7073,7 @@
       "violations": [],
       "wallMs": 17648,
       "apiMs": null,
-      "costUsd": 0.0033015
+      "costUsd": 0.00088942
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7089,7 +7089,7 @@
       "violations": [],
       "wallMs": 33278,
       "apiMs": null,
-      "costUsd": 0.0060123
+      "costUsd": 0.0015219400000000003
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7105,7 +7105,7 @@
       "violations": [],
       "wallMs": 22632,
       "apiMs": null,
-      "costUsd": 0.003959099999999999
+      "costUsd": 0.00104286
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7129,7 +7129,7 @@
       ],
       "wallMs": 17804,
       "apiMs": null,
-      "costUsd": 0.0037683
+      "costUsd": 0.0009983400000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7154,7 +7154,7 @@
       "violations": [],
       "wallMs": 28260,
       "apiMs": null,
-      "costUsd": 0.0048495
+      "costUsd": 0.00125062
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7178,7 +7178,7 @@
       ],
       "wallMs": 31517,
       "apiMs": null,
-      "costUsd": 0.005172
+      "costUsd": 0.0013258000000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7202,7 +7202,7 @@
       ],
       "wallMs": 22099,
       "apiMs": null,
-      "costUsd": 0.0035892
+      "costUsd": 0.00095648
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7245,7 +7245,7 @@
       "violations": [],
       "wallMs": 16373,
       "apiMs": null,
-      "costUsd": 0.0027110999999999993
+      "costUsd": 0.0007516600000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7269,7 +7269,7 @@
       ],
       "wallMs": 13512,
       "apiMs": null,
-      "costUsd": 0.0023937
+      "costUsd": 0.00067774
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7293,7 +7293,7 @@
       ],
       "wallMs": 14848,
       "apiMs": null,
-      "costUsd": 0.0033453000000000003
+      "costUsd": 0.00089978
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7318,7 +7318,7 @@
       "violations": [],
       "wallMs": 14664,
       "apiMs": null,
-      "costUsd": 0.0021969
+      "costUsd": 0.0006307000000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7334,7 +7334,7 @@
       "violations": [],
       "wallMs": 14469,
       "apiMs": null,
-      "costUsd": 0.0027165
+      "costUsd": 0.0007519400000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7350,7 +7350,7 @@
       "violations": [],
       "wallMs": 13638,
       "apiMs": null,
-      "costUsd": 0.0024116999999999997
+      "costUsd": 0.0006808200000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7374,7 +7374,7 @@
       ],
       "wallMs": 15240,
       "apiMs": null,
-      "costUsd": 0.0033177
+      "costUsd": 0.0008941800000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7398,7 +7398,7 @@
       ],
       "wallMs": 17401,
       "apiMs": null,
-      "costUsd": 0.0036777
+      "costUsd": 0.0009781800000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7428,7 +7428,7 @@
       ],
       "wallMs": 11359,
       "apiMs": null,
-      "costUsd": 0.0026732999999999995
+      "costUsd": 0.0007438200000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7444,7 +7444,7 @@
       "violations": [],
       "wallMs": 4071,
       "apiMs": null,
-      "costUsd": 0.0012504
+      "costUsd": 0.0004099200000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7460,7 +7460,7 @@
       "violations": [],
       "wallMs": 11991,
       "apiMs": null,
-      "costUsd": 0.0024924
+      "costUsd": 0.00069972
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7476,7 +7476,7 @@
       "violations": [],
       "wallMs": 17923,
       "apiMs": null,
-      "costUsd": 0.003648
+      "costUsd": 0.0009693600000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7501,7 +7501,7 @@
       "violations": [],
       "wallMs": 18658,
       "apiMs": null,
-      "costUsd": 0.0034268999999999997
+      "costUsd": 0.0009191000000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7517,7 +7517,7 @@
       "violations": [],
       "wallMs": 8277,
       "apiMs": null,
-      "costUsd": 0.0020025
+      "costUsd": 0.00058674
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7542,7 +7542,7 @@
       "violations": [],
       "wallMs": 39653,
       "apiMs": null,
-      "costUsd": 0.0078237
+      "costUsd": 0.0019450200000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7567,7 +7567,7 @@
       "violations": [],
       "wallMs": 12178,
       "apiMs": null,
-      "costUsd": 0.0027456
+      "costUsd": 0.0007588000000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7592,7 +7592,7 @@
       "violations": [],
       "wallMs": 6122,
       "apiMs": null,
-      "costUsd": 0.0014664
+      "costUsd": 0.00046032000000000007
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7608,7 +7608,7 @@
       "violations": [],
       "wallMs": 21872,
       "apiMs": null,
-      "costUsd": 0.0033615
+      "costUsd": 0.00090342
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7632,7 +7632,7 @@
       ],
       "wallMs": 9330,
       "apiMs": null,
-      "costUsd": 0.0018099
+      "costUsd": 0.0005413799999999999
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7656,7 +7656,7 @@
       ],
       "wallMs": 19099,
       "apiMs": null,
-      "costUsd": 0.0037947
+      "costUsd": 0.0010045000000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7681,7 +7681,7 @@
       "violations": [],
       "wallMs": 21295,
       "apiMs": null,
-      "costUsd": 0.0038672999999999997
+      "costUsd": 0.0010213000000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7723,7 +7723,7 @@
       ],
       "wallMs": 21145,
       "apiMs": null,
-      "costUsd": 0.0037863000000000003
+      "costUsd": 0.00100758
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7747,7 +7747,7 @@
       ],
       "wallMs": 28617,
       "apiMs": null,
-      "costUsd": 0.0057423
+      "costUsd": 0.0014639800000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7780,7 +7780,7 @@
       ],
       "wallMs": 56007,
       "apiMs": null,
-      "costUsd": 0.010356299999999999
+      "costUsd": 0.0025391800000000003
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7796,7 +7796,7 @@
       "violations": [],
       "wallMs": 25729,
       "apiMs": null,
-      "costUsd": 0.005646299999999999
+      "costUsd": 0.0014401800000000003
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7820,7 +7820,7 @@
       ],
       "wallMs": 33461,
       "apiMs": null,
-      "costUsd": 0.0052664999999999995
+      "costUsd": 0.00135226
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7862,7 +7862,7 @@
       ],
       "wallMs": 18157,
       "apiMs": null,
-      "costUsd": 0.0038943
+      "costUsd": 0.00103502
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7886,7 +7886,7 @@
       ],
       "wallMs": 11994,
       "apiMs": null,
-      "costUsd": 0.0026427
+      "costUsd": 0.00074298
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7919,7 +7919,7 @@
       ],
       "wallMs": 35471,
       "apiMs": null,
-      "costUsd": 0.006339600000000001
+      "costUsd": 0.0016060800000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7935,7 +7935,7 @@
       "violations": [],
       "wallMs": 26316,
       "apiMs": null,
-      "costUsd": 0.0046464
+      "costUsd": 0.001211
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7965,7 +7965,7 @@
       ],
       "wallMs": 42214,
       "apiMs": null,
-      "costUsd": 0.007868400000000001
+      "costUsd": 0.0019628000000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7981,7 +7981,7 @@
       "violations": [],
       "wallMs": 30197,
       "apiMs": null,
-      "costUsd": 0.0056985
+      "costUsd": 0.0014527800000000003
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -7997,7 +7997,7 @@
       "violations": [],
       "wallMs": 23215,
       "apiMs": null,
-      "costUsd": 0.0042873
+      "costUsd": 0.0011235000000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8013,7 +8013,7 @@
       "violations": [],
       "wallMs": 29462,
       "apiMs": null,
-      "costUsd": 0.004374899999999999
+      "costUsd": 0.00114394
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8029,7 +8029,7 @@
       "violations": [],
       "wallMs": 13265,
       "apiMs": null,
-      "costUsd": 0.0028788000000000004
+      "costUsd": 0.00079548
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8045,7 +8045,7 @@
       "violations": [],
       "wallMs": 29176,
       "apiMs": null,
-      "costUsd": 0.0052044
+      "costUsd": 0.0013381200000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8061,7 +8061,7 @@
       "violations": [],
       "wallMs": 19523,
       "apiMs": null,
-      "costUsd": 0.0034752
+      "costUsd": 0.0009346400000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8103,7 +8103,7 @@
       ],
       "wallMs": 29377,
       "apiMs": null,
-      "costUsd": 0.0048303
+      "costUsd": 0.0012503400000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8127,7 +8127,7 @@
       ],
       "wallMs": 16229,
       "apiMs": null,
-      "costUsd": 0.0032391
+      "costUsd": 0.00088102
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8151,7 +8151,7 @@
       ],
       "wallMs": 14210,
       "apiMs": null,
-      "costUsd": 0.0030903
+      "costUsd": 0.0008463
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8175,7 +8175,7 @@
       ],
       "wallMs": 18039,
       "apiMs": null,
-      "costUsd": 0.0036758999999999997
+      "costUsd": 0.00098294
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8200,7 +8200,7 @@
       "violations": [],
       "wallMs": 27616,
       "apiMs": null,
-      "costUsd": 0.004030199999999999
+      "costUsd": 0.0010670800000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8225,7 +8225,7 @@
       "violations": [],
       "wallMs": 34190,
       "apiMs": null,
-      "costUsd": 0.0049467
+      "costUsd": 0.0012766600000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8241,7 +8241,7 @@
       "violations": [],
       "wallMs": 28033,
       "apiMs": null,
-      "costUsd": 0.004920299999999999
+      "costUsd": 0.0012705
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8266,7 +8266,7 @@
       "violations": [],
       "wallMs": 20633,
       "apiMs": null,
-      "costUsd": 0.0032445
+      "costUsd": 0.0008793400000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8282,7 +8282,7 @@
       "violations": [],
       "wallMs": 21245,
       "apiMs": null,
-      "costUsd": 0.0039597
+      "costUsd": 0.00104622
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8298,7 +8298,7 @@
       "violations": [],
       "wallMs": 15668,
       "apiMs": null,
-      "costUsd": 0.0028785
+      "costUsd": 0.00079394
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8322,7 +8322,7 @@
       ],
       "wallMs": 9498,
       "apiMs": null,
-      "costUsd": 0.0019785
+      "costUsd": 0.0005845
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8338,7 +8338,7 @@
       "violations": [],
       "wallMs": 24889,
       "apiMs": null,
-      "costUsd": 0.0039777
+      "costUsd": 0.00105098
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8354,7 +8354,7 @@
       "violations": [],
       "wallMs": 46771,
       "apiMs": null,
-      "costUsd": 0.0068217
+      "costUsd": 0.00171458
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8384,7 +8384,7 @@
       ],
       "wallMs": 12065,
       "apiMs": null,
-      "costUsd": 0.0025482
+      "costUsd": 0.00071848
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8408,7 +8408,7 @@
       ],
       "wallMs": 21009,
       "apiMs": null,
-      "costUsd": 0.0043494
+      "costUsd": 0.00113876
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8441,7 +8441,7 @@
       ],
       "wallMs": 28246,
       "apiMs": null,
-      "costUsd": 0.0046986
+      "costUsd": 0.00122192
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8457,7 +8457,7 @@
       "violations": [],
       "wallMs": 32475,
       "apiMs": null,
-      "costUsd": 0.0059478
+      "costUsd": 0.0015134
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8502,7 +8502,7 @@
       ],
       "wallMs": 11335,
       "apiMs": null,
-      "costUsd": 0.0026508
+      "costUsd": 0.00074704
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8526,7 +8526,7 @@
       ],
       "wallMs": 20892,
       "apiMs": null,
-      "costUsd": 0.0032844
+      "costUsd": 0.0008948800000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8551,7 +8551,7 @@
       "violations": [],
       "wallMs": 57790,
       "apiMs": null,
-      "costUsd": 0.0062883
+      "costUsd": 0.00159642
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8567,7 +8567,7 @@
       "violations": [],
       "wallMs": 48825,
       "apiMs": null,
-      "costUsd": 0.004562699999999999
+      "costUsd": 0.0011937800000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8583,7 +8583,7 @@
       "violations": [],
       "wallMs": 46859,
       "apiMs": null,
-      "costUsd": 0.0044451000000000004
+      "costUsd": 0.00116634
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8617,7 +8617,7 @@
       "violations": [],
       "wallMs": 14957,
       "apiMs": null,
-      "costUsd": 0.0037449000000000002
+      "costUsd": 0.0010008600000000001
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8633,7 +8633,7 @@
       "violations": [],
       "wallMs": 26851,
       "apiMs": null,
-      "costUsd": 0.0038868
+      "costUsd": 0.0010334800000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8649,7 +8649,7 @@
       "violations": [],
       "wallMs": 24062,
       "apiMs": null,
-      "costUsd": 0.004141199999999999
+      "costUsd": 0.00109284
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8673,7 +8673,7 @@
       ],
       "wallMs": 22030,
       "apiMs": null,
-      "costUsd": 0.002844
+      "costUsd": 0.00079016
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8689,7 +8689,7 @@
       "violations": [],
       "wallMs": 16350,
       "apiMs": null,
-      "costUsd": 0.0036821999999999996
+      "costUsd": 0.0009858800000000002
     },
     {
       "contestant": "deepseek-v4-flash",
@@ -8722,7 +8722,7 @@
       ],
       "wallMs": 13405,
       "apiMs": null,
-      "costUsd": 0.0030114
+      "costUsd": 0.0008293600000000001
     },
     {
       "contestant": "glm-5.2",
