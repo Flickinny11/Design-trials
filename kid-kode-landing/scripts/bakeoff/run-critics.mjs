@@ -92,7 +92,7 @@ async function criticClaudeCli(model, entry) {
     '--strict-mcp-config', '--mcp-config', '{"mcpServers":{}}',
     '--output-format', 'json',
     singleFramePrompt(entry, 'cli'),
-  ], { maxBuffer: 64 * 1024 * 1024, timeout: 600000 });
+  ], { maxBuffer: 64 * 1024 * 1024, timeout: 600000, cwd: '/tmp/wbake-clean' });
   const env = JSON.parse(stdout);
   return { verdict: parseVerdict(env.result), latencyMs: Date.now() - t0, costUsd: env.total_cost_usd ?? 0, billing: 'subscription-equivalent', raw: env.result, usage: env.usage };
 }

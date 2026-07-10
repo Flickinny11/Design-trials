@@ -89,7 +89,7 @@ async function judgeBatch(batch, label) {
     '--strict-mcp-config', '--mcp-config', '{"mcpServers":{}}',
     '--output-format', 'json',
     prompt,
-  ], { maxBuffer: 64 * 1024 * 1024, timeout: 900000 });
+  ], { maxBuffer: 64 * 1024 * 1024, timeout: 900000, cwd: '/tmp/wbake-clean' });
   const env = JSON.parse(stdout);
   const wallMs = Date.now() - t0;
   writeFileSync(path.join(JUDGE_DIR, `${label}.json`), JSON.stringify({

@@ -55,7 +55,7 @@ async function passOnce(passNo) {
       '--strict-mcp-config', '--mcp-config', '{"mcpServers":{}}',
       '--output-format', 'json',
       prompt,
-    ], { maxBuffer: 64 * 1024 * 1024, timeout: 900000 });
+    ], { maxBuffer: 64 * 1024 * 1024, timeout: 900000, cwd: '/tmp/wbake-clean' });
     const env = JSON.parse(stdout);
     writeFileSync(path.join(GOLDEN_DIR, `${label}.json`), JSON.stringify({
       label, model: 'claude-fable-5', frames: batch.map((b, k) => ({ label: `F${k + 1}`, goldenId: b.goldenId })),

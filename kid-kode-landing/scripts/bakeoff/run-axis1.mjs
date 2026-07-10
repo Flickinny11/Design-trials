@@ -113,11 +113,21 @@ async function callOpenAICompat(route, model, system, user, spec, maxTokens = 81
   throw new Error(`transport failure after retries: ${lastErr}`);
 }
 
+// Clean-room cwd: running the CLI from the repo cwd injected ~28-30K tokens
+// of project context (CLAUDE.md + memory) into every contestant call —
+// prompt-purity contamination + a 10x cost multiplier. All Claude-lane calls
+// run from an empty directory; effort=low approximates the API default
+// (no extended thinking), matching the other contestants' provider defaults.
+// The contaminated pilot records are quarantined under
+// notes/bakeoff/runs/pilot-dirty-envelope/ (disclosed in the report).
+const CLEAN_CWD = '/tmp/wbake-clean';
+
 async function callClaudeCli(model, system, user) {
   const t0 = Date.now();
   const { stdout } = await pexecFile('claude', [
     '--print',
     '--model', model,
+    '--effort', 'low',
     '--settings', '{"hooks":{},"disableAllHooks":true}',
     '--system-prompt', system,
     '--disallowedTools', '*',
@@ -125,7 +135,7 @@ async function callClaudeCli(model, system, user) {
     '--strict-mcp-config', '--mcp-config', '{"mcpServers":{}}',
     '--output-format', 'json',
     user,
-  ], { maxBuffer: 64 * 1024 * 1024, timeout: 300000 });
+  ], { maxBuffer: 64 * 1024 * 1024, timeout: 300000, cwd: CLEAN_CWD });
   const wallMs = Date.now() - t0;
   const env = JSON.parse(stdout);
   if (env.is_error) throw new Error(`claude cli error: ${String(env.result).slice(0, 200)}`);

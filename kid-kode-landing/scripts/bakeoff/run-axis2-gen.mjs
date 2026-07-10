@@ -27,6 +27,15 @@ const argOf = (k, d) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1]
 const onlyContestant = argOf('--contestant', null);
 const onlyCase = argOf('--case', null);
 const RUNS_PER_NODE = Number(argOf('--runs', '2'));
+// Mid-wave route override (2026-07-09: the Fireworks account hit its monthly
+// spend cap, HTTP 412) — gpt-oss-120b is dual-homed on Groq (same open
+// weights). Applies only with --contestant; disclosed in run records.
+const routeOverride = argOf('--route-override', null);
+const modelOverride = argOf('--model-override', null);
+// Groq on_demand tier: 8000 TPM counted per request INCLUDING max_tokens —
+// the lane runs with a reduced completion budget (truncations recorded via
+// finish_reason and disclosed).
+const maxTokensArg = Number(argOf('--max-tokens', '12288'));
 
 const L1 = readFileSync(path.join(FUNCTIONAL, 'l1-system.txt'), 'utf8');
 const L2 = readFileSync(path.join(FUNCTIONAL, 'l2-world.txt'), 'utf8');
@@ -62,7 +71,7 @@ async function callOpenAICompat(route, model, user, spec) {
       const res = await fetch(r.chatUrl, {
         method: 'POST',
         headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model, max_tokens: 12288, messages: [
+        body: JSON.stringify({ model, max_tokens: maxTokensArg, messages: [
           { role: 'system', content: SYSTEM },
           { role: 'user', content: user },
         ] }),
@@ -84,10 +93,16 @@ async function callOpenAICompat(route, model, user, spec) {
   throw new Error(`transport failure after retries: ${lastErr}`);
 }
 
+// Clean-room cwd + effort low — see run-axis1.mjs callClaudeCli (the repo
+// cwd injected ~28-30K tokens of project context into contestant calls; the
+// contaminated pilot is quarantined under runs/pilot-dirty-envelope/).
+const CLEAN_CWD = '/tmp/wbake-clean';
+
 async function callClaudeCli(model, user) {
   const t0 = Date.now();
   const { stdout } = await pexecFile('claude', [
     '--print', '--model', model,
+    '--effort', 'low',
     '--settings', '{"hooks":{},"disableAllHooks":true}',
     '--system-prompt', SYSTEM,
     '--disallowedTools', '*',
@@ -95,7 +110,7 @@ async function callClaudeCli(model, user) {
     '--strict-mcp-config', '--mcp-config', '{"mcpServers":{}}',
     '--output-format', 'json',
     user,
-  ], { maxBuffer: 64 * 1024 * 1024, timeout: 420000 });
+  ], { maxBuffer: 64 * 1024 * 1024, timeout: 420000, cwd: CLEAN_CWD });
   const wallMs = Date.now() - t0;
   const env = JSON.parse(stdout);
   if (env.is_error) throw new Error(`claude cli error: ${String(env.result).slice(0, 200)}`);
@@ -146,7 +161,11 @@ async function pool(items, worker, concurrency) {
   return { done, err };
 }
 
-const active = CONTESTANTS.filter((ct) => (onlyContestant ? ct.id === onlyContestant : ct.route !== 'none'));
+const active = CONTESTANTS
+  .filter((ct) => (onlyContestant ? ct.id === onlyContestant : ct.route !== 'none'))
+  .map((ct) => (onlyContestant && routeOverride
+    ? { ...ct, route: routeOverride, model: modelOverride ?? ct.model, routeOverridden: true }
+    : ct));
 mkdirSync(RUNS_DIR, { recursive: true });
 for (const ct of active) {
   if (ct.route === 'none') continue;
