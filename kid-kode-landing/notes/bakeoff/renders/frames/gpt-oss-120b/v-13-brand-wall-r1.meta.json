@@ -1,6 +1,6 @@
 {
   "bundle": "gpt-oss-120b/v-13-brand-wall-r1",
-  "capturedAt": "2026-07-10T03:37:25.320Z",
+  "capturedAt": "2026-07-10T05:17:16.291Z",
   "probe": {
     "status": "error",
     "error": "module did not default-export a function",

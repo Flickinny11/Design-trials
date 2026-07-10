@@ -1,6 +1,6 @@
 {
   "label": "batch-006-v-06-loop-column-gallery",
-  "judgedAt": "2026-07-10T04:11:27.490Z",
+  "judgedAt": "2026-07-10T05:22:55.173Z",
   "model": "claude-fable-5",
   "route": "claude-cli-print",
   "frames": [
@@ -35,38 +35,38 @@
       "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-06-loop-column-gallery-r2.png"
     }
   ],
-  "costUsd": 0.681674,
-  "durationApiMs": 41284,
-  "wallMs": 43056,
+  "costUsd": 0.670394,
+  "durationApiMs": 38140,
+  "wallMs": 41049,
   "usage": {
     "input_tokens": 3263,
-    "cache_creation_input_tokens": 20726,
+    "cache_creation_input_tokens": 20707,
     "cache_read_input_tokens": 82886,
-    "output_tokens": 2967,
+    "output_tokens": 2749,
     "server_tool_use": {
       "web_search_requests": 0,
       "web_fetch_requests": 0
     },
     "service_tier": "standard",
     "cache_creation": {
-      "ephemeral_1h_input_tokens": 20726,
+      "ephemeral_1h_input_tokens": 20707,
       "ephemeral_5m_input_tokens": 0
     },
     "inference_geo": "not_available",
     "iterations": [
       {
         "input_tokens": 23,
-        "output_tokens": 1957,
+        "output_tokens": 1758,
         "cache_read_input_tokens": 44683,
-        "cache_creation_input_tokens": 14246,
+        "cache_creation_input_tokens": 14227,
         "cache_creation": {
           "ephemeral_5m_input_tokens": 0,
-          "ephemeral_1h_input_tokens": 14246
+          "ephemeral_1h_input_tokens": 14227
         },
         "type": "message"
       }
     ],
     "speed": "standard"
   },
-  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 8, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame ~95% empty black field\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field outside center square\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — one tiny plate, not six photographic plates in a looping column\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card — blue glow instead of ink/red palette\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card occupies ~2% of frame\" } ], \"notes\": \"Near-empty black frame; single tiny blue glass plate, no column, no photographic textures, no red accent.\" }, { \"frame\": \"F2\", \"score\": 8, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame ~95% empty black field\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field outside center square\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — six-plate loop column absent\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card — blue cast, off spec palette\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card far too small in frame\" } ], \"notes\": \"Identical near-void render to F1; spec's gallery column and filmic textures entirely missing.\" }, { \"frame\": \"F3\", \"score\": 8, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame ~95% empty black field\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field outside center square\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no six distinct image plates, no loop column\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card — blue vignette replaces red accent\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card ~2% of frame area\" } ], \"notes\": \"Same near-empty frame; one miniature blue plate against void, violating DL16 and the spec wholesale.\" }, { \"frame\": \"F4\", \"score\": 8, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame ~95% empty black field\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field outside center square\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — photographic plate column absent\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card — blue glow, off palette\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card far undersized\" } ], \"notes\": \"Duplicate of F3's near-void output; nothing from the case spec is realized.\" }, { \"frame\": \"F5\", \"score\": 8, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame ~95% empty black field\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field outside center square\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no six-plate gallery, no filmic textures\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card — blue-dominant instead of #ff2a38 accent\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card ~2% of frame\" } ], \"notes\": \"Near-empty black render with a single tiny blue plate; spec elements absent.\" }, { \"frame\": \"F6\", \"score\": 8, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame ~95% empty black field\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field outside center square\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — loop column and distinct photographs missing\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card — blue cast, off palette\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card far too small\" } ], \"notes\": \"Identical near-void frame across all six renders; likely a shared render-pipeline failure, not model variance.\" } ] }"
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — one tiny plate instead of six photographic plates\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card\" } ], \"notes\": \"Near-empty black frame; single tiny blue glass card, no photo textures, no column, no red accent.\" }, { \"frame\": \"F2\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — six-plate loop column absent\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card\" } ], \"notes\": \"Identical near-void render; one small blue plate, spec's photographic gallery entirely missing.\" }, { \"frame\": \"F3\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no six-plate column, no textures\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card\" } ], \"notes\": \"Same near-empty frame; tiny blue card in black void, off-palette, no photographs.\" }, { \"frame\": \"F4\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — gallery column absent\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card\" } ], \"notes\": \"Duplicate near-void render; no plates, no red accent, blue glow only.\" }, { \"frame\": \"F5\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — six photographic plates missing\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card\" } ], \"notes\": \"Near-empty black frame with one tiny blue placeholder card; spec unfulfilled.\" }, { \"frame\": \"F6\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — loop column and textures absent\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card\" } ], \"notes\": \"Identical near-void frame across all candidates; likely shared broken render pipeline, not model-specific output.\" } ] }"
 }

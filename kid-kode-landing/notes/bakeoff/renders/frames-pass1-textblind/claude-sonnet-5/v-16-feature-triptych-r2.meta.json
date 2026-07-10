@@ -1,0 +1,18 @@
+{
+  "bundle": "claude-sonnet-5/v-16-feature-triptych-r2",
+  "capturedAt": "2026-07-10T03:10:33.731Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "claude-sonnet-5/v-16-feature-triptych-r2",
+    "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'set')"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

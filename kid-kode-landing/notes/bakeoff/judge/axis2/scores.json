@@ -7,38 +7,38 @@
       "caseId": "v-01-orbit-product-hero",
       "tag": "v-01-orbit-product-hero-r1",
       "batchNo": 1,
-      "score": 12,
+      "score": 14,
       "mustFix": [
         {
           "defect": "FLAT_VOID",
-          "region": "background field, ~95% of frame"
+          "region": "entire background field, ~97% of frame"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "upper-center-right, watch is a tiny sliver"
+          "region": "upper-center — watch renders at tiny fraction of frame instead of dominating hero scale"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "lower half — no plinth, no gradient stops"
+          "region": "lower half — plinth entirely absent, watch floats"
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "watch body — flat ambient, no key+rim or signal light"
-        },
-        {
-          "defect": "OFF_PALETTE",
-          "region": "watch case — warm gold, not brushed near-black metal"
+          "region": "whole frame — no key+rim setup, no #ff2a38 signal light, no gradient stops visible"
         },
         {
           "defect": "BROKEN_COMPOSITION",
-          "region": "object floats tilted off-center, not resting at origin"
+          "region": "upper-center-right — object off-center, edge-on, unanchored"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "watch body — gold/brass tone vs spec brushed steel-metal"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.glbLoader.load is not a function"
         }
       ],
-      "notes": "Tiny gold watch adrift in a black void; nearly every spec element (plinth, lighting rig, gradient, accent) absent.",
+      "notes": "Tiny edge-on gold watch adrift in a black void; no plinth, lighting rig, or accent. Far below exemplar bar.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -49,38 +49,38 @@
       "caseId": "v-01-orbit-product-hero",
       "tag": "v-01-orbit-product-hero-r2",
       "batchNo": 1,
-      "score": 12,
+      "score": 13,
       "mustFix": [
         {
           "defect": "FLAT_VOID",
-          "region": "background field, ~95% of frame"
+          "region": "entire background field"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "upper-center-right, watch minuscule"
+          "region": "upper-center — watch minuscule relative to frame"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "lower half — plinth and engineered gradient absent"
+          "region": "lower half — no plinth"
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "watch body — no key, rim, or accent signal light"
-        },
-        {
-          "defect": "OFF_PALETTE",
-          "region": "watch case — gold/beige vs spec palette"
+          "region": "whole frame — no key/rim/accent light, no engineered gradient"
         },
         {
           "defect": "BROKEN_COMPOSITION",
-          "region": "object tilted and floating, not centered on plinth"
+          "region": "upper-center-right — floating, edge-on"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "watch body — gold vs brushed metal"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.glbLoader is not a function"
         }
       ],
-      "notes": "Duplicate of F1's failure: unlit floating sliver in a void, spec composition never materialized.",
+      "notes": "Near-duplicate of F1; same void, floating micro-watch, zero lighting design. Not blank, but barely rendered.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -95,34 +95,34 @@
       "mustFix": [
         {
           "defect": "FLAT_VOID",
-          "region": "background field, ~95% of frame"
+          "region": "entire background field"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "upper-center-right, watch far below hero scale"
+          "region": "upper-center — watch far too small for hero"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "lower half — no plinth, no vertical gradient"
+          "region": "lower half — plinth absent"
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "watch body — flat fill, no key+rim modeling"
-        },
-        {
-          "defect": "OFF_PALETTE",
-          "region": "watch case — warm gold body"
+          "region": "whole frame — no key+rim, accent red reduced to a sliver on case edge"
         },
         {
           "defect": "BROKEN_COMPOSITION",
-          "region": "floating tilted object, no grounding"
+          "region": "upper-center-right — off-center floating object"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "watch body — gold tone off spec"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.glbLoader.load is not a function"
         }
       ],
-      "notes": "Marginal red glint at crown edge, otherwise same void: no plinth, no lighting rig, no presentation scale.",
+      "notes": "Same failure mode as Haiku: unlit micro-object in void. Faint red edge hint is the only accent trace.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -133,38 +133,38 @@
       "caseId": "v-01-orbit-product-hero",
       "tag": "v-01-orbit-product-hero-r2",
       "batchNo": 1,
-      "score": 13,
+      "score": 19,
       "mustFix": [
         {
           "defect": "FLAT_VOID",
-          "region": "background field, ~95% of frame"
+          "region": "entire background field"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "upper-center-right, tiny object"
+          "region": "upper-center — watch small, though largest of the set"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "lower half — plinth and gradient stops absent"
+          "region": "lower half — no plinth"
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "watch body — no key, rim, or accent light response"
-        },
-        {
-          "defect": "OFF_PALETTE",
-          "region": "watch case — gold vs brushed near-black spec"
+          "region": "whole frame — no key/rim/accent rig; dial catches some light"
         },
         {
           "defect": "BROKEN_COMPOSITION",
-          "region": "object floats off-center, uncentered at origin"
+          "region": "upper-center-right — floating, unanchored"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "watch case — gold vs brushed metal"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.glbLoader.load is not a function"
         }
       ],
-      "notes": "Same failure mode as F3 with slightly less surface detail; frame is effectively an empty ink field.",
+      "notes": "Best of a broken set: dial faces camera with readable material response, but still a void composition.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -175,38 +175,38 @@
       "caseId": "v-01-orbit-product-hero",
       "tag": "v-01-orbit-product-hero-r1",
       "batchNo": 1,
-      "score": 16,
+      "score": 14,
       "mustFix": [
         {
           "defect": "FLAT_VOID",
-          "region": "background field, ~93% of frame"
+          "region": "entire background field"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "upper-center-right, watch still far too small"
+          "region": "upper-center — micro-scale watch"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "lower half — no plinth or engineered gradient"
+          "region": "lower half — plinth absent"
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "watch body — dial detail visible but no key+rim structure"
-        },
-        {
-          "defect": "OFF_PALETTE",
-          "region": "watch case — warm gold body"
+          "region": "whole frame — no key+rim, no #ff2a38 signal light"
         },
         {
           "defect": "BROKEN_COMPOSITION",
-          "region": "tilted floating object, no grounding plane"
+          "region": "upper-center-right — floating edge-on object"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "watch body — gold vs spec"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.glbLoader is not a function"
         }
       ],
-      "notes": "Slightly larger render with legible dial and hint of accent, but composition, plinth, and lighting spec all unmet.",
+      "notes": "Indistinguishable from other failures; identical camera, void, and missing rig. Suggests shared broken scene setup.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -217,38 +217,38 @@
       "caseId": "v-01-orbit-product-hero",
       "tag": "v-01-orbit-product-hero-r2",
       "batchNo": 1,
-      "score": 16,
+      "score": 14,
       "mustFix": [
         {
           "defect": "FLAT_VOID",
-          "region": "background field, ~93% of frame"
+          "region": "entire background field"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "upper-center-right, sub-hero scale"
+          "region": "upper-center — watch tiny"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "lower half — plinth and gradient absent"
+          "region": "lower half — no plinth"
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "watch body — faint red bezel edge but no key/rim/signal rig"
-        },
-        {
-          "defect": "OFF_PALETTE",
-          "region": "watch case — gold vs spec metal"
+          "region": "whole frame — no key/rim/accent lighting, no gradient"
         },
         {
           "defect": "BROKEN_COMPOSITION",
-          "region": "floating tilted object, uncentered"
+          "region": "upper-center-right — unanchored floating object"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "watch body — gold vs brushed metal"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.glbLoader.load is not a function"
         }
       ],
-      "notes": "Best of a failed set: visible dial and faint red accent, still a tiny unlit object in a void.",
+      "notes": "Same void render as F5 with a faint red glint; none of the spec's lighting or plinth exists.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -259,30 +259,30 @@
       "caseId": "v-02-particle-constellation",
       "tag": "v-02-particle-constellation-r1",
       "batchNo": 2,
-      "score": 18,
+      "score": 12,
       "mustFix": [
         {
-          "defect": "FLAT_VOID",
-          "region": "background field (entire frame outside center)"
+          "defect": "SCALE_ERROR",
+          "region": "center — constellation collapsed to a tiny postage-stamp square, ~1% of frame"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center cluster — no #ff2a38 accent core or emissive glow"
+          "region": "center core — no #ff2a38 accent core or emissive glow anywhere"
         },
         {
-          "defect": "SCALE_ERROR",
-          "region": "center — constellation compressed into tiny square patch, camera far too distant"
+          "defect": "FLAT_VOID",
+          "region": "entire background field outside the small cluster"
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "center cluster — flat white specks, no depth falloff, fog, or additive glow"
+          "region": "full frame — no additive glow, no fog depth gradient"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.fontAtlas.renderText is not a function"
         }
       ],
-      "notes": "Particles render but as a tiny flat square speck-patch; no red core, no depth, frame is 95% void.",
+      "notes": "Particles render but as a minuscule monochrome patch; no red core, no depth, frame is 99% void.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -293,30 +293,30 @@
       "caseId": "v-02-particle-constellation",
       "tag": "v-02-particle-constellation-r2",
       "batchNo": 2,
-      "score": 17,
+      "score": 12,
       "mustFix": [
         {
-          "defect": "FLAT_VOID",
-          "region": "background field (entire frame outside center)"
+          "defect": "SCALE_ERROR",
+          "region": "center — cluster confined to tiny square instead of filling stage"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center cluster — no accent core, no red anywhere"
+          "region": "center core — accent #ff2a38 core absent"
         },
         {
-          "defect": "SCALE_ERROR",
-          "region": "center — cube-shaped micro-cluster instead of frame-filling ellipsoidal shell"
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "center cluster — uniform opacity, no fog sink or glow discipline"
+          "region": "full frame — no glow or fog falloff"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.fontAtlas.createTextMesh is not a function"
         }
       ],
-      "notes": "Same failure as F1: sparse boxy speck cluster, zero accent, zero materiality, vast empty field.",
+      "notes": "Same failure as r1: tiny white speck cloud, no accent core, overwhelming empty void.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -327,30 +327,30 @@
       "caseId": "v-02-particle-constellation",
       "tag": "v-02-particle-constellation-r1",
       "batchNo": 2,
-      "score": 18,
+      "score": 14,
       "mustFix": [
         {
-          "defect": "FLAT_VOID",
-          "region": "background field (entire frame outside center)"
+          "defect": "SCALE_ERROR",
+          "region": "center — ellipsoid shell rendered as tiny square patch"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center — accent core absent, no #ff2a38 emissive instances"
+          "region": "center core — no red emissive accent core"
         },
         {
-          "defect": "SCALE_ERROR",
-          "region": "center — constellation occupies ~10% of frame as square patch"
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "center cluster — no depth falloff gradient or additive glow visible"
+          "region": "full frame — no additive glow, no visible depth falloff"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
         }
       ],
-      "notes": "Renders points but wrong scale and shape, no red core, no light response; overwhelmingly void.",
+      "notes": "Marginally denser distribution than F1/F2 but identical defects: miniature monochrome cluster, void frame, spec accent missing.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -361,30 +361,30 @@
       "caseId": "v-02-particle-constellation",
       "tag": "v-02-particle-constellation-r2",
       "batchNo": 2,
-      "score": 19,
+      "score": 14,
       "mustFix": [
         {
-          "defect": "FLAT_VOID",
-          "region": "background field (entire frame outside center)"
+          "defect": "SCALE_ERROR",
+          "region": "center — constellation occupies tiny fraction of viewport"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center — no red accent core or emissive glow"
+          "region": "center core — accent #ff2a38 core and glow absent"
         },
         {
-          "defect": "SCALE_ERROR",
-          "region": "center — tiny square cluster, not an ellipsoidal frame-filling shell"
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "center cluster — flat specks, slight density variation but no real depth or fog"
+          "region": "full frame — flat white points, no light response"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.fontAtlas.createTextMesh is not a function"
         }
       ],
-      "notes": "Marginally denser cluster with hints of depth variation; still tiny, accentless, and mostly void.",
+      "notes": "Consistent with r1; particles exist but composition, palette accent, and lighting all fail the spec.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -399,10 +399,18 @@
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame — uniform near-black, zero visible geometry"
+          "region": "entire frame — uniform near-black, zero particles"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — no particles, no accent core"
         }
       ],
-      "notes": "Completely empty near-black frame; nothing rendered.",
+      "notes": "Completely empty black frame; nothing rendered.",
       "renderable": false,
       "probeStatus": "error",
       "renderables": 0
@@ -413,30 +421,30 @@
       "caseId": "v-02-particle-constellation",
       "tag": "v-02-particle-constellation-r2",
       "batchNo": 2,
-      "score": 17,
+      "score": 12,
       "mustFix": [
         {
-          "defect": "FLAT_VOID",
-          "region": "background field (entire frame outside center)"
+          "defect": "SCALE_ERROR",
+          "region": "center — tiny particle square instead of stage-filling shell"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center — accent core and red palette entirely absent"
+          "region": "center core — no red accent core or emissive glow"
         },
         {
-          "defect": "SCALE_ERROR",
-          "region": "center — micro square patch of points, wrong distribution and camera framing"
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "center cluster — uniform flat white points, no falloff, fog, or glow"
+          "region": "full frame — no additive glow or fog gradient"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: (0 , import_tsl.meshStandardNodeMaterial) is not a function"
         }
       ],
-      "notes": "Sparse boxy speck patch, no red core, no depth cues; frame reads as void with a smudge.",
+      "notes": "Particles present but miniature and monochrome; no accent, no depth, frame dominated by void.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -447,7 +455,7 @@
       "caseId": "v-03-glass-prism-refraction",
       "tag": "v-03-glass-prism-refraction-r1",
       "batchNo": 3,
-      "score": 26,
+      "score": 24,
       "mustFix": [
         {
           "defect": "DEAD_LIGHTING",
@@ -455,18 +463,18 @@
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center prism — no dispersion, iridescence, or rim light"
-        },
-        {
-          "defect": "BROKEN_COMPOSITION",
-          "region": "white quad clipping behind prism, upper-left of prism"
+          "region": "center prism — no iridescence, transmission, or emissive core"
         },
         {
           "defect": "FLAT_VOID",
           "region": "background field"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "white square jutting from upper-left of prism"
         }
       ],
-      "notes": "Matte gray triangle, not glass; stray white plane; faint red floor strip is the only palette signal.",
+      "notes": "Flat matte gray triangle, not glass; faint dispersion bar below is the only spec signal. Reads as unlit placeholder geometry.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 3
@@ -477,29 +485,37 @@
       "caseId": "v-03-glass-prism-refraction",
       "tag": "v-03-glass-prism-refraction-r2",
       "batchNo": 3,
-      "score": 37,
+      "score": 30,
       "mustFix": [
         {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center object — cube-like form, not triangular prism; no dispersion split"
+          "defect": "SCALE_ERROR",
+          "region": "center object — cube/diamond, not the specified triangular prism"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "lower-left — headline clipped to 'ht machined.'"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "bottom edge — text and micro-caption cut off frame"
         },
         {
           "defect": "OFF_PALETTE",
-          "region": "lavender floor strip and candy-pink interior, lower center"
+          "region": "lavender parallelogram under object"
         },
         {
           "defect": "FLAT_VOID",
           "region": "background field"
         },
         {
-          "defect": "DEAD_LIGHTING",
-          "region": "floor strip — flat unlit fill"
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center object — no dispersion pass or back rim light"
         }
       ],
-      "notes": "Real gloss and internal refraction attempt, but wrong geometry, candy-pink drift, flat lavender ground plane.",
+      "notes": "Glossy pink blob inside wrong-shape solid; some specular life but off-spec geometry, clipped type, AI-slop plastic sheen.",
       "renderable": true,
       "probeStatus": "ready",
-      "renderables": 3
+      "renderables": 5
     },
     {
       "bundleId": "claude-sonnet-5/v-03-glass-prism-refraction-r1",
@@ -510,26 +526,26 @@
       "score": 58,
       "mustFix": [
         {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "whole prism — no RGB dispersion fan or iridescence"
-        },
-        {
-          "defect": "FLAT_VOID",
-          "region": "background field"
+          "defect": "OFF_PALETTE",
+          "region": "right edge — large flat pale blue-gray slab"
         },
         {
           "defect": "DEFAULT_BLUE_DRIFT",
-          "region": "left face gradient and center hotspot glow"
+          "region": "right edge slab"
         },
         {
-          "defect": "ALL_BLACK_ELEMENT",
-          "region": "right prism face"
+          "defect": "FLAT_VOID",
+          "region": "left half background"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center prism — iridescence and back rim light absent"
         }
       ],
-      "notes": "Correct prism geometry, red refractions, emissive hotspot; best of set but no spectral split, blue-tinted glass, empty surround.",
+      "notes": "Best of set: readable glass prism, red emissive core, dispersion streak on-accent. Right-side blue slab and dead background hold it back.",
       "renderable": true,
       "probeStatus": "ready",
-      "renderables": 3
+      "renderables": 5
     },
     {
       "bundleId": "claude-sonnet-5/v-03-glass-prism-refraction-r2",
@@ -548,7 +564,7 @@
           "region": "TypeError: (0 , import_text.createTextMesh) is not a function"
         }
       ],
-      "notes": "Uniform near-black frame; nothing rendered.",
+      "notes": "Uniform near-black frame at background color; nothing rendered.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 0
@@ -559,7 +575,7 @@
       "caseId": "v-03-glass-prism-refraction",
       "tag": "v-03-glass-prism-refraction-r1",
       "batchNo": 3,
-      "score": 4,
+      "score": 5,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
@@ -570,7 +586,7 @@
           "region": "ReferenceError: THREE is not defined"
         }
       ],
-      "notes": "Uniform near-black frame; nothing rendered.",
+      "notes": "Uniform near-black frame; no geometry, light, or spec elements rendered.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 0
@@ -581,7 +597,7 @@
       "caseId": "v-03-glass-prism-refraction",
       "tag": "v-03-glass-prism-refraction-r2",
       "batchNo": 3,
-      "score": 4,
+      "score": 5,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
@@ -592,7 +608,7 @@
           "region": "TypeError: tsl.TransmissionNode is not a constructor"
         }
       ],
-      "notes": "Uniform near-black frame; nothing rendered.",
+      "notes": "Uniform near-black frame; no geometry, light, or spec elements rendered.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 0
@@ -603,18 +619,22 @@
       "caseId": "v-04-kinetic-type-headline",
       "tag": "v-04-kinetic-type-headline-r1",
       "batchNo": 4,
-      "score": 6,
+      "score": 5,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "full frame"
-        },
-        {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center (no MSDF headline, no accent underline)"
+          "region": "entire frame"
         },
         {
           "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center (no headline, no glyphs, no accent underline)"
+        },
+        {
+          "defect": "ALL_BLACK_ELEMENT",
           "region": "background field"
         },
         {
@@ -622,7 +642,7 @@
           "region": "TypeError: ctx.fontAtlas is not a function"
         }
       ],
-      "notes": "Only an untextured white quad on black; no glyphs, no depth, no accent. Render failed.",
+      "notes": "Near-empty frame: lone white placeholder quad on flat black; no MSDF type, no accent, nothing rendered.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -633,18 +653,22 @@
       "caseId": "v-04-kinetic-type-headline",
       "tag": "v-04-kinetic-type-headline-r2",
       "batchNo": 4,
-      "score": 6,
+      "score": 5,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "full frame"
-        },
-        {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center (no headline or underline)"
+          "region": "entire frame"
         },
         {
           "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center (no headline, no glyphs, no accent underline)"
+        },
+        {
+          "defect": "ALL_BLACK_ELEMENT",
           "region": "background field"
         },
         {
@@ -652,7 +676,7 @@
           "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
         }
       ],
-      "notes": "Identical failed frame to F1: single white placeholder quad, zero typography or kinetic evidence.",
+      "notes": "Identical failed render to F1: single white square, zero typography, zero materiality.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -667,25 +691,29 @@
       "mustFix": [
         {
           "defect": "GARBLED_TEXT",
-          "region": "center rectangle (vertical stripe noise, unreadable glyph atlas)"
+          "region": "upper-right quadrant ([object Object] strings)"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center (no legible headline, no accent underline)"
+          "region": "center (no MSDF headline, no accent underline)"
         },
         {
-          "defect": "LOW_CONTRAST",
-          "region": "full frame"
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center panel (striped noise texture, off-center text)"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower half of center panel"
         },
         {
           "defect": "DEAD_LIGHTING",
           "region": "background field"
         }
       ],
-      "notes": "MSDF pipeline broke into vertical stripe artifacts; nothing legible, no red accent, no dimensionality.",
+      "notes": "Runtime data-binding failure: literal [object Object] labels over glitch-stripe panel; spec headline never materialized.",
       "renderable": true,
       "probeStatus": "ready",
-      "renderables": 2
+      "renderables": 5
     },
     {
       "bundleId": "claude-sonnet-5/v-04-kinetic-type-headline-r2",
@@ -693,25 +721,33 @@
       "caseId": "v-04-kinetic-type-headline",
       "tag": "v-04-kinetic-type-headline-r2",
       "batchNo": 4,
-      "score": 18,
+      "score": 34,
       "mustFix": [
         {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center panel (headline glyphs absent)"
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center card (headline and subcopy fully overlapping)"
         },
         {
-          "defect": "FLAT_VOID",
-          "region": "center card above and below underline"
+          "defect": "GARBLED_TEXT",
+          "region": "center card (TIME, MACHINED collides with billet line)"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center card (headline undersized vs 0.62em hero spec)"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center panel (flat gradient, no dimensional type or parallax depth)"
         },
         {
           "defect": "LOW_CONTRAST",
-          "region": "surface panel vs background"
+          "region": "center card (ghosted mid-fade headline)"
         }
       ],
-      "notes": "Correct palette and accent underline render, but the entire headline failed to draw; large dead panel.",
+      "notes": "Right palette and red accent present, but headline collides with subcopy, flat 2D type, no dimensionality; unshippable.",
       "renderable": true,
       "probeStatus": "ready",
-      "renderables": 2
+      "renderables": 6
     },
     {
       "bundleId": "gpt-oss-120b/v-04-kinetic-type-headline-r1",
@@ -719,22 +755,26 @@
       "caseId": "v-04-kinetic-type-headline",
       "tag": "v-04-kinetic-type-headline-r1",
       "batchNo": 4,
-      "score": 3,
+      "score": 2,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "full frame"
-        },
-        {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "full frame (no headline, no underline)"
+          "region": "entire frame"
         },
         {
           "defect": "FLAT_VOID",
-          "region": "background field"
+          "region": "entire frame"
+        },
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame (nothing rendered)"
         }
       ],
-      "notes": "Completely empty near-black frame; nothing rendered at all.",
+      "notes": "Completely black frame; nothing rendered at all.",
       "renderable": false,
       "probeStatus": "error",
       "renderables": 0
@@ -745,18 +785,22 @@
       "caseId": "v-04-kinetic-type-headline",
       "tag": "v-04-kinetic-type-headline-r2",
       "batchNo": 4,
-      "score": 6,
+      "score": 5,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "full frame"
-        },
-        {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center (no glyphs or accent)"
+          "region": "entire frame"
         },
         {
           "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center (no headline, no glyphs, no accent underline)"
+        },
+        {
+          "defect": "ALL_BLACK_ELEMENT",
           "region": "background field"
         },
         {
@@ -764,7 +808,7 @@
           "region": "TypeError: ctx2.textureLoader.load is not a function"
         }
       ],
-      "notes": "Single white placeholder quad on black, matching F1/F2 failure; no typography or motion evidence.",
+      "notes": "Same failure mode as F1/F2: lone white placeholder quad on black void; spec entirely absent.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -782,19 +826,15 @@
           "region": "entire frame"
         },
         {
-          "defect": "FLAT_VOID",
-          "region": "background field"
-        },
-        {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center (no knot, pedestal, or lighting)"
+          "region": "entire frame"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.textureLoader.load is not a function"
         }
       ],
-      "notes": "Uniform near-black frame; nothing rendered. Scored as rendered blank per rubric.",
+      "notes": "Uniform near-black frame; no pedestal, knot, or lighting rendered at all.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 0
@@ -812,19 +852,15 @@
           "region": "entire frame"
         },
         {
-          "defect": "FLAT_VOID",
-          "region": "background field"
-        },
-        {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center (no knot, pedestal, or lighting)"
+          "region": "entire frame"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.textureLoader.load is not a function"
         }
       ],
-      "notes": "Identical void to F1; no geometry, no light response, total spec miss.",
+      "notes": "Identical void to F1; nothing rendered.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 0
@@ -842,19 +878,15 @@
           "region": "entire frame"
         },
         {
-          "defect": "FLAT_VOID",
-          "region": "background field"
-        },
-        {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center (no knot, pedestal, or lighting)"
+          "region": "entire frame"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.textureLoader.load is not a function"
         }
       ],
-      "notes": "Uniform near-black void; render produced nothing scoreable.",
+      "notes": "Uniform near-black frame; scene failed to render.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 0
@@ -865,33 +897,37 @@
       "caseId": "v-05-pedestal-material-study",
       "tag": "v-05-pedestal-material-study-r2",
       "batchNo": 5,
-      "score": 33,
+      "score": 30,
       "mustFix": [
         {
+          "defect": "GARBLED_TEXT",
+          "region": "lower-right quadrant"
+        },
+        {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center knot (no brushed-metal PBR, anisotropy, or imperfection pass — matte white clay)"
+          "region": "center knot"
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "center knot and pedestal (flat ambient fill, no specular or contact shadow)"
+          "region": "center knot and pedestal"
         },
         {
           "defect": "FLAT_VOID",
-          "region": "background field (no gradient stops, empty right two-thirds)"
+          "region": "left half background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "pedestal base"
         },
         {
           "defect": "BROKEN_COMPOSITION",
-          "region": "center card (knot clips through pedestal rim and pokes out below base)"
-        },
-        {
-          "defect": "SCALE_ERROR",
-          "region": "center (knot oversized relative to pedestal, geometry intersecting)"
+          "region": "center card"
         }
       ],
-      "notes": "Only frame with geometry: knot plus pedestal present, but material study absent, lighting dead, clipping severe, no red accent.",
+      "notes": "Geometry present but flat white plastic, no brushed-metal PBR, no contact shadow, knot clips pedestal, '[object Object]' debug leak.",
       "renderable": true,
       "probeStatus": "ready",
-      "renderables": 5
+      "renderables": 7
     },
     {
       "bundleId": "gpt-oss-120b/v-05-pedestal-material-study-r1",
@@ -906,19 +942,15 @@
           "region": "entire frame"
         },
         {
-          "defect": "FLAT_VOID",
-          "region": "background field"
-        },
-        {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center (no knot, pedestal, or lighting)"
+          "region": "entire frame"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.textureLoader is not a function"
         }
       ],
-      "notes": "Uniform near-black void; nothing rendered against spec.",
+      "notes": "Uniform near-black frame; nothing rendered.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 0
@@ -936,19 +968,15 @@
           "region": "entire frame"
         },
         {
-          "defect": "FLAT_VOID",
-          "region": "background field"
-        },
-        {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center (no knot, pedestal, or lighting)"
+          "region": "entire frame"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.textureLoader is not a function"
         }
       ],
-      "notes": "Uniform near-black void; identical failure to F5.",
+      "notes": "Uniform near-black frame; nothing rendered.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 0
@@ -959,34 +987,34 @@
       "caseId": "v-06-loop-column-gallery",
       "tag": "v-06-loop-column-gallery-r1",
       "batchNo": 6,
-      "score": 8,
+      "score": 6,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "full frame ~95% empty black field"
+          "region": "full frame"
         },
         {
           "defect": "FLAT_VOID",
-          "region": "entire background field outside center square"
+          "region": "background field"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center — one tiny plate, not six photographic plates in a looping column"
+          "region": "center — one tiny plate instead of six photographic plates"
         },
         {
           "defect": "DEFAULT_BLUE_DRIFT",
-          "region": "center card — blue glow instead of ink/red palette"
+          "region": "center card"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "center card occupies ~2% of frame"
+          "region": "center card"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: Cannot read properties of undefined (reading 'ticker')"
         }
       ],
-      "notes": "Near-empty black frame; single tiny blue glass plate, no column, no photographic textures, no red accent.",
+      "notes": "Near-empty black frame; single tiny blue glass card, no photo textures, no column, no red accent.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -997,15 +1025,15 @@
       "caseId": "v-06-loop-column-gallery",
       "tag": "v-06-loop-column-gallery-r2",
       "batchNo": 6,
-      "score": 8,
+      "score": 6,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "full frame ~95% empty black field"
+          "region": "full frame"
         },
         {
           "defect": "FLAT_VOID",
-          "region": "entire background field outside center square"
+          "region": "background field"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
@@ -1013,18 +1041,18 @@
         },
         {
           "defect": "DEFAULT_BLUE_DRIFT",
-          "region": "center card — blue cast, off spec palette"
+          "region": "center card"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "center card far too small in frame"
+          "region": "center card"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.textureLoader.load is not a function"
         }
       ],
-      "notes": "Identical near-void render to F1; spec's gallery column and filmic textures entirely missing.",
+      "notes": "Identical near-void render; one small blue plate, spec's photographic gallery entirely missing.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1035,34 +1063,34 @@
       "caseId": "v-06-loop-column-gallery",
       "tag": "v-06-loop-column-gallery-r1",
       "batchNo": 6,
-      "score": 8,
+      "score": 6,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "full frame ~95% empty black field"
+          "region": "full frame"
         },
         {
           "defect": "FLAT_VOID",
-          "region": "entire background field outside center square"
+          "region": "background field"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center — no six distinct image plates, no loop column"
+          "region": "center — no six-plate column, no textures"
         },
         {
           "defect": "DEFAULT_BLUE_DRIFT",
-          "region": "center card — blue vignette replaces red accent"
+          "region": "center card"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "center card ~2% of frame area"
+          "region": "center card"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.textureLoader.load is not a function"
         }
       ],
-      "notes": "Same near-empty frame; one miniature blue plate against void, violating DL16 and the spec wholesale.",
+      "notes": "Same near-empty frame; tiny blue card in black void, off-palette, no photographs.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1073,34 +1101,34 @@
       "caseId": "v-06-loop-column-gallery",
       "tag": "v-06-loop-column-gallery-r2",
       "batchNo": 6,
-      "score": 8,
+      "score": 6,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "full frame ~95% empty black field"
+          "region": "full frame"
         },
         {
           "defect": "FLAT_VOID",
-          "region": "entire background field outside center square"
+          "region": "background field"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center — photographic plate column absent"
+          "region": "center — gallery column absent"
         },
         {
           "defect": "DEFAULT_BLUE_DRIFT",
-          "region": "center card — blue glow, off palette"
+          "region": "center card"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "center card far undersized"
+          "region": "center card"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.textureLoader.load is not a function"
         }
       ],
-      "notes": "Duplicate of F3's near-void output; nothing from the case spec is realized.",
+      "notes": "Duplicate near-void render; no plates, no red accent, blue glow only.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1111,34 +1139,34 @@
       "caseId": "v-06-loop-column-gallery",
       "tag": "v-06-loop-column-gallery-r1",
       "batchNo": 6,
-      "score": 8,
+      "score": 6,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "full frame ~95% empty black field"
+          "region": "full frame"
         },
         {
           "defect": "FLAT_VOID",
-          "region": "entire background field outside center square"
+          "region": "background field"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center — no six-plate gallery, no filmic textures"
+          "region": "center — six photographic plates missing"
         },
         {
           "defect": "DEFAULT_BLUE_DRIFT",
-          "region": "center card — blue-dominant instead of #ff2a38 accent"
+          "region": "center card"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "center card ~2% of frame"
+          "region": "center card"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.textureLoader.load is not a function"
         }
       ],
-      "notes": "Near-empty black render with a single tiny blue plate; spec elements absent.",
+      "notes": "Near-empty black frame with one tiny blue placeholder card; spec unfulfilled.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1149,34 +1177,34 @@
       "caseId": "v-06-loop-column-gallery",
       "tag": "v-06-loop-column-gallery-r2",
       "batchNo": 6,
-      "score": 8,
+      "score": 6,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "full frame ~95% empty black field"
+          "region": "full frame"
         },
         {
           "defect": "FLAT_VOID",
-          "region": "entire background field outside center square"
+          "region": "background field"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center — loop column and distinct photographs missing"
+          "region": "center — loop column and textures absent"
         },
         {
           "defect": "DEFAULT_BLUE_DRIFT",
-          "region": "center card — blue cast, off palette"
+          "region": "center card"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "center card far too small"
+          "region": "center card"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.textureLoader.load is not a function"
         }
       ],
-      "notes": "Identical near-void frame across all six renders; likely a shared render-pipeline failure, not model variance.",
+      "notes": "Identical near-void frame across all candidates; likely shared broken render pipeline, not model-specific output.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1187,42 +1215,42 @@
       "caseId": "v-07-filmstrip-carousel",
       "tag": "v-07-filmstrip-carousel-r1",
       "batchNo": 7,
-      "score": 6,
+      "score": 8,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame"
+          "region": "full frame — near-empty black field with one tiny plate"
         },
         {
           "defect": "FLAT_VOID",
-          "region": "background field"
+          "region": "background field, all quadrants"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center — no five-card filmstrip, no -18deg recession, no bevel frames"
+          "region": "center — one card instead of five, no -18deg strip, no recession, no bevel, no distinct plates"
         },
         {
           "defect": "DEFAULT_BLUE_DRIFT",
-          "region": "center card"
+          "region": "center card — indigo/blue placeholder, no #ff2a38 accent"
         },
         {
           "defect": "OFF_PALETTE",
-          "region": "center card — indigo/blue, no #ff2a38 accent"
-        },
-        {
-          "defect": "SCALE_ERROR",
-          "region": "center card — tiny single plate in vast void"
+          "region": "center card"
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "center card — flat texture fill, no clearcoat/roughness response"
+          "region": "center card — flat fill, no clearcoat/roughness response"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center card vs frame — tiny plate lost in void"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.textureLoader.load is not a function"
         }
       ],
-      "notes": "Single tiny flat blue placeholder square in a black void; carousel never rendered.",
+      "notes": "Single tiny blue placeholder card in a black void; filmstrip never rendered. Effectively a failed render.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1233,19 +1261,19 @@
       "caseId": "v-07-filmstrip-carousel",
       "tag": "v-07-filmstrip-carousel-r2",
       "batchNo": 7,
-      "score": 6,
+      "score": 8,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame"
+          "region": "full frame — near-empty black field with one tiny plate"
         },
         {
           "defect": "FLAT_VOID",
-          "region": "background field"
+          "region": "background field, all quadrants"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center — no filmstrip, one plate instead of five distinct plates"
+          "region": "center — one card instead of five, no rotation, no perspective, no distinct textures"
         },
         {
           "defect": "DEFAULT_BLUE_DRIFT",
@@ -1256,19 +1284,19 @@
           "region": "center card"
         },
         {
-          "defect": "SCALE_ERROR",
+          "defect": "DEAD_LIGHTING",
           "region": "center card"
         },
         {
-          "defect": "DEAD_LIGHTING",
-          "region": "center card"
+          "defect": "SCALE_ERROR",
+          "region": "center card vs frame"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.textureLoader.load is not a function"
         }
       ],
-      "notes": "Identical near-empty frame; no perspective, no recession, no red accent anywhere.",
+      "notes": "Identical failed render to F1: lone blue layers icon centered in void, no carousel.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1279,19 +1307,19 @@
       "caseId": "v-07-filmstrip-carousel",
       "tag": "v-07-filmstrip-carousel-r1",
       "batchNo": 7,
-      "score": 6,
+      "score": 8,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame"
+          "region": "full frame — near-empty black field with one tiny plate"
         },
         {
           "defect": "FLAT_VOID",
-          "region": "background field"
+          "region": "background field, all quadrants"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center — five-card strip, y-rotation, and machined bevels all absent"
+          "region": "center — five-card angled filmstrip absent; no bevel frames, no focus card"
         },
         {
           "defect": "DEFAULT_BLUE_DRIFT",
@@ -1302,19 +1330,19 @@
           "region": "center card"
         },
         {
-          "defect": "SCALE_ERROR",
+          "defect": "DEAD_LIGHTING",
           "region": "center card"
         },
         {
-          "defect": "DEAD_LIGHTING",
-          "region": "center card"
+          "defect": "SCALE_ERROR",
+          "region": "center card vs frame"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.textureLoader.load is not a function"
         }
       ],
-      "notes": "Same failed render: lone unlit blue texture swatch centered in dead black field.",
+      "notes": "Same failure mode: only the base placeholder texture rendered flat-on, nothing from the spec.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1325,19 +1353,19 @@
       "caseId": "v-07-filmstrip-carousel",
       "tag": "v-07-filmstrip-carousel-r2",
       "batchNo": 7,
-      "score": 6,
+      "score": 8,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame"
+          "region": "full frame — near-empty black field with one tiny plate"
         },
         {
           "defect": "FLAT_VOID",
-          "region": "background field"
+          "region": "background field, all quadrants"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center — no carousel geometry, no distinct photograph plates"
+          "region": "center — no filmstrip, no recession, no distinct plates"
         },
         {
           "defect": "DEFAULT_BLUE_DRIFT",
@@ -1348,19 +1376,19 @@
           "region": "center card"
         },
         {
-          "defect": "SCALE_ERROR",
+          "defect": "DEAD_LIGHTING",
           "region": "center card"
         },
         {
-          "defect": "DEAD_LIGHTING",
-          "region": "center card"
+          "defect": "SCALE_ERROR",
+          "region": "center card vs frame"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.textureLoader.load is not a function"
         }
       ],
-      "notes": "Near-empty duplicate frame; spec composition entirely missing, palette violated.",
+      "notes": "Duplicate of F3 failure: lone blue placeholder in void; carousel unbuilt.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1371,19 +1399,19 @@
       "caseId": "v-07-filmstrip-carousel",
       "tag": "v-07-filmstrip-carousel-r1",
       "batchNo": 7,
-      "score": 6,
+      "score": 8,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame"
+          "region": "full frame — near-empty black field with one tiny plate"
         },
         {
           "defect": "FLAT_VOID",
-          "region": "background field"
+          "region": "background field, all quadrants"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center — filmstrip, focus card, and perspective recession absent"
+          "region": "center — five cards, y-rotation, bevels, distinct photos all absent"
         },
         {
           "defect": "DEFAULT_BLUE_DRIFT",
@@ -1394,19 +1422,19 @@
           "region": "center card"
         },
         {
-          "defect": "SCALE_ERROR",
+          "defect": "DEAD_LIGHTING",
           "region": "center card"
         },
         {
-          "defect": "DEAD_LIGHTING",
-          "region": "center card"
+          "defect": "SCALE_ERROR",
+          "region": "center card vs frame"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.textureLoader.load is not a function"
         }
       ],
-      "notes": "One flat placeholder tile in void; no materiality, no accent red, no 3D.",
+      "notes": "Same near-blank render: single flat blue icon plate centered, no spec geometry or palette.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1417,19 +1445,19 @@
       "caseId": "v-07-filmstrip-carousel",
       "tag": "v-07-filmstrip-carousel-r2",
       "batchNo": 7,
-      "score": 6,
+      "score": 8,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame"
+          "region": "full frame — near-empty black field with one tiny plate"
         },
         {
           "defect": "FLAT_VOID",
-          "region": "background field"
+          "region": "background field, all quadrants"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center — no five distinct plates, no bevel, no angled strip"
+          "region": "center — filmstrip carousel entirely absent"
         },
         {
           "defect": "DEFAULT_BLUE_DRIFT",
@@ -1440,19 +1468,19 @@
           "region": "center card"
         },
         {
-          "defect": "SCALE_ERROR",
+          "defect": "DEAD_LIGHTING",
           "region": "center card"
         },
         {
-          "defect": "DEAD_LIGHTING",
-          "region": "center card"
+          "defect": "SCALE_ERROR",
+          "region": "center card vs frame"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.textureLoader is not a function"
         }
       ],
-      "notes": "Identical near-empty render across all entrants; scene setup failed, scored as rendered void.",
+      "notes": "Identical failed frame across all six candidates; likely shared pipeline bug, not model differences.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1463,38 +1491,34 @@
       "caseId": "v-08-orrery-mechanism",
       "tag": "v-08-orrery-mechanism-r1",
       "batchNo": 8,
-      "score": 25,
+      "score": 26,
       "mustFix": [
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "right of center — no secondary meshed gear"
-        },
-        {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "gear hub — no red jewel accent pivot"
-        },
-        {
-          "defect": "FLAT_VOID",
-          "region": "lower two-thirds and entire background field"
-        },
-        {
-          "defect": "BROKEN_COMPOSITION",
-          "region": "gear pushed to upper-left-of-center, not origin-centered"
+          "region": "right of center — no secondary meshed gear, no jewel accent pivot"
         },
         {
           "defect": "OFF_PALETTE",
-          "region": "gear body — warm brass, not machined steel; zero accent red"
+          "region": "center gear — brass/gold instead of machined steel; #ff2a38 accent absent"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower two-thirds and full background field — no gradient, empty near-black"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-center — small gear floats off-balance with stray rod clipping through rim"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "center object — gear far too small in frame"
+          "region": "center gear — occupies tiny fraction of frame vs 1.6-unit hero framing"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.glbLoader.load is not a function"
         }
       ],
-      "notes": "Single brass gear floating in dead void; secondary gear, jewel pivot, and gradient background all absent.",
+      "notes": "Single toy-like brass gear on void; mechanism, steel material, and red jewel pivot all missing.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1509,34 +1533,30 @@
       "mustFix": [
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "right of center — no secondary meshed gear"
-        },
-        {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "gear hub — no red jewel accent pivot"
-        },
-        {
-          "defect": "FLAT_VOID",
-          "region": "lower two-thirds and entire background field"
-        },
-        {
-          "defect": "BROKEN_COMPOSITION",
-          "region": "gear offset upper-left-of-center"
+          "region": "right of center — secondary gear and jewel pivot absent"
         },
         {
           "defect": "OFF_PALETTE",
-          "region": "gear body — brass instead of steel; no accent red"
+          "region": "center gear — gold tones, no signal-red accent anywhere"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field and lower half — flat empty black, no gradient stops"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-center — off-center placement, rod intersecting teeth"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "center object — undersized in frame"
+          "region": "center gear — undersized subject in oversized void"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: Cannot read properties of undefined (reading 'meshUrl')"
         }
       ],
-      "notes": "Near-identical to F1; same lone brass gear, same void, no spec compliance beyond one rendered mesh.",
+      "notes": "Near-identical to F1; same lone gold gear, same voided composition, spec mechanism unrealized.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1547,38 +1567,34 @@
       "caseId": "v-08-orrery-mechanism",
       "tag": "v-08-orrery-mechanism-r1",
       "batchNo": 8,
-      "score": 27,
+      "score": 26,
       "mustFix": [
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "right of center — secondary gear absent"
-        },
-        {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "gear hub — jewel accent pivot absent"
-        },
-        {
-          "defect": "FLAT_VOID",
-          "region": "background field and lower two-thirds"
-        },
-        {
-          "defect": "BROKEN_COMPOSITION",
-          "region": "gear parked upper-left-of-center"
+          "region": "right of center — no 0.9-unit secondary gear, no jewel accent"
         },
         {
           "defect": "OFF_PALETTE",
-          "region": "gear body — brass tone, no #ff2a38 accent anywhere"
+          "region": "center gear — warm brass not steel; accent red missing"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field, lower two-thirds — dead empty black"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-center — floating gear with rod clipping rim, unbalanced frame"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "center object — too small"
+          "region": "center gear — subject too small for frame"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.glbLoader.load is not a function"
         }
       ],
-      "notes": "Slightly more visible tooth depth and edge shading than F1/F2, but same spec failures and dead composition.",
+      "notes": "Same failed single-gear render as Haiku frames; slight rotation only. Mechanism and palette both missing.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1593,34 +1609,30 @@
       "mustFix": [
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "right of center — secondary gear absent"
-        },
-        {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "gear hub — jewel accent pivot absent"
-        },
-        {
-          "defect": "FLAT_VOID",
-          "region": "background field and lower two-thirds"
-        },
-        {
-          "defect": "BROKEN_COMPOSITION",
-          "region": "gear offset upper-left-of-center"
+          "region": "right of center — secondary gear and jewel pivot absent"
         },
         {
           "defect": "OFF_PALETTE",
-          "region": "gear body — brass, zero red accent"
+          "region": "center gear — gold/brass material, no #ff2a38 accent"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field and lower half — no gradient, empty void"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-center — rod intersects teeth; gear floats without anchor"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "center object — undersized"
+          "region": "center gear — undersized"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.glbLoader is not a function"
         }
       ],
-      "notes": "Same scene as F3 at a different rotation phase; marginal dimensionality, all spec elements beyond primary gear missing.",
+      "notes": "Marginally more three-quarter depth on gear; still one gear, void background, spec unmet.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1631,42 +1643,34 @@
       "caseId": "v-08-orrery-mechanism",
       "tag": "v-08-orrery-mechanism-r1",
       "batchNo": 8,
-      "score": 24,
+      "score": 26,
       "mustFix": [
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "right of center — no secondary gear"
-        },
-        {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "gear hub — no jewel accent pivot"
-        },
-        {
-          "defect": "FLAT_VOID",
-          "region": "background field, ~85% of frame"
-        },
-        {
-          "defect": "BROKEN_COMPOSITION",
-          "region": "gear upper-left-of-center, vast empty lower field"
+          "region": "right of center — no meshed secondary gear, no jewel pivot"
         },
         {
           "defect": "OFF_PALETTE",
-          "region": "gear body — brass; no accent red"
+          "region": "center gear — brass instead of machined steel; red accent absent"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field, lower two-thirds — flat black emptiness"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-center — off-balance placement, stray rod through rim"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "center object — too small"
-        },
-        {
-          "defect": "DEAD_LIGHTING",
-          "region": "background field — no gradient stops or light response"
+          "region": "center gear — too small in frame"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.glbLoader is not a function"
         }
       ],
-      "notes": "Indistinguishable from Haiku output; lone brass gear in flat void, spec's second gear and accent entirely absent.",
+      "notes": "Indistinguishable from other entrants; identical lone gold gear on void, mechanism unrendered.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1681,34 +1685,30 @@
       "mustFix": [
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "right of center — no secondary gear"
-        },
-        {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "gear hub — no jewel accent pivot"
-        },
-        {
-          "defect": "FLAT_VOID",
-          "region": "background field and lower two-thirds"
-        },
-        {
-          "defect": "BROKEN_COMPOSITION",
-          "region": "gear offset upper-left-of-center"
+          "region": "right of center — secondary gear and jewel accent pivot missing"
         },
         {
           "defect": "OFF_PALETTE",
-          "region": "gear body — brass, no #ff2a38"
+          "region": "center gear — gold tones, zero red accent"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field and lower half — empty near-black, no gradient"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-center — floating gear, rod clipping teeth"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "center object — undersized"
+          "region": "center gear — undersized subject"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.glbLoader is not a function"
         }
       ],
-      "notes": "Same lone gear, same void; no meshing pair, no jewel, no gradient — far below the exemplar bar.",
+      "notes": "Same single-gear failure mode; all six frames appear to share one render, far below exemplar bar.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1719,7 +1719,7 @@
       "caseId": "v-09-editorial-oversized-type",
       "tag": "v-09-editorial-oversized-type-r1",
       "batchNo": 9,
-      "score": 6,
+      "score": 5,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
@@ -1727,7 +1727,7 @@
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center card — no kicker, hero lines, or accent rule"
+          "region": "full frame — no kicker, hero lines, or accent rule"
         },
         {
           "defect": "FLAT_VOID",
@@ -1738,7 +1738,7 @@
           "region": "TypeError: ctx.fontAtlas is not a function"
         }
       ],
-      "notes": "Near-empty: lone white placeholder square on flat black; no type, gradient, grain, or accent rendered.",
+      "notes": "Near-empty black field with lone white square; no typography rendered at all.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1749,7 +1749,7 @@
       "caseId": "v-09-editorial-oversized-type",
       "tag": "v-09-editorial-oversized-type-r2",
       "batchNo": 9,
-      "score": 6,
+      "score": 5,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
@@ -1757,7 +1757,7 @@
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center card — no kicker, hero lines, or accent rule"
+          "region": "full frame — no kicker, hero lines, or accent rule"
         },
         {
           "defect": "FLAT_VOID",
@@ -1768,7 +1768,7 @@
           "region": "TypeError: import_tsl.MeshBasicNodeMaterial is not a constructor"
         }
       ],
-      "notes": "Identical failure to F1: single white square, zero editorial content, dead flat field.",
+      "notes": "Identical failed render to F1; centered white placeholder square, zero spec elements.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1779,7 +1779,7 @@
       "caseId": "v-09-editorial-oversized-type",
       "tag": "v-09-editorial-oversized-type-r1",
       "batchNo": 9,
-      "score": 6,
+      "score": 5,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
@@ -1787,7 +1787,7 @@
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center card — no kicker, hero lines, or accent rule"
+          "region": "full frame — no kicker, hero lines, or accent rule"
         },
         {
           "defect": "FLAT_VOID",
@@ -1798,7 +1798,7 @@
           "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
         }
       ],
-      "notes": "White placeholder quad on flat black; no typography or spec elements rendered.",
+      "notes": "Near-empty black field with lone white square; nothing from the visualSpec present.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1809,25 +1809,29 @@
       "caseId": "v-09-editorial-oversized-type",
       "tag": "v-09-editorial-oversized-type-r2",
       "batchNo": 9,
-      "score": 18,
+      "score": 34,
       "mustFix": [
         {
+          "defect": "SCALE_ERROR",
+          "region": "center and right — hero glyphs overflow frame, illegible fragments"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "all edges — type crops out, baseline grid unreadable"
+        },
+        {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "left half — kicker and both hero type lines absent"
+          "region": "upper-left quadrant — kicker line absent"
         },
         {
-          "defect": "FLAT_VOID",
-          "region": "upper and lower plate regions"
-        },
-        {
-          "defect": "DEAD_LIGHTING",
-          "region": "center plate — visible gradient banding, no grain"
+          "defect": "GARBLED_TEXT",
+          "region": "center — letterforms unresolvable, soft blur falloff on strokes"
         }
       ],
-      "notes": "Plate, gradient, and red accent rule present but all typography missing; mostly void.",
+      "notes": "Correct palette, surface panel, and red accent rule, but hero type catastrophically over-scaled and blurred; layout unrecognizable.",
       "renderable": true,
       "probeStatus": "ready",
-      "renderables": 2
+      "renderables": 9
     },
     {
       "bundleId": "gpt-oss-120b/v-09-editorial-oversized-type-r1",
@@ -1835,7 +1839,7 @@
       "caseId": "v-09-editorial-oversized-type",
       "tag": "v-09-editorial-oversized-type-r1",
       "batchNo": 9,
-      "score": 6,
+      "score": 5,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
@@ -1843,7 +1847,7 @@
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center card — no kicker, hero lines, or accent rule"
+          "region": "full frame — no kicker, hero lines, or accent rule"
         },
         {
           "defect": "FLAT_VOID",
@@ -1854,7 +1858,7 @@
           "region": "TypeError: import_webgpu.Mesh.BasicNodeMaterial is not a constructor"
         }
       ],
-      "notes": "Lone white square on flat black; no editorial content rendered.",
+      "notes": "Near-empty black field with lone white square; no editorial content rendered.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1865,7 +1869,7 @@
       "caseId": "v-09-editorial-oversized-type",
       "tag": "v-09-editorial-oversized-type-r2",
       "batchNo": 9,
-      "score": 6,
+      "score": 5,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
@@ -1873,7 +1877,7 @@
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center card — no kicker, hero lines, or accent rule"
+          "region": "full frame — no kicker, hero lines, or accent rule"
         },
         {
           "defect": "FLAT_VOID",
@@ -1884,7 +1888,7 @@
           "region": "TypeError: (0 , import_tsl.noise) is not a function"
         }
       ],
-      "notes": "Identical placeholder-square failure; zero spec elements, dead flat field.",
+      "notes": "Identical failed render; centered white placeholder square only, zero spec compliance.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1895,26 +1899,26 @@
       "caseId": "v-10-bento-metrics",
       "tag": "v-10-bento-metrics-r1",
       "batchNo": 10,
-      "score": 5,
+      "score": 6,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
           "region": "entire frame"
         },
         {
-          "defect": "FLAT_VOID",
-          "region": "background field"
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no bento grid, tiles, metrics, or accent"
         },
         {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "entire frame — no bento grid, cells, gradients, or metrics"
+          "defect": "FLAT_VOID",
+          "region": "background field"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.fontAtlas.createTextMesh is not a function"
         }
       ],
-      "notes": "Near-empty frame: lone white square on void, zero spec content rendered.",
+      "notes": "Single flat white square on void black; no grid, gradients, text, or accent rendered.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1925,26 +1929,26 @@
       "caseId": "v-10-bento-metrics",
       "tag": "v-10-bento-metrics-r2",
       "batchNo": 10,
-      "score": 5,
+      "score": 6,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
           "region": "entire frame"
         },
         {
-          "defect": "FLAT_VOID",
-          "region": "background field"
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no bento grid, tiles, metrics, or accent"
         },
         {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "entire frame — no bento grid, cells, gradients, or metrics"
+          "defect": "FLAT_VOID",
+          "region": "background field"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: Cannot read properties of undefined (reading 'y')"
         }
       ],
-      "notes": "Identical failure to F1: single untextured white square, nothing else rendered.",
+      "notes": "Identical failure to F1: lone white square on void; spec entirely absent.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1955,26 +1959,26 @@
       "caseId": "v-10-bento-metrics",
       "tag": "v-10-bento-metrics-r1",
       "batchNo": 10,
-      "score": 5,
+      "score": 6,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
           "region": "entire frame"
         },
         {
-          "defect": "FLAT_VOID",
-          "region": "background field"
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no bento grid, tiles, metrics, or accent"
         },
         {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "entire frame — no bento grid, cells, gradients, or metrics"
+          "defect": "FLAT_VOID",
+          "region": "background field"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: (0 , import_text.createTextMesh) is not a function"
         }
       ],
-      "notes": "Lone white square on void; no bento composition, gradients, or accent present.",
+      "notes": "Lone white square on void black; no grid, surfaces, or typography rendered.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -1985,41 +1989,23 @@
       "caseId": "v-10-bento-metrics",
       "tag": "v-10-bento-metrics-r2",
       "batchNo": 10,
-      "score": 46,
+      "score": 32,
       "mustFix": [
         {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "all three cells — no metric numerals or labels"
+          "defect": "GARBLED_TEXT",
+          "region": "left margin, upper-left, and right column — all labels render as [object Object]"
         },
         {
           "defect": "OFF_PALETTE",
-          "region": "all cell surfaces — washed mid-gray, far lighter than #14141a spec"
+          "region": "all three tiles — bright silver-grey surfaces instead of #14141a ink; accent bars pink not #ff2a38"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "diagonal sheen bands — several times wider than 0.15-unit spec, soft not hard-stop"
+          "region": "all tiles — sheen band vastly wider and brighter than 0.15-unit +6% spec"
         },
         {
-          "defect": "FLAT_VOID",
-          "region": "background field surrounding grid"
-        }
-      ],
-      "notes": "Only real composition: correct 2x2 bento layout with dominant cell, but gray-washed, textless, oversized soft sheen.",
-      "renderable": true,
-      "probeStatus": "ready",
-      "renderables": 9
-    },
-    {
-      "bundleId": "gpt-oss-120b/v-10-bento-metrics-r1",
-      "contestant": "gpt-oss-120b",
-      "caseId": "v-10-bento-metrics",
-      "tag": "v-10-bento-metrics-r1",
-      "batchNo": 10,
-      "score": 5,
-      "mustFix": [
-        {
-          "defect": "BLANK_RENDER",
-          "region": "entire frame"
+          "defect": "BROKEN_COMPOSITION",
+          "region": "left and right margins — labels float outside tiles, grid off-center"
         },
         {
           "defect": "FLAT_VOID",
@@ -2027,14 +2013,40 @@
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "entire frame — no bento grid, cells, gradients, or metrics"
+          "region": "tile interiors — no metric numerals or stat content"
+        }
+      ],
+      "notes": "Only frame with grid geometry; layout roughly matches, but garbled labels, washed grey surfaces, and empty tiles sink it.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "renderables": 16
+    },
+    {
+      "bundleId": "gpt-oss-120b/v-10-bento-metrics-r1",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-10-bento-metrics",
+      "tag": "v-10-bento-metrics-r1",
+      "batchNo": 10,
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no bento grid, tiles, metrics, or accent"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: (0 , import_tsl.tslFn) is not a function"
         }
       ],
-      "notes": "Same lone white square on void; spec entirely unrendered.",
+      "notes": "Lone white square on void black; spec entirely absent.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -2045,7 +2057,7 @@
       "caseId": "v-10-bento-metrics",
       "tag": "v-10-bento-metrics-r2",
       "batchNo": 10,
-      "score": 2,
+      "score": 3,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
@@ -2053,10 +2065,6 @@
         },
         {
           "defect": "FLAT_VOID",
-          "region": "entire frame"
-        },
-        {
-          "defect": "ALL_BLACK_ELEMENT",
           "region": "entire frame"
         },
         {
@@ -2075,22 +2083,18 @@
       "caseId": "v-11-gradient-cta",
       "tag": "v-11-gradient-cta-r1",
       "batchNo": 11,
-      "score": 56,
+      "score": 58,
       "mustFix": [
         {
           "defect": "OFF_PALETTE",
-          "region": "lower half of center button"
+          "region": "lower half of center button — gradient inverts to washed pink instead of darkening to #c1121f"
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "button bevel edges"
-        },
-        {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "button perimeter"
+          "region": "center button perimeter — no machined chamfer highlight, no clearcoat specular, no emissive channel"
         }
       ],
-      "notes": "Gradient ramp inverted, drifts pink instead of deep #c1121f; seam present but no machined chamfer highlight or emissive channel.",
+      "notes": "Correct shape, seam line present, dark-first held; gradient ramp inverted and materiality flat, not physical.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 2
@@ -2101,23 +2105,23 @@
       "caseId": "v-11-gradient-cta",
       "tag": "v-11-gradient-cta-r2",
       "batchNo": 11,
-      "score": 8,
+      "score": 7,
       "mustFix": [
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center card"
+          "region": "center — no gradient CTA button rendered"
         },
         {
           "defect": "OFF_PALETTE",
-          "region": "center card"
+          "region": "center card — flat white square, zero red"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "center card"
+          "region": "center card — square aspect vs 2.6x0.68 spec"
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "center card"
+          "region": "center card — flat fill, no light response"
         },
         {
           "defect": "FLAT_VOID",
@@ -2128,7 +2132,7 @@
           "region": "TypeError: ctx.fontAtlas is not a function"
         }
       ],
-      "notes": "Flat white square; no red gradient, bevel, seam, or 2.6:0.68 proportion. Spec entirely absent.",
+      "notes": "Untextured white placeholder quad; spec object entirely absent.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -2139,23 +2143,23 @@
       "caseId": "v-11-gradient-cta",
       "tag": "v-11-gradient-cta-r1",
       "batchNo": 11,
-      "score": 8,
+      "score": 7,
       "mustFix": [
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center card"
+          "region": "center — no gradient CTA button rendered"
         },
         {
           "defect": "OFF_PALETTE",
-          "region": "center card"
+          "region": "center card — flat white square, zero red"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "center card"
+          "region": "center card — square aspect vs 2.6x0.68 spec"
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "center card"
+          "region": "center card — flat fill, no light response"
         },
         {
           "defect": "FLAT_VOID",
@@ -2166,7 +2170,7 @@
           "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
         }
       ],
-      "notes": "Identical flat white square; gradient CTA object never rendered.",
+      "notes": "Identical white placeholder quad; no gradient, bevel, seam, or emissive channel.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -2177,23 +2181,23 @@
       "caseId": "v-11-gradient-cta",
       "tag": "v-11-gradient-cta-r2",
       "batchNo": 11,
-      "score": 8,
+      "score": 7,
       "mustFix": [
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center card"
+          "region": "center — no gradient CTA button rendered"
         },
         {
           "defect": "OFF_PALETTE",
-          "region": "center card"
+          "region": "center card — flat white square, zero red"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "center card"
+          "region": "center card — square aspect vs 2.6x0.68 spec"
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "center card"
+          "region": "center card — flat fill, no light response"
         },
         {
           "defect": "FLAT_VOID",
@@ -2204,7 +2208,7 @@
           "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
         }
       ],
-      "notes": "Same flat white square as F3; no spec element present.",
+      "notes": "Same failed placeholder render as F3; spec object absent.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -2215,23 +2219,23 @@
       "caseId": "v-11-gradient-cta",
       "tag": "v-11-gradient-cta-r1",
       "batchNo": 11,
-      "score": 8,
+      "score": 7,
       "mustFix": [
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center card"
+          "region": "center — no gradient CTA button rendered"
         },
         {
           "defect": "OFF_PALETTE",
-          "region": "center card"
+          "region": "center card — flat white square, zero red"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "center card"
+          "region": "center card — square aspect vs 2.6x0.68 spec"
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "center card"
+          "region": "center card — flat fill, no light response"
         },
         {
           "defect": "FLAT_VOID",
@@ -2242,7 +2246,7 @@
           "region": "ReferenceError: sub is not defined"
         }
       ],
-      "notes": "Flat white square, wrong shape and palette; nothing from the CTA spec rendered.",
+      "notes": "Same failed white placeholder quad; no spec elements present.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -2257,10 +2261,14 @@
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
+          "region": "entire frame — uniform near-black, nothing rendered"
+        },
+        {
+          "defect": "FLAT_VOID",
           "region": "entire frame"
         }
       ],
-      "notes": "Near-black empty frame; nothing rendered.",
+      "notes": "Empty near-black frame; no geometry, light, or spec content at all.",
       "renderable": false,
       "probeStatus": "error",
       "renderables": 0
@@ -2274,31 +2282,35 @@
       "score": 8,
       "mustFix": [
         {
-          "defect": "BLANK_RENDER",
-          "region": "entire frame near-empty"
-        },
-        {
           "defect": "FLAT_VOID",
-          "region": "background field"
-        },
-        {
-          "defect": "DEFAULT_BLUE_DRIFT",
-          "region": "center placeholder icon"
+          "region": "entire background field"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "no photo plate, filmic grade, caption block, or red accent"
+          "region": "full frame — no photo plate, no filmic grade, no foreground subject, no caption block"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center placeholder tile"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center placeholder tile — blue/violet, no #ff2a38 accent anywhere"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "center card tiny vs 4.0x2.5 plate spec"
+          "region": "center — plate spec is 4.0x2.5 scene units, rendered as tiny thumbnail"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "full frame"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: Cannot read properties of undefined (reading 'imageUrl')"
         }
       ],
-      "notes": "Blue layered-stack loading placeholder floating in a black void; photo composite never rendered.",
+      "notes": "Unloaded-image placeholder icon floating in a void; the hero composite never rendered. Near-empty frame.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -2312,31 +2324,35 @@
       "score": 8,
       "mustFix": [
         {
-          "defect": "BLANK_RENDER",
-          "region": "entire frame near-empty"
-        },
-        {
           "defect": "FLAT_VOID",
-          "region": "background field"
-        },
-        {
-          "defect": "DEFAULT_BLUE_DRIFT",
-          "region": "center placeholder icon"
+          "region": "entire background field"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "no photo plate, caption block, or accent"
+          "region": "full frame — photo plate, grade, subject separation, caption all absent"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center placeholder tile"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center placeholder tile"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "center card undersized"
+          "region": "center — plate rendered as tiny thumbnail"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "full frame"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: Cannot read properties of undefined (reading 'imageUrl')"
         }
       ],
-      "notes": "Identical placeholder-on-void as F1; no spec content rendered.",
+      "notes": "Identical failure to F1: blue placeholder glyph on black void, zero spec content.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -2350,31 +2366,35 @@
       "score": 8,
       "mustFix": [
         {
-          "defect": "BLANK_RENDER",
-          "region": "entire frame near-empty"
-        },
-        {
           "defect": "FLAT_VOID",
-          "region": "background field"
-        },
-        {
-          "defect": "DEFAULT_BLUE_DRIFT",
-          "region": "center placeholder icon"
+          "region": "entire background field"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "no photo plate, grade, caption, or red accent"
+          "region": "full frame — no photographic plate, filmic grade, or caption block"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center placeholder tile"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center placeholder tile — no red accent"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "center card undersized"
+          "region": "center — spec calls for a 4.0x2.5 hero plate"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "full frame"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.textureLoader is not a function"
         }
       ],
-      "notes": "Same unloaded-texture placeholder on void; photo hero absent entirely.",
+      "notes": "Same unloaded-texture placeholder in a void; composite failed to render. Near-empty.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -2388,31 +2408,35 @@
       "score": 8,
       "mustFix": [
         {
-          "defect": "BLANK_RENDER",
-          "region": "entire frame near-empty"
-        },
-        {
           "defect": "FLAT_VOID",
-          "region": "background field"
-        },
-        {
-          "defect": "DEFAULT_BLUE_DRIFT",
-          "region": "center placeholder icon"
+          "region": "entire background field"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "no photo plate, caption block, or accent"
+          "region": "full frame — every spec element absent"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center placeholder tile"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center placeholder tile"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "center card undersized"
+          "region": "center — tiny thumbnail vs full hero plate"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "full frame"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.textureLoader.load is not a function"
         }
       ],
-      "notes": "Duplicate of F3 failure: blue placeholder icon in a dead black field.",
+      "notes": "Duplicate of F3's failure: placeholder icon on void, no hero content rendered.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -2423,11 +2447,11 @@
       "caseId": "v-12-photo-hero-composite",
       "tag": "v-12-photo-hero-composite-r1",
       "batchNo": 12,
-      "score": 2,
+      "score": 3,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame"
+          "region": "full frame"
         },
         {
           "defect": "FLAT_VOID",
@@ -2435,10 +2459,10 @@
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "entire frame — nothing from spec rendered"
+          "region": "full frame — nothing rendered at all"
         }
       ],
-      "notes": "Completely black frame; nothing rendered at all.",
+      "notes": "Completely black frame; nothing rendered, not even a placeholder.",
       "renderable": false,
       "probeStatus": "error",
       "renderables": 0
@@ -2452,31 +2476,35 @@
       "score": 8,
       "mustFix": [
         {
-          "defect": "BLANK_RENDER",
-          "region": "entire frame near-empty"
-        },
-        {
           "defect": "FLAT_VOID",
-          "region": "background field"
-        },
-        {
-          "defect": "DEFAULT_BLUE_DRIFT",
-          "region": "center placeholder icon"
+          "region": "entire background field"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "no photo plate, caption block, or red accent"
+          "region": "full frame — no plate, grade, subject, or caption"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center placeholder tile"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center placeholder tile"
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "center card undersized"
+          "region": "center — thumbnail-sized instead of hero-scale plate"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "full frame"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: Cannot read properties of undefined (reading 'imageUrl')"
         }
       ],
-      "notes": "Same blue placeholder-on-void failure; photo composite never loaded.",
+      "notes": "Placeholder icon on black void, same failure signature as F1-F4. Near-empty frame.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -2487,11 +2515,11 @@
       "caseId": "v-13-brand-wall",
       "tag": "v-13-brand-wall-r1",
       "batchNo": 13,
-      "score": 7,
+      "score": 6,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame — single flat white square on void"
+          "region": "whole frame"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
@@ -2503,14 +2531,14 @@
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "center card — flat fill, no brushed-metal response"
+          "region": "center card — flat white fill, no brushed-metal PBR"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.fontAtlas.createMesh is not a function"
         }
       ],
-      "notes": "Near-empty render: one untextured white quad, none of the six machined tiles or brand marks present.",
+      "notes": "Single flat white square on void black; none of the six machined tiles or brand marks rendered.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -2521,11 +2549,11 @@
       "caseId": "v-13-brand-wall",
       "tag": "v-13-brand-wall-r2",
       "batchNo": 13,
-      "score": 7,
+      "score": 6,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame — single flat white square on void"
+          "region": "whole frame"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
@@ -2537,14 +2565,14 @@
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "center card — flat fill, no material"
+          "region": "center card — flat white fill, no material response"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: import_tsl.MeshStandardNodeMaterial is not a constructor"
         }
       ],
-      "notes": "Identical failure to F1: near-empty frame, no grid, no PBR materiality, spec unexecuted.",
+      "notes": "Identical failure to F1: lone white square, near-empty frame, spec entirely absent.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -2555,15 +2583,15 @@
       "caseId": "v-13-brand-wall",
       "tag": "v-13-brand-wall-r1",
       "batchNo": 13,
-      "score": 7,
+      "score": 6,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame — single flat white square on void"
+          "region": "whole frame"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center — no 3x2 tile grid, wordmarks, or kicker"
+          "region": "center — no tile grid, brand marks, or kicker"
         },
         {
           "defect": "FLAT_VOID",
@@ -2571,14 +2599,14 @@
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "center card — flat white fill"
+          "region": "center card — flat unlit white fill"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: (0 , import_text.createTextMesh) is not a function"
         }
       ],
-      "notes": "Near-empty render; single flat quad instead of six brushed-metal tiles with monochrome wordmarks.",
+      "notes": "Near-empty render; one flat white square replaces the entire brand-mark wall.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -2589,15 +2617,15 @@
       "caseId": "v-13-brand-wall",
       "tag": "v-13-brand-wall-r2",
       "batchNo": 13,
-      "score": 7,
+      "score": 6,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame — single flat white square on void"
+          "region": "whole frame"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center — no 3x2 tile grid, wordmarks, or kicker"
+          "region": "center — no tile grid, brand marks, or kicker"
         },
         {
           "defect": "FLAT_VOID",
@@ -2605,14 +2633,14 @@
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "center card — no light response"
+          "region": "center card — flat unlit white fill"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: (0 , import_text.createTextMesh) is not a function"
         }
       ],
-      "notes": "Same failure mode: one untextured square, no grid, no materiality, spec absent.",
+      "notes": "Same near-empty failure as F3; no machined tiles, no wordmarks, no lighting.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -2623,22 +2651,22 @@
       "caseId": "v-13-brand-wall",
       "tag": "v-13-brand-wall-r1",
       "batchNo": 13,
-      "score": 1,
+      "score": 0,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame — fully black, nothing rendered"
-        },
-        {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "entire frame — no tiles, wordmarks, or kicker"
+          "region": "whole frame"
         },
         {
           "defect": "FLAT_VOID",
-          "region": "entire frame"
+          "region": "whole frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "whole frame — nothing rendered"
         }
       ],
-      "notes": "Completely black void frame; nothing rendered at all.",
+      "notes": "Completely black frame; nothing rendered at all.",
       "renderable": false,
       "probeStatus": "error",
       "renderables": 0
@@ -2649,15 +2677,15 @@
       "caseId": "v-13-brand-wall",
       "tag": "v-13-brand-wall-r2",
       "batchNo": 13,
-      "score": 7,
+      "score": 6,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame — single flat white square on void"
+          "region": "whole frame"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center — no 3x2 tile grid, wordmarks, or kicker"
+          "region": "center — no tile grid, brand marks, or kicker"
         },
         {
           "defect": "FLAT_VOID",
@@ -2665,14 +2693,14 @@
         },
         {
           "defect": "DEAD_LIGHTING",
-          "region": "center card — flat fill, no brushed metal"
+          "region": "center card — flat white fill, no PBR"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: ctx.fontAtlas.createTextMesh is not a function"
         }
       ],
-      "notes": "Near-empty render matching F1-F4 failure; no grid, no PBR tiles, no brand marks.",
+      "notes": "Lone flat white square on void black; spec elements entirely missing.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -2683,29 +2711,29 @@
       "caseId": "v-14-pricing-card",
       "tag": "v-14-pricing-card-r1",
       "batchNo": 14,
-      "score": 22,
+      "score": 14,
       "mustFix": [
         {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "right half — giant blurred glyph overruns card"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "right half quadrant"
+        },
+        {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "entire card interior — no tier name, price, or feature text"
+          "region": "center card — no tier name, price, or feature text"
         },
         {
           "defect": "FLAT_VOID",
-          "region": "upper two-thirds of center card"
-        },
-        {
-          "defect": "ALL_BLACK_ELEMENT",
-          "region": "header strip at card top edge"
-        },
-        {
-          "defect": "DEAD_LIGHTING",
-          "region": "card surface, flat albedo with no light response"
+          "region": "left third background field"
         }
       ],
-      "notes": "Correct palette and card geometry, but all typography absent; black unlit header strip; vast empty interior.",
+      "notes": "Palette hints exist (red bar, ink card) but a massive blurred glyph destroys composition; zero legible spec content.",
       "renderable": true,
       "probeStatus": "ready",
-      "renderables": 7
+      "renderables": 15
     },
     {
       "bundleId": "claude-haiku-4.5/v-14-pricing-card-r2",
@@ -2713,26 +2741,26 @@
       "caseId": "v-14-pricing-card",
       "tag": "v-14-pricing-card-r2",
       "batchNo": 14,
-      "score": 5,
+      "score": 6,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame — lone white square on background field"
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "entire frame — no card, text, header, or CTA"
-        },
-        {
-          "defect": "OFF_PALETTE",
-          "region": "center white square"
+          "region": "center — card, text, CTA all absent"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: Cannot read properties of undefined (reading 'tier-name')"
         }
       ],
-      "notes": "Render failed to a placeholder white square; nothing from the spec exists.",
+      "notes": "Near-empty frame: lone flat white square on void background. Nothing from spec rendered.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -2743,25 +2771,29 @@
       "caseId": "v-14-pricing-card",
       "tag": "v-14-pricing-card-r1",
       "batchNo": 14,
-      "score": 34,
+      "score": 16,
       "mustFix": [
         {
+          "defect": "GARBLED_TEXT",
+          "region": "all text rows — '[object Object]' throughout"
+        },
+        {
           "defect": "OFF_PALETTE",
-          "region": "center card surface — mid-gray, not ink #16161d"
+          "region": "center card — light gray surface, not #16161d ink"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-center and CTA row — overlapping text layers"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "card interior — no tier name, price, or feature text"
-        },
-        {
-          "defect": "FLAT_VOID",
-          "region": "upper half of center card"
+          "region": "upper card — no price figure or tier name"
         }
       ],
-      "notes": "Has directional lighting, header strip, gradient CTA and hairlines, but surface drifts light-gray and all text is missing.",
+      "notes": "Card scaffold and red CTA exist, but every text node is a serialization bug; surface badly off palette.",
       "renderable": true,
       "probeStatus": "ready",
-      "renderables": 7
+      "renderables": 15
     },
     {
       "bundleId": "claude-sonnet-5/v-14-pricing-card-r2",
@@ -2769,25 +2801,33 @@
       "caseId": "v-14-pricing-card",
       "tag": "v-14-pricing-card-r2",
       "batchNo": 14,
-      "score": 29,
+      "score": 34,
       "mustFix": [
         {
           "defect": "OFF_PALETTE",
-          "region": "center card surface — mid-gray, not ink #16161d"
+          "region": "entire card — washed light-gray surface instead of ink #16161d"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "upper card — tier name and price nearly invisible"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper card price overlaps tier name; CTA covers a feature row"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "card top edge — machined header strip absent; no text anywhere"
+          "region": "CTA row — unlabeled blank red bar"
         },
         {
-          "defect": "FLAT_VOID",
-          "region": "upper half of center card"
+          "defect": "DEAD_LIGHTING",
+          "region": "card surface — flat gradient, no material response"
         }
       ],
-      "notes": "Gradient CTA and lighting present, but no header strip, no typography, and washed-out gray surface breaks palette.",
+      "notes": "Real content and correct rhythm intent, but off-palette gray surface, overlaps, unlabeled CTA keep it clearly deficient.",
       "renderable": true,
       "probeStatus": "ready",
-      "renderables": 7
+      "renderables": 15
     },
     {
       "bundleId": "gpt-oss-120b/v-14-pricing-card-r1",
@@ -2795,26 +2835,26 @@
       "caseId": "v-14-pricing-card",
       "tag": "v-14-pricing-card-r1",
       "batchNo": 14,
-      "score": 5,
+      "score": 6,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame — lone white square on background field"
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "entire frame — no card, text, header, or CTA"
-        },
-        {
-          "defect": "OFF_PALETTE",
-          "region": "center white square"
+          "region": "center — card, text, CTA all absent"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: import_tsl.MeshBasicNodeMaterial is not a constructor"
         }
       ],
-      "notes": "Placeholder white square only; no spec element rendered.",
+      "notes": "Near-empty frame: flat white square centered on void. No spec elements rendered.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -2825,26 +2865,26 @@
       "caseId": "v-14-pricing-card",
       "tag": "v-14-pricing-card-r2",
       "batchNo": 14,
-      "score": 5,
+      "score": 6,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame — lone white square on background field"
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "entire frame — no card, text, header, or CTA"
-        },
-        {
-          "defect": "OFF_PALETTE",
-          "region": "center white square"
+          "region": "center — card, text, CTA all absent"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: tsl.MeshBasicNodeMaterial is not a constructor"
         }
       ],
-      "notes": "Identical failure to F5; placeholder white square, nothing from the spec.",
+      "notes": "Identical failure to F5: lone flat white square, void background, zero spec content.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -2855,15 +2895,15 @@
       "caseId": "v-15-testimonial-panel",
       "tag": "v-15-testimonial-panel-r1",
       "batchNo": 15,
-      "score": 8,
+      "score": 9,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame"
+          "region": "full frame — only a small flat white square on empty black"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center card — no panel gradient, no red quote glyph, no quote text, no attribution"
+          "region": "center card — no panel gradient, red quote glyph, quote text, or attribution"
         },
         {
           "defect": "FLAT_VOID",
@@ -2875,14 +2915,14 @@
         },
         {
           "defect": "SCALE_ERROR",
-          "region": "center card — square, not 3.4x1.9 panel"
+          "region": "center card — square instead of 3.4x1.9 panel"
         },
         {
           "defect": "RUNTIME_ERROR",
           "region": "TypeError: (0 , import_tsl.linearSRGB) is not a function"
         }
       ],
-      "notes": "Only a flat untextured white square on a void; no testimonial content, gradient, border, or accent rendered.",
+      "notes": "Near-empty frame; a single flat white square, zero spec content or materiality.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -2897,18 +2937,22 @@
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame"
+          "region": "full frame — black except one tiny red dash"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "entire frame — panel, quote glyph, text, attribution all absent"
+          "region": "full frame — no panel, glyph, quote, or attribution"
         },
         {
           "defect": "FLAT_VOID",
           "region": "background field"
+        },
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "full frame"
         }
       ],
-      "notes": "Near-empty black frame with a single tiny red dash lower-left; nothing of the spec rendered.",
+      "notes": "Effectively void; only a small red tick lower-left of center renders.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 2
@@ -2919,15 +2963,15 @@
       "caseId": "v-15-testimonial-panel",
       "tag": "v-15-testimonial-panel-r1",
       "batchNo": 15,
-      "score": 8,
+      "score": 9,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame"
+          "region": "full frame — lone flat white square on empty black"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center card — no gradient, quote glyph, text, or attribution"
+          "region": "center card — no gradient panel, red quotation glyph, quote, or attribution"
         },
         {
           "defect": "FLAT_VOID",
@@ -2946,7 +2990,7 @@
           "region": "TypeError: (0 , import_text.createTextMesh) is not a function"
         }
       ],
-      "notes": "Identical failure to F1: flat white square centered on void black; zero spec elements present.",
+      "notes": "Near-empty; identical failure to F1, no spec elements or light response.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -2957,15 +3001,15 @@
       "caseId": "v-15-testimonial-panel",
       "tag": "v-15-testimonial-panel-r2",
       "batchNo": 15,
-      "score": 8,
+      "score": 9,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame"
+          "region": "full frame — lone flat white square on empty black"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "center card — no gradient, quote glyph, text, or attribution"
+          "region": "center card — no panel gradient, glyph, quote text, or attribution"
         },
         {
           "defect": "FLAT_VOID",
@@ -2984,7 +3028,7 @@
           "region": "TypeError: (0 , import_text.createTextMesh) is not a function"
         }
       ],
-      "notes": "Flat white square on void black; no testimonial content, materiality, or accent rendered.",
+      "notes": "Duplicate near-empty render; flat unlit square only, nothing from spec.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -2999,22 +3043,22 @@
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame"
+          "region": "full frame"
         },
         {
           "defect": "ALL_BLACK_ELEMENT",
-          "region": "entire frame"
+          "region": "full frame"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "entire frame — nothing rendered"
+          "region": "full frame — nothing rendered"
         },
         {
           "defect": "FLAT_VOID",
-          "region": "entire frame"
+          "region": "background field"
         }
       ],
-      "notes": "Completely black empty frame; nothing rendered at all.",
+      "notes": "Completely black frame; nothing rendered at all.",
       "renderable": false,
       "probeStatus": "error",
       "renderables": 0
@@ -3029,22 +3073,22 @@
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame"
+          "region": "full frame"
         },
         {
           "defect": "ALL_BLACK_ELEMENT",
-          "region": "entire frame"
+          "region": "full frame"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "entire frame — nothing rendered"
+          "region": "full frame — nothing rendered"
         },
         {
           "defect": "FLAT_VOID",
-          "region": "entire frame"
+          "region": "background field"
         }
       ],
-      "notes": "Completely black empty frame; nothing rendered at all.",
+      "notes": "Completely black frame; identical void to F5.",
       "renderable": false,
       "probeStatus": "error",
       "renderables": 0
@@ -3058,12 +3102,12 @@
       "score": 6,
       "mustFix": [
         {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "entire frame — no ribbon, ticks, or figures"
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
         },
         {
-          "defect": "BROKEN_COMPOSITION",
-          "region": "center — lone white square placeholder"
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no ribbon, hairlines, ticker text, or accent ticks"
         },
         {
           "defect": "FLAT_VOID",
@@ -3074,7 +3118,7 @@
           "region": "TypeError: Cannot read properties of undefined (reading 'surface')"
         }
       ],
-      "notes": "Render collapsed to a single white square on empty background; nothing from the ribbon spec exists.",
+      "notes": "Near-empty frame: lone white square placeholder on flat background; no ribbon geometry or content rendered.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -3085,26 +3129,22 @@
       "caseId": "v-17-data-ribbon",
       "tag": "v-17-data-ribbon-r2",
       "batchNo": 16,
-      "score": 29,
+      "score": 24,
       "mustFix": [
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "ribbon center — no mono ticker figures"
+          "region": "center ribbon — no mono ticker figures, only one accent tick"
         },
         {
           "defect": "OFF_PALETTE",
-          "region": "ribbon hairlines — bright white instead of #23232b, overshoot ribbon ends"
-        },
-        {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "ribbon ends — no edge fades, hard cutoff"
+          "region": "center ribbon — mid-gray gradient surface instead of #111117 ink"
         },
         {
           "defect": "FLAT_VOID",
-          "region": "background field"
+          "region": "background field above and below ribbon"
         }
       ],
-      "notes": "Ribbon plane and one red tick exist with mild material gradient, but zero text and wrong hairlines gut the spec.",
+      "notes": "Ribbon plane, hairlines, and one red tick exist, but strip is contentless and surface drifts light gray.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 13
@@ -3115,29 +3155,33 @@
       "caseId": "v-17-data-ribbon",
       "tag": "v-17-data-ribbon-r1",
       "batchNo": 16,
-      "score": 24,
+      "score": 12,
       "mustFix": [
         {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "ribbon center — no ticker figures"
+          "defect": "SCALE_ERROR",
+          "region": "upper half — glyphs hundreds of times ribbon height, cropped by frame"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "upper half — letterforms blurred and unreadable"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "full frame — text detached from ribbon baseline"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "full ribbon — no red accent ticks"
-        },
-        {
-          "defect": "OFF_PALETTE",
-          "region": "ribbon surface — silvery mid-gray, far lighter than #111117"
+          "region": "center ribbon — no accent tick marks"
         },
         {
           "defect": "FLAT_VOID",
-          "region": "background field"
+          "region": "lower half"
         }
       ],
-      "notes": "Edge fades and metallic sheen are attempted, but no text and no accent leaves an anonymous gray bar.",
+      "notes": "Ticker glyphs exploded to monumental scale, blurred and cropped; ribbon band barely visible; no red ticks.",
       "renderable": true,
       "probeStatus": "ready",
-      "renderables": 15
+      "renderables": 27
     },
     {
       "bundleId": "claude-sonnet-5/v-17-data-ribbon-r2",
@@ -3145,29 +3189,29 @@
       "caseId": "v-17-data-ribbon",
       "tag": "v-17-data-ribbon-r2",
       "batchNo": 16,
-      "score": 34,
+      "score": 18,
       "mustFix": [
         {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "ribbon center — no mono ticker figures"
+          "defect": "SCALE_ERROR",
+          "region": "upper-right quadrant — giant stray blurred glyph"
         },
         {
           "defect": "MISSING_SPEC_ELEMENT",
-          "region": "ribbon ends — edge fades absent"
+          "region": "center ribbon — no ticker figures, single tick only"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center ribbon — gray gradient surface, not #111117"
         },
         {
           "defect": "FLAT_VOID",
-          "region": "background field"
-        },
-        {
-          "defect": "DEAD_LIGHTING",
-          "region": "ribbon surface — single flat sweep, no material response"
+          "region": "left and lower background field"
         }
       ],
-      "notes": "Closest to spec surface hex with red tick and subtle bevel, but text-less ribbon still fails the case.",
+      "notes": "Ribbon and one accent tick render, but text is one enormous off-baseline glyph escaping the frame.",
       "renderable": true,
       "probeStatus": "ready",
-      "renderables": 17
+      "renderables": 29
     },
     {
       "bundleId": "gpt-oss-120b/v-17-data-ribbon-r1",
@@ -3178,12 +3222,12 @@
       "score": 6,
       "mustFix": [
         {
-          "defect": "MISSING_SPEC_ELEMENT",
-          "region": "entire frame — no ribbon, ticks, or figures"
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
         },
         {
-          "defect": "BROKEN_COMPOSITION",
-          "region": "center — lone white square placeholder"
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no ribbon, hairlines, ticker text, or accent ticks"
         },
         {
           "defect": "FLAT_VOID",
@@ -3194,7 +3238,7 @@
           "region": "TypeError: import_tsl.MeshBasicNodeMaterial is not a constructor"
         }
       ],
-      "notes": "Same failure as F1: placeholder white square, no ribbon geometry or content rendered.",
+      "notes": "Near-empty frame: single white square on flat background; ribbon spec entirely unrendered.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
@@ -3205,14 +3249,22 @@
       "caseId": "v-17-data-ribbon",
       "tag": "v-17-data-ribbon-r2",
       "batchNo": 16,
-      "score": 4,
+      "score": 3,
       "mustFix": [
         {
           "defect": "BLANK_RENDER",
-          "region": "entire frame"
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "full frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — nothing from spec present"
         }
       ],
-      "notes": "Uniform near-black frame; nothing rendered.",
+      "notes": "Completely empty dark frame; nothing rendered.",
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1

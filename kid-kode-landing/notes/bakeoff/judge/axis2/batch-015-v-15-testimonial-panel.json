@@ -1,6 +1,6 @@
 {
   "label": "batch-015-v-15-testimonial-panel",
-  "judgedAt": "2026-07-10T04:57:03.474Z",
+  "judgedAt": "2026-07-10T05:29:49.391Z",
   "model": "claude-fable-5",
   "route": "claude-cli-print",
   "frames": [
@@ -35,38 +35,38 @@
       "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-15-testimonial-panel-r2.png"
     }
   ],
-  "costUsd": 0.6606449999999999,
-  "durationApiMs": 36546,
-  "wallMs": 38773,
+  "costUsd": 0.669605,
+  "durationApiMs": 37532,
+  "wallMs": 39627,
   "usage": {
     "input_tokens": 3263,
-    "cache_creation_input_tokens": 20738,
+    "cache_creation_input_tokens": 20731,
     "cache_read_input_tokens": 82910,
-    "output_tokens": 2539,
+    "output_tokens": 2721,
     "server_tool_use": {
       "web_search_requests": 0,
       "web_fetch_requests": 0
     },
     "service_tier": "standard",
     "cache_creation": {
-      "ephemeral_1h_input_tokens": 20738,
+      "ephemeral_1h_input_tokens": 20731,
       "ephemeral_5m_input_tokens": 0
     },
     "inference_geo": "not_available",
     "iterations": [
       {
         "input_tokens": 23,
-        "output_tokens": 1541,
+        "output_tokens": 1730,
         "cache_read_input_tokens": 44707,
-        "cache_creation_input_tokens": 14234,
+        "cache_creation_input_tokens": 14227,
         "cache_creation": {
           "ephemeral_5m_input_tokens": 0,
-          "ephemeral_1h_input_tokens": 14234
+          "ephemeral_1h_input_tokens": 14227
         },
         "type": "message"
       }
     ],
     "speed": "standard"
   },
-  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":8,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card — no panel gradient, no red quote glyph, no quote text, no attribution\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center card — square, not 3.4x1.9 panel\"}],\"notes\":\"Only a flat untextured white square on a void; no testimonial content, gradient, border, or accent rendered.\"},{\"frame\":\"F2\",\"score\":5,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame — panel, quote glyph, text, attribution all absent\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"}],\"notes\":\"Near-empty black frame with a single tiny red dash lower-left; nothing of the spec rendered.\"},{\"frame\":\"F3\",\"score\":8,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card — no gradient, quote glyph, text, or attribution\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center card — square, not 3.4x1.9 panel\"}],\"notes\":\"Identical failure to F1: flat white square centered on void black; zero spec elements present.\"},{\"frame\":\"F4\",\"score\":8,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card — no gradient, quote glyph, text, or attribution\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center card — square, not 3.4x1.9 panel\"}],\"notes\":\"Flat white square on void black; no testimonial content, materiality, or accent rendered.\"},{\"frame\":\"F5\",\"score\":2,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"ALL_BLACK_ELEMENT\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame — nothing rendered\"},{\"defect\":\"FLAT_VOID\",\"region\":\"entire frame\"}],\"notes\":\"Completely black empty frame; nothing rendered at all.\"},{\"frame\":\"F6\",\"score\":2,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"ALL_BLACK_ELEMENT\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame — nothing rendered\"},{\"defect\":\"FLAT_VOID\",\"region\":\"entire frame\"}],\"notes\":\"Completely black empty frame; nothing rendered at all.\"}]}"
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":9,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"full frame — only a small flat white square on empty black\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card — no panel gradient, red quote glyph, quote text, or attribution\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center card — square instead of 3.4x1.9 panel\"}],\"notes\":\"Near-empty frame; a single flat white square, zero spec content or materiality.\"},{\"frame\":\"F2\",\"score\":5,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"full frame — black except one tiny red dash\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"full frame — no panel, glyph, quote, or attribution\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"ALL_BLACK_ELEMENT\",\"region\":\"full frame\"}],\"notes\":\"Effectively void; only a small red tick lower-left of center renders.\"},{\"frame\":\"F3\",\"score\":9,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"full frame — lone flat white square on empty black\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card — no gradient panel, red quotation glyph, quote, or attribution\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center card — square, not 3.4x1.9 panel\"}],\"notes\":\"Near-empty; identical failure to F1, no spec elements or light response.\"},{\"frame\":\"F4\",\"score\":9,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"full frame — lone flat white square on empty black\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card — no panel gradient, glyph, quote text, or attribution\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center card — square, not 3.4x1.9 panel\"}],\"notes\":\"Duplicate near-empty render; flat unlit square only, nothing from spec.\"},{\"frame\":\"F5\",\"score\":2,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"full frame\"},{\"defect\":\"ALL_BLACK_ELEMENT\",\"region\":\"full frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"full frame — nothing rendered\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"}],\"notes\":\"Completely black frame; nothing rendered at all.\"},{\"frame\":\"F6\",\"score\":2,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"full frame\"},{\"defect\":\"ALL_BLACK_ELEMENT\",\"region\":\"full frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"full frame — nothing rendered\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"}],\"notes\":\"Completely black frame; identical void to F5.\"}]}"
 }

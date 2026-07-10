@@ -1,0 +1,18 @@
+{
+  "bundle": "claude-sonnet-5/v-12-photo-hero-composite-r2",
+  "capturedAt": "2026-07-10T03:09:58.553Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "claude-sonnet-5/v-12-photo-hero-composite-r2",
+    "moduleRuntimeError": "TypeError: ctx.textureLoader.load is not a function"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

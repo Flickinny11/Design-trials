@@ -144,9 +144,153 @@
       "costUsd": 0.7140380000000001,
       "billing": "subscription-equivalent",
       "at": "2026-07-10T04:57:55.998Z"
+    },
+    {
+      "axis": "axis2-judge",
+      "model": "claude-fable-5",
+      "batch": "batch-001-v-01-orbit-product-hero",
+      "frames": 6,
+      "costUsd": 0.7106220000000001,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:19:03.705Z"
+    },
+    {
+      "axis": "axis2-judge",
+      "model": "claude-fable-5",
+      "batch": "batch-002-v-02-particle-constellation",
+      "frames": 6,
+      "costUsd": 0.689476,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:19:48.884Z"
+    },
+    {
+      "axis": "axis2-judge",
+      "model": "claude-fable-5",
+      "batch": "batch-003-v-03-glass-prism-refraction",
+      "frames": 6,
+      "costUsd": 0.682211,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:20:36.564Z"
+    },
+    {
+      "axis": "axis2-judge",
+      "model": "claude-fable-5",
+      "batch": "batch-004-v-04-kinetic-type-headline",
+      "frames": 6,
+      "costUsd": 0.70303,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:21:32.349Z"
+    },
+    {
+      "axis": "axis2-judge",
+      "model": "claude-fable-5",
+      "batch": "batch-005-v-05-pedestal-material-study",
+      "frames": 6,
+      "costUsd": 0.669965,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:22:14.122Z"
+    },
+    {
+      "axis": "axis2-judge",
+      "model": "claude-fable-5",
+      "batch": "batch-006-v-06-loop-column-gallery",
+      "frames": 6,
+      "costUsd": 0.670394,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:22:55.174Z"
+    },
+    {
+      "axis": "axis2-judge",
+      "model": "claude-fable-5",
+      "batch": "batch-007-v-07-filmstrip-carousel",
+      "frames": 6,
+      "costUsd": 0.700714,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:23:39.803Z"
+    },
+    {
+      "axis": "axis2-judge",
+      "model": "claude-fable-5",
+      "batch": "batch-008-v-08-orrery-mechanism",
+      "frames": 6,
+      "costUsd": 0.702833,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:24:28.171Z"
+    },
+    {
+      "axis": "axis2-judge",
+      "model": "claude-fable-5",
+      "batch": "batch-009-v-09-editorial-oversized-type",
+      "frames": 6,
+      "costUsd": 0.687123,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:25:12.449Z"
+    },
+    {
+      "axis": "axis2-judge",
+      "model": "claude-fable-5",
+      "batch": "batch-010-v-10-bento-metrics",
+      "frames": 6,
+      "costUsd": 0.7029319999999999,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:26:03.623Z"
+    },
+    {
+      "axis": "axis2-judge",
+      "model": "claude-fable-5",
+      "batch": "batch-011-v-11-gradient-cta",
+      "frames": 6,
+      "costUsd": 0.712316,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:26:53.767Z"
+    },
+    {
+      "axis": "axis2-judge",
+      "model": "claude-fable-5",
+      "batch": "batch-012-v-12-photo-hero-composite",
+      "frames": 6,
+      "costUsd": 0.6874560000000001,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:27:38.510Z"
+    },
+    {
+      "axis": "axis2-judge",
+      "model": "claude-fable-5",
+      "batch": "batch-013-v-13-brand-wall",
+      "frames": 6,
+      "costUsd": 0.660327,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:28:17.320Z"
+    },
+    {
+      "axis": "axis2-judge",
+      "model": "claude-fable-5",
+      "batch": "batch-014-v-14-pricing-card",
+      "frames": 6,
+      "costUsd": 0.7052729999999999,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:29:09.762Z"
+    },
+    {
+      "axis": "axis2-judge",
+      "model": "claude-fable-5",
+      "batch": "batch-015-v-15-testimonial-panel",
+      "frames": 6,
+      "costUsd": 0.669605,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:29:49.391Z"
+    },
+    {
+      "axis": "axis2-judge",
+      "model": "claude-fable-5",
+      "batch": "batch-016-v-17-data-ribbon",
+      "frames": 6,
+      "costUsd": 0.7032930000000001,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:30:42.354Z"
     }
   ],
   "totals": {
-    "subscriptionEquivalentUsd": 11.713862
+    "subscriptionEquivalentUsd": 22.771432
   }
 }

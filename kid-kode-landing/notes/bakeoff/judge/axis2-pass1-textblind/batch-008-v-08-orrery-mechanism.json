@@ -1,0 +1,72 @@
+{
+  "label": "batch-008-v-08-orrery-mechanism",
+  "judgedAt": "2026-07-10T04:13:04.540Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "bundleId": "claude-haiku-4.5/v-08-orrery-mechanism-r1",
+      "frame": "notes/bakeoff/renders/frames/claude-haiku-4.5/v-08-orrery-mechanism-r1.png"
+    },
+    {
+      "label": "F2",
+      "bundleId": "claude-haiku-4.5/v-08-orrery-mechanism-r2",
+      "frame": "notes/bakeoff/renders/frames/claude-haiku-4.5/v-08-orrery-mechanism-r2.png"
+    },
+    {
+      "label": "F3",
+      "bundleId": "claude-sonnet-5/v-08-orrery-mechanism-r1",
+      "frame": "notes/bakeoff/renders/frames/claude-sonnet-5/v-08-orrery-mechanism-r1.png"
+    },
+    {
+      "label": "F4",
+      "bundleId": "claude-sonnet-5/v-08-orrery-mechanism-r2",
+      "frame": "notes/bakeoff/renders/frames/claude-sonnet-5/v-08-orrery-mechanism-r2.png"
+    },
+    {
+      "label": "F5",
+      "bundleId": "gpt-oss-120b/v-08-orrery-mechanism-r1",
+      "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-08-orrery-mechanism-r1.png"
+    },
+    {
+      "label": "F6",
+      "bundleId": "gpt-oss-120b/v-08-orrery-mechanism-r2",
+      "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-08-orrery-mechanism-r2.png"
+    }
+  ],
+  "costUsd": 0.719448,
+  "durationApiMs": 50002,
+  "wallMs": 52469,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 20951,
+    "cache_read_input_tokens": 83132,
+    "output_tokens": 3624,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 20951,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 2635,
+        "cache_read_input_tokens": 44929,
+        "cache_creation_input_tokens": 14225,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 14225
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":25,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"right of center — no secondary meshed gear\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"gear hub — no red jewel accent pivot\"},{\"defect\":\"FLAT_VOID\",\"region\":\"lower two-thirds and entire background field\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"gear pushed to upper-left-of-center, not origin-centered\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"gear body — warm brass, not machined steel; zero accent red\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center object — gear far too small in frame\"}],\"notes\":\"Single brass gear floating in dead void; secondary gear, jewel pivot, and gradient background all absent.\"},{\"frame\":\"F2\",\"score\":25,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"right of center — no secondary meshed gear\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"gear hub — no red jewel accent pivot\"},{\"defect\":\"FLAT_VOID\",\"region\":\"lower two-thirds and entire background field\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"gear offset upper-left-of-center\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"gear body — brass instead of steel; no accent red\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center object — undersized in frame\"}],\"notes\":\"Near-identical to F1; same lone brass gear, same void, no spec compliance beyond one rendered mesh.\"},{\"frame\":\"F3\",\"score\":27,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"right of center — secondary gear absent\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"gear hub — jewel accent pivot absent\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field and lower two-thirds\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"gear parked upper-left-of-center\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"gear body — brass tone, no #ff2a38 accent anywhere\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center object — too small\"}],\"notes\":\"Slightly more visible tooth depth and edge shading than F1/F2, but same spec failures and dead composition.\"},{\"frame\":\"F4\",\"score\":27,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"right of center — secondary gear absent\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"gear hub — jewel accent pivot absent\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field and lower two-thirds\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"gear offset upper-left-of-center\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"gear body — brass, zero red accent\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center object — undersized\"}],\"notes\":\"Same scene as F3 at a different rotation phase; marginal dimensionality, all spec elements beyond primary gear missing.\"},{\"frame\":\"F5\",\"score\":24,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"right of center — no secondary gear\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"gear hub — no jewel accent pivot\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field, ~85% of frame\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"gear upper-left-of-center, vast empty lower field\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"gear body — brass; no accent red\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center object — too small\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"background field — no gradient stops or light response\"}],\"notes\":\"Indistinguishable from Haiku output; lone brass gear in flat void, spec's second gear and accent entirely absent.\"},{\"frame\":\"F6\",\"score\":25,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"right of center — no secondary gear\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"gear hub — no jewel accent pivot\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field and lower two-thirds\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"gear offset upper-left-of-center\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"gear body — brass, no #ff2a38\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center object — undersized\"}],\"notes\":\"Same lone gear, same void; no meshing pair, no jewel, no gradient — far below the exemplar bar.\"}]}"
+}

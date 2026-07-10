@@ -24,6 +24,7 @@ import { getSharedNodeContext } from '@/lib/prism/runtime/shared-context';
 import { mountFromGraphSource, type MountGraphResult } from '@/lib/prism/runtime/mount-graph';
 import { registerCodeRef } from '@/lib/prism/runtime/factories/coderef-registry';
 import * as textUtils from '@/lib/prism/runtime/shared/text';
+import { webgl2MSDFTextFactory } from './webgl2-msdf-text';
 import type { GraphSource, PrismHub, PrismNode } from '@/lib/prism-graph/types';
 
 interface Bundle {
@@ -94,8 +95,17 @@ export default function BakeoffLabPage() {
 
         // Dependency map — the app's OWN instances (INV-R1: one three).
         const ctx = getSharedNodeContext({ runPrimitives: true });
+        // MEASUREMENT-INTEGRITY FIX (2026-07-10): the shared atlas's default
+        // factory only compiles on WebGPU and silently returns an invisible
+        // placeholder Group on the WebGL2 capture backend — which blinded the
+        // design judge to EVERY contestant's text (see webgl2-msdf-text.ts).
+        // The lab builds its own atlas handle with a WebGL2-compatible TSL
+        // median-MSDF factory (same BMFont atlas, same call contract) and
+        // hands THAT to contestant modules. Lab-route only; no product-path
+        // change.
+        const labFontAtlas = textUtils.createFontAtlas({ msdfTextFactory: webgl2MSDFTextFactory });
         try {
-          await ctx.fontAtlas.load(
+          await labFontAtlas.load(
             '/prism-assets/font-inter.msdf.png',
             '/prism-assets/font-inter.msdf.json',
           );
@@ -114,7 +124,7 @@ export default function BakeoffLabPage() {
           // as the shared text module PLUS a `createText` binding delegating
           // to the live fontAtlas (the one real MSDF text entry point).
           // Hallucinated names (createTextMesh etc.) still fail honestly.
-          '@/text': { ...textUtils, createText: (content: string, opts?: unknown) => ctx.fontAtlas.createText(content, opts as never) },
+          '@/text': { ...textUtils, createText: (content: string, opts?: unknown) => labFontAtlas.createText(content, opts as never) },
         };
         const requireShim = (spec: string) => {
           if (spec in DEPS) return DEPS[spec];
@@ -136,7 +146,9 @@ export default function BakeoffLabPage() {
         type FactoryFn = Parameters<typeof registerCodeRef>[1];
         const recordingFactory: FactoryFn = (n, c) => {
           try {
-            return (factory as FactoryFn)(n, c);
+            // Contestant ctx rides the runtime's own context, with only the
+            // fontAtlas swapped for the WebGL2-visible lab atlas (above).
+            return (factory as FactoryFn)(n, { ...c, fontAtlas: labFontAtlas });
           } catch (err) {
             probe.moduleRuntimeError = err instanceof Error ? `${err.name}: ${err.message}`.slice(0, 300) : String(err).slice(0, 300);
             throw err;

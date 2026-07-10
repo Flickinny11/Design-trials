@@ -1,0 +1,17 @@
+{
+  "bundle": "claude-sonnet-5/v-14-pricing-card-r1",
+  "capturedAt": "2026-07-10T03:10:11.585Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 7,
+    "nodeMounted": true,
+    "bundleId": "claude-sonnet-5/v-14-pricing-card-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

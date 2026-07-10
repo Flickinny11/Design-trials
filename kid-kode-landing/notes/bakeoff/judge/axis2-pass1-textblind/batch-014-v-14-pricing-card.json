@@ -1,0 +1,72 @@
+{
+  "label": "batch-014-v-14-pricing-card",
+  "judgedAt": "2026-07-10T04:17:36.255Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "bundleId": "claude-haiku-4.5/v-14-pricing-card-r1",
+      "frame": "notes/bakeoff/renders/frames/claude-haiku-4.5/v-14-pricing-card-r1.png"
+    },
+    {
+      "label": "F2",
+      "bundleId": "claude-haiku-4.5/v-14-pricing-card-r2",
+      "frame": "notes/bakeoff/renders/frames/claude-haiku-4.5/v-14-pricing-card-r2.png"
+    },
+    {
+      "label": "F3",
+      "bundleId": "claude-sonnet-5/v-14-pricing-card-r1",
+      "frame": "notes/bakeoff/renders/frames/claude-sonnet-5/v-14-pricing-card-r1.png"
+    },
+    {
+      "label": "F4",
+      "bundleId": "claude-sonnet-5/v-14-pricing-card-r2",
+      "frame": "notes/bakeoff/renders/frames/claude-sonnet-5/v-14-pricing-card-r2.png"
+    },
+    {
+      "label": "F5",
+      "bundleId": "gpt-oss-120b/v-14-pricing-card-r1",
+      "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-14-pricing-card-r1.png"
+    },
+    {
+      "label": "F6",
+      "bundleId": "gpt-oss-120b/v-14-pricing-card-r2",
+      "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-14-pricing-card-r2.png"
+    }
+  ],
+  "costUsd": 0.690483,
+  "durationApiMs": 48339,
+  "wallMs": 50795,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 20690,
+    "cache_read_input_tokens": 82868,
+    "output_tokens": 3157,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 20690,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 2165,
+        "cache_read_input_tokens": 44665,
+        "cache_creation_input_tokens": 14228,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 14228
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":22,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire card interior — no tier name, price, or feature text\"},{\"defect\":\"FLAT_VOID\",\"region\":\"upper two-thirds of center card\"},{\"defect\":\"ALL_BLACK_ELEMENT\",\"region\":\"header strip at card top edge\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"card surface, flat albedo with no light response\"}],\"notes\":\"Correct palette and card geometry, but all typography absent; black unlit header strip; vast empty interior.\"},{\"frame\":\"F2\",\"score\":5,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame — lone white square on background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame — no card, text, header, or CTA\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"center white square\"}],\"notes\":\"Render failed to a placeholder white square; nothing from the spec exists.\"},{\"frame\":\"F3\",\"score\":34,\"mustFix\":[{\"defect\":\"OFF_PALETTE\",\"region\":\"center card surface — mid-gray, not ink #16161d\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"card interior — no tier name, price, or feature text\"},{\"defect\":\"FLAT_VOID\",\"region\":\"upper half of center card\"}],\"notes\":\"Has directional lighting, header strip, gradient CTA and hairlines, but surface drifts light-gray and all text is missing.\"},{\"frame\":\"F4\",\"score\":29,\"mustFix\":[{\"defect\":\"OFF_PALETTE\",\"region\":\"center card surface — mid-gray, not ink #16161d\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"card top edge — machined header strip absent; no text anywhere\"},{\"defect\":\"FLAT_VOID\",\"region\":\"upper half of center card\"}],\"notes\":\"Gradient CTA and lighting present, but no header strip, no typography, and washed-out gray surface breaks palette.\"},{\"frame\":\"F5\",\"score\":5,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame — lone white square on background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame — no card, text, header, or CTA\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"center white square\"}],\"notes\":\"Placeholder white square only; no spec element rendered.\"},{\"frame\":\"F6\",\"score\":5,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame — lone white square on background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame — no card, text, header, or CTA\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"center white square\"}],\"notes\":\"Identical failure to F5; placeholder white square, nothing from the spec.\"}]}"
+}

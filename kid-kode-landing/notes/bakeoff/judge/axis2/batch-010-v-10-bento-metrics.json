@@ -1,6 +1,6 @@
 {
   "label": "batch-010-v-10-bento-metrics",
-  "judgedAt": "2026-07-10T04:14:41.174Z",
+  "judgedAt": "2026-07-10T05:26:03.622Z",
   "model": "claude-fable-5",
   "route": "claude-cli-print",
   "frames": [
@@ -35,38 +35,38 @@
       "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-10-bento-metrics-r2.png"
     }
   ],
-  "costUsd": 0.682682,
-  "durationApiMs": 50092,
-  "wallMs": 52631,
+  "costUsd": 0.7029319999999999,
+  "durationApiMs": 49859,
+  "wallMs": 51171,
   "usage": {
     "input_tokens": 3263,
-    "cache_creation_input_tokens": 20712,
+    "cache_creation_input_tokens": 20722,
     "cache_read_input_tokens": 82898,
-    "output_tokens": 2991,
+    "output_tokens": 3392,
     "server_tool_use": {
       "web_search_requests": 0,
       "web_fetch_requests": 0
     },
     "service_tier": "standard",
     "cache_creation": {
-      "ephemeral_1h_input_tokens": 20712,
+      "ephemeral_1h_input_tokens": 20722,
       "ephemeral_5m_input_tokens": 0
     },
     "inference_geo": "not_available",
     "iterations": [
       {
         "input_tokens": 23,
-        "output_tokens": 2007,
+        "output_tokens": 2398,
         "cache_read_input_tokens": 44695,
-        "cache_creation_input_tokens": 14220,
+        "cache_creation_input_tokens": 14230,
         "cache_creation": {
           "ephemeral_5m_input_tokens": 0,
-          "ephemeral_1h_input_tokens": 14220
+          "ephemeral_1h_input_tokens": 14230
         },
         "type": "message"
       }
     ],
     "speed": "standard"
   },
-  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame — no bento grid, cells, gradients, or metrics\" } ], \"notes\": \"Near-empty frame: lone white square on void, zero spec content rendered.\" }, { \"frame\": \"F2\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame — no bento grid, cells, gradients, or metrics\" } ], \"notes\": \"Identical failure to F1: single untextured white square, nothing else rendered.\" }, { \"frame\": \"F3\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame — no bento grid, cells, gradients, or metrics\" } ], \"notes\": \"Lone white square on void; no bento composition, gradients, or accent present.\" }, { \"frame\": \"F4\", \"score\": 46, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"all three cells — no metric numerals or labels\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"all cell surfaces — washed mid-gray, far lighter than #14141a spec\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"diagonal sheen bands — several times wider than 0.15-unit spec, soft not hard-stop\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field surrounding grid\" } ], \"notes\": \"Only real composition: correct 2x2 bento layout with dominant cell, but gray-washed, textless, oversized soft sheen.\" }, { \"frame\": \"F5\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame — no bento grid, cells, gradients, or metrics\" } ], \"notes\": \"Same lone white square on void; spec entirely unrendered.\" }, { \"frame\": \"F6\", \"score\": 2, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"entire frame\" }, { \"defect\": \"ALL_BLACK_ELEMENT\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame\" } ], \"notes\": \"Completely black frame; nothing rendered at all.\" } ] }"
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame — no bento grid, tiles, metrics, or accent\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"}],\"notes\":\"Single flat white square on void black; no grid, gradients, text, or accent rendered.\"},{\"frame\":\"F2\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame — no bento grid, tiles, metrics, or accent\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"}],\"notes\":\"Identical failure to F1: lone white square on void; spec entirely absent.\"},{\"frame\":\"F3\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame — no bento grid, tiles, metrics, or accent\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"}],\"notes\":\"Lone white square on void black; no grid, surfaces, or typography rendered.\"},{\"frame\":\"F4\",\"score\":32,\"mustFix\":[{\"defect\":\"GARBLED_TEXT\",\"region\":\"left margin, upper-left, and right column — all labels render as [object Object]\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"all three tiles — bright silver-grey surfaces instead of #14141a ink; accent bars pink not #ff2a38\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"all tiles — sheen band vastly wider and brighter than 0.15-unit +6% spec\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"left and right margins — labels float outside tiles, grid off-center\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"tile interiors — no metric numerals or stat content\"}],\"notes\":\"Only frame with grid geometry; layout roughly matches, but garbled labels, washed grey surfaces, and empty tiles sink it.\"},{\"frame\":\"F5\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame — no bento grid, tiles, metrics, or accent\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"}],\"notes\":\"Lone white square on void black; spec entirely absent.\"},{\"frame\":\"F6\",\"score\":3,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame\"}],\"notes\":\"Completely black frame; nothing rendered at all.\"}]}"
 }

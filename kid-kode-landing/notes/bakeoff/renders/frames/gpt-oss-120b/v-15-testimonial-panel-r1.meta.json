@@ -1,6 +1,6 @@
 {
   "bundle": "gpt-oss-120b/v-15-testimonial-panel-r1",
-  "capturedAt": "2026-07-10T03:37:42.446Z",
+  "capturedAt": "2026-07-10T05:17:33.394Z",
   "probe": {
     "status": "error",
     "error": "module did not default-export a function",

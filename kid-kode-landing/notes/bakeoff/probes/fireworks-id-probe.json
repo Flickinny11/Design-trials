@@ -1,94 +1,66 @@
 {
-  "probedAt": "2026-07-10T00:03:21.089Z",
+  "probedAt": "2026-07-10T01:45:24.649Z",
   "results": [
     {
       "model": "accounts/fireworks/models/kimi-k2p7-code",
-      "httpStatus": 200,
-      "latencyMs": 566,
-      "usage": {
-        "prompt_tokens": 11,
-        "total_tokens": 15,
-        "completion_tokens": 4,
-        "prompt_tokens_details": {
-          "cached_tokens": 0
-        }
-      },
-      "error": null
+      "httpStatus": 412,
+      "latencyMs": 186,
+      "usage": null,
+      "error": "{\"message\":\"Account logantbaird-6990a8 is suspended, possibly due to reaching the monthly spending limit or failure to pay past invoices. Please go to https://fireworks.ai/account/billing for more inf"
     },
     {
       "model": "accounts/fireworks/models/kimi-k2p7",
       "httpStatus": 404,
-      "latencyMs": 320,
+      "latencyMs": 186,
       "usage": null,
       "error": "{\"message\":\"Model not found, inaccessible, and/or not deployed\",\"param\":\"model\",\"code\":\"NOT_FOUND\",\"type\":\"error\"}"
     },
     {
       "model": "accounts/fireworks/models/deepseek-v4-flash",
-      "httpStatus": 200,
-      "latencyMs": 831,
-      "usage": {
-        "prompt_tokens": 7,
-        "total_tokens": 11,
-        "completion_tokens": 4,
-        "prompt_tokens_details": {
-          "cached_tokens": 0
-        }
-      },
-      "error": null
+      "httpStatus": 412,
+      "latencyMs": 63,
+      "usage": null,
+      "error": "{\"message\":\"Account logantbaird-6990a8 is suspended, possibly due to reaching the monthly spending limit or failure to pay past invoices. Please go to https://fireworks.ai/account/billing for more inf"
     },
     {
       "model": "accounts/fireworks/models/deepseek-v4",
+      "httpStatus": 404,
+      "latencyMs": 137,
+      "usage": null,
+      "error": "{\"message\":\"Model not found, inaccessible, and/or not deployed\",\"param\":\"model\",\"code\":\"NOT_FOUND\",\"type\":\"error\"}"
+    },
+    {
+      "model": "accounts/fireworks/models/glm-5p2",
+      "httpStatus": 412,
+      "latencyMs": 56,
+      "usage": null,
+      "error": "{\"message\":\"Account logantbaird-6990a8 is suspended, possibly due to reaching the monthly spending limit or failure to pay past invoices. Please go to https://fireworks.ai/account/billing for more inf"
+    },
+    {
+      "model": "accounts/fireworks/models/qwen3p7-max",
       "httpStatus": 404,
       "latencyMs": 140,
       "usage": null,
       "error": "{\"message\":\"Model not found, inaccessible, and/or not deployed\",\"param\":\"model\",\"code\":\"NOT_FOUND\",\"type\":\"error\"}"
     },
     {
-      "model": "accounts/fireworks/models/glm-5p2",
-      "httpStatus": 200,
-      "latencyMs": 3102,
-      "usage": {
-        "prompt_tokens": 15,
-        "total_tokens": 19,
-        "completion_tokens": 4,
-        "prompt_tokens_details": {
-          "cached_tokens": 0
-        }
-      },
-      "error": null
-    },
-    {
-      "model": "accounts/fireworks/models/qwen3p7-max",
-      "httpStatus": 404,
-      "latencyMs": 131,
-      "usage": null,
-      "error": "{\"message\":\"Model not found, inaccessible, and/or not deployed\",\"param\":\"model\",\"code\":\"NOT_FOUND\",\"type\":\"error\"}"
-    },
-    {
       "model": "accounts/fireworks/models/qwen3p7-plus",
-      "httpStatus": 200,
-      "latencyMs": 831,
-      "usage": {
-        "prompt_tokens": 13,
-        "total_tokens": 17,
-        "completion_tokens": 4,
-        "prompt_tokens_details": {
-          "cached_tokens": 0
-        }
-      },
-      "error": null
+      "httpStatus": 412,
+      "latencyMs": 54,
+      "usage": null,
+      "error": "{\"message\":\"Account logantbaird-6990a8 is suspended, possibly due to reaching the monthly spending limit or failure to pay past invoices. Please go to https://fireworks.ai/account/billing for more inf"
     },
     {
       "model": "accounts/fireworks/models/qwen3-vl-235b-a22b-instruct",
       "httpStatus": 404,
-      "latencyMs": 133,
+      "latencyMs": 129,
       "usage": null,
       "error": "{\"message\":\"Model not found, inaccessible, and/or not deployed\",\"param\":\"model\",\"code\":\"NOT_FOUND\",\"type\":\"error\"}"
     },
     {
       "model": "accounts/fireworks/models/mercury-2",
       "httpStatus": 404,
-      "latencyMs": 133,
+      "latencyMs": 135,
       "usage": null,
       "error": "{\"message\":\"Model not found, inaccessible, and/or not deployed\",\"param\":\"model\",\"code\":\"NOT_FOUND\",\"type\":\"error\"}"
     }

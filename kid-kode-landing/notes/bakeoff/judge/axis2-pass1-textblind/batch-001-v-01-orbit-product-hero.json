@@ -1,0 +1,72 @@
+{
+  "label": "batch-001-v-01-orbit-product-hero",
+  "judgedAt": "2026-07-10T04:07:41.706Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "bundleId": "claude-haiku-4.5/v-01-orbit-product-hero-r1",
+      "frame": "notes/bakeoff/renders/frames/claude-haiku-4.5/v-01-orbit-product-hero-r1.png"
+    },
+    {
+      "label": "F2",
+      "bundleId": "claude-haiku-4.5/v-01-orbit-product-hero-r2",
+      "frame": "notes/bakeoff/renders/frames/claude-haiku-4.5/v-01-orbit-product-hero-r2.png"
+    },
+    {
+      "label": "F3",
+      "bundleId": "claude-sonnet-5/v-01-orbit-product-hero-r1",
+      "frame": "notes/bakeoff/renders/frames/claude-sonnet-5/v-01-orbit-product-hero-r1.png"
+    },
+    {
+      "label": "F4",
+      "bundleId": "claude-sonnet-5/v-01-orbit-product-hero-r2",
+      "frame": "notes/bakeoff/renders/frames/claude-sonnet-5/v-01-orbit-product-hero-r2.png"
+    },
+    {
+      "label": "F5",
+      "bundleId": "gpt-oss-120b/v-01-orbit-product-hero-r1",
+      "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-01-orbit-product-hero-r1.png"
+    },
+    {
+      "label": "F6",
+      "bundleId": "gpt-oss-120b/v-01-orbit-product-hero-r2",
+      "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-01-orbit-product-hero-r2.png"
+    }
+  ],
+  "costUsd": 1.442614,
+  "durationApiMs": 48266,
+  "wallMs": 50560,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 59133,
+    "cache_read_input_tokens": 44911,
+    "output_tokens": 3578,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 59133,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 2592,
+        "cache_read_input_tokens": 44911,
+        "cache_creation_input_tokens": 14222,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 14222
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 12, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"background field, ~95% of frame\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"upper-center-right, watch is a tiny sliver\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"lower half — no plinth, no gradient stops\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"watch body — flat ambient, no key+rim or signal light\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"watch case — warm gold, not brushed near-black metal\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"object floats tilted off-center, not resting at origin\" } ], \"notes\": \"Tiny gold watch adrift in a black void; nearly every spec element (plinth, lighting rig, gradient, accent) absent.\" }, { \"frame\": \"F2\", \"score\": 12, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"background field, ~95% of frame\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"upper-center-right, watch minuscule\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"lower half — plinth and engineered gradient absent\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"watch body — no key, rim, or accent signal light\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"watch case — gold/beige vs spec palette\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"object tilted and floating, not centered on plinth\" } ], \"notes\": \"Duplicate of F1's failure: unlit floating sliver in a void, spec composition never materialized.\" }, { \"frame\": \"F3\", \"score\": 14, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"background field, ~95% of frame\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"upper-center-right, watch far below hero scale\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"lower half — no plinth, no vertical gradient\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"watch body — flat fill, no key+rim modeling\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"watch case — warm gold body\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"floating tilted object, no grounding\" } ], \"notes\": \"Marginal red glint at crown edge, otherwise same void: no plinth, no lighting rig, no presentation scale.\" }, { \"frame\": \"F4\", \"score\": 13, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"background field, ~95% of frame\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"upper-center-right, tiny object\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"lower half — plinth and gradient stops absent\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"watch body — no key, rim, or accent light response\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"watch case — gold vs brushed near-black spec\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"object floats off-center, uncentered at origin\" } ], \"notes\": \"Same failure mode as F3 with slightly less surface detail; frame is effectively an empty ink field.\" }, { \"frame\": \"F5\", \"score\": 16, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"background field, ~93% of frame\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"upper-center-right, watch still far too small\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"lower half — no plinth or engineered gradient\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"watch body — dial detail visible but no key+rim structure\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"watch case — warm gold body\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"tilted floating object, no grounding plane\" } ], \"notes\": \"Slightly larger render with legible dial and hint of accent, but composition, plinth, and lighting spec all unmet.\" }, { \"frame\": \"F6\", \"score\": 16, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"background field, ~93% of frame\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"upper-center-right, sub-hero scale\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"lower half — plinth and gradient absent\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"watch body — faint red bezel edge but no key/rim/signal rig\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"watch case — gold vs spec metal\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"floating tilted object, uncentered\" } ], \"notes\": \"Best of a failed set: visible dial and faint red accent, still a tiny unlit object in a void.\" } ] }"
+}

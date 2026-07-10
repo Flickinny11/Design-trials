@@ -1,10 +1,10 @@
 {
   "bundle": "claude-haiku-4.5/v-03-glass-prism-refraction-r2",
-  "capturedAt": "2026-07-10T03:05:30.735Z",
+  "capturedAt": "2026-07-10T05:09:55.377Z",
   "probe": {
     "status": "ready",
     "error": null,
-    "renderables": 3,
+    "renderables": 5,
     "nodeMounted": true,
     "bundleId": "claude-haiku-4.5/v-03-glass-prism-refraction-r2"
   },

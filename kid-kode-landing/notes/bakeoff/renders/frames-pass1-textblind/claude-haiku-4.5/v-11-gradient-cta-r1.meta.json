@@ -1,0 +1,17 @@
+{
+  "bundle": "claude-haiku-4.5/v-11-gradient-cta-r1",
+  "capturedAt": "2026-07-10T03:06:41.177Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 2,
+    "nodeMounted": true,
+    "bundleId": "claude-haiku-4.5/v-11-gradient-cta-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

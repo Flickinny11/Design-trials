@@ -1,10 +1,10 @@
 {
   "bundle": "claude-sonnet-5/v-09-editorial-oversized-type-r2",
-  "capturedAt": "2026-07-10T03:09:30.489Z",
+  "capturedAt": "2026-07-10T05:13:51.422Z",
   "probe": {
     "status": "ready",
     "error": null,
-    "renderables": 2,
+    "renderables": 9,
     "nodeMounted": true,
     "bundleId": "claude-sonnet-5/v-09-editorial-oversized-type-r2"
   },

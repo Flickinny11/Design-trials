@@ -1,10 +1,10 @@
 {
   "bundle": "claude-haiku-4.5/v-14-pricing-card-r1",
-  "capturedAt": "2026-07-10T03:07:08.966Z",
+  "capturedAt": "2026-07-10T05:11:34.102Z",
   "probe": {
     "status": "ready",
     "error": null,
-    "renderables": 7,
+    "renderables": 15,
     "nodeMounted": true,
     "bundleId": "claude-haiku-4.5/v-14-pricing-card-r1"
   },

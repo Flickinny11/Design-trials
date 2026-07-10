@@ -1,10 +1,10 @@
 {
   "bundle": "claude-sonnet-5/v-19-empty-state-r2",
-  "capturedAt": "2026-07-10T03:10:56.894Z",
+  "capturedAt": "2026-07-10T05:15:17.558Z",
   "probe": {
     "status": "ready",
     "error": null,
-    "renderables": 6,
+    "renderables": 9,
     "nodeMounted": true,
     "bundleId": "claude-sonnet-5/v-19-empty-state-r2"
   },

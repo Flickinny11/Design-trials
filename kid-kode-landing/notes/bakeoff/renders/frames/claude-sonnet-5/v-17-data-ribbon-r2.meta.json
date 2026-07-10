@@ -1,10 +1,10 @@
 {
   "bundle": "claude-sonnet-5/v-17-data-ribbon-r2",
-  "capturedAt": "2026-07-10T03:10:40.619Z",
+  "capturedAt": "2026-07-10T05:15:01.519Z",
   "probe": {
     "status": "ready",
     "error": null,
-    "renderables": 17,
+    "renderables": 29,
     "nodeMounted": true,
     "bundleId": "claude-sonnet-5/v-17-data-ribbon-r2"
   },

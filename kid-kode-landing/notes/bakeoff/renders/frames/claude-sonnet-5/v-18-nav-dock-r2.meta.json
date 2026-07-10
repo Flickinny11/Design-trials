@@ -1,10 +1,10 @@
 {
   "bundle": "claude-sonnet-5/v-18-nav-dock-r2",
-  "capturedAt": "2026-07-10T03:10:48.950Z",
+  "capturedAt": "2026-07-10T05:15:09.726Z",
   "probe": {
     "status": "ready",
     "error": null,
-    "renderables": 8,
+    "renderables": 13,
     "nodeMounted": true,
     "bundleId": "claude-sonnet-5/v-18-nav-dock-r2"
   },

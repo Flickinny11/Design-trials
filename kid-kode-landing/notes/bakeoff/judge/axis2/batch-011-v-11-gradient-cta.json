@@ -1,6 +1,6 @@
 {
   "label": "batch-011-v-11-gradient-cta",
-  "judgedAt": "2026-07-10T04:15:27.228Z",
+  "judgedAt": "2026-07-10T05:26:53.766Z",
   "model": "claude-fable-5",
   "route": "claude-cli-print",
   "frames": [
@@ -35,38 +35,38 @@
       "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-11-gradient-cta-r2.png"
     }
   ],
-  "costUsd": 0.687126,
-  "durationApiMs": 43747,
-  "wallMs": 46051,
+  "costUsd": 0.712316,
+  "durationApiMs": 47448,
+  "wallMs": 50141,
   "usage": {
     "input_tokens": 3263,
-    "cache_creation_input_tokens": 20861,
+    "cache_creation_input_tokens": 20853,
     "cache_read_input_tokens": 83048,
-    "output_tokens": 3015,
+    "output_tokens": 3522,
     "server_tool_use": {
       "web_search_requests": 0,
       "web_fetch_requests": 0
     },
     "service_tier": "standard",
     "cache_creation": {
-      "ephemeral_1h_input_tokens": 20861,
+      "ephemeral_1h_input_tokens": 20853,
       "ephemeral_5m_input_tokens": 0
     },
     "inference_geo": "not_available",
     "iterations": [
       {
         "input_tokens": 23,
-        "output_tokens": 2032,
+        "output_tokens": 2547,
         "cache_read_input_tokens": 44845,
-        "cache_creation_input_tokens": 14219,
+        "cache_creation_input_tokens": 14211,
         "cache_creation": {
           "ephemeral_5m_input_tokens": 0,
-          "ephemeral_1h_input_tokens": 14219
+          "ephemeral_1h_input_tokens": 14211
         },
         "type": "message"
       }
     ],
     "speed": "standard"
   },
-  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":56,\"mustFix\":[{\"defect\":\"OFF_PALETTE\",\"region\":\"lower half of center button\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"button bevel edges\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"button perimeter\"}],\"notes\":\"Gradient ramp inverted, drifts pink instead of deep #c1121f; seam present but no machined chamfer highlight or emissive channel.\"},{\"frame\":\"F2\",\"score\":8,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"center card\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center card\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"}],\"notes\":\"Flat white square; no red gradient, bevel, seam, or 2.6:0.68 proportion. Spec entirely absent.\"},{\"frame\":\"F3\",\"score\":8,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"center card\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center card\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"}],\"notes\":\"Identical flat white square; gradient CTA object never rendered.\"},{\"frame\":\"F4\",\"score\":8,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"center card\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center card\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"}],\"notes\":\"Same flat white square as F3; no spec element present.\"},{\"frame\":\"F5\",\"score\":8,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"center card\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center card\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"}],\"notes\":\"Flat white square, wrong shape and palette; nothing from the CTA spec rendered.\"},{\"frame\":\"F6\",\"score\":3,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"}],\"notes\":\"Near-black empty frame; nothing rendered.\"}]}"
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 58, \"mustFix\": [ { \"defect\": \"OFF_PALETTE\", \"region\": \"lower half of center button — gradient inverts to washed pink instead of darkening to #c1121f\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center button perimeter — no machined chamfer highlight, no clearcoat specular, no emissive channel\" } ], \"notes\": \"Correct shape, seam line present, dark-first held; gradient ramp inverted and materiality flat, not physical.\" }, { \"frame\": \"F2\", \"score\": 7, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no gradient CTA button rendered\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center card — flat white square, zero red\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card — square aspect vs 2.6x0.68 spec\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center card — flat fill, no light response\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Untextured white placeholder quad; spec object entirely absent.\" }, { \"frame\": \"F3\", \"score\": 7, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no gradient CTA button rendered\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center card — flat white square, zero red\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card — square aspect vs 2.6x0.68 spec\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center card — flat fill, no light response\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Identical white placeholder quad; no gradient, bevel, seam, or emissive channel.\" }, { \"frame\": \"F4\", \"score\": 7, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no gradient CTA button rendered\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center card — flat white square, zero red\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card — square aspect vs 2.6x0.68 spec\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center card — flat fill, no light response\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Same failed placeholder render as F3; spec object absent.\" }, { \"frame\": \"F5\", \"score\": 7, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no gradient CTA button rendered\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center card — flat white square, zero red\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card — square aspect vs 2.6x0.68 spec\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center card — flat fill, no light response\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Same failed white placeholder quad; no spec elements present.\" }, { \"frame\": \"F6\", \"score\": 3, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame — uniform near-black, nothing rendered\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"entire frame\" } ], \"notes\": \"Empty near-black frame; no geometry, light, or spec content at all.\" } ] }"
 }

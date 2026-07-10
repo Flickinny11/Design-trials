@@ -1,6 +1,6 @@
 {
   "bundle": "gpt-oss-120b/v-04-kinetic-type-headline-r1",
-  "capturedAt": "2026-07-10T03:36:06.299Z",
+  "capturedAt": "2026-07-10T05:15:57.035Z",
   "probe": {
     "status": "error",
     "error": "module did not default-export a function",

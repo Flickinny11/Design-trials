@@ -1,10 +1,10 @@
 {
   "bundle": "claude-sonnet-5/v-04-kinetic-type-headline-r1",
-  "capturedAt": "2026-07-10T03:08:41.051Z",
+  "capturedAt": "2026-07-10T05:13:01.635Z",
   "probe": {
     "status": "ready",
     "error": null,
-    "renderables": 2,
+    "renderables": 5,
     "nodeMounted": true,
     "bundleId": "claude-sonnet-5/v-04-kinetic-type-headline-r1"
   },

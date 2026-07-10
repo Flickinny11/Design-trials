@@ -1,6 +1,6 @@
 {
   "label": "batch-003-v-03-glass-prism-refraction",
-  "judgedAt": "2026-07-10T04:09:15.503Z",
+  "judgedAt": "2026-07-10T05:20:36.563Z",
   "model": "claude-fable-5",
   "route": "claude-cli-print",
   "frames": [
@@ -35,38 +35,38 @@
       "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-03-glass-prism-refraction-r2.png"
     }
   ],
-  "costUsd": 0.6964859999999999,
-  "durationApiMs": 47148,
-  "wallMs": 49543,
+  "costUsd": 0.682211,
+  "durationApiMs": 44808,
+  "wallMs": 47677,
   "usage": {
     "input_tokens": 3263,
-    "cache_creation_input_tokens": 20993,
+    "cache_creation_input_tokens": 20984,
     "cache_read_input_tokens": 83156,
-    "output_tokens": 3146,
+    "output_tokens": 2864,
     "server_tool_use": {
       "web_search_requests": 0,
       "web_fetch_requests": 0
     },
     "service_tier": "standard",
     "cache_creation": {
-      "ephemeral_1h_input_tokens": 20993,
+      "ephemeral_1h_input_tokens": 20984,
       "ephemeral_5m_input_tokens": 0
     },
     "inference_geo": "not_available",
     "iterations": [
       {
         "input_tokens": 23,
-        "output_tokens": 2139,
+        "output_tokens": 1866,
         "cache_read_input_tokens": 44953,
-        "cache_creation_input_tokens": 14243,
+        "cache_creation_input_tokens": 14234,
         "cache_creation": {
           "ephemeral_5m_input_tokens": 0,
-          "ephemeral_1h_input_tokens": 14243
+          "ephemeral_1h_input_tokens": 14234
         },
         "type": "message"
       }
     ],
     "speed": "standard"
   },
-  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":26,\"mustFix\":[{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center prism\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center prism — no dispersion, iridescence, or rim light\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"white quad clipping behind prism, upper-left of prism\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"}],\"notes\":\"Matte gray triangle, not glass; stray white plane; faint red floor strip is the only palette signal.\"},{\"frame\":\"F2\",\"score\":37,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center object — cube-like form, not triangular prism; no dispersion split\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"lavender floor strip and candy-pink interior, lower center\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"floor strip — flat unlit fill\"}],\"notes\":\"Real gloss and internal refraction attempt, but wrong geometry, candy-pink drift, flat lavender ground plane.\"},{\"frame\":\"F3\",\"score\":58,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"whole prism — no RGB dispersion fan or iridescence\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"left face gradient and center hotspot glow\"},{\"defect\":\"ALL_BLACK_ELEMENT\",\"region\":\"right prism face\"}],\"notes\":\"Correct prism geometry, red refractions, emissive hotspot; best of set but no spectral split, blue-tinted glass, empty surround.\"},{\"frame\":\"F4\",\"score\":5,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"}],\"notes\":\"Uniform near-black frame; nothing rendered.\"},{\"frame\":\"F5\",\"score\":4,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"}],\"notes\":\"Uniform near-black frame; nothing rendered.\"},{\"frame\":\"F6\",\"score\":4,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"}],\"notes\":\"Uniform near-black frame; nothing rendered.\"}]}"
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":24,\"mustFix\":[{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center prism\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center prism — no iridescence, transmission, or emissive core\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"white square jutting from upper-left of prism\"}],\"notes\":\"Flat matte gray triangle, not glass; faint dispersion bar below is the only spec signal. Reads as unlit placeholder geometry.\"},{\"frame\":\"F2\",\"score\":30,\"mustFix\":[{\"defect\":\"SCALE_ERROR\",\"region\":\"center object — cube/diamond, not the specified triangular prism\"},{\"defect\":\"GARBLED_TEXT\",\"region\":\"lower-left — headline clipped to 'ht machined.'\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"bottom edge — text and micro-caption cut off frame\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"lavender parallelogram under object\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center object — no dispersion pass or back rim light\"}],\"notes\":\"Glossy pink blob inside wrong-shape solid; some specular life but off-spec geometry, clipped type, AI-slop plastic sheen.\"},{\"frame\":\"F3\",\"score\":58,\"mustFix\":[{\"defect\":\"OFF_PALETTE\",\"region\":\"right edge — large flat pale blue-gray slab\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"right edge slab\"},{\"defect\":\"FLAT_VOID\",\"region\":\"left half background\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center prism — iridescence and back rim light absent\"}],\"notes\":\"Best of set: readable glass prism, red emissive core, dispersion streak on-accent. Right-side blue slab and dead background hold it back.\"},{\"frame\":\"F4\",\"score\":5,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"}],\"notes\":\"Uniform near-black frame at background color; nothing rendered.\"},{\"frame\":\"F5\",\"score\":5,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"}],\"notes\":\"Uniform near-black frame; no geometry, light, or spec elements rendered.\"},{\"frame\":\"F6\",\"score\":5,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"}],\"notes\":\"Uniform near-black frame; no geometry, light, or spec elements rendered.\"}]}"
 }

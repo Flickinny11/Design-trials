@@ -1,6 +1,6 @@
 {
   "label": "batch-004-v-04-kinetic-type-headline",
-  "judgedAt": "2026-07-10T04:09:57.125Z",
+  "judgedAt": "2026-07-10T05:21:32.349Z",
   "model": "claude-fable-5",
   "route": "claude-cli-print",
   "frames": [
@@ -35,38 +35,38 @@
       "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-04-kinetic-type-headline-r2.png"
     }
   ],
-  "costUsd": 0.67125,
-  "durationApiMs": 39675,
-  "wallMs": 41620,
+  "costUsd": 0.70303,
+  "durationApiMs": 53417,
+  "wallMs": 55783,
   "usage": {
     "input_tokens": 3263,
-    "cache_creation_input_tokens": 20904,
+    "cache_creation_input_tokens": 20913,
     "cache_read_input_tokens": 83072,
-    "output_tokens": 2678,
+    "output_tokens": 3310,
     "server_tool_use": {
       "web_search_requests": 0,
       "web_fetch_requests": 0
     },
     "service_tier": "standard",
     "cache_creation": {
-      "ephemeral_1h_input_tokens": 20904,
+      "ephemeral_1h_input_tokens": 20913,
       "ephemeral_5m_input_tokens": 0
     },
     "inference_geo": "not_available",
     "iterations": [
       {
         "input_tokens": 23,
-        "output_tokens": 1676,
+        "output_tokens": 2299,
         "cache_read_input_tokens": 44869,
-        "cache_creation_input_tokens": 14238,
+        "cache_creation_input_tokens": 14247,
         "cache_creation": {
           "ephemeral_5m_input_tokens": 0,
-          "ephemeral_1h_input_tokens": 14238
+          "ephemeral_1h_input_tokens": 14247
         },
         "type": "message"
       }
     ],
     "speed": "standard"
   },
-  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center (no MSDF headline, no accent underline)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Only an untextured white quad on black; no glyphs, no depth, no accent. Render failed.\" }, { \"frame\": \"F2\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center (no headline or underline)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Identical failed frame to F1: single white placeholder quad, zero typography or kinetic evidence.\" }, { \"frame\": \"F3\", \"score\": 12, \"mustFix\": [ { \"defect\": \"GARBLED_TEXT\", \"region\": \"center rectangle (vertical stripe noise, unreadable glyph atlas)\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center (no legible headline, no accent underline)\" }, { \"defect\": \"LOW_CONTRAST\", \"region\": \"full frame\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"background field\" } ], \"notes\": \"MSDF pipeline broke into vertical stripe artifacts; nothing legible, no red accent, no dimensionality.\" }, { \"frame\": \"F4\", \"score\": 18, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center panel (headline glyphs absent)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"center card above and below underline\" }, { \"defect\": \"LOW_CONTRAST\", \"region\": \"surface panel vs background\" } ], \"notes\": \"Correct palette and accent underline render, but the entire headline failed to draw; large dead panel.\" }, { \"frame\": \"F5\", \"score\": 3, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"full frame (no headline, no underline)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Completely empty near-black frame; nothing rendered at all.\" }, { \"frame\": \"F6\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center (no glyphs or accent)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Single white placeholder quad on black, matching F1/F2 failure; no typography or motion evidence.\" } ] }"
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center (no headline, no glyphs, no accent underline)\" }, { \"defect\": \"ALL_BLACK_ELEMENT\", \"region\": \"background field\" } ], \"notes\": \"Near-empty frame: lone white placeholder quad on flat black; no MSDF type, no accent, nothing rendered.\" }, { \"frame\": \"F2\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center (no headline, no glyphs, no accent underline)\" }, { \"defect\": \"ALL_BLACK_ELEMENT\", \"region\": \"background field\" } ], \"notes\": \"Identical failed render to F1: single white square, zero typography, zero materiality.\" }, { \"frame\": \"F3\", \"score\": 12, \"mustFix\": [ { \"defect\": \"GARBLED_TEXT\", \"region\": \"upper-right quadrant ([object Object] strings)\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center (no MSDF headline, no accent underline)\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"center panel (striped noise texture, off-center text)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"lower half of center panel\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"background field\" } ], \"notes\": \"Runtime data-binding failure: literal [object Object] labels over glitch-stripe panel; spec headline never materialized.\" }, { \"frame\": \"F4\", \"score\": 34, \"mustFix\": [ { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"center card (headline and subcopy fully overlapping)\" }, { \"defect\": \"GARBLED_TEXT\", \"region\": \"center card (TIME, MACHINED collides with billet line)\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card (headline undersized vs 0.62em hero spec)\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center panel (flat gradient, no dimensional type or parallax depth)\" }, { \"defect\": \"LOW_CONTRAST\", \"region\": \"center card (ghosted mid-fade headline)\" } ], \"notes\": \"Right palette and red accent present, but headline collides with subcopy, flat 2D type, no dimensionality; unshippable.\" }, { \"frame\": \"F5\", \"score\": 2, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"entire frame\" }, { \"defect\": \"ALL_BLACK_ELEMENT\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame (nothing rendered)\" } ], \"notes\": \"Completely black frame; nothing rendered at all.\" }, { \"frame\": \"F6\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center (no headline, no glyphs, no accent underline)\" }, { \"defect\": \"ALL_BLACK_ELEMENT\", \"region\": \"background field\" } ], \"notes\": \"Same failure mode as F1/F2: lone white placeholder quad on black void; spec entirely absent.\" } ] }"
 }

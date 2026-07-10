@@ -1,0 +1,17 @@
+{
+  "bundle": "harness-probe/text-probe-r1",
+  "capturedAt": "2026-07-10T05:08:20.734Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 3,
+    "nodeMounted": true,
+    "bundleId": "harness-probe/text-probe-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

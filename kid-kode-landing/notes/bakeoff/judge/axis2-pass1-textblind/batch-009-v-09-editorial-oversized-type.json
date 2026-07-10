@@ -1,0 +1,72 @@
+{
+  "label": "batch-009-v-09-editorial-oversized-type",
+  "judgedAt": "2026-07-10T04:13:48.541Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "bundleId": "claude-haiku-4.5/v-09-editorial-oversized-type-r1",
+      "frame": "notes/bakeoff/renders/frames/claude-haiku-4.5/v-09-editorial-oversized-type-r1.png"
+    },
+    {
+      "label": "F2",
+      "bundleId": "claude-haiku-4.5/v-09-editorial-oversized-type-r2",
+      "frame": "notes/bakeoff/renders/frames/claude-haiku-4.5/v-09-editorial-oversized-type-r2.png"
+    },
+    {
+      "label": "F3",
+      "bundleId": "claude-sonnet-5/v-09-editorial-oversized-type-r1",
+      "frame": "notes/bakeoff/renders/frames/claude-sonnet-5/v-09-editorial-oversized-type-r1.png"
+    },
+    {
+      "label": "F4",
+      "bundleId": "claude-sonnet-5/v-09-editorial-oversized-type-r2",
+      "frame": "notes/bakeoff/renders/frames/claude-sonnet-5/v-09-editorial-oversized-type-r2.png"
+    },
+    {
+      "label": "F5",
+      "bundleId": "gpt-oss-120b/v-09-editorial-oversized-type-r1",
+      "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-09-editorial-oversized-type-r1.png"
+    },
+    {
+      "label": "F6",
+      "bundleId": "gpt-oss-120b/v-09-editorial-oversized-type-r2",
+      "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-09-editorial-oversized-type-r2.png"
+    }
+  ],
+  "costUsd": 0.668218,
+  "durationApiMs": 41513,
+  "wallMs": 43999,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 20845,
+    "cache_read_input_tokens": 83018,
+    "output_tokens": 2645,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 20845,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1648,
+        "cache_read_input_tokens": 44815,
+        "cache_creation_input_tokens": 14233,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 14233
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"full frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card — no kicker, hero lines, or accent rule\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"}],\"notes\":\"Near-empty: lone white placeholder square on flat black; no type, gradient, grain, or accent rendered.\"},{\"frame\":\"F2\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"full frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card — no kicker, hero lines, or accent rule\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"}],\"notes\":\"Identical failure to F1: single white square, zero editorial content, dead flat field.\"},{\"frame\":\"F3\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"full frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card — no kicker, hero lines, or accent rule\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"}],\"notes\":\"White placeholder quad on flat black; no typography or spec elements rendered.\"},{\"frame\":\"F4\",\"score\":18,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"left half — kicker and both hero type lines absent\"},{\"defect\":\"FLAT_VOID\",\"region\":\"upper and lower plate regions\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center plate — visible gradient banding, no grain\"}],\"notes\":\"Plate, gradient, and red accent rule present but all typography missing; mostly void.\"},{\"frame\":\"F5\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"full frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card — no kicker, hero lines, or accent rule\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"}],\"notes\":\"Lone white square on flat black; no editorial content rendered.\"},{\"frame\":\"F6\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"full frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card — no kicker, hero lines, or accent rule\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"}],\"notes\":\"Identical placeholder-square failure; zero spec elements, dead flat field.\"}]}"
+}

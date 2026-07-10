@@ -1,6 +1,6 @@
 {
   "label": "batch-012-v-12-photo-hero-composite",
-  "judgedAt": "2026-07-10T04:16:03.973Z",
+  "judgedAt": "2026-07-10T05:27:38.510Z",
   "model": "claude-fable-5",
   "route": "claude-cli-print",
   "frames": [
@@ -35,38 +35,38 @@
       "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-12-photo-hero-composite-r2.png"
     }
   ],
-  "costUsd": 0.665576,
-  "durationApiMs": 34379,
-  "wallMs": 36743,
+  "costUsd": 0.6874560000000001,
+  "durationApiMs": 42109,
+  "wallMs": 44741,
   "usage": {
     "input_tokens": 3263,
-    "cache_creation_input_tokens": 20619,
+    "cache_creation_input_tokens": 20603,
     "cache_read_input_tokens": 82790,
-    "output_tokens": 2693,
+    "output_tokens": 3137,
     "server_tool_use": {
       "web_search_requests": 0,
       "web_fetch_requests": 0
     },
     "service_tier": "standard",
     "cache_creation": {
-      "ephemeral_1h_input_tokens": 20619,
+      "ephemeral_1h_input_tokens": 20603,
       "ephemeral_5m_input_tokens": 0
     },
     "inference_geo": "not_available",
     "iterations": [
       {
         "input_tokens": 23,
-        "output_tokens": 1694,
+        "output_tokens": 2154,
         "cache_read_input_tokens": 44587,
-        "cache_creation_input_tokens": 14235,
+        "cache_creation_input_tokens": 14219,
         "cache_creation": {
           "ephemeral_5m_input_tokens": 0,
-          "ephemeral_1h_input_tokens": 14235
+          "ephemeral_1h_input_tokens": 14219
         },
         "type": "message"
       }
     ],
     "speed": "standard"
   },
-  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":8,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame near-empty\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center placeholder icon\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"no photo plate, filmic grade, caption block, or red accent\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center card tiny vs 4.0x2.5 plate spec\"}],\"notes\":\"Blue layered-stack loading placeholder floating in a black void; photo composite never rendered.\"},{\"frame\":\"F2\",\"score\":8,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame near-empty\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center placeholder icon\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"no photo plate, caption block, or accent\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center card undersized\"}],\"notes\":\"Identical placeholder-on-void as F1; no spec content rendered.\"},{\"frame\":\"F3\",\"score\":8,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame near-empty\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center placeholder icon\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"no photo plate, grade, caption, or red accent\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center card undersized\"}],\"notes\":\"Same unloaded-texture placeholder on void; photo hero absent entirely.\"},{\"frame\":\"F4\",\"score\":8,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame near-empty\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center placeholder icon\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"no photo plate, caption block, or accent\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center card undersized\"}],\"notes\":\"Duplicate of F3 failure: blue placeholder icon in a dead black field.\"},{\"frame\":\"F5\",\"score\":2,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame — nothing from spec rendered\"}],\"notes\":\"Completely black frame; nothing rendered at all.\"},{\"frame\":\"F6\",\"score\":8,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame near-empty\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center placeholder icon\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"no photo plate, caption block, or red accent\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center card undersized\"}],\"notes\":\"Same blue placeholder-on-void failure; photo composite never loaded.\"}]}"
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 8, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"full frame — no photo plate, no filmic grade, no foreground subject, no caption block\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center placeholder tile\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center placeholder tile — blue/violet, no #ff2a38 accent anywhere\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — plate spec is 4.0x2.5 scene units, rendered as tiny thumbnail\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"full frame\" } ], \"notes\": \"Unloaded-image placeholder icon floating in a void; the hero composite never rendered. Near-empty frame.\" }, { \"frame\": \"F2\", \"score\": 8, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"full frame — photo plate, grade, subject separation, caption all absent\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center placeholder tile\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center placeholder tile\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — plate rendered as tiny thumbnail\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"full frame\" } ], \"notes\": \"Identical failure to F1: blue placeholder glyph on black void, zero spec content.\" }, { \"frame\": \"F3\", \"score\": 8, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"full frame — no photographic plate, filmic grade, or caption block\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center placeholder tile\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center placeholder tile — no red accent\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — spec calls for a 4.0x2.5 hero plate\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"full frame\" } ], \"notes\": \"Same unloaded-texture placeholder in a void; composite failed to render. Near-empty.\" }, { \"frame\": \"F4\", \"score\": 8, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"full frame — every spec element absent\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center placeholder tile\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center placeholder tile\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — tiny thumbnail vs full hero plate\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"full frame\" } ], \"notes\": \"Duplicate of F3's failure: placeholder icon on void, no hero content rendered.\" }, { \"frame\": \"F5\", \"score\": 3, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"full frame — nothing rendered at all\" } ], \"notes\": \"Completely black frame; nothing rendered, not even a placeholder.\" }, { \"frame\": \"F6\", \"score\": 8, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"full frame — no plate, grade, subject, or caption\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center placeholder tile\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center placeholder tile\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — thumbnail-sized instead of hero-scale plate\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"full frame\" } ], \"notes\": \"Placeholder icon on black void, same failure signature as F1-F4. Near-empty frame.\" } ] }"
 }

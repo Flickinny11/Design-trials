@@ -1,0 +1,18 @@
+{
+  "bundle": "claude-haiku-4.5/v-20-footer-colophon-r1",
+  "capturedAt": "2026-07-10T03:08:00.551Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "claude-haiku-4.5/v-20-footer-colophon-r1",
+    "moduleRuntimeError": "TypeError: (0 , import_tsl.positionGeometry) is not a function"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

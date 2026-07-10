@@ -2192,11 +2192,25 @@
       "billing": "metered",
       "rateNote": "estimate from published per-MTok rates",
       "at": "2026-07-10T04:39:43.909Z"
+    },
+    {
+      "axis": "axis2",
+      "contestant": "gpt-oss-120b",
+      "model": "openai/gpt-oss-120b",
+      "provider": "groq",
+      "caseId": "v-20-footer-colophon",
+      "run": 1,
+      "promptTokens": 2337,
+      "completionTokens": 4096,
+      "costUsd": 0.00280815,
+      "billing": "metered",
+      "rateNote": "estimate from published per-MTok rates",
+      "at": "2026-07-10T05:27:02.467Z"
     }
   ],
   "totals": {
-    "meteredUsd": 0.08243415000000001,
+    "meteredUsd": 0.08524230000000001,
     "subscriptionEquivalentUsd": 24.37079629999999,
-    "totalUsd": 24.453230449999992
+    "totalUsd": 24.456038599999992
   }
 }

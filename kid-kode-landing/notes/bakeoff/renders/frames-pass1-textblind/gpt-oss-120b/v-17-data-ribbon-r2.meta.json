@@ -1,0 +1,17 @@
+{
+  "bundle": "gpt-oss-120b/v-17-data-ribbon-r2",
+  "capturedAt": "2026-07-10T04:51:37.410Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "gpt-oss-120b/v-17-data-ribbon-r2"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

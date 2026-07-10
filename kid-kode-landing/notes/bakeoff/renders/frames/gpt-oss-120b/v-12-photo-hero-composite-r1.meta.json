@@ -1,6 +1,6 @@
 {
   "bundle": "gpt-oss-120b/v-12-photo-hero-composite-r1",
-  "capturedAt": "2026-07-10T03:37:17.169Z",
+  "capturedAt": "2026-07-10T05:17:08.104Z",
   "probe": {
     "status": "error",
     "error": "module did not default-export a function",

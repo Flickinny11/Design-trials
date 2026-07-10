@@ -1,10 +1,10 @@
 {
   "bundle": "claude-haiku-4.5/v-19-empty-state-r1",
-  "capturedAt": "2026-07-10T03:07:51.325Z",
+  "capturedAt": "2026-07-10T05:12:16.105Z",
   "probe": {
     "status": "ready",
     "error": null,
-    "renderables": 27,
+    "renderables": 30,
     "nodeMounted": true,
     "bundleId": "claude-haiku-4.5/v-19-empty-state-r1"
   },

@@ -1,6 +1,6 @@
 {
   "label": "batch-013-v-13-brand-wall",
-  "judgedAt": "2026-07-10T04:16:45.458Z",
+  "judgedAt": "2026-07-10T05:28:17.319Z",
   "model": "claude-fable-5",
   "route": "claude-cli-print",
   "frames": [
@@ -35,38 +35,38 @@
       "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-13-brand-wall-r2.png"
     }
   ],
-  "costUsd": 0.666112,
-  "durationApiMs": 41668,
-  "wallMs": 41483,
+  "costUsd": 0.660327,
+  "durationApiMs": 36021,
+  "wallMs": 38807,
   "usage": {
     "input_tokens": 3263,
-    "cache_creation_input_tokens": 20893,
+    "cache_creation_input_tokens": 20891,
     "cache_read_input_tokens": 83066,
-    "output_tokens": 2582,
+    "output_tokens": 2467,
     "server_tool_use": {
       "web_search_requests": 0,
       "web_fetch_requests": 0
     },
     "service_tier": "standard",
     "cache_creation": {
-      "ephemeral_1h_input_tokens": 20893,
+      "ephemeral_1h_input_tokens": 20891,
       "ephemeral_5m_input_tokens": 0
     },
     "inference_geo": "not_available",
     "iterations": [
       {
         "input_tokens": 23,
-        "output_tokens": 1585,
+        "output_tokens": 1472,
         "cache_read_input_tokens": 44863,
-        "cache_creation_input_tokens": 14233,
+        "cache_creation_input_tokens": 14231,
         "cache_creation": {
           "ephemeral_5m_input_tokens": 0,
-          "ephemeral_1h_input_tokens": 14233
+          "ephemeral_1h_input_tokens": 14231
         },
         "type": "message"
       }
     ],
     "speed": "standard"
   },
-  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":7,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame — single flat white square on void\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no 3x2 tile grid, wordmarks, or kicker\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card — flat fill, no brushed-metal response\"}],\"notes\":\"Near-empty render: one untextured white quad, none of the six machined tiles or brand marks present.\"},{\"frame\":\"F2\",\"score\":7,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame — single flat white square on void\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no 3x2 tile grid, wordmarks, or kicker\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card — flat fill, no material\"}],\"notes\":\"Identical failure to F1: near-empty frame, no grid, no PBR materiality, spec unexecuted.\"},{\"frame\":\"F3\",\"score\":7,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame — single flat white square on void\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no 3x2 tile grid, wordmarks, or kicker\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card — flat white fill\"}],\"notes\":\"Near-empty render; single flat quad instead of six brushed-metal tiles with monochrome wordmarks.\"},{\"frame\":\"F4\",\"score\":7,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame — single flat white square on void\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no 3x2 tile grid, wordmarks, or kicker\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card — no light response\"}],\"notes\":\"Same failure mode: one untextured square, no grid, no materiality, spec absent.\"},{\"frame\":\"F5\",\"score\":1,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame — fully black, nothing rendered\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame — no tiles, wordmarks, or kicker\"},{\"defect\":\"FLAT_VOID\",\"region\":\"entire frame\"}],\"notes\":\"Completely black void frame; nothing rendered at all.\"},{\"frame\":\"F6\",\"score\":7,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame — single flat white square on void\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no 3x2 tile grid, wordmarks, or kicker\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card — flat fill, no brushed metal\"}],\"notes\":\"Near-empty render matching F1-F4 failure; no grid, no PBR tiles, no brand marks.\"}]}"
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"whole frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no 3x2 tile grid, wordmarks, or kicker\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card — flat white fill, no brushed-metal PBR\"}],\"notes\":\"Single flat white square on void black; none of the six machined tiles or brand marks rendered.\"},{\"frame\":\"F2\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"whole frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no 3x2 tile grid, wordmarks, or kicker\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card — flat white fill, no material response\"}],\"notes\":\"Identical failure to F1: lone white square, near-empty frame, spec entirely absent.\"},{\"frame\":\"F3\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"whole frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no tile grid, brand marks, or kicker\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card — flat unlit white fill\"}],\"notes\":\"Near-empty render; one flat white square replaces the entire brand-mark wall.\"},{\"frame\":\"F4\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"whole frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no tile grid, brand marks, or kicker\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card — flat unlit white fill\"}],\"notes\":\"Same near-empty failure as F3; no machined tiles, no wordmarks, no lighting.\"},{\"frame\":\"F5\",\"score\":0,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"whole frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"whole frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"whole frame — nothing rendered\"}],\"notes\":\"Completely black frame; nothing rendered at all.\"},{\"frame\":\"F6\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"whole frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no tile grid, brand marks, or kicker\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card — flat white fill, no PBR\"}],\"notes\":\"Lone flat white square on void black; spec elements entirely missing.\"}]}"
 }
