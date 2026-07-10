@@ -25,24 +25,41 @@ const scores = JSON.parse(readFileSync(SCORES, 'utf8')).renders
   .filter((r) => r.renderable && r.probeStatus !== 'no-frame');
 
 // Even sampling across the sorted score distribution with diversity guards.
+//
+// v2 (2026-07-10, D4 fix caught before ground truth ran to completion): the
+// v1 sampler capped each contestant at 6 picks, but with only 3 reachable
+// Axis-2 contestants that allows at most 18 capped picks of the 24 target —
+// the last 6 fell through a cap-less fallback that returned the LOWEST
+// unpicked scores, so the "even" sample was [3..14] and never touched the
+// 16–58 top of the range (compressing Spearman into noise). Fixes: the
+// contestant cap derives from target / #contestants, and the search walks
+// OUTWARD from the quantile point (…q, q+1, q-1, q+2…) instead of wrapping
+// past the array end to the bottom, so every quantile keeps locality.
 const sorted = [...scores].sort((a, b) => a.score - b.score);
 const target = 24;
+const contestantIds = [...new Set(sorted.map((r) => r.contestant))];
+const contestantCap = Math.ceil(target / Math.max(1, contestantIds.length));
 const picked = [];
 const seenCase = new Map();
 const seenContestant = new Map();
-for (let i = 0; i < target && sorted.length > 0; i += 1) {
-  const q = Math.floor((i / target) * sorted.length);
-  // Walk forward from the quantile point to satisfy diversity caps.
+for (let i = 0; i < target && picked.length < sorted.length; i += 1) {
+  const q = Math.min(sorted.length - 1, Math.floor((i / (target - 1)) * (sorted.length - 1)));
   let pick = null;
-  for (let j = 0; j < sorted.length; j += 1) {
-    const cand = sorted[(q + j) % sorted.length];
-    if (picked.includes(cand)) continue;
-    if ((seenCase.get(cand.caseId) ?? 0) >= 3) continue;
-    if ((seenContestant.get(cand.contestant) ?? 0) >= 6) continue;
-    pick = cand;
-    break;
+  // Outward search from the quantile point, relaxing caps in two rounds:
+  // round 0 honors both caps; round 1 drops the contestant cap (quantile
+  // locality beats contestant balance when they conflict).
+  for (let round = 0; round < 2 && !pick; round += 1) {
+    for (let j = 0; j < 2 * sorted.length && !pick; j += 1) {
+      const off = j % 2 === 0 ? j / 2 : -(j + 1) / 2;
+      const idx = q + off;
+      if (idx < 0 || idx >= sorted.length) continue;
+      const cand = sorted[idx];
+      if (picked.includes(cand)) continue;
+      if ((seenCase.get(cand.caseId) ?? 0) >= 3) continue;
+      if (round === 0 && (seenContestant.get(cand.contestant) ?? 0) >= contestantCap) continue;
+      pick = cand;
+    }
   }
-  if (!pick) pick = sorted.find((c) => !picked.includes(c)) ?? null;
   if (!pick) break;
   picked.push(pick);
   seenCase.set(pick.caseId, (seenCase.get(pick.caseId) ?? 0) + 1);

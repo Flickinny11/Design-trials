@@ -29,6 +29,26 @@ function ledgerAdd(entry) {
 const cases = loadCases();
 const golden = JSON.parse(readFileSync(path.join(GOLDEN_DIR, 'golden-set.json'), 'utf8')).entries;
 
+function extractJsonObject(text) {
+  const t = (text ?? '').trim();
+  const start = t.indexOf('{');
+  if (start < 0) throw new Error('no JSON in verdict');
+  for (let i = start; i < t.length; i += 1) {
+    if (t[i] !== '{') continue;
+    let depth = 0;
+    for (let j = i; j < t.length; j += 1) {
+      if (t[j] === '{') depth += 1;
+      else if (t[j] === '}') {
+        depth -= 1;
+        if (depth === 0) {
+          try { return JSON.parse(t.slice(i, j + 1)); } catch { break; }
+        }
+      }
+    }
+  }
+  throw new Error('no parseable JSON object in verdict');
+}
+
 async function passOnce(passNo) {
   const verdicts = new Map();
   for (let i = 0; i < golden.length; i += 5) {
@@ -64,7 +84,10 @@ async function passOnce(passNo) {
     ledgerAdd({ axis: 'axis3-ground-truth', model: 'claude-fable-5', batch: label, frames: batch.length, costUsd: env.total_cost_usd ?? 0, billing: 'subscription-equivalent', at: new Date().toISOString() });
     let text = (env.result ?? '').trim();
     if (text.startsWith('```')) text = text.replace(/^```(?:json)?\s*/, '').replace(/\s*```$/, '');
-    const parsed = JSON.parse(text);
+    // The judge occasionally leads with a one-line prose preamble before the
+    // strict JSON (observed live 2026-07-10) — extract the first balanced
+    // JSON object that parses, same discipline as run-critics.parseVerdict.
+    const parsed = extractJsonObject(text);
     parsed.frames.forEach((f, k) => {
       const idx = Number(String(f.frame).replace('F', '')) - 1;
       const entry = batch[idx >= 0 && idx < batch.length ? idx : k];

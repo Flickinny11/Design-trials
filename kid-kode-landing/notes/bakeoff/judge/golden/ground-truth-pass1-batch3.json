@@ -1,0 +1,58 @@
+{
+  "label": "ground-truth-pass1-batch3",
+  "model": "claude-fable-5",
+  "frames": [
+    {
+      "label": "F1",
+      "goldenId": "g-11"
+    },
+    {
+      "label": "F2",
+      "goldenId": "g-12"
+    },
+    {
+      "label": "F3",
+      "goldenId": "g-13"
+    },
+    {
+      "label": "F4",
+      "goldenId": "g-14"
+    },
+    {
+      "label": "F5",
+      "goldenId": "g-15"
+    }
+  ],
+  "costUsd": 0.584302,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 15263,
+    "cache_read_input_tokens": 82370,
+    "output_tokens": 3223,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15263,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 2419,
+        "cache_read_input_tokens": 44167,
+        "cache_creation_input_tokens": 9299,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9299
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":4,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no red gradient CTA, bevel, seam, or emissive channel\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"center card — plain white, no #ff2a38 accent\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card — flat fill, no light response\"}],\"notes\":\"Featureless white square on empty black; nothing of the specified CTA object renders.\"},{\"frame\":\"F2\",\"score\":5,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"full frame — no five-card filmstrip, no photographs, no perspective recession\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center element — blue/indigo stack icon replaces red-accent palette\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center — tiny thumbnail in vast empty frame\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center element — flat fills, no materiality\"}],\"notes\":\"Small generic blue layers icon instead of the carousel; frame is mostly void.\"},{\"frame\":\"F3\",\"score\":5,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"full frame — no filmstrip, no distinct photo plates, no focused card\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center element\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center — undersized element\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center element\"}],\"notes\":\"Near-duplicate of F2's blue stack icon; spec entirely unaddressed, mostly empty frame.\"},{\"frame\":\"F4\",\"score\":4,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"full frame — no photographic plate, filmic grade, subject separation, or caption block\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center element — blue stack icon\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center — tiny warped tile vs 4.0x2.5 hero plate\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"center element — warped, deformed edges\"}],\"notes\":\"Warped blue icon instead of photo hero composite; no photography, void surround.\"},{\"frame\":\"F5\",\"score\":7,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"full frame — one glass plate instead of three cards with icon seats and text hierarchy\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center — miniature element in empty frame\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center glow — blue ambient dominates, accent red barely a smudge\"},{\"defect\":\"LOW_CONTRAST\",\"region\":\"center card — dim, murky rendering\"}],\"notes\":\"Single dim glass slab with faint glow; triptych, icons, and hierarchy absent.\"}]}"
+}

@@ -1,0 +1,58 @@
+{
+  "label": "ground-truth-pass2-batch2",
+  "model": "claude-fable-5",
+  "frames": [
+    {
+      "label": "F1",
+      "goldenId": "g-06"
+    },
+    {
+      "label": "F2",
+      "goldenId": "g-07"
+    },
+    {
+      "label": "F3",
+      "goldenId": "g-08"
+    },
+    {
+      "label": "F4",
+      "goldenId": "g-09"
+    },
+    {
+      "label": "F5",
+      "goldenId": "g-10"
+    }
+  ],
+  "costUsd": 0.46023100000000006,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 9277,
+    "cache_read_input_tokens": 88430,
+    "output_tokens": 3014,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 9277,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 2232,
+        "cache_read_input_tokens": 44215,
+        "cache_creation_input_tokens": 9277,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9277
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 8, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame — near-empty black field\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field, all quadrants\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no six-plate loop column, no photographic textures\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card — blue glow instead of red/black/white palette\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card occupies ~3% of frame\" } ], \"notes\": \"Tiny blue glassy card floating in a black void; no gallery column, no plates, off-palette blue. Effectively unrendered.\" }, { \"frame\": \"F2\", \"score\": 8, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame — near-empty black field\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field, all quadrants\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — six distinct image plates absent\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card — blue emissive accent\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card far below spec plate dimensions\" } ], \"notes\": \"Duplicate of F1: lone blue miniature card in black void; loop column and photographic plates entirely missing.\" }, { \"frame\": \"F3\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame — flat white square on black void\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field, all quadrants\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no 2x2 bento, no stat tiles, no gradients or text\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center square — flat fill, no sheen band or edge response\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center square vastly undersized vs 5.5x3.5-unit grid\" } ], \"notes\": \"Untextured white placeholder quad in a void; zero bento structure, metrics, materials, or palette. Broken render.\" }, { \"frame\": \"F4\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame — flat white square on black void\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field, all quadrants\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no 3x2 tile wall, no brand wordmarks\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center square — no brushed-metal anisotropy or chamfer highlights\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center square — pure white, not #1a1a22→#121218 tiles\" } ], \"notes\": \"Same placeholder white quad; brand wall, machined PBR tiles, and wordmarks all absent. Broken render.\" }, { \"frame\": \"F5\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame — flat white square on black void\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field, all quadrants\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no 7.0-unit ribbon, mono figures, hairlines, or red ticks\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center square — flat fill, no material response\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"square aspect contradicts wide ribbon geometry\" } ], \"notes\": \"Placeholder white quad again; ticker ribbon, type, accent ticks, and edge fades entirely missing. Broken render.\" } ] }"
+}

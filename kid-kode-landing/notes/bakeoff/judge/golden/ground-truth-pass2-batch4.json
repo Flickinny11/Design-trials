@@ -1,0 +1,58 @@
+{
+  "label": "ground-truth-pass2-batch4",
+  "model": "claude-fable-5",
+  "frames": [
+    {
+      "label": "F1",
+      "goldenId": "g-16"
+    },
+    {
+      "label": "F2",
+      "goldenId": "g-17"
+    },
+    {
+      "label": "F3",
+      "goldenId": "g-18"
+    },
+    {
+      "label": "F4",
+      "goldenId": "g-19"
+    },
+    {
+      "label": "F5",
+      "goldenId": "g-20"
+    }
+  ],
+  "costUsd": 0.48843800000000004,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 9286,
+    "cache_read_input_tokens": 88458,
+    "output_tokens": 3573,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 9286,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 2782,
+        "cache_read_input_tokens": 44229,
+        "cache_creation_input_tokens": 9286,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9286
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":8,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"full frame near-empty black field\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center — particle field collapsed to tiny square patch, not ellipsoidal shell\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center core — no #ff2a38 accent core instances\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field — no gradient stops, pure flat black\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"full frame — no glow, no depth falloff readable\"}],\"notes\":\"Particles collapsed into a tiny centered square; no red core, no fog depth, surrounding frame is void.\"},{\"frame\":\"F2\",\"score\":12,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"lower half — plinth entirely absent\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"upper-center — watch tiny, floating, not 2.2-unit hero scale\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field — flat black, no gradient stops\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"watch body — no key/rim response, no accent signal light\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"watch body — gold/tan albedo instead of brushed near-black metal\"}],\"notes\":\"Untextured gold watch floats in a black void; no plinth, lighting rig, or palette compliance.\"},{\"frame\":\"F3\",\"score\":12,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"lower half — plinth entirely absent\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"upper-center — watch tiny relative to frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field — flat black, no engineered gradient\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"watch body — no key+rim lighting, no accent light\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"watch body — gold/tan material off spec\"}],\"notes\":\"Near-duplicate of F2 with identical failures: floating miniature watch, void background, dead lighting.\"},{\"frame\":\"F4\",\"score\":16,\"mustFix\":[{\"defect\":\"GARBLED_TEXT\",\"region\":\"center rail — '[object Object]' repeated with overlapping glyphs\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"right edge — rail and text clipped off-frame, entries colliding\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center rail — five distinct entries, active state, press-down affordance absent\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field — flat near-black, no stage\"}],\"notes\":\"Data-binding failure renders '[object Object]' five times, overlapping and clipped; rail ramp exists but dock content is broken.\"},{\"frame\":\"F5\",\"score\":18,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center band — wordmark, three link columns, legal line all absent\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"background field — giant clipped glyph forms dwarf the footer band\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"full frame — band floats mid-frame over broken oversized letterforms\"},{\"defect\":\"FLAT_VOID\",\"region\":\"center band — empty gradient slab with lone red dash, no content\"},{\"defect\":\"GARBLED_TEXT\",\"region\":\"background field — unreadable fragmented glyph shapes\"}],\"notes\":\"Footer band renders as an empty slab with one accent dash; all typographic content missing, background glyphs broken and oversized.\"}]}"
+}

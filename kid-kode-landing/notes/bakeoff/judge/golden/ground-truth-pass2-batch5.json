@@ -1,0 +1,58 @@
+{
+  "label": "ground-truth-pass2-batch5",
+  "model": "claude-fable-5",
+  "frames": [
+    {
+      "label": "F1",
+      "goldenId": "g-21"
+    },
+    {
+      "label": "F2",
+      "goldenId": "g-22"
+    },
+    {
+      "label": "F3",
+      "goldenId": "g-23"
+    },
+    {
+      "label": "F4",
+      "goldenId": "g-24"
+    },
+    {
+      "label": "F5",
+      "goldenId": "g-25"
+    }
+  ],
+  "costUsd": 0.520486,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 9290,
+    "cache_read_input_tokens": 87832,
+    "output_tokens": 4230,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 9290,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 3435,
+        "cache_read_input_tokens": 43916,
+        "cache_creation_input_tokens": 9290,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9290
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 14, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — secondary gear and jewel accent pivot absent\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center gear — tan/brass instead of machined steel, no red accent\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"upper-center-left — gear small and off-origin, not 1.6-unit centered\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"background field — no gradient stops, no environment response\" } ], \"notes\": \"Single toy-like brass gear floating in a pure black void; no meshing pair, no steel PBR, no accent, no gradient.\" }, { \"frame\": \"F2\", \"score\": 13, \"mustFix\": [ { \"defect\": \"GARBLED_TEXT\", \"region\": \"bottom center — literal '[object Object]' strings rendered twice\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center knot — brushed-metal PBR, anisotropy, imperfection pass all absent (flat white matte)\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center knot — blown-out flat white, no contact shadow on pedestal\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"center — knot tube clips through pedestal; pedestal floats\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field — pure black, no cinematic floor or gradient\" } ], \"notes\": \"Unlit white clay knot clipping its pedestal in a void, plus '[object Object]' debug text; no metal, shadow, or palette.\" }, { \"frame\": \"F3\", \"score\": 38, \"mustFix\": [ { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"center card — unlabeled red block overlaps a feature row; tier name overlapped by price figure\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"card top edge — machined brushed header strip and hairline border absent; CTA has no label\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center card — washed mid-gray gradient instead of ink #16161d albedo\" }, { \"defect\": \"LOW_CONTRAST\", \"region\": \"upper card — per-month caption fades into light gray surface\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field — flat black, no depth or lighting\" } ], \"notes\": \"Recognizable pricing hierarchy, but overlapping red CTA blob, clipped tier name, missing header strip, and washed card albedo break it.\" }, { \"frame\": \"F4\", \"score\": 32, \"mustFix\": [ { \"defect\": \"OFF_PALETTE\", \"region\": \"right edge — large blurred pale blue-gray band, reads as blue drift\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"right edge band — unexplained occluding element; dispersion streak floats detached below prism\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center prism — no iridescence, no back rim light, no emissive core, no RGB dispersion split\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center prism — faces read as flat fills, minimal transmission or light response\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"left/background field — pure black, gradient stops absent\" } ], \"notes\": \"Prism silhouette with flat red interior quads; no dispersion, iridescence, or rim light, plus an off-palette blue band intruding right.\" }, { \"frame\": \"F5\", \"score\": 4, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame — uniform near-black, no content\" } ], \"notes\": \"Completely black frame; nothing rendered.\" } ] }"
+}

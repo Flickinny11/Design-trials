@@ -1,5 +1,5 @@
 {
-  "preparedAt": "2026-07-10T04:51:22.553Z",
+  "preparedAt": "2026-07-10T05:46:43.814Z",
   "bundles": [
     {
       "id": "claude-haiku-4.5/v-01-orbit-product-hero-r1",
@@ -1254,6 +1254,17 @@
       "fenced": false,
       "depViolations": [],
       "transformError": null
+    },
+    {
+      "id": "gpt-oss-120b/v-20-footer-colophon-r1",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-20-footer-colophon",
+      "run": 1,
+      "renderable": false,
+      "parsed": true,
+      "fenced": false,
+      "depViolations": [],
+      "transformError": "Transform failed with 1 error:\n<stdin>:298:15: ERROR: Unexpected end of file"
     },
     {
       "id": "seeded-bad/bad-1-flat-void-r1",

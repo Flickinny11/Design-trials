@@ -1,0 +1,67 @@
+{
+  "label": "batch-018-v-18-nav-dock",
+  "judgedAt": "2026-07-10T05:48:24.609Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "bundleId": "claude-haiku-4.5/v-18-nav-dock-r1",
+      "frame": "notes/bakeoff/renders/frames/claude-haiku-4.5/v-18-nav-dock-r1.png"
+    },
+    {
+      "label": "F2",
+      "bundleId": "claude-haiku-4.5/v-18-nav-dock-r2",
+      "frame": "notes/bakeoff/renders/frames/claude-haiku-4.5/v-18-nav-dock-r2.png"
+    },
+    {
+      "label": "F3",
+      "bundleId": "claude-sonnet-5/v-18-nav-dock-r1",
+      "frame": "notes/bakeoff/renders/frames/claude-sonnet-5/v-18-nav-dock-r1.png"
+    },
+    {
+      "label": "F4",
+      "bundleId": "claude-sonnet-5/v-18-nav-dock-r2",
+      "frame": "notes/bakeoff/renders/frames/claude-sonnet-5/v-18-nav-dock-r2.png"
+    },
+    {
+      "label": "F5",
+      "bundleId": "gpt-oss-120b/v-18-nav-dock-r2",
+      "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-18-nav-dock-r2.png"
+    }
+  ],
+  "costUsd": 0.6274150000000001,
+  "durationApiMs": 38600,
+  "wallMs": 41340,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 18882,
+    "cache_read_input_tokens": 82416,
+    "output_tokens": 2635,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18882,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1773,
+        "cache_read_input_tokens": 44213,
+        "cache_creation_input_tokens": 12872,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 12872
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":5,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"center card\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"center card\"}],\"notes\":\"Single flat white square on dark void; no rail, entries, active state, or materiality rendered.\"},{\"frame\":\"F2\",\"score\":48,\"mustFix\":[{\"defect\":\"DEAD_LIGHTING\",\"region\":\"five entry tiles\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entry tiles (no icons/labels)\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"gray-blue entry tiles\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"}],\"notes\":\"Rail, five entries, active state with red accent present; but entries are flat unlabeled slabs, no brushed-metal specular or chamfer.\"},{\"frame\":\"F3\",\"score\":5,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"center card\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"center card\"}],\"notes\":\"Identical failure: lone flat white square, no dock geometry or spec elements rendered.\"},{\"frame\":\"F4\",\"score\":16,\"mustFix\":[{\"defect\":\"GARBLED_TEXT\",\"region\":\"center rail\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"text overflowing rail right edge\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"center rail\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"rail surface\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entries (no icons, no press affordance)\"}],\"notes\":\"Rail gradient and red accent exist, but '[object Object]' spam overflows frame; unusable render.\"},{\"frame\":\"F5\",\"score\":5,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"center card\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"center card\"}],\"notes\":\"Same lone white square on dark void; no dock, entries, or material response rendered.\"}]}"
+}

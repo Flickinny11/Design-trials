@@ -1,0 +1,17 @@
+{
+  "bundle": "gpt-oss-120b/v-20-footer-colophon-r1",
+  "capturedAt": "2026-07-10T05:46:49.831Z",
+  "probe": {
+    "status": "error",
+    "error": "module did not default-export a function",
+    "renderables": 0,
+    "nodeMounted": false,
+    "bundleId": "gpt-oss-120b/v-20-footer-colophon-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": "Transform failed with 1 error:\n<stdin>:298:15: ERROR: Unexpected end of file",
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

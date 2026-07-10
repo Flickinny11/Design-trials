@@ -1,0 +1,58 @@
+{
+  "label": "ground-truth-pass2-batch1",
+  "model": "claude-fable-5",
+  "frames": [
+    {
+      "label": "F1",
+      "goldenId": "g-01"
+    },
+    {
+      "label": "F2",
+      "goldenId": "g-02"
+    },
+    {
+      "label": "F3",
+      "goldenId": "g-03"
+    },
+    {
+      "label": "F4",
+      "goldenId": "g-04"
+    },
+    {
+      "label": "F5",
+      "goldenId": "g-05"
+    }
+  ],
+  "costUsd": 0.406729,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 9312,
+    "cache_read_input_tokens": 88552,
+    "output_tokens": 1926,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 9312,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1109,
+        "cache_read_input_tokens": 44276,
+        "cache_creation_input_tokens": 9312,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9312
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":3,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame — no ribbon, ticks, or mono figures\"}],\"notes\":\"Solid near-black frame; nothing from the ticker spec rendered.\"},{\"frame\":\"F2\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame except center\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no MSDF headline glyphs or accent underline\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center white square\"}],\"notes\":\"Only an unlit flat white square on void; no kinetic type rendered.\"},{\"frame\":\"F3\",\"score\":3,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame — no torus knot, pedestal, or floor\"}],\"notes\":\"Solid near-black frame; pedestal material study entirely absent.\"},{\"frame\":\"F4\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame except center\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"left column — no kicker, hero lines, or accent rule\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center white square\"}],\"notes\":\"Flat white square on void; no editorial type or gradient plate.\"},{\"frame\":\"F5\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame except center\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no rail, five entries, or active state\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center white square\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center square vs 3.6w rail proportion\"}],\"notes\":\"Single flat white square; navigation dock spec entirely unrendered.\"}]}"
+}

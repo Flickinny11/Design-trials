@@ -1,0 +1,843 @@
+{
+  "candidate": "claude-sonnet-5",
+  "verdicts": [
+    {
+      "goldenId": "g-01",
+      "score": 2,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire frame"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "entire frame"
+        }
+      ],
+      "latencyMs": 22034,
+      "costUsd": 0.49845149999999994,
+      "raw": "```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 2, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"entire frame\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"entire frame\" } ], \"notes\": \"Single flat color (12,11,16), zero variation; no ribbon, ticks, text, gradient, or materiality. Void render.\" } ] }\n```"
+    },
+    {
+      "goldenId": "g-02",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
+        }
+      ],
+      "latencyMs": 17374,
+      "costUsd": 0.2007255,
+      "raw": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 4, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" } ], \"notes\": \"Near-empty dark frame; only a flat white square renders, no glyphs, no accent underline, no depth or kinetic settle visible.\" } ] }"
+    },
+    {
+      "goldenId": "g-03",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center (torus knot + pedestal absent)"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire frame"
+        }
+      ],
+      "latencyMs": 15201,
+      "costUsd": 0.2009995,
+      "raw": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 4, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center (torus knot + pedestal absent)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"entire frame\" } ], \"notes\": \"Near-empty dark plane; no torus knot, pedestal, brushed-metal material, contact shadow, or accent red rendered.\" } ] }"
+    },
+    {
+      "goldenId": "g-04",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "left-aligned text column (x=-3.1)"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no hero headline type present"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "lower-center — no accent underline rule"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
+        }
+      ],
+      "latencyMs": 13065,
+      "costUsd": 0.171157,
+      "raw": "Frame F1 is essentially a blank dark background with a single small white rectangle — no headline type, no kicker, no accent underline rule, no grain texture, no composition at all.\n\n```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 4, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"left-aligned text column (x=-3.1)\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no hero headline type present\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"lower-center — no accent underline rule\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" } ], \"notes\": \"Near-empty dark frame with one stray white rectangle; no headline, kicker, underline, or grain — spec unrendered.\" } ] }\n```"
+    },
+    {
+      "goldenId": "g-05",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center card"
+        }
+      ],
+      "latencyMs": 14195,
+      "costUsd": 0.17135500000000004,
+      "raw": "Frame F1 is essentially a blank render — a plain dark background with a flat white rectangle, none of the specified navigation dock elements (rail, five entries, brushed-metal PBR, chamfer, specular line, contact shadow) are present.\n\n```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 4, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center card\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center card\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center card\" } ], \"notes\": \"Flat white rectangle on dark field; no rail, no five entries, no metal/specular/chamfer, no shadow plane.\" } ] }\n```"
+    },
+    {
+      "goldenId": "g-06",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center plate"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center-left"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "full frame"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center-left"
+        }
+      ],
+      "latencyMs": 19545,
+      "costUsd": 0.1872705,
+      "raw": "```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center plate\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center-left\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"full frame\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center-left\" } ], \"notes\": \"Near-empty black void; one tiny blurred blue-purple rectangle instead of six distinct photographic plates in a column.\" } ] }\n```"
+    },
+    {
+      "goldenId": "g-07",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field surrounding center"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center card glow"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center card"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center card"
+        }
+      ],
+      "latencyMs": 23708,
+      "costUsd": 0.2123435,
+      "raw": "```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field surrounding center\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card glow\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center card\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center card\" } ], \"notes\": \"Near-black void with one tiny blurred blue card; no six-plate column gallery, no photographic plates, blue drift violates palette law.\" } ] }\n```"
+    },
+    {
+      "goldenId": "g-08",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center square"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "entire frame"
+        }
+      ],
+      "latencyMs": 17632,
+      "costUsd": 0.203218,
+      "raw": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 4, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center square\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"entire frame\" } ], \"notes\": \"Near-empty dark frame with a single flat white square; no bento grid, cells, gradients, or accent red.\" } ] }"
+    },
+    {
+      "goldenId": "g-09",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center"
+        }
+      ],
+      "latencyMs": 15285,
+      "costUsd": 0.174707,
+      "raw": "```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center\" } ], \"notes\": \"Only a flat white square on dark bg; no 3x2 tile grid, no wordmarks, no PBR materiality, no red accent, no gradient.\" } ] }\n```"
+    },
+    {
+      "goldenId": "g-10",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        }
+      ],
+      "latencyMs": 18479,
+      "costUsd": 0.196354,
+      "raw": "```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center card\" } ], \"notes\": \"Just a plain white rectangle on dark background; no ticker text, tick marks, hairlines, or ribbon materiality present.\" } ] }\n```"
+    },
+    {
+      "goldenId": "g-11",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center card"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center card"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        }
+      ],
+      "latencyMs": 20086,
+      "costUsd": 0.20192100000000002,
+      "raw": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 5, \"mustFix\": [ { \"defect\": \"OFF_PALETTE\", \"region\": \"center card\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center card\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center card\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Flat white rectangle on black; no gradient, bevel, chamfer, emissive edge, or seam line — spec unmet.\" } ] }"
+    },
+    {
+      "goldenId": "g-12",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "whole frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center icon"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "whole frame"
+        }
+      ],
+      "latencyMs": 21104,
+      "costUsd": 0.2031975,
+      "raw": "{\"frames\":[{\"frame\":\"F1\",\"score\":5,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"whole frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center icon\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"whole frame\"}],\"notes\":\"Near-empty black frame with tiny generic blue stacked-diamond icon; no filmstrip, no cards, no photos, no red accent, no perspective.\"}]}"
+    },
+    {
+      "goldenId": "g-13",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field, ~95% of frame"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center icon"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center icon"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center icon"
+        }
+      ],
+      "latencyMs": 18225,
+      "costUsd": 0.1813745,
+      "raw": "```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 4, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field, ~95% of frame\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center icon\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center icon\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"center icon\" } ], \"notes\": \"Generic blue stacked-layers placeholder icon on black; no filmstrip, cards, photos, perspective, or red accent — spec unrendered.\" } ] }\n```"
+    },
+    {
+      "goldenId": "g-14",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field surrounding the center (roughly 90% of frame)"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no photographic plate, subject, parallax layers, filmic grade, or caption block"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center icon"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center icon (blue/violet gradient, no red accent, no ink/paper tones)"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — tiny isolated graphic adrift in a vast empty canvas"
+        }
+      ],
+      "latencyMs": 22433,
+      "costUsd": 0.21378599999999998,
+      "raw": "```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 5, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"background field surrounding the center (roughly 90% of frame)\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame — no photographic plate, subject, parallax layers, filmic grade, or caption block\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center icon\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center icon (blue/violet gradient, no red accent, no ink/paper tones)\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — tiny isolated graphic adrift in a vast empty canvas\" } ], \"notes\": \"Near-blank black void with a small generic blue app-icon glyph; no photo hero, no subject, no red accent — spec unmet.\" } ] }\n```"
+    },
+    {
+      "goldenId": "g-15",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — only 1 of 3 spec'd cards present, no icon disc, no glyph, no title/body text"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — single card rendered as a tiny square instead of a 1.5w x 1.9h card in a 5.0w row"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "outer field surrounding the small center card — over 90% dead black space"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center card halo/glow — rendered in blue-purple instead of the specified ink/red/paper palette"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center card — no #ff2a38 accent, no #191921/#121218 albedo ramp visible"
+        }
+      ],
+      "latencyMs": 28808,
+      "costUsd": 0.21564149999999999,
+      "raw": "```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 8, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame — only 1 of 3 spec'd cards present, no icon disc, no glyph, no title/body text\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — single card rendered as a tiny square instead of a 1.5w x 1.9h card in a 5.0w row\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"outer field surrounding the small center card — over 90% dead black space\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card halo/glow — rendered in blue-purple instead of the specified ink/red/paper palette\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center card — no #ff2a38 accent, no #191921/#121218 albedo ramp visible\" } ], \"notes\": \"Triptych spec collapsed to one tiny blue-glowing card adrift in a black void; no icon, glyph, text, or palette fidelity.\" } ] }\n```"
+    },
+    {
+      "goldenId": "g-16",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field surrounding center"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center cluster"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center cluster"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center cluster"
+        }
+      ],
+      "latencyMs": 27024,
+      "costUsd": 0.23879949999999997,
+      "raw": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 8, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field surrounding center\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center cluster\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center cluster\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center cluster\" } ], \"notes\": \"Tiny flat white dot cluster in a vast black void; no ellipsoidal spread, no red emissive accent core, no depth falloff or glow.\" } ] }"
+    },
+    {
+      "goldenId": "g-17",
+      "score": 15,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper-center-left, tiny watch"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "lower half — no plinth visible"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "around watch — no red signal accent light"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center object — no visible key/rim separation"
+        }
+      ],
+      "latencyMs": 23511,
+      "costUsd": 0.2138235,
+      "raw": "```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 15, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"upper-center-left, tiny watch\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"lower half — no plinth visible\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"around watch — no red signal accent light\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center object — no visible key/rim separation\" } ], \"notes\": \"Tiny off-scale watch adrift in near-black void; no plinth, no gradient, no red accent, no orbital framing.\" } ] }\n```"
+    },
+    {
+      "goldenId": "g-18",
+      "score": 16,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper-center — watch rendered tiny and off-center instead of filling frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "below subject — no plinth visible"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "whole frame — no red accent signal light present"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center subject — no key/rim light separation, flat dim illumination"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "center subject — brushed-metal mesh detail barely legible against black"
+        }
+      ],
+      "latencyMs": 19998,
+      "costUsd": 0.1870445,
+      "raw": "```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 16, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"upper-center — watch rendered tiny and off-center instead of filling frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"below subject — no plinth visible\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"whole frame — no red accent signal light present\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center subject — no key/rim light separation, flat dim illumination\" }, { \"defect\": \"LOW_CONTRAST\", \"region\": \"center subject — brushed-metal mesh detail barely legible against black\" } ], \"notes\": \"Tiny adrift watch in empty void; no plinth, no rim light, no red accent — spec largely unmet.\" } ] }\n```"
+    },
+    {
+      "goldenId": "g-19",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "center of rail"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center rail — no five distinct nav entries, icons, or labels"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "rail body — flat gray fill, no brushed-metal PBR, no vertical albedo ramp"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "rail edge — no chamfer, no specular line, no key light response"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "background — no contact-shadow plane beneath floating rail"
+        }
+      ],
+      "latencyMs": 22995,
+      "costUsd": 0.21206950000000002,
+      "raw": "```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 4, \"mustFix\": [ { \"defect\": \"GARBLED_TEXT\", \"region\": \"center of rail\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center rail — no five distinct nav entries, icons, or labels\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"rail body — flat gray fill, no brushed-metal PBR, no vertical albedo ramp\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"rail edge — no chamfer, no specular line, no key light response\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"background — no contact-shadow plane beneath floating rail\" } ], \"notes\": \"Literal '[object Object]' render failure; flat gray box, no material, no nav entries, no light.\" } ] }\n```"
+    },
+    {
+      "goldenId": "g-20",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center and right of footer band"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "footer band interior"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "background field (oversized blurred glyph)"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "left edge of band (stray red dash, not accent bar under wordmark)"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "band-to-band hairline split"
+        }
+      ],
+      "latencyMs": 25029,
+      "costUsd": 0.192639,
+      "raw": "```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 8, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center and right of footer band\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"footer band interior\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"background field (oversized blurred glyph)\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"left edge of band (stray red dash, not accent bar under wordmark)\" }, { \"defect\": \"LOW_CONTRAST\", \"region\": \"band-to-band hairline split\" } ], \"notes\": \"No wordmark, columns, or legal line rendered; just a gradient box, one hairline, stray red mark, and an unexplained blurred glyph behind.\" } ] }\n```"
+    },
+    {
+      "goldenId": "g-21",
+      "score": 14,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — secondary meshed gear and jewel pivot absent"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper-left quadrant — single gear rendered tiny and off-center"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center gear — flat tan/gold, not steel with red jewel accent"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center gear — flat unlit shading, no PBR clearcoat/anisotropy response"
+        }
+      ],
+      "latencyMs": 19668,
+      "costUsd": 0.202226,
+      "raw": "```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 14, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — secondary meshed gear and jewel pivot absent\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"upper-left quadrant — single gear rendered tiny and off-center\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center gear — flat tan/gold, not steel with red jewel accent\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center gear — flat unlit shading, no PBR clearcoat/anisotropy response\" } ], \"notes\": \"Single small tan gear adrift in vast black void; no meshing pair, no jewel, no metallic light response.\" } ] }\n```"
+    },
+    {
+      "goldenId": "g-22",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "center, below torus knot"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "torus knot object"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "entire frame — no red accent, no gradient"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "pedestal and knot surfaces"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "lower-center debug text overlay"
+        }
+      ],
+      "latencyMs": 28121,
+      "costUsd": 0.2176815,
+      "raw": "```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 8, \"mustFix\": [ { \"defect\": \"GARBLED_TEXT\", \"region\": \"center, below torus knot\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"torus knot object\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"entire frame — no red accent, no gradient\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"pedestal and knot surfaces\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"lower-center debug text overlay\" } ], \"notes\": \"Flat unlit white knot, matte gray puck, literal '[object Object]' text leaking into render; no PBR, no red accent, no gradient bg.\" } ] }\n```"
+    },
+    {
+      "goldenId": "g-23",
+      "score": 18,
+      "mustFix": [
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "upper card header (tier name, price figure, caption all ghosted/doubled)"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "second feature row, center-left"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "solid coral block over second feature row"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "card top edge (no machined/brushed header strip)"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "card bottom (no accent CTA row)"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "background field, no ambient falloff or shadow"
+        }
+      ],
+      "latencyMs": 35641,
+      "costUsd": 0.2189645,
+      "raw": "```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 18, \"mustFix\": [ { \"defect\": \"GARBLED_TEXT\", \"region\": \"upper card header (tier name, price figure, caption all ghosted/doubled)\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"second feature row, center-left\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"solid coral block over second feature row\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"card top edge (no machined/brushed header strip)\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"card bottom (no accent CTA row)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"background field, no ambient falloff or shadow\" } ], \"notes\": \"Garbled ghosted title/price text, flat coral block blocks a feature row, no CTA, no header strip, void black background.\" } ] }\n```"
+    },
+    {
+      "goldenId": "g-24",
+      "score": 15,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "right edge vertical strip"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "right edge light blue-gray panel intrusion"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "top half and left two-thirds of frame"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center prism object"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center prism — no glass transmission, dispersion, or back rim light"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center-low prism, undersized and off-center vs spec's origin-centered geometry"
+        }
+      ],
+      "latencyMs": 30202,
+      "costUsd": 0.23231749999999998,
+      "raw": "{\"frames\":[{\"frame\":\"F1\",\"score\":15,\"mustFix\":[{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"right edge vertical strip\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"right edge light blue-gray panel intrusion\"},{\"defect\":\"FLAT_VOID\",\"region\":\"top half and left two-thirds of frame\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center prism object\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center prism — no glass transmission, dispersion, or back rim light\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center-low prism, undersized and off-center vs spec's origin-centered geometry\"}],\"notes\":\"Flat matte triangle, no glass/iridescence/rim light; stray blue panel breaks composition; mostly empty black field.\"}]}"
+    },
+    {
+      "goldenId": "g-25",
+      "score": 3,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame"
+        }
+      ],
+      "latencyMs": 20236,
+      "costUsd": 0.1882115,
+      "raw": "```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 3, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame\" } ], \"notes\": \"Near-solid black frame, no discernible content, type, or composition; unscoreable against Design Law.\" } ] }\n```"
+    },
+    {
+      "goldenId": "g-26",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "center card"
+        }
+      ],
+      "latencyMs": 13396,
+      "costUsd": 0.16515000000000002,
+      "raw": "Frame F1 is nearly all black with only a faint dark rectangle and inner bar visible — no discernible content, typography, or composition.\n\n```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 4, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center card\" }, { \"defect\": \"LOW_CONTRAST\", \"region\": \"center card\" } ], \"notes\": \"Near-black void with a barely visible rectangle; no legible content, type, or materiality rendered.\" } ] }\n```"
+    },
+    {
+      "goldenId": "g-27",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "top and bottom bars of center card"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "center card body (blank white field)"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "entire card — no red accent, no ink/paper treatment"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no typography, imagery, or content rendered"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "entire card — flat fills, no material response"
+        }
+      ],
+      "latencyMs": 17236,
+      "costUsd": 0.174425,
+      "raw": "```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 5, \"mustFix\": [ { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"top and bottom bars of center card\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"center card body (blank white field)\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"entire card — no red accent, no ink/paper treatment\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame — no typography, imagery, or content rendered\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"entire card — flat fills, no material response\" } ], \"notes\": \"Placeholder wireframe: default-blue bars, blank white void, no type or texture, no red signal accent.\" } ] }\n```"
+    },
+    {
+      "goldenId": "g-28",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center cube"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center object"
+        }
+      ],
+      "latencyMs": 22231,
+      "costUsd": 0.18087999999999999,
+      "raw": "```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 8, \"mustFix\": [ { \"defect\": \"OFF_PALETTE\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center cube\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"center object\" } ], \"notes\": \"Untextured gray cube-on-pedestal placeholder; no red accent, no type, no materiality — reads as unrendered test asset.\" } ] }\n```"
+    },
+    {
+      "goldenId": "g-29",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "upper two-thirds / center field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "background field"
+        }
+      ],
+      "latencyMs": 17022,
+      "costUsd": 0.19083,
+      "raw": "```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 4, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"upper two-thirds / center field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"background field\" } ], \"notes\": \"Near-empty dark navy void; only two faint low-contrast triangle shards bottom-right, no type, no red accent, no composition.\" } ] }\n```"
+    },
+    {
+      "goldenId": "g-30",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "center card"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "entire frame"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center card"
+        }
+      ],
+      "latencyMs": 16822,
+      "costUsd": 0.17592000000000002,
+      "raw": "```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 6, \"mustFix\": [ { \"defect\": \"GARBLED_TEXT\", \"region\": \"center card\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"entire frame\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"center card\" } ], \"notes\": \"Near-blank black frame; only content is a cluster of jittered, illegible white shard glyphs. No red accent, no hierarchy, reads as failed render.\" } ] }\n```"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "label": "ground-truth-pass1-batch1",
+  "model": "claude-fable-5",
+  "frames": [
+    {
+      "label": "F1",
+      "goldenId": "g-01"
+    },
+    {
+      "label": "F2",
+      "goldenId": "g-02"
+    },
+    {
+      "label": "F3",
+      "goldenId": "g-03"
+    },
+    {
+      "label": "F4",
+      "goldenId": "g-04"
+    },
+    {
+      "label": "F5",
+      "goldenId": "g-05"
+    }
+  ],
+  "costUsd": 0.40942399999999995,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 9309,
+    "cache_read_input_tokens": 88552,
+    "output_tokens": 1981,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 9309,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1167,
+        "cache_read_input_tokens": 44276,
+        "cache_creation_input_tokens": 9309,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9309
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":2,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center band — no ribbon, ticks, or mono figures\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"}],\"notes\":\"Solid near-black frame; no ticker ribbon, hairlines, accent ticks, or type rendered.\"},{\"frame\":\"F2\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame except one white square\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no MSDF headline glyphs or accent underline\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"center card — lone untextured quad, likely failed glyph plane\"}],\"notes\":\"Only a single flat white quad on void; kinetic type headline entirely absent.\"},{\"frame\":\"F3\",\"score\":2,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no torus knot, pedestal, or floor\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"}],\"notes\":\"Solid near-black void; no pedestal, knot, PBR material, or lighting rendered.\"},{\"frame\":\"F4\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame except one white square\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"left column — no kicker, hero lines, or accent underline\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field — no gradient or grain\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"center — stray white quad instead of editorial plate\"}],\"notes\":\"Editorial type spec unrendered; only a flat white square floats on a void.\"},{\"frame\":\"F5\",\"score\":5,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame except one white square\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no rail, five entries, active state, or contact shadow\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center quad — square, not 3.6x0.5 rail proportion\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center quad — flat fill, no brushed-metal response\"}],\"notes\":\"Navigation dock absent; single flat untextured square on void, no materiality or entries.\"}]}"
+}

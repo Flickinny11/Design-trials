@@ -1,0 +1,58 @@
+{
+  "label": "ground-truth-pass1-batch2",
+  "model": "claude-fable-5",
+  "frames": [
+    {
+      "label": "F1",
+      "goldenId": "g-06"
+    },
+    {
+      "label": "F2",
+      "goldenId": "g-07"
+    },
+    {
+      "label": "F3",
+      "goldenId": "g-08"
+    },
+    {
+      "label": "F4",
+      "goldenId": "g-09"
+    },
+    {
+      "label": "F5",
+      "goldenId": "g-10"
+    }
+  ],
+  "costUsd": 0.546034,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 15323,
+    "cache_read_input_tokens": 82418,
+    "output_tokens": 2432,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15323,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1616,
+        "cache_read_input_tokens": 44215,
+        "cache_creation_input_tokens": 9311,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9311
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame except small center card\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center card glow\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"whole frame — no six-plate loop column, no photographic textures\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center card vs frame\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"background field\"}],\"notes\":\"Near-empty black void; single tiny blue-lit slab replaces the six-plate photographic gallery. Off-palette blue, no red accent.\"},{\"frame\":\"F2\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame except small center card\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center card glow\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"whole frame — no plate column, no distinct textures, no frames\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center card vs frame\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"background field\"}],\"notes\":\"Identical near-void as F1: one blue-glowing plate in blackness, zero of the specified loop-column composition or palette.\"},{\"frame\":\"F3\",\"score\":3,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"whole frame — no bento grid, no stat tiles, no gradients\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center white square\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center square vs 5.5x3.5 grid spec\"}],\"notes\":\"Flat white square on black void. No bento cells, no machined gradients, no typography, no accent.\"},{\"frame\":\"F4\",\"score\":3,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"whole frame — no 3x2 tile grid, no wordmarks, no kicker\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center white square\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"center white square — pure white fill, no brushed-metal ramp\"}],\"notes\":\"Blank white square in blackness. Zero brand-wall content, no brushed-metal materiality, no anisotropy or chamfers.\"},{\"frame\":\"F5\",\"score\":3,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"whole frame — no ribbon, no mono figures, no accent ticks, no hairlines\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center white square\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center square vs 7.0x0.35 ribbon spec\"}],\"notes\":\"Flat white square, not a ticker ribbon. No scrolling figures, edge fades, or red tick marks rendered.\"}]}"
+}

@@ -1,0 +1,58 @@
+{
+  "label": "ground-truth-pass1-batch5",
+  "model": "claude-fable-5",
+  "frames": [
+    {
+      "label": "F1",
+      "goldenId": "g-21"
+    },
+    {
+      "label": "F2",
+      "goldenId": "g-22"
+    },
+    {
+      "label": "F3",
+      "goldenId": "g-23"
+    },
+    {
+      "label": "F4",
+      "goldenId": "g-24"
+    },
+    {
+      "label": "F5",
+      "goldenId": "g-25"
+    }
+  ],
+  "costUsd": 0.592643,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 14996,
+    "cache_read_input_tokens": 82119,
+    "output_tokens": 3505,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14996,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 2717,
+        "cache_read_input_tokens": 43916,
+        "cache_creation_input_tokens": 9283,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9283
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":20,\"mustFix\":[{\"defect\":\"FLAT_VOID\",\"region\":\"entire background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"secondary gear and jewel accent pivot absent, right of primary gear\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"center-left gear (tan brass instead of machined steel, no red accent)\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"background field (no gradient stops, no light response)\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"gear undersized and pushed to upper-left quadrant\"}],\"notes\":\"Single toy-like brass gear floating in pure black void; no meshing pair, no steel PBR, no accent, no environment.\"},{\"frame\":\"F2\",\"score\":16,\"mustFix\":[{\"defect\":\"GARBLED_TEXT\",\"region\":\"lower-center ('[object Object]' rendered twice)\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center knot (no brushed-metal PBR, roughness map, or imperfection pass — flat white plastic)\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"center card (knot clips through pedestal front and floats below it)\"},{\"defect\":\"FLAT_VOID\",\"region\":\"left half background\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"knot surface (flat unlit white, no anisotropy or contact shadow)\"}],\"notes\":\"Template-string bug leaks '[object Object]'; white plastic knot instead of brushed metal; clipping geometry; void background.\"},{\"frame\":\"F3\",\"score\":34,\"mustFix\":[{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper card (tier name overlaps price figure)\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"center card (red block covers and obscures a feature row)\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"top edge (machined brushed header strip absent) and bottom (accent CTA row absent)\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"card surface (washed gray gradient instead of ink #16161d with hairline border)\"},{\"defect\":\"LOW_CONTRAST\",\"region\":\"per-month caption under price\"}],\"notes\":\"Right content skeleton but colliding type, a mis-scaled red slab burying a feature row, and missing header strip/CTA.\"},{\"frame\":\"F4\",\"score\":41,\"mustFix\":[{\"defect\":\"OFF_PALETTE\",\"region\":\"right edge (large pale blue-gray band violates RED/BLACK/WHITE discipline)\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"right edge (blurred band crops into frame; prism sits low-center)\"},{\"defect\":\"FLAT_VOID\",\"region\":\"left two-thirds background (no gradient stops)\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"prism (back rim light and iridescence pass absent; facets read flat)\"}],\"notes\":\"Best of set: transmission, red emissive core, floor dispersion strip present — but faceting is flat and a blue band breaks palette.\"},{\"frame\":\"F5\",\"score\":4,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"}],\"notes\":\"Frame is uniformly near-black with no rendered content; scored as blank render.\"}]}"
+}

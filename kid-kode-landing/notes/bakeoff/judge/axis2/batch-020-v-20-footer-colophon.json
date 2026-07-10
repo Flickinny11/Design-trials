@@ -1,0 +1,67 @@
+{
+  "label": "batch-020-v-20-footer-colophon",
+  "judgedAt": "2026-07-10T05:49:55.704Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "bundleId": "claude-haiku-4.5/v-20-footer-colophon-r1",
+      "frame": "notes/bakeoff/renders/frames/claude-haiku-4.5/v-20-footer-colophon-r1.png"
+    },
+    {
+      "label": "F2",
+      "bundleId": "claude-haiku-4.5/v-20-footer-colophon-r2",
+      "frame": "notes/bakeoff/renders/frames/claude-haiku-4.5/v-20-footer-colophon-r2.png"
+    },
+    {
+      "label": "F3",
+      "bundleId": "claude-sonnet-5/v-20-footer-colophon-r1",
+      "frame": "notes/bakeoff/renders/frames/claude-sonnet-5/v-20-footer-colophon-r1.png"
+    },
+    {
+      "label": "F4",
+      "bundleId": "claude-sonnet-5/v-20-footer-colophon-r2",
+      "frame": "notes/bakeoff/renders/frames/claude-sonnet-5/v-20-footer-colophon-r2.png"
+    },
+    {
+      "label": "F5",
+      "bundleId": "gpt-oss-120b/v-20-footer-colophon-r1",
+      "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-20-footer-colophon-r1.png"
+    }
+  ],
+  "costUsd": 0.61983,
+  "durationApiMs": 38050,
+  "wallMs": 40725,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 18929,
+    "cache_read_input_tokens": 82461,
+    "output_tokens": 2462,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18929,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1598,
+        "cache_read_input_tokens": 44258,
+        "cache_creation_input_tokens": 12874,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 12874
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"full frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"full frame — no wordmark, columns, legal line, hairline, or accent bar\"}],\"notes\":\"Near-empty frame: lone white square on flat black; nothing from the colophon spec rendered.\"},{\"frame\":\"F2\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"full frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"full frame — no wordmark, columns, legal line, hairline, or accent bar\"}],\"notes\":\"Identical to F1: single white placeholder square on void black; spec entirely unrendered.\"},{\"frame\":\"F3\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"full frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"full frame — no wordmark, columns, legal line, hairline, or accent bar\"}],\"notes\":\"Same failure mode: white square on flat black void, zero colophon content.\"},{\"frame\":\"F4\",\"score\":24,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center band — no wordmark, no link columns, no legal line\"},{\"defect\":\"FLAT_VOID\",\"region\":\"center band interior — large empty gray expanse\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"center band — light gray, not #121218→#0b0b10 ink ramp\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"background field — giant garbled glyph forms dwarf the band\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper-right quadrant — cropped white/gray letterforms collide with band\"},{\"defect\":\"GARBLED_TEXT\",\"region\":\"background field — illegible oversized glyphs\"}],\"notes\":\"Band, red accent dash, and a hairline exist, but no typography; off-palette gray slab against garbled giant glyphs.\"},{\"frame\":\"F5\",\"score\":3,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"full frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"full frame — nothing rendered\"}],\"notes\":\"Completely black frame; total render failure, no spec element present.\"}]}"
+}

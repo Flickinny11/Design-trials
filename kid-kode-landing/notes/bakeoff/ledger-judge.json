@@ -288,9 +288,180 @@
       "costUsd": 0.7032930000000001,
       "billing": "subscription-equivalent",
       "at": "2026-07-10T05:30:42.354Z"
+    },
+    {
+      "axis": "axis2-judge",
+      "model": "claude-fable-5",
+      "batch": "batch-017-v-16-feature-triptych",
+      "frames": 5,
+      "costUsd": 0.6486149999999999,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:47:43.268Z"
+    },
+    {
+      "axis": "axis2-judge",
+      "model": "claude-fable-5",
+      "batch": "batch-018-v-18-nav-dock",
+      "frames": 5,
+      "costUsd": 0.6274150000000001,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:48:24.609Z"
+    },
+    {
+      "axis": "axis2-judge",
+      "model": "claude-fable-5",
+      "batch": "batch-019-v-19-empty-state",
+      "frames": 4,
+      "costUsd": 0.608404,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:49:14.977Z"
+    },
+    {
+      "axis": "axis2-judge",
+      "model": "claude-fable-5",
+      "batch": "batch-020-v-20-footer-colophon",
+      "frames": 5,
+      "costUsd": 0.61983,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:49:55.705Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass1-batch1",
+      "frames": 5,
+      "costUsd": 0.545454,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:51:01.192Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass1-batch2",
+      "frames": 5,
+      "costUsd": 0.54025,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:51:51.103Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass1-batch1",
+      "frames": 5,
+      "costUsd": 0.5255960000000001,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:53:53.883Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass1-batch1",
+      "frames": 5,
+      "costUsd": 0.40942399999999995,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:55:17.758Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass1-batch2",
+      "frames": 5,
+      "costUsd": 0.546034,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:56:04.501Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass1-batch3",
+      "frames": 5,
+      "costUsd": 0.584302,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:56:51.321Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass1-batch4",
+      "frames": 5,
+      "costUsd": 0.6065670000000001,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:57:47.198Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass1-batch5",
+      "frames": 5,
+      "costUsd": 0.592643,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:58:41.692Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass1-batch6",
+      "frames": 5,
+      "costUsd": 0.518642,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:59:23.658Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass2-batch1",
+      "frames": 5,
+      "costUsd": 0.406729,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:59:56.547Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass2-batch2",
+      "frames": 5,
+      "costUsd": 0.46023100000000006,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T06:00:44.023Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass2-batch3",
+      "frames": 5,
+      "costUsd": 0.455776,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T06:01:28.068Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass2-batch4",
+      "frames": 5,
+      "costUsd": 0.48843800000000004,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T06:02:22.448Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass2-batch5",
+      "frames": 5,
+      "costUsd": 0.520486,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T06:03:25.821Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass2-batch6",
+      "frames": 5,
+      "costUsd": 0.43463,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T06:04:06.523Z"
     }
   ],
   "totals": {
-    "subscriptionEquivalentUsd": 22.771432
+    "subscriptionEquivalentUsd": 32.910897999999996
   }
 }

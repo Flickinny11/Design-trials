@@ -3268,6 +3268,660 @@
       "renderable": true,
       "probeStatus": "ready",
       "renderables": 1
+    },
+    {
+      "bundleId": "claude-haiku-4.5/v-16-feature-triptych-r1",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-16-feature-triptych",
+      "tag": "v-16-feature-triptych-r1",
+      "batchNo": 17,
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame ~95% empty black"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — only one tiny card, no triptych, no icon seats, no title/body text"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center card and its glow"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center card — blue instead of ink ramp with red accent"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center card — fraction of intended 5.0-unit row"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.fontAtlas.create is not a function"
+        }
+      ],
+      "notes": "Near-empty black frame; single tiny blue card instead of three-card triptych. No text, no red glyphs.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "renderables": 1
+    },
+    {
+      "bundleId": "claude-haiku-4.5/v-16-feature-triptych-r2",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-16-feature-triptych",
+      "tag": "v-16-feature-triptych-r2",
+      "batchNo": 17,
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame ~95% empty black"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — one card only; no icon seats, hierarchy, or second/third cards"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center card and glow"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center card"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.fontAtlas is not a function"
+        }
+      ],
+      "notes": "Identical failure to F1: void frame, lone miniature blue card, spec triptych entirely absent.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "renderables": 1
+    },
+    {
+      "bundleId": "claude-sonnet-5/v-16-feature-triptych-r1",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-16-feature-triptych",
+      "tag": "v-16-feature-triptych-r1",
+      "batchNo": 17,
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame ~95% empty black"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no triptych, icon discs, or typography"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center card and glow"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center card"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: (0 , import_text.createTextMesh) is not a function"
+        }
+      ],
+      "notes": "Same broken output: near-empty frame with one undersized blue card; nothing from spec renders.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "renderables": 1
+    },
+    {
+      "bundleId": "claude-sonnet-5/v-16-feature-triptych-r2",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-16-feature-triptych",
+      "tag": "v-16-feature-triptych-r2",
+      "batchNo": 17,
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame ~95% empty black"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — single card, no seats/text/red glyphs"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center card and glow"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center card"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'set')"
+        }
+      ],
+      "notes": "Void frame with lone tiny blue card; triptych spec unmet. Visually identical to F1-F3.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "renderables": 1
+    },
+    {
+      "bundleId": "gpt-oss-120b/v-16-feature-triptych-r1",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-16-feature-triptych",
+      "tag": "v-16-feature-triptych-r1",
+      "batchNo": 17,
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame ~95% empty black"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no three-card row, icon discs, or hierarchy"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center card and glow"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center card"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.textureLoader is not a function"
+        }
+      ],
+      "notes": "Same near-empty render as all other frames; suggests shared pipeline failure upstream, not model differences.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "renderables": 1
+    },
+    {
+      "bundleId": "claude-haiku-4.5/v-18-nav-dock-r1",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-18-nav-dock",
+      "tag": "v-18-nav-dock-r1",
+      "batchNo": 18,
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "center card"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.fontAtlas.createTextMesh is not a function"
+        }
+      ],
+      "notes": "Single flat white square on dark void; no rail, entries, active state, or materiality rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "renderables": 1
+    },
+    {
+      "bundleId": "claude-haiku-4.5/v-18-nav-dock-r2",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-18-nav-dock",
+      "tag": "v-18-nav-dock-r2",
+      "batchNo": 18,
+      "score": 48,
+      "mustFix": [
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "five entry tiles"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entry tiles (no icons/labels)"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "gray-blue entry tiles"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        }
+      ],
+      "notes": "Rail, five entries, active state with red accent present; but entries are flat unlabeled slabs, no brushed-metal specular or chamfer.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "renderables": 8
+    },
+    {
+      "bundleId": "claude-sonnet-5/v-18-nav-dock-r1",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-18-nav-dock",
+      "tag": "v-18-nav-dock-r1",
+      "batchNo": 18,
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "center card"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Identical failure: lone flat white square, no dock geometry or spec elements rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "renderables": 1
+    },
+    {
+      "bundleId": "claude-sonnet-5/v-18-nav-dock-r2",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-18-nav-dock",
+      "tag": "v-18-nav-dock-r2",
+      "batchNo": 18,
+      "score": 16,
+      "mustFix": [
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "center rail"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "text overflowing rail right edge"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center rail"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "rail surface"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entries (no icons, no press affordance)"
+        }
+      ],
+      "notes": "Rail gradient and red accent exist, but '[object Object]' spam overflows frame; unusable render.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "renderables": 13
+    },
+    {
+      "bundleId": "gpt-oss-120b/v-18-nav-dock-r2",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-18-nav-dock",
+      "tag": "v-18-nav-dock-r2",
+      "batchNo": 18,
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "center card"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: import_tsl.MeshStandardNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Same lone white square on dark void; no dock, entries, or material response rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "renderables": 1
+    },
+    {
+      "bundleId": "claude-haiku-4.5/v-19-empty-state-r1",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-19-empty-state",
+      "tag": "v-19-empty-state-r1",
+      "batchNo": 19,
+      "score": 42,
+      "mustFix": [
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "accent button, lower-center — label 'BROWSE THE COLLECTION' overflows the red fill, remainder rendered in dark ink outside it"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "right side — guidance copy 'Commissioned pieces and s…' clips off the panel and frame edge"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "accent button, lower-center — flat red fill, no material or light response (DL12)"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "panel field — radial engineered gradient and hairline border absent; grid sits on flat black"
+        }
+      ],
+      "notes": "All spec elements attempted, but clipped copy and overflowing button label break shippability; button is a flat sticker, not an object.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "renderables": 30
+    },
+    {
+      "bundleId": "claude-haiku-4.5/v-19-empty-state-r2",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-19-empty-state",
+      "tag": "v-19-empty-state-r2",
+      "batchNo": 19,
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame — lone white square on black"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "everywhere — grid, ghost preview, guidance copy, and accent action all absent"
+        },
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "full background outside center square"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Near-empty render; a single unstyled white square with no spec content.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "renderables": 1
+    },
+    {
+      "bundleId": "claude-sonnet-5/v-19-empty-state-r1",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-19-empty-state",
+      "tag": "v-19-empty-state-r1",
+      "batchNo": 19,
+      "score": 38,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "panel field — surface reads mid-gray with ~40% grid, not #14141a→#0b0b10 with 6% hairlines"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center-right — guidance copy entirely absent"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "accent button, center — label missing, renders as empty bar"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "ghost preview, left of center — wireframe strokes nearly lost against over-bright surface"
+        }
+      ],
+      "notes": "Coherent layout and gradient button, but zero text and a washed-out gray panel violate palette and spec.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "renderables": 10
+    },
+    {
+      "bundleId": "claude-sonnet-5/v-19-empty-state-r2",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-19-empty-state",
+      "tag": "v-19-empty-state-r2",
+      "batchNo": 19,
+      "score": 33,
+      "mustFix": [
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "right side and button — all three text slots render literal '[object Object]'"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "panel field — mid-gray surface with over-bright grid, not the specified near-black gradient"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "accent button, lower-right — label overflows the button bounds onto the panel"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "panel edges — hairline #26262f border and radial gradient falloff absent"
+        }
+      ],
+      "notes": "Layout matches spec skeleton, but data-binding failure prints '[object Object]' everywhere; unshippable.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "renderables": 9
+    },
+    {
+      "bundleId": "claude-haiku-4.5/v-20-footer-colophon-r1",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-20-footer-colophon",
+      "tag": "v-20-footer-colophon-r1",
+      "batchNo": 20,
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — no wordmark, columns, legal line, hairline, or accent bar"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: (0 , import_tsl.positionGeometry) is not a function"
+        }
+      ],
+      "notes": "Near-empty frame: lone white square on flat black; nothing from the colophon spec rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "renderables": 1
+    },
+    {
+      "bundleId": "claude-haiku-4.5/v-20-footer-colophon-r2",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-20-footer-colophon",
+      "tag": "v-20-footer-colophon-r2",
+      "batchNo": 20,
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — no wordmark, columns, legal line, hairline, or accent bar"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'y')"
+        }
+      ],
+      "notes": "Identical to F1: single white placeholder square on void black; spec entirely unrendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "renderables": 1
+    },
+    {
+      "bundleId": "claude-sonnet-5/v-20-footer-colophon-r1",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-20-footer-colophon",
+      "tag": "v-20-footer-colophon-r1",
+      "batchNo": 20,
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — no wordmark, columns, legal line, hairline, or accent bar"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Same failure mode: white square on flat black void, zero colophon content.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "renderables": 1
+    },
+    {
+      "bundleId": "claude-sonnet-5/v-20-footer-colophon-r2",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-20-footer-colophon",
+      "tag": "v-20-footer-colophon-r2",
+      "batchNo": 20,
+      "score": 24,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center band — no wordmark, no link columns, no legal line"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "center band interior — large empty gray expanse"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center band — light gray, not #121218→#0b0b10 ink ramp"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "background field — giant garbled glyph forms dwarf the band"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-right quadrant — cropped white/gray letterforms collide with band"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "background field — illegible oversized glyphs"
+        }
+      ],
+      "notes": "Band, red accent dash, and a hairline exist, but no typography; off-palette gray slab against garbled giant glyphs.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "renderables": 18
+    },
+    {
+      "bundleId": "gpt-oss-120b/v-20-footer-colophon-r1",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-20-footer-colophon",
+      "tag": "v-20-footer-colophon-r1",
+      "batchNo": 20,
+      "score": 3,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — nothing rendered"
+        }
+      ],
+      "notes": "Completely black frame; total render failure, no spec element present.",
+      "renderable": false,
+      "probeStatus": "error",
+      "renderables": 0
     }
   ]
 }

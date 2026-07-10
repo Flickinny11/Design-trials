@@ -1,0 +1,58 @@
+{
+  "label": "ground-truth-pass1-batch4",
+  "model": "claude-fable-5",
+  "frames": [
+    {
+      "label": "F1",
+      "goldenId": "g-16"
+    },
+    {
+      "label": "F2",
+      "goldenId": "g-17"
+    },
+    {
+      "label": "F3",
+      "goldenId": "g-18"
+    },
+    {
+      "label": "F4",
+      "goldenId": "g-19"
+    },
+    {
+      "label": "F5",
+      "goldenId": "g-20"
+    }
+  ],
+  "costUsd": 0.6065670000000001,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 15379,
+    "cache_read_input_tokens": 82432,
+    "output_tokens": 3619,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15379,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 2761,
+        "cache_read_input_tokens": 44229,
+        "cache_creation_input_tokens": 9353,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9353
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 8, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame near-empty\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — constellation collapsed to tiny square patch\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center core — no #ff2a38 accent core\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Starfield collapsed to a tiny square speck cluster; no accent core, no depth falloff, frame is 95% void.\" }, { \"frame\": \"F2\", \"score\": 12, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"lower half — plinth absent\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"upper-center — watch tiny, not normalized to stage\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"watch body — gold/tan, not brushed near-black metal\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"full frame — no key/rim/accent light\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Untextured gold watch floats in a black void; no plinth, lighting rig, or gradient stage.\" }, { \"frame\": \"F3\", \"score\": 12, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"lower half — plinth absent\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"upper-center — watch far too small\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"watch body — gold/tan vs spec brushed metal\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"full frame — flat unlit render\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Same failure as F2: tiny off-palette watch adrift in unlit void; spec plinth, materials, lighting all missing.\" }, { \"frame\": \"F4\", \"score\": 14, \"mustFix\": [ { \"defect\": \"GARBLED_TEXT\", \"region\": \"center rail — '[object Object]' repeated, glyphs overlapping\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center rail — five dock entries/active state absent\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"rail clipped off right edge, labels colliding\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"rail surface — no anisotropy, chamfer specular, or contact shadow\" } ], \"notes\": \"Data-binding failure: rail filled with overlapping '[object Object]' strings; no entries, materiality, or shadow.\" }, { \"frame\": \"F5\", \"score\": 18, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center band — no wordmark, link columns, or legal line\" }, { \"defect\": \"GARBLED_TEXT\", \"region\": \"background field — giant broken glyph fragments\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"background field — glyphs massively oversized\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"full frame — band floats over stray letterforms\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center band — mid-gray ramp vs spec near-black #121218–#0b0b10\" } ], \"notes\": \"Band and accent bar render, but all colophon content missing; huge garbled glyphs pollute the background.\" } ] }"
+}

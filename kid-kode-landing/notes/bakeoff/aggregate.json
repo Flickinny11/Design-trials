@@ -1,0 +1,141 @@
+{
+  "aggregatedAt": "2026-07-10T06:04:16.057Z",
+  "axis2": {
+    "byContestant": {
+      "claude-haiku-4.5": {
+        "renders": 40,
+        "meanScore": 12.775,
+        "sdScore": 12.613561078336406,
+        "mustFixRate": 1,
+        "meanMustFixPerRender": 5.075,
+        "noRenderCount": 0,
+        "depGateViolations": 0,
+        "mean3d": 12.75,
+        "mean2d": 12.791666666666666,
+        "topDefects": [
+          [
+            "MISSING_SPEC_ELEMENT",
+            39
+          ],
+          [
+            "FLAT_VOID",
+            36
+          ],
+          [
+            "RUNTIME_ERROR",
+            32
+          ],
+          [
+            "BLANK_RENDER",
+            24
+          ],
+          [
+            "SCALE_ERROR",
+            18
+          ]
+        ]
+      },
+      "claude-sonnet-5": {
+        "renders": 40,
+        "meanScore": 16.025,
+        "sdScore": 12.435448709852999,
+        "mustFixRate": 1,
+        "meanMustFixPerRender": 5.375,
+        "noRenderCount": 0,
+        "depGateViolations": 0,
+        "mean3d": 17.875,
+        "mean2d": 14.791666666666666,
+        "topDefects": [
+          [
+            "MISSING_SPEC_ELEMENT",
+            39
+          ],
+          [
+            "FLAT_VOID",
+            31
+          ],
+          [
+            "RUNTIME_ERROR",
+            26
+          ],
+          [
+            "SCALE_ERROR",
+            25
+          ],
+          [
+            "OFF_PALETTE",
+            20
+          ]
+        ]
+      },
+      "gpt-oss-120b": {
+        "renders": 35,
+        "meanScore": 6.771428571428571,
+        "sdScore": 5.589305514503011,
+        "mustFixRate": 1,
+        "meanMustFixPerRender": 4.571428571428571,
+        "noRenderCount": 9,
+        "depGateViolations": 0,
+        "mean3d": 9.375,
+        "mean2d": 4.578947368421052,
+        "topDefects": [
+          [
+            "MISSING_SPEC_ELEMENT",
+            32
+          ],
+          [
+            "FLAT_VOID",
+            31
+          ],
+          [
+            "BLANK_RENDER",
+            28
+          ],
+          [
+            "RUNTIME_ERROR",
+            25
+          ],
+          [
+            "SCALE_ERROR",
+            12
+          ]
+        ]
+      }
+    }
+  },
+  "axis3": {
+    "groundTruthSelfDisagreement": {
+      "meanAbsScoreDelta": 1.5,
+      "maxAbsScoreDelta": 9,
+      "rendersWithDefectDisagreement": 17
+    },
+    "positivesInGoldenSet": 30,
+    "critics": {
+      "claude-sonnet-5": {
+        "judgedRenders": 30,
+        "parseFailures": 0,
+        "rankCorrelation": 0.7425275081141383,
+        "mustFixDetectionRate": 1,
+        "seededBadDetectionRate": 1,
+        "meanCostPerCritiqueUsd": 0.20744946666666664,
+        "p50LatencyMs": 19998
+      },
+      "gemini-3.5-flash": {
+        "blocked": "deepinfra 402 (unfunded) — reprobed 2026-07-10T06:03:55.384Z"
+      },
+      "qwen3.7-plus": {
+        "blocked": "fireworks 412 (account suspended — monthly spend cap) — reprobed 2026-07-10T06:03:55.615Z"
+      }
+    },
+    "selection": {
+      "selected": null,
+      "rule": "cheapest with rank correlation >= 0.85 AND MUST-FIX detection >= 90%",
+      "verdict": "UNFILLED — no candidate qualifies; escalation-tier critique stays on Fable/Opus"
+    }
+  },
+  "ledger": {
+    "meteredUsd": 4.578886139999997,
+    "subscriptionEquivalentUsd": 84.14451609999996,
+    "totalUsd": 88.72340223999996
+  }
+}

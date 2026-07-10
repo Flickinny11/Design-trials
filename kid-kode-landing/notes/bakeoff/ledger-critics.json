@@ -1,0 +1,249 @@
+{
+  "wave": "wbake-critics",
+  "calls": [
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-01",
+      "costUsd": 0.49845149999999994,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:53:50.821Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-02",
+      "costUsd": 0.2007255,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:54:08.197Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-03",
+      "costUsd": 0.2009995,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:54:23.399Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-04",
+      "costUsd": 0.171157,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:54:36.465Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-05",
+      "costUsd": 0.17135500000000004,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:54:50.661Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-06",
+      "costUsd": 0.1872705,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:55:10.207Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-07",
+      "costUsd": 0.2123435,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:55:33.916Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-08",
+      "costUsd": 0.203218,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:55:51.549Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-09",
+      "costUsd": 0.174707,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:56:06.834Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-10",
+      "costUsd": 0.196354,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:56:25.314Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-11",
+      "costUsd": 0.20192100000000002,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:56:45.401Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-12",
+      "costUsd": 0.2031975,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:57:06.506Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-13",
+      "costUsd": 0.1813745,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:57:24.732Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-14",
+      "costUsd": 0.21378599999999998,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:57:47.165Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-15",
+      "costUsd": 0.21564149999999999,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:58:15.973Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-16",
+      "costUsd": 0.23879949999999997,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:58:42.998Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-17",
+      "costUsd": 0.2138235,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:59:06.510Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-18",
+      "costUsd": 0.1870445,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:59:26.509Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-19",
+      "costUsd": 0.21206950000000002,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T05:59:49.505Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-20",
+      "costUsd": 0.192639,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T06:00:14.535Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-21",
+      "costUsd": 0.202226,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T06:00:34.205Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-22",
+      "costUsd": 0.2176815,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T06:01:02.326Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-23",
+      "costUsd": 0.2189645,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T06:01:37.968Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-24",
+      "costUsd": 0.23231749999999998,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T06:02:08.171Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-25",
+      "costUsd": 0.1882115,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T06:02:28.407Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-26",
+      "costUsd": 0.16515000000000002,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T06:02:41.804Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-27",
+      "costUsd": 0.174425,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T06:02:59.041Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-28",
+      "costUsd": 0.18087999999999999,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T06:03:21.273Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-29",
+      "costUsd": 0.19083,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T06:03:38.296Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "goldenId": "g-30",
+      "costUsd": 0.17592000000000002,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T06:03:55.119Z"
+    }
+  ],
+  "totals": {
+    "meteredUsd": 0,
+    "subscriptionEquivalentUsd": 6.223483999999999
+  }
+}

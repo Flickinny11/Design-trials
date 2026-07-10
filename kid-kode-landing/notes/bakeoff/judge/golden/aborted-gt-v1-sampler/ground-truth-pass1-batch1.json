@@ -1,0 +1,58 @@
+{
+  "label": "ground-truth-pass1-batch1",
+  "model": "claude-fable-5",
+  "frames": [
+    {
+      "label": "F1",
+      "goldenId": "g-01"
+    },
+    {
+      "label": "F2",
+      "goldenId": "g-02"
+    },
+    {
+      "label": "F3",
+      "goldenId": "g-03"
+    },
+    {
+      "label": "F4",
+      "goldenId": "g-04"
+    },
+    {
+      "label": "F5",
+      "goldenId": "g-05"
+    }
+  ],
+  "costUsd": 0.545454,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 15391,
+    "cache_read_input_tokens": 82483,
+    "output_tokens": 2390,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15391,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1571,
+        "cache_read_input_tokens": 44280,
+        "cache_creation_input_tokens": 9314,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9314
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 3, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center band — ribbon plane, mono figures, accent ticks all absent\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Uniform near-black frame; no ribbon, hairlines, type, or accent ticks rendered.\" }, { \"frame\": \"F2\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame except one quad\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no MSDF glyphs, headline, or accent underline\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"center-left untextured white square (failed glyph plane)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Single untextured white quad instead of MSDF type; headline entirely missing; void background.\" }, { \"frame\": \"F3\", \"score\": 2, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — torus knot and pedestal absent\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Pure black frame; no geometry, materials, lighting, or floor gradient rendered.\" }, { \"frame\": \"F4\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame except one quad\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"left column — kicker, stacked hero lines, accent underline absent\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"center untextured white square, off-grid\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field — no gradient or grain\" } ], \"notes\": \"All editorial type missing; lone untextured white quad; no engineered gradient or grain.\" }, { \"frame\": \"F5\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame except one hairline\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — panel, quotation glyph, quote, attribution absent\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"lower-left red dash — tiny fragment vs 0.62-unit glyph spec\" } ], \"notes\": \"Only a tiny red dash rendered; panel and all typography missing; void frame.\" } ] }"
+}
