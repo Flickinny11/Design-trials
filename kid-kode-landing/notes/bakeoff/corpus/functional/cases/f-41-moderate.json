@@ -1,0 +1,105 @@
+{
+  "caseId": "f-41-moderate",
+  "tier": "moderate",
+  "integrationBearing": false,
+  "sourceNodeId": null,
+  "node": {
+    "nodeId": "wb-extra-hub-collection-08",
+    "subtype": "list-row",
+    "parentHubId": "hub-collection",
+    "serviceTag": "wbake-corpus",
+    "visual": {
+      "sourceAsset": "/prism-assets/chrome/brushed-metal.map.png"
+    },
+    "intent": {
+      "caption": "List row for Collection: a horizontal row with title, meta text, and a subtle divider.",
+      "behaviorSpec": {
+        "interactions": [
+          {
+            "event": "hover",
+            "effect": "preset:rise-in (subtle, 0.15 scene units)"
+          },
+          {
+            "event": "click",
+            "effect": "emit:hub-collection.select"
+          }
+        ],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [],
+        "layers": [],
+        "colors": {
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "surface": "#0b0b10"
+        },
+        "typography": {
+          "display": "Lora serif 400/600",
+          "text": "JetBrains Mono 400/700"
+        },
+        "effects": "interactive card: hover lift (rise-in), press-down on click, accent edge on focus"
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "scenePosition": {
+      "x": 0,
+      "y": 0.7000000000000001,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    },
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": []
+  },
+  "neighbors": {
+    "parent": {
+      "id": "hub-collection",
+      "type": "hub"
+    },
+    "siblings": [
+      {
+        "id": "hub-collection-title",
+        "type": "section-title"
+      },
+      {
+        "id": "hub-collection-card-0",
+        "type": "content-card"
+      },
+      {
+        "id": "hub-collection-card-0-label",
+        "type": "card-label"
+      }
+    ],
+    "children": []
+  },
+  "atlas": {
+    "atlasIndex": 0,
+    "x": 0,
+    "y": 0,
+    "width": 512,
+    "height": 320
+  },
+  "verifierCtx": {
+    "renderMode": "plane",
+    "hasTextContent": false
+  },
+  "l3": "ELEMENT SPECIFICATION:\nList row for Collection: a horizontal row with title, meta text, and a subtle divider.\n\nRENDER MODE: plane\nASSETS:\n- imageUrl: /prism-assets/chrome/brushed-metal.map.png\n- depthMapUrl: (none)\n- meshUrl: (none)\n\nVISUAL:\n- Colors: {\"ink\":\"#16161d\",\"paper\":\"#e8ecf2\",\"accent\":\"#ff2a38\",\"surface\":\"#0b0b10\"}\n- Typography: {\"display\":\"Lora serif 400/600\",\"text\":\"JetBrains Mono 400/700\"}\n- Effects: \"interactive card: hover lift (rise-in), press-down on click, accent edge on focus\"\n\nTEXT CONTENT:\n(none)\n\nBEHAVIOR:\n- Interactions: [{\"event\":\"hover\",\"effect\":\"preset:rise-in (subtle, 0.15 scene units)\"},{\"event\":\"click\",\"effect\":\"emit:hub-collection.select\"}]\n- Data bindings: []\n\nSCENE PLACEMENT:\n- Position: (0, 0.7000000000000001, 0)\n- Rotation: (0, 0, 0)\n- Scale: (1, 1, 1)\n\nCINEMATIC PRIMITIVES TO APPLY:\n(none — node ships without primitive)\n\nNEIGHBORS:\n- Parent: hub-collection (hub)\n- Siblings: hub-collection-title (section-title), hub-collection-card-0 (content-card), hub-collection-card-0-label (card-label)\n- Children: (none)\n\nATLAS REGION:\n- Atlas: 0\n- Source rect: 0, 0, 512, 320\n\n--- RENDER MODE GUIDANCE ---\nCreate a textured plane with explicit position/rotation from scenePosition. Use\nMeshBasicNodeMaterial unless behaviorSpec.effects requests lighting (then MeshStandardNodeMaterial)."
+}

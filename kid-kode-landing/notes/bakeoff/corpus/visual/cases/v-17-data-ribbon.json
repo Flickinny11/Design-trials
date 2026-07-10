@@ -1,0 +1,210 @@
+{
+  "caseId": "v-17-data-ribbon",
+  "category": "2d",
+  "title": "Data ticker ribbon",
+  "node": {
+    "nodeId": "v-17-data-ribbon",
+    "subtype": "ticker",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Data ticker ribbon — A horizontal data ribbon of mono figures scrolling with constant velocity and edge fades.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "CAL NA-01 BEAT 28800 VPH",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "POWER RESERVE 72H",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "CASE 40.5 MM 904L",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "REF 5811 IN STOCK",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "WAITLIST 1204",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "NEXT FITTING JUL 18",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#111117",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10ff"
+            },
+            {
+              "at": 0.09,
+              "hex": "#0b0b1000"
+            },
+            {
+              "at": 0.91,
+              "hex": "#0b0b1000"
+            },
+            {
+              "at": 1,
+              "hex": "#0b0b10ff"
+            }
+          ]
+        },
+        "typography": {
+          "ticker-figure": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 700,
+            "letterSpacing": 0.06,
+            "lineHeight": 1
+          }
+        },
+        "effects": "Ribbon plane 7.0w x 0.35h scene units centered at origin, albedo #111117, top and bottom 0.006-unit hairlines #23232b, roughness 0.6, metalness 0.2; ticker entries set in mono 700 paper on a single baseline, separated by vertical accent tick marks 0.02w x 0.14h in #ff2a38 emissive intensity 1.5 with 0.5-unit gaps (2x base unit) on both sides of each tick, never punctuation glyphs; content strip duplicated for a seamless loop and translated x at constant velocity 0.4 scene units per second leftward (fly-through primitive, speed 0.4, depthUnits 0), linear timing cubic-bezier(0,0,1,1), loop period equal to strip length divided by 0.4 with zero visible seam; edge fade masks 0.6 units wide at both ends using the stop ramp #0b0b10ff (at 0.0) -> #0b0b1000 (at 0.09) and mirrored at the right so figures dissolve into the stage rather than clipping; figures float translateZ +0.02 above the rail so the key light gives the mono digits a crisp top edge; no vertical motion, no easing changes, the ribbon reads as instrumentation."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "fly-through",
+        "trigger": "time",
+        "params": {
+          "depthUnits": 0,
+          "speed": 0.4
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "neighbors": {
+    "parent": {
+      "id": "hub-visual-stage",
+      "type": "hub"
+    },
+    "siblings": [],
+    "children": []
+  },
+  "atlas": {
+    "atlasIndex": 0,
+    "x": 0,
+    "y": 0,
+    "width": 512,
+    "height": 320
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 55
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.45
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1,
+        "position": [
+          0,
+          3,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.4,
+        "position": [
+          0,
+          -1,
+          -1
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "The figure strip translates left at a constant 0.4 scene units per second in a seamless loop; entries dissolve through 0.6-unit edge fades.",
+    "contrastMinimum": "4.5:1 figures on ribbon surface at full opacity zone"
+  },
+  "contrastMinimum": "4.5:1 ticker figures #e8ecf2 on ribbon #111117 (measures above 14:1) in the unfaded zone; accent ticks 4.6:1 against the rail",
+  "verifierCtx": {
+    "renderMode": "plane",
+    "hasTextContent": true
+  },
+  "l3": "ELEMENT SPECIFICATION:\nData ticker ribbon — A horizontal data ribbon of mono figures scrolling with constant velocity and edge fades.\n\nRENDER MODE: plane\nASSETS:\n- imageUrl: (none)\n- depthMapUrl: (none)\n- meshUrl: (none)\n\nVISUAL:\n- Colors: {\"background\":\"#0b0b10\",\"surface\":\"#111117\",\"ink\":\"#16161d\",\"paper\":\"#e8ecf2\",\"accent\":\"#ff2a38\",\"gradientStops\":[{\"at\":0,\"hex\":\"#0b0b10ff\"},{\"at\":0.09,\"hex\":\"#0b0b1000\"},{\"at\":0.91,\"hex\":\"#0b0b1000\"},{\"at\":1,\"hex\":\"#0b0b10ff\"}]}\n- Typography: {\"ticker-figure\":{\"family\":\"JetBrains Mono\",\"fontSize\":13,\"fontWeight\":700,\"letterSpacing\":0.06,\"lineHeight\":1}}\n- Effects: \"Ribbon plane 7.0w x 0.35h scene units centered at origin, albedo #111117, top and bottom 0.006-unit hairlines #23232b, roughness 0.6, metalness 0.2; ticker entries set in mono 700 paper on a single baseline, separated by vertical accent tick marks 0.02w x 0.14h in #ff2a38 emissive intensity 1.5 with 0.5-unit gaps (2x base unit) on both sides of each tick, never punctuation glyphs; content strip duplicated for a seamless loop and translated x at constant velocity 0.4 scene units per second leftward (fly-through primitive, speed 0.4, depthUnits 0), linear timing cubic-bezier(0,0,1,1), loop period equal to strip length divided by 0.4 with zero visible seam; edge fade masks 0.6 units wide at both ends using the stop ramp #0b0b10ff (at 0.0) -> #0b0b1000 (at 0.09) and mirrored at the right so figures dissolve into the stage rather than clipping; figures float translateZ +0.02 above the rail so the key light gives the mono digits a crisp top edge; no vertical motion, no easing changes, the ribbon reads as instrumentation.\"\n\nTEXT CONTENT:\n- \"CAL NA-01 BEAT 28800 VPH\" (ticker-figure, 13px 700)\n- \"POWER RESERVE 72H\" (ticker-figure, 13px 700)\n- \"CASE 40.5 MM 904L\" (ticker-figure, 13px 700)\n- \"REF 5811 IN STOCK\" (ticker-figure, 13px 700)\n- \"WAITLIST 1204\" (ticker-figure, 13px 700)\n- \"NEXT FITTING JUL 18\" (ticker-figure, 13px 700)\n\nBEHAVIOR:\n- Interactions: []\n- Data bindings: []\n\nSCENE PLACEMENT:\n- Position: (0, 0, 0)\n- Rotation: (0, 0, 0)\n- Scale: (1, 1, 1)\n\nCINEMATIC PRIMITIVES TO APPLY:\n- fly-through (trigger: time, params: {\"depthUnits\":0,\"speed\":0.4})\n\nNEIGHBORS:\n- Parent: hub-visual-stage (hub)\n- Siblings: (none)\n- Children: (none)\n\nATLAS REGION:\n- Atlas: 0\n- Source rect: 0, 0, 512, 320\n\n--- RENDER MODE GUIDANCE ---\nCreate a textured plane with explicit position/rotation from scenePosition. Use\nMeshBasicNodeMaterial unless behaviorSpec.effects requests lighting (then MeshStandardNodeMaterial)."
+}

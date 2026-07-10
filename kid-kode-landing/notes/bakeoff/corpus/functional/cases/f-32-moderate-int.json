@@ -1,0 +1,153 @@
+{
+  "caseId": "f-32-moderate-int",
+  "tier": "moderate",
+  "integrationBearing": true,
+  "sourceNodeId": "hub-journal-card-2",
+  "node": {
+    "nodeId": "hub-journal-card-2",
+    "subtype": "content-card",
+    "parentHubId": "hub-journal",
+    "serviceTag": "static",
+    "visual": {
+      "transform": {
+        "x": 0,
+        "y": 0,
+        "width": 2.6,
+        "height": 3.4,
+        "z": 1
+      },
+      "sourceAsset": "/prism-mock/home/nodes/cta-hero-isolated.png"
+    },
+    "intent": {
+      "caption": "Journal card 3",
+      "behaviorSpec": {
+        "interactions": [
+          {
+            "event": "hover",
+            "effect": "preset:rise-in (subtle, 0.15 scene units)"
+          },
+          {
+            "event": "click",
+            "effect": "emit:hub-journal.select"
+          }
+        ],
+        "apiCalls": [
+          {
+            "endpoint": "trpc.inventory.status",
+            "method": "query",
+            "capability": "capability:shopify.inventory"
+          }
+        ],
+        "dataBindings": [
+          {
+            "source": "trpc.inventory.status.inStock",
+            "target": "stockBadge"
+          }
+        ],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [],
+        "layers": [],
+        "colors": {
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "surface": "#0b0b10"
+        },
+        "typography": {
+          "display": "Lora serif 400/600",
+          "text": "JetBrains Mono 400/700"
+        },
+        "effects": "interactive card: hover lift (rise-in), press-down on click, accent edge on focus"
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "scenePosition": {
+      "x": 3.2,
+      "y": -0.3,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    },
+    "cinematicPrimitives": [],
+    "meshPrimitive": {
+      "kind": "plane",
+      "params": {
+        "width": 2.5,
+        "height": 3.3
+      }
+    },
+    "materialSpec": {
+      "baseColor": "#2e2f34",
+      "metalness": 0.85,
+      "roughness": 0.28,
+      "transmission": 0,
+      "ior": 1.5,
+      "dispersion": 0,
+      "clearcoat": 0.3,
+      "clearcoatRoughness": 0.1,
+      "iridescence": 0,
+      "iridescenceIOR": 1.3,
+      "thickness": 0.5,
+      "emissive": "#2e2f34",
+      "emissiveIntensity": 0.5,
+      "normalScale": 1,
+      "displacementScale": 0,
+      "envMapIntensity": 1.2,
+      "opacity": 1,
+      "normalMapUrl": null,
+      "displacementMapUrl": null,
+      "roughnessMapUrl": null
+    },
+    "receivesLighting": true,
+    "depthMapUrl": null,
+    "meshUrl": null
+  },
+  "neighbors": {
+    "parent": {
+      "id": "hub-journal",
+      "type": "hub"
+    },
+    "siblings": [
+      {
+        "id": "hub-journal-title",
+        "type": "section-title"
+      },
+      {
+        "id": "hub-journal-card-0",
+        "type": "content-card"
+      },
+      {
+        "id": "hub-journal-card-0-label",
+        "type": "card-label"
+      }
+    ],
+    "children": []
+  },
+  "atlas": {
+    "atlasIndex": 0,
+    "x": 0,
+    "y": 0,
+    "width": 512,
+    "height": 320
+  },
+  "verifierCtx": {
+    "renderMode": "plane",
+    "hasTextContent": false
+  },
+  "l3": "ELEMENT SPECIFICATION:\nJournal card 3\n\nRENDER MODE: plane\nASSETS:\n- imageUrl: /prism-mock/home/nodes/cta-hero-isolated.png\n- depthMapUrl: (none)\n- meshUrl: (none)\n\nVISUAL:\n- Colors: {\"ink\":\"#16161d\",\"paper\":\"#e8ecf2\",\"accent\":\"#ff2a38\",\"surface\":\"#0b0b10\"}\n- Typography: {\"display\":\"Lora serif 400/600\",\"text\":\"JetBrains Mono 400/700\"}\n- Effects: \"interactive card: hover lift (rise-in), press-down on click, accent edge on focus\"\n\nTEXT CONTENT:\n(none)\n\nBEHAVIOR:\n- Interactions: [{\"event\":\"hover\",\"effect\":\"preset:rise-in (subtle, 0.15 scene units)\"},{\"event\":\"click\",\"effect\":\"emit:hub-journal.select\"}]\n- Data bindings: [{\"source\":\"trpc.inventory.status.inStock\",\"target\":\"stockBadge\"}]\n\nSCENE PLACEMENT:\n- Position: (3.2, -0.3, 0)\n- Rotation: (0, 0, 0)\n- Scale: (1, 1, 1)\n\nCINEMATIC PRIMITIVES TO APPLY:\n(none — node ships without primitive)\n\nNEIGHBORS:\n- Parent: hub-journal (hub)\n- Siblings: hub-journal-title (section-title), hub-journal-card-0 (content-card), hub-journal-card-0-label (card-label)\n- Children: (none)\n\nATLAS REGION:\n- Atlas: 0\n- Source rect: 0, 0, 512, 320\n\n--- RENDER MODE GUIDANCE ---\nCreate a textured plane with explicit position/rotation from scenePosition. Use\nMeshBasicNodeMaterial unless behaviorSpec.effects requests lighting (then MeshStandardNodeMaterial)."
+}

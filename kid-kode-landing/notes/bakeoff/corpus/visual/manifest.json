@@ -1,0 +1,34 @@
+{
+  "corpus": "wbake-visual-v1",
+  "generator": "tests/unit/wbake-build-corpus.test.ts (WBAKE_BUILD_VISUAL=1)",
+  "designDirector": "Fable 5 (claude CLI print pass; transcript committed as design-director-transcript.json)",
+  "counts": {
+    "total": 20,
+    "threeD": 8,
+    "twoD": 12
+  },
+  "frozen": true,
+  "files": {
+    "../functional/l2-world.txt": "9c7c5d701a2916dd0e7bdf099e09ce2f9dab68205b3c94648fe0ec508a397332",
+    "cases/v-01-orbit-product-hero.json": "557717a6287ce6e0b84640166fba59d3a9a3a387ca2eb7724e5b353d8ad85334",
+    "cases/v-02-particle-constellation.json": "432393225e1cd2776407646f1f59f825ebbdf91cbfc9d58487bbdce02e51b661",
+    "cases/v-03-glass-prism-refraction.json": "42e529d213d5d64744c4c4559c365e6495a36e27f88554bdab73b7d04b142738",
+    "cases/v-04-kinetic-type-headline.json": "f91bffd09af5f9105efe16792a53b6954dc9b9221efa78f3ae89c3b6f508e9fd",
+    "cases/v-05-pedestal-material-study.json": "bc3db102bc1cce008142aa644f9b7ab2b19d05dc2e76949e9b7dfbb96eb91940",
+    "cases/v-06-loop-column-gallery.json": "a8540953675b948e5135f17ef21fda999dbfa5235775ff7ca23121a32a046adc",
+    "cases/v-07-filmstrip-carousel.json": "5f1d085265df50bc533aa7f3662817ff4a2e9a491c6bfe539d82d26332433287",
+    "cases/v-08-orrery-mechanism.json": "2de5cb5ae312fcb17d607e47767edd38ca41a34c79d19cab39af9c3ff3cfa399",
+    "cases/v-09-editorial-oversized-type.json": "1a94bc6a3a5700247a2faca67d93472869b0b69179bb8b876a5d60534062413b",
+    "cases/v-10-bento-metrics.json": "bf36c73040a331206aa61cba5193448ca46b1540ac021f6af664d3db77f480ad",
+    "cases/v-11-gradient-cta.json": "e94210c7d6ccb0cf3e32f4336836a67eb77540571cad55535a0233afd2cc2c8e",
+    "cases/v-12-photo-hero-composite.json": "5f6955036b07f28017127247faa8ccf0b8277fb4f3870a1f2e31de8e782e4859",
+    "cases/v-13-brand-wall.json": "1f416fcc7cdc5c94bf8c8615b5fa25adfcd9a4f217aad6c637119ec6faca3202",
+    "cases/v-14-pricing-card.json": "029204664cb134788569d0e30dad969f5690a6f89c16096093deb6dcb1df346a",
+    "cases/v-15-testimonial-panel.json": "988f0ba7f2a129a0be0a3623d8f07de4e86a3fe81b6a3c878f463d9e140f5c0c",
+    "cases/v-16-feature-triptych.json": "4ac026cca8b2682a604c60a65ecb82af13a41978ee56a4b0cd75fa60d09d1c63",
+    "cases/v-17-data-ribbon.json": "135f82285e85b03915b607e9c1c1d4a856b12f8dafa35528d60ee239fe0b34cb",
+    "cases/v-18-nav-dock.json": "86175ef7cc24e1c9fddf5a847a11d8523b149605e0e37e12dfeaadcd9eee2770",
+    "cases/v-19-empty-state.json": "c75a88a9fe8b2160f730bcd70c8be6a40f67232081fac573563c9ea796d8b2b0",
+    "cases/v-20-footer-colophon.json": "dd26af89e2d750415b729d61a8694d872c04619939988de03207b8246d153d28"
+  }
+}

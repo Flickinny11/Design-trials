@@ -1,0 +1,124 @@
+{
+  "caseId": "f-37-moderate-int",
+  "tier": "moderate",
+  "integrationBearing": true,
+  "sourceNodeId": null,
+  "node": {
+    "nodeId": "wb-extra-hub-pricing-04",
+    "subtype": "quote-panel",
+    "parentHubId": "hub-pricing",
+    "serviceTag": "wbake-corpus",
+    "visual": {
+      "sourceAsset": "/prism-mock/home/nodes/feature-card.png"
+    },
+    "intent": {
+      "caption": "Quote panel for Pricing: a client quote with attribution line.",
+      "behaviorSpec": {
+        "interactions": [
+          {
+            "event": "hover",
+            "effect": "preset:rise-in (subtle, 0.15 scene units)"
+          },
+          {
+            "event": "click",
+            "effect": "emit:hub-pricing.select"
+          }
+        ],
+        "apiCalls": [
+          {
+            "endpoint": "trpc.contact.submit",
+            "method": "mutation",
+            "capability": "capability:resend.email"
+          }
+        ],
+        "dataBindings": [
+          {
+            "source": "form.fields",
+            "target": "trpc.contact.submit.input"
+          }
+        ],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [],
+        "layers": [],
+        "colors": {
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "surface": "#0b0b10"
+        },
+        "typography": {
+          "display": "Lora serif 400/600",
+          "text": "JetBrains Mono 400/700"
+        },
+        "effects": "interactive card: hover lift (rise-in), press-down on click, accent edge on focus"
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "scenePosition": {
+      "x": 1.25,
+      "y": 1.6,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    },
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "parallax-scroll",
+        "trigger": "scroll",
+        "params": {
+          "intensity": 0.25
+        }
+      }
+    ]
+  },
+  "neighbors": {
+    "parent": {
+      "id": "hub-pricing",
+      "type": "hub"
+    },
+    "siblings": [
+      {
+        "id": "hub-pricing-title",
+        "type": "section-title"
+      },
+      {
+        "id": "hub-pricing-card-0",
+        "type": "content-card"
+      },
+      {
+        "id": "hub-pricing-card-0-label",
+        "type": "card-label"
+      }
+    ],
+    "children": []
+  },
+  "atlas": {
+    "atlasIndex": 0,
+    "x": 0,
+    "y": 0,
+    "width": 512,
+    "height": 320
+  },
+  "verifierCtx": {
+    "renderMode": "plane",
+    "hasTextContent": false
+  },
+  "l3": "ELEMENT SPECIFICATION:\nQuote panel for Pricing: a client quote with attribution line.\n\nRENDER MODE: plane\nASSETS:\n- imageUrl: /prism-mock/home/nodes/feature-card.png\n- depthMapUrl: (none)\n- meshUrl: (none)\n\nVISUAL:\n- Colors: {\"ink\":\"#16161d\",\"paper\":\"#e8ecf2\",\"accent\":\"#ff2a38\",\"surface\":\"#0b0b10\"}\n- Typography: {\"display\":\"Lora serif 400/600\",\"text\":\"JetBrains Mono 400/700\"}\n- Effects: \"interactive card: hover lift (rise-in), press-down on click, accent edge on focus\"\n\nTEXT CONTENT:\n(none)\n\nBEHAVIOR:\n- Interactions: [{\"event\":\"hover\",\"effect\":\"preset:rise-in (subtle, 0.15 scene units)\"},{\"event\":\"click\",\"effect\":\"emit:hub-pricing.select\"}]\n- Data bindings: [{\"source\":\"form.fields\",\"target\":\"trpc.contact.submit.input\"}]\n\nSCENE PLACEMENT:\n- Position: (1.25, 1.6, 0)\n- Rotation: (0, 0, 0)\n- Scale: (1, 1, 1)\n\nCINEMATIC PRIMITIVES TO APPLY:\n- parallax-scroll (trigger: scroll, params: {\"intensity\":0.25})\n\nNEIGHBORS:\n- Parent: hub-pricing (hub)\n- Siblings: hub-pricing-title (section-title), hub-pricing-card-0 (content-card), hub-pricing-card-0-label (card-label)\n- Children: (none)\n\nATLAS REGION:\n- Atlas: 0\n- Source rect: 0, 0, 512, 320\n\n--- RENDER MODE GUIDANCE ---\nCreate a textured plane with explicit position/rotation from scenePosition. Use\nMeshBasicNodeMaterial unless behaviorSpec.effects requests lighting (then MeshStandardNodeMaterial)."
+}

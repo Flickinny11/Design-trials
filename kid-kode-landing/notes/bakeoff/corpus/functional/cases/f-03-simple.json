@@ -1,0 +1,135 @@
+{
+  "caseId": "f-03-simple",
+  "tier": "simple",
+  "integrationBearing": false,
+  "sourceNodeId": "home-hero",
+  "node": {
+    "nodeId": "home-hero",
+    "subtype": "hero-showpiece",
+    "parentHubId": "hub-home",
+    "serviceTag": "static",
+    "visual": {
+      "transform": {
+        "x": 0,
+        "y": 0,
+        "width": 2.6,
+        "height": 2.6,
+        "z": 1
+      },
+      "sourceAsset": "/prism-mock/home/nodes/floating-accent.png"
+    },
+    "intent": {
+      "caption": "Hero showpiece",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [],
+        "layers": [],
+        "colors": {
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "surface": "#0b0b10"
+        },
+        "typography": {
+          "display": "Lora serif 400/600",
+          "text": "JetBrains Mono 400/700"
+        },
+        "effects": "static composition: engineered gradient surface, subtle grain, no interactivity"
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "sprite",
+    "scenePosition": {
+      "x": 0,
+      "y": -0.35,
+      "z": -0.6,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    },
+    "cinematicPrimitives": [],
+    "meshPrimitive": {
+      "kind": "cube",
+      "params": {
+        "width": 2.4,
+        "height": 2.4,
+        "depth": 2.4,
+        "radius": 1.3
+      }
+    },
+    "materialSpec": {
+      "baseColor": "#ff2a38",
+      "metalness": 0.15,
+      "roughness": 0.35,
+      "transmission": 0,
+      "ior": 1.5,
+      "dispersion": 0,
+      "clearcoat": 0.4,
+      "clearcoatRoughness": 0.1,
+      "iridescence": 0,
+      "iridescenceIOR": 1.3,
+      "thickness": 0.5,
+      "emissive": "#ff2a38",
+      "emissiveIntensity": 0.8,
+      "normalScale": 1,
+      "displacementScale": 0,
+      "envMapIntensity": 1,
+      "opacity": 1,
+      "normalMapUrl": null,
+      "displacementMapUrl": null,
+      "roughnessMapUrl": null
+    },
+    "receivesLighting": true,
+    "depthMapUrl": null,
+    "meshUrl": null
+  },
+  "neighbors": {
+    "parent": {
+      "id": "hub-home",
+      "type": "hub"
+    },
+    "siblings": [
+      {
+        "id": "home-headline",
+        "type": "hero-headline"
+      },
+      {
+        "id": "home-subhead",
+        "type": "hero-subhead"
+      },
+      {
+        "id": "home-cta",
+        "type": "primary-cta"
+      }
+    ],
+    "children": []
+  },
+  "atlas": {
+    "atlasIndex": 0,
+    "x": 0,
+    "y": 0,
+    "width": 512,
+    "height": 320
+  },
+  "verifierCtx": {
+    "renderMode": "sprite",
+    "hasTextContent": false
+  },
+  "l3": "ELEMENT SPECIFICATION:\nHero showpiece\n\nRENDER MODE: sprite\nASSETS:\n- imageUrl: /prism-mock/home/nodes/floating-accent.png\n- depthMapUrl: (none)\n- meshUrl: (none)\n\nVISUAL:\n- Colors: {\"ink\":\"#16161d\",\"paper\":\"#e8ecf2\",\"accent\":\"#ff2a38\",\"surface\":\"#0b0b10\"}\n- Typography: {\"display\":\"Lora serif 400/600\",\"text\":\"JetBrains Mono 400/700\"}\n- Effects: \"static composition: engineered gradient surface, subtle grain, no interactivity\"\n\nTEXT CONTENT:\n(none)\n\nBEHAVIOR:\n- Interactions: []\n- Data bindings: []\n\nSCENE PLACEMENT:\n- Position: (0, -0.35, -0.6)\n- Rotation: (0, 0, 0)\n- Scale: (1, 1, 1)\n\nCINEMATIC PRIMITIVES TO APPLY:\n(none — node ships without primitive)\n\nNEIGHBORS:\n- Parent: hub-home (hub)\n- Siblings: home-headline (hero-headline), home-subhead (hero-subhead), home-cta (primary-cta)\n- Children: (none)\n\nATLAS REGION:\n- Atlas: 0\n- Source rect: 0, 0, 512, 320\n\n--- RENDER MODE GUIDANCE ---\nCreate a textured plane that billboards toward the camera. Use THREE.PlaneGeometry sized\nto the atlas region's aspect ratio. Apply texture with proper UV offsets for atlas region.\nUse MeshBasicNodeMaterial with .map node."
+}

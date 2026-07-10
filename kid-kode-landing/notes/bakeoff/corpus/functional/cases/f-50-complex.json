@@ -1,0 +1,123 @@
+{
+  "caseId": "f-50-complex",
+  "tier": "complex",
+  "integrationBearing": false,
+  "sourceNodeId": null,
+  "node": {
+    "nodeId": "wb-extra-hub-features-17",
+    "subtype": "thumb-card",
+    "parentHubId": "hub-features",
+    "serviceTag": "wbake-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Thumbnail card for Features: an image card with caption strip.",
+      "behaviorSpec": {
+        "interactions": [
+          {
+            "event": "hover",
+            "effect": "preset:rise-in (subtle, 0.15 scene units)"
+          },
+          {
+            "event": "click",
+            "effect": "emit:hub-features.select"
+          }
+        ],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [
+          "hub-features.hero.engaged"
+        ],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [],
+        "layers": [],
+        "colors": {
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "surface": "#0b0b10"
+        },
+        "typography": {
+          "display": "Lora serif 400/600",
+          "text": "JetBrains Mono 400/700"
+        },
+        "effects": "hero-grade: layered depth, accent rim light, weighted-settle entrance, machined-metal PBR"
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "scenePosition": {
+      "x": -1.25,
+      "y": -1.1,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    },
+    "renderMode": "mesh",
+    "depthMapUrl": null,
+    "meshUrl": "/prism-mock/orrery/meshes/gear-a.glb",
+    "cinematicPrimitives": [
+      {
+        "name": "parallax-scroll",
+        "trigger": "scroll",
+        "params": {
+          "intensity": 0.4
+        }
+      },
+      {
+        "name": "magnetic-cursor",
+        "trigger": "hover",
+        "params": {
+          "radius": 1.2,
+          "strength": 0.35
+        }
+      }
+    ]
+  },
+  "neighbors": {
+    "parent": {
+      "id": "hub-features",
+      "type": "hub"
+    },
+    "siblings": [
+      {
+        "id": "hub-features-title",
+        "type": "section-title"
+      },
+      {
+        "id": "hub-features-card-0",
+        "type": "content-card"
+      },
+      {
+        "id": "hub-features-card-0-label",
+        "type": "card-label"
+      }
+    ],
+    "children": []
+  },
+  "atlas": {
+    "atlasIndex": 0,
+    "x": 0,
+    "y": 0,
+    "width": 512,
+    "height": 320
+  },
+  "verifierCtx": {
+    "renderMode": "mesh",
+    "hasTextContent": false
+  },
+  "l3": "ELEMENT SPECIFICATION:\nThumbnail card for Features: an image card with caption strip.\n\nRENDER MODE: mesh\nASSETS:\n- imageUrl: (none)\n- depthMapUrl: (none)\n- meshUrl: /prism-mock/orrery/meshes/gear-a.glb\n\nVISUAL:\n- Colors: {\"ink\":\"#16161d\",\"paper\":\"#e8ecf2\",\"accent\":\"#ff2a38\",\"surface\":\"#0b0b10\"}\n- Typography: {\"display\":\"Lora serif 400/600\",\"text\":\"JetBrains Mono 400/700\"}\n- Effects: \"hero-grade: layered depth, accent rim light, weighted-settle entrance, machined-metal PBR\"\n\nTEXT CONTENT:\n(none)\n\nBEHAVIOR:\n- Interactions: [{\"event\":\"hover\",\"effect\":\"preset:rise-in (subtle, 0.15 scene units)\"},{\"event\":\"click\",\"effect\":\"emit:hub-features.select\"}]\n- Data bindings: []\n\nSCENE PLACEMENT:\n- Position: (-1.25, -1.1, 0)\n- Rotation: (0, 0, 0)\n- Scale: (1, 1, 1)\n\nCINEMATIC PRIMITIVES TO APPLY:\n- parallax-scroll (trigger: scroll, params: {\"intensity\":0.4})\n- magnetic-cursor (trigger: hover, params: {\"radius\":1.2,\"strength\":0.35})\n\nNEIGHBORS:\n- Parent: hub-features (hub)\n- Siblings: hub-features-title (section-title), hub-features-card-0 (content-card), hub-features-card-0-label (card-label)\n- Children: (none)\n\nATLAS REGION:\n- Atlas: 0\n- Source rect: 0, 0, 512, 320\n\n--- RENDER MODE GUIDANCE ---\nLoad the GLB from meshUrl via ctx.glbLoader. Apply scenePosition transform. Texture and PBR\nmaterials come from the GLB itself. If imageUrl is also present, that's the reference image —\ndo NOT apply it as a texture override; the mesh has correct textures from generation."
+}

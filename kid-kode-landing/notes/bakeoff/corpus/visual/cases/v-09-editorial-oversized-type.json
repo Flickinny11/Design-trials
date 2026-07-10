@@ -1,0 +1,195 @@
+{
+  "caseId": "v-09-editorial-oversized-type",
+  "category": "2d",
+  "title": "Editorial oversized type",
+  "node": {
+    "nodeId": "v-09-editorial-oversized-type",
+    "subtype": "oversized-type",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Editorial oversized type — A massive editorial headline with tight tracking discipline, a kicker line, and an accent underline rule.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "NOVA ATELIER / JOURNAL",
+            "role": "kicker",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "PRECISION IS",
+            "role": "hero",
+            "typography": {
+              "fontSize": 124,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "A HABIT.",
+            "role": "hero",
+            "typography": {
+              "fontSize": 124,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Notes from the bench: tolerances, tempering, and the case for slower watchmaking.",
+            "role": "body",
+            "typography": {
+              "fontSize": 26,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "ISSUE 12 / JULY 2026",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 1,
+              "hex": "#14141a"
+            }
+          ]
+        },
+        "typography": {
+          "hero": {
+            "family": "Lora",
+            "fontSize": 124,
+            "fontWeight": 600,
+            "letterSpacing": -0.015,
+            "lineHeight": 0.98
+          },
+          "kicker": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.4
+          },
+          "body": {
+            "family": "JetBrains Mono",
+            "fontSize": 26,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.55
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Full-bleed editorial plate 7 x 5.5 scene units at z=0 with a vertical engineered gradient #0b0b10 to #14141a plus 1.5 percent monochrome grain (no soft pastel blur). All type left-aligned at x=-3.1 on a strict 0.25-unit baseline grid: kicker at y=1.7 (JetBrains Mono 700, uppercase, tracking 0.12em); hero in two stacked lines at y=0.9 and y=0.25 (Lora 600, em height 0.62 units, tracking -0.015em, lineHeight 0.98); accent underline rule 2.2 x 0.05 units #ff2a38 at emissive 1.2 at y=-0.15; body paragraph max-width 4.5 units at y=-0.8; caption at y=-1.9. Print-depth trick: hero glyph planes duplicated 0.02 units behind at #16161d for a letterpress shadow edge. Entrance: rise-in per block top-to-bottom (y +0.4 to 0, opacity 0 to 1, 700ms, cubic-bezier(0.215,0.61,0.355,1)) with 80ms stagger; the rule draws scaleX 0 to 1 over 500ms cubic-bezier(0.25,0.46,0.45,0.94) after the hero lands."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "neighbors": {
+    "parent": {
+      "id": "hub-visual-stage",
+      "type": "hub"
+    },
+    "siblings": [],
+    "children": []
+  },
+  "atlas": {
+    "atlasIndex": 0,
+    "x": 0,
+    "y": 0,
+    "width": 512,
+    "height": 320
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        6.2
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#3a3f4a",
+        "intensity": 0.55
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 0.8,
+        "position": [
+          1.5,
+          2.5,
+          4
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Type blocks rise in top-to-bottom with an 80ms stagger; the red rule draws left to right after the hero settles."
+  },
+  "contrastMinimum": "4.5:1 body, kicker, caption (#e8ecf2 on #0b0b10 = 16.9:1); 3:1 large display hero; accent rule decorative",
+  "verifierCtx": {
+    "renderMode": "plane",
+    "hasTextContent": true
+  },
+  "l3": "ELEMENT SPECIFICATION:\nEditorial oversized type — A massive editorial headline with tight tracking discipline, a kicker line, and an accent underline rule.\n\nRENDER MODE: plane\nASSETS:\n- imageUrl: (none)\n- depthMapUrl: (none)\n- meshUrl: (none)\n\nVISUAL:\n- Colors: {\"background\":\"#0b0b10\",\"surface\":\"#14141a\",\"ink\":\"#16161d\",\"paper\":\"#e8ecf2\",\"accent\":\"#ff2a38\",\"gradientStops\":[{\"at\":0,\"hex\":\"#0b0b10\"},{\"at\":1,\"hex\":\"#14141a\"}]}\n- Typography: {\"hero\":{\"family\":\"Lora\",\"fontSize\":124,\"fontWeight\":600,\"letterSpacing\":-0.015,\"lineHeight\":0.98},\"kicker\":{\"family\":\"JetBrains Mono\",\"fontSize\":18,\"fontWeight\":700,\"letterSpacing\":0.12,\"lineHeight\":1.4},\"body\":{\"family\":\"JetBrains Mono\",\"fontSize\":26,\"fontWeight\":400,\"letterSpacing\":0,\"lineHeight\":1.55},\"caption\":{\"family\":\"JetBrains Mono\",\"fontSize\":18,\"fontWeight\":400,\"letterSpacing\":0.08,\"lineHeight\":1.4}}\n- Effects: \"Full-bleed editorial plate 7 x 5.5 scene units at z=0 with a vertical engineered gradient #0b0b10 to #14141a plus 1.5 percent monochrome grain (no soft pastel blur). All type left-aligned at x=-3.1 on a strict 0.25-unit baseline grid: kicker at y=1.7 (JetBrains Mono 700, uppercase, tracking 0.12em); hero in two stacked lines at y=0.9 and y=0.25 (Lora 600, em height 0.62 units, tracking -0.015em, lineHeight 0.98); accent underline rule 2.2 x 0.05 units #ff2a38 at emissive 1.2 at y=-0.15; body paragraph max-width 4.5 units at y=-0.8; caption at y=-1.9. Print-depth trick: hero glyph planes duplicated 0.02 units behind at #16161d for a letterpress shadow edge. Entrance: rise-in per block top-to-bottom (y +0.4 to 0, opacity 0 to 1, 700ms, cubic-bezier(0.215,0.61,0.355,1)) with 80ms stagger; the rule draws scaleX 0 to 1 over 500ms cubic-bezier(0.25,0.46,0.45,0.94) after the hero lands.\"\n\nTEXT CONTENT:\n- \"NOVA ATELIER / JOURNAL\" (kicker, 18px 700)\n- \"PRECISION IS\" (hero, 124px 600)\n- \"A HABIT.\" (hero, 124px 600)\n- \"Notes from the bench: tolerances, tempering, and the case for slower watchmaking.\" (body, 26px 400)\n- \"ISSUE 12 / JULY 2026\" (caption, 18px 400)\n\nBEHAVIOR:\n- Interactions: []\n- Data bindings: []\n\nSCENE PLACEMENT:\n- Position: (0, 0, 0)\n- Rotation: (0, 0, 0)\n- Scale: (1, 1, 1)\n\nCINEMATIC PRIMITIVES TO APPLY:\n(none — node ships without primitive)\n\nNEIGHBORS:\n- Parent: hub-visual-stage (hub)\n- Siblings: (none)\n- Children: (none)\n\nATLAS REGION:\n- Atlas: 0\n- Source rect: 0, 0, 512, 320\n\n--- RENDER MODE GUIDANCE ---\nCreate a textured plane with explicit position/rotation from scenePosition. Use\nMeshBasicNodeMaterial unless behaviorSpec.effects requests lighting (then MeshStandardNodeMaterial)."
+}

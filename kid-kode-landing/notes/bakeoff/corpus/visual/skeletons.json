@@ -1,0 +1,211 @@
+[
+  {
+    "caseId": "v-01-orbit-product-hero",
+    "title": "Orbit product hero",
+    "category": "3d",
+    "archetype": "product-hero",
+    "intentLine": "A machined-metal product body on a low plinth, slow orbital presentation, key+rim lighting, accent signal light.",
+    "renderMode": "mesh",
+    "meshUrl": "/prism-mock/orrery/meshes/watch.glb",
+    "primitives": [
+      { "name": "orbit", "trigger": "load", "params": { "speed": 0.15, "radius": 0.6 } },
+      { "name": "depth-rotate", "trigger": "hover", "params": { "maxDeg": 6 } }
+    ]
+  },
+  {
+    "caseId": "v-02-particle-constellation",
+    "title": "Particle constellation hero",
+    "category": "3d",
+    "archetype": "particle-field",
+    "intentLine": "A deep starfield of instanced points with depth falloff and an accent core, slow drift, additive glow discipline.",
+    "renderMode": "mesh",
+    "primitives": [
+      { "name": "particle-emerge", "trigger": "load", "params": { "count": 1200, "durationMs": 1400 } }
+    ]
+  },
+  {
+    "caseId": "v-03-glass-prism-refraction",
+    "title": "Glass prism refraction",
+    "category": "3d",
+    "archetype": "glass-prism",
+    "intentLine": "A dispersive glass prism over a dark scene: iridescence, back rim light, emissive core — never flat glassmorphism.",
+    "renderMode": "mesh",
+    "primitives": [
+      { "name": "depth-rotate", "trigger": "hover", "params": { "maxDeg": 10 } }
+    ]
+  },
+  {
+    "caseId": "v-04-kinetic-type-headline",
+    "title": "Kinetic 3D type headline",
+    "category": "3d",
+    "archetype": "kinetic-typography",
+    "intentLine": "A hero headline as dimensional type with staggered kinetic entrance and weighted settle; MSDF text only.",
+    "renderMode": "plane",
+    "primitives": [
+      { "name": "kinetic-text", "trigger": "load", "params": { "staggerMs": 60, "riseUnits": 0.35 } }
+    ]
+  },
+  {
+    "caseId": "v-05-pedestal-material-study",
+    "title": "Pedestal material study",
+    "category": "3d",
+    "archetype": "material-pedestal",
+    "intentLine": "A cinematic-floor pedestal with a torus-knot material study: brushed metal PBR, contact shadow, imperfection pass.",
+    "renderMode": "mesh",
+    "imageUrl": "/prism-assets/chrome/brushed-metal.map.png",
+    "primitives": [
+      { "name": "orbit", "trigger": "load", "params": { "speed": 0.1, "radius": 0.4 } }
+    ]
+  },
+  {
+    "caseId": "v-06-loop-column-gallery",
+    "title": "Loop column gallery",
+    "category": "3d",
+    "archetype": "loop-column",
+    "intentLine": "A vertical loop column of distinct image plates cycling with weighted motion; plates read as photographs, not voids.",
+    "renderMode": "plane",
+    "imageUrl": "/prism-mock/home/nodes/feature-card.png",
+    "primitives": [
+      { "name": "fly-through", "trigger": "scroll", "params": { "depthUnits": 2.5 } }
+    ]
+  },
+  {
+    "caseId": "v-07-filmstrip-carousel",
+    "title": "Filmstrip 3D carousel",
+    "category": "3d",
+    "archetype": "carousel-3d",
+    "intentLine": "An angled 3D filmstrip of image cards with perspective recession and one focused card; distinct plates, no echo.",
+    "renderMode": "plane",
+    "imageUrl": "/prism-mock/home/nodes/parallax-stack.png",
+    "primitives": [
+      { "name": "parallax-scroll", "trigger": "scroll", "params": { "intensity": 0.5 } }
+    ]
+  },
+  {
+    "caseId": "v-08-orrery-mechanism",
+    "title": "Orrery mechanism",
+    "category": "3d",
+    "archetype": "mechanism",
+    "intentLine": "A machined gear mechanism with metallic PBR, slow meshing rotation, and a jewel accent pivot.",
+    "renderMode": "mesh",
+    "meshUrl": "/prism-mock/orrery/meshes/gear-a.glb",
+    "primitives": [
+      { "name": "orbit", "trigger": "time", "params": { "speed": 0.08, "radius": 0.2 } }
+    ]
+  },
+  {
+    "caseId": "v-09-editorial-oversized-type",
+    "title": "Editorial oversized type",
+    "category": "2d",
+    "archetype": "oversized-type",
+    "intentLine": "A massive editorial headline with tight tracking discipline, a kicker line, and an accent underline rule.",
+    "renderMode": "plane",
+    "primitives": []
+  },
+  {
+    "caseId": "v-10-bento-metrics",
+    "title": "Bento metrics grid",
+    "category": "2d",
+    "archetype": "bento-grid",
+    "intentLine": "A 2x2 bento of stat tiles with one dominant cell; machined surfaces, engineered gradients, no flat voids.",
+    "renderMode": "plane",
+    "primitives": []
+  },
+  {
+    "caseId": "v-11-gradient-cta",
+    "title": "Gradient CTA object",
+    "category": "2d",
+    "archetype": "cta-button",
+    "intentLine": "A primary CTA as a physical object: engineered gradient ramp, press-down state, accent edge light (DL12).",
+    "renderMode": "plane",
+    "primitives": []
+  },
+  {
+    "caseId": "v-12-photo-hero-composite",
+    "title": "Photo hero composite",
+    "category": "2d",
+    "archetype": "layered-photo-hero",
+    "intentLine": "A layered photographic hero plate with filmic grade, foreground subject separation, and caption block.",
+    "renderMode": "parallax-plane",
+    "imageUrl": "/prism-mock/home/nodes/parallax-stack.png",
+    "depthMapUrl": "/prism-mock/home/nodes/parallax-stack.depth.png",
+    "primitives": [
+      { "name": "parallax-scroll", "trigger": "scroll", "params": { "intensity": 0.35 } }
+    ]
+  },
+  {
+    "caseId": "v-13-brand-wall",
+    "title": "Brand mark wall",
+    "category": "2d",
+    "archetype": "brand-wall",
+    "intentLine": "A 3x2 wall of monochrome brand-mark tiles rendered premium on machined tiles — no icon-pack styling.",
+    "renderMode": "plane",
+    "primitives": []
+  },
+  {
+    "caseId": "v-14-pricing-card",
+    "title": "Premium pricing card",
+    "category": "2d",
+    "archetype": "pricing-card",
+    "intentLine": "A single flagship pricing card: tier name, price figure, feature list rhythm, one accent CTA row.",
+    "renderMode": "plane",
+    "primitives": []
+  },
+  {
+    "caseId": "v-15-testimonial-panel",
+    "title": "Testimonial panel",
+    "category": "2d",
+    "archetype": "quote-panel",
+    "intentLine": "A typographic client quote with oversized quotation mark, attribution line, and surface depth.",
+    "renderMode": "plane",
+    "primitives": []
+  },
+  {
+    "caseId": "v-16-feature-triptych",
+    "title": "Feature triptych",
+    "category": "2d",
+    "archetype": "feature-cards",
+    "intentLine": "Three feature cards in rhythm with icon seats, title/body hierarchy, and hover lift states.",
+    "renderMode": "plane",
+    "imageUrl": "/prism-mock/home/nodes/feature-card.png",
+    "primitives": []
+  },
+  {
+    "caseId": "v-17-data-ribbon",
+    "title": "Data ticker ribbon",
+    "category": "2d",
+    "archetype": "ticker",
+    "intentLine": "A horizontal data ribbon of mono figures scrolling with constant velocity and edge fades.",
+    "renderMode": "plane",
+    "primitives": [
+      { "name": "fly-through", "trigger": "time", "params": { "depthUnits": 0.0, "speed": 0.4 } }
+    ]
+  },
+  {
+    "caseId": "v-18-nav-dock",
+    "title": "Navigation dock",
+    "category": "2d",
+    "archetype": "nav-dock",
+    "intentLine": "A floating navigation dock of five entries with active state, machined rail, and press-down affordance.",
+    "renderMode": "plane",
+    "primitives": []
+  },
+  {
+    "caseId": "v-19-empty-state",
+    "title": "Rich empty state",
+    "category": "2d",
+    "archetype": "empty-state",
+    "intentLine": "An empty-state panel that is rich, never void (DL16): guidance copy, ghost preview, one accent action.",
+    "renderMode": "plane",
+    "primitives": []
+  },
+  {
+    "caseId": "v-20-footer-colophon",
+    "title": "Footer colophon",
+    "category": "2d",
+    "archetype": "footer",
+    "intentLine": "A footer colophon with type-scale discipline: wordmark, three link columns, legal line, hairline rules.",
+    "renderMode": "plane",
+    "primitives": []
+  }
+]

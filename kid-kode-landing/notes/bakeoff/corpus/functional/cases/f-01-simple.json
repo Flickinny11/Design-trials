@@ -1,0 +1,128 @@
+{
+  "caseId": "f-01-simple",
+  "tier": "simple",
+  "integrationBearing": false,
+  "sourceNodeId": "home-headline",
+  "node": {
+    "nodeId": "home-headline",
+    "subtype": "hero-headline",
+    "parentHubId": "hub-home",
+    "serviceTag": "static",
+    "visual": {
+      "transform": {
+        "x": 0,
+        "y": 0,
+        "width": 9,
+        "height": 1.6,
+        "z": 1
+      },
+      "sourceAsset": "/prism-mock/home/nodes/feature-card.png"
+    },
+    "intent": {
+      "caption": "Hero headline",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "A machined-metal watch atelier landing with catalog, pricing, jo",
+            "role": "body",
+            "typography": {
+              "fontSize": 31,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "surface": "#0b0b10"
+        },
+        "typography": {
+          "display": "Lora serif 400/600",
+          "text": "JetBrains Mono 400/700"
+        },
+        "effects": "static composition: engineered gradient surface, subtle grain, no interactivity"
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "scenePosition": {
+      "x": 0,
+      "y": 3,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    },
+    "cinematicPrimitives": [],
+    "textSpec": {
+      "content": "A machined-metal watch atelier landing with catalog, pricing, jo",
+      "fontFamily": "Inter",
+      "fontSize": 0.2556818181818182,
+      "fontWeight": 400,
+      "align": "center",
+      "fill": {
+        "kind": "solid",
+        "color": "#f4f1ea"
+      },
+      "glow": {
+        "color": "#f4f1ea",
+        "intensity": 1.6
+      }
+    },
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "receivesLighting": false
+  },
+  "neighbors": {
+    "parent": {
+      "id": "hub-home",
+      "type": "hub"
+    },
+    "siblings": [
+      {
+        "id": "home-subhead",
+        "type": "hero-subhead"
+      },
+      {
+        "id": "home-hero",
+        "type": "hero-showpiece"
+      },
+      {
+        "id": "home-cta",
+        "type": "primary-cta"
+      }
+    ],
+    "children": []
+  },
+  "atlas": {
+    "atlasIndex": 0,
+    "x": 0,
+    "y": 0,
+    "width": 512,
+    "height": 320
+  },
+  "verifierCtx": {
+    "renderMode": "plane",
+    "hasTextContent": true
+  },
+  "l3": "ELEMENT SPECIFICATION:\nHero headline\n\nRENDER MODE: plane\nASSETS:\n- imageUrl: /prism-mock/home/nodes/feature-card.png\n- depthMapUrl: (none)\n- meshUrl: (none)\n\nVISUAL:\n- Colors: {\"ink\":\"#16161d\",\"paper\":\"#e8ecf2\",\"accent\":\"#ff2a38\",\"surface\":\"#0b0b10\"}\n- Typography: {\"display\":\"Lora serif 400/600\",\"text\":\"JetBrains Mono 400/700\"}\n- Effects: \"static composition: engineered gradient surface, subtle grain, no interactivity\"\n\nTEXT CONTENT:\n- \"A machined-metal watch atelier landing with catalog, pricing, jo\" (body, 31px 400)\n\nBEHAVIOR:\n- Interactions: []\n- Data bindings: []\n\nSCENE PLACEMENT:\n- Position: (0, 3, 0)\n- Rotation: (0, 0, 0)\n- Scale: (1, 1, 1)\n\nCINEMATIC PRIMITIVES TO APPLY:\n(none — node ships without primitive)\n\nNEIGHBORS:\n- Parent: hub-home (hub)\n- Siblings: home-subhead (hero-subhead), home-hero (hero-showpiece), home-cta (primary-cta)\n- Children: (none)\n\nATLAS REGION:\n- Atlas: 0\n- Source rect: 0, 0, 512, 320\n\n--- RENDER MODE GUIDANCE ---\nCreate a textured plane with explicit position/rotation from scenePosition. Use\nMeshBasicNodeMaterial unless behaviorSpec.effects requests lighting (then MeshStandardNodeMaterial)."
+}

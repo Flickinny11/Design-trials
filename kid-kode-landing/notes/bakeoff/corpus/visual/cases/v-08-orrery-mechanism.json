@@ -1,0 +1,200 @@
+{
+  "caseId": "v-08-orrery-mechanism",
+  "category": "3d",
+  "title": "Orrery mechanism",
+  "node": {
+    "nodeId": "v-08-orrery-mechanism",
+    "subtype": "mechanism",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Orrery mechanism — A machined gear mechanism with metallic PBR, slow meshing rotation, and a jewel accent pivot.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "The going train",
+            "role": "headline",
+            "typography": {
+              "fontSize": 68,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "34 COMPONENTS / HAND-FINISHED",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 0.65,
+              "hex": "#101017"
+            },
+            {
+              "at": 1,
+              "hex": "#16161d"
+            }
+          ]
+        },
+        "typography": {
+          "headline": {
+            "family": "Lora",
+            "fontSize": 68,
+            "fontWeight": 600,
+            "letterSpacing": -0.005,
+            "lineHeight": 1.1
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Primary gear (/prism-mock/orrery/meshes/gear-a.glb) normalized to 1.6-unit diameter, centered at origin in the xy plane; secondary gear instance scaled to 0.9-unit diameter at [1.15, 0.35, -0.1], tooth-meshed at ratio 16:9 (primary 0.08 rad/s, secondary -0.142 rad/s, phase-locked so teeth never intersect). Gear material: machined steel roughness 0.5, metalness 0.55, clearcoat 0.2, clearcoatRoughness 0.3, anisotropy 0.7 oriented radially so spokes catch light as they turn. Jewel pivot: 0.12-unit-radius sphere at the primary hub, MeshPhysicalMaterial color #ff2a38, transmission 0.6, ior 1.76, emissive #ff2a38 intensity 1.8. Arbor shafts: 0.05-radius ink #16161d cylinders through both hubs, z-length 0.8. Contact shadow ellipse 2.6 x 1.2 units at y=-1.2, opacity 0.5. Backdrop plane 7 x 6 at z=-3 with the radial gradient stops; linear fog #0b0b10 near 5 far 11 for depth hint. Time-trigger orbit: camera drifts on radius 0.2 at 0.08 rad/s. Headline baseline at y=-1.7, caption at y=-2.1 on the 0.25-unit rhythm."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "mesh",
+    "depthMapUrl": null,
+    "meshUrl": "/prism-mock/orrery/meshes/gear-a.glb",
+    "cinematicPrimitives": [
+      {
+        "name": "orbit",
+        "trigger": "time",
+        "params": {
+          "speed": 0.08,
+          "radius": 0.2
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "neighbors": {
+    "parent": {
+      "id": "hub-visual-stage",
+      "type": "hub"
+    },
+    "siblings": [],
+    "children": []
+  },
+  "atlas": {
+    "atlasIndex": 0,
+    "x": 0,
+    "y": 0,
+    "width": 512,
+    "height": 320
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0.6,
+        0.5,
+        3.8
+      ],
+      "lookAt": [
+        0.3,
+        0.1,
+        0
+      ],
+      "fov": 45
+    },
+    "lights": [
+      {
+        "type": "directional",
+        "color": "#f2f4f8",
+        "intensity": 1.3,
+        "position": [
+          2,
+          3,
+          2.5
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#7e8aa0",
+        "intensity": 0.35,
+        "position": [
+          -2.5,
+          0.5,
+          1.5
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 1,
+        "position": [
+          -1,
+          2.5,
+          -2.5
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 1.2,
+        "position": [
+          0,
+          0,
+          0.6
+        ]
+      },
+      {
+        "type": "ambient",
+        "color": "#2a2e38",
+        "intensity": 0.25
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Both gears rotate in phase-locked mesh (0.08 and -0.142 rad/s) while the camera drifts on a 0.2-unit orbit; the ruby pivot glints as spokes sweep the key light."
+  },
+  "contrastMinimum": "4.5:1 caption (#e8ecf2 on #0b0b10 = 16.9:1); 3:1 large display headline; jewel accent is decorative light, not text",
+  "verifierCtx": {
+    "renderMode": "mesh",
+    "hasTextContent": true
+  },
+  "l3": "ELEMENT SPECIFICATION:\nOrrery mechanism — A machined gear mechanism with metallic PBR, slow meshing rotation, and a jewel accent pivot.\n\nRENDER MODE: mesh\nASSETS:\n- imageUrl: (none)\n- depthMapUrl: (none)\n- meshUrl: /prism-mock/orrery/meshes/gear-a.glb\n\nVISUAL:\n- Colors: {\"background\":\"#0b0b10\",\"surface\":\"#14141a\",\"ink\":\"#16161d\",\"paper\":\"#e8ecf2\",\"accent\":\"#ff2a38\",\"gradientStops\":[{\"at\":0,\"hex\":\"#0b0b10\"},{\"at\":0.65,\"hex\":\"#101017\"},{\"at\":1,\"hex\":\"#16161d\"}]}\n- Typography: {\"headline\":{\"family\":\"Lora\",\"fontSize\":68,\"fontWeight\":600,\"letterSpacing\":-0.005,\"lineHeight\":1.1},\"caption\":{\"family\":\"JetBrains Mono\",\"fontSize\":18,\"fontWeight\":400,\"letterSpacing\":0.08,\"lineHeight\":1.4}}\n- Effects: \"Primary gear (/prism-mock/orrery/meshes/gear-a.glb) normalized to 1.6-unit diameter, centered at origin in the xy plane; secondary gear instance scaled to 0.9-unit diameter at [1.15, 0.35, -0.1], tooth-meshed at ratio 16:9 (primary 0.08 rad/s, secondary -0.142 rad/s, phase-locked so teeth never intersect). Gear material: machined steel roughness 0.5, metalness 0.55, clearcoat 0.2, clearcoatRoughness 0.3, anisotropy 0.7 oriented radially so spokes catch light as they turn. Jewel pivot: 0.12-unit-radius sphere at the primary hub, MeshPhysicalMaterial color #ff2a38, transmission 0.6, ior 1.76, emissive #ff2a38 intensity 1.8. Arbor shafts: 0.05-radius ink #16161d cylinders through both hubs, z-length 0.8. Contact shadow ellipse 2.6 x 1.2 units at y=-1.2, opacity 0.5. Backdrop plane 7 x 6 at z=-3 with the radial gradient stops; linear fog #0b0b10 near 5 far 11 for depth hint. Time-trigger orbit: camera drifts on radius 0.2 at 0.08 rad/s. Headline baseline at y=-1.7, caption at y=-2.1 on the 0.25-unit rhythm.\"\n\nTEXT CONTENT:\n- \"The going train\" (headline, 68px 600)\n- \"34 COMPONENTS / HAND-FINISHED\" (caption, 18px 400)\n\nBEHAVIOR:\n- Interactions: []\n- Data bindings: []\n\nSCENE PLACEMENT:\n- Position: (0, 0, 0)\n- Rotation: (0, 0, 0)\n- Scale: (1, 1, 1)\n\nCINEMATIC PRIMITIVES TO APPLY:\n- orbit (trigger: time, params: {\"speed\":0.08,\"radius\":0.2})\n\nNEIGHBORS:\n- Parent: hub-visual-stage (hub)\n- Siblings: (none)\n- Children: (none)\n\nATLAS REGION:\n- Atlas: 0\n- Source rect: 0, 0, 512, 320\n\n--- RENDER MODE GUIDANCE ---\nLoad the GLB from meshUrl via ctx.glbLoader. Apply scenePosition transform. Texture and PBR\nmaterials come from the GLB itself. If imageUrl is also present, that's the reference image —\ndo NOT apply it as a texture override; the mesh has correct textures from generation."
+}

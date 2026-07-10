@@ -1,0 +1,128 @@
+{
+  "caseId": "f-24-simple",
+  "tier": "simple",
+  "integrationBearing": false,
+  "sourceNodeId": "hub-pricing-card-1-label",
+  "node": {
+    "nodeId": "hub-pricing-card-1-label",
+    "subtype": "card-label",
+    "parentHubId": "hub-pricing",
+    "serviceTag": "static",
+    "visual": {
+      "transform": {
+        "x": 0,
+        "y": 0,
+        "width": 2.3,
+        "height": 0.6,
+        "z": 1
+      },
+      "sourceAsset": "/prism-assets/chrome/ceramic-grain.map.png"
+    },
+    "intent": {
+      "caption": "Pricing card 2 label",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "Pricing 2",
+            "role": "headline",
+            "typography": {
+              "fontSize": 39,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "surface": "#0b0b10"
+        },
+        "typography": {
+          "display": "Lora serif 400/600",
+          "text": "JetBrains Mono 400/700"
+        },
+        "effects": "static composition: engineered gradient surface, subtle grain, no interactivity"
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "sprite",
+    "scenePosition": {
+      "x": 0,
+      "y": 1,
+      "z": 0.06,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    },
+    "cinematicPrimitives": [],
+    "textSpec": {
+      "content": "Pricing 2",
+      "fontFamily": "Inter",
+      "fontSize": 0.32,
+      "fontWeight": 400,
+      "align": "center",
+      "fill": {
+        "kind": "solid",
+        "color": "#f4f1ea"
+      },
+      "glow": {
+        "color": "#f4f1ea",
+        "intensity": 1.6
+      }
+    },
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "receivesLighting": false
+  },
+  "neighbors": {
+    "parent": {
+      "id": "hub-pricing",
+      "type": "hub"
+    },
+    "siblings": [
+      {
+        "id": "hub-pricing-title",
+        "type": "section-title"
+      },
+      {
+        "id": "hub-pricing-card-0",
+        "type": "content-card"
+      },
+      {
+        "id": "hub-pricing-card-0-label",
+        "type": "card-label"
+      }
+    ],
+    "children": []
+  },
+  "atlas": {
+    "atlasIndex": 0,
+    "x": 0,
+    "y": 0,
+    "width": 512,
+    "height": 320
+  },
+  "verifierCtx": {
+    "renderMode": "sprite",
+    "hasTextContent": true
+  },
+  "l3": "ELEMENT SPECIFICATION:\nPricing card 2 label\n\nRENDER MODE: sprite\nASSETS:\n- imageUrl: /prism-assets/chrome/ceramic-grain.map.png\n- depthMapUrl: (none)\n- meshUrl: (none)\n\nVISUAL:\n- Colors: {\"ink\":\"#16161d\",\"paper\":\"#e8ecf2\",\"accent\":\"#ff2a38\",\"surface\":\"#0b0b10\"}\n- Typography: {\"display\":\"Lora serif 400/600\",\"text\":\"JetBrains Mono 400/700\"}\n- Effects: \"static composition: engineered gradient surface, subtle grain, no interactivity\"\n\nTEXT CONTENT:\n- \"Pricing 2\" (headline, 39px 400)\n\nBEHAVIOR:\n- Interactions: []\n- Data bindings: []\n\nSCENE PLACEMENT:\n- Position: (0, 1, 0.06)\n- Rotation: (0, 0, 0)\n- Scale: (1, 1, 1)\n\nCINEMATIC PRIMITIVES TO APPLY:\n(none — node ships without primitive)\n\nNEIGHBORS:\n- Parent: hub-pricing (hub)\n- Siblings: hub-pricing-title (section-title), hub-pricing-card-0 (content-card), hub-pricing-card-0-label (card-label)\n- Children: (none)\n\nATLAS REGION:\n- Atlas: 0\n- Source rect: 0, 0, 512, 320\n\n--- RENDER MODE GUIDANCE ---\nCreate a textured plane that billboards toward the camera. Use THREE.PlaneGeometry sized\nto the atlas region's aspect ratio. Apply texture with proper UV offsets for atlas region.\nUse MeshBasicNodeMaterial with .map node."
+}

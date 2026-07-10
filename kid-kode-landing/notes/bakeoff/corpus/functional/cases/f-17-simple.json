@@ -1,0 +1,128 @@
+{
+  "caseId": "f-17-simple",
+  "tier": "simple",
+  "integrationBearing": false,
+  "sourceNodeId": "hub-collection-card-1-label",
+  "node": {
+    "nodeId": "hub-collection-card-1-label",
+    "subtype": "card-label",
+    "parentHubId": "hub-collection",
+    "serviceTag": "static",
+    "visual": {
+      "transform": {
+        "x": 0,
+        "y": 0,
+        "width": 2.3,
+        "height": 0.6,
+        "z": 1
+      },
+      "sourceAsset": "/prism-assets/chrome/brushed-metal.map.png"
+    },
+    "intent": {
+      "caption": "Collection card 2 label",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "Collection 2",
+            "role": "headline",
+            "typography": {
+              "fontSize": 39,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "surface": "#0b0b10"
+        },
+        "typography": {
+          "display": "Lora serif 400/600",
+          "text": "JetBrains Mono 400/700"
+        },
+        "effects": "static composition: engineered gradient surface, subtle grain, no interactivity"
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "scenePosition": {
+      "x": 0,
+      "y": 1,
+      "z": 0.06,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    },
+    "cinematicPrimitives": [],
+    "textSpec": {
+      "content": "Collection 2",
+      "fontFamily": "Inter",
+      "fontSize": 0.32,
+      "fontWeight": 400,
+      "align": "center",
+      "fill": {
+        "kind": "solid",
+        "color": "#f4f1ea"
+      },
+      "glow": {
+        "color": "#f4f1ea",
+        "intensity": 1.6
+      }
+    },
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "receivesLighting": false
+  },
+  "neighbors": {
+    "parent": {
+      "id": "hub-collection",
+      "type": "hub"
+    },
+    "siblings": [
+      {
+        "id": "hub-collection-title",
+        "type": "section-title"
+      },
+      {
+        "id": "hub-collection-card-0",
+        "type": "content-card"
+      },
+      {
+        "id": "hub-collection-card-0-label",
+        "type": "card-label"
+      }
+    ],
+    "children": []
+  },
+  "atlas": {
+    "atlasIndex": 0,
+    "x": 0,
+    "y": 0,
+    "width": 512,
+    "height": 320
+  },
+  "verifierCtx": {
+    "renderMode": "plane",
+    "hasTextContent": true
+  },
+  "l3": "ELEMENT SPECIFICATION:\nCollection card 2 label\n\nRENDER MODE: plane\nASSETS:\n- imageUrl: /prism-assets/chrome/brushed-metal.map.png\n- depthMapUrl: (none)\n- meshUrl: (none)\n\nVISUAL:\n- Colors: {\"ink\":\"#16161d\",\"paper\":\"#e8ecf2\",\"accent\":\"#ff2a38\",\"surface\":\"#0b0b10\"}\n- Typography: {\"display\":\"Lora serif 400/600\",\"text\":\"JetBrains Mono 400/700\"}\n- Effects: \"static composition: engineered gradient surface, subtle grain, no interactivity\"\n\nTEXT CONTENT:\n- \"Collection 2\" (headline, 39px 400)\n\nBEHAVIOR:\n- Interactions: []\n- Data bindings: []\n\nSCENE PLACEMENT:\n- Position: (0, 1, 0.06)\n- Rotation: (0, 0, 0)\n- Scale: (1, 1, 1)\n\nCINEMATIC PRIMITIVES TO APPLY:\n(none — node ships without primitive)\n\nNEIGHBORS:\n- Parent: hub-collection (hub)\n- Siblings: hub-collection-title (section-title), hub-collection-card-0 (content-card), hub-collection-card-0-label (card-label)\n- Children: (none)\n\nATLAS REGION:\n- Atlas: 0\n- Source rect: 0, 0, 512, 320\n\n--- RENDER MODE GUIDANCE ---\nCreate a textured plane with explicit position/rotation from scenePosition. Use\nMeshBasicNodeMaterial unless behaviorSpec.effects requests lighting (then MeshStandardNodeMaterial)."
+}

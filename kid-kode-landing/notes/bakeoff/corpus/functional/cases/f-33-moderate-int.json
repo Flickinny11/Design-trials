@@ -1,0 +1,148 @@
+{
+  "caseId": "f-33-moderate-int",
+  "tier": "moderate",
+  "integrationBearing": true,
+  "sourceNodeId": "hub-journal-card-2-label",
+  "node": {
+    "nodeId": "hub-journal-card-2-label",
+    "subtype": "card-label",
+    "parentHubId": "hub-journal",
+    "serviceTag": "static",
+    "visual": {
+      "transform": {
+        "x": 0,
+        "y": 0,
+        "width": 2.3,
+        "height": 0.6,
+        "z": 1
+      },
+      "sourceAsset": "/prism-mock/home/nodes/floating-accent.png"
+    },
+    "intent": {
+      "caption": "Journal card 3 label",
+      "behaviorSpec": {
+        "interactions": [
+          {
+            "event": "hover",
+            "effect": "preset:rise-in (subtle, 0.15 scene units)"
+          },
+          {
+            "event": "click",
+            "effect": "emit:hub-journal.select"
+          }
+        ],
+        "apiCalls": [
+          {
+            "endpoint": "trpc.catalog.list",
+            "method": "query",
+            "capability": "capability:shopify.catalog"
+          }
+        ],
+        "dataBindings": [
+          {
+            "source": "trpc.catalog.list.items[]",
+            "target": "cards[]"
+          }
+        ],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "Journal 3",
+            "role": "headline",
+            "typography": {
+              "fontSize": 39,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "surface": "#0b0b10"
+        },
+        "typography": {
+          "display": "Lora serif 400/600",
+          "text": "JetBrains Mono 400/700"
+        },
+        "effects": "interactive card: hover lift (rise-in), press-down on click, accent edge on focus"
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "scenePosition": {
+      "x": 3.2,
+      "y": 1,
+      "z": 0.06,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    },
+    "cinematicPrimitives": [],
+    "textSpec": {
+      "content": "Journal 3",
+      "fontFamily": "Inter",
+      "fontSize": 0.32,
+      "fontWeight": 400,
+      "align": "center",
+      "fill": {
+        "kind": "solid",
+        "color": "#f4f1ea"
+      },
+      "glow": {
+        "color": "#f4f1ea",
+        "intensity": 1.6
+      }
+    },
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "receivesLighting": false
+  },
+  "neighbors": {
+    "parent": {
+      "id": "hub-journal",
+      "type": "hub"
+    },
+    "siblings": [
+      {
+        "id": "hub-journal-title",
+        "type": "section-title"
+      },
+      {
+        "id": "hub-journal-card-0",
+        "type": "content-card"
+      },
+      {
+        "id": "hub-journal-card-0-label",
+        "type": "card-label"
+      }
+    ],
+    "children": []
+  },
+  "atlas": {
+    "atlasIndex": 0,
+    "x": 0,
+    "y": 0,
+    "width": 512,
+    "height": 320
+  },
+  "verifierCtx": {
+    "renderMode": "plane",
+    "hasTextContent": true
+  },
+  "l3": "ELEMENT SPECIFICATION:\nJournal card 3 label\n\nRENDER MODE: plane\nASSETS:\n- imageUrl: /prism-mock/home/nodes/floating-accent.png\n- depthMapUrl: (none)\n- meshUrl: (none)\n\nVISUAL:\n- Colors: {\"ink\":\"#16161d\",\"paper\":\"#e8ecf2\",\"accent\":\"#ff2a38\",\"surface\":\"#0b0b10\"}\n- Typography: {\"display\":\"Lora serif 400/600\",\"text\":\"JetBrains Mono 400/700\"}\n- Effects: \"interactive card: hover lift (rise-in), press-down on click, accent edge on focus\"\n\nTEXT CONTENT:\n- \"Journal 3\" (headline, 39px 400)\n\nBEHAVIOR:\n- Interactions: [{\"event\":\"hover\",\"effect\":\"preset:rise-in (subtle, 0.15 scene units)\"},{\"event\":\"click\",\"effect\":\"emit:hub-journal.select\"}]\n- Data bindings: [{\"source\":\"trpc.catalog.list.items[]\",\"target\":\"cards[]\"}]\n\nSCENE PLACEMENT:\n- Position: (3.2, 1, 0.06)\n- Rotation: (0, 0, 0)\n- Scale: (1, 1, 1)\n\nCINEMATIC PRIMITIVES TO APPLY:\n(none — node ships without primitive)\n\nNEIGHBORS:\n- Parent: hub-journal (hub)\n- Siblings: hub-journal-title (section-title), hub-journal-card-0 (content-card), hub-journal-card-0-label (card-label)\n- Children: (none)\n\nATLAS REGION:\n- Atlas: 0\n- Source rect: 0, 0, 512, 320\n\n--- RENDER MODE GUIDANCE ---\nCreate a textured plane with explicit position/rotation from scenePosition. Use\nMeshBasicNodeMaterial unless behaviorSpec.effects requests lighting (then MeshStandardNodeMaterial)."
+}

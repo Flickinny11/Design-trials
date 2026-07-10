@@ -1,0 +1,116 @@
+{
+  "caseId": "f-39-moderate-int",
+  "tier": "moderate",
+  "integrationBearing": true,
+  "sourceNodeId": null,
+  "node": {
+    "nodeId": "wb-extra-hub-home-06",
+    "subtype": "divider-orn",
+    "parentHubId": "hub-home",
+    "serviceTag": "wbake-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Ornamental divider for Home: a thin machined rule with center jewel.",
+      "behaviorSpec": {
+        "interactions": [
+          {
+            "event": "hover",
+            "effect": "preset:rise-in (subtle, 0.15 scene units)"
+          },
+          {
+            "event": "click",
+            "effect": "emit:hub-home.select"
+          }
+        ],
+        "apiCalls": [
+          {
+            "endpoint": "trpc.visits.book",
+            "method": "mutation",
+            "capability": "capability:cal.scheduling"
+          }
+        ],
+        "dataBindings": [
+          {
+            "source": "trpc.visits.book.slot",
+            "target": "confirmPanel"
+          }
+        ],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [],
+        "layers": [],
+        "colors": {
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "surface": "#0b0b10"
+        },
+        "typography": {
+          "display": "Lora serif 400/600",
+          "text": "JetBrains Mono 400/700"
+        },
+        "effects": "interactive card: hover lift (rise-in), press-down on click, accent edge on focus"
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "scenePosition": {
+      "x": -2.5,
+      "y": 0.7000000000000001,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    },
+    "renderMode": "mesh",
+    "depthMapUrl": null,
+    "meshUrl": "/prism-mock/home/nodes/cta-hero.glb",
+    "cinematicPrimitives": []
+  },
+  "neighbors": {
+    "parent": {
+      "id": "hub-home",
+      "type": "hub"
+    },
+    "siblings": [
+      {
+        "id": "home-headline",
+        "type": "hero-headline"
+      },
+      {
+        "id": "home-subhead",
+        "type": "hero-subhead"
+      },
+      {
+        "id": "home-hero",
+        "type": "hero-showpiece"
+      }
+    ],
+    "children": []
+  },
+  "atlas": {
+    "atlasIndex": 0,
+    "x": 0,
+    "y": 0,
+    "width": 512,
+    "height": 320
+  },
+  "verifierCtx": {
+    "renderMode": "mesh",
+    "hasTextContent": false
+  },
+  "l3": "ELEMENT SPECIFICATION:\nOrnamental divider for Home: a thin machined rule with center jewel.\n\nRENDER MODE: mesh\nASSETS:\n- imageUrl: (none)\n- depthMapUrl: (none)\n- meshUrl: /prism-mock/home/nodes/cta-hero.glb\n\nVISUAL:\n- Colors: {\"ink\":\"#16161d\",\"paper\":\"#e8ecf2\",\"accent\":\"#ff2a38\",\"surface\":\"#0b0b10\"}\n- Typography: {\"display\":\"Lora serif 400/600\",\"text\":\"JetBrains Mono 400/700\"}\n- Effects: \"interactive card: hover lift (rise-in), press-down on click, accent edge on focus\"\n\nTEXT CONTENT:\n(none)\n\nBEHAVIOR:\n- Interactions: [{\"event\":\"hover\",\"effect\":\"preset:rise-in (subtle, 0.15 scene units)\"},{\"event\":\"click\",\"effect\":\"emit:hub-home.select\"}]\n- Data bindings: [{\"source\":\"trpc.visits.book.slot\",\"target\":\"confirmPanel\"}]\n\nSCENE PLACEMENT:\n- Position: (-2.5, 0.7000000000000001, 0)\n- Rotation: (0, 0, 0)\n- Scale: (1, 1, 1)\n\nCINEMATIC PRIMITIVES TO APPLY:\n(none — node ships without primitive)\n\nNEIGHBORS:\n- Parent: hub-home (hub)\n- Siblings: home-headline (hero-headline), home-subhead (hero-subhead), home-hero (hero-showpiece)\n- Children: (none)\n\nATLAS REGION:\n- Atlas: 0\n- Source rect: 0, 0, 512, 320\n\n--- RENDER MODE GUIDANCE ---\nLoad the GLB from meshUrl via ctx.glbLoader. Apply scenePosition transform. Texture and PBR\nmaterials come from the GLB itself. If imageUrl is also present, that's the reference image —\ndo NOT apply it as a texture override; the mesh has correct textures from generation."
+}

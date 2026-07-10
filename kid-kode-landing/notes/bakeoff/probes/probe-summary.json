@@ -1,0 +1,214 @@
+{
+  "probedAt": "2026-07-10T00:01:57.683Z",
+  "results": [
+    {
+      "provider": "cerebras",
+      "keySource": "file:cerebras.key",
+      "probedAt": "2026-07-10T00:01:55.388Z",
+      "models": {
+        "ok": true,
+        "httpStatus": 200,
+        "count": 3,
+        "familyMatches": {
+          "gpt-oss": [
+            "gpt-oss-120b"
+          ],
+          "glm": [
+            "zai-glm-4.7"
+          ]
+        }
+      },
+      "funding": {
+        "ok": false,
+        "httpStatus": 402,
+        "latencyMs": 88,
+        "model": "gpt-oss-120b",
+        "usage": null,
+        "error": "{\"message\":\"Payment required to access this resource. Visit your billing tab.\",\"type\":\"payment_required_error\",\"param\":\"quota\",\"code\":\"payment_required\"}"
+      }
+    },
+    {
+      "provider": "fireworks",
+      "keySource": "file:fireworks.key",
+      "probedAt": "2026-07-10T00:01:55.798Z",
+      "models": {
+        "ok": true,
+        "httpStatus": 200,
+        "count": 7,
+        "familyMatches": {
+          "gpt-oss": [
+            "accounts/fireworks/models/gpt-oss-120b"
+          ],
+          "deepseek": [
+            "accounts/fireworks/models/deepseek-v4-pro"
+          ],
+          "glm": [
+            "accounts/fireworks/models/glm-5p1",
+            "accounts/fireworks/models/glm-5p2"
+          ],
+          "kimi": [
+            "accounts/fireworks/models/kimi-k2p5",
+            "accounts/fireworks/models/kimi-k2p6"
+          ]
+        }
+      },
+      "funding": {
+        "ok": true,
+        "httpStatus": 200,
+        "latencyMs": 394,
+        "model": "accounts/fireworks/models/gpt-oss-120b",
+        "usage": {
+          "prompt_tokens": 79,
+          "total_tokens": 87,
+          "completion_tokens": 8,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "error": null
+      }
+    },
+    {
+      "provider": "deepinfra",
+      "keySource": "file:deepinfra.key",
+      "probedAt": "2026-07-10T00:01:56.480Z",
+      "models": {
+        "ok": true,
+        "httpStatus": 200,
+        "count": 172,
+        "familyMatches": {
+          "gemini": [
+            "google/gemini-1.5-flash",
+            "google/gemini-1.5-flash-8b",
+            "google/gemini-2.5-flash",
+            "google/gemini-2.5-pro",
+            "google/gemini-3-pro-image",
+            "google/gemini-3.1-flash-lite",
+            "google/gemini-3.1-pro",
+            "google/gemini-3.5-flash"
+          ],
+          "haiku": [
+            "anthropic/claude-haiku-4-5"
+          ],
+          "sonnet": [
+            "anthropic/claude-sonnet-4-6",
+            "anthropic/claude-sonnet-5"
+          ],
+          "claude": [
+            "anthropic/claude-fable-5",
+            "anthropic/claude-haiku-4-5",
+            "anthropic/claude-opus-4-7",
+            "anthropic/claude-opus-4-8",
+            "anthropic/claude-sonnet-4-6",
+            "anthropic/claude-sonnet-5"
+          ],
+          "gpt-oss": [
+            "openai/gpt-oss-120b",
+            "openai/gpt-oss-120b-Turbo",
+            "openai/gpt-oss-20b"
+          ],
+          "deepseek": [
+            "deepseek-ai/DeepSeek-R1-0528",
+            "deepseek-ai/DeepSeek-V3",
+            "deepseek-ai/DeepSeek-V3-0324",
+            "deepseek-ai/DeepSeek-V3.1",
+            "deepseek-ai/DeepSeek-V3.1-Terminus",
+            "deepseek-ai/DeepSeek-V3.2",
+            "deepseek-ai/DeepSeek-V4-Flash",
+            "deepseek-ai/DeepSeek-V4-Pro"
+          ],
+          "glm": [
+            "zai-org/GLM-4.6",
+            "zai-org/GLM-4.7",
+            "zai-org/GLM-4.7-Flash",
+            "zai-org/GLM-5",
+            "zai-org/GLM-5.1",
+            "zai-org/GLM-5.2"
+          ],
+          "kimi": [
+            "moonshotai/Kimi-K2.5",
+            "moonshotai/Kimi-K2.6",
+            "moonshotai/Kimi-K2.7-Code"
+          ],
+          "qwen": [
+            "Qwen/Qwen-Image-Edit",
+            "Qwen/Qwen-Image-Max",
+            "Qwen/Qwen2.5-72B-Instruct",
+            "Qwen/Qwen3-14B",
+            "Qwen/Qwen3-235B-A22B-Instruct-2507",
+            "Qwen/Qwen3-235B-A22B-Thinking-2507",
+            "Qwen/Qwen3-30B-A3B",
+            "Qwen/Qwen3-32B",
+            "Qwen/Qwen3-Coder-480B-A35B-Instruct-Turbo",
+            "Qwen/Qwen3-Embedding-0.6B",
+            "Qwen/Qwen3-Embedding-4B",
+            "Qwen/Qwen3-Embedding-8B",
+            "Qwen/Qwen3-Max",
+            "Qwen/Qwen3-Max-Thinking",
+            "Qwen/Qwen3-Next-80B-A3B-Instruct",
+            "Qwen/Qwen3-TTS",
+            "Qwen/Qwen3-TTS-VoiceDesign",
+            "Qwen/Qwen3-VL-235B-A22B-Instruct",
+            "Qwen/Qwen3-VL-30B-A3B-Instruct",
+            "Qwen/Qwen3.5-122B-A10B",
+            "Qwen/Qwen3.5-27B",
+            "Qwen/Qwen3.5-35B-A3B",
+            "Qwen/Qwen3.5-397B-A17B",
+            "Qwen/Qwen3.5-9B",
+            "Qwen/Qwen3.6-27B",
+            "Qwen/Qwen3.6-35B-A3B",
+            "Qwen/Qwen3.7-Max"
+          ]
+        }
+      },
+      "funding": {
+        "ok": false,
+        "httpStatus": 402,
+        "latencyMs": 232,
+        "model": "openai/gpt-oss-120b",
+        "usage": null,
+        "error": "{\"detail\":{\"error\":\"You need positive balance to do inference. Please add balance manually or setup top-up\"}}"
+      }
+    },
+    {
+      "provider": "groq",
+      "keySource": "file:groq.key",
+      "probedAt": "2026-07-10T00:01:57.206Z",
+      "models": {
+        "ok": true,
+        "httpStatus": 200,
+        "count": 17,
+        "familyMatches": {
+          "gpt-oss": [
+            "openai/gpt-oss-120b",
+            "openai/gpt-oss-20b",
+            "openai/gpt-oss-safeguard-20b"
+          ],
+          "qwen": [
+            "qwen/qwen3-32b",
+            "qwen/qwen3.6-27b"
+          ]
+        }
+      },
+      "funding": {
+        "ok": true,
+        "httpStatus": 200,
+        "latencyMs": 217,
+        "model": "openai/gpt-oss-120b",
+        "usage": {
+          "queue_time": 0.059576132,
+          "prompt_tokens": 78,
+          "prompt_time": 0.01362149,
+          "completion_tokens": 8,
+          "completion_time": 0.016685068,
+          "total_tokens": 86,
+          "total_time": 0.030306558,
+          "completion_tokens_details": {
+            "reasoning_tokens": 6
+          }
+        },
+        "error": null
+      }
+    }
+  ]
+}

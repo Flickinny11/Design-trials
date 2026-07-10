@@ -1,0 +1,140 @@
+{
+  "caseId": "f-04-simple",
+  "tier": "simple",
+  "integrationBearing": false,
+  "sourceNodeId": "home-cta",
+  "node": {
+    "nodeId": "home-cta",
+    "subtype": "primary-cta",
+    "parentHubId": "hub-home",
+    "serviceTag": "static",
+    "visual": {
+      "transform": {
+        "x": 0,
+        "y": 0,
+        "width": 3,
+        "height": 0.9,
+        "z": 1
+      },
+      "sourceAsset": "/prism-mock/home/nodes/orb-decor.png"
+    },
+    "intent": {
+      "caption": "Primary CTA",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [
+          "cta-click"
+        ],
+        "listens": [],
+        "triggersDownstream": [
+          {
+            "eventName": "cta-click",
+            "targetNodeIds": []
+          }
+        ]
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [],
+        "layers": [],
+        "colors": {
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "surface": "#0b0b10"
+        },
+        "typography": {
+          "display": "Lora serif 400/600",
+          "text": "JetBrains Mono 400/700"
+        },
+        "effects": "static composition: engineered gradient surface, subtle grain, no interactivity"
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "scenePosition": {
+      "x": 0,
+      "y": -2.85,
+      "z": 0.2,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    },
+    "cinematicPrimitives": [],
+    "meshPrimitive": {
+      "kind": "plane",
+      "params": {
+        "width": 3,
+        "height": 0.82
+      }
+    },
+    "materialSpec": {
+      "baseColor": "#ff2a38",
+      "metalness": 0.1,
+      "roughness": 0.4,
+      "transmission": 0,
+      "ior": 1.5,
+      "dispersion": 0,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "iridescence": 0,
+      "iridescenceIOR": 1.3,
+      "thickness": 0.5,
+      "emissive": "#ff2a38",
+      "emissiveIntensity": 0.9,
+      "normalScale": 1,
+      "displacementScale": 0,
+      "envMapIntensity": 1,
+      "opacity": 1,
+      "normalMapUrl": null,
+      "displacementMapUrl": null,
+      "roughnessMapUrl": null
+    },
+    "receivesLighting": true,
+    "depthMapUrl": null,
+    "meshUrl": null
+  },
+  "neighbors": {
+    "parent": {
+      "id": "hub-home",
+      "type": "hub"
+    },
+    "siblings": [
+      {
+        "id": "home-headline",
+        "type": "hero-headline"
+      },
+      {
+        "id": "home-subhead",
+        "type": "hero-subhead"
+      },
+      {
+        "id": "home-hero",
+        "type": "hero-showpiece"
+      }
+    ],
+    "children": []
+  },
+  "atlas": {
+    "atlasIndex": 0,
+    "x": 0,
+    "y": 0,
+    "width": 512,
+    "height": 320
+  },
+  "verifierCtx": {
+    "renderMode": "plane",
+    "hasTextContent": false
+  },
+  "l3": "ELEMENT SPECIFICATION:\nPrimary CTA\n\nRENDER MODE: plane\nASSETS:\n- imageUrl: /prism-mock/home/nodes/orb-decor.png\n- depthMapUrl: (none)\n- meshUrl: (none)\n\nVISUAL:\n- Colors: {\"ink\":\"#16161d\",\"paper\":\"#e8ecf2\",\"accent\":\"#ff2a38\",\"surface\":\"#0b0b10\"}\n- Typography: {\"display\":\"Lora serif 400/600\",\"text\":\"JetBrains Mono 400/700\"}\n- Effects: \"static composition: engineered gradient surface, subtle grain, no interactivity\"\n\nTEXT CONTENT:\n(none)\n\nBEHAVIOR:\n- Interactions: []\n- Data bindings: []\n\nSCENE PLACEMENT:\n- Position: (0, -2.85, 0.2)\n- Rotation: (0, 0, 0)\n- Scale: (1, 1, 1)\n\nCINEMATIC PRIMITIVES TO APPLY:\n(none — node ships without primitive)\n\nNEIGHBORS:\n- Parent: hub-home (hub)\n- Siblings: home-headline (hero-headline), home-subhead (hero-subhead), home-hero (hero-showpiece)\n- Children: (none)\n\nATLAS REGION:\n- Atlas: 0\n- Source rect: 0, 0, 512, 320\n\n--- RENDER MODE GUIDANCE ---\nCreate a textured plane with explicit position/rotation from scenePosition. Use\nMeshBasicNodeMaterial unless behaviorSpec.effects requests lighting (then MeshStandardNodeMaterial)."
+}

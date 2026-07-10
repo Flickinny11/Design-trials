@@ -1,0 +1,11 @@
+{
+  "provider": "cerebras",
+  "url": "https://api.cerebras.ai/v1/models",
+  "httpStatus": 200,
+  "latencyMs": 319,
+  "modelIds": [
+    "gemma-4-31b",
+    "gpt-oss-120b",
+    "zai-glm-4.7"
+  ]
+}
