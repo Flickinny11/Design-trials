@@ -1,0 +1,18 @@
+{
+  "bundle": "gpt-oss-120b/v-03-glass-prism-refraction-r2",
+  "capturedAt": "2026-07-10T03:36:03.285Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 0,
+    "nodeMounted": true,
+    "bundleId": "gpt-oss-120b/v-03-glass-prism-refraction-r2",
+    "moduleRuntimeError": "TypeError: tsl.TransmissionNode is not a constructor"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

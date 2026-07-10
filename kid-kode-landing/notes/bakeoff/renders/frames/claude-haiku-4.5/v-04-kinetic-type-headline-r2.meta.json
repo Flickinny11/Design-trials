@@ -1,0 +1,18 @@
+{
+  "bundle": "claude-haiku-4.5/v-04-kinetic-type-headline-r2",
+  "capturedAt": "2026-07-10T03:05:40.016Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "claude-haiku-4.5/v-04-kinetic-type-headline-r2",
+    "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

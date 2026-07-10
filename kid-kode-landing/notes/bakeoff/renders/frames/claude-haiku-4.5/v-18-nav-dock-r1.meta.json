@@ -1,0 +1,18 @@
+{
+  "bundle": "claude-haiku-4.5/v-18-nav-dock-r1",
+  "capturedAt": "2026-07-10T03:07:44.292Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "claude-haiku-4.5/v-18-nav-dock-r1",
+    "moduleRuntimeError": "TypeError: ctx.fontAtlas.createTextMesh is not a function"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

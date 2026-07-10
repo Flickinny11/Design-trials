@@ -1,0 +1,17 @@
+{
+  "bundle": "gpt-oss-120b/v-15-testimonial-panel-r1",
+  "capturedAt": "2026-07-10T03:37:42.446Z",
+  "probe": {
+    "status": "error",
+    "error": "module did not default-export a function",
+    "renderables": 0,
+    "nodeMounted": false,
+    "bundleId": "gpt-oss-120b/v-15-testimonial-panel-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": "Transform failed with 1 error:\n<stdin>:165:9: ERROR: Unexpected end of file",
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

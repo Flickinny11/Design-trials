@@ -1,0 +1,18 @@
+{
+  "bundle": "gpt-oss-120b/v-03-glass-prism-refraction-r1",
+  "capturedAt": "2026-07-10T03:35:58.792Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 0,
+    "nodeMounted": true,
+    "bundleId": "gpt-oss-120b/v-03-glass-prism-refraction-r1",
+    "moduleRuntimeError": "ReferenceError: THREE is not defined"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

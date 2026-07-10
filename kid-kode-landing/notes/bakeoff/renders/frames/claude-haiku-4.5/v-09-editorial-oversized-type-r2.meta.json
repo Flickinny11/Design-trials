@@ -1,0 +1,18 @@
+{
+  "bundle": "claude-haiku-4.5/v-09-editorial-oversized-type-r2",
+  "capturedAt": "2026-07-10T03:06:28.470Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "claude-haiku-4.5/v-09-editorial-oversized-type-r2",
+    "moduleRuntimeError": "TypeError: import_tsl.MeshBasicNodeMaterial is not a constructor"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

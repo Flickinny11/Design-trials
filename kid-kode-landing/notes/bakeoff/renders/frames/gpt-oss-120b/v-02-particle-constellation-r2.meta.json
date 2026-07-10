@@ -1,0 +1,18 @@
+{
+  "bundle": "gpt-oss-120b/v-02-particle-constellation-r2",
+  "capturedAt": "2026-07-10T03:35:54.233Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "gpt-oss-120b/v-02-particle-constellation-r2",
+    "moduleRuntimeError": "TypeError: (0 , import_tsl.meshStandardNodeMaterial) is not a function"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

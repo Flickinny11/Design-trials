@@ -1,0 +1,72 @@
+{
+  "label": "batch-003-v-03-glass-prism-refraction",
+  "judgedAt": "2026-07-10T04:09:15.503Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "bundleId": "claude-haiku-4.5/v-03-glass-prism-refraction-r1",
+      "frame": "notes/bakeoff/renders/frames/claude-haiku-4.5/v-03-glass-prism-refraction-r1.png"
+    },
+    {
+      "label": "F2",
+      "bundleId": "claude-haiku-4.5/v-03-glass-prism-refraction-r2",
+      "frame": "notes/bakeoff/renders/frames/claude-haiku-4.5/v-03-glass-prism-refraction-r2.png"
+    },
+    {
+      "label": "F3",
+      "bundleId": "claude-sonnet-5/v-03-glass-prism-refraction-r1",
+      "frame": "notes/bakeoff/renders/frames/claude-sonnet-5/v-03-glass-prism-refraction-r1.png"
+    },
+    {
+      "label": "F4",
+      "bundleId": "claude-sonnet-5/v-03-glass-prism-refraction-r2",
+      "frame": "notes/bakeoff/renders/frames/claude-sonnet-5/v-03-glass-prism-refraction-r2.png"
+    },
+    {
+      "label": "F5",
+      "bundleId": "gpt-oss-120b/v-03-glass-prism-refraction-r1",
+      "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-03-glass-prism-refraction-r1.png"
+    },
+    {
+      "label": "F6",
+      "bundleId": "gpt-oss-120b/v-03-glass-prism-refraction-r2",
+      "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-03-glass-prism-refraction-r2.png"
+    }
+  ],
+  "costUsd": 0.6964859999999999,
+  "durationApiMs": 47148,
+  "wallMs": 49543,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 20993,
+    "cache_read_input_tokens": 83156,
+    "output_tokens": 3146,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 20993,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 2139,
+        "cache_read_input_tokens": 44953,
+        "cache_creation_input_tokens": 14243,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 14243
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":26,\"mustFix\":[{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center prism\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center prism — no dispersion, iridescence, or rim light\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"white quad clipping behind prism, upper-left of prism\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"}],\"notes\":\"Matte gray triangle, not glass; stray white plane; faint red floor strip is the only palette signal.\"},{\"frame\":\"F2\",\"score\":37,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center object — cube-like form, not triangular prism; no dispersion split\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"lavender floor strip and candy-pink interior, lower center\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"floor strip — flat unlit fill\"}],\"notes\":\"Real gloss and internal refraction attempt, but wrong geometry, candy-pink drift, flat lavender ground plane.\"},{\"frame\":\"F3\",\"score\":58,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"whole prism — no RGB dispersion fan or iridescence\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"left face gradient and center hotspot glow\"},{\"defect\":\"ALL_BLACK_ELEMENT\",\"region\":\"right prism face\"}],\"notes\":\"Correct prism geometry, red refractions, emissive hotspot; best of set but no spectral split, blue-tinted glass, empty surround.\"},{\"frame\":\"F4\",\"score\":5,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"}],\"notes\":\"Uniform near-black frame; nothing rendered.\"},{\"frame\":\"F5\",\"score\":4,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"}],\"notes\":\"Uniform near-black frame; nothing rendered.\"},{\"frame\":\"F6\",\"score\":4,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"}],\"notes\":\"Uniform near-black frame; nothing rendered.\"}]}"
+}

@@ -1,0 +1,18 @@
+{
+  "bundle": "claude-haiku-4.5/v-05-pedestal-material-study-r2",
+  "capturedAt": "2026-07-10T03:05:49.178Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 0,
+    "nodeMounted": true,
+    "bundleId": "claude-haiku-4.5/v-05-pedestal-material-study-r2",
+    "moduleRuntimeError": "TypeError: ctx.textureLoader.load is not a function"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

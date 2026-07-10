@@ -1,0 +1,72 @@
+{
+  "label": "batch-007-v-07-filmstrip-carousel",
+  "judgedAt": "2026-07-10T04:12:12.069Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "bundleId": "claude-haiku-4.5/v-07-filmstrip-carousel-r1",
+      "frame": "notes/bakeoff/renders/frames/claude-haiku-4.5/v-07-filmstrip-carousel-r1.png"
+    },
+    {
+      "label": "F2",
+      "bundleId": "claude-haiku-4.5/v-07-filmstrip-carousel-r2",
+      "frame": "notes/bakeoff/renders/frames/claude-haiku-4.5/v-07-filmstrip-carousel-r2.png"
+    },
+    {
+      "label": "F3",
+      "bundleId": "claude-sonnet-5/v-07-filmstrip-carousel-r1",
+      "frame": "notes/bakeoff/renders/frames/claude-sonnet-5/v-07-filmstrip-carousel-r1.png"
+    },
+    {
+      "label": "F4",
+      "bundleId": "claude-sonnet-5/v-07-filmstrip-carousel-r2",
+      "frame": "notes/bakeoff/renders/frames/claude-sonnet-5/v-07-filmstrip-carousel-r2.png"
+    },
+    {
+      "label": "F5",
+      "bundleId": "gpt-oss-120b/v-07-filmstrip-carousel-r1",
+      "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-07-filmstrip-carousel-r1.png"
+    },
+    {
+      "label": "F6",
+      "bundleId": "gpt-oss-120b/v-07-filmstrip-carousel-r2",
+      "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-07-filmstrip-carousel-r2.png"
+    }
+  ],
+  "costUsd": 0.689314,
+  "durationApiMs": 42058,
+  "wallMs": 44577,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 20733,
+    "cache_read_input_tokens": 82904,
+    "output_tokens": 3117,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 20733,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 2118,
+        "cache_read_input_tokens": 44701,
+        "cache_creation_input_tokens": 14235,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 14235
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no five-card filmstrip, no -18deg recession, no bevel frames\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center card — indigo/blue, no #ff2a38 accent\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card — tiny single plate in vast void\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center card — flat texture fill, no clearcoat/roughness response\" } ], \"notes\": \"Single tiny flat blue placeholder square in a black void; carousel never rendered.\" }, { \"frame\": \"F2\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no filmstrip, one plate instead of five distinct plates\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center card\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center card\" } ], \"notes\": \"Identical near-empty frame; no perspective, no recession, no red accent anywhere.\" }, { \"frame\": \"F3\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — five-card strip, y-rotation, and machined bevels all absent\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center card\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center card\" } ], \"notes\": \"Same failed render: lone unlit blue texture swatch centered in dead black field.\" }, { \"frame\": \"F4\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no carousel geometry, no distinct photograph plates\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center card\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center card\" } ], \"notes\": \"Near-empty duplicate frame; spec composition entirely missing, palette violated.\" }, { \"frame\": \"F5\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — filmstrip, focus card, and perspective recession absent\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center card\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center card\" } ], \"notes\": \"One flat placeholder tile in void; no materiality, no accent red, no 3D.\" }, { \"frame\": \"F6\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no five distinct plates, no bevel, no angled strip\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center card\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center card\" } ], \"notes\": \"Identical near-empty render across all entrants; scene setup failed, scored as rendered void.\" } ] }"
+}

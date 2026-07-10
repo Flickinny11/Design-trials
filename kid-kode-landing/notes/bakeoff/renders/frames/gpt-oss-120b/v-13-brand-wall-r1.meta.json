@@ -1,0 +1,17 @@
+{
+  "bundle": "gpt-oss-120b/v-13-brand-wall-r1",
+  "capturedAt": "2026-07-10T03:37:25.320Z",
+  "probe": {
+    "status": "error",
+    "error": "module did not default-export a function",
+    "renderables": 0,
+    "nodeMounted": false,
+    "bundleId": "gpt-oss-120b/v-13-brand-wall-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": "Transform failed with 1 error:\n<stdin>:115:35: ERROR: Unterminated string literal",
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

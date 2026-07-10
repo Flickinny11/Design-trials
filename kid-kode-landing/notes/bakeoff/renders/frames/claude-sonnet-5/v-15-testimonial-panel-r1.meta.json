@@ -1,0 +1,18 @@
+{
+  "bundle": "claude-sonnet-5/v-15-testimonial-panel-r1",
+  "capturedAt": "2026-07-10T03:10:19.847Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "claude-sonnet-5/v-15-testimonial-panel-r1",
+    "moduleRuntimeError": "TypeError: (0 , import_text.createTextMesh) is not a function"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

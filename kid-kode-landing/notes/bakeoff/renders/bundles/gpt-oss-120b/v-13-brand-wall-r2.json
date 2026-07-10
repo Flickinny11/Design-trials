@@ -1,0 +1,212 @@
+{
+  "id": "gpt-oss-120b/v-13-brand-wall-r2",
+  "contestant": "gpt-oss-120b",
+  "caseId": "v-13-brand-wall",
+  "run": 2,
+  "node": {
+    "nodeId": "v-13-brand-wall",
+    "subtype": "brand-wall",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Brand mark wall — A 3x2 wall of monochrome brand-mark tiles rendered premium on machined tiles — no icon-pack styling.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "AS FEATURED IN",
+            "role": "kicker",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "HODINKEE",
+            "role": "brand-mark",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "MONOCLE",
+            "role": "brand-mark",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "WALLPAPER",
+            "role": "brand-mark",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "ESQUIRE",
+            "role": "brand-mark",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "WIRED",
+            "role": "brand-mark",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "FINANCIAL TIMES",
+            "role": "brand-mark",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#16161d",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#1a1a22"
+            },
+            {
+              "at": 1,
+              "hex": "#121218"
+            }
+          ]
+        },
+        "typography": {
+          "kicker": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.2
+          },
+          "brand-mark": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 700,
+            "letterSpacing": 0.08,
+            "lineHeight": 1
+          }
+        },
+        "effects": "Six machined tiles 1.0w x 0.62h scene units in a 3x2 grid, gap 0.25 (1x base unit), grid total 3.5w x 1.49h centered at origin with the kicker 0.3 units above; each tile brushed-metal PBR, anisotropy strength 0.6 aligned to x, roughness 0.55, metalness 0.5, clearcoat 0.2, albedo vertical ramp #1a1a22 (at 0.0) -> #121218 (at 1.0), chamfered edges 0.02 units; brand wordmarks rendered flat monochrome #e8ecf2 at 78 percent opacity, no drop shadows, no strokes, no icon-pack styling; hover per tile wordmark opacity 0.78 -> 1.0 and tile translateZ 0 -> 0.05 over 160ms cubic-bezier(0.25,0.46,0.45,0.94); mount stagger-cards with each tile fade-up opacity 0 -> 1 and y +0.2 -> 0 over 500ms cubic-bezier(0.25,0.46,0.45,0.94) at 80ms stagger, top row left-to-right first; key light rakes at 35deg elevation so the brushed anisotropic highlight sweeps across each tile as it settles, giving the wall visible material motion without color noise."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0.1,
+        4
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 45
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.4
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1.1,
+        "position": [
+          3,
+          2.5,
+          3.5
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#7f8896",
+        "intensity": 0.35,
+        "position": [
+          -3,
+          1,
+          2
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.4,
+        "position": [
+          0,
+          -1.6,
+          -1
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Tiles fade-up in an 80ms left-to-right stagger while the brushed specular band sweeps each tile; hover lifts a tile 0.05 units.",
+    "contrastMinimum": "4.5:1 wordmarks at rest opacity on tile albedo; kicker on background exceeds 15:1"
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap",
+      "@/primitives",
+      "@/text"
+    ],
+    "violations": []
+  },
+  "cjs": "var __create = Object.create;\nvar __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __getProtoOf = Object.getPrototypeOf;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(\n  // If the importer is in node compatibility mode or this is not an ESM\n  // file that has been converted to a CommonJS file using a Babel-\n  // compatible transform (i.e. \"__esModule\" has not been set), then set\n  // \"default\" to the CommonJS \"module.exports\" for node compatibility.\n  isNodeMode || !mod || !mod.__esModule ? __defProp(target, \"default\", { value: mod, enumerable: true }) : target,\n  mod\n));\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar THREE = __toESM(require(\"three/webgpu\"));\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nvar import_primitives = require(\"@/primitives\");\nvar import_text = require(\"@/text\");\nfunction createNode(config, ctx) {\n  const TILE_W = 1;\n  const TILE_H = 0.62;\n  const GAP = 0.25;\n  const COLS = 3;\n  const ROWS = 2;\n  const GRID_W = COLS * TILE_W + (COLS - 1) * GAP;\n  const GRID_H = ROWS * TILE_H + (ROWS - 1) * GAP;\n  const GRAD_TOP = \"#1a1a22\";\n  const GRAD_BOTTOM = \"#121218\";\n  const TILE_COLOR = \"#e8ecf2\";\n  const TILE_OPACITY = 0.78;\n  const KICKER_TEXT = \"AS FEATURED IN\";\n  const BRAND_TEXTS = [\n    \"HODINKEE\",\n    \"MONOCLE\",\n    \"WALLPAPER\",\n    \"ESQUIRE\",\n    \"WIRED\",\n    \"FINANCIAL TIMES\"\n  ];\n  const group = new THREE.Group();\n  if (config.position) group.position.fromArray(config.position);\n  if (config.rotation) group.rotation.fromArray(config.rotation);\n  if (config.scale) group.scale.fromArray(config.scale);\n  const tileGeoms = [];\n  const tileMats = [];\n  const tileMeshes = [];\n  for (let row = 0; row < ROWS; row++) {\n    for (let col = 0; col < COLS; col++) {\n      const ix = row * COLS + col;\n      const text = BRAND_TEXTS[ix] || \"\";\n      const geom = new THREE.PlaneGeometry(TILE_W, TILE_H);\n      geom.translate(0, 0, 0);\n      tileGeoms.push(geom);\n      const mat = new THREE.MeshPhysicalNodeMaterial({\n        transparent: true,\n        opacity: 0,\n        // start invisible for animation\n        metalness: 0.5,\n        roughness: 0.55,\n        clearcoat: 0.2,\n        anisotropy: 0.6,\n        anisotropyDirection: new THREE.Vector3(1, 0, 0)\n      });\n      mat.colorNode = (0, import_tsl.mix)(\n        (0, import_tsl.color)(GRAD_TOP),\n        (0, import_tsl.color)(GRAD_BOTTOM),\n        (0, import_tsl.uv)().y\n      );\n      const mesh = new THREE.Mesh(geom, mat);\n      mesh.castShadow = true;\n      mesh.receiveShadow = true;\n      const offsetX = -GRID_W / 2 + TILE_W / 2 + col * (TILE_W + GAP);\n      const offsetY = GRID_H / 2 - TILE_H / 2 - row * (TILE_H + GAP);\n      mesh.position.set(offsetX, offsetY, 0);\n      tileMats.push(mat);\n      tileMeshes.push(mesh);\n      group.add(mesh);\n      if (text) {\n        const txtMesh = ctx.fontAtlas.createTextMesh(text, {\n          fontFamily: \"JetBrains Mono\",\n          fontSize: 13,\n          fontWeight: 700,\n          letterSpacing: 0.08,\n          lineHeight: 1,\n          color: \"#e8ecf2\",\n          opacity: TILE_OPACITY,\n          // align centre\n          anchorX: \"center\",\n          anchorY: \"middle\"\n        });\n        txtMesh.position.set(0, 0, 1e-3);\n        mesh.add(txtMesh);\n      }\n    }\n  }\n  const kickerMesh = ctx.fontAtlas.createTextMesh(KICKER_TEXT, {\n    fontFamily: \"JetBrains Mono\",\n    fontSize: 9,\n    fontWeight: 700,\n    letterSpacing: 0.12,\n    lineHeight: 1.2,\n    color: \"#e8ecf2\",\n    opacity: 1,\n    anchorX: \"center\",\n    anchorY: \"bottom\"\n  });\n  kickerMesh.position.set(0, GRID_H / 2 + 0.3, 1e-3);\n  group.add(kickerMesh);\n  const tl = import_gsap.gsap.timeline({ defaults: { ease: \"power2.out\" } });\n  tileMeshes.forEach((mesh, i) => {\n    mesh.position.y += 0.2;\n    tl.to(\n      mesh.position,\n      {\n        y: mesh.position.y - 0.2,\n        duration: 0.5,\n        ease: \"power2.out\"\n      },\n      i * 0.08\n    );\n    tl.to(\n      mesh.material,\n      {\n        opacity: 1,\n        duration: 0.5,\n        ease: \"power2.out\"\n      },\n      i * 0.08\n    );\n  });\n  tl.play();\n  group.userData.cleanup = () => {\n    tl.kill();\n    tileGeoms.forEach((g) => g.dispose());\n    tileMats.forEach((m) => m.dispose());\n    if (kickerMesh.geometry) kickerMesh.geometry.dispose();\n    if (kickerMesh.material) kickerMesh.material.dispose();\n  };\n  group.userData.handlers = {};\n  return group;\n}\n",
+  "transformError": null
+}

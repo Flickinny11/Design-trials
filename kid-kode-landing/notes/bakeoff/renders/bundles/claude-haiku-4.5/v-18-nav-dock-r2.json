@@ -1,0 +1,193 @@
+{
+  "id": "claude-haiku-4.5/v-18-nav-dock-r2",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-18-nav-dock",
+  "run": 2,
+  "node": {
+    "nodeId": "v-18-nav-dock",
+    "subtype": "nav-dock",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Navigation dock — A floating navigation dock of five entries with active state, machined rail, and press-down affordance.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "HOME",
+            "role": "nav-active",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "FEATURES",
+            "role": "nav-item",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "COLLECTION",
+            "role": "nav-item",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "PRICING",
+            "role": "nav-item",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "JOURNAL",
+            "role": "nav-item",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#1b1b23"
+            },
+            {
+              "at": 1,
+              "hex": "#101015"
+            }
+          ]
+        },
+        "typography": {
+          "nav-active": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 700,
+            "letterSpacing": 0.08,
+            "lineHeight": 1
+          },
+          "nav-item": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1
+          }
+        },
+        "effects": "Floating rail 3.6w x 0.5h scene units, corner radius 0.1, brushed-metal PBR with vertical albedo ramp #1b1b23 (at 0.0) -> #101015 (at 1.0), anisotropy 0.6 along x, roughness 0.55, metalness 0.5, clearcoat 0.2, chamfered edge 0.02 catching a continuous specular line from the key light; rail floats translateZ +0.15 above a contact-shadow plane at 35 percent opacity, shadow offset 0.06 down; five entries laid out on centers 0.68 apart with 0.25-unit (1x base) horizontal padding inside each hit cell 0.6w x 0.34h; active entry Home in paper 700 with an underline bar 0.28w x 0.025h in #ff2a38 emissive intensity 1.8 seated 0.06 below its baseline; inactive entries #a6adba 400; hover inactive color #a6adba -> #e8ecf2 over 160ms cubic-bezier(0.25,0.46,0.45,0.94); press per entry scale 1.0 -> 0.97 over 120ms cubic-bezier(0.175,0.885,0.32,1.275) with the cell dipping translateZ -0.03 into the rail; on active change the underline bar translates x to the new entry over 260ms cubic-bezier(0.165,0.84,0.44,1) with a weighted 1.04 overshoot; mount rise-in y +0.4 -> 0 over 700ms cubic-bezier(0.215,0.61,0.355,1)."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0.05,
+        3
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 45
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.35
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1.15,
+        "position": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.5,
+        "position": [
+          -1.5,
+          -0.6,
+          -1
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#8a93a3",
+        "intensity": 0.3,
+        "position": [
+          -2.5,
+          1,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Rail rises in once; the red active underline slides between entries with a weighted overshoot; pressed entries compress and dip into the rail.",
+    "contrastMinimum": "4.5:1 inactive entries on rail; active underline 4.6:1 against rail"
+  },
+  "parsed": true,
+  "fenced": true,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __create = Object.create;\nvar __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __getProtoOf = Object.getPrototypeOf;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(\n  // If the importer is in node compatibility mode or this is not an ESM\n  // file that has been converted to a CommonJS file using a Babel-\n  // compatible transform (i.e. \"__esModule\" has not been set), then set\n  // \"default\" to the CommonJS \"module.exports\" for node compatibility.\n  isNodeMode || !mod || !mod.__esModule ? __defProp(target, \"default\", { value: mod, enumerable: true }) : target,\n  mod\n));\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar THREE = __toESM(require(\"three/webgpu\"));\nvar import_gsap = __toESM(require(\"gsap\"));\nfunction createNode(config, ctx) {\n  const group = new THREE.Group();\n  const state = { activeIndex: 0, timelines: [] };\n  const navLabels = [\"HOME\", \"FEATURES\", \"COLLECTION\", \"PRICING\", \"JOURNAL\"];\n  const colors = {\n    paper: 15265010,\n    accent: 16722488,\n    inactive: 10923450\n  };\n  const railWidth = 3.6;\n  const railHeight = 0.5;\n  const itemSpacing = 0.68;\n  const railGeo = new THREE.PlaneGeometry(railWidth, railHeight);\n  const railMat = new THREE.MeshStandardMaterial({\n    color: 986900,\n    metalness: 0.5,\n    roughness: 0.55,\n    clearcoat: 0.2\n  });\n  const railMesh = new THREE.Mesh(railGeo, railMat);\n  railMesh.position.z = 0.15;\n  group.add(railMesh);\n  const shadowGeo = new THREE.PlaneGeometry(railWidth + 0.4, railHeight + 0.2);\n  const shadowMat = new THREE.MeshBasicMaterial({\n    color: 0,\n    transparent: true,\n    opacity: 0.35\n  });\n  const shadowMesh = new THREE.Mesh(shadowGeo, shadowMat);\n  shadowMesh.position.z = 0.08;\n  shadowMesh.position.y = -0.06;\n  group.add(shadowMesh);\n  const items = navLabels.map((label, idx) => {\n    const itemGroup = new THREE.Group();\n    itemGroup.position.x = (idx - 2) * itemSpacing;\n    itemGroup.index = idx;\n    let textMesh;\n    const isActive = idx === 0;\n    if (ctx.fontAtlas && typeof ctx.fontAtlas.createMesh === \"function\") {\n      textMesh = ctx.fontAtlas.createMesh({\n        text: label,\n        fontSize: 0.13,\n        fontWeight: isActive ? 700 : 400,\n        color: isActive ? colors.paper : colors.inactive,\n        fontFamily: \"JetBrains Mono\",\n        letterSpacing: 0.08\n      });\n    } else {\n      const textGeo = new THREE.PlaneGeometry(0.4, 0.15);\n      const textMaterial = new THREE.MeshBasicMaterial({\n        color: isActive ? colors.paper : colors.inactive\n      });\n      textMesh = new THREE.Mesh(textGeo, textMaterial);\n    }\n    textMesh.position.z = 0.16;\n    itemGroup.add(textMesh);\n    itemGroup.textMesh = textMesh;\n    group.add(itemGroup);\n    return itemGroup;\n  });\n  const underlineGeo = new THREE.PlaneGeometry(0.28, 0.025);\n  const underlineMat = new THREE.MeshBasicMaterial({\n    color: colors.accent,\n    emissive: colors.accent,\n    emissiveIntensity: 1.8\n  });\n  const underlineMesh = new THREE.Mesh(underlineGeo, underlineMat);\n  underlineMesh.position.set((0 - 2) * itemSpacing, -0.06, 0.16);\n  group.add(underlineMesh);\n  group.userData.handlers = {\n    onHover: (idx) => {\n      if (state.activeIndex === idx) return;\n      const tween = import_gsap.default.to(items[idx].textMesh.material, {\n        color: colors.paper,\n        duration: 0.16,\n        ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n      });\n      state.timelines.push(tween);\n    },\n    onUnhover: (idx) => {\n      if (state.activeIndex === idx) return;\n      const tween = import_gsap.default.to(items[idx].textMesh.material, {\n        color: colors.inactive,\n        duration: 0.16,\n        ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n      });\n      state.timelines.push(tween);\n    },\n    onPress: (idx) => {\n      const t1 = import_gsap.default.to(items[idx], {\n        scaleX: 0.97,\n        scaleY: 0.97,\n        duration: 0.12,\n        ease: \"cubic-bezier(0.175,0.885,0.32,1.275)\"\n      });\n      const t2 = import_gsap.default.to(items[idx].position, {\n        z: -0.03,\n        duration: 0.12,\n        ease: \"cubic-bezier(0.175,0.885,0.32,1.275)\"\n      });\n      state.timelines.push(t1, t2);\n    },\n    onRelease: (idx) => {\n      const t1 = import_gsap.default.to(items[idx], {\n        scaleX: 1,\n        scaleY: 1,\n        duration: 0.12,\n        ease: \"cubic-bezier(0.175,0.885,0.32,1.275)\"\n      });\n      const t2 = import_gsap.default.to(items[idx].position, {\n        z: 0,\n        duration: 0.12,\n        ease: \"cubic-bezier(0.175,0.885,0.32,1.275)\"\n      });\n      state.timelines.push(t1, t2);\n    },\n    setActive: (idx) => {\n      if (state.activeIndex === idx) return;\n      const prevIdx = state.activeIndex;\n      state.activeIndex = idx;\n      const t1 = import_gsap.default.to(items[prevIdx].textMesh.material, {\n        color: colors.inactive,\n        duration: 0.2\n      });\n      const t2 = import_gsap.default.to(items[idx].textMesh.material, {\n        color: colors.paper,\n        duration: 0.2\n      });\n      const t3 = import_gsap.default.to(underlineMesh.position, {\n        x: (idx - 2) * itemSpacing,\n        duration: 0.26,\n        ease: \"cubic-bezier(0.165,0.84,0.44,1)\",\n        overwrite: false\n      });\n      state.timelines.push(t1, t2, t3);\n    }\n  };\n  const mountTween = import_gsap.default.from(group.position, {\n    y: 0.4,\n    duration: 0.7,\n    ease: \"cubic-bezier(0.215,0.61,0.355,1)\"\n  });\n  state.timelines.push(mountTween);\n  group.userData.cleanup = () => {\n    state.timelines.forEach((tl) => tl.kill());\n    state.timelines = [];\n    import_gsap.default.killTweensOf([\n      group,\n      underlineMesh,\n      underlineMesh.position,\n      ...items,\n      ...items.map((i) => i.position),\n      ...items.map((i) => i.textMesh?.material)\n    ]);\n    railGeo.dispose();\n    railMat.dispose();\n    shadowGeo.dispose();\n    shadowMat.dispose();\n    underlineGeo.dispose();\n    underlineMat.dispose();\n    items.forEach((item) => {\n      item.children.forEach((child) => {\n        if (child.geometry) child.geometry.dispose();\n        if (child.material) child.material.dispose();\n      });\n    });\n  };\n  return group;\n}\n",
+  "transformError": null
+}

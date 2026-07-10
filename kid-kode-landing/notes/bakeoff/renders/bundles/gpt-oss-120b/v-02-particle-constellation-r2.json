@@ -1,0 +1,185 @@
+{
+  "id": "gpt-oss-120b/v-02-particle-constellation-r2",
+  "contestant": "gpt-oss-120b",
+  "caseId": "v-02-particle-constellation",
+  "run": 2,
+  "node": {
+    "nodeId": "v-02-particle-constellation",
+    "subtype": "particle-field",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Particle constellation hero — A deep starfield of instanced points with depth falloff and an accent core, slow drift, additive glow discipline.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "NOVA ATELIER",
+            "role": "hero",
+            "typography": {
+              "fontSize": 124,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Precision instruments for the dark hours.",
+            "role": "subhead",
+            "typography": {
+              "fontSize": 40,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "EST. 2019 / GENEVA AND KYOTO",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#101017",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 1,
+              "hex": "#16161d"
+            }
+          ]
+        },
+        "typography": {
+          "hero": {
+            "family": "Lora",
+            "fontSize": 124,
+            "fontWeight": 600,
+            "letterSpacing": -0.01,
+            "lineHeight": 1.02
+          },
+          "subhead": {
+            "family": "JetBrains Mono",
+            "fontSize": 40,
+            "fontWeight": 400,
+            "letterSpacing": 0.02,
+            "lineHeight": 1.35
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "1200 instanced icosahedron points, each radius 0.012 scene units, distributed through an ellipsoidal shell 6 x 4 x 5 units centered at [0,0,-1.5]. Depth falloff: per-instance opacity 0.9 at z=0 falling linearly to 0.15 at z=-5; linear fog #0b0b10 near 4 far 10 so far points sink into the stage. Accent core: 90 instances within a 0.5-unit-radius sphere at origin tinted #ff2a38 with emissive #ff2a38 intensity 1.8 (additive blending only inside the core, hard cap, no screen-space soft blur). Field particles are paper #e8ecf2 at metalness 0, roughness 1, self-lit 0.9. particle-emerge on load: instances scale 0 to 1 and translate outward from the core to final anchors over 1400ms, staggered by distance-from-core, cubic-bezier(0.165,0.84,0.44,1). Ambient drift: each particle orbits its anchor +/-0.04 units at 0.05 Hz on offset phase. Core pulse: emissive intensity 1.5 to 1.8 sine at 0.1 Hz. Hero MSDF type plane at z=0.5, baseline 0.5 units (2x base) above center; subhead 0.75 units below hero baseline; caption pinned 2.25 units below center on the 0.25-unit rhythm."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "mesh",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "particle-emerge",
+        "trigger": "load",
+        "params": {
+          "count": 1200,
+          "durationMs": 1400
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0.2,
+        6.5
+      ],
+      "lookAt": [
+        0,
+        0,
+        -0.5
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#2a2e38",
+        "intensity": 0.4
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 1.2,
+        "position": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 0.6,
+        "position": [
+          1.5,
+          2.5,
+          4
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Particles emerge outward from the accent core over 1.4s, then drift slowly on offset phases while the red core pulses at 0.1 Hz."
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap",
+      "@/primitives",
+      "@/text"
+    ],
+    "violations": []
+  },
+  "cjs": "var __create = Object.create;\nvar __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __getProtoOf = Object.getPrototypeOf;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(\n  // If the importer is in node compatibility mode or this is not an ESM\n  // file that has been converted to a CommonJS file using a Babel-\n  // compatible transform (i.e. \"__esModule\" has not been set), then set\n  // \"default\" to the CommonJS \"module.exports\" for node compatibility.\n  isNodeMode || !mod || !mod.__esModule ? __defProp(target, \"default\", { value: mod, enumerable: true }) : target,\n  mod\n));\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar THREE = __toESM(require(\"three/webgpu\"));\nvar import_tsl = require(\"three/tsl\");\nvar import_text = require(\"@/text\");\nfunction createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.position.set(0, 0, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n  group.userData.handlers = {};\n  const pointRadius = 0.012;\n  const icoGeometry = new THREE.IcosahedronGeometry(pointRadius, 0);\n  const coreCount = 90;\n  const coreGeometry = icoGeometry.clone();\n  const coreMaterial = (0, import_tsl.meshStandardNodeMaterial)({\n    color: (0, import_tsl.color)(\"#ff2a38\"),\n    emissive: (0, import_tsl.color)(\"#ff2a38\"),\n    emissiveIntensity: (0, import_tsl.uniform)(\"coreEmissiveIntensity\", 1.5),\n    transparent: true,\n    opacity: (0, import_tsl.float)(1),\n    depthWrite: false,\n    blending: THREE.AdditiveBlending\n  });\n  const coreMesh = new THREE.InstancedMesh(coreGeometry, coreMaterial, coreCount);\n  coreMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);\n  coreMesh.instanceColor = null;\n  group.add(coreMesh);\n  const coreInfo = [];\n  for (let i = 0; i < coreCount; i++) {\n    const pos = new THREE.Vector3(\n      (Math.random() - 0.5) * 1,\n      (Math.random() - 0.5) * 1,\n      (Math.random() - 0.5) * 1\n    );\n    const matrix = new THREE.Matrix4().makeTranslation(pos.x, pos.y, pos.z);\n    coreMesh.setMatrixAt(i, matrix);\n    coreInfo.push({ anchor: pos.clone(), distance: pos.length() });\n  }\n  const fieldCount = 1200 - coreCount;\n  const fieldGeometry = icoGeometry.clone();\n  const opacityNode = (0, import_tsl.mix)(\n    (0, import_tsl.float)(0.9),\n    (0, import_tsl.float)(0.15),\n    (0, import_tsl.div)((0, import_tsl.neg)(import_tsl.viewPosition.z), (0, import_tsl.float)(5))\n  );\n  const fieldMaterial = (0, import_tsl.meshStandardNodeMaterial)({\n    color: (0, import_tsl.color)(\"#e8ecf2\"),\n    metalness: (0, import_tsl.float)(0),\n    roughness: (0, import_tsl.float)(1),\n    emissiveIntensity: (0, import_tsl.float)(0),\n    transparent: true,\n    opacity: opacityNode,\n    depthWrite: false,\n    blending: THREE.NormalBlending\n  });\n  const fieldMesh = new THREE.InstancedMesh(fieldGeometry, fieldMaterial, fieldCount);\n  fieldMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);\n  fieldMesh.instanceColor = null;\n  group.add(fieldMesh);\n  const fieldInfo = [];\n  const ellipsoid = { x: 6, y: 4, z: 5 };\n  const centerZ = -1.5;\n  for (let i = 0; i < fieldCount; i++) {\n    const u = Math.random();\n    const v = Math.random();\n    const theta = u * 2 * Math.PI;\n    const phi = Math.acos(2 * v - 1);\n    const r = Math.cbrt(Math.random());\n    const x = r * ellipsoid.x * Math.sin(phi) * Math.cos(theta);\n    const y = r * ellipsoid.y * Math.sin(phi) * Math.sin(theta);\n    const z = r * ellipsoid.z * Math.cos(phi) + centerZ;\n    const pos = new THREE.Vector3(x, y, z);\n    const matrix = new THREE.Matrix4().makeTranslation(pos.x, pos.y, pos.z);\n    fieldMesh.setMatrixAt(i, matrix);\n    fieldInfo.push({ anchor: pos.clone(), distance: pos.distanceTo(new THREE.Vector3(0, 0, 0)) });\n  }\n  const textGroup = new THREE.Group();\n  const heroText = (0, import_text.createMSDFText)(\"NOVA ATELIER\", {\n    fontFamily: \"Lora\",\n    fontSize: 124,\n    fontWeight: 600,\n    color: \"#ff2a38\",\n    letterSpacing: -0.01,\n    lineHeight: 1.02,\n    anchor: new THREE.Vector3(0, 0.5, 0.5)\n  }, ctx.fontAtlas);\n  heroText.position.set(0, 0.5, 0.5);\n  textGroup.add(heroText);\n  const subheadText = (0, import_text.createMSDFText)(\"Precision instruments for the dark hours.\", {\n    fontFamily: \"JetBrains Mono\",\n    fontSize: 40,\n    fontWeight: 400,\n    color: \"#e8ecf2\",\n    letterSpacing: 0.02,\n    lineHeight: 1.35,\n    anchor: new THREE.Vector3(0, -0.25, 0.5)\n  }, ctx.fontAtlas);\n  subheadText.position.set(0, -0.25, 0.5);\n  textGroup.add(subheadText);\n  const captionText = (0, import_text.createMSDFText)(\"EST. 2019 / GENEVA AND KYOTO\", {\n    fontFamily: \"JetBrains Mono\",\n    fontSize: 18,\n    fontWeight: 400,\n    color: \"#e8ecf2\",\n    letterSpacing: 0.08,\n    lineHeight: 1.4,\n    anchor: new THREE.Vector3(0, -2.25, 0.5)\n  }, ctx.fontAtlas);\n  captionText.position.set(0, -2.25, 0.5);\n  textGroup.add(captionText);\n  group.add(textGroup);\n  const timelines = [];\n  const coreEmissiveUniform = coreMaterial.uniforms.coreEmissiveIntensity;\n  const pulseUpdate = (delta) => {\n    const t = performance.now() * 1e-3;\n    coreEmissiveUniform.value = 1.5 + 0.3 * Math.sin(2 * Math.PI * 0.1 * t);\n  };\n  const driftUpdate = (delta) => {\n    const timeSec = performance.now() * 1e-3;\n    const freq = 0.05;\n    const amp = 0.04;\n    for (let i = 0; i < coreCount; i++) {\n      const info = coreInfo[i];\n      const angle = 2 * Math.PI * freq * timeSec + i;\n      const offset = new THREE.Vector3(\n        Math.cos(angle) * amp,\n        Math.sin(angle) * amp,\n        0\n      );\n      const pos = info.anchor.clone().add(offset);\n      const mat = new THREE.Matrix4().makeTranslation(pos.x, pos.y, pos.z);\n      coreMesh.setMatrixAt(i, mat);\n    }\n    coreMesh.instanceMatrix.needsUpdate = true;\n    for (let i = 0; i < fieldCount; i++) {\n      const info = fieldInfo[i];\n      const angle = 2 * Math.PI * freq * timeSec + i;\n      const offset = new THREE.Vector3(\n        Math.cos(angle) * amp,\n        Math.sin(angle) * amp,\n        0\n      );\n      const pos = info.anchor.clone().add(offset);\n      const mat = new THREE.Matrix4().makeTranslation(pos.x, pos.y, pos.z);\n      fieldMesh.setMatrixAt(i, mat);\n    }\n    fieldMesh.instanceMatrix.needsUpdate = true;\n  };\n  group.userData.update = (delta) => {\n    pulseUpdate(delta);\n    driftUpdate(delta);\n  };\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const fn = ctx.primitives[prim.name];\n      if (typeof fn === \"function\") {\n        fn(group, prim.params);\n      }\n    }\n  }\n  group.userData.cleanup = () => {\n    coreGeometry.dispose();\n    fieldGeometry.dispose();\n    coreMaterial.dispose();\n    fieldMaterial.dispose();\n    textGroup.traverse((obj) => {\n      if (obj.isMesh) {\n        obj.geometry?.dispose();\n        obj.material?.dispose();\n      }\n    });\n    timelines.forEach((tl) => tl.kill());\n    delete group.userData.update;\n  };\n  return group;\n}\n",
+  "transformError": null
+}

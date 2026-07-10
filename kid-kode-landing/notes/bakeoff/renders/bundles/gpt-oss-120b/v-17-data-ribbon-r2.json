@@ -1,0 +1,203 @@
+{
+  "id": "gpt-oss-120b/v-17-data-ribbon-r2",
+  "contestant": "gpt-oss-120b",
+  "caseId": "v-17-data-ribbon",
+  "run": 2,
+  "node": {
+    "nodeId": "v-17-data-ribbon",
+    "subtype": "ticker",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Data ticker ribbon — A horizontal data ribbon of mono figures scrolling with constant velocity and edge fades.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "CAL NA-01 BEAT 28800 VPH",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "POWER RESERVE 72H",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "CASE 40.5 MM 904L",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "REF 5811 IN STOCK",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "WAITLIST 1204",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "NEXT FITTING JUL 18",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#111117",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10ff"
+            },
+            {
+              "at": 0.09,
+              "hex": "#0b0b1000"
+            },
+            {
+              "at": 0.91,
+              "hex": "#0b0b1000"
+            },
+            {
+              "at": 1,
+              "hex": "#0b0b10ff"
+            }
+          ]
+        },
+        "typography": {
+          "ticker-figure": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 700,
+            "letterSpacing": 0.06,
+            "lineHeight": 1
+          }
+        },
+        "effects": "Ribbon plane 7.0w x 0.35h scene units centered at origin, albedo #111117, top and bottom 0.006-unit hairlines #23232b, roughness 0.6, metalness 0.2; ticker entries set in mono 700 paper on a single baseline, separated by vertical accent tick marks 0.02w x 0.14h in #ff2a38 emissive intensity 1.5 with 0.5-unit gaps (2x base unit) on both sides of each tick, never punctuation glyphs; content strip duplicated for a seamless loop and translated x at constant velocity 0.4 scene units per second leftward (fly-through primitive, speed 0.4, depthUnits 0), linear timing cubic-bezier(0,0,1,1), loop period equal to strip length divided by 0.4 with zero visible seam; edge fade masks 0.6 units wide at both ends using the stop ramp #0b0b10ff (at 0.0) -> #0b0b1000 (at 0.09) and mirrored at the right so figures dissolve into the stage rather than clipping; figures float translateZ +0.02 above the rail so the key light gives the mono digits a crisp top edge; no vertical motion, no easing changes, the ribbon reads as instrumentation."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "fly-through",
+        "trigger": "time",
+        "params": {
+          "depthUnits": 0,
+          "speed": 0.4
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 55
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.45
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1,
+        "position": [
+          0,
+          3,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.4,
+        "position": [
+          0,
+          -1,
+          -1
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "The figure strip translates left at a constant 0.4 scene units per second in a seamless loop; entries dissolve through 0.6-unit edge fades.",
+    "contrastMinimum": "4.5:1 figures on ribbon surface at full opacity zone"
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "gsap",
+      "@/primitives",
+      "@/text"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const root = new import_webgpu.Object3D();\n  root.position.set(0, 0, 0);\n  root.rotation.set(0, 0, 0);\n  root.scale.set(1, 1, 1);\n  const PLANE_WIDTH = 7;\n  const PLANE_HEIGHT = 0.35;\n  const entries = [\n    \"CAL NA-01 BEAT 28800 VPH\",\n    \"POWER RESERVE 72H\",\n    \"CASE 40.5 MM 904L\",\n    \"REF 5811 IN STOCK\",\n    \"WAITLIST 1204\",\n    \"NEXT FITTING JUL 18\"\n  ];\n  const textStyle = {\n    family: \"JetBrains Mono\",\n    size: 13,\n    weight: 700,\n    letterSpacing: 0.06,\n    lineHeight: 1,\n    fillStyle: \"#e8ecf2\"\n    // paper color\n    // extra spacing between entries (2 * base unit = 0.5 scene units)\n    // We'll translate scene units to pixel spacing later based on canvas size.\n  };\n  const dpi = window.devicePixelRatio || 1;\n  const baseUnitPixels = 64;\n  const gapPixels = baseUnitPixels * 2;\n  const measureCanvas = new OffscreenCanvas(2, 2);\n  const measureCtx = measureCanvas.getContext(\"2d\");\n  measureCtx.font = `${textStyle.weight} ${textStyle.size}px ${textStyle.family}`;\n  const entryWidths = entries.map((e) => measureCtx.measureText(e).width);\n  const totalWidth = entryWidths.reduce((a, b) => a + b, 0) + gapPixels * (entries.length - 1);\n  const textureWidth = Math.ceil(totalWidth * 2);\n  const textureHeight = Math.ceil(textStyle.size * 2);\n  const canvas = new OffscreenCanvas(textureWidth, textureHeight);\n  const ctx2d = canvas.getContext(\"2d\");\n  ctx2d.clearRect(0, 0, textureWidth, textureHeight);\n  let x = 0;\n  const renderSequence = (seq) => {\n    for (let i = 0; i < entries.length; i++) {\n      const txt = entries[i];\n      ctx2d.fillStyle = textStyle.fillStyle;\n      ctx2d.font = `${textStyle.weight} ${textStyle.size}px ${textStyle.family}`;\n      ctx2d.textBaseline = \"middle\";\n      const w = entryWidths[i];\n      ctx2d.fillText(txt, x, textureHeight / 2);\n      x += w + gapPixels;\n    }\n  };\n  renderSequence();\n  renderSequence();\n  const tickerTexture = new import_webgpu.Texture(canvas);\n  tickerTexture.wrapS = import_webgpu.RepeatWrapping;\n  tickerTexture.wrapT = import_webgpu.RepeatWrapping;\n  tickerTexture.minFilter = import_webgpu.LinearFilter;\n  tickerTexture.magFilter = import_webgpu.LinearFilter;\n  tickerTexture.needsUpdate = true;\n  const maskCanvas = new OffscreenCanvas(textureWidth, textureHeight);\n  const maskCtx = maskCanvas.getContext(\"2d\");\n  const grad = maskCtx.createLinearGradient(0, 0, textureWidth, 0);\n  const fadePortion = 0.09 * textureWidth;\n  grad.addColorStop(0, \"rgba(0,0,0,0)\");\n  grad.addColorStop(fadePortion / textureWidth, \"rgba(0,0,0,1)\");\n  grad.addColorStop(1 - fadePortion / textureWidth, \"rgba(0,0,0,1)\");\n  grad.addColorStop(1, \"rgba(0,0,0,0)\");\n  maskCtx.fillStyle = grad;\n  maskCtx.fillRect(0, 0, textureWidth, textureHeight);\n  const maskTexture = new import_webgpu.Texture(maskCanvas);\n  maskTexture.wrapS = import_webgpu.RepeatWrapping;\n  maskTexture.wrapT = import_webgpu.RepeatWrapping;\n  maskTexture.minFilter = import_webgpu.LinearFilter;\n  maskTexture.magFilter = import_webgpu.LinearFilter;\n  maskTexture.needsUpdate = true;\n  const geometry = new import_webgpu.PlaneGeometry(PLANE_WIDTH, PLANE_HEIGHT);\n  const material = new import_webgpu.MeshBasicNodeMaterial({\n    map: tickerTexture,\n    alphaMap: maskTexture,\n    transparent: true,\n    depthWrite: false,\n    color: 1118487\n    // surface albedo\n  });\n  const mesh = new import_webgpu.Mesh(geometry, material);\n  mesh.position.set(0, 0, 0);\n  root.add(mesh);\n  if (ctx.primitives && typeof ctx.primitives[\"fly-through\"] === \"function\") {\n    ctx.primitives[\"fly-through\"](mesh, { depthUnits: 0, speed: 0.4 });\n  } else {\n    const timeline = import_gsap.gsap.timeline({ repeat: -1, ease: \"none\" });\n    timeline.to(tickerTexture.offset, {\n      x: -(totalWidth / textureWidth),\n      duration: totalWidth / 0.4 / 60,\n      // approximate based on speed (scene units per sec) and pixel scaling\n      ease: \"none\"\n    });\n    mesh.userData._timeline = timeline;\n  }\n  root.userData.handlers = {};\n  root.userData.cleanup = () => {\n    geometry.dispose();\n    material.map?.dispose();\n    material.alphaMap?.dispose();\n    material.dispose();\n    if (mesh.userData._timeline) {\n      mesh.userData._timeline.kill();\n    }\n  };\n  if (Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach((p) => {\n      const fn = ctx.primitives?.[p.name];\n      if (typeof fn === \"function\") {\n        fn(mesh, p.params);\n      }\n    });\n  }\n  if (ctx.fontAtlas && typeof ctx.fontAtlas.registerTexture === \"function\") {\n    ctx.fontAtlas.registerTexture(tickerTexture);\n    ctx.fontAtlas.registerTexture(maskTexture);\n  }\n  return root;\n}\n",
+  "transformError": null
+}

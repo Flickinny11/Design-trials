@@ -32,6 +32,10 @@ const LEDGER_PATH = path.join(ROOT, 'notes', 'bakeoff', 'ledger-judge.json');
 
 const args = process.argv.slice(2);
 const includeSeeded = args.includes('--include-seeded');
+// --case v-15-x,v-17-y — judge only the named cases (used to judge cases as
+// they become frame-complete while a transport-limited lane back-fills).
+const caseArgIdx = args.indexOf('--case');
+const onlyCases = caseArgIdx >= 0 ? new Set(args[caseArgIdx + 1].split(',')) : null;
 
 const ledger = existsSync(LEDGER_PATH)
   ? JSON.parse(readFileSync(LEDGER_PATH, 'utf8'))
@@ -125,6 +129,7 @@ const doneBundles = new Set(existing.map((r) => r.bundleId));
 const results = [...existing];
 let batchNo = existing.length > 0 ? Math.max(0, ...existing.map((r) => r.batchNo ?? 0)) : 0;
 for (const [caseId, list] of [...byCase.entries()].sort()) {
+  if (onlyCases && !onlyCases.has(caseId)) continue;
   const pending = list.filter((f) => !doneBundles.has(f.bundleId)).sort((a, b) => a.bundleId.localeCompare(b.bundleId));
   for (let i = 0; i < pending.length; i += 6) {
     const batch = pending.slice(i, i + 6);

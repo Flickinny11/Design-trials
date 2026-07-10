@@ -1,0 +1,176 @@
+{
+  "id": "gpt-oss-120b/v-11-gradient-cta-r1",
+  "contestant": "gpt-oss-120b",
+  "caseId": "v-11-gradient-cta",
+  "run": 1,
+  "node": {
+    "nodeId": "v-11-gradient-cta",
+    "subtype": "cta-button",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Gradient CTA object — A primary CTA as a physical object: engineered gradient ramp, press-down state, accent edge light (DL12).",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "BEGIN COMMISSION",
+            "role": "cta-label",
+            "typography": {
+              "fontSize": 20,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "NO DEPOSIT REQUIRED",
+            "role": "caption",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#16161d",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#ff4450"
+            },
+            {
+              "at": 0.55,
+              "hex": "#ff2a38"
+            },
+            {
+              "at": 1,
+              "hex": "#c1121f"
+            }
+          ]
+        },
+        "typography": {
+          "cta-label": {
+            "family": "JetBrains Mono",
+            "fontSize": 20,
+            "fontWeight": 700,
+            "letterSpacing": 0.08,
+            "lineHeight": 1
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 400,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Rounded-rect button plane 2.6w x 0.68h scene units, corner radius 0.08, extruded bevel depth 0.03 with 45deg chamfer that catches the key light as a bright machined edge; face carries a vertical engineered gradient #ff4450 (at 0.0) -> #ff2a38 (at 0.55) -> #c1121f (at 1.0) with one hard 0.01-unit seam line at 50 percent face height, zero soft blur; material roughness 0.5, metalness 0.35, clearcoat 0.22; perimeter emissive channel 0.015 units wide in #ff2a38 at intensity 1.6; label centered with 0.25-unit side padding (1x base unit), caption line 0.25 below the button in paper; mount motion weighted-settle scale 1.04 -> 1.0 over 900ms cubic-bezier(0.165,0.84,0.44,1); hover translateZ 0 -> 0.06 and edge emissive intensity 1.6 -> 2.2 over 180ms cubic-bezier(0.25,0.46,0.45,0.94); press scale 1.0 -> 0.97 over 120ms cubic-bezier(0.175,0.885,0.32,1.275) while the chamfer shadow visibly deepens under the raking key light; contact shadow plane 0.08 below at 35 percent opacity that tightens on press."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0.15,
+        2.8
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 38
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.35
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1.15,
+        "position": [
+          2.5,
+          3,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.8,
+        "position": [
+          -1.6,
+          -0.4,
+          -1.2
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#8a93a3",
+        "intensity": 0.3,
+        "position": [
+          -3,
+          1,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Button settles with 1.04 overshoot on mount; hover lifts 0.06 units toward camera with brighter edge glow; press compresses to 0.97 scale.",
+    "contrastMinimum": "4.8:1 ink label #16161d on accent gradient midpoint #ff2a38; 4.5:1 minimum all text; caption #e8ecf2 on #0b0b10 exceeds 15:1"
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap",
+      "@/primitives",
+      "@/text"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nvar import_primitives = require(\"@/primitives\");\nvar import_text = require(\"@/text\");\nfunction createNode(config, ctx) {\n  const width = 2.6;\n  const height = 0.68;\n  const geometry = new import_webgpu.PlaneGeometry(width, height, 1, 1);\n  const c0 = (0, import_tsl.color)(\"#ff4450\");\n  const c1 = (0, import_tsl.color)(\"#ff2a38\");\n  const c2 = (0, import_tsl.color)(\"#c1121f\");\n  const gradient = (0, import_tsl.mix)(\n    (0, import_tsl.mix)(c0, c1, (0, import_tsl.smoothstep)(0, 0.55, (0, import_tsl.uv)().y)),\n    c2,\n    (0, import_tsl.smoothstep)(0.55, 1, (0, import_tsl.uv)().y)\n  );\n  const borderWorldWidth = 0.015;\n  const borderUVWidth = borderWorldWidth / Math.max(width, height);\n  const edgeDist = (0, import_tsl.min)(\n    (0, import_tsl.uv)().x,\n    sub(1, (0, import_tsl.uv)().x),\n    (0, import_tsl.uv)().y,\n    sub(1, (0, import_tsl.uv)().y)\n  );\n  const borderMask = (0, import_tsl.step)(edgeDist, (0, import_tsl.float)(borderUVWidth));\n  const emissiveEdge = (0, import_tsl.mul)((0, import_tsl.color)(\"#ff2a38\"), (0, import_tsl.float)(1.6)).mul(borderMask);\n  const material = new import_tsl.MeshStandardNodeMaterial();\n  material.colorNode = gradient;\n  material.roughnessNode = (0, import_tsl.float)(0.5);\n  material.metalnessNode = (0, import_tsl.float)(0.35);\n  material.clearcoatNode = (0, import_tsl.float)(0.22);\n  material.emissiveNode = emissiveEdge;\n  const buttonMesh = new import_webgpu.Mesh(geometry, material);\n  buttonMesh.castShadow = true;\n  buttonMesh.receiveShadow = false;\n  const root = new import_webgpu.Group();\n  root.add(buttonMesh);\n  const labelText = config.textContent?.ctaLabel || \"BEGIN COMMISSION\";\n  const label = (0, import_text.createTextMesh)(labelText, {\n    family: \"JetBrains Mono\",\n    fontSize: 20,\n    fontWeight: 700,\n    letterSpacing: 0.08,\n    lineHeight: 1,\n    color: \"#e8ecf2\",\n    maxWidth: width - 0.5,\n    // side padding 0.25 each side\n    atlas: ctx.fontAtlas\n  });\n  label.position.set(0, 0, 1e-3);\n  root.add(label);\n  const captionText = config.textContent?.caption || \"NO DEPOSIT REQUIRED\";\n  const caption = (0, import_text.createTextMesh)(captionText, {\n    family: \"JetBrains Mono\",\n    fontSize: 9,\n    fontWeight: 400,\n    letterSpacing: 0.12,\n    lineHeight: 1.4,\n    color: \"#e8ecf2\",\n    maxWidth: width,\n    atlas: ctx.fontAtlas\n  });\n  caption.position.set(0, -(height / 2) - 0.25, 1e-3);\n  root.add(caption);\n  const pos = config.placement?.position || { x: 0, y: 0, z: 0 };\n  const rot = config.placement?.rotation || { x: 0, y: 0, z: 0 };\n  const scl = config.placement?.scale || { x: 1, y: 1, z: 1 };\n  root.position.set(pos.x, pos.y, pos.z);\n  root.rotation.set(rot.x, rot.y, rot.z);\n  root.scale.set(scl.x, scl.y, scl.z);\n  const settleTimeline = import_gsap.gsap.timeline({ paused: false });\n  root.scale.set(1.04, 1.04, 1.04);\n  settleTimeline.to(root.scale, {\n    x: 1,\n    y: 1,\n    z: 1,\n    duration: 0.9,\n    ease: \"power4.out\"\n  });\n  root.userData.handlers = {};\n  root.userData.cleanup = () => {\n    settleTimeline.kill();\n    geometry.dispose();\n    material.dispose();\n    if (label && label.geometry) label.geometry.dispose();\n    if (label && label.material) label.material.dispose();\n    if (caption && caption.geometry) caption.geometry.dispose();\n    if (caption && caption.material) caption.material.dispose();\n  };\n  return root;\n}\n",
+  "transformError": null
+}

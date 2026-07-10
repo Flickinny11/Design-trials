@@ -1,0 +1,18 @@
+{
+  "bundle": "gpt-oss-120b/v-08-orrery-mechanism-r2",
+  "capturedAt": "2026-07-10T03:36:49.348Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "gpt-oss-120b/v-08-orrery-mechanism-r2",
+    "moduleRuntimeError": "TypeError: ctx.glbLoader is not a function"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

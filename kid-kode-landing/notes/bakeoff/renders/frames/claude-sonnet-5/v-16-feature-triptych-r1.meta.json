@@ -1,0 +1,18 @@
+{
+  "bundle": "claude-sonnet-5/v-16-feature-triptych-r1",
+  "capturedAt": "2026-07-10T03:10:29.003Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "claude-sonnet-5/v-16-feature-triptych-r1",
+    "moduleRuntimeError": "TypeError: (0 , import_text.createTextMesh) is not a function"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

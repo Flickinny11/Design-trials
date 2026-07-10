@@ -1,0 +1,72 @@
+{
+  "label": "batch-002-v-02-particle-constellation",
+  "judgedAt": "2026-07-10T04:08:25.958Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "bundleId": "claude-haiku-4.5/v-02-particle-constellation-r1",
+      "frame": "notes/bakeoff/renders/frames/claude-haiku-4.5/v-02-particle-constellation-r1.png"
+    },
+    {
+      "label": "F2",
+      "bundleId": "claude-haiku-4.5/v-02-particle-constellation-r2",
+      "frame": "notes/bakeoff/renders/frames/claude-haiku-4.5/v-02-particle-constellation-r2.png"
+    },
+    {
+      "label": "F3",
+      "bundleId": "claude-sonnet-5/v-02-particle-constellation-r1",
+      "frame": "notes/bakeoff/renders/frames/claude-sonnet-5/v-02-particle-constellation-r1.png"
+    },
+    {
+      "label": "F4",
+      "bundleId": "claude-sonnet-5/v-02-particle-constellation-r2",
+      "frame": "notes/bakeoff/renders/frames/claude-sonnet-5/v-02-particle-constellation-r2.png"
+    },
+    {
+      "label": "F5",
+      "bundleId": "gpt-oss-120b/v-02-particle-constellation-r1",
+      "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-02-particle-constellation-r1.png"
+    },
+    {
+      "label": "F6",
+      "bundleId": "gpt-oss-120b/v-02-particle-constellation-r2",
+      "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-02-particle-constellation-r2.png"
+    }
+  ],
+  "costUsd": 0.679421,
+  "durationApiMs": 41963,
+  "wallMs": 44249,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 20753,
+    "cache_read_input_tokens": 82916,
+    "output_tokens": 2909,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 20753,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1902,
+        "cache_read_input_tokens": 44713,
+        "cache_creation_input_tokens": 14243,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 14243
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 18, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"background field (entire frame outside center)\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center cluster — no #ff2a38 accent core or emissive glow\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — constellation compressed into tiny square patch, camera far too distant\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center cluster — flat white specks, no depth falloff, fog, or additive glow\" } ], \"notes\": \"Particles render but as a tiny flat square speck-patch; no red core, no depth, frame is 95% void.\" }, { \"frame\": \"F2\", \"score\": 17, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"background field (entire frame outside center)\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center cluster — no accent core, no red anywhere\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — cube-shaped micro-cluster instead of frame-filling ellipsoidal shell\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center cluster — uniform opacity, no fog sink or glow discipline\" } ], \"notes\": \"Same failure as F1: sparse boxy speck cluster, zero accent, zero materiality, vast empty field.\" }, { \"frame\": \"F3\", \"score\": 18, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"background field (entire frame outside center)\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — accent core absent, no #ff2a38 emissive instances\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — constellation occupies ~10% of frame as square patch\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center cluster — no depth falloff gradient or additive glow visible\" } ], \"notes\": \"Renders points but wrong scale and shape, no red core, no light response; overwhelmingly void.\" }, { \"frame\": \"F4\", \"score\": 19, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"background field (entire frame outside center)\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no red accent core or emissive glow\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — tiny square cluster, not an ellipsoidal frame-filling shell\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center cluster — flat specks, slight density variation but no real depth or fog\" } ], \"notes\": \"Marginally denser cluster with hints of depth variation; still tiny, accentless, and mostly void.\" }, { \"frame\": \"F5\", \"score\": 4, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame — uniform near-black, zero visible geometry\" } ], \"notes\": \"Completely empty near-black frame; nothing rendered.\" }, { \"frame\": \"F6\", \"score\": 17, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"background field (entire frame outside center)\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — accent core and red palette entirely absent\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — micro square patch of points, wrong distribution and camera framing\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center cluster — uniform flat white points, no falloff, fog, or glow\" } ], \"notes\": \"Sparse boxy speck patch, no red core, no depth cues; frame reads as void with a smudge.\" } ] }"
+}

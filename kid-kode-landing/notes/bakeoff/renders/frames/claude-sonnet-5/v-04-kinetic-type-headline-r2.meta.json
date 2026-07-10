@@ -1,0 +1,17 @@
+{
+  "bundle": "claude-sonnet-5/v-04-kinetic-type-headline-r2",
+  "capturedAt": "2026-07-10T03:08:44.387Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 2,
+    "nodeMounted": true,
+    "bundleId": "claude-sonnet-5/v-04-kinetic-type-headline-r2"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

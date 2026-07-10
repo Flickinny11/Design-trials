@@ -1,0 +1,17 @@
+{
+  "bundle": "gpt-oss-120b/v-02-particle-constellation-r1",
+  "capturedAt": "2026-07-10T04:06:41.784Z",
+  "probe": {
+    "status": "error",
+    "error": "module did not default-export a function",
+    "renderables": 0,
+    "nodeMounted": false,
+    "bundleId": "gpt-oss-120b/v-02-particle-constellation-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": "Transform failed with 1 error:\n<stdin>:94:52: ERROR: Expected \")\" but found end of file",
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

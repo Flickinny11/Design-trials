@@ -1,0 +1,185 @@
+{
+  "id": "claude-sonnet-5/v-19-empty-state-r1",
+  "contestant": "claude-sonnet-5",
+  "caseId": "v-19-empty-state",
+  "run": 1,
+  "node": {
+    "nodeId": "v-19-empty-state",
+    "subtype": "empty-state",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Rich empty state — An empty-state panel that is rich, never void (DL16): guidance copy, ghost preview, one accent action.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "Your ledger is empty.",
+            "role": "headline",
+            "typography": {
+              "fontSize": 34,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Commissioned pieces and saved references will appear here once you begin.",
+            "role": "body",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "BROWSE THE COLLECTION",
+            "role": "cta-label",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#16161d",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#14141a"
+            },
+            {
+              "at": 1,
+              "hex": "#0b0b10"
+            }
+          ]
+        },
+        "typography": {
+          "headline": {
+            "family": "Lora",
+            "fontSize": 34,
+            "fontWeight": 600,
+            "letterSpacing": -0.01,
+            "lineHeight": 1.15
+          },
+          "body": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.5
+          },
+          "cta-label": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 700,
+            "letterSpacing": 0.08,
+            "lineHeight": 1
+          }
+        },
+        "effects": "Panel 3.2w x 2.2h scene units, corner radius 0.06, filled with a radial engineered gradient #14141a (at 0.0, center) -> #0b0b10 (at 1.0, edges) plus a hairline grid at 0.25-unit pitch (1x base) in #e8ecf2 at 6 percent opacity so the region is never void; 0.006-unit hairline border #26262f; ghost preview at left of center: a wireframe watch-card outline 1.1w x 1.4h drawn in 0.008-unit strokes of #e8ecf2 at 30 percent opacity containing a ghost dial circle 0.55 diameter and two ghost text bars 0.7w x 0.06h at 22 percent; ghost group breathes opacity 0.24 -> 0.34 over 2400ms cubic-bezier(0.445,0.05,0.55,0.95) yoyo repeat; copy column right of the ghost with 0.5-unit padding (2x base), headline then body on a 0.25 baseline rhythm; accent CTA 1.5w x 0.36h below the body, vertical gradient #ff4450 -> #c1121f, ink label, edge emissive #ff2a38 intensity 1.5, press scale 1.0 -> 0.97 over 120ms cubic-bezier(0.175,0.885,0.32,1.275); mount fade-up opacity 0 -> 1 and y +0.2 -> 0 over 500ms cubic-bezier(0.25,0.46,0.45,0.94); the key light grazes the panel so the hairline grid catches faint specular structure, keeping depth in an intentionally empty region."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        4.2
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 45
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.4
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1,
+        "position": [
+          2.5,
+          2.5,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.45,
+        "position": [
+          -1.8,
+          -0.8,
+          -1
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#7f8896",
+        "intensity": 0.3,
+        "position": [
+          -3,
+          1,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "The ghost watch-card outline breathes between 24 and 34 percent opacity on a 2.4s cycle; the CTA compresses on press; everything else is still.",
+    "contrastMinimum": "4.5:1 body on radial gradient center; 4.8:1 ink CTA label on accent"
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __create = Object.create;\nvar __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __getProtoOf = Object.getPrototypeOf;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toESM = (mod2, isNodeMode, target) => (target = mod2 != null ? __create(__getProtoOf(mod2)) : {}, __copyProps(\n  // If the importer is in node compatibility mode or this is not an ESM\n  // file that has been converted to a CommonJS file using a Babel-\n  // compatible transform (i.e. \"__esModule\" has not been set), then set\n  // \"default\" to the CommonJS \"module.exports\" for node compatibility.\n  isNodeMode || !mod2 || !mod2.__esModule ? __defProp(target, \"default\", { value: mod2, enumerable: true }) : target,\n  mod2\n));\nvar __toCommonJS = (mod2) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod2);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar THREE = __toESM(require(\"three/webgpu\"));\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = __toESM(require(\"gsap\"));\nfunction createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = \"rich-empty-state\";\n  const pos = config.scenePosition?.position ?? [0, 0, 0];\n  const rot = config.scenePosition?.rotation ?? [0, 0, 0];\n  const scl = config.scenePosition?.scale ?? [1, 1, 1];\n  group.position.set(...pos);\n  group.rotation.set(...rot);\n  group.scale.set(...scl);\n  const PANEL_W = 3.2;\n  const PANEL_H = 2.2;\n  const panelGeo = new THREE.PlaneGeometry(PANEL_W, PANEL_H, 1, 1);\n  const panelMat = new THREE.MeshStandardNodeMaterial();\n  const uvNode = (0, import_tsl.uv)();\n  const centered = uvNode.sub((0, import_tsl.vec2)(0.5, 0.5));\n  const dist = (0, import_tsl.length)((0, import_tsl.vec2)(centered.x.mul(PANEL_W), centered.y.mul(PANEL_H)));\n  const maxDist = (0, import_tsl.float)(Math.sqrt((PANEL_W * 0.5) ** 2 + (PANEL_H * 0.5) ** 2));\n  const t = dist.div(maxDist).clamp(0, 1);\n  const gradInner = (0, import_tsl.color)(1315866);\n  const gradOuter = (0, import_tsl.color)(723728);\n  const gradientColor = (0, import_tsl.mix)(gradInner, gradOuter, t);\n  const pitch = (0, import_tsl.float)(0.25);\n  const scaledUvX = uvNode.x.mul(PANEL_W).div(pitch);\n  const scaledUvY = uvNode.y.mul(PANEL_H).div(pitch);\n  const gridX = (0, import_tsl.abs)((0, import_tsl.mod)(scaledUvX, 1).sub(0.5));\n  const gridY = (0, import_tsl.abs)((0, import_tsl.mod)(scaledUvY, 1).sub(0.5));\n  const lineWidth = (0, import_tsl.float)(0.02);\n  const lineX = (0, import_tsl.step)(gridX, lineWidth);\n  const lineY = (0, import_tsl.step)(gridY, lineWidth);\n  const gridMask = (0, import_tsl.max)(lineX, lineY).mul(0.06);\n  const paperColor = (0, import_tsl.color)(15265010);\n  const withGrid = (0, import_tsl.mix)(gradientColor, paperColor, gridMask);\n  panelMat.colorNode = withGrid;\n  panelMat.roughness = 0.7;\n  panelMat.metalness = 0.15;\n  const panelMesh = new THREE.Mesh(panelGeo, panelMat);\n  panelMesh.position.z = 0;\n  group.add(panelMesh);\n  const borderGeo = new THREE.EdgesGeometry(new THREE.PlaneGeometry(PANEL_W, PANEL_H));\n  const borderMat = new THREE.LineBasicMaterial({ color: 2500143 });\n  const border = new THREE.LineSegments(borderGeo, borderMat);\n  border.position.z = 1e-3;\n  group.add(border);\n  const ghostGroup = new THREE.Group();\n  ghostGroup.position.set(-0.75, 0.05, 2e-3);\n  const ghostMat = new THREE.LineBasicMaterial({ color: 15265010, transparent: true, opacity: 0.3 });\n  const cardGeo = new THREE.EdgesGeometry(new THREE.PlaneGeometry(1.1, 1.4));\n  const cardOutline = new THREE.LineSegments(cardGeo, ghostMat);\n  ghostGroup.add(cardOutline);\n  const dialGeo = new THREE.RingGeometry(0.27, 0.275, 32);\n  const dialMat = new THREE.MeshBasicMaterial({ color: 15265010, transparent: true, opacity: 0.22, side: THREE.DoubleSide });\n  const dial = new THREE.Mesh(dialGeo, dialMat);\n  dial.position.set(0, 0.15, 0);\n  ghostGroup.add(dial);\n  const barMat = new THREE.MeshBasicMaterial({ color: 15265010, transparent: true, opacity: 0.22 });\n  const bar1 = new THREE.Mesh(new THREE.PlaneGeometry(0.7, 0.06), barMat);\n  bar1.position.set(0, -0.35, 0);\n  ghostGroup.add(bar1);\n  const bar2 = new THREE.Mesh(new THREE.PlaneGeometry(0.7, 0.06), barMat.clone());\n  bar2.position.set(0, -0.5, 0);\n  ghostGroup.add(bar2);\n  group.add(ghostGroup);\n  const ghostMaterials = [ghostMat, dialMat, barMat, bar2.material];\n  const breatheState = { v: 0.24 };\n  const breatheTween = import_gsap.default.to(breatheState, {\n    v: 0.34,\n    duration: 2.4,\n    ease: \"cubic-bezier(0.445, 0.05, 0.55, 0.95)\",\n    yoyo: true,\n    repeat: -1,\n    onUpdate: () => {\n      ghostMat.opacity = breatheState.v;\n      dialMat.opacity = breatheState.v * 0.73;\n      barMat.opacity = breatheState.v * 0.73;\n      bar2.material.opacity = breatheState.v * 0.73;\n    }\n  });\n  const textOriginX = -0.05;\n  const textOriginY = 0.55;\n  const headlineText = ctx.fontAtlas.createText({\n    text: \"Your ledger is empty.\",\n    font: \"Lora\",\n    fontWeight: 600,\n    fontSize: 0.24,\n    color: 15265010,\n    letterSpacing: -0.01,\n    lineHeight: 1.15,\n    maxWidth: 1.5\n  });\n  headlineText.position.set(textOriginX, textOriginY, 3e-3);\n  group.add(headlineText);\n  const bodyText = ctx.fontAtlas.createText({\n    text: \"Commissioned pieces and saved references will appear here once you begin.\",\n    font: \"JetBrains Mono\",\n    fontWeight: 400,\n    fontSize: 0.1,\n    color: 13093843,\n    letterSpacing: 0,\n    lineHeight: 1.5,\n    maxWidth: 1.5\n  });\n  bodyText.position.set(textOriginX, textOriginY - 0.35, 3e-3);\n  group.add(bodyText);\n  const ctaGroup = new THREE.Group();\n  ctaGroup.position.set(textOriginX + 0.05, textOriginY - 0.85, 3e-3);\n  const ctaW = 1.5;\n  const ctaH = 0.36;\n  const ctaGeo = new THREE.PlaneGeometry(ctaW, ctaH);\n  const ctaMat = new THREE.MeshStandardNodeMaterial();\n  const ctaUv = (0, import_tsl.uv)();\n  const ctaTop = (0, import_tsl.color)(16729168);\n  const ctaBottom = (0, import_tsl.color)(12653087);\n  ctaMat.colorNode = (0, import_tsl.mix)(ctaBottom, ctaTop, ctaUv.y);\n  ctaMat.emissive = new THREE.Color(16722488);\n  ctaMat.emissiveIntensity = 1.5;\n  ctaMat.roughness = 0.5;\n  ctaMat.metalness = 0.3;\n  const ctaMesh = new THREE.Mesh(ctaGeo, ctaMat);\n  ctaGroup.add(ctaMesh);\n  const ctaLabel = ctx.fontAtlas.createText({\n    text: \"BROWSE THE COLLECTION\",\n    font: \"JetBrains Mono\",\n    fontWeight: 700,\n    fontSize: 0.05,\n    color: 1447453,\n    letterSpacing: 0.08,\n    lineHeight: 1,\n    align: \"center\"\n  });\n  ctaLabel.position.set(0, 0, 2e-3);\n  ctaGroup.add(ctaLabel);\n  group.add(ctaGroup);\n  const mountState = { opacity: 0, y: 0.2 };\n  const baseY = group.position.y;\n  group.position.y = baseY + mountState.y;\n  const setGroupOpacity = (val) => {\n    panelMat.opacity = val;\n    panelMat.transparent = val < 1;\n    ctaMat.opacity = val;\n    ctaMat.transparent = val < 1;\n    if (headlineText.material) {\n      headlineText.material.opacity = val;\n      headlineText.material.transparent = val < 1;\n    }\n    if (bodyText.material) {\n      bodyText.material.opacity = val;\n      bodyText.material.transparent = val < 1;\n    }\n    if (ctaLabel.material) {\n      ctaLabel.material.opacity = val;\n      ctaLabel.material.transparent = val < 1;\n    }\n  };\n  setGroupOpacity(0);\n  const mountTween = import_gsap.default.to(mountState, {\n    opacity: 1,\n    y: 0,\n    duration: 0.5,\n    ease: \"cubic-bezier(0.25, 0.46, 0.45, 0.94)\",\n    onUpdate: () => {\n      setGroupOpacity(mountState.opacity);\n      group.position.y = baseY + mountState.y;\n    }\n  });\n  let pressTween = null;\n  const handlePressDown = () => {\n    if (pressTween) pressTween.kill();\n    pressTween = import_gsap.default.to(ctaGroup.scale, {\n      x: 0.97,\n      y: 0.97,\n      z: 0.97,\n      duration: 0.12,\n      ease: \"back.out(1.7)\"\n    });\n  };\n  const handlePressUp = () => {\n    if (pressTween) pressTween.kill();\n    pressTween = import_gsap.default.to(ctaGroup.scale, {\n      x: 1,\n      y: 1,\n      z: 1,\n      duration: 0.12,\n      ease: \"back.out(1.7)\"\n    });\n  };\n  const handleClick = () => {\n    if (typeof ctx.navigate === \"function\") {\n      ctx.navigate(\"hub-collection\");\n    }\n  };\n  group.userData.handlers = {\n    pointerdown: handlePressDown,\n    pointerup: handlePressUp,\n    click: handleClick\n  };\n  group.userData.cleanup = () => {\n    breatheTween.kill();\n    mountTween.kill();\n    if (pressTween) pressTween.kill();\n    panelGeo.dispose();\n    panelMat.dispose();\n    borderGeo.dispose();\n    borderMat.dispose();\n    cardGeo.dispose();\n    ghostMat.dispose();\n    dialGeo.dispose();\n    dialMat.dispose();\n    bar1.geometry.dispose();\n    barMat.dispose();\n    bar2.geometry.dispose();\n    bar2.material.dispose();\n    ctaGeo.dispose();\n    ctaMat.dispose();\n    if (headlineText.geometry) headlineText.geometry.dispose();\n    if (headlineText.material) headlineText.material.dispose();\n    if (bodyText.geometry) bodyText.geometry.dispose();\n    if (bodyText.material) bodyText.material.dispose();\n    if (ctaLabel.geometry) ctaLabel.geometry.dispose();\n    if (ctaLabel.material) ctaLabel.material.dispose();\n  };\n  return group;\n}\n",
+  "transformError": null
+}

@@ -1,0 +1,18 @@
+{
+  "bundle": "gpt-oss-120b/v-18-nav-dock-r2",
+  "capturedAt": "2026-07-10T03:37:59.429Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "gpt-oss-120b/v-18-nav-dock-r2",
+    "moduleRuntimeError": "TypeError: import_tsl.MeshStandardNodeMaterial is not a constructor"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

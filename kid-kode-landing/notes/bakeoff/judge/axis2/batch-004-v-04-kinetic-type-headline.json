@@ -1,0 +1,72 @@
+{
+  "label": "batch-004-v-04-kinetic-type-headline",
+  "judgedAt": "2026-07-10T04:09:57.125Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "bundleId": "claude-haiku-4.5/v-04-kinetic-type-headline-r1",
+      "frame": "notes/bakeoff/renders/frames/claude-haiku-4.5/v-04-kinetic-type-headline-r1.png"
+    },
+    {
+      "label": "F2",
+      "bundleId": "claude-haiku-4.5/v-04-kinetic-type-headline-r2",
+      "frame": "notes/bakeoff/renders/frames/claude-haiku-4.5/v-04-kinetic-type-headline-r2.png"
+    },
+    {
+      "label": "F3",
+      "bundleId": "claude-sonnet-5/v-04-kinetic-type-headline-r1",
+      "frame": "notes/bakeoff/renders/frames/claude-sonnet-5/v-04-kinetic-type-headline-r1.png"
+    },
+    {
+      "label": "F4",
+      "bundleId": "claude-sonnet-5/v-04-kinetic-type-headline-r2",
+      "frame": "notes/bakeoff/renders/frames/claude-sonnet-5/v-04-kinetic-type-headline-r2.png"
+    },
+    {
+      "label": "F5",
+      "bundleId": "gpt-oss-120b/v-04-kinetic-type-headline-r1",
+      "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-04-kinetic-type-headline-r1.png"
+    },
+    {
+      "label": "F6",
+      "bundleId": "gpt-oss-120b/v-04-kinetic-type-headline-r2",
+      "frame": "notes/bakeoff/renders/frames/gpt-oss-120b/v-04-kinetic-type-headline-r2.png"
+    }
+  ],
+  "costUsd": 0.67125,
+  "durationApiMs": 39675,
+  "wallMs": 41620,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 20904,
+    "cache_read_input_tokens": 83072,
+    "output_tokens": 2678,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 20904,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1676,
+        "cache_read_input_tokens": 44869,
+        "cache_creation_input_tokens": 14238,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 14238
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center (no MSDF headline, no accent underline)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Only an untextured white quad on black; no glyphs, no depth, no accent. Render failed.\" }, { \"frame\": \"F2\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center (no headline or underline)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Identical failed frame to F1: single white placeholder quad, zero typography or kinetic evidence.\" }, { \"frame\": \"F3\", \"score\": 12, \"mustFix\": [ { \"defect\": \"GARBLED_TEXT\", \"region\": \"center rectangle (vertical stripe noise, unreadable glyph atlas)\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center (no legible headline, no accent underline)\" }, { \"defect\": \"LOW_CONTRAST\", \"region\": \"full frame\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"background field\" } ], \"notes\": \"MSDF pipeline broke into vertical stripe artifacts; nothing legible, no red accent, no dimensionality.\" }, { \"frame\": \"F4\", \"score\": 18, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center panel (headline glyphs absent)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"center card above and below underline\" }, { \"defect\": \"LOW_CONTRAST\", \"region\": \"surface panel vs background\" } ], \"notes\": \"Correct palette and accent underline render, but the entire headline failed to draw; large dead panel.\" }, { \"frame\": \"F5\", \"score\": 3, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"full frame (no headline, no underline)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Completely empty near-black frame; nothing rendered at all.\" }, { \"frame\": \"F6\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center (no glyphs or accent)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Single white placeholder quad on black, matching F1/F2 failure; no typography or motion evidence.\" } ] }"
+}

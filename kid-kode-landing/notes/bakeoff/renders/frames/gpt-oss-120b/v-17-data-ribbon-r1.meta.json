@@ -1,0 +1,18 @@
+{
+  "bundle": "gpt-oss-120b/v-17-data-ribbon-r1",
+  "capturedAt": "2026-07-10T03:37:54.700Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "gpt-oss-120b/v-17-data-ribbon-r1",
+    "moduleRuntimeError": "TypeError: import_tsl.MeshBasicNodeMaterial is not a constructor"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

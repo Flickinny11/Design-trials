@@ -144,15 +144,21 @@ for (const cand of CANDIDATES) {
   const existing = existsSync(outPath) ? JSON.parse(readFileSync(outPath, 'utf8')) : { candidate: cand.id, verdicts: [] };
   const done = new Set(existing.verdicts.map((v) => v.goldenId));
 
-  if (cand.route === 'deepinfra') {
-    const key = providerKey(ROUTES.deepinfra.keyFile, ROUTES.deepinfra.envKey);
-    const probe = await fetch(ROUTES.deepinfra.chatUrl, {
+  // Reprobe metered routes before burning golden-set calls: deepinfra 402
+  // (unfunded, founder console action pending) and fireworks 412 (account
+  // suspended mid-wave — monthly spend cap). A blocked candidate gets one
+  // honest BLOCKED record, not 30 per-entry transport errors.
+  if (cand.route === 'deepinfra' || cand.route === 'fireworks') {
+    const r = ROUTES[cand.route];
+    const key = providerKey(r.keyFile, r.envKey);
+    const probe = await fetch(r.chatUrl, {
       method: 'POST', headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({ model: cand.model, max_tokens: 4, messages: [{ role: 'user', content: 'Reply: ok' }] }),
       signal: AbortSignal.timeout(20000),
     }).catch(() => null);
-    if (!probe || probe.status === 402) {
-      existing.blocked = `deepinfra ${probe?.status ?? 'unreachable'} (unfunded) — reprobed ${new Date().toISOString()}`;
+    if (!probe || probe.status === 402 || probe.status === 412) {
+      const why = probe?.status === 412 ? 'account suspended — monthly spend cap' : 'unfunded';
+      existing.blocked = `${cand.route} ${probe?.status ?? 'unreachable'} (${why}) — reprobed ${new Date().toISOString()}`;
       writeFileSync(outPath, JSON.stringify(existing, null, 2));
       console.log(`[${cand.id}] BLOCKED (${existing.blocked})`);
       continue;

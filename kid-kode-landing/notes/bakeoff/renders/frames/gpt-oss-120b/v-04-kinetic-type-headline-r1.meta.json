@@ -1,0 +1,17 @@
+{
+  "bundle": "gpt-oss-120b/v-04-kinetic-type-headline-r1",
+  "capturedAt": "2026-07-10T03:36:06.299Z",
+  "probe": {
+    "status": "error",
+    "error": "module did not default-export a function",
+    "renderables": 0,
+    "nodeMounted": false,
+    "bundleId": "gpt-oss-120b/v-04-kinetic-type-headline-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": "Transform failed with 1 error:\n<stdin>:243:15: ERROR: Unexpected end of file",
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}
