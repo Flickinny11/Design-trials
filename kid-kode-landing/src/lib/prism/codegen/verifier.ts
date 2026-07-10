@@ -178,15 +178,21 @@ function checkStructural(
     }
   }
 
-  // §10.C L383 — mesh MUST call ctx.glbLoader.load(...).
+  // §10.C L383 — mesh MUST call the GLB loader.
+  // W-PCP instrument alignment (2026-07-10): the runtime surface exposes ONLY
+  // `ctx.glbLoader.loadGLB(url)` (adapter.ts NodeGLBLoader = Pick<'loadGLB'>);
+  // the migration-era `.load(` spelling this rule originally demanded CRASHES
+  // at runtime and was the largest W-BAKE crash cluster (report §4). The rule
+  // now accepts BOTH spellings — additive: strictly more correct programs
+  // pass; nothing that passed before fails now.
   if (ctx.renderMode === 'mesh') {
-    const hasGlbLoad = /ctx\.glbLoader\.load\s*\(/.test(source);
+    const hasGlbLoad = /ctx\.glbLoader\.load(?:GLB)?\s*\(/.test(source);
     if (!hasGlbLoad) {
       out.push({
         rule: 'MISSING_GLB_LOADER',
         severity: 'error',
         message:
-          'renderMode "mesh" must call ctx.glbLoader.load(config.meshUrl, ...) (§10.C L383)',
+          'renderMode "mesh" must call ctx.glbLoader.loadGLB(config.meshUrl) (§10.C L383; legacy .load( spelling also accepted)',
       });
     }
   }
