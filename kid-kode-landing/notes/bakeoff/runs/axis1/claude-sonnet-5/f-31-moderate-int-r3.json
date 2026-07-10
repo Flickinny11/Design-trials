@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-31-moderate-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 16186,
+  "apiMs": 14025,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1393,
+    "cacheCreation": 0,
+    "cacheRead": 5592
+  },
+  "costUsd": 0.038785999999999994,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, uniform, mix } from 'three/tsl';\nimport gsap from 'gsap';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'journal-card-2-label';\n  group.position.set(0, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 1.6;\n  const height = 0.4;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const map = ctx.textureLoader.load('/prism-mock/home/nodes/feature-card.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const hoverLift = uniform(0);\n  const uvNode = uv();\n  const colorNode = texture(map, uvNode);\n  const accentColor = vec4(1.0, 0.165, 0.22, 1.0);\n  const mixed = mix(colorNode, accentColor, hoverLift.mul(0.08));\n\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n  material.colorNode = mixed;\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'journal-card-2-label-plane';\n  group.add(plane);\n\n  const textMesh = createTextMesh({\n    text: 'Journal 2',\n    fontAtlas: ctx.fontAtlas,\n    font: 'display',\n    weight: 400,\n    size: 0.34 * (39 / 39),\n    color: '#16161d',\n    align: 'center',\n    anchor: 'middle',\n  });\n  textMesh.position.set(0, 0, 0.01);\n  group.add(textMesh);\n\n  ctx.primitives['parallax-scroll'](group, { intensity: 0.25, trigger: 'scroll' });\n\n  let hoverTween = null;\n  let pressTween = null;\n  const baseY = group.position.y;\n  const baseZ = group.position.z;\n  const baseScale = group.scale.x;\n\n  const onHoverStart = () => {\n    if (hoverTween) hoverTween.kill();\n    hoverTween = gsap.timeline()\n      .to(group.position, { y: baseY + 0.15, duration: 0.7, ease: 'power3.out' }, 0)\n      .to(hoverLift, { value: 1, duration: 0.7, ease: 'power3.out' }, 0);\n  };\n\n  const onHoverEnd = () => {\n    if (hoverTween) hoverTween.kill();\n    hoverTween = gsap.timeline()\n      .to(group.position, { y: baseY, duration: 0.5, ease: 'power2.out' }, 0)\n      .to(hoverLift, { value: 0, duration: 0.5, ease: 'power2.out' }, 0);\n  };\n\n  const onClick = () => {\n    if (pressTween) pressTween.kill();\n    pressTween = gsap.timeline()\n      .to(group.scale, { x: baseScale * 0.97, y: baseScale * 0.97, z: baseScale * 0.97, duration: 0.12, ease: 'back.out' })\n      .to(group.scale, { x: baseScale, y: baseScale, z: baseScale, duration: 0.2, ease: 'back.out' });\n\n    if (group.userData.emit) {\n      group.userData.emit('hub-journal.select', { id: 'hub-journal-card-1' });\n    }\n  };\n\n  group.userData.handlers = {\n    onHoverStart,\n    onHoverEnd,\n    onClick,\n  };\n\n  group.userData.cleanup = () => {\n    if (hoverTween) hoverTween.kill();\n    if (pressTween) pressTween.kill();\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n  };\n\n  return group;\n}"
+}

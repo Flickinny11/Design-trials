@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-28-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 9731,
+  "usage": {
+    "promptTokens": 1651,
+    "completionTokens": 1089
+  },
+  "costUsd": 0.0009010499999999999,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport * as primitives from '@/primitives';\nimport * as textUtils from '@/text';\n\nexport default function createNode(config, ctx) {\n  // --- Geometry ---\n  const geometry = new THREE.PlaneGeometry(1, 1);\n\n  // --- Texture ---\n  const tex = ctx.textureLoader(config.assets?.imageUrl ?? '');\n\n  // Enable texture orientation handling if needed\n  tex.flipY = false;\n  tex.needsUpdate = true;\n\n  // --- Material ---\n  const material = new MeshBasicNodeMaterial({\n    map: tex,\n    transparent: true,\n    alphaTest: 0.0,\n    depthWrite: true,\n    depthTest: true,\n  });\n\n  // --- Mesh ---\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = config.id ?? 'journal-card-1';\n\n  // --- Placement ---\n  const pos = config.scenePlacement?.position ?? [0, 0, 0];\n  const rot = config.scenePlacement?.rotation ?? [0, 0, 0];\n  const scl = config.scenePlacement?.scale ?? [1, 1, 1];\n\n  mesh.position.set(pos[0], pos[1], pos[2]);\n  mesh.rotation.set(rot[0], rot[1], rot[2]);\n  mesh.scale.set(scl[0], scl[1], scl[2]);\n\n  // --- Apply cinematic primitives if any ---\n  const primitivesList = config.cinematicPrimitives ?? [];\n  for (const prim of primitivesList) {\n    const fn = ctx.primitives?.[prim.name];\n    if (typeof fn === 'function') {\n      fn(mesh, prim.params);\n    }\n  }\n\n  // --- UserData for handlers & cleanup ---\n  mesh.userData.handlers = {};\n\n  mesh.userData.cleanup = () => {\n    // Dispose GSAP timelines (none for this node, but guard for future)\n    gsap.globalTimeline.clear();\n\n    geometry.dispose();\n    material.dispose();\n    tex.dispose();\n  };\n\n  return mesh;\n}"
+}

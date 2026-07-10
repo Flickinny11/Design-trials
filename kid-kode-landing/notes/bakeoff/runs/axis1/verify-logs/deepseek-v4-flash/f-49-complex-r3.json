@@ -1,0 +1,16 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "caseId": "f-49-complex",
+  "run": 3,
+  "rawCompliant": false,
+  "fenced": true,
+  "parsed": true,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "MISSING_DISPLACEMENT",
+      "severity": "error",
+      "message": "renderMode \"parallax-plane\" must reference displacementMap or a TSL displacement node (§10.C L382)"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-20-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 31517,
+  "usage": {
+    "promptTokens": 1700,
+    "completionTokens": 3885
+  },
+  "costUsd": 0.0013258000000000002,
+  "transportAttempts": 4,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  PlaneGeometry,\n  Mesh,\n  MeshBasicNodeMaterial,\n} from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  // Load the atlas texture using the cached loader\n  const texture = ctx.textureLoader.load(config.imageUrl);\n\n  // Apply atlas region cropping (UV offset/repeat)\n  if (config.atlasRegion) {\n    const { x, y, width, height } = config.atlasRegion;\n    const img = texture.image;\n    if (img) {\n      // Assumes texture coordinates (0,0) at bottom-left; adjust for WebGL top-left origin\n      texture.offset.set(x / img.width, 1 - (y + height) / img.height);\n      texture.repeat.set(width / img.width, height / img.height);\n    }\n  }\n\n  // Plane geometry (size 1,1 – scale will be applied via config.sceneScale)\n  const geometry = new PlaneGeometry(1, 1);\n\n  // Static plane with basic material – no lighting needed\n  const material = new MeshBasicNodeMaterial({\n    map: texture,\n    color: config.colors?.paper || 0xe8ecf2,\n    transparent: true,\n  });\n\n  const mesh = new Mesh(geometry, material);\n\n  // Placement from config\n  if (config.scenePosition) mesh.position.copy(config.scenePosition);\n  if (config.quaternion) {\n    mesh.quaternion.copy(config.quaternion);\n  } else if (config.rotation) {\n    mesh.rotation.set(config.rotation.x, config.rotation.y, config.rotation.z);\n  }\n  if (config.sceneScale) mesh.scale.copy(config.sceneScale);\n\n  // Resources disposal\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n  };\n\n  // No event handlers needed for this static element\n  mesh.userData.handlers = {};\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

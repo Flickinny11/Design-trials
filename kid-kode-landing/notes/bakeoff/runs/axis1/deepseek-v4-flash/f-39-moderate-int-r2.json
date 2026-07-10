@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-39-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 14210,
+  "usage": {
+    "promptTokens": 1789,
+    "completionTokens": 2128
+  },
+  "costUsd": 0.0008463,
+  "transportAttempts": 3,
+  "billing": "metered",
+  "output": "```javascript\nimport { Group } from 'three/webgpu';\nimport gsap from 'gsap';\n\n/**\n * Ornamental divider with machined rule and center jewel.\n * Loads GLB, applies transform, binds hover/click interactions.\n */\nexport default function createNode(config, ctx) {\n  const { scenePosition } = config;\n  const { position, rotation, scale } = scenePosition;\n\n  // Load GLB (synchronous – cached)\n  const glb = ctx.glbLoader.get(config.meshUrl);\n  if (!glb) throw new Error('GLB not loaded: ' + config.meshUrl);\n\n  // Clone to avoid mutating cached scene\n  const meshGroup = glb.scene.clone(true);\n\n  // Apply scene placement\n  meshGroup.position.set(position.x, position.y, position.z);\n  meshGroup.rotation.set(rotation.x, rotation.y, rotation.z);\n  meshGroup.scale.set(scale.x, scale.y, scale.z);\n\n  // Track disposable resources for cleanup\n  const resources = [];\n  meshGroup.traverse(child => {\n    if (child.isMesh) {\n      resources.push(child.geometry);\n      if (Array.isArray(child.material)) {\n        child.material.forEach(m => resources.push(m));\n      } else {\n        resources.push(child.material);\n      }\n    }\n  });\n\n  // Container to return\n  const container = new Group();\n  container.add(meshGroup);\n\n  // Interaction state\n  let hoverTween = null;\n\n  // Handlers\n  container.userData.handlers = {\n    hover: (active) => {\n      if (hoverTween) hoverTween.kill();\n      if (active) {\n        // Subtle rise-in: increase y by 0.15 scene units\n        hoverTween = gsap.to(meshGroup.position, {\n          y: position.y + 0.15,\n          duration: 0.7,\n          ease: 'power3.out',\n          overwrite: 'auto',\n        });\n      } else {\n        hoverTween = gsap.to(meshGroup.position, {\n          y: position.y,\n          duration: 0.5,\n          ease: 'power2.out',\n          overwrite: 'auto',\n        });\n      }\n    },\n    click: () => {\n      // Press-down effect (scale 0.97, back.out, yoyo)\n      gsap.to(meshGroup.scale, {\n        x: scale.x * 0.97,\n        y: scale.y * 0.97,\n        z: scale.z * 0.97,\n        duration: 0.12,\n        ease: 'back.out(1.7)',\n        yoyo: true,\n        repeat: 1,\n      });\n      // Emit event for navigation / selection\n      if (container.userData.emitter) {\n        container.userData.emitter.emit('hub-home.select', { source: 'ornamental-divider' });\n      }\n    },\n  };\n\n  // Data binding reference (as per spec)\n  container.userData.dataBindings = {\n    source: 'trpc.visits.book.slot',\n    target: 'confirmPanel',\n  };\n\n  // Cleanup\n  container.userData.cleanup = () => {\n    if (hoverTween) hoverTween.kill();\n    resources.forEach(r => {\n      if (r && typeof r.dispose === 'function') r.dispose();\n    });\n    if (container.parent) container.parent.remove(container);\n  };\n\n  return container;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

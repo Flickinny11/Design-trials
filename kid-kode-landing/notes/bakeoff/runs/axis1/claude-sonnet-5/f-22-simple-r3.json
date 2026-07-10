@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-22-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 15890,
+  "apiMs": 13835,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1460,
+    "cacheCreation": 0,
+    "cacheRead": 5491
+  },
+  "costUsd": 0.040341499999999995,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec3, vec4, float, mix, uniform } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-pricing-card-1-label';\n\n  const {\n    position = [-3.2, 1, 0.06],\n    rotation = [0, 0, 0],\n    scale = [1, 1, 1],\n  } = config.scenePlacement || {};\n\n  group.position.set(...position);\n  group.rotation.set(...rotation);\n  group.scale.set(...scale);\n\n  const width = 1.6;\n  const height = 1.0;\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  const inkColor = new THREE.Color('#16161d');\n  const paperColor = new THREE.Color('#e8ecf2');\n  const accentColor = new THREE.Color('#ff2a38');\n  const surfaceColor = new THREE.Color('#0b0b10');\n\n  const material = new THREE.MeshBasicNodeMaterial();\n\n  let colorNode;\n  let map = null;\n\n  const imageUrl = '/prism-mock/home/nodes/orb-decor.png';\n  if (imageUrl && ctx.textureLoader) {\n    map = ctx.textureLoader.load(imageUrl);\n    map.colorSpace = THREE.SRGBColorSpace;\n\n    const atlasRect = { x: 0, y: 0, w: 512, h: 320 };\n    const atlasSize = { w: 512, h: 320 };\n\n    const uOffset = atlasRect.x / atlasSize.w;\n    const vOffset = 1.0 - (atlasRect.y + atlasRect.h) / atlasSize.h;\n    const uScale = atlasRect.w / atlasSize.w;\n    const vScale = atlasRect.h / atlasSize.h;\n\n    const remappedUv = uv().mul(vec3(uScale, vScale, 1.0).xy).add(vec3(uOffset, vOffset, 0.0).xy);\n    const texSample = texture(map, remappedUv);\n\n    // Engineered gradient overlay: surface -> ink diagonal blend\n    const gradientMix = uv().x.add(uv().y).mul(0.5);\n    const gradient = mix(vec3(surfaceColor.r, surfaceColor.g, surfaceColor.b), vec3(inkColor.r, inkColor.g, inkColor.b), gradientMix);\n\n    colorNode = mix(vec4(gradient, 1.0), texSample, texSample.a);\n  } else {\n    const gradientMix = uv().x.add(uv().y).mul(0.5);\n    const gradient = mix(vec3(surfaceColor.r, surfaceColor.g, surfaceColor.b), vec3(inkColor.r, inkColor.g, inkColor.b), gradientMix);\n    colorNode = vec4(gradient, 1.0);\n  }\n\n  material.colorNode = colorNode;\n  material.transparent = false;\n\n  const planeMesh = new THREE.Mesh(geometry, material);\n  planeMesh.name = 'pricing-card-1-label-plane';\n  group.add(planeMesh);\n\n  // Headline text: \"Pricing 1\"\n  let textMesh = null;\n  if (ctx.fontAtlas) {\n    textMesh = createTextMesh({\n      text: 'Pricing 1',\n      font: 'Lora',\n      weight: 400,\n      role: 'headline',\n      sizeEm: 0.34,\n      color: paperColor,\n      atlas: ctx.fontAtlas,\n      align: 'center',\n      anchor: 'center',\n    });\n    textMesh.position.set(0, 0, 0.01);\n    textMesh.name = 'pricing-card-1-label-text';\n    group.add(textMesh);\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n    if (textMesh) {\n      if (textMesh.geometry) textMesh.geometry.dispose();\n      if (textMesh.material) textMesh.material.dispose();\n    }\n  };\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,10 @@
+{
+  "contestant": "gpt-oss-120b",
+  "caseId": "f-01-simple",
+  "run": 2,
+  "rawCompliant": true,
+  "fenced": false,
+  "parsed": true,
+  "verified": true,
+  "violations": []
+}

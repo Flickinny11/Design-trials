@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-08-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 74584,
+  "apiMs": 72158,
+  "usage": {
+    "promptTokens": 3957,
+    "completionTokens": 7839,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.044137,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Load card image texture\n  const texture = ctx.textureLoader.load(config.imageUrl);\n\n  // Create plane geometry with atlas aspect ratio (512:320 ≈ 1.6:1)\n  const geometry = new THREE.PlaneGeometry(1.6, 1);\n  const material = new THREE.MeshBasicNodeMaterial({\n    map: texture,\n    transparent: true,\n    side: THREE.DoubleSide\n  });\n  const plane = new THREE.Mesh(geometry, material);\n  group.add(plane);\n\n  // Render headline text \"Features 1\" via fontAtlas\n  if (ctx.fontAtlas) {\n    const textMesh = ctx.fontAtlas.createText('Features 1', {\n      font: 'Lora',\n      size: 0.34,\n      weight: 400,\n      color: config.colors?.ink || '#16161d'\n    });\n    if (textMesh) {\n      textMesh.position.y = -0.7;\n      group.add(textMesh);\n    }\n  }\n\n  // Apply scene placement from config\n  const pos = config.scenePosition || {};\n  group.position.set(pos.x ?? -3.2, pos.y ?? 1, pos.z ?? 0.06);\n\n  const rot = config.sceneRotation || {};\n  group.rotation.set(rot.x ?? 0, rot.y ?? 0, rot.z ?? 0);\n\n  const scale = config.sceneScale || {};\n  group.scale.set(scale.x ?? 1, scale.y ?? 1, scale.z ?? 1);\n\n  // Resource cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n    gsap.killTweensOf(group);\n  };\n\n  // No interactive handlers for static element\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-02-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 57731,
+  "apiMs": 55314,
+  "usage": {
+    "promptTokens": 3951,
+    "completionTokens": 8837,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.04913,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture as textureNode } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const root = new THREE.Group();\n  \n  const geometries = [];\n  const materials = [];\n  const textures = [];\n  const timelines = [];\n\n  root.userData.handlers = {};\n\n  root.userData.cleanup = () => {\n    geometries.forEach(g => g.dispose());\n    materials.forEach(m => m.dispose());\n    textures.forEach(t => t.dispose());\n    timelines.forEach(tl => tl.kill());\n  };\n\n  // Load image texture\n  const imageTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  textures.push(imageTexture);\n\n  // Determine plane dimensions from atlas region\n  const atlasWidth = config.atlasRegion?.width ?? 512;\n  const atlasHeight = config.atlasRegion?.height ?? 320;\n  const aspectRatio = atlasWidth / atlasHeight;\n  \n  const planeGeometry = new THREE.PlaneGeometry(aspectRatio, 1);\n  geometries.push(planeGeometry);\n\n  // Create material with texture node\n  const planeMaterial = new MeshBasicNodeMaterial();\n  planeMaterial.colorNode = textureNode(imageTexture);\n  materials.push(planeMaterial);\n\n  // Create and position image mesh\n  const imageMesh = new THREE.Mesh(planeGeometry, planeMaterial);\n  imageMesh.position.set(0, 1.85, 0);\n  root.add(imageMesh);\n\n  // Render text content\n  if (config.textContent && config.textContent.length > 0 && ctx.fontAtlas) {\n    const textItem = config.textContent[0];\n    const textString = typeof textItem === 'string' ? textItem : (textItem.text ?? '');\n\n    if (textString) {\n      const inkColor = config.colors?.ink ?? '#16161d';\n      \n      const textMesh = ctx.fontAtlas.createTextMesh(textString, {\n        font: 'display',\n        size: 0.34,\n        weight: 400,\n        color: new THREE.Color(inkColor),\n        align: 'center'\n      });\n\n      if (textMesh) {\n        textMesh.position.z = 0.01;\n        root.add(textMesh);\n      }\n    }\n  }\n\n  return root;\n}\n```"
+}

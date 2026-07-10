@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-11-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 13583,
+  "apiMs": 11075,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1007,
+    "cacheCreation": 0,
+    "cacheRead": 5464
+  },
+  "costUsd": 0.028992,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import { MeshStandardNodeMaterial, PlaneGeometry, Mesh, Vector2 } from 'three/webgpu';\nimport {\n  texture,\n  uv,\n  vec3,\n  vec4,\n  mix,\n  float,\n  positionLocal,\n  time,\n  sin,\n  uniform\n} from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const width = 1.6;\n  const height = 1.0;\n  const geometry = new PlaneGeometry(width, height, 1, 1);\n\n  const map = ctx.textureLoader.load('/prism-assets/chrome/brushed-metal.map.png');\n  map.colorSpace = 'srgb';\n\n  const ink = vec3(0x16 / 255, 0x16 / 255, 0x1d / 255);\n  const surface = vec3(0x0b / 255, 0x0b / 255, 0x10 / 255);\n  const accent = vec3(0xff / 255, 0x2a / 255, 0x38 / 255);\n\n  const vUv = uv();\n\n  // engineered gradient: diagonal blend from surface to ink, with a thin accent seam\n  const gradientMix = vUv.x.add(vUv.y).mul(0.5);\n  const engineeredGradient = mix(surface, ink, gradientMix);\n\n  // subtle grain via hashed noise from uv + time (static-looking, low amplitude)\n  const grainSeed = vUv.x.mul(4173.23).add(vUv.y.mul(917.31));\n  const grain = sin(grainSeed.mul(43758.5453)).fract().sub(0.5).mul(0.035);\n\n  const baseColor = texture(map, vUv).rgb;\n\n  const accentSeam = float(1.0).sub(\n    vUv.x.sub(0.5).abs().smoothstep(0.0, 0.01)\n  ).mul(0.15);\n\n  const finalColor = baseColor\n    .mul(0.6)\n    .add(engineeredGradient.mul(0.4))\n    .add(vec3(grain, grain, grain))\n    .add(accent.mul(accentSeam));\n\n  const material = new MeshStandardNodeMaterial();\n  material.colorNode = vec4(finalColor, 1.0);\n  material.roughnessNode = float(0.55);\n  material.metalnessNode = float(0.45);\n  material.map = map;\n\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(3.2, -0.3, 0);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  mesh.userData.handlers = {};\n\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n  };\n\n  return mesh;\n}"
+}

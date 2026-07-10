@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-26-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 53216,
+  "apiMs": 50652,
+  "usage": {
+    "promptTokens": 3960,
+    "completionTokens": 8696,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.048413000000000005,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport * as TSL from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Create plane geometry (512x320 atlas region = 1.6:1 aspect ratio)\n  const geometry = new THREE.PlaneGeometry(1.6, 1);\n  \n  // Load texture\n  const texture = ctx.textureLoader.load(config.assets.imageUrl);\n  texture.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create material with TSL node\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.colorNode = TSL.texture(texture);\n  \n  // Create and configure plane\n  const plane = new THREE.Mesh(geometry, material);\n  plane.position.set(\n    config.scenePosition.x,\n    config.scenePosition.y,\n    config.scenePosition.z\n  );\n  plane.rotation.set(\n    config.sceneRotation.x,\n    config.sceneRotation.y,\n    config.sceneRotation.z\n  );\n  plane.scale.set(\n    config.sceneScale.x,\n    config.sceneScale.y,\n    config.sceneScale.z\n  );\n  \n  group.add(plane);\n  \n  // Render text content\n  if (config.textContent && config.textContent.length > 0) {\n    config.textContent.forEach((text) => {\n      const textMesh = ctx.fontAtlas.createText(text.content, {\n        fontSize: text.fontSize || 0.34,\n        fontWeight: text.fontWeight || 400,\n        fontFamily: 'Lora',\n      });\n      \n      if (textMesh) {\n        textMesh.position.z = 0.01;\n        plane.add(textMesh);\n      }\n    });\n  }\n  \n  // Setup handlers\n  group.userData.handlers = {};\n  \n  // Setup cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n  };\n  \n  return group;\n}\n```"
+}

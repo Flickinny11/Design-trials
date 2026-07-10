@@ -1,0 +1,9 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-22-simple",
+  "run": 3,
+  "ok": false,
+  "transportError": "transport failure after retries: HTTP 429"
+}

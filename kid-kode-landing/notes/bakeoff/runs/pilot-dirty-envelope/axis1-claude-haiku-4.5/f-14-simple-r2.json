@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-14-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 38585,
+  "apiMs": 36517,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 5395,
+    "cacheCreation": 0,
+    "cacheRead": 21549
+  },
+  "costUsd": 0.0301119,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Load texture via cached loader\n  const texture = ctx.textureLoader.load(config.assetUrls?.imageUrl);\n  \n  // Create plane geometry with 512:320 aspect ratio (1.6:1)\n  const geometry = new THREE.PlaneGeometry(1.6, 1);\n  \n  // Create material with texture\n  const material = new MeshBasicNodeMaterial({\n    map: texture,\n  });\n  \n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n  \n  // Apply scene position\n  const pos = config.scenePosition || {};\n  mesh.position.set(pos.x ?? 0, pos.y ?? 0, pos.z ?? 0);\n  \n  // Apply rotation if present\n  if (pos.rotationXYZ) {\n    mesh.rotation.order = 'XYZ';\n    mesh.rotation.set(\n      pos.rotationXYZ.x ?? 0,\n      pos.rotationXYZ.y ?? 0,\n      pos.rotationXYZ.z ?? 0\n    );\n  }\n  \n  // Apply scale if present\n  if (pos.scaleXYZ) {\n    mesh.scale.set(\n      pos.scaleXYZ.x ?? 1,\n      pos.scaleXYZ.y ?? 1,\n      pos.scaleXYZ.z ?? 1\n    );\n  }\n  \n  // Initialize event handlers\n  group.userData.handlers = {};\n  \n  // Cleanup function\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n  };\n  \n  return group;\n}\n```"
+}

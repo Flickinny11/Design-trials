@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-06-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 87618,
+  "apiMs": 85220,
+  "usage": {
+    "promptTokens": 3960,
+    "completionTokens": 9407,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.051968,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture as textureNode } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Load ceramic grain texture\n  const grainsTexture = ctx.textureLoader.load(\n    '/prism-assets/chrome/ceramic-grain.map.png'\n  );\n  grainsTexture.colorSpace = THREE.SRGBColorSpace;\n\n  // Create billboard plane with atlas region aspect ratio (512:320 = 1.6)\n  const aspectRatio = 512 / 320;\n  const planeHeight = 2.0;\n  const planeWidth = planeHeight * aspectRatio;\n\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  // Material using TSL texture node\n  const material = new THREE.MeshBasicNodeMaterial({\n    colorNode: textureNode(grainsTexture),\n    transparent: true,\n    side: THREE.DoubleSide,\n  });\n\n  const plane = new THREE.Mesh(geometry, material);\n  group.add(plane);\n\n  // Render headline text via fontAtlas\n  if (config.textContent && ctx.fontAtlas) {\n    const textMesh = ctx.fontAtlas.createTextMesh({\n      text: config.textContent,\n      fontSize: 0.34, // headline scale from design tokens\n      fontWeight: 400,\n      fontFamily: 'Lora', // display serif\n      color: config.colors?.ink || '#16161d',\n      align: 'center',\n      anchorX: 'center',\n      anchorY: 'middle',\n    });\n\n    if (textMesh) {\n      textMesh.position.z = 0.01;\n      group.add(textMesh);\n    }\n  }\n\n  // Cleanup resources\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    grainsTexture.dispose();\n  };\n\n  return group;\n}\n```"
+}

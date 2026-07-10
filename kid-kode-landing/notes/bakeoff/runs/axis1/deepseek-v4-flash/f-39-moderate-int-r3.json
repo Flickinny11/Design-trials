@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-39-moderate-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 18039,
+  "usage": {
+    "promptTokens": 1789,
+    "completionTokens": 2616
+  },
+  "costUsd": 0.00098294,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport { Group, Euler } from 'three/webgpu';\nimport gsap from 'gsap';\n\n/**\n * @param {Object} config - Node configuration\n * @param {Object} ctx - Context with loaders and utilities\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  // Create the root group\n  const root = new Group();\n  root.name = config.id || 'ornamental-divider';\n\n  // Load the GLB mesh (synchronous from cache)\n  const loadedGroup = ctx.glbLoader(config.meshUrl).clone(true);\n  const mesh = loadedGroup.children[0]; // Assume single mesh child\n\n  // Apply scene placement transforms\n  const { position, rotation, scale } = config.scenePlacement || {};\n  if (position) {\n    root.position.set(position.x || 0, position.y || 0, position.z || 0);\n  }\n  if (rotation) {\n    const euler = new Euler(rotation.x || 0, rotation.y || 0, rotation.z || 0);\n    root.quaternion.setFromEuler(euler);\n  }\n  if (scale) {\n    root.scale.set(scale.x || 1, scale.y || 1, scale.z || 1);\n  }\n\n  // Add the mesh as child (so transforms on root apply)\n  root.add(loadedGroup);\n\n  // Store original Y position for hover animation\n  const baseY = root.position.y;\n\n  // --- Interaction handlers ---\n  root.userData.handlers = {\n    hoverEnter: () => {\n      gsap.killTweensOf(root.position);\n      gsap.to(root.position, {\n        y: baseY + 0.15,\n        duration: 0.7,\n        ease: 'power3.out',\n        overwrite: true,\n      });\n    },\n    hoverLeave: () => {\n      gsap.killTweensOf(root.position);\n      gsap.to(root.position, {\n        y: baseY,\n        duration: 0.5,\n        ease: 'power2.out',\n        overwrite: true,\n      });\n    },\n    click: () => {\n      // Emit event for hub-home.select (handled by parent scene manager)\n      // The scene manager is expected to check userData.handlers.click\n      // and dispatch the appropriate event.\n      // For now we just trigger the event via a hypothetical global emitter.\n      if (typeof ctx.emit === 'function') {\n        ctx.emit('hub-home.select', { source: config.id });\n      } else {\n        // Fallback: set a custom data property for external reading\n        root.userData.lastEvent = 'hub-home.select';\n      }\n    },\n  };\n\n  // --- Data binding placeholder (trpc.visits.book.slot -> confirmPanel) ---\n  // This would typically be wired in the parent scene; we leave it empty.\n  // root.userData.dataBindings = config.dataBindings || [];\n\n  // --- Cleanup ---\n  root.userData.cleanup = () => {\n    // Kill all GSAP tweens targeting this object\n    gsap.killTweensOf(root.position);\n    gsap.killTweensOf(root);\n\n    // Dispose mesh and its materials/geometries\n    if (loadedGroup && loadedGroup.children) {\n      loadedGroup.traverse((child) => {\n        if (child.isMesh) {\n          child.geometry?.dispose();\n          if (Array.isArray(child.material)) {\n            child.material.forEach((mat) => mat.dispose());\n          } else if (child.material) {\n            child.material.dispose();\n          }\n        }\n      });\n    }\n\n    // Remove from parent (optional, but good practice)\n    if (root.parent) {\n      root.parent.remove(root);\n    }\n  };\n\n  return root;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

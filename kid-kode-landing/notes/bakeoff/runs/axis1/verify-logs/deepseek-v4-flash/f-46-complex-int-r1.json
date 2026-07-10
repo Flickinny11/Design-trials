@@ -1,0 +1,26 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "caseId": "f-46-complex-int",
+  "run": 1,
+  "rawCompliant": false,
+  "fenced": true,
+  "parsed": true,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "WINDOW_ACCESS",
+      "severity": "error",
+      "message": "window.* access is forbidden except for window.devicePixelRatio"
+    },
+    {
+      "rule": "TEXT_GEOMETRY",
+      "severity": "error",
+      "message": "TextGeometry is forbidden — use ctx.fontAtlas (MSDF) for text"
+    },
+    {
+      "rule": "MISSING_GLB_LOADER",
+      "severity": "error",
+      "message": "renderMode \"mesh\" must call ctx.glbLoader.load(config.meshUrl, ...) (§10.C L383)"
+    }
+  ]
+}

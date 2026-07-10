@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-30-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 8836,
+  "usage": {
+    "promptTokens": 1663,
+    "completionTokens": 1562
+  },
+  "costUsd": 0.0011866499999999998,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import { Object3D, PlaneGeometry, Mesh } from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\nexport default function createNode(config, ctx) {\n  // Load texture (atlas)\n  const tex = ctx.textureLoader(config.assets.imageUrl);\n\n  // Determine aspect ratio from atlas region (width / height)\n  const srcRect = config.atlasRegion?.sourceRect ?? { width: 1, height: 1 };\n  const aspect = srcRect.width / srcRect.height || 1;\n\n  // Plane geometry sized to aspect ratio (height = 1 unit)\n  const geometry = new PlaneGeometry(aspect, 1);\n  // Node material with texture map\n  const material = new MeshBasicNodeMaterial({ map: texture(tex) });\n\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(0, -0.3, 0);\n  mesh.scale.set(1, 1, 1);\n  mesh.rotation.set(0, 0, 0);\n\n  // Billboard: always face camera\n  mesh.onBeforeRender = (_, __, camera) => {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  // No primitives to apply per spec\n  // Store handlers placeholder\n  mesh.userData.handlers = {};\n\n  // Cleanup resources and any GSAP timelines\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    tex.dispose && tex.dispose();\n    gsap.globalTimeline.clear();\n  };\n\n  return mesh;\n}"
+}

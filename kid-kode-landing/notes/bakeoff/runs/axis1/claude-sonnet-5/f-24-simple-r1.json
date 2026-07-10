@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-24-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 12664,
+  "apiMs": 10124,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1124,
+    "cacheCreation": 3381,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0640785,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2, vec4 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-pricing-card-1-label';\n\n  const pos = config.position || [0, 1, 0.06];\n  const rot = config.rotation || [0, 0, 0];\n  const scl = config.scale || [1, 1, 1];\n  group.position.set(pos[0], pos[1], pos[2]);\n  group.rotation.set(rot[0], rot[1], rot[2]);\n  group.scale.set(scl[0], scl[1], scl[2]);\n\n  const atlasRegion = { x: 0, y: 0, w: 512, h: 320, atlasW: 512, atlasH: 320 };\n  const aspect = atlasRegion.w / atlasRegion.h;\n  const planeHeight = 0.34;\n  const planeWidth = planeHeight * aspect;\n\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  const grainTex = ctx.textureLoader.load('/prism-assets/chrome/ceramic-grain.map.png');\n  grainTex.colorSpace = THREE.SRGBColorSpace;\n\n  const uOffset = atlasRegion.x / atlasRegion.atlasW;\n  const vOffset = 1.0 - (atlasRegion.y + atlasRegion.h) / atlasRegion.atlasH;\n  const uScale = atlasRegion.w / atlasRegion.atlasW;\n  const vScale = atlasRegion.h / atlasRegion.atlasH;\n\n  const atlasUV = uv().mul(vec2(uScale, vScale)).add(vec2(uOffset, vOffset));\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.transparent = true;\n  material.map = grainTex;\n  material.colorNode = texture(grainTex, atlasUV);\n\n  const bgMesh = new THREE.Mesh(geometry, material);\n  bgMesh.name = 'pricing-card-1-label-bg';\n  group.add(bgMesh);\n\n  const colors = {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n\n  let textMesh = null;\n  if (ctx.fontAtlas && ctx.fontAtlas.createText) {\n    textMesh = ctx.fontAtlas.createText({\n      text: 'Pricing 2',\n      font: 'Lora',\n      weight: 400,\n      size: 0.2,\n      color: colors.paper,\n      align: 'center',\n      anchor: 'center'\n    });\n    textMesh.position.set(0, 0, 0.001);\n    group.add(textMesh);\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (grainTex && grainTex.dispose) grainTex.dispose();\n    if (textMesh) {\n      if (textMesh.geometry) textMesh.geometry.dispose();\n      if (textMesh.material) textMesh.material.dispose();\n    }\n  };\n\n  return group;\n}\n```"
+}

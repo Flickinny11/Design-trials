@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-14-simple",
+  "run": "repair",
+  "ok": true,
+  "wallMs": 36741,
+  "apiMs": 34457,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 6216,
+    "cacheCreation": 4574,
+    "cacheRead": 0
+  },
+  "costUsd": 0.041839999999999995,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture as textureTSL } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const container = new THREE.Group();\n\n  // Load texture\n  const textureUrl = config.assets?.imageUrl || '/prism-mock/home/nodes/cta-hero-isolated.png';\n  const tex = ctx.textureLoader.load(textureUrl);\n  tex.colorSpace = THREE.SRGBColorSpace;\n\n  // Calculate plane size from atlas region aspect ratio\n  const atlasRect = config.atlasRegion?.sourceRect || [0, 0, 512, 320];\n  const imgWidth = atlasRect[2] - atlasRect[0];\n  const imgHeight = atlasRect[3] - atlasRect[1];\n  const aspectRatio = imgWidth / imgHeight;\n\n  // Create plane with appropriate size\n  const planeWidth = 2.0;\n  const planeHeight = planeWidth / aspectRatio;\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  // Create material using TSL texture node\n  const texNode = textureTSL(tex);\n  const material = new MeshBasicNodeMaterial({\n    colorNode: texNode,\n    transparent: true,\n  });\n\n  // Create mesh and apply transforms\n  const mesh = new THREE.Mesh(geometry, material);\n\n  const position = config.scenePosition || [-3.2, -0.3, 0];\n  const rotation = config.sceneRotation || [0, 0, 0];\n  const scale = config.sceneScale || [1, 1, 1];\n\n  mesh.position.fromArray(position);\n  mesh.rotation.order = 'XYZ';\n  mesh.rotation.fromArray(rotation);\n  mesh.scale.fromArray(scale);\n\n  container.add(mesh);\n\n  // Setup handlers and cleanup\n  container.userData.handlers = {};\n  container.userData.cleanup = function() {\n    geometry.dispose();\n    material.dispose();\n    tex.dispose();\n    gsap.killTweensOf(mesh);\n  };\n\n  return container;\n}\n```"
+}

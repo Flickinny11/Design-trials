@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-32-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 62867,
+  "apiMs": 60303,
+  "usage": {
+    "promptTokens": 4010,
+    "completionTokens": 10705,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.058582999999999996,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Apply scene transform\n  const pos = config.scenePosition || [3.2, -0.3, 0];\n  const rot = config.sceneRotation || [0, 0, 0];\n  const scl = config.sceneScale || [1, 1, 1];\n\n  group.position.set(...pos);\n  group.rotation.set(...rot);\n  group.scale.set(...scl);\n\n  // Load texture\n  const imageUrl = config.assets?.imageUrl || '/prism-mock/home/nodes/cta-hero-isolated.png';\n  const texture = ctx.textureLoader.load(imageUrl);\n  texture.colorSpace = THREE.SRGBColorSpace;\n\n  // Calculate plane dimensions from atlas aspect ratio\n  const atlas = config.atlasRegion || { w: 512, h: 320 };\n  const aspect = atlas.w / atlas.h;\n  const geometry = new THREE.PlaneGeometry(2.0, 2.0 / aspect);\n\n  // Create material with texture node\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.colorNode = new THREE.TextureNode(texture);\n  material.transparent = true;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Initialize handlers\n  group.userData.handlers = {};\n\n  let hoverTl = null;\n  let pressTl = null;\n  const origY = pos[1];\n\n  // Hover handler: rise-in preset (0.15 scene units)\n  group.userData.handlers.onHover = (hovering) => {\n    if (hoverTl) hoverTl.kill();\n    hoverTl = gsap.to(group.position, {\n      y: hovering ? origY + 0.15 : origY,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n  };\n\n  // Click handler: emit hub-journal.select event\n  group.userData.handlers.onClick = () => {\n    const click = config.behaviorSpec?.interactions?.find(i => i.event === 'click');\n    if (click?.effect?.startsWith('emit:')) {\n      const event = click.effect.slice(5);\n      group.dispatchEvent({ type: 'node-event', detail: { event } });\n    }\n  };\n\n  // Press handler: scale down to 0.97\n  group.userData.handlers.onPress = (pressing) => {\n    if (pressTl) pressTl.kill();\n    pressTl = gsap.to(mesh.scale, {\n      x: pressing ? 0.97 : 1,\n      y: pressing ? 0.97 : 1,\n      duration: 0.12,\n      ease: 'back.out'\n    });\n  };\n\n  // Stock badge handler: update opacity based on inventory status\n  group.userData.handlers.updateStockBadge = (inStock) => {\n    group.userData.inStock = inStock;\n    material.opacity = inStock ? 1.0 : 0.6;\n  };\n\n  // Cleanup: dispose resources and kill timelines\n  group.userData.cleanup = () => {\n    if (hoverTl) hoverTl.kill();\n    if (pressTl) pressTl.kill();\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n  };\n\n  return group;\n}\n```"
+}

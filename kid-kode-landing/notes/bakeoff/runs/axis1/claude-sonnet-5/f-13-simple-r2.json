@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-13-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 11292,
+  "apiMs": 8758,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 914,
+    "cacheCreation": 0,
+    "cacheRead": 5477
+  },
+  "costUsd": 0.0266595,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, float, mix } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-collection-title';\n\n  const pos = config.scenePosition?.position ?? [0, 3, 0];\n  const rot = config.scenePosition?.rotation ?? [0, 0, 0];\n  const scl = config.scenePosition?.scale ?? [1, 1, 1];\n  group.position.set(...pos);\n  group.rotation.set(...rot);\n  group.scale.set(...scl);\n\n  const width = 2.6;\n  const height = width * (320 / 512);\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  const imgTex = ctx.textureLoader('/prism-mock/home/nodes/feature-card.png');\n\n  const ink = new THREE.Color('#16161d');\n  const surface = new THREE.Color('#0b0b10');\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.transparent = true;\n\n  const baseTex = texture(imgTex, uv());\n  const gradientMix = mix(\n    vec4(surface.r, surface.g, surface.b, 1.0),\n    vec4(ink.r, ink.g, ink.b, 1.0),\n    uv().y\n  );\n\n  material.colorNode = mix(gradientMix, baseTex, float(0.55));\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'collection-title-plane';\n  group.add(plane);\n\n  let textMesh = null;\n  try {\n    textMesh = createTextMesh({\n      text: 'Collection',\n      font: 'Lora',\n      weight: 400,\n      sizeEm: 0.34,\n      color: '#e8ecf2',\n      fontAtlas: ctx.fontAtlas,\n      align: 'center',\n    });\n    textMesh.position.set(0, 0, 0.01);\n    group.add(textMesh);\n  } catch (e) {\n    // font atlas render failed silently; no fallback DOM text allowed\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (textMesh) {\n      textMesh.geometry?.dispose?.();\n      if (textMesh.material) {\n        if (Array.isArray(textMesh.material)) {\n          textMesh.material.forEach((m) => m.dispose());\n        } else {\n          textMesh.material.dispose();\n        }\n      }\n    }\n  };\n\n  return group;\n}\n```"
+}

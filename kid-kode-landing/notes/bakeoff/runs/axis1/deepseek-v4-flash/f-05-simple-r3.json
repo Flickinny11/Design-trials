@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-05-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 21776,
+  "usage": {
+    "promptTokens": 1692,
+    "completionTokens": 3167
+  },
+  "costUsd": 0.0011236400000000002,
+  "transportAttempts": 2,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  Group,\n  PlaneGeometry,\n  MeshBasicNodeMaterial,\n  Mesh,\n  Vector3,\n} from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // Extract scene placement\n  const pos = config.scenePosition || new Vector3(0, -2.85, 0.26);\n  const rot = config.sceneRotation || { x: 0, y: 0, z: 0 };\n  const scl = config.sceneScale || { x: 1, y: 1, z: 1 };\n  group.position.copy(pos);\n  group.rotation.set(rot.x, rot.y, rot.z);\n  group.scale.set(scl.x, scl.y, scl.z);\n\n  // Load brushed metal texture\n  const texture = ctx.textureLoader.load(config.assets.imageUrl);\n  texture.wrapS = texture.wrapT = 1001; // RepeatWrapping\n  texture.anisotropy = 16;\n\n  // Create background plane (sized dynamically after text creation)\n  const pad = 0.15; // padding around text in scene units\n  let planeMesh = null;\n  let textMesh = null;\n\n  // Process text content\n  if (config.textContent && config.textContent.length > 0) {\n    const textItem = config.textContent[0];\n    const { text } = textItem;\n    // Map font size from token (headline -> 0.34)\n    const fontSize = 0.34; // scene units\n    const fontFamily = 'Lora';\n    const fontWeight = 400;\n    const color = '#ff2a38'; // accent\n\n    // Create text mesh via font atlas\n    textMesh = ctx.fontAtlas.createText({\n      text,\n      fontFamily,\n      fontWeight,\n      fontSize,\n      color,\n    });\n\n    // Get text bounding box to size background\n    textMesh.geometry.computeBoundingBox();\n    const box = textMesh.geometry.boundingBox;\n    const textWidth = box.max.x - box.min.x;\n    const textHeight = box.max.y - box.min.y;\n\n    // Size background plane\n    const planeWidth = textWidth + pad * 2;\n    const planeHeight = textHeight + pad * 2;\n    const planeGeo = new PlaneGeometry(planeWidth, planeHeight);\n    const planeMat = new MeshBasicNodeMaterial({\n      map: texture,\n      side: 2, // DoubleSide\n    });\n    planeMesh = new Mesh(planeGeo, planeMat);\n\n    // Center text relative to plane\n    const centerX = box.min.x + textWidth / 2;\n    const centerY = box.min.y + textHeight / 2;\n    textMesh.position.set(-centerX, -centerY, 0.001); // slight z push to avoid z-fighting\n\n    group.add(planeMesh);\n    group.add(textMesh);\n  }\n\n  // Attach handlers (none in this node)\n  group.userData.handlers = {};\n\n  // Cleanup function\n  group.userData.cleanup = () => {\n    if (planeMesh) {\n      planeMesh.geometry.dispose();\n      planeMesh.material.dispose();\n    }\n    if (textMesh) {\n      // Assume font atlas text has its own cleanup method or we dispose geometry\n      if (textMesh.geometry) textMesh.geometry.dispose();\n      if (textMesh.material) textMesh.material.dispose();\n    }\n    texture.dispose();\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

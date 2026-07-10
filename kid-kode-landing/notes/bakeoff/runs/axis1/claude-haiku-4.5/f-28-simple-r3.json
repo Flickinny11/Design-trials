@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-28-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 88914,
+  "apiMs": 86514,
+  "usage": {
+    "promptTokens": 3943,
+    "completionTokens": 9474,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.052284,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture as tslTexture, add, mul, vUv, noise } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const geometry = new THREE.PlaneGeometry(1, 1);\n  \n  const imageTexture = ctx.textureLoader.load('/prism-mock/home/nodes/orb-decor.png');\n  imageTexture.colorSpace = THREE.SRGBColorSpace;\n  \n  const textureNode = tslTexture(imageTexture);\n  \n  // Subtle grain effect: fine Perlin noise, scaled to 3% intensity\n  const grainNode = mul(noise(mul(vUv, 20)), 0.03);\n  \n  // Composite: texture + grain overlay\n  const compositeNode = add(textureNode, grainNode);\n  \n  const material = new THREE.MeshBasicNodeMaterial({\n    colorNode: compositeNode\n  });\n  \n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(-3.2, -0.3, 0);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n  \n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    imageTexture.dispose();\n  };\n  \n  mesh.userData.handlers = {};\n  \n  return mesh;\n}\n```"
+}

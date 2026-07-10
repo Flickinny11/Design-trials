@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-45-moderate",
+  "run": 1,
+  "ok": true,
+  "wallMs": 107239,
+  "apiMs": 104733,
+  "usage": {
+    "promptTokens": 4052,
+    "completionTokens": 11012,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.060197,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, positionGeometry, normalGeometry, mul, add } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Load textures via cached loader\n  const colorTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  const depthTexture = ctx.textureLoader.load(config.assets.depthMapUrl);\n\n  // Create tessellated plane for displacement mapping\n  const geometry = new THREE.PlaneGeometry(2.5, 0.3, 64, 64);\n\n  // Build TSL displacement nodes\n  const colorNode = texture(colorTexture);\n  const displacementMap = texture(depthTexture);\n  const displacementStrength = 0.06;\n  const displacement = mul(displacementMap.r, displacementStrength);\n  const displacedPosition = add(positionGeometry, mul(normalGeometry, displacement));\n\n  // Create material with machined-metal PBR\n  const material = new THREE.MeshStandardNodeMaterial({\n    metalness: 0.48,\n    roughness: 0.56,\n    clearcoat: 0.18,\n  });\n\n  material.colorNode = colorNode;\n  material.positionNode = displacedPosition;\n\n  // Create and position mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(\n    config.scenePosition[0],\n    config.scenePosition[1],\n    config.scenePosition[2]\n  );\n  mesh.scale.set(config.scale[0], config.scale[1], config.scale[2]);\n\n  group.add(mesh);\n\n  // Store initial state\n  const initialPosition = mesh.position.clone();\n  const initialScale = new THREE.Vector3(config.scale[0], config.scale[1], config.scale[2]);\n\n  // Hover animation (rise-in: subtle 0.15 units)\n  const hoverTimeline = gsap.timeline({ paused: true });\n  hoverTimeline.to(mesh.position, {\n    y: initialPosition.y + 0.15,\n    duration: 0.7,\n    ease: 'power3.out',\n  }, 0);\n  hoverTimeline.to(material, {\n    clearcoat: 0.28,\n    duration: 0.7,\n    ease: 'power3.out',\n  }, 0);\n\n  // Click animation (press-down)\n  const clickTimeline = gsap.timeline();\n  clickTimeline.to(mesh.scale, {\n    x: 0.97,\n    y: 0.97,\n    z: 0.97,\n    duration: 0.12,\n    ease: 'back.out',\n  }).to(mesh.scale, {\n    x: initialScale.x,\n    y: initialScale.y,\n    z: initialScale.z,\n    duration: 0.3,\n    ease: 'power2.out',\n  });\n\n  // Subtle time-based parallax effect\n  const parallaxTimeline = gsap.timeline({ repeat: -1 });\n  parallaxTimeline\n    .to(mesh.rotation, { y: 0.015, duration: 4, ease: 'sine.inOut' }, 0)\n    .to(mesh.rotation, { y: -0.015, duration: 4, ease: 'sine.inOut' }, 4);\n\n  // Attach event handlers\n  group.userData.handlers = {\n    onHoverEnter: () => {\n      hoverTimeline.play();\n    },\n    onHoverExit: () => {\n      hoverTimeline.reverse();\n    },\n    onClick: () => {\n      clickTimeline.restart();\n      group.dispatchEvent({ type: 'hub-features.select' });\n    },\n  };\n\n  // Cleanup function\n  group.userData.cleanup = () => {\n    hoverTimeline.kill();\n    clickTimeline.kill();\n    parallaxTimeline.kill();\n    geometry.dispose();\n    material.dispose();\n    colorTexture.dispose();\n    depthTexture.dispose();\n  };\n\n  return group;\n}\n```"
+}

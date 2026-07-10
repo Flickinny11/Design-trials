@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-06-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 14034,
+  "apiMs": 12889,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1213,
+    "cacheCreation": 0,
+    "cacheRead": 5491
+  },
+  "costUsd": 0.0341535,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-features-title';\n  group.position.set(0, 3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const atlasRegion = { x: 0, y: 0, w: 512, h: 320, atlasW: 512, atlasH: 320 };\n  const aspect = atlasRegion.w / atlasRegion.h;\n  const planeHeight = 0.34; // headline scale unit em height\n  const planeWidth = planeHeight * aspect;\n\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  const material = new THREE.MeshBasicNodeMaterial({\n    transparent: true,\n    depthWrite: false,\n  });\n\n  const disposers = [];\n\n  const baseUV = uv();\n  const uOffset = atlasRegion.x / atlasRegion.atlasW;\n  const vOffset = 1.0 - (atlasRegion.y + atlasRegion.h) / atlasRegion.atlasH;\n  const uScale = atlasRegion.w / atlasRegion.atlasW;\n  const vScale = atlasRegion.h / atlasRegion.atlasH;\n\n  const atlasUV = baseUV.mul(vec2(uScale, vScale)).add(vec2(uOffset, vOffset));\n\n  const map = ctx.textureLoader.load('/prism-assets/chrome/ceramic-grain.map.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n  map.wrapS = THREE.ClampToEdgeWrapping;\n  map.wrapT = THREE.ClampToEdgeWrapping;\n\n  material.map = null;\n  material.colorNode = texture(map, atlasUV);\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'hub-features-title-plane';\n  group.add(mesh);\n\n  // Billboard behavior: orient toward camera each frame.\n  group.userData.onBeforeRender = (renderer, scene, camera) => {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  // Render \"Features\" headline text via MSDF font atlas, layered above the surface plane.\n  let textMesh = null;\n  if (config.textContent && ctx.fontAtlas) {\n    textMesh = ctx.fontAtlas.createText({\n      text: 'Features',\n      font: 'Lora',\n      weight: 400,\n      size: 0.34,\n      color: config.visual?.colors?.paper || '#e8ecf2',\n      anchor: 'center',\n    });\n    if (textMesh) {\n      textMesh.position.set(0, 0, 0.001);\n      group.add(textMesh);\n      group.userData.onBeforeRenderText = (renderer, scene, camera) => {\n        textMesh.quaternion.copy(camera.quaternion);\n      };\n    }\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    if (textMesh && textMesh.userData && typeof textMesh.userData.cleanup === 'function') {\n      textMesh.userData.cleanup();\n    }\n    disposers.forEach((fn) => fn());\n  };\n\n  return group;\n}\n```"
+}

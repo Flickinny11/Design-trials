@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-40-moderate",
+  "run": 1,
+  "ok": true,
+  "wallMs": 82339,
+  "apiMs": 80115,
+  "usage": {
+    "promptTokens": 4066,
+    "completionTokens": 9924,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.054775000000000004,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, attribute, mul, add } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const container = new THREE.Group();\n  container.position.set(-1.25, 0.7, 0);\n\n  // Load textures via context loader (cached)\n  const colorTexture = ctx.textureLoader.load('/prism-mock/home/nodes/parallax-stack.png');\n  const depthTexture = ctx.textureLoader.load('/prism-mock/home/nodes/parallax-stack.depth.png');\n\n  // Create tessellated plane for displacement mapping\n  const geometry = new THREE.PlaneGeometry(2.0, 1.25, 64, 64);\n\n  // TSL nodes for vertex displacement\n  const positionAttribute = attribute('position');\n  const normalAttribute = attribute('normal');\n  const depthMapNode = texture(depthTexture);\n\n  // Displace vertices along normals based on depth map intensity\n  const displacementIntensity = 0.15;\n  const displacedPosition = add(\n    positionAttribute,\n    mul(normalAttribute, mul(depthMapNode.r, displacementIntensity))\n  );\n\n  // Color texture node\n  const colorNode = texture(colorTexture);\n\n  // Create machined-metal material with physical parameters\n  const material = new THREE.MeshPhysicalMaterial({\n    map: colorTexture,\n    metalness: 0.45,\n    roughness: 0.65,\n    clearcoat: 0.15,\n    clearcoatRoughness: 0.8,\n    emissive: new THREE.Color(0x000000),\n    toneMapped: false,\n  });\n\n  // Apply TSL node graph (WebGPU automatic node material)\n  material.colorNode = colorNode;\n  material.positionNode = displacedPosition;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  container.add(mesh);\n\n  // Apply cinematic primitive: parallax-scroll\n  if (ctx.primitives?.['parallax-scroll']) {\n    ctx.primitives['parallax-scroll'](container, { intensity: 0.25 });\n  }\n\n  // Interaction handlers\n  container.userData.handlers = {\n    onHover: () => {\n      gsap.killTweensOf(mesh.position);\n      gsap.to(mesh.position, {\n        y: 0.15,\n        duration: 0.7,\n        ease: 'power3.out'\n      });\n    },\n\n    onHoverOut: () => {\n      gsap.killTweensOf(mesh.position);\n      gsap.to(mesh.position, {\n        y: 0,\n        duration: 0.7,\n        ease: 'power3.out'\n      });\n    },\n\n    onClick: () => {\n      gsap.killTweensOf(mesh.scale);\n      gsap.to(mesh.scale, {\n        x: 0.97,\n        y: 0.97,\n        z: 0.97,\n        duration: 0.12,\n        ease: 'back.out',\n        onComplete: () => {\n          gsap.to(mesh.scale, {\n            x: 1,\n            y: 1,\n            z: 1,\n            duration: 0.3,\n            ease: 'power2.out'\n          });\n        }\n      });\n\n      if (config.handlers?.onClick) {\n        config.handlers.onClick({ event: 'hub-features.select' });\n      }\n    },\n\n    onFocus: () => {\n      gsap.to(material.emissive, {\n        r: 1.0,\n        g: 0.16,\n        b: 0.22,\n        duration: 0.3,\n        ease: 'power2.out'\n      });\n    },\n\n    onBlur: () => {\n      gsap.to(material.emissive, {\n        r: 0,\n        g: 0,\n        b: 0,\n        duration: 0.3,\n        ease: 'power2.out'\n      });\n    }\n  };\n\n  container.userData.cleanup = () => {\n    gsap.killTweensOf([mesh.position, mesh.scale, material.emissive]);\n    geometry.dispose();\n    material.dispose();\n    colorTexture.dispose();\n    depthTexture.dispose();\n  };\n\n  return container;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-30-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 71440,
+  "apiMs": 69001,
+  "usage": {
+    "promptTokens": 3951,
+    "completionTokens": 7294,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.0414,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport { PlaneGeometry, MeshBasicNodeMaterial, Mesh } from 'three/webgpu';\nimport { texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  // Atlas region aspect ratio: 512/320 ≈ 1.6\n  const aspectRatio = 512 / 320;\n  \n  // Default card dimensions\n  const cardHeight = config.cardHeight ?? 1.2;\n  const cardWidth = cardHeight * aspectRatio;\n  \n  // Create plane geometry\n  const geometry = new PlaneGeometry(cardWidth, cardHeight);\n  \n  // Load texture\n  const imageUrl = config.imageUrl ?? '/prism-assets/chrome/ceramic-grain.map.png';\n  const textureMap = ctx.textureLoader.load(imageUrl);\n  \n  // Create material with TSL texture node\n  const colorNode = texture(textureMap);\n  const material = new MeshBasicNodeMaterial({\n    colorNode: colorNode,\n  });\n  \n  // Create mesh at scene position\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(0, -0.3, 0);\n  \n  // Setup resource cleanup\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (textureMap) textureMap.dispose();\n  };\n  \n  mesh.userData.handlers = {};\n  \n  return mesh;\n}\n```"
+}

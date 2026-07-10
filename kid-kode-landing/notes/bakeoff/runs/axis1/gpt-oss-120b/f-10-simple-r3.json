@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-10-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 9922,
+  "usage": {
+    "promptTokens": 1662,
+    "completionTokens": 1567
+  },
+  "costUsd": 0.0011895,
+  "transportAttempts": 3,
+  "billing": "metered",
+  "output": "import { Mesh, PlaneGeometry, Object3D, Color } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport { createText } from '@/text';\n\nexport default function createNode(config, ctx) {\n  // ---------- Geometry ----------\n  const geometry = new PlaneGeometry(1, 1);\n  geometry.translate(0, 0, 0);\n\n  // ---------- Texture ----------\n  const texture = ctx.textureLoader.load(config.assets?.imageUrl ?? '');\n\n  // ---------- Material ----------\n  const material = new MeshBasicNodeMaterial({\n    map: texture,\n    side: DoubleSide,\n    transparent: true,\n  });\n\n  // ---------- Mesh ----------\n  const plane = new Mesh(geometry, material);\n  plane.position.set(\n    config.scenePlacement?.position?.[0] ?? 0,\n    config.scenePlacement?.position?.[1] ?? 0,\n    config.scenePlacement?.position?.[2] ?? 0,\n  );\n  plane.rotation.set(\n    config.scenePlacement?.rotation?.[0] ?? 0,\n    config.scenePlacement?.rotation?.[1] ?? 0,\n    config.scenePlacement?.rotation?.[2] ?? 0,\n  );\n  plane.scale.set(\n    config.scenePlacement?.scale?.[0] ?? 1,\n    config.scenePlacement?.scale?.[1] ?? 1,\n    config.scenePlacement?.scale?.[2] ?? 1,\n  );\n\n  // ---------- Text ----------\n  let textObject = null;\n  if (config.textContent) {\n    const textColor = new Color(config.palette?.ink ?? '#16161d');\n    textObject = createText({\n      text: config.textContent,\n      fontAtlas: ctx.fontAtlas,\n      size: 0.34, // headline scale approximation\n      color: textColor,\n      // optional alignment and positioning within the card\n      anchor: { x: 0, y: 0 },\n    });\n    // Slightly offset in front of the plane to avoid z‑fighting\n    textObject.position.set(0, 0, 0.001);\n    plane.add(textObject);\n  }\n\n  // ---------- Handlers ----------\n  plane.userData.handlers = {};\n\n  // ---------- Cleanup ----------\n  const timelines = [];\n  plane.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (texture) texture.dispose();\n    if (textObject && textObject.dispose) textObject.dispose();\n    timelines.forEach((tl) => tl.kill());\n  };\n\n  return plane;\n}"
+}

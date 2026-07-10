@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-50-complex",
+  "run": 1,
+  "ok": true,
+  "wallMs": 42975,
+  "usage": {
+    "promptTokens": 1767,
+    "completionTokens": 1711
+  },
+  "costUsd": 0.0012916499999999999,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import { Object3D, Vector3, Euler } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\n/**\n * @typedef {Object} PrimitiveConfig\n * @property {string} name\n * @property {Object} params\n */\n\n/**\n * @typedef {Object} NodeConfig\n * @property {{ x: number, y: number, z: number }} position\n * @property {{ x: number, y: number, z: number }} rotation\n * @property {{ x: number, y: number, z: number }} scale\n * @property {{ meshUrl?: string }} assets\n * @property {PrimitiveConfig[]} cinematicPrimitives\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {(url:string)=>any} glbLoader                // returns a cached GLTF (with .scene)\n * @property {Record<string, (obj:Object3D, params:any)=>void>} primitives\n * @property {(event:string)=>void} [emit]                // optional event emitter\n */\n\n/**\n * Creates a thumbnail card node.\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {Object3D}\n */\nexport default function createNode(config, ctx) {\n  const root = new Object3D();\n\n  // Apply placement\n  if (config.position) root.position.set(config.position.x, config.position.y, config.position.z);\n  if (config.rotation) root.rotation.set(config.rotation.x, config.rotation.y, config.rotation.z);\n  if (config.scale) root.scale.set(config.scale.x, config.scale.y, config.scale.z);\n\n  // Load mesh\n  if (config.assets && config.assets.meshUrl) {\n    const gltf = ctx.glbLoader(config.assets.meshUrl);\n    if (gltf && gltf.scene) {\n      const mesh = gltf.scene.clone();\n      root.add(mesh);\n    }\n  }\n\n  // Apply cinematic primitives\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const fn = ctx.primitives[prim.name];\n      if (typeof fn === 'function') {\n        fn(root, prim.params);\n      }\n    }\n  }\n\n  // Store original Y for hover animation\n  const originalY = root.position.y;\n\n  // GSAP timeline tracking\n  const _timelines = [];\n\n  // Event handlers container\n  root.userData.handlers = {};\n\n  // Hover (rise‑in) handler\n  root.userData.handlers.hover = () => {\n    const tl = gsap.to(root.position, {\n      y: originalY + 0.15,\n      duration: 0.15,\n      ease: 'power3.out',\n    });\n    _timelines.push(tl);\n  };\n\n  // Click (emit) handler\n  root.userData.handlers.click = () => {\n    if (typeof ctx.emit === 'function') {\n      ctx.emit('hub-features.select');\n    }\n  };\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Kill GSAP timelines\n    _timelines.forEach((t) => t.kill());\n    _timelines.length = 0;\n\n    // Dispose geometries and materials\n    root.traverse((obj) => {\n      if (obj.geometry) {\n        obj.geometry.dispose();\n      }\n      if (obj.material) {\n        if (Array.isArray(obj.material)) {\n          obj.material.forEach((m) => m.dispose());\n        } else {\n          obj.material.dispose();\n        }\n      }\n    });\n  };\n\n  return root;\n}"
+}

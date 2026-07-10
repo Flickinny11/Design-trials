@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-03-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 44984,
+  "usage": {
+    "promptTokens": 1695,
+    "completionTokens": 4873
+  },
+  "costUsd": 0.00160174,
+  "transportAttempts": 2,
+  "billing": "metered",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, MeshBasicNodeMaterial } from 'three/tsl';\n\nconst createNode = (config, ctx) => {\n  // --- load texture synchronously ---\n  const tex = ctx.textureLoader.load(config.assets.imageUrl);\n\n  // --- apply atlas UV offsets if provided ---\n  const region = config.atlasRegion;\n  if (region && region.sourceRect) {\n    const { x, y, width, height } = region.sourceRect;\n    const atlasW = tex.image.naturalWidth || tex.image.width;\n    const atlasH = tex.image.naturalHeight || tex.image.height;\n    const repeatX = width / atlasW;\n    const repeatY = height / atlasH;\n    const offsetX = x / atlasW;\n    // UV origin is bottom‑left; flip Y to match top‑left source rect\n    const offsetY = 1 - (y + height) / atlasH;\n\n    tex.repeat.set(repeatX, repeatY);\n    tex.offset.set(offsetX, offsetY);\n  }\n\n  // --- geometry sized to the atlas region’s aspect ratio ---\n  const regionWidth = region?.sourceRect?.width ?? tex.image.naturalWidth ?? 512;\n  const regionHeight = region?.sourceRect?.height ?? tex.image.naturalHeight ?? 320;\n  const aspect = regionWidth / regionHeight;\n  const geo = new THREE.PlaneGeometry(1, 1 / aspect);\n\n  // --- material with node based map ---\n  const mat = new MeshBasicNodeMaterial();\n  mat.map = texture(tex);\n\n  // --- build the mesh ---\n  const mesh = new THREE.Mesh(geo, mat);\n  const pos = config.scenePlacement.position;\n  const rot = config.scenePlacement.rotation;\n  const scl = config.scenePlacement.scale;\n  mesh.position.set(pos.x, pos.y, pos.z);\n  mesh.rotation.set(rot.x, rot.y, rot.z);\n  mesh.scale.set(scl.x, scl.y, scl.z);\n\n  // --- billboard via update handler ---\n  mesh.userData.handlers = {\n    update: (camera) => {\n      if (camera) {\n        mesh.lookAt(camera.position);\n      }\n    },\n  };\n\n  // --- cleanup ---\n  mesh.userData.cleanup = () => {\n    geo.dispose();\n    mat.dispose();\n    tex.dispose();\n    // no GSAP timelines in this node\n  };\n\n  return mesh;\n};\n\nexport default createNode;\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

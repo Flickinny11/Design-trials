@@ -1,0 +1,17 @@
+{
+  "contestant": "glm-5.2",
+  "model": "accounts/fireworks/models/glm-5p2",
+  "route": "fireworks",
+  "caseId": "f-03-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 58862,
+  "usage": {
+    "promptTokens": 1608,
+    "completionTokens": 4274
+  },
+  "costUsd": 0.021056800000000004,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import { Mesh, PlaneGeometry, MeshBasicNodeMaterial, SRGBColorSpace, DoubleSide } from 'three/webgpu';\nimport { texture, uv, vec2 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const tex = ctx.textureLoader(config.imageUrl);\n  if (tex) {\n    tex.colorSpace = SRGBColorSpace;\n    if (tex.generateMipmaps !== undefined) {\n      tex.generateMipmaps = true;\n    }\n  }\n\n  // Atlas region: (x, y, w, h) = (0, 0, 512, 320)\n  const regionX = 0;\n  const regionY = 0;\n  const regionW = 512;\n  const regionH = 320;\n\n  // Derive atlas dimensions from the loaded image (fallback to region bounds).\n  const img = tex && tex.image;\n  const atlasW = (img && img.width) ? img.width : regionW;\n  const atlasH = (img && img.height) ? img.height : regionH;\n\n  // UV remap: pixel-space region -> normalized UV with Y-flip for texture convention.\n  const uScale = regionW / atlasW;\n  const vScale = regionH / atlasH;\n  const uOffset = regionX / atlasW;\n  const vOffset = 1 - (regionY + regionH) / atlasH;\n\n  // Plane sized to the region's aspect ratio (1.6 : 1) in scene units.\n  const aspect = regionW / regionH;\n  const geometry = new PlaneGeometry(aspect, 1, 1, 1);\n\n  // TSL node graph: sample the atlas texture at the remapped UV coordinates.\n  const remappedUv = uv().mul(vec2(uScale, vScale)).add(vec2(uOffset, vOffset));\n  const mapNode = texture(tex, remappedUv);\n\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = mapNode;\n  material.transparent = true;\n  material.side = DoubleSide;\n  material.depthWrite = false;\n\n  const mesh = new Mesh(geometry, material);\n  // Sprite placement: plane faces +Z, camera at +Z, so it billboards naturally.\n  mesh.position.set(0, -0.35, -0.6);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n  mesh.renderOrder = 1;\n  mesh.frustumCulled = false;\n\n  mesh.userData.handlers = {};\n\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n  };\n\n  return mesh;\n}"
+}

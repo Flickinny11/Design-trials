@@ -1,0 +1,21 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "caseId": "f-34-moderate-int",
+  "run": 3,
+  "rawCompliant": false,
+  "fenced": true,
+  "parsed": true,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "MISSING_GLB_LOADER",
+      "severity": "error",
+      "message": "renderMode \"mesh\" must call ctx.glbLoader.load(config.meshUrl, ...) (§10.C L383)"
+    },
+    {
+      "rule": "MISSING_CLEANUP",
+      "severity": "error",
+      "message": "returned object must define userData.cleanup (§10.C L386)"
+    }
+  ]
+}

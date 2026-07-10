@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-36-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 23215,
+  "usage": {
+    "promptTokens": 1759,
+    "completionTokens": 3133
+  },
+  "costUsd": 0.0011235000000000001,
+  "transportAttempts": 2,
+  "billing": "metered",
+  "output": "```javascript\nimport { PlaneGeometry, MeshBasicNodeMaterial, Mesh } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { scenePlacement, interactions, dataBindings } = config;\n  const pos = scenePlacement.position;\n  const rot = scenePlacement.rotation;\n  const scale = scenePlacement.scale;\n\n  // Load texture (cached by ctx)\n  const texture = ctx.textureLoader.load('/prism-assets/chrome/ceramic-grain.map.png');\n\n  // Geometry dimensions derived from source rect aspect ratio (512×320)\n  const aspect = 512 / 320;\n  const geo = new PlaneGeometry(aspect, 1.0);\n\n  // Basic material – lighting not requested\n  const mat = new MeshBasicNodeMaterial({ map: texture, transparent: true });\n\n  const mesh = new Mesh(geo, mat);\n  mesh.position.set(pos.x, pos.y, pos.z);\n  mesh.rotation.set(rot.x, rot.y, rot.z);\n  mesh.scale.set(scale.x, scale.y, scale.z);\n\n  // ── Hover interactions ─────────────────────────────────\n  const initialY = pos.y;\n  let hoverTween = null;\n\n  const onHover = () => {\n    if (hoverTween) hoverTween.kill();\n    hoverTween = gsap.to(mesh.position, {\n      y: initialY + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n  };\n\n  const onUnhover = () => {\n    if (hoverTween) hoverTween.kill();\n    hoverTween = gsap.to(mesh.position, {\n      y: initialY,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n  };\n\n  // ── Click interaction ──────────────────────────────────\n  const onClick = () => {\n    // Press-down effect\n    gsap.to(mesh.scale, {\n      x: 0.97,\n      y: 0.97,\n      z: 0.97,\n      duration: 0.12,\n      ease: 'back.out(1.7)',\n      yoyo: true,\n      repeat: 1,\n    });\n    // Emit navigation event\n    mesh.dispatchEvent({ type: 'navigate', detail: 'hub-collection.select' });\n  };\n\n  // ── Attach event handlers ──────────────────────────────\n  mesh.userData.handlers = {\n    hover: onHover,\n    unhover: onUnhover,\n    click: onClick,\n  };\n\n  // Store data bindings for parent\n  if (dataBindings) {\n    mesh.userData.dataBindings = dataBindings;\n  }\n\n  // ── Resource cleanup ───────────────────────────────────\n  mesh.userData.cleanup = () => {\n    if (hoverTween) hoverTween.kill();\n    geo.dispose();\n    mat.dispose();\n    if (texture) texture.dispose();\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

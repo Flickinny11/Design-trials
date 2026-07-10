@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-21-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 61481,
+  "apiMs": 59188,
+  "usage": {
+    "promptTokens": 3954,
+    "completionTokens": 5902,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.034431,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  // Calculate aspect ratio from atlas region (512x320 pixels)\n  const aspectRatio = 512 / 320;\n\n  // Define plane dimensions in world units\n  const width = 0.8;\n  const height = width / aspectRatio;\n\n  // Create plane geometry\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  // Load texture from imageUrl\n  const texture = ctx.textureLoader.load(config.assets.imageUrl);\n  texture.colorSpace = THREE.SRGBColorSpace;\n\n  // Create material with texture\n  const material = new THREE.MeshBasicMaterial({\n    map: texture,\n    toneMapped: false,\n  });\n\n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n\n  // Apply scene placement from config\n  const position = config.position || [-3.2, -0.3, 0];\n  const rotation = config.rotation || [0, 0, 0];\n  const scale = config.scale || [1, 1, 1];\n\n  mesh.position.set(...position);\n  mesh.rotation.set(...rotation);\n  mesh.scale.set(...scale);\n\n  // Setup cleanup function\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n  };\n\n  return mesh;\n}\n```"
+}

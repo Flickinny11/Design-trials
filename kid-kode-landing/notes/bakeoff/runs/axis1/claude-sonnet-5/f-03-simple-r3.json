@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-03-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 9871,
+  "apiMs": 8293,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 688,
+    "cacheCreation": 0,
+    "cacheRead": 5477
+  },
+  "costUsd": 0.0210095,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2, uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const rect = { x: 0, y: 0, w: 512, h: 320 };\n  const atlasSize = 512;\n\n  const aspect = rect.w / rect.h;\n  const height = 1.6;\n  const width = height * aspect;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  const map = ctx.textureLoader.load('/prism-mock/home/nodes/floating-accent.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n  map.wrapS = THREE.ClampToEdgeWrapping;\n  map.wrapT = THREE.ClampToEdgeWrapping;\n\n  const uvScale = vec2(rect.w / atlasSize, rect.h / atlasSize);\n  const uvOffset = vec2(rect.x / atlasSize, 1.0 - (rect.y + rect.h) / atlasSize);\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  const mappedUv = uv().mul(uvScale).add(uvOffset);\n  material.colorNode = texture(map, mappedUv);\n  material.transparent = true;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'home-hero-showpiece';\n\n  const group = new THREE.Group();\n  group.add(mesh);\n  group.position.set(0, -0.35, -0.6);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  group.userData.handlers = {};\n\n  group.userData.billboard = (camera) => {\n    if (!camera) return;\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n  };\n\n  return group;\n}\n```"
+}

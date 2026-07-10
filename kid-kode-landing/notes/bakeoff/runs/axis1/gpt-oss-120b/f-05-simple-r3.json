@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-05-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 20742,
+  "usage": {
+    "promptTokens": 1652,
+    "completionTokens": 3214
+  },
+  "costUsd": 0.0021761999999999997,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import { Group, Mesh, PlaneGeometry } from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture, color } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\nexport default function createNode(config, ctx) {\n\t// Root group\n\tconst root = new Group();\n\n\t// Apply placement\n\tif (config.position && config.position.length === 3) {\n\t\troot.position.set(config.position[0], config.position[1], config.position[2]);\n\t}\n\tif (config.rotation && config.rotation.length === 3) {\n\t\troot.rotation.set(config.rotation[0], config.rotation[1], config.rotation[2]);\n\t}\n\tif (config.scale && config.scale.length === 3) {\n\t\troot.scale.set(config.scale[0], config.scale[1], config.scale[2]);\n\t}\n\n\t// ------------ Background plane with brushed metal texture ------------\n\tconst metalTex = ctx.textureLoader.load('/prism-assets/chrome/brushed-metal.map.png');\n\n\tconst bgGeom = new PlaneGeometry(2, 0.5);\n\tconst bgMat = new MeshBasicNodeMaterial({\n\t\tmapNode: texture(metalTex)\n\t});\n\tconst bgMesh = new Mesh(bgGeom, bgMat);\n\troot.add(bgMesh);\n\n\t// ------------ Text overlay using MSDF atlas ------------\n\t// Retrieve atlas region (texture + UV transform info)\n\tconst atlasRegion = ctx.fontAtlas.getRegion(0, {\n\t\tx: 0,\n\t\ty: 0,\n\t\twidth: 512,\n\t\theight: 320\n\t});\n\n\tconst txtTex = atlasRegion.texture;\n\tconst txtMapNode = texture(txtTex);\n\tconst txtColorNode = color('#16161d'); // ink color\n\n\tconst txtMat = new MeshBasicNodeMaterial({\n\t\tmapNode: txtMapNode,\n\t\tcolorNode: txtColorNode,\n\t\ttransparent: true\n\t});\n\n\tconst txtGeom = bgGeom.clone(); // same size, separate geometry for proper disposal\n\tconst txtMesh = new Mesh(txtGeom, txtMat);\n\t// Slight forward offset to avoid z‑fighting with background\n\ttxtMesh.position.z = 0.001;\n\troot.add(txtMesh);\n\n\t// ------------ User data: handlers & cleanup ------------\n\troot.userData.handlers = {};\n\n\troot.userData.cleanup = () => {\n\t\t// Dispose materials\n\t\tbgMat.dispose();\n\t\ttxtMat.dispose();\n\n\t\t// Dispose geometries\n\t\tbgGeom.dispose();\n\t\ttxtGeom.dispose();\n\n\t\t// Dispose textures (if they aren't shared cache)\n\t\tif (metalTex && typeof metalTex.dispose === 'function') metalTex.dispose();\n\t\tif (txtTex && typeof txtTex.dispose === 'function') txtTex.dispose();\n\n\t\t// Kill any GSAP timelines that might have been created elsewhere\n\t\tgsap.globalTimeline.clear();\n\t};\n\n\t// ------------ Apply cinematic primitives if any ------------\n\tif (Array.isArray(config.cinematicPrimitives)) {\n\t\tfor (const primitive of config.cinematicPrimitives) {\n\t\t\tconst fn = ctx.primitives[primitive.name];\n\t\t\tif (typeof fn === 'function') {\n\t\t\t\tfn(root, primitive.params);\n\t\t\t}\n\t\t}\n\t}\n\n\treturn root;\n}"
+}

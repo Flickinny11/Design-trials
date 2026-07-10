@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-17-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 21400,
+  "usage": {
+    "promptTokens": 1700,
+    "completionTokens": 3155
+  },
+  "costUsd": 0.0011214,
+  "transportAttempts": 3,
+  "billing": "metered",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { uv, texture, color, mix, sin, abs, mul, add } from 'three/tsl';\nimport { createText } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Scene placement\n  const sp = config.scenePosition || { position: [0, 1, 0.06], rotation: [0, 0, 0], scale: [1, 1, 1] };\n  group.position.set(...sp.position);\n  group.rotation.set(...sp.rotation);\n  group.scale.set(...sp.scale);\n\n  // Load brushed metal texture\n  const brushedTexture = ctx.textureLoader.load('/prism-assets/chrome/brushed-metal.map.png');\n\n  // Plane geometry (size 1x1 to respect scale)\n  const planeGeo = new THREE.PlaneGeometry(1, 1);\n\n  // --- Engineered Gradient + Subtle Grain (TSL nodes) ---\n  const u = uv().x;\n  const v = uv().y;\n\n  // Horizontal gradient: ink (left) → paper (right)\n  const gradientColor = mix(\n    color('#16161d'),\n    color('#e8ecf2'),\n    u\n  );\n\n  // Subtle grain noise (based on UV)\n  const grain = sin(mul(uv(), 100.0)).abs().mul(0.05);\n\n  // Brushed metal node\n  const brushedNode = texture(brushedTexture);\n\n  // Combine: brushed metal * gradient + grain\n  const finalColor = add(mul(brushedNode, gradientColor), grain);\n\n  const material = new THREE.MeshBasicNodeMaterial({\n    colorNode: finalColor,\n  });\n\n  const plane = new THREE.Mesh(planeGeo, material);\n  group.add(plane);\n\n  // --- Text: \"Collection 2\" (headline, 0.34 scene units) ---\n  const textMesh = createText({\n    text: 'Collection 2',\n    fontFamily: 'Lora',\n    fontWeight: 400,\n    fontSize: 0.34,         // headline height from type scale\n    fontAtlas: ctx.fontAtlas,\n  });\n\n  // Slightly in front of the plane\n  textMesh.position.set(0, 0, 0.001);\n  group.add(textMesh);\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    planeGeo.dispose();\n    material.dispose();\n    brushedTexture.dispose();\n\n    if (textMesh.isMesh) {\n      textMesh.geometry.dispose();\n      if (Array.isArray(textMesh.material)) {\n        textMesh.material.forEach(m => m.dispose());\n      } else {\n        textMesh.material.dispose();\n      }\n    }\n    // No GSAP timelines to kill\n  };\n\n  // No event handlers needed\n  group.userData.handlers = {};\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

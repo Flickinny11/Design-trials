@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-17-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 97121,
+  "apiMs": 94738,
+  "usage": {
+    "promptTokens": 3954,
+    "completionTokens": 9958,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.054726,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture as textureNode } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Set position, rotation, scale\n  group.position.set(0, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Load brushed metal texture\n  const metalMap = ctx.textureLoader.load(config.assets.imageUrl);\n  \n  // Create plane geometry\n  const geometry = new THREE.PlaneGeometry(1, 1);\n  \n  // Create material using TSL nodes\n  const colorNode = textureNode(metalMap);\n  const material = new THREE.MeshBasicNodeMaterial({\n    colorNode: colorNode,\n  });\n  \n  // Create and add plane mesh\n  const plane = new THREE.Mesh(geometry, material);\n  group.add(plane);\n  \n  // Render text content via font atlas\n  if (config.textContent && ctx.fontAtlas) {\n    const textMesh = ctx.fontAtlas.create(config.textContent, {\n      fontSize: 0.34,\n      fontWeight: 400,\n      fontFamily: 'display',\n      color: '#e8ecf2',\n      align: 'center',\n    });\n    \n    if (textMesh) {\n      textMesh.position.z = 0.01;\n      group.add(textMesh);\n    }\n  }\n  \n  // Setup cleanup\n  group.userData.handlers = {};\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    metalMap.dispose();\n  };\n  \n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-24-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 100753,
+  "apiMs": 98350,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 9513,
+    "cacheCreation": 0,
+    "cacheRead": 21572
+  },
+  "costUsd": 0.05072720000000001,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Calculate plane dimensions from atlas region aspect ratio\n  const atlasRegion = config.atlasRegion || { width: 512, height: 320 };\n  const aspectRatio = atlasRegion.width / atlasRegion.height;\n  const planeHeight = 1.0;\n  const planeWidth = planeHeight * aspectRatio;\n\n  // Create sprite plane geometry\n  const planeGeometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  // Load ceramic grain texture and create TSL material\n  const textureMap = ctx.textureLoader.load(config.assets.imageUrl);\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = texture(textureMap);\n\n  // Add plane mesh to group\n  const planeMesh = new THREE.Mesh(planeGeometry, material);\n  group.add(planeMesh);\n\n  // Render text content via fontAtlas\n  if (config.textContent && config.textContent.length > 0) {\n    const textObject = ctx.fontAtlas(config.textContent[0], {\n      size: 0.34,\n      color: 0x16161d,\n    });\n    if (textObject) {\n      textObject.position.z = 0.01;\n      group.add(textObject);\n    }\n  }\n\n  // Setup resource cleanup\n  group.userData.cleanup = () => {\n    planeGeometry.dispose();\n    material.dispose();\n    textureMap.dispose();\n  };\n\n  // Apply cinematic primitives (if any)\n  if (config.cinematicPrimitives && Array.isArray(config.cinematicPrimitives)) {\n    for (const primitive of config.cinematicPrimitives) {\n      if (ctx.primitives[primitive.name]) {\n        ctx.primitives[primitive.name](group, primitive.params);\n      }\n    }\n  }\n\n  return group;\n}\n```"
+}

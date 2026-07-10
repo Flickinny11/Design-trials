@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-06-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 15547,
+  "apiMs": 13008,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1025,
+    "cacheCreation": 0,
+    "cacheRead": 5491
+  },
+  "costUsd": 0.0294535,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import * as THREE from 'three/webgpu';\nimport { texture, uv, vec2 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-features-title';\n  group.position.set(0, 3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const atlasW = 2048, atlasH = 2048;\n  const rect = { x: 0, y: 0, w: 512, h: 320 };\n  const aspect = rect.w / rect.h;\n\n  const planeH = 1.0;\n  const planeW = planeH * aspect;\n  const geometry = new THREE.PlaneGeometry(planeW, planeH);\n\n  const map = ctx.textureLoader.load('/prism-assets/chrome/ceramic-grain.map.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const uOffset = rect.x / atlasW;\n  const vOffset = 1 - (rect.y + rect.h) / atlasH;\n  const uScale = rect.w / atlasW;\n  const vScale = rect.h / atlasH;\n\n  const uvNode = uv().mul(vec2(uScale, vScale)).add(vec2(uOffset, vOffset));\n  const mapNode = texture(map, uvNode);\n\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n  material.colorNode = mapNode;\n\n  const bgMesh = new THREE.Mesh(geometry, material);\n  bgMesh.name = 'features-title-bg';\n  group.add(bgMesh);\n\n  let textMesh = null;\n  if (ctx.fontAtlas && typeof ctx.fontAtlas.createText === 'function') {\n    textMesh = ctx.fontAtlas.createText({\n      text: 'Features',\n      font: 'display',\n      weight: 400,\n      size: 0.34,\n      color: config?.colors?.ink ?? '#16161d',\n      align: 'center',\n      anchor: 'center'\n    });\n    textMesh.name = 'features-title-text';\n    textMesh.position.set(0, 0, 0.01);\n    group.add(textMesh);\n  }\n\n  group.onBeforeRender = (renderer, scene, camera) => {\n    group.quaternion.copy(camera.quaternion);\n  };\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    if (textMesh) {\n      if (textMesh.geometry) textMesh.geometry.dispose();\n      if (textMesh.material) textMesh.material.dispose();\n      if (typeof textMesh.userData?.cleanup === 'function') {\n        textMesh.userData.cleanup();\n      }\n    }\n  };\n\n  return group;\n}"
+}

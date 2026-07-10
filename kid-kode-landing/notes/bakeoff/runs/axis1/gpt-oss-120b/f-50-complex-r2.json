@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-50-complex",
+  "run": 2,
+  "ok": true,
+  "wallMs": 12788,
+  "usage": {
+    "promptTokens": 1767,
+    "completionTokens": 1999
+  },
+  "costUsd": 0.0014644499999999997,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\nexport default function createNode(config, ctx) {\n\t// Root container\n\tconst root = new THREE.Object3D();\n\troot.name = config.id ?? 'feature-thumbnail-card';\n\n\t// Apply transforms from config (fallback to specification defaults)\n\tconst pos = config.position ?? [-1.25, -1.1, 0];\n\tconst rot = config.rotation ?? [0, 0, 0];\n\tconst scl = config.scale ?? [1, 1, 1];\n\n\troot.position.set(pos[0], pos[1], pos[2]);\n\troot.rotation.set(rot[0], rot[1], rot[2]);\n\troot.scale.set(scl[0], scl[1], scl[2]);\n\n\t// Load GLB mesh (synchronous via cached loader)\n\tconst glb = ctx.glbLoader(config.meshUrl);\n\t// Assume loader returns an Object3D (Group or Scene)\n\tconst meshRoot = glb.scene ? glb.scene.clone() : glb.clone ? glb.clone() : glb;\n\troot.add(meshRoot);\n\n\t// Apply cinematic primitives\n\tif (Array.isArray(config.cinematicPrimitives)) {\n\t\tfor (const prim of config.cinematicPrimitives) {\n\t\t\tconst fn = ctx.primitives?.[prim.name];\n\t\t\tif (typeof fn === 'function') {\n\t\t\t\tfn(root, prim.params ?? {});\n\t\t\t}\n\t\t}\n\t}\n\n\t// ---------- Event Handlers ----------\n\tconst handlers = {};\n\n\t// Hover: rise‑in (y +0.15 → original) using GSAP preset‑like config\n\tconst baseY = root.position.y;\n\tconst hoverTL = gsap.timeline({ paused: true });\n\thoverTL.to(\n\t\troot.position,\n\t\t{\n\t\t\ty: baseY + 0.15,\n\t\t\tduration: 0.15,\n\t\t\tease: 'power3.out',\n\t\t},\n\t\t0\n\t);\n\thandlers.hover = () => {\n\t\thoverTL.restart();\n\t};\n\n\t// Click: emit navigation event\n\thandlers.click = () => {\n\t\tif (typeof ctx.emit === 'function') {\n\t\t\tctx.emit('hub-features.select');\n\t\t}\n\t};\n\n\t// Attach handlers to userData\n\troot.userData.handlers = handlers;\n\n\t// ---------- Cleanup ----------\n\troot.userData.cleanup = () => {\n\t\t// Kill GSAP timeline(s)\n\t\thoverTL.kill();\n\n\t\t// Dispose geometry and material resources\n\t\tmeshRoot.traverse((obj) => {\n\t\t\tif (obj.isMesh) {\n\t\t\t\tif (obj.geometry) obj.geometry.dispose();\n\t\t\t\tif (Array.isArray(obj.material)) {\n\t\t\t\t\tobj.material.forEach((m) => m && m.dispose && m.dispose());\n\t\t\t\t} else if (obj.material) {\n\t\t\t\t\tobj.material.dispose();\n\t\t\t\t}\n\t\t\t}\n\t\t});\n\t};\n\n\treturn root;\n}"
+}

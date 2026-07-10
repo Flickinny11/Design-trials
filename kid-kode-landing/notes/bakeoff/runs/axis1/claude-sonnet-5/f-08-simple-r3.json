@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-08-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 12887,
+  "apiMs": 10381,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1044,
+    "cacheCreation": 0,
+    "cacheRead": 5483
+  },
+  "costUsd": 0.0299215,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, float, uniform } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'features-card-1-label';\n  group.position.set(-3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 1.6;\n  const height = 1.0;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  const map = ctx.textureLoader.load('/prism-mock/home/nodes/cta-hero-isolated.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const grainAmount = uniform(0.035);\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  const uvNode = uv();\n  const texColor = texture(map, uvNode);\n\n  // engineered gradient overlay using surface/ink tones, plus subtle procedural grain\n  const gradTop = vec4(0.09, 0.09, 0.11, 1.0); // surface #0b0b10 approx\n  const gradBottom = vec4(0.086, 0.086, 0.114, 1.0); // ink #16161d approx\n  const gradMix = gradTop.mul(float(1.0).sub(uvNode.y)).add(gradBottom.mul(uvNode.y));\n\n  const noise = uvNode.x.mul(12.9898).add(uvNode.y.mul(78.233)).sin().mul(43758.5453).fract();\n  const grain = noise.sub(0.5).mul(grainAmount);\n\n  const finalColor = texColor.rgb.mul(0.85).add(gradMix.rgb.mul(0.15)).add(grain);\n  material.colorNode = vec4(finalColor, texColor.a);\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'features-card-1-label-plane';\n  group.add(plane);\n\n  const textMesh = createTextMesh({\n    text: 'Features 1',\n    font: 'Lora',\n    weight: 400,\n    role: 'headline',\n    sizeEm: 0.34,\n    color: '#e8ecf2',\n    fontAtlas: ctx.fontAtlas,\n    maxWidth: width * 0.85,\n    align: 'center',\n  });\n  textMesh.position.set(0, 0, 0.01);\n  group.add(textMesh);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) {\n      if (Array.isArray(textMesh.material)) {\n        textMesh.material.forEach((m) => m.dispose());\n      } else {\n        textMesh.material.dispose();\n      }\n    }\n  };\n\n  return group;\n}\n```"
+}

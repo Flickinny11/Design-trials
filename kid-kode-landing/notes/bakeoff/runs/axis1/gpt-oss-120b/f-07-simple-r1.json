@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-07-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 29744,
+  "usage": {
+    "promptTokens": 1650,
+    "completionTokens": 1461
+  },
+  "costUsd": 0.0011240999999999998,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import * as THREE from 'three/webgpu';\nimport { texture as nodeTexture } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport primitives from '@/primitives';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const {\n    position = [-3.2, -0.3, 0],\n    rotation = [0, 0, 0],\n    scale = [1, 1, 1],\n    assets = {}\n  } = config;\n\n  // Load texture (synchronous via cache)\n  const imgUrl = assets.imageUrl;\n  const tex = ctx.textureLoader(imgUrl);\n  const texNode = nodeTexture(tex);\n\n  // Plane geometry respecting atlas aspect ratio (512:320)\n  const aspect = 512 / 320; // 1.6\n  const geometry = new THREE.PlaneGeometry(aspect, 1, 1, 1);\n\n  // Basic material (no lighting required)\n  const material = new THREE.MeshBasicNodeMaterial({\n    map: texNode,\n    // Ensure correct handling of premultiplied alpha if needed\n    // (defaults are fine for a static composition)\n  });\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(...position);\n  mesh.rotation.set(...rotation);\n  mesh.scale.set(...scale);\n\n  // No cinematic primitives to apply for this node\n\n  // Event handlers placeholder (none defined)\n  mesh.userData.handlers = {};\n\n  // Cleanup routine\n  mesh.userData.cleanup = () => {\n    // Dispose of geometry & material\n    geometry.dispose();\n    material.dispose();\n\n    // If the texture is owned exclusively, dispose it.\n    // ctx.textureLoader typically returns cached textures; dispose only if\n    // you are certain it's not shared elsewhere.\n    if (tex && tex.dispose) {\n      tex.dispose();\n    }\n\n    // Kill any GSAP timelines that might have been created in the future\n    gsap.killTweensOf(mesh);\n  };\n\n  return mesh;\n}"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-20-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 101862,
+  "apiMs": 99481,
+  "usage": {
+    "promptTokens": 3953,
+    "completionTokens": 10902,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.059434,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Apply scene placement\n  const scenePos = config.scenePosition || new THREE.Vector3(0, 3, 0);\n  const sceneRot = config.sceneRotation || new THREE.Euler(0, 0, 0);\n  const sceneScale = config.sceneScale || new THREE.Vector3(1, 1, 1);\n  \n  group.position.copy(scenePos);\n  group.rotation.copy(sceneRot);\n  group.scale.copy(sceneScale);\n  \n  const timelines = [];\n  const disposables = [];\n  \n  group.userData.cleanup = () => {\n    timelines.forEach(tl => tl.kill());\n    disposables.forEach(item => {\n      if (item && typeof item.dispose === 'function') {\n        item.dispose();\n      }\n    });\n  };\n  \n  group.userData.handlers = {};\n  \n  // Load and apply image texture\n  const imageUrl = config.imageUrl || '/prism-mock/home/nodes/cta-hero-isolated.png';\n  const texture = ctx.textureLoader.load(imageUrl);\n  disposables.push(texture);\n  \n  // Create background plane\n  const planeGeom = new THREE.PlaneGeometry(1.6, 1.0);\n  disposables.push(planeGeom);\n  \n  const planeMat = new THREE.MeshBasicMaterial({\n    map: texture,\n    transparent: true,\n  });\n  disposables.push(planeMat);\n  \n  const planeMesh = new THREE.Mesh(planeGeom, planeMat);\n  planeMesh.position.z = 0;\n  group.add(planeMesh);\n  \n  // Create text overlay\n  const textContent = config.textContent || {};\n  const textStr = textContent.text || 'Pricing';\n  \n  if (ctx.fontAtlas && ctx.fontAtlas.create) {\n    const textMesh = ctx.fontAtlas.create({\n      text: textStr,\n      fontSize: 0.34,\n      font: 'Lora-400',\n      color: '#16161d',\n    });\n    \n    if (textMesh) {\n      textMesh.position.z = 0.1;\n      group.add(textMesh);\n    }\n  }\n  \n  return group;\n}\n```"
+}

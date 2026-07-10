@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-13-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 13872,
+  "apiMs": 11713,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1022,
+    "cacheCreation": 3350,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.061184499999999996,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, uniform, mix, positionLocal, time } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-collection-title';\n  group.position.set(0, 3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 3.2;\n  const height = (320 / 512) * width;\n\n  const geometry = new THREE.PlaneGeometry(width, height, 1, 1);\n\n  const tex = ctx.textureLoader.load('/prism-mock/home/nodes/feature-card.png');\n  tex.colorSpace = THREE.SRGBColorSpace;\n\n  const inkColor = new THREE.Color('#16161d');\n  const surfaceColor = new THREE.Color('#0b0b10');\n\n  const grainStrength = uniform(0.035);\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.transparent = false;\n\n  const baseTex = texture(tex, uv());\n\n  // engineered gradient overlay (ink -> surface) mixed with texture, plus subtle static grain\n  const gradientMix = uv().y;\n  const gradientColor = mix(vec4(surfaceColor, 1.0), vec4(inkColor, 1.0), gradientMix);\n\n  const grainNoise = uv().x.mul(1234.5).sin().mul(uv().y.mul(789.3).cos()).fract().sub(0.5).mul(grainStrength);\n\n  material.colorNode = baseTex.mul(0.82).add(gradientColor.mul(0.18)).add(vec4(grainNoise, grainNoise, grainNoise, 0.0));\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'collection-title-plane';\n  group.add(plane);\n\n  // Headline text: \"Collection\"\n  const textMesh = createTextMesh({\n    text: 'Collection',\n    font: 'Lora',\n    weight: 400,\n    role: 'headline',\n    sizeEm: 0.34,\n    color: '#e8ecf2',\n    atlas: ctx.fontAtlas,\n  });\n  textMesh.name = 'collection-title-text';\n  textMesh.position.set(0, 0, 0.02);\n  group.add(textMesh);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (tex && tex.dispose) tex.dispose();\n    if (textMesh.userData && typeof textMesh.userData.cleanup === 'function') {\n      textMesh.userData.cleanup();\n    } else if (textMesh.geometry) {\n      textMesh.geometry.dispose();\n      if (textMesh.material) textMesh.material.dispose();\n    }\n  };\n\n  return group;\n}\n```"
+}

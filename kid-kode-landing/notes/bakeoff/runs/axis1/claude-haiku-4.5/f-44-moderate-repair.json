@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-44-moderate",
+  "run": "repair",
+  "ok": true,
+  "wallMs": 15328,
+  "apiMs": 13496,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 2110,
+    "cacheCreation": 4703,
+    "cacheRead": 0
+  },
+  "costUsd": 0.021712,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const container = new THREE.Object3D();\n  const timelines = [];\n  const initialPosition = { x: -2.5, y: -0.2, z: 0 };\n  let mesh = null;\n\n  // Load the GLB mesh and clone it for this instance\n  const glb = ctx.glbLoader.load(config.meshUrl);\n  if (glb && glb.scene) {\n    mesh = glb.scene.clone();\n    container.add(mesh);\n  }\n\n  // Apply scene placement\n  container.position.set(initialPosition.x, initialPosition.y, initialPosition.z);\n\n  // Setup interaction handlers\n  const handlers = {\n    onHover: () => {\n      timelines.forEach(tl => tl.kill());\n      timelines.length = 0;\n\n      const timeline = gsap.to(container.position, {\n        y: initialPosition.y + 0.15,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n      timelines.push(timeline);\n    },\n\n    onHoverOut: () => {\n      timelines.forEach(tl => tl.kill());\n      timelines.length = 0;\n\n      const timeline = gsap.to(container.position, {\n        y: initialPosition.y,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n      timelines.push(timeline);\n    },\n\n    onClick: () => {\n      container.dispatchEvent({\n        type: 'hub-home.select',\n        detail: config,\n      });\n    },\n  };\n\n  container.userData.handlers = handlers;\n\n  container.userData.cleanup = () => {\n    timelines.forEach(tl => tl.kill());\n    timelines.length = 0;\n\n    if (mesh) {\n      mesh.traverse((child) => {\n        if (child.geometry) child.geometry.dispose();\n        if (child.material) {\n          if (Array.isArray(child.material)) {\n            child.material.forEach(mat => mat.dispose());\n          } else {\n            child.material.dispose();\n          }\n        }\n      });\n    }\n  };\n\n  return container;\n}\n```"
+}

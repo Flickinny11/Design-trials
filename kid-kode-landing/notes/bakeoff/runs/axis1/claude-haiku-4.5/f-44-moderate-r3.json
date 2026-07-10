@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-44-moderate",
+  "run": 3,
+  "ok": true,
+  "wallMs": 114244,
+  "apiMs": 111774,
+  "usage": {
+    "promptTokens": 4019,
+    "completionTokens": 12753,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.068826,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  const timelines = [];\n  \n  // Load and clone GLB mesh\n  const glb = ctx.glbLoader(config.meshUrl);\n  const meshScene = glb.scene.clone();\n  group.add(meshScene);\n  \n  // Apply scene placement\n  const { scenePosition = [0, 0, 0], rotation = [0, 0, 0], scale = [1, 1, 1] } = config;\n  \n  group.position.fromArray(scenePosition);\n  group.rotation.fromArray(rotation);\n  group.scale.fromArray(scale);\n  \n  const initialPos = group.position.clone();\n  const initialScale = group.scale.clone();\n  \n  // Create accent edge wireframe overlay\n  const accentEdge = new THREE.Group();\n  meshScene.traverse(child => {\n    if (child.isMesh && child.geometry) {\n      const edgeGeo = new THREE.EdgesGeometry(child.geometry);\n      const edgeMat = new THREE.LineBasicMaterial({\n        color: 0xff2a38,\n        linewidth: 1,\n        transparent: true,\n        opacity: 0.8\n      });\n      const edges = new THREE.LineSegments(edgeGeo, edgeMat);\n      edges.position.copy(child.position);\n      edges.rotation.copy(child.rotation);\n      edges.scale.copy(child.scale);\n      accentEdge.add(edges);\n    }\n  });\n  group.add(accentEdge);\n  accentEdge.visible = false;\n  \n  // Event handlers\n  const handlers = {\n    onHover: () => {\n      timelines.forEach(tl => tl.kill());\n      timelines.length = 0;\n      \n      const tl = gsap.timeline();\n      tl.to(group.position, {\n        y: initialPos.y + 0.15,\n        duration: 0.7,\n        ease: 'power3.out'\n      });\n      timelines.push(tl);\n    },\n    \n    onHoverEnd: () => {\n      timelines.forEach(tl => tl.kill());\n      timelines.length = 0;\n      \n      const tl = gsap.timeline();\n      tl.to(group.position, {\n        y: initialPos.y,\n        duration: 0.5,\n        ease: 'power3.out'\n      });\n      timelines.push(tl);\n    },\n    \n    onClick: () => {\n      timelines.forEach(tl => tl.kill());\n      timelines.length = 0;\n      \n      const tl = gsap.timeline();\n      tl.to(group.scale, {\n        x: initialScale.x * 0.97,\n        y: initialScale.y * 0.97,\n        z: initialScale.z * 0.97,\n        duration: 0.06,\n        ease: 'back.out'\n      }).to(group.scale, {\n        x: initialScale.x,\n        y: initialScale.y,\n        z: initialScale.z,\n        duration: 0.06,\n        ease: 'back.out'\n      });\n      timelines.push(tl);\n      \n      // Emit event\n      if (config.onEvent) {\n        config.onEvent('hub-home.select');\n      }\n    },\n    \n    onFocus: () => {\n      accentEdge.visible = true;\n    },\n    \n    onBlur: () => {\n      accentEdge.visible = false;\n    }\n  };\n  \n  group.userData.handlers = handlers;\n  \n  group.userData.cleanup = () => {\n    timelines.forEach(tl => tl.kill());\n    timelines.length = 0;\n    \n    accentEdge.traverse(child => {\n      if (child.geometry) child.geometry.dispose();\n      if (child.material) {\n        if (Array.isArray(child.material)) {\n          child.material.forEach(m => m.dispose());\n        } else {\n          child.material.dispose();\n        }\n      }\n    });\n  };\n  \n  return group;\n}"
+}

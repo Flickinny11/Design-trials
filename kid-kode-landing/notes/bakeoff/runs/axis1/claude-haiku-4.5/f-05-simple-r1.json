@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-05-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 83792,
+  "apiMs": 81238,
+  "usage": {
+    "promptTokens": 3942,
+    "completionTokens": 9172,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.050776999999999996,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Track resources for cleanup\n  const cleanup_resources = {\n    geometries: [],\n    materials: [],\n    textures: [],\n  };\n\n  // ===== SCENE PLACEMENT =====\n  const scenePos = config.scenePosition || {};\n  const position = scenePos.position || [0, -2.85, 0.26];\n  const rotation = scenePos.rotation || [0, 0, 0];\n  const scale = scenePos.scale || [1, 1, 1];\n\n  group.position.set(position[0], position[1], position[2]);\n  group.rotation.set(rotation[0], rotation[1], rotation[2]);\n  group.scale.set(scale[0], scale[1], scale[2]);\n\n  // ===== COLOR PALETTE =====\n  const colors = {\n    ink: new THREE.Color(config.colors?.ink || '#16161d'),\n    paper: new THREE.Color(config.colors?.paper || '#e8ecf2'),\n    accent: new THREE.Color(config.colors?.accent || '#ff2a38'),\n    surface: new THREE.Color(config.colors?.surface || '#0b0b10'),\n  };\n\n  // ===== BUTTON BACKGROUND PLANE =====\n  const buttonGeom = new THREE.PlaneGeometry(2.4, 0.6);\n  cleanup_resources.geometries.push(buttonGeom);\n\n  // Load brushed metal texture\n  const metalTexture = ctx.textureLoader.load(\n    config.assets?.imageUrl || '/prism-assets/chrome/brushed-metal.map.png'\n  );\n  cleanup_resources.textures.push(metalTexture);\n\n  const buttonMat = new MeshBasicNodeMaterial({\n    map: metalTexture,\n    color: colors.paper,\n    transparent: true,\n  });\n  cleanup_resources.materials.push(buttonMat);\n\n  const buttonMesh = new THREE.Mesh(buttonGeom, buttonMat);\n  group.add(buttonMesh);\n\n  // ===== TEXT CONTENT VIA FONT ATLAS =====\n  if (config.textContent && config.textContent.length > 0) {\n    const textContent = config.textContent[0];\n\n    // Create MSDF text mesh using fontAtlas\n    const textMesh = ctx.fontAtlas.create({\n      text: textContent,\n      font: 'Lora',\n      size: 0.34, // headline type scale\n      weight: 400,\n      color: colors.ink,\n      align: 'center',\n      anchorX: 'center',\n      anchorY: 'middle',\n    });\n\n    if (textMesh) {\n      textMesh.position.z = 0.01;\n      group.add(textMesh);\n    }\n  }\n\n  // ===== EVENT HANDLERS =====\n  group.userData.handlers = {\n    click: (event) => {\n      // CTA button interaction\n    },\n  };\n\n  // ===== RESOURCE CLEANUP =====\n  group.userData.cleanup = () => {\n    cleanup_resources.geometries.forEach((g) => g.dispose());\n    cleanup_resources.materials.forEach((m) => m.dispose());\n    cleanup_resources.textures.forEach((t) => t.dispose());\n  };\n\n  return group;\n}\n```"
+}

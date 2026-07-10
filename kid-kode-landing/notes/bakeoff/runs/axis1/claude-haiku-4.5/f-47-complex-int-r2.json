@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-47-complex-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 92461,
+  "apiMs": 89838,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 10325,
+    "cacheCreation": 0,
+    "cacheRead": 4097
+  },
+  "costUsd": 0.0531797,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport {\n  texture,\n  positionLocal,\n  uv,\n  mul,\n  add,\n  float,\n  sampler2D,\n  vec3\n} from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Load textures asynchronously via ctx\n  const imageTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  const depthMapTexture = ctx.textureLoader.load(config.assets.depthMapUrl);\n\n  // Set color space for proper rendering\n  imageTexture.colorSpace = THREE.SRGBColorSpace;\n\n  // Create tessellated plane for detailed displacement\n  const geometry = new THREE.PlaneGeometry(1, 1, 64, 64);\n\n  // Setup TSL-based displacement material\n  const colorSampler = sampler2D(imageTexture);\n  const depthSampler = sampler2D(depthMapTexture);\n\n  // Calculate displacement from depth map\n  const displacementStrength = float(0.08);\n  const depthSample = texture(depthSampler, uv()).x;\n  const displacementOffset = mul(depthSample, displacementStrength);\n\n  // Displace vertices in Z direction\n  const displacedPosition = add(\n    positionLocal,\n    mul(vec3(0, 0, 1), displacementOffset)\n  );\n\n  // Create NodeMaterial with TSL nodes\n  const material = new THREE.NodeMaterial();\n  material.positionNode = displacedPosition;\n  material.colorNode = texture(colorSampler, uv());\n  material.side = THREE.FrontSide;\n\n  // Create and configure mesh\n  const mesh = new THREE.Mesh(geometry, material);\n\n  // Apply position and scale from config\n  if (config.sceneConfig) {\n    const [px, py, pz] = config.sceneConfig.position || [0, 0, 0];\n    const [sx, sy, sz] = config.sceneConfig.scale || [1, 1, 1];\n    mesh.position.set(px, py, pz);\n    mesh.scale.set(sx, sy, sz);\n  }\n\n  group.add(mesh);\n\n  // Apply cinematic primitives as specified in config\n  if (config.cinematicPrimitives && Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach(primitive => {\n      if (ctx.primitives && typeof ctx.primitives[primitive.name] === 'function') {\n        ctx.primitives[primitive.name](mesh, primitive.params || {});\n      }\n    });\n  }\n\n  // Track timelines for cleanup\n  const timelines = [];\n  const originalPos = mesh.position.clone();\n\n  // Event handlers\n  const handlers = {};\n\n  // Hover enter: subtle rise-in effect (0.15 scene units)\n  handlers.mouseenter = function() {\n    const tl = gsap.timeline();\n    tl.to(mesh.position, {\n      y: originalPos.y + 0.15,\n      duration: 0.7,\n      ease: 'power3.out'\n    }, 0);\n    timelines.push(tl);\n  };\n\n  // Hover leave: return to original position\n  handlers.mouseleave = function() {\n    gsap.to(mesh.position, {\n      y: originalPos.y,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n  };\n\n  // Click: signal hub-pricing.select event\n  handlers.click = function() {\n    group.userData.eventType = 'hub-pricing.select';\n  };\n\n  // Attach handlers to userData\n  group.userData.handlers = handlers;\n  group.userData.eventType = null;\n\n  // Cleanup function disposes resources and kills timelines\n  group.userData.cleanup = function() {\n    timelines.forEach(tl => tl.kill());\n    timelines.length = 0;\n\n    geometry.dispose();\n    material.dispose();\n    imageTexture.dispose();\n    depthMapTexture.dispose();\n  };\n\n  return group;\n}\n```"
+}

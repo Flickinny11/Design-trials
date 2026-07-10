@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-03-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 75466,
+  "apiMs": 72988,
+  "usage": {
+    "promptTokens": 3943,
+    "completionTokens": 7872,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.044264000000000005,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  // Calculate plane dimensions from atlas region aspect ratio (512 x 320)\n  const atlasAspectRatio = 512 / 320;\n  const planeHeight = 1.0;\n  const planeWidth = planeHeight * atlasAspectRatio;\n\n  // Create plane geometry\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  // Load sprite texture\n  const textureAsset = ctx.textureLoader('/prism-mock/home/nodes/floating-accent.png');\n\n  // Create material with TSL texture node\n  const colorNode = texture(textureAsset);\n  const material = new THREE.MeshBasicNodeMaterial({\n    colorNode,\n    transparent: true\n  });\n\n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n\n  // Apply scene placement from config or defaults\n  const position = config.position ?? [0, -0.35, -0.6];\n  const rotation = config.rotation ?? [0, 0, 0];\n  const scale = config.scale ?? [1, 1, 1];\n\n  mesh.position.set(position[0], position[1], position[2]);\n  mesh.rotation.set(rotation[0], rotation[1], rotation[2]);\n  mesh.scale.set(scale[0], scale[1], scale[2]);\n\n  // Setup cleanup handler\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n  };\n\n  return mesh;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-43-moderate",
+  "run": 1,
+  "ok": true,
+  "wallMs": 16030,
+  "apiMs": 13768,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1668,
+    "cacheCreation": 3440,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0783015,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import * as THREE from 'three/webgpu';\nimport { texture, uv, uniform, mix, vec3, vec4, float } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-journal-quote-panel';\n  group.position.set(2.5, 0.7000000000000001, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 1.6;\n  const height = 1.0;\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  const map = ctx.textureLoader.load('/prism-mock/home/nodes/feature-card.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const hoverAmount = uniform(0);\n  const accentColor = vec3(1.0, 0.1647, 0.2196);\n  const surfaceColor = vec3(0.0431, 0.0431, 0.0627);\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.transparent = true;\n\n  const texSample = texture(map, uv());\n  const tintMix = mix(texSample.rgb, mix(surfaceColor, accentColor, hoverAmount.mul(0.3)), 0.05);\n  material.colorNode = vec4(tintMix, texSample.a);\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'quote-panel-mesh';\n  group.add(mesh);\n\n  // Accent edge frame (thin border plane) for focus indication\n  const edgeGeometry = new THREE.PlaneGeometry(width + 0.03, height + 0.03);\n  const edgeMaterial = new THREE.MeshBasicNodeMaterial();\n  edgeMaterial.transparent = true;\n  const edgeOpacity = uniform(0);\n  edgeMaterial.colorNode = vec4(accentColor, edgeOpacity);\n  const edgeMesh = new THREE.Mesh(edgeGeometry, edgeMaterial);\n  edgeMesh.position.z = -0.001;\n  edgeMesh.visible = false;\n  group.add(edgeMesh);\n\n  // Apply cinematic primitives from config\n  const primitivesToApply = config.cinematicPrimitives || [];\n  primitivesToApply.forEach((primitive) => {\n    if (ctx.primitives && typeof ctx.primitives[primitive.name] === 'function') {\n      ctx.primitives[primitive.name](group, primitive.params);\n    }\n  });\n\n  const baseY = group.position.y;\n  let hoverTween = null;\n  let pressTween = null;\n\n  function onHoverIn() {\n    edgeMesh.visible = true;\n    hoverTween && hoverTween.kill();\n    hoverTween = gsap.timeline()\n      .to(group.position, { y: baseY + 0.15, duration: 0.7, ease: 'power3.out' }, 0)\n      .to(hoverAmount, { value: 1, duration: 0.7, ease: 'power3.out' }, 0)\n      .to(edgeOpacity, { value: 0.9, duration: 0.3, ease: 'power2.out' }, 0);\n  }\n\n  function onHoverOut() {\n    hoverTween && hoverTween.kill();\n    hoverTween = gsap.timeline()\n      .to(group.position, { y: baseY, duration: 0.5, ease: 'power2.out' }, 0)\n      .to(hoverAmount, { value: 0, duration: 0.5, ease: 'power2.out' }, 0)\n      .to(edgeOpacity, { value: 0, duration: 0.3, ease: 'power2.out', onComplete: () => { edgeMesh.visible = false; } }, 0);\n  }\n\n  function onClick() {\n    pressTween && pressTween.kill();\n    pressTween = gsap.timeline()\n      .to(group.scale, { x: 0.97, y: 0.97, z: 0.97, duration: 0.12, ease: 'back.out' })\n      .to(group.scale, { x: 1, y: 1, z: 1, duration: 0.3, ease: 'back.out' });\n\n    if (ctx.emit) {\n      ctx.emit('hub-journal.select', { nodeId: 'hub-journal-quote-panel' });\n    }\n  }\n\n  group.userData.handlers = {\n    onHoverIn,\n    onHoverOut,\n    onClick,\n  };\n\n  group.userData.cleanup = function cleanup() {\n    hoverTween && hoverTween.kill();\n    pressTween && pressTween.kill();\n    geometry.dispose();\n    edgeGeometry.dispose();\n    material.dispose();\n    edgeMaterial.dispose();\n    if (map) map.dispose();\n  };\n\n  return group;\n}"
+}

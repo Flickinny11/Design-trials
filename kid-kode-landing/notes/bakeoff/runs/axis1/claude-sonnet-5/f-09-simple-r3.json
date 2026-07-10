@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-09-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 10221,
+  "apiMs": 7687,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 820,
+    "cacheCreation": 0,
+    "cacheRead": 5478
+  },
+  "costUsd": 0.024313,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-features-card-2-accent';\n\n  const atlasIndex = 0;\n  const rect = { x: 0, y: 0, w: 512, h: 320 };\n  const atlasSize = 512;\n\n  const aspect = rect.w / rect.h;\n  const baseHeight = 1.0;\n  const baseWidth = baseHeight * aspect;\n\n  const geometry = new THREE.PlaneGeometry(baseWidth, baseHeight);\n\n  const map = ctx.textureLoader.load(config.assets?.imageUrl || '/prism-mock/home/nodes/floating-accent.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n  map.wrapS = THREE.ClampToEdgeWrapping;\n  map.wrapT = THREE.ClampToEdgeWrapping;\n\n  const offsetX = rect.x / atlasSize;\n  const offsetY = 1.0 - (rect.y + rect.h) / atlasSize;\n  const scaleX = rect.w / atlasSize;\n  const scaleY = rect.h / atlasSize;\n\n  const uvNode = uv().mul(vec2(scaleX, scaleY)).add(vec2(offsetX, offsetY));\n  const mapNode = texture(map, uvNode);\n\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n  material.colorNode = mapNode;\n  material.opacityNode = mapNode.a;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'features-card-2-accent-sprite';\n  group.add(mesh);\n\n  group.position.set(0, -0.3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  group.onBeforeRender = (renderer, scene, camera) => {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    group.onBeforeRender = null;\n  };\n\n  return group;\n}\n```"
+}

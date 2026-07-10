@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-24-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 11359,
+  "usage": {
+    "promptTokens": 1715,
+    "completionTokens": 1799
+  },
+  "costUsd": 0.0007438200000000001,
+  "transportAttempts": 2,
+  "billing": "metered",
+  "output": "```javascript\nimport { PlaneGeometry, Mesh, Object3D } from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture, uv } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { position, rotation, scale, assets, atlas } = config;\n  const { imageUrl } = assets;\n\n  // Load texture (cached)\n  const tex = ctx.textureLoader.load(imageUrl);\n\n  // Compute aspect ratio from atlas source rect\n  const srcW = atlas?.sourceRect?.width ?? 512;\n  const srcH = atlas?.sourceRect?.height ?? 320;\n  const aspect = srcW / srcH; // 1.6\n\n  // Geometry: width = 1, height = 1 / aspect\n  const geometry = new PlaneGeometry(1, 1 / aspect);\n\n  // Material with texture node\n  const material = new MeshBasicNodeMaterial();\n  material.mapNode = texture(tex);\n\n  // Apply atlas UV offset if needed (assuming atlas size same as source rect)\n  // If atlas is larger, compute offset/repeat from atlas.offsetX, atlas.offsetY, atlas.totalWidth, atlas.totalHeight.\n  // Here we assume simple case: texture is exactly the source region.\n  if (atlas && atlas.sourceRect) {\n    const { x, y, width, height } = atlas.sourceRect;\n    // If we had total atlas dimensions, we would set:\n    // const totalW = atlas.totalWidth ?? width;\n    // const totalH = atlas.totalHeight ?? height;\n    // tex.offset.x = x / totalW;\n    // tex.offset.y = y / totalH;\n    // tex.repeat.x = width / totalW;\n    // tex.repeat.y = height / totalH;\n    // For simplicity, assume no atlas slicing.\n  }\n\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(position.x, position.y, position.z);\n  mesh.rotation.set(rotation.x, rotation.y, rotation.z);\n  mesh.scale.set(scale.x, scale.y, scale.z);\n\n  // Billboard update handler\n  mesh.userData.handlers = {\n    update: (time, camera) => {\n      if (camera) {\n        mesh.lookAt(camera.position);\n      }\n    },\n    cleanup: () => {\n      geometry.dispose();\n      material.dispose();\n      // Do not dispose shared texture\n    }\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

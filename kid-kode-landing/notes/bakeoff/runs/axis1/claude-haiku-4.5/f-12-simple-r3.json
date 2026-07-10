@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-12-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 83442,
+  "apiMs": 80955,
+  "usage": {
+    "promptTokens": 3967,
+    "completionTokens": 13111,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.070522,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture as textureNode } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Load ceramic grain texture\n  const texture = ctx.textureLoader.load(config.assets?.imageUrl || '/prism-assets/chrome/ceramic-grain.map.png');\n  texture.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create plane geometry with 512:320 aspect ratio\n  const aspectRatio = 512 / 320;\n  const planeWidth = 1.0;\n  const planeHeight = planeWidth / aspectRatio;\n  const planeGeometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n  \n  // TSL material with textured surface\n  const planeMaterial = new MeshBasicNodeMaterial({\n    colorNode: textureNode(texture)\n  });\n  \n  const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);\n  group.add(planeMesh);\n  \n  // Extract text content\n  const textContent = config.textContent || { text: \"Features 3\" };\n  const textString = typeof textContent === 'string' ? textContent : (textContent.text || \"Features 3\");\n  \n  // Create text mesh via fontAtlas\n  const textMesh = ctx.fontAtlas.createMesh(textString, {\n    size: 0.34, // headline em size\n    font: 'Lora',\n    weight: 400,\n    color: new THREE.Color(0x16161d) // ink\n  });\n  \n  // Position text on top of background\n  if (textMesh) {\n    if (textMesh.geometry && typeof textMesh.geometry.center === 'function') {\n      textMesh.geometry.center();\n    }\n    textMesh.position.z = 0.05;\n    group.add(textMesh);\n  }\n  \n  // Apply scene placement\n  group.position.set(3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n  \n  // Event handlers (empty for static element)\n  group.userData.handlers = {};\n  \n  // Cleanup function\n  group.userData.cleanup = () => {\n    planeGeometry.dispose();\n    planeMaterial.dispose();\n    texture.dispose();\n    \n    if (textMesh) {\n      if (textMesh.geometry) textMesh.geometry.dispose();\n      if (textMesh.material) textMesh.material.dispose();\n      if (Array.isArray(textMesh.children)) {\n        textMesh.children.forEach(child => {\n          if (child.geometry) child.geometry.dispose();\n          if (child.material) child.material.dispose();\n        });\n      }\n    }\n    \n    gsap.killTweensOf(group);\n  };\n  \n  return group;\n}\n```"
+}

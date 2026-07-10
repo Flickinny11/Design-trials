@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-03-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 37965,
+  "apiMs": 35760,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 5001,
+    "cacheCreation": 0,
+    "cacheRead": 21548
+  },
+  "costUsd": 0.028135800000000002,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Load the sprite texture\n  const textureMap = ctx.textureLoader.load(config.imageUrl);\n  \n  // Create plane geometry with aspect ratio from atlas region (512:320 = 1.6:1)\n  const aspectRatio = 512 / 320;\n  const geometry = new THREE.PlaneGeometry(aspectRatio, 1);\n  \n  // Create material using TSL nodes\n  const textureNode = texture(textureMap);\n  const material = new THREE.MeshBasicNodeMaterial({\n    colorNode: textureNode,\n    transparent: true\n  });\n  \n  // Create and add mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n  \n  // Setup cleanup function\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    textureMap.dispose();\n  };\n  \n  // Setup handlers object (no event handlers needed for static sprite)\n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

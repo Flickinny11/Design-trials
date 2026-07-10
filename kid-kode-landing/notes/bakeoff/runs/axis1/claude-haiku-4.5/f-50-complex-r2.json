@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-50-complex",
+  "run": 2,
+  "ok": true,
+  "wallMs": 82010,
+  "apiMs": 79824,
+  "usage": {
+    "promptTokens": 4064,
+    "completionTokens": 13582,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.073061,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const container = new THREE.Group();\n  \n  // Load GLB mesh with machined-metal PBR materials\n  const glb = ctx.glbLoader.load(config.meshUrl);\n  container.add(glb.scene);\n  \n  // Apply scene placement\n  if (config.scenePosition) {\n    container.position.fromArray(config.scenePosition);\n  }\n  if (config.rotation) {\n    container.rotation.fromArray(config.rotation);\n  }\n  if (config.scale) {\n    container.scale.fromArray(config.scale);\n  }\n  \n  // Add accent rim light for hero-grade layered depth effect\n  const rimLight = new THREE.PointLight(0xff2a38, 1.5, 5);\n  rimLight.position.set(1.5, 1.5, 1.5);\n  container.add(rimLight);\n  \n  // Apply cinematic primitives\n  if (config.cinematicPrimitives && Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach(primitive => {\n      if (ctx.primitives && typeof ctx.primitives[primitive.name] === 'function') {\n        ctx.primitives[primitive.name](container, primitive.params || {});\n      }\n    });\n  }\n  \n  // Weighted-settle entrance animation\n  const entranceStartScale = 1.04;\n  container.scale.set(entranceStartScale, entranceStartScale, entranceStartScale);\n  \n  const entranceTimeline = gsap.timeline();\n  entranceTimeline.to(container.scale, {\n    x: 1,\n    y: 1,\n    z: 1,\n    duration: 0.9,\n    ease: 'power4.out'\n  }, 0);\n  \n  // Store base position for hover interactions\n  const basePosition = new THREE.Vector3().copy(container.position);\n  \n  // Attach event handlers\n  container.userData.handlers = {\n    hover: () => {\n      gsap.to(container.position, {\n        y: basePosition.y + 0.15,\n        duration: 0.7,\n        ease: 'power3.out',\n        overwrite: 'auto'\n      });\n    },\n    unhover: () => {\n      gsap.to(container.position, {\n        y: basePosition.y,\n        duration: 0.7,\n        ease: 'power3.out',\n        overwrite: 'auto'\n      });\n    },\n    click: () => {\n      if (container.userData.emit) {\n        container.userData.emit('hub-features.select');\n      }\n    }\n  };\n  \n  // Cleanup\n  container.userData.cleanup = () => {\n    entranceTimeline.kill();\n    gsap.killTweensOf(container.position);\n    gsap.killTweensOf(container.scale);\n    \n    glb.scene.traverse(node => {\n      if (node.geometry) {\n        node.geometry.dispose();\n      }\n      if (node.material) {\n        if (Array.isArray(node.material)) {\n          node.material.forEach(m => m.dispose());\n        } else {\n          node.material.dispose();\n        }\n      }\n    });\n  };\n  \n  return container;\n}\n```"
+}

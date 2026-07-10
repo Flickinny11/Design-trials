@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-14-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 11771,
+  "apiMs": 9599,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 919,
+    "cacheCreation": 0,
+    "cacheRead": 5473
+  },
+  "costUsd": 0.026788499999999996,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, float, uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const width = 1.6;\n  const height = 1.0;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const imageUrl = config?.assets?.imageUrl || '/prism-mock/home/nodes/cta-hero-isolated.png';\n  const map = ctx.textureLoader(imageUrl);\n  if (map) {\n    map.colorSpace = THREE.SRGBColorSpace;\n  }\n\n  const grainStrength = uniform(0.035);\n\n  if (map) {\n    const texNode = texture(map, uv());\n    // subtle grain via pseudo-random noise based on uv\n    const uvCoord = uv();\n    const noise = float(uvCoord.x).mul(12.9898).add(float(uvCoord.y).mul(78.233)).sin().mul(43758.5453).fract();\n    const grain = noise.sub(0.5).mul(grainStrength);\n    const finalColor = texNode.rgb.add(grain).clamp(0.0, 1.0);\n    material.colorNode = vec4(finalColor, texNode.a);\n  } else {\n    // fallback engineered gradient using ink/surface tones if texture missing\n    const uvCoord = uv();\n    const inkColor = vec4(0.086, 0.086, 0.114, 1.0);\n    const surfaceColor = vec4(0.043, 0.043, 0.063, 1.0);\n    const gradient = inkColor.mix(surfaceColor, uvCoord.y);\n    material.colorNode = gradient;\n  }\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'hub-collection-card-1';\n\n  const pos = config?.scenePosition?.position || [-3.2, -0.3, 0];\n  const rot = config?.scenePosition?.rotation || [0, 0, 0];\n  const scl = config?.scenePosition?.scale || [1, 1, 1];\n\n  mesh.position.set(pos[0], pos[1], pos[2]);\n  mesh.rotation.set(rot[0], rot[1], rot[2]);\n  mesh.scale.set(scl[0], scl[1], scl[2]);\n\n  mesh.userData.handlers = {};\n\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && typeof map.dispose === 'function') {\n      map.dispose();\n    }\n  };\n\n  return mesh;\n}\n```"
+}

@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-45-moderate",
+  "run": 1,
+  "ok": true,
+  "wallMs": 28246,
+  "usage": {
+    "promptTokens": 1794,
+    "completionTokens": 3467
+  },
+  "costUsd": 0.00122192,
+  "transportAttempts": 3,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  MeshNodeMaterial,\n  PlaneGeometry,\n  Mesh,\n  Vector2,\n  Group,\n  Color,\n} from 'three/webgpu';\nimport {\n  texture,\n  uv,\n  normalLocal,\n  uniform,\n  mul,\n  add,\n  vec2,\n  FloatNode,\n} from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { imageUrl, depthMapUrl, scenePlacement } = config;\n  const { x, y, z } = scenePlacement.position;\n  const { x: rx, y: ry, z: rz } = scenePlacement.rotation;\n  const { x: sx, y: sy, z: sz } = scenePlacement.scale;\n\n  // Load textures\n  const colorTex = ctx.textureLoader.load(imageUrl);\n  const depthTex = ctx.textureLoader.load(depthMapUrl);\n\n  // Tessellated plane\n  const geometry = new PlaneGeometry(1, 1, 64, 64);\n\n  // TSL nodes for displacement\n  const mouseOffset = uniform(new Vector2(0, 0));\n  const dispScale = uniform(0.05); // subtle displacement strength\n\n  const depthSample = depthTex.sample(uv().add(mouseOffset));\n  const displacement = depthSample.r.mul(dispScale);\n  const positionNode = normalLocal.mul(displacement);\n\n  // Material\n  const material = new MeshNodeMaterial({\n    colorNode: colorTex.sample(uv()),\n    positionNode,\n    metalness: 0.55,\n    roughness: 0.5,\n    clearcoat: 0.25,\n    anisotropy: 0.5,\n    side: 'double',\n  });\n\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(x, y, z);\n  mesh.rotation.set(rx, ry, rz);\n  mesh.scale.set(sx, sy, sz);\n\n  const group = new Group();\n  group.add(mesh);\n\n  // Hover animation tracking\n  const hoverTween = { current: null };\n\n  // Pointer handler for parallax\n  const updatePointer = (event) => {\n    // Normalize pointer coordinates to [-1,1] relative to viewport\n    const px = (event.clientX / window.innerWidth) * 2 - 1;\n    const py = -(event.clientY / window.innerHeight) * 2 + 1;\n    mouseOffset.value.set(px * 0.02, py * 0.02);\n  };\n\n  // Event handlers\n  group.userData.handlers = {\n    pointerenter: () => {\n      gsap.killTweensOf(mesh.position);\n      hoverTween.current = gsap.to(mesh.position, {\n        y: 0.15,\n        duration: 0.7,\n        ease: 'power3.out',\n        overwrite: 'auto',\n      });\n    },\n    pointerleave: () => {\n      gsap.killTweensOf(mesh.position);\n      hoverTween.current = gsap.to(mesh.position, {\n        y: y,\n        duration: 0.5,\n        ease: 'power2.out',\n        overwrite: 'auto',\n      });\n    },\n    pointermove: updatePointer,\n    click: () => {\n      // Emit navigation event as specified\n      if (ctx.emit) {\n        ctx.emit('hub-features.select');\n      }\n    },\n  };\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    gsap.killTweensOf(mesh.position);\n    if (hoverTween.current) hoverTween.current.kill();\n    geometry.dispose();\n    material.dispose();\n    // Textures are cached – do not dispose\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

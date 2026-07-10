@@ -1,0 +1,12 @@
+{
+  "contestant": "mai-code-1-flash",
+  "label": "MAI-Code-1-Flash",
+  "status": "UNREACHABLE",
+  "proof": "No Azure/Foundry credentials on this machine; not hosted by any keyed provider (deepinfra catalog grep: no MAI models); no OpenRouter key exists (.constellation/ absent).",
+  "probes": [
+    "notes/bakeoff/probes/probe-summary.json",
+    "notes/bakeoff/probes/fireworks-id-probe.json",
+    "notes/bakeoff/probes/deepinfra-models.json"
+  ],
+  "recordedAt": "2026-07-10T01:36:14.216Z"
+}

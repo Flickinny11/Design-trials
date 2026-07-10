@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-01-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 16271,
+  "usage": {
+    "promptTokens": 1700,
+    "completionTokens": 2530
+  },
+  "costUsd": 0.0009464000000000001,
+  "transportAttempts": 2,
+  "billing": "metered",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, color, uv } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // ---- Background plane ----\n  const atlasRect = { x: 0, y: 0, w: 512, h: 320 };\n  const aspect = atlasRect.w / atlasRect.h;\n  const planeWidth = 3.2;\n  const planeHeight = planeWidth / aspect;\n\n  const bgTexture = ctx.textureLoader.load(config.imageUrl);\n  bgTexture.offset.set(0, 0);\n  bgTexture.repeat.set(1, 1);\n  bgTexture.needsUpdate = true;\n\n  const bgMat = new THREE.MeshBasicNodeMaterial({\n    colorNode: texture(bgTexture),\n    side: THREE.DoubleSide,\n  });\n  const bgGeo = new THREE.PlaneGeometry(planeWidth, planeHeight);\n  const bgMesh = new THREE.Mesh(bgGeo, bgMat);\n  bgMesh.position.set(0, 0, -0.01); // slightly behind text\n  group.add(bgMesh);\n\n  // ---- Text (body style) ----\n  const textOptions = {\n    font: 'JetBrains Mono',\n    weight: 400,\n    size: 0.13,       // body scale from type tokens\n    letterSpacing: 0.02,\n    align: 'center',\n    color: '#e8ecf2', // paper color for readability\n    materialType: 'basic',\n  };\n  const textMesh = ctx.fontAtlas(config.textContent, textOptions);\n  textMesh.position.set(0, -0.2, 0); // centered vertically in plane\n  group.add(textMesh);\n\n  // ---- Placement ----\n  const pos = config.scenePosition || [0, 3, 0];\n  const rot = config.sceneRotation || [0, 0, 0];\n  const scl = config.sceneScale || [1, 1, 1];\n  group.position.set(pos[0], pos[1], pos[2]);\n  group.rotation.set(rot[0], rot[1], rot[2]);\n  group.scale.set(scl[0], scl[1], scl[2]);\n\n  // ---- Cinematic primitives (none) ----\n  // (no primitives in this config)\n\n  // ---- Event Handlers (none) ----\n  group.userData.handlers = {};\n\n  // ---- Cleanup ----\n  const timeline = gsap.timeline({ paused: true });\n  group.userData.cleanup = () => {\n    timeline.kill();\n    bgGeo.dispose();\n    bgMat.dispose();\n    bgTexture.dispose();\n    // dispose text material & geometry if accessible\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

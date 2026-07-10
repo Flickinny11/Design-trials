@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-27-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 113454,
+  "apiMs": 112447,
+  "usage": {
+    "promptTokens": 3960,
+    "completionTokens": 11558,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.062728,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.position.set(0, 3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Create sprite plane with billboard effect\n  const spriteTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  const planeGeometry = new THREE.PlaneGeometry(0.8, 0.5);\n  \n  const planeMaterial = new MeshBasicNodeMaterial({\n    map: texture(spriteTexture),\n    transparent: true,\n    side: THREE.DoubleSide\n  });\n  \n  const spriteMesh = new THREE.Mesh(planeGeometry, planeMaterial);\n  group.add(spriteMesh);\n\n  // Render text content via fontAtlas\n  if (config.textContent && ctx.fontAtlas) {\n    const textContent = config.textContent[0] || 'Journal';\n    const textMesh = ctx.fontAtlas.createMesh(textContent, {\n      size: 0.34,\n      weight: 400,\n      font: 'Lora',\n      color: 0x16161d\n    });\n    if (textMesh) {\n      group.add(textMesh);\n    }\n  }\n\n  // Setup billboarding to face camera\n  if (ctx.camera) {\n    group.onBeforeRender = (renderer, scene, camera) => {\n      group.lookAt(camera.position);\n    };\n  }\n\n  // Cleanup resources on dispose\n  group.userData.cleanup = () => {\n    group.traverse((child) => {\n      if (child.geometry) {\n        child.geometry.dispose();\n      }\n      if (child.material) {\n        if (child.material.map) {\n          child.material.map.dispose();\n        }\n        child.material.dispose();\n      }\n    });\n    gsap.killTweensOf(group);\n  };\n\n  return group;\n}\n```"
+}

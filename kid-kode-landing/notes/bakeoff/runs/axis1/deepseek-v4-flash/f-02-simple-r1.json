@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-02-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 18212,
+  "usage": {
+    "promptTokens": 1703,
+    "completionTokens": 2624
+  },
+  "costUsd": 0.00097314,
+  "transportAttempts": 4,
+  "billing": "metered",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // ---- Image Plane ----\n  const texture = ctx.textureLoader.load(config.imageUrl || '/prism-mock/home/nodes/cta-hero-isolated.png');\n  // Atlas source rect: 0,0,512,320 → aspect 1.6:1\n  const aspect = 512 / 320;\n  const planeWidth = 4; // scene units, fits within hub frame x[-3.5,3.5]\n  const planeHeight = planeWidth / aspect;\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n  const material = new MeshBasicNodeMaterial({\n    map: texture,\n    side: THREE.DoubleSide,\n  });\n  const imageMesh = new THREE.Mesh(geometry, material);\n  group.add(imageMesh);\n\n  // ---- Text Plane (subhead) ----\n  // Design token: subhead = 0.2 scene-unit em height\n  // Use paper color for contrast (assuming image is dark)\n  const textSize = 0.2;\n  const textMesh = ctx.fontAtlas.createText(config.textContent, {\n    fontFamily: 'Lora',\n    fontWeight: 400,\n    fontSize: textSize,\n    color: '#e8ecf2',\n    // no outline or shadow, static composition\n  });\n  // Position text slightly forward to avoid z-fighting\n  textMesh.position.set(0, 0, 0.001);\n  // Center horizontally and vertically relative to image (could tweak per design)\n  // For now, place at a typical subhead position – slightly above center\n  textMesh.position.y = planeHeight * 0.15;\n  group.add(textMesh);\n\n  // ---- Scene Placement ----\n  if (config.scenePosition) {\n    group.position.copy(config.scenePosition);\n  }\n  if (config.sceneRotation) {\n    group.rotation.set(...config.sceneRotation);\n  }\n  if (config.sceneScale) {\n    group.scale.copy(config.sceneScale);\n  } else {\n    group.scale.set(1, 1, 1);\n  }\n\n  // ---- Event Handlers (none) ----\n  group.userData.handlers = {};\n\n  // ---- Cleanup ----\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n    // Dispose font atlas text resources if provided by ctx\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

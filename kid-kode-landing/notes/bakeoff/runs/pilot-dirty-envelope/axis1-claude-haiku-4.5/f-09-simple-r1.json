@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-09-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 80296,
+  "apiMs": 77824,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 8586,
+    "cacheCreation": 21556,
+    "cacheRead": 0
+  },
+  "costUsd": 0.08703099999999998,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\nimport { texture as tsTexture } from 'three/tsl';\n\ninterface NodeConfig {\n  imageUrl: string;\n  depthMapUrl?: string | null;\n  meshUrl?: string | null;\n  atlasRegion?: {\n    atlas: number;\n    x: number;\n    y: number;\n    width: number;\n    height: number;\n    atlasWidth?: number;\n    atlasHeight?: number;\n  };\n  cinematicPrimitives?: Array<{ name: string; params: any }>;\n  scenePosition?: { x: number; y: number; z: number };\n  [key: string]: any;\n}\n\ninterface NodeContext {\n  textureLoader: any;\n  glbLoader: any;\n  fontAtlas: any;\n  primitives: Record<string, (obj: THREE.Object3D, params: any) => void>;\n}\n\nexport default function createNode(config: NodeConfig, ctx: NodeContext): THREE.Object3D {\n  const group = new THREE.Group();\n\n  // Load texture synchronously from cache\n  const textureData = ctx.textureLoader.load(config.imageUrl);\n\n  // Create plane geometry with aspect ratio 512/320 = 1.6\n  const planeWidth = 1.6;\n  const planeHeight = 1.0;\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  // Handle atlas region UV mapping\n  if (config.atlasRegion) {\n    const region = config.atlasRegion;\n    const atlasWidth = region.atlasWidth || 512;\n    const atlasHeight = region.atlasHeight || 320;\n\n    const uOffset = region.x / atlasWidth;\n    const vOffset = region.y / atlasHeight;\n    const uScale = region.width / atlasWidth;\n    const vScale = region.height / atlasHeight;\n\n    const uvAttribute = geometry.attributes.uv as THREE.BufferAttribute;\n    for (let i = 0; i < uvAttribute.count; i++) {\n      const u = uvAttribute.getX(i);\n      const v = uvAttribute.getY(i);\n      uvAttribute.setXY(i, uOffset + u * uScale, vOffset + v * vScale);\n    }\n    uvAttribute.needsUpdate = true;\n  }\n\n  // Create material using TSL texture node\n  const textureNode = tsTexture(textureData);\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.colorNode = textureNode;\n\n  // Create mesh and add to group\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Apply scene position\n  if (config.scenePosition) {\n    group.position.set(\n      config.scenePosition.x,\n      config.scenePosition.y,\n      config.scenePosition.z\n    );\n  }\n\n  // Setup cleanup function\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    // Texture is managed by ctx.textureLoader cache, do not dispose\n  };\n\n  // Initialize handlers object\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

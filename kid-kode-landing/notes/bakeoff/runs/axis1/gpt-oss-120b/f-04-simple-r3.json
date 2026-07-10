@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-04-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 5828,
+  "usage": {
+    "promptTokens": 1643,
+    "completionTokens": 1282
+  },
+  "costUsd": 0.0010156499999999999,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import {\n  Mesh,\n  PlaneGeometry,\n  DoubleSide,\n  Object3D,\n} from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\nexport default function createNode(config, ctx) {\n  // -------------------------------------------------\n  // Geometry (aspect based on atlas source rect)\n  // -------------------------------------------------\n  const defaultRect = { width: 1, height: 1 };\n  const sourceRect = (config.atlasRegion && config.atlasRegion.sourceRect) || defaultRect;\n  const aspect = sourceRect.width / sourceRect.height;\n  const geometry = new PlaneGeometry(aspect, 1);\n\n  // -------------------------------------------------\n  // Texture loading (synchronous via cached loader)\n  // -------------------------------------------------\n  const imageUrl = (config.assets && config.assets.imageUrl) || null;\n  const tex = imageUrl ? ctx.textureLoader(imageUrl) : null;\n\n  // -------------------------------------------------\n  // Material selection (MeshBasicNodeMaterial per spec)\n  // -------------------------------------------------\n  const material = new MeshBasicNodeMaterial({\n    map: tex ? texture(tex) : null,\n    side: DoubleSide,\n    transparent: true,\n  });\n\n  // -------------------------------------------------\n  // Mesh assembly\n  // -------------------------------------------------\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(\n    (config.scenePlacement?.position?.[0]) ?? 0,\n    (config.scenePlacement?.position?.[1]) ?? 0,\n    (config.scenePlacement?.position?.[2]) ?? 0,\n  );\n  mesh.rotation.set(\n    (config.scenePlacement?.rotation?.[0]) ?? 0,\n    (config.scenePlacement?.rotation?.[1]) ?? 0,\n    (config.scenePlacement?.rotation?.[2]) ?? 0,\n  );\n  mesh.scale.set(\n    (config.scenePlacement?.scale?.[0]) ?? 1,\n    (config.scenePlacement?.scale?.[1]) ?? 1,\n    (config.scenePlacement?.scale?.[2]) ?? 1,\n  );\n\n  // -------------------------------------------------\n  // Apply cinematic primitives (none in this spec)\n  // -------------------------------------------------\n  if (Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach((prim) => {\n      const fn = ctx.primitives[prim.name];\n      if (typeof fn === 'function') {\n        fn(mesh, prim.params);\n      }\n    });\n  }\n\n  // -------------------------------------------------\n  // User data – empty handlers and cleanup\n  // -------------------------------------------------\n  const timelines = []; // store any GSAP timelines if created later\n\n  mesh.userData.handlers = {};\n\n  mesh.userData.cleanup = () => {\n    // Kill any GSAP timelines that might have been stored\n    timelines.forEach((t) => {\n      if (t && typeof t.kill === 'function') t.kill();\n    });\n    // Dispose Three.js resources\n    geometry.dispose();\n    material.dispose();\n    if (tex && tex.dispose) tex.dispose();\n  };\n\n  // Ensure returned object is an Object3D (Mesh is already one)\n  return mesh;\n}"
+}

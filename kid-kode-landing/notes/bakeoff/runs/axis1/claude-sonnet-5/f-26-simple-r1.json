@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-26-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 11596,
+  "apiMs": 8949,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 952,
+    "cacheCreation": 3368,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0596465,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, float } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-pricing-card-0-label';\n  group.position.set(3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 1.6;\n  const height = 1.0;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  let map = null;\n  const imageUrl = '/prism-mock/home/nodes/cta-hero-isolated.png';\n  if (imageUrl && ctx.textureLoader) {\n    map = ctx.textureLoader.load(imageUrl);\n    map.colorSpace = THREE.SRGBColorSpace;\n\n    // atlas region mapping\n    const atlasW = 512, atlasH = 320;\n    const rectX = 0, rectY = 0, rectW = 512, rectH = 320;\n    const uOffset = rectX / atlasW;\n    const vOffset = 1 - (rectY + rectH) / atlasH;\n    const uScale = rectW / atlasW;\n    const vScale = rectH / atlasH;\n\n    const uvNode = uv().mul([uScale, vScale]).add([uOffset, vOffset]);\n    material.colorNode = texture(map, uvNode);\n  } else {\n    material.colorNode = vec4(\n      float(0x16 / 255), float(0x16 / 255), float(0x1d / 255), 1\n    );\n  }\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'pricing-card-3-label-plane';\n  group.add(plane);\n\n  // headline text: \"Pricing 3\"\n  let textMesh = null;\n  if (ctx.fontAtlas) {\n    textMesh = createTextMesh({\n      text: 'Pricing 3',\n      font: 'Lora',\n      weight: 400,\n      sizeEm: 0.34,\n      color: '#e8ecf2',\n      atlas: ctx.fontAtlas,\n      align: 'center',\n      anchor: 'center',\n    });\n    textMesh.position.set(0, 0, 0.001);\n    group.add(textMesh);\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n    if (textMesh) {\n      textMesh.geometry?.dispose();\n      textMesh.material?.dispose();\n    }\n  };\n\n  return group;\n}\n```"
+}

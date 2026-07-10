@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-01-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 12800,
+  "apiMs": 10229,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 964,
+    "cacheCreation": 3361,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0598625,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, mix, float, uniform, mx_noise_float } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hero-headline';\n  group.position.set(0, 3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 3.2;\n  const height = 2.0;\n\n  const geometry = new THREE.PlaneGeometry(width, height, 1, 1);\n\n  const map = ctx.textureLoader.load('/prism-mock/home/nodes/feature-card.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const grainStrength = uniform(0.035);\n  const uvNode = uv();\n  const texColor = texture(map, uvNode);\n\n  const noise = mx_noise_float(uvNode.mul(512.0), float(1.0));\n  const grain = noise.mul(grainStrength);\n\n  const inkColor = vec4(0.086, 0.086, 0.114, 1.0);\n  const gradientMix = uvNode.y.oneMinus().mul(0.35);\n  const engineeredGradient = mix(texColor, inkColor, gradientMix);\n\n  const finalColor = engineeredGradient.add(vec4(grain, grain, grain, 0.0));\n\n  const material = new THREE.MeshBasicNodeMaterial({\n    transparent: true,\n  });\n  material.colorNode = finalColor;\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'hero-headline-plane';\n  group.add(plane);\n\n  const textMesh = createTextMesh({\n    text: 'A machined-metal watch atelier landing with catalog, pricing, jo',\n    font: 'JetBrains Mono',\n    weight: 400,\n    sizeEm: 0.13,\n    color: '#e8ecf2',\n    maxWidth: width * 0.85,\n    align: 'center',\n    fontAtlas: ctx.fontAtlas,\n  });\n  textMesh.position.set(0, -height / 2 + 0.35, 0.01);\n  textMesh.name = 'hero-headline-text';\n  group.add(textMesh);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n    if (textMesh.userData && typeof textMesh.userData.cleanup === 'function') {\n      textMesh.userData.cleanup();\n    }\n  };\n\n  return group;\n}"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-36-moderate-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 16317,
+  "apiMs": 13861,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1574,
+    "cacheCreation": 0,
+    "cacheRead": 5576
+  },
+  "costUsd": 0.043269,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, uniform, vec3, vec4, mix, smoothstep, float } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const width = 1.4;\n  const height = 0.42;\n\n  const geometry = new THREE.PlaneGeometry(width, height, 1, 1);\n  const material = new THREE.MeshStandardNodeMaterial({\n    transparent: true,\n    metalness: 0.4,\n    roughness: 0.55,\n  });\n\n  const map = ctx.textureLoader.load('/prism-assets/chrome/ceramic-grain.map.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const hoverUniform = uniform(0.0);\n  const pressUniform = uniform(0.0);\n\n  const accentColor = vec3(1.0, 0.1647, 0.2196); // #ff2a38\n  const inkColor = vec3(0.0863, 0.0863, 0.1137); // #16161d\n  const paperColor = vec3(0.9098, 0.9255, 0.9490); // #e8ecf2\n\n  const vUv = uv();\n  // edge factor: distance from left/right edges to create capsule edge glow\n  const edgeDist = float(1.0).sub(\n    smoothstep(0.0, 0.08, vUv.x).oneMinus().add(smoothstep(0.92, 1.0, vUv.x))\n  ).oneMinus();\n\n  const grain = texture(map, vUv);\n\n  const baseColor = mix(inkColor, paperColor, grain.r.mul(0.15).add(0.85));\n  const accentEdge = mix(baseColor, accentColor, edgeDist.mul(hoverUniform.mul(0.6).add(0.25)));\n\n  material.colorNode = vec4(accentEdge, grain.a.mul(0.0).add(1.0));\n  material.emissiveNode = accentColor.mul(hoverUniform.mul(0.35));\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(0, 1.6, 0);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n  mesh.userData.baseY = mesh.position.y;\n\n  const group = new THREE.Group();\n  group.add(mesh);\n  group.position.set(0, 0, 0);\n\n  let hoverTl = null;\n  let pressTl = null;\n\n  const onHoverIn = () => {\n    hoverTl?.kill();\n    hoverTl = gsap.timeline();\n    hoverTl.to(mesh.position, {\n      y: mesh.userData.baseY + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    }, 0);\n    hoverTl.to(hoverUniform, {\n      value: 1.0,\n      duration: 0.7,\n      ease: 'power3.out',\n    }, 0);\n  };\n\n  const onHoverOut = () => {\n    hoverTl?.kill();\n    hoverTl = gsap.timeline();\n    hoverTl.to(mesh.position, {\n      y: mesh.userData.baseY,\n      duration: 0.7,\n      ease: 'power3.out',\n    }, 0);\n    hoverTl.to(hoverUniform, {\n      value: 0.0,\n      duration: 0.7,\n      ease: 'power3.out',\n    }, 0);\n  };\n\n  const onClick = () => {\n    pressTl?.kill();\n    pressTl = gsap.timeline();\n    pressTl.to(mesh.scale, {\n      x: 0.97,\n      y: 0.97,\n      z: 0.97,\n      duration: 0.12,\n      ease: 'back.out',\n    }).to(mesh.scale, {\n      x: 1,\n      y: 1,\n      z: 1,\n      duration: 0.12,\n      ease: 'back.out',\n    });\n\n    if (group.userData.emit) {\n      group.userData.emit('hub-collection.select', { itemId: 'hub-collection' });\n    }\n  };\n\n  group.userData.handlers = {\n    pointerover: onHoverIn,\n    pointerenter: onHoverIn,\n    pointerout: onHoverOut,\n    pointerleave: onHoverOut,\n    click: onClick,\n  };\n\n  group.userData.cleanup = () => {\n    hoverTl?.kill();\n    pressTl?.kill();\n    hoverTl = null;\n    pressTl = null;\n    geometry.dispose();\n    material.dispose();\n    map.dispose();\n  };\n\n  return group;\n}\n```"
+}

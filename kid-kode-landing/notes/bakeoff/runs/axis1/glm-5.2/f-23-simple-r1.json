@@ -1,0 +1,17 @@
+{
+  "contestant": "glm-5.2",
+  "model": "accounts/fireworks/models/glm-5p2",
+  "route": "fireworks",
+  "caseId": "f-23-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 86942,
+  "usage": {
+    "promptTokens": 1599,
+    "completionTokens": 8192
+  },
+  "costUsd": 0.0382834,
+  "transportAttempts": 3,
+  "billing": "metered",
+  "output": "import { \n  PlaneGeometry, \n  MeshBasicNodeMaterial, \n  Mesh,\n  SRGBColorSpace\n} from 'three/webgpu';\nimport { \n  texture, \n  uv, \n  mix, \n  hash, \n  color\n} from 'three/tsl';\n\nconst createNode = (config, ctx) => {\n  const colors = config.colors || { ink: '#16161d', paper: '#e8ecf2', accent: '#ff2a38', surface: '#0b0b10' };\n  const atlasRegion = config.atlasRegion || { sourceRect: { x: 0,"
+}

@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-11-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 15792,
+  "usage": {
+    "promptTokens": 1649,
+    "completionTokens": 1751
+  },
+  "costUsd": 0.0012979499999999998,
+  "transportAttempts": 4,
+  "billing": "metered",
+  "output": "import { Object3D, Mesh, PlaneGeometry, Color } from 'three/webgpu';\nimport {\n\tMeshBasicNodeMaterial,\n\ttexture as texNode,\n} from 'three/tsl';\nimport { gsap } from 'gsap';\nimport * as primitives from '@/primitives';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {{ imageUrl?: string }} assets\n * @property {{ cinematicPrimitives?: Array<{ name: string, params: any }> }} cinematicPrimitives\n * @property {{ position?: [number, number, number], rotation?: [number, number, number], scale?: [number, number, number] }} transform\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {(url: string) => any} textureLoader\n * @property {{ [key: string]: (obj: Object3D, params: any) => void }} primitives\n */\n\n/**\n * Creates a textured plane node.\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {Object3D}\n */\nexport default function createNode(config, ctx) {\n\tconst root = new ObjectD3 ? new Object3D() : new Object3D(); // fallback safety\n\n\t// Apply transform\n\tif (config.transform?.position) {\n\t\troot.position.set(...config.transform.position);\n\t}\n\tif (config.transform?.rotation) {\n\t\tconst [rx, ry, rz] = config.transform.rotation;\n\t\troot.rotation.set(rx, ry, rz);\n\t}\n\tif (config.transform?.scale) {\n\t\troot.scale.set(...config.transform.scale);\n\t}\n\n\t// Load texture (synchronous via cached loader)\n\tconst tex = config.assets?.imageUrl ? ctx.textureLoader(config.assets.imageUrl) : null;\n\n\t// Plane geometry (unit size)\n\tconst geometry = new PlaneGeometry(1, 1);\n\t// Material – basic node material with optional map\n\tconst material = new MeshBasicNodeMaterial({\n\t\tmap: tex ? texNode(tex) : null,\n\t\tcolor: new Color(0xffffff),\n\t});\n\n\tconst mesh = new Mesh(geometry, material);\n\troot.add(mesh);\n\n\t// Apply cinematic primitives if any\n\tif (Array.isArray(config.cinematicPrimitives)) {\n\t\tfor (const prim of config.cinematicPrimitives) {\n\t\t\tconst fn = ctx.primitives?.[prim.name];\n\t\t\tif (typeof fn === 'function') {\n\t\t\t\tfn(root, prim.params);\n\t\t\t}\n\t\t}\n\t}\n\n\t// Handlers placeholder (no interactions defined)\n\troot.userData.handlers = {};\n\n\t// Cleanup method\n\troot.userData.cleanup = () => {\n\t\t// Dispose three.js resources\n\t\tgeometry.dispose();\n\t\tmaterial.dispose();\n\t\tif (tex && typeof tex.dispose === 'function') {\n\t\t\ttex.dispose();\n\t\t}\n\t\t// Kill any GSAP tweens/timelines attached to this node\n\t\tgsap.killTweensOf(mesh);\n\t\tgsap.globalTimeline.clear();\n\t};\n\n\treturn root;\n}"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-05-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 82593,
+  "apiMs": 80143,
+  "usage": {
+    "promptTokens": 3942,
+    "completionTokens": 9547,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.052652,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\nimport { texture, uv, vec3, mix } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Design tokens\n  const colors = {\n    ink: new THREE.Color('#16161d'),\n    paper: new THREE.Color('#e8ecf2'),\n    accent: new THREE.Color('#ff2a38'),\n    surface: new THREE.Color('#0b0b10')\n  };\n  \n  // Create plane geometry for button background\n  const planeGeometry = new THREE.PlaneGeometry(1.2, 0.8);\n  \n  // Load and configure brushed-metal texture\n  const brushedMetalTexture = ctx.textureLoader.load(\n    '/prism-assets/chrome/brushed-metal.map.png'\n  );\n  brushedMetalTexture.colorSpace = THREE.SRGBColorSpace;\n  \n  // Build TSL shader: gradient surface + metal texture composite\n  const uvNode = uv();\n  \n  // Vertical gradient: paper (bottom) to surface (top)\n  const paperVec = vec3(\n    colors.paper.r,\n    colors.paper.g,\n    colors.paper.b\n  );\n  const surfaceVec = vec3(\n    colors.surface.r,\n    colors.surface.g,\n    colors.surface.b\n  );\n  const gradientNode = mix(paperVec, surfaceVec, uvNode.y);\n  \n  // Sample metal texture\n  const metalNode = texture(brushedMetalTexture, uvNode);\n  \n  // Composite: blend gradient and metal (30% metal opacity for engineered surface effect)\n  const compositeNode = mix(gradientNode, metalNode, 0.3);\n  \n  // Create material with composite shader\n  const planeMaterial = new MeshBasicNodeMaterial({\n    colorNode: compositeNode,\n    transparent: true\n  });\n  \n  // Create mesh and add to group\n  const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);\n  group.add(planeMesh);\n  \n  // Create text content using fontAtlas\n  if (ctx.fontAtlas) {\n    const textMesh = ctx.fontAtlas.create({\n      text: 'Get started',\n      fontSize: 42,\n      fontWeight: 400,\n      fontFamily: 'Lora',\n      color: colors.ink,\n      align: 'center',\n      anchorX: 'center',\n      anchorY: 'middle'\n    });\n    \n    if (textMesh) {\n      textMesh.position.z = 0.01; // Render above plane surface\n      group.add(textMesh);\n    }\n  }\n  \n  // Apply scene placement from config\n  group.position.set(0, -2.85, 0.26);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n  \n  // Initialize handlers and cleanup\n  const timelines = [];\n  group.userData.handlers = {};\n  group.userData.cleanup = () => {\n    timelines.forEach(tl => tl.kill());\n    planeGeometry.dispose();\n    planeMaterial.dispose();\n    brushedMetalTexture.dispose();\n  };\n  \n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-20-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 77372,
+  "apiMs": 77714,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 7836,
+    "cacheCreation": 0,
+    "cacheRead": 21558
+  },
+  "costUsd": 0.0423118,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  const toDispose = [];\n\n  // Create and add textured plane from imageUrl\n  if (config.assets?.imageUrl) {\n    const planeGeometry = new THREE.PlaneGeometry(1, 1);\n    const texture = ctx.textureLoader.load(config.assets.imageUrl);\n    const material = new THREE.MeshBasicMaterial({\n      map: texture,\n      transparent: true,\n    });\n\n    const plane = new THREE.Mesh(planeGeometry, material);\n    group.add(plane);\n\n    toDispose.push(planeGeometry, material, texture);\n  }\n\n  // Render text \"Pricing\" via fontAtlas\n  if (config.textContent) {\n    let textString = config.textContent;\n\n    // Handle various textContent formats\n    if (!textString || typeof textString !== 'string') {\n      if (Array.isArray(textString) && textString.length > 0) {\n        textString = textString[0];\n      }\n      if (typeof textString === 'object' && textString?.text) {\n        textString = textString.text;\n      }\n    }\n\n    if (typeof textString === 'string' && textString) {\n      try {\n        const textMesh = ctx.fontAtlas.create(textString, {\n          size: 0.96,\n          font: 'Lora',\n          weight: 400,\n        });\n\n        if (textMesh) {\n          textMesh.position.z = 0.1;\n          group.add(textMesh);\n        }\n      } catch (_err) {\n        // Font atlas may not be ready; continue gracefully\n      }\n    }\n  }\n\n  // Apply scene transform\n  if (config.scenePosition) {\n    const { x, y, z, rotationXYZ, scaleXYZ } = config.scenePosition;\n\n    group.position.set(x || 0, y || 0, z || 0);\n\n    if (rotationXYZ && Array.isArray(rotationXYZ)) {\n      group.rotation.order = 'XYZ';\n      group.rotation.set(rotationXYZ[0] || 0, rotationXYZ[1] || 0, rotationXYZ[2] || 0);\n    }\n\n    if (scaleXYZ && Array.isArray(scaleXYZ)) {\n      group.scale.set(scaleXYZ[0] || 1, scaleXYZ[1] || 1, scaleXYZ[2] || 1);\n    }\n  }\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    toDispose.forEach(resource => {\n      if (resource && typeof resource.dispose === 'function') {\n        resource.dispose();\n      }\n    });\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,17 @@
+{
+  "contestant": "glm-5.2",
+  "model": "accounts/fireworks/models/glm-5p2",
+  "route": "fireworks",
+  "caseId": "f-23-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 85770,
+  "usage": {
+    "promptTokens": 1599,
+    "completionTokens": 8192
+  },
+  "costUsd": 0.0382834,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import * as THREE from 'three/webgpu';\nimport { uniform, uv, texture, float, mix, hash } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const position = config.scenePosition ?? [0, -0.3, 0];\n  const rotation = config.sceneRotation ?? [0, 0, 0];\n  const scaleVal = config.sceneScale ?? [1, 1, 1];\n\n  const colors = config.visual?.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10',\n  };\n\n  const atlasRegion = config.atlasRegion ?? { x: 0, y: 0, w: 512, h: 320 };\n\n  // Cached, synchronous texture load\n  const tex = ctx.textureLoader('/prism-assets/chrome/brushed-metal.map.png');\n  if (tex) {\n    tex.colorSpace = THREE.SRGBColorSpace;\n    tex.anisotropy = 8;\n    tex.needsUpdate = true;\n  }\n\n  const atlasW = (tex && tex.image && tex.image.width) || 512;\n  const atlasH = (tex && tex.image && tex.image.height) || 320;\n\n  const atlasSize = uniform(new THREE.Vector2(atlasW, atlasH));\n  const regionOffset = uniform(new THREE.Vector2(atlasRegion.x, atlasRegion.y));\n  const regionSize = uniform(new THREE.Vector2(atlasRegion.w, atlasRegion.h));\n\n  const colorInk = uniform(new THREE.Color(colors.ink));\n  const colorSurface = uniform(new THREE.Color(colors.surface));\n\n  // MeshBasicNodeMaterial — effects spec requests no lighting\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.transparent = false;\n  material.side = THREE.DoubleSide;\n\n  // Atlas-region UV remap (identity when source rect equals full texture)\n  const remappedUV = regionOffset.add(uv().mul(regionSize)).div(atlasSize);\n\n  // Brushed-metal base\n  const baseColor = texture(tex, remappedUV);\n\n  // Engineered vertical gradient: surface (bottom) -> ink (top)\n  const gradient = mix(colorSurface, colorInk, uv().y);\n\n  // Subtle hash-based grain\n  const grain = hash(uv().mul(float(2048.0"
+}

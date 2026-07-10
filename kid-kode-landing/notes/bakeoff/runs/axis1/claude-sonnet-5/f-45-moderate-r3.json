@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-45-moderate",
+  "run": 3,
+  "ok": true,
+  "wallMs": 16602,
+  "apiMs": 14140,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1520,
+    "cacheCreation": 0,
+    "cacheRead": 5613
+  },
+  "costUsd": 0.04199649999999999,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, positionLocal, vec2, vec3, float, uniform, mix, MeshStandardNodeMaterial } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-features-divider';\n  group.position.set(-1.25, -0.2, 0);\n\n  const width = 3.0;\n  const height = 0.1875;\n\n  const geometry = new THREE.PlaneGeometry(width, height, 64, 64);\n\n  const colorMap = ctx.textureLoader.load('/prism-mock/home/nodes/parallax-stack.png');\n  const depthMap = ctx.textureLoader.load('/prism-mock/home/nodes/parallax-stack.depth.png');\n  colorMap.colorSpace = THREE.SRGBColorSpace;\n\n  const parallaxOffset = uniform(vec2(0, 0));\n  const displacementStrength = uniform(float(0.015));\n\n  const material = new MeshStandardNodeMaterial();\n  material.metalness = 0.5;\n  material.roughness = 0.55;\n\n  const baseUv = uv();\n  const depthSample = texture(depthMap, baseUv).r;\n  const parallaxUv = baseUv.add(parallaxOffset.mul(depthSample));\n\n  material.colorNode = texture(colorMap, parallaxUv);\n\n  const displaced = positionLocal.add(\n    vec3(0, 0, depthSample.sub(0.5).mul(displacementStrength))\n  );\n  material.positionNode = displaced;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'divider-plane';\n  group.add(mesh);\n\n  // Center jewel — accent-colored sphere as focal point\n  const jewelGeo = new THREE.SphereGeometry(0.045, 24, 24);\n  const jewelMat = new THREE.MeshPhysicalMaterial({\n    color: new THREE.Color('#ff2a38'),\n    metalness: 0.55,\n    roughness: 0.35,\n    clearcoat: 0.25,\n    clearcoatRoughness: 0.2,\n  });\n  const jewel = new THREE.Mesh(jewelGeo, jewelMat);\n  jewel.position.set(0, 0, 0.03);\n  jewel.name = 'jewel';\n  group.add(jewel);\n\n  // Baseline for rise-in hover animation\n  const baseY = group.position.y;\n  let hoverTween = null;\n  let pressTween = null;\n\n  function onHover() {\n    if (hoverTween) hoverTween.kill();\n    hoverTween = gsap.to(group.position, {\n      y: baseY + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n  }\n\n  function onHoverEnd() {\n    if (hoverTween) hoverTween.kill();\n    hoverTween = gsap.to(group.position, {\n      y: baseY,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n  }\n\n  function onClick() {\n    if (pressTween) pressTween.kill();\n    pressTween = gsap.timeline()\n      .to(group.scale, { x: 0.97, y: 0.97, z: 0.97, duration: 0.12, ease: 'back.out' })\n      .to(group.scale, { x: 1, y: 1, z: 1, duration: 0.12, ease: 'back.out' });\n\n    if (group.userData.emit) {\n      group.userData.emit('hub-features.select', { source: group.name });\n    }\n  }\n\n  function onPointerMove(event) {\n    if (event && typeof event.x === 'number' && typeof event.y === 'number') {\n      parallaxOffset.value.set(event.x * 0.01, event.y * 0.01);\n    }\n  }\n\n  group.userData.handlers = {\n    hover: onHover,\n    hoverEnd: onHoverEnd,\n    click: onClick,\n    pointerMove: onPointerMove,\n  };\n\n  group.userData.cleanup = () => {\n    if (hoverTween) hoverTween.kill();\n    if (pressTween) pressTween.kill();\n    geometry.dispose();\n    material.dispose();\n    jewelGeo.dispose();\n    jewelMat.dispose();\n    colorMap.dispose();\n    depthMap.dispose();\n  };\n\n  return group;\n}\n```"
+}

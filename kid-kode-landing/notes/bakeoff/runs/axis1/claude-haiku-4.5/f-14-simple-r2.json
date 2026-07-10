@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-14-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 43567,
+  "apiMs": 41111,
+  "usage": {
+    "promptTokens": 3944,
+    "completionTokens": 4560,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.027706,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture as textureNode } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  // Extract placement configuration\n  const scenePosition = config.scenePosition || [-3.2, -0.3, 0];\n  const sceneRotation = config.sceneRotation || [0, 0, 0];\n  const sceneScale = config.sceneScale || [1, 1, 1];\n\n  // Create plane geometry\n  const geometry = new THREE.PlaneGeometry(1, 1);\n  \n  // Load texture from imageUrl\n  const imageUrl = config.imageUrl || '/prism-mock/home/nodes/cta-hero-isolated.png';\n  const textureMap = ctx.textureLoader.load(imageUrl);\n  textureMap.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create material with TSL node\n  const material = new THREE.MeshBasicNodeMaterial({\n    colorNode: textureNode(textureMap),\n    transparent: true,\n  });\n  \n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  \n  // Apply scene placement\n  mesh.position.set(...scenePosition);\n  mesh.rotation.set(...sceneRotation);\n  mesh.scale.set(...sceneScale);\n  \n  // Initialize handlers object\n  mesh.userData.handlers = {};\n  \n  // Setup cleanup function\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    textureMap.dispose();\n  };\n  \n  return mesh;\n}\n```"
+}

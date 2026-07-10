@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-09-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 11044,
+  "apiMs": 8761,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 890,
+    "cacheCreation": 0,
+    "cacheRead": 5478
+  },
+  "costUsd": 0.026082999999999995,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const width = 512;\n  const height = 320;\n  const aspect = width / height;\n\n  const planeHeight = 1.2;\n  const planeWidth = planeHeight * aspect;\n\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  const map = ctx.textureLoader.load('/prism-mock/home/nodes/floating-accent.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  // atlas region 0,0,512,320 with total atlas assumed same size as region (full image use)\n  const atlasWidth = 512;\n  const atlasHeight = 320;\n  const rect = { x: 0, y: 0, w: 512, h: 320 };\n\n  const uOffset = rect.x / atlasWidth;\n  const vOffset = 1.0 - (rect.y + rect.h) / atlasHeight;\n  const uScale = rect.w / atlasWidth;\n  const vScale = rect.h / atlasHeight;\n\n  const materialUv = uv().mul(vec2(uScale, vScale)).add(vec2(uOffset, vOffset));\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.map = map;\n  material.mapNode = texture(map, materialUv);\n  material.transparent = true;\n  material.depthWrite = false;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'hub-features-card-1-accent';\n\n  const node = new THREE.Object3D();\n  node.name = 'hub-features-card-1-accent-sprite';\n  node.add(mesh);\n\n  node.position.set(0, -0.3, 0);\n  node.rotation.set(0, 0, 0);\n  node.scale.set(1, 1, 1);\n\n  // Billboard behavior handled in update loop if ctx supports it\n  const billboardUpdate = () => {\n    if (ctx.camera) {\n      mesh.quaternion.copy(ctx.camera.quaternion);\n    }\n  };\n\n  if (ctx.onUpdate) {\n    ctx.onUpdate(billboardUpdate);\n  }\n\n  node.userData.handlers = {};\n\n  node.userData.cleanup = () => {\n    if (ctx.offUpdate) {\n      ctx.offUpdate(billboardUpdate);\n    }\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n  };\n\n  return node;\n}\n```"
+}

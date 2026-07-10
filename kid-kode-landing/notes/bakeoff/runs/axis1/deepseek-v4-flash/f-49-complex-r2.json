@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-49-complex",
+  "run": 2,
+  "ok": true,
+  "wallMs": 24062,
+  "usage": {
+    "promptTokens": 1808,
+    "completionTokens": 2999
+  },
+  "costUsd": 0.00109284,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  Mesh,\n  PlaneGeometry,\n  MeshStandardNodeMaterial,\n  Object3D,\n  Color,\n} from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new Object3D();\n  group.position.set(-2.5, -1.1, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Load textures\n  const map = ctx.textureLoader.load('/prism-mock/home/nodes/parallax-stack.png');\n  const depthMap = ctx.textureLoader.load('/prism-mock/home/nodes/parallax-stack.depth.png');\n\n  // Plane dimensions from atlas source rect (512x320)\n  const aspect = 512 / 320; // ≈1.6\n  const width = 1.6;\n  const height = 1.0;\n  const geometry = new PlaneGeometry(width, height, 64, 64);\n\n  // Material with displacement & machined-metal PBR\n  const material = new MeshStandardNodeMaterial({\n    map,\n    displacementMap: depthMap,\n    displacementScale: 0.08,\n    metalness: 0.55,\n    roughness: 0.5,\n    clearcoat: 0.25,\n    color: new Color('#e8ecf2'), // paper base tint\n  });\n\n  const mesh = new Mesh(geometry, material);\n  mesh.position.y = 0; // will be animated for hover\n  group.add(mesh);\n\n  // Store resources for cleanup\n  const resources = { geometry, material, map, depthMap, group, mesh };\n\n  // -------- Cinematic primitives --------\n  if (ctx.primitives) {\n    ctx.primitives['parallax-scroll'](mesh, { intensity: 0.4 });\n    ctx.primitives['depth-rotate'](mesh, { maxDeg: 8 });\n  }\n\n  // -------- Entrance animation (weighted-settle) --------\n  const entranceTl = gsap.timeline({ defaults: { ease: 'back.out(1.7)', duration: 0.9 } });\n  entranceTl.fromTo(\n    group.scale,\n    { x: 0.96, y: 0.96, z: 0.96 },\n    { x: 1, y: 1, z: 1 }\n  );\n\n  // -------- Hover interaction (rise-in) --------\n  const hoverTl = gsap.timeline({ paused: true });\n  hoverTl.to(mesh.position, { y: 0.15, duration: 0.3, ease: 'power3.out' });\n\n  // -------- Event handlers --------\n  group.userData.handlers = {\n    onPointerEnter: () => {\n      hoverTl.play();\n    },\n    onPointerLeave: () => {\n      hoverTl.reverse();\n    },\n    onClick: () => {\n      // Emit 'hub-home.select' event\n      group.dispatchEvent(new CustomEvent('hub-home.select', { bubbles: true }));\n    },\n  };\n\n  // -------- Cleanup --------\n  group.userData.cleanup = () => {\n    entranceTl.kill();\n    hoverTl.kill();\n    geometry.dispose();\n    material.dispose();\n    map.dispose();\n    depthMap.dispose();\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-19-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 67740,
+  "apiMs": 65292,
+  "usage": {
+    "promptTokens": 3955,
+    "completionTokens": 7332,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.041597999999999996,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Design tokens\n  const colors = {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n\n  const typeScale = {\n    headline: 0.34\n  };\n\n  // Extract configuration\n  const imageUrl = config.imageUrl || '/prism-mock/home/nodes/feature-card.png';\n  const text = config.textContent?.text || 'Collection 3';\n  const textRole = config.textContent?.role || 'headline';\n  \n  // Create plane geometry (512x320 px = 1.6:1 aspect)\n  const planeGeometry = new THREE.PlaneGeometry(1.6, 1);\n  \n  // Load texture\n  const texture = ctx.textureLoader.load(imageUrl);\n  texture.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create material\n  const material = new MeshBasicNodeMaterial({\n    map: texture,\n    transparent: true\n  });\n  \n  // Create and configure card mesh\n  const cardMesh = new THREE.Mesh(planeGeometry, material);\n  cardMesh.position.set(\n    config.scenePosition?.x ?? 3.2,\n    config.scenePosition?.y ?? 1,\n    config.scenePosition?.z ?? 0.06\n  );\n  cardMesh.rotation.set(\n    config.rotation?.x ?? 0,\n    config.rotation?.y ?? 0,\n    config.rotation?.z ?? 0\n  );\n  cardMesh.scale.set(\n    config.scale?.x ?? 1,\n    config.scale?.y ?? 1,\n    config.scale?.z ?? 1\n  );\n  \n  group.add(cardMesh);\n  \n  // Render text using fontAtlas\n  if (ctx.fontAtlas) {\n    const fontSize = typeScale[textRole] || typeScale.headline;\n    const textMesh = ctx.fontAtlas.createTextMesh(text, {\n      fontSize,\n      fontFamily: 'Lora',\n      fontWeight: 400,\n      color: colors.ink,\n      anchor: 'center'\n    });\n    \n    if (textMesh) {\n      textMesh.position.z = 0.01;\n      group.add(textMesh);\n    }\n  }\n  \n  // Apply cinematic primitives if any\n  if (config.cinematicPrimitives?.length > 0) {\n    config.cinematicPrimitives.forEach(primitive => {\n      if (ctx.primitives?.[primitive.name]) {\n        ctx.primitives[primitive.name](group, primitive.params);\n      }\n    });\n  }\n  \n  // Setup cleanup\n  group.userData.cleanup = () => {\n    planeGeometry.dispose();\n    material.dispose();\n    texture.dispose();\n    gsap.killTweensOf(group);\n  };\n  \n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

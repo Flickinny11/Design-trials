@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-01-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 14231,
+  "apiMs": 11748,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1191,
+    "cacheCreation": 3361,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.06553749999999998,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport {\n  texture,\n  uv,\n  vec3,\n  vec4,\n  mix,\n  float,\n  uniform,\n  positionLocal,\n  time,\n  sin,\n  fract,\n  dot,\n} from 'three/tsl';\nimport * as THREE from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'home-hero-headline';\n  group.position.set(0, 3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 4.2;\n  const height = 2.625;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial({ transparent: true });\n\n  const map = ctx.textureLoader.load('/prism-mock/home/nodes/feature-card.png');\n  if (map) {\n    map.colorSpace = THREE.SRGBColorSpace;\n  }\n\n  const inkColor = vec3(0x16 / 255, 0x16 / 255, 0x1d / 255);\n  const surfaceColor = vec3(0x0b / 255, 0x0b / 255, 0x10 / 255);\n\n  const vUv = uv();\n\n  // engineered gradient (hard-edged linear ramp, no soft blur)\n  const gradientMix = vUv.y.clamp(0.0, 1.0);\n  const gradient = mix(surfaceColor, inkColor, gradientMix);\n\n  const baseTex = map ? texture(map, vUv) : vec4(gradient, 1.0);\n\n  // subtle static grain via pseudo-random noise (hash-based, no time dependency for static composition)\n  const grainSeed = dot(vUv, vec3(12.9898, 78.233, 0.0).xy);\n  const grain = fract(sin(grainSeed).mul(43758.5453));\n  const grainAmount = grain.sub(0.5).mul(0.035);\n\n  const composed = mix(vec3(baseTex.r, baseTex.g, baseTex.b), gradient, 0.15).add(vec3(grainAmount, grainAmount, grainAmount));\n\n  material.colorNode = vec4(composed, 1.0);\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'home-hero-headline-plane';\n  group.add(mesh);\n\n  // Text content — body role, rendered via MSDF font atlas\n  const textNode = ctx.fontAtlas.createText({\n    text: 'A machined-metal watch atelier landing with catalog, pricing, jo',\n    font: 'JetBrains Mono',\n    weight: 400,\n    size: 0.13,\n    color: 0xe8ecf2,\n    maxWidth: width - 0.5,\n    align: 'left',\n    anchor: 'center',\n  });\n  textNode.position.set(0, -height / 2 + 0.35, 0.01);\n  group.add(textNode);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n    if (textNode && typeof textNode.userData?.cleanup === 'function') {\n      textNode.userData.cleanup();\n    }\n  };\n\n  return group;\n}"
+}

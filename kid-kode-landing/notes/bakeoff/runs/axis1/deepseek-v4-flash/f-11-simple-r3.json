@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-11-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 11643,
+  "usage": {
+    "promptTokens": 1688,
+    "completionTokens": 1766
+  },
+  "costUsd": 0.0007308000000000001,
+  "transportAttempts": 4,
+  "billing": "metered",
+  "output": "```javascript\nimport { PlaneGeometry, MeshBasicNodeMaterial, Mesh, Group } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  // Create group for future extensibility (children, etc.)\n  const group = new Group();\n\n  // Load texture from config.assets.imageUrl\n  const texture = ctx.textureLoader.load(config.assets.imageUrl);\n\n  // Determine material type based on effects description: static composition, no lighting\n  const material = new MeshBasicNodeMaterial({ map: texture });\n\n  // Geometry matching atlas source rect (0,0,512,320) - use custom size\n  const geometry = new PlaneGeometry(512, 320); // units in scene space (scaling handles final size)\n  const mesh = new Mesh(geometry, material);\n  mesh.name = 'FeaturesCard3';\n\n  // Apply scene placement from config.scenePosition\n  if (config.scenePosition) {\n    const { position, rotation, scale } = config.scenePosition;\n    if (position) {\n      if (Array.isArray(position)) {\n        mesh.position.set(position[0], position[1], position[2]);\n      } else {\n        mesh.position.copy(position);\n      }\n    }\n    if (rotation) {\n      if (Array.isArray(rotation)) {\n        mesh.rotation.set(rotation[0], rotation[1], rotation[2]);\n      } else {\n        mesh.rotation.copy(rotation);\n      }\n    }\n    if (scale) {\n      if (typeof scale === 'number') {\n        mesh.scale.set(scale, scale, scale);\n      } else if (Array.isArray(scale)) {\n        mesh.scale.set(scale[0], scale[1], scale[2]);\n      } else {\n        mesh.scale.copy(scale);\n      }\n    }\n  }\n\n  group.add(mesh);\n\n  // No cinematic primitives to apply (empty array)\n  // If config.cinematicPrimitives were present, we would iterate and call ctx.primitives[name](...)\n\n  // No text content – skip font atlas usage\n\n  // Set up userData.handlers (empty as no interactions)\n  group.userData.handlers = {};\n\n  // Cleanup: dispose resources and kill GSAP timelines\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n    // Kill any GSAP timelines associated with this node (none here)\n    gsap.killTweensOf(group);\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

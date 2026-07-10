@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-35-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 35471,
+  "usage": {
+    "promptTokens": 1812,
+    "completionTokens": 4830
+  },
+  "costUsd": 0.0016060800000000002,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial, PlaneGeometry, Mesh, Vector2 } from 'three/webgpu';\nimport { texture, uniform, uv, positionLocal, normalLocal, Fn, vec2, sub, mul } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  // --- Load assets ---\n  const imageTexture = ctx.textureLoader.load(config.visual.imageUrl);\n  const depthTexture = ctx.textureLoader.load(config.visual.depthMapUrl);\n  imageTexture.anisotropy = 8;\n  depthTexture.anisotropy = 8;\n\n  // --- Geometry ---\n  const aspect = 512 / 320; // atlas source rect ratio\n  const width = 2.5;\n  const height = width / aspect;\n  const geometry = new PlaneGeometry(width, height, 64, 64);\n\n  // --- TSL displacement material ---\n  const mouseUniform = uniform(new Vector2(0.5, 0.5));\n  const colorNode = texture(imageTexture);\n  const depthNode = texture(depthTexture);\n\n  const vertexModifier = Fn(() => {\n    const h = depthNode.sample(uv()).r;\n    const offset = sub(mouseUniform, vec2(0.5)).mul(0.2).mul(h);\n    positionLocal.addAssign(normalLocal.mul(offset));\n  })();\n\n  const material = new MeshBasicNodeMaterial({\n    colorNode,\n    vertexNode: vertexModifier,\n  });\n\n  // --- Mesh ---\n  const mesh = new Mesh(geometry, material);\n  const pos = config.scenePlacement.position;\n  mesh.position.set(pos.x, pos.y, pos.z);\n  mesh.rotation.set(config.scenePlacement.rotation.x, config.scenePlacement.rotation.y, config.scenePlacement.rotation.z);\n  mesh.scale.set(config.scenePlacement.scale.x, config.scenePlacement.scale.y, config.scenePlacement.scale.z);\n\n  // Store initial Y for hover lift\n  mesh.userData.originalY = pos.y;\n\n  // --- Interaction handlers ---\n  mesh.userData.handlers = {\n    pointerover: () => {\n      gsap.to(mesh.position, {\n        y: mesh.userData.originalY + 0.15,\n        duration: 0.7,\n        ease: 'power3.out',\n        overwrite: 'auto',\n      });\n    },\n    pointerout: () => {\n      gsap.to(mesh.position, {\n        y: mesh.userData.originalY,\n        duration: 0.5,\n        ease: 'power3.out',\n        overwrite: 'auto',\n      });\n    },\n    click: () => {\n      // Emit event as specified\n      if (ctx.events && ctx.events.emit) {\n        ctx.events.emit('hub-features.select');\n      }\n      // Data binding: navigate via checkout URL (itemId not given, skip)\n    },\n    pointermove: (event) => {\n      // Update mouse uniform for parallax\n      mouseUniform.value.set(\n        event.clientX / window.innerWidth,\n        event.clientY / window.innerHeight\n      );\n    },\n  };\n\n  // --- Cleanup ---\n  mesh.userData.cleanup = () => {\n    gsap.killTweensOf(mesh.position);\n    geometry.dispose();\n    material.dispose();\n    imageTexture.dispose();\n    depthTexture.dispose();\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

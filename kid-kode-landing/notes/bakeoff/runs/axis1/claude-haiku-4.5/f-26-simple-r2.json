@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-26-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 73420,
+  "apiMs": 70888,
+  "usage": {
+    "promptTokens": 3960,
+    "completionTokens": 7721,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.043553,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  const resourcesForCleanup = [];\n  const timelinesForCleanup = [];\n\n  // Load the background image texture\n  const imageTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  resourcesForCleanup.push(imageTexture);\n\n  // Create plane geometry (atlas region 512x320 = 1.6:1 aspect ratio)\n  const planeGeometry = new THREE.PlaneGeometry(1.6, 1);\n  resourcesForCleanup.push(planeGeometry);\n\n  // Create basic material for the plane\n  const planeMaterial = new THREE.MeshBasicNodeMaterial({\n    map: imageTexture,\n    transparent: true,\n  });\n  resourcesForCleanup.push(planeMaterial);\n\n  // Create and add plane mesh\n  const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);\n  group.add(planeMesh);\n\n  // Apply scene position, rotation, and scale from config\n  group.position.set(\n    config.scenePosition[0],\n    config.scenePosition[1],\n    config.scenePosition[2]\n  );\n\n  if (config.sceneRotation) {\n    group.rotation.set(\n      config.sceneRotation[0],\n      config.sceneRotation[1],\n      config.sceneRotation[2]\n    );\n  }\n\n  if (config.sceneScale) {\n    group.scale.set(\n      config.sceneScale[0],\n      config.sceneScale[1],\n      config.sceneScale[2]\n    );\n  }\n\n  // Render text content using font atlas\n  if (config.textContent && config.textContent.length > 0 && ctx.fontAtlas) {\n    const textContent = config.textContent[0];\n\n    const textMesh = ctx.fontAtlas.createTextMesh({\n      text: textContent.text,\n      fontSize: textContent.fontSize,\n      fontWeight: textContent.fontWeight,\n      fontFamily: textContent.fontFamily,\n      color: config.colors.ink,\n      align: 'center',\n      anchor: [0.5, 0.5],\n    });\n\n    if (textMesh) {\n      // Position text slightly in front of the plane\n      textMesh.position.z = 0.01;\n      group.add(textMesh);\n    }\n  }\n\n  // Initialize event handlers object (no interactions for this static component)\n  group.userData.handlers = {};\n\n  // Define cleanup function\n  group.userData.cleanup = () => {\n    timelinesForCleanup.forEach(timeline => timeline.kill());\n    resourcesForCleanup.forEach(resource => {\n      if (resource && typeof resource.dispose === 'function') {\n        resource.dispose();\n      }\n    });\n  };\n\n  return group;\n}\n```"
+}

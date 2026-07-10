@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-23-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 14664,
+  "usage": {
+    "promptTokens": 1687,
+    "completionTokens": 1409
+  },
+  "costUsd": 0.0006307000000000001,
+  "transportAttempts": 4,
+  "billing": "metered",
+  "output": "```javascript\nimport { PlaneGeometry, Mesh, Object3D } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\n\n/**\n * Creates a setting-card-2 plane with brushed metal texture.\n * @param {NodeConfig} config - Configuration object.\n * @param {NodeContext} ctx - Context with textureLoader.\n * @returns {Object3D} The mesh with cleanup handler.\n */\nexport default function createNode(config, ctx) {\n  // Load texture\n  const texture = ctx.textureLoader.load(config.imageUrl);\n  texture.needsUpdate = true;\n\n  // Geometry dimensions derived from atlas region aspect ratio (512x320)\n  const width = 2; // scene units\n  const height = width * (320 / 512); // ≈1.25\n\n  const geometry = new PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial({ map: texture });\n  const mesh = new Mesh(geometry, material);\n\n  // Apply scene placement\n  mesh.position.set(\n    config.scenePosition?.x ?? 0,\n    config.scenePosition?.y ?? -0.3,\n    config.scenePosition?.z ?? 0\n  );\n  mesh.rotation.set(\n    config.sceneRotation?.x ?? 0,\n    config.sceneRotation?.y ?? 0,\n    config.sceneRotation?.z ?? 0\n  );\n  mesh.scale.set(\n    config.sceneScale?.x ?? 1,\n    config.sceneScale?.y ?? 1,\n    config.sceneScale?.z ?? 1\n  );\n\n  // No interactions or data bindings\n  mesh.userData.handlers = {};\n\n  // Cleanup\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

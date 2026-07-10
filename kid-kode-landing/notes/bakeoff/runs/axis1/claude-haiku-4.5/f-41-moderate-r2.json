@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-41-moderate",
+  "run": 2,
+  "ok": true,
+  "wallMs": 119100,
+  "apiMs": 116537,
+  "usage": {
+    "promptTokens": 4006,
+    "completionTokens": 14308,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.076565,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture as tslTexture, vec4 } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Create main plane (list row background)\n  const planeGeometry = new THREE.PlaneGeometry(6.5, 0.18);\n  \n  // Load brushed-metal texture\n  const metalTexture = ctx.textureLoader.load('/prism-assets/chrome/brushed-metal.map.png');\n  metalTexture.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create material with TSL texture node\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = tslTexture(metalTexture);\n  \n  // Create plane mesh\n  const planeMesh = new THREE.Mesh(planeGeometry, material);\n  planeMesh.position.set(0, 0.7, 0);\n  group.add(planeMesh);\n  \n  // Add subtle divider line at bottom\n  const dividerGeometry = new THREE.PlaneGeometry(6.5, 0.005);\n  const dividerMaterial = new MeshBasicNodeMaterial();\n  dividerMaterial.colorNode = vec4(0.906, 0.925, 0.949, 0.15); // #e8ecf2 with alpha 0.15\n  \n  const divider = new THREE.Mesh(dividerGeometry, dividerMaterial);\n  divider.position.set(0, 0.7 - 0.09, 0.001);\n  group.add(divider);\n  \n  // Store initial state\n  const initialPosition = planeMesh.position.clone();\n  const initialScale = planeMesh.scale.clone();\n  \n  // Create animation timelines\n  const hoverTimeline = gsap.timeline({ paused: true });\n  const hoverOutTimeline = gsap.timeline({ paused: true });\n  const clickTimeline = gsap.timeline();\n  \n  // Hover timeline - rise-in effect (0.15 scene units up)\n  hoverTimeline.to(planeMesh.position, {\n    y: initialPosition.y + 0.15,\n    duration: 0.7,\n    ease: 'power3.out',\n  }, 0);\n  \n  // Hover out timeline - return to original position\n  hoverOutTimeline.to(planeMesh.position, {\n    y: initialPosition.y,\n    duration: 0.7,\n    ease: 'power3.out',\n  }, 0);\n  \n  // Event handlers\n  const handlers = {\n    hover: (isHovering) => {\n      if (isHovering) {\n        hoverOutTimeline.pause();\n        hoverTimeline.restart();\n      } else {\n        hoverTimeline.pause();\n        hoverOutTimeline.restart();\n      }\n    },\n    click: () => {\n      // Press-down effect\n      clickTimeline.clear();\n      clickTimeline\n        .to(planeMesh.scale, {\n          x: 0.97,\n          y: 0.97,\n          duration: 0.12,\n          ease: 'back.out',\n        }, 0)\n        .to(planeMesh.scale, {\n          x: initialScale.x,\n          y: initialScale.y,\n          duration: 0.12,\n          ease: 'back.out',\n        });\n      \n      // Emit select event\n      if (config.onEvent) {\n        config.onEvent('hub-collection.select', { source: 'click' });\n      }\n    },\n  };\n  \n  group.userData.handlers = handlers;\n  \n  // Cleanup function\n  group.userData.cleanup = () => {\n    hoverTimeline.kill();\n    hoverOutTimeline.kill();\n    clickTimeline.kill();\n    planeGeometry.dispose();\n    material.dispose();\n    dividerGeometry.dispose();\n    dividerMaterial.dispose();\n    metalTexture.dispose();\n  };\n  \n  return group;\n}\n```"
+}

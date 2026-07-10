@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-14-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 15097,
+  "usage": {
+    "promptTokens": 1691,
+    "completionTokens": 2010
+  },
+  "costUsd": 0.0007995400000000001,
+  "transportAttempts": 3,
+  "billing": "metered",
+  "output": "```javascript\nimport { PlaneGeometry, MeshBasicNodeMaterial, DoubleSide } from 'three/webgpu';\nimport { LoopOnce } from 'three';\n\nexport default function createNode(config, ctx) {\n  const {\n    scenePlacement: { position, rotation, scale },\n    assets: { imageUrl },\n    atlasRegion: { sourceRect }\n  } = config;\n\n  // Load texture and set sub-rectangle\n  const texture = ctx.textureLoader.load(imageUrl);\n  const img = texture.image;\n  const imgWidth = img ? img.naturalWidth || img.width : 1;\n  const imgHeight = img ? img.naturalHeight || img.height : 1;\n  const [sx, sy, sw, sh] = sourceRect;\n  texture.wrapS = texture.wrapT = 1000; // ClampToEdgeWrapping\n  texture.repeat.set(sw / imgWidth, sh / imgHeight);\n  texture.offset.set(sx / imgWidth, 1 - (sy + sh) / imgHeight); // WebGL origin top-left vs bottom-left\n\n  // Plane geometry sized to source rect aspect ratio\n  const aspect = sh / sw;\n  const width = 1;\n  const geometry = new PlaneGeometry(width, width * aspect);\n\n  const material = new MeshBasicNodeMaterial({\n    map: texture,\n    side: DoubleSide\n  });\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(position[0], position[1], position[2]);\n  mesh.rotation.set(rotation[0], rotation[1], rotation[2]);\n  mesh.scale.set(scale[0], scale[1], scale[2]);\n\n  // No handlers or animations\n  mesh.userData.handlers = {};\n\n  // Cleanup\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

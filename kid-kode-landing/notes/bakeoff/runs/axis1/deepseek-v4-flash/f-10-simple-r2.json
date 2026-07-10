@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-10-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 25618,
+  "usage": {
+    "promptTokens": 1700,
+    "completionTokens": 3223
+  },
+  "costUsd": 0.0011404400000000002,
+  "transportAttempts": 4,
+  "billing": "metered",
+  "output": "```javascript\nimport { PlaneGeometry, Mesh, Group, MeshBasicNodeMaterial } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const { imageUrl, textContent, colors, scenePosition } = config;\n  const { position, rotation, scale } = scenePosition;\n\n  const group = new Group();\n\n  // ── Texture plane ──────────────────────────────────────────────────\n  const texture = ctx.textureLoader.load(imageUrl);\n  // If the texture is part of an atlas, set UV repeat/offset.\n  // Source rect is (0, 0, 512, 320). We assume the loaded image may be larger.\n  const img = texture.image;\n  if (img && img.width && img.height) {\n    const srcW = 512;\n    const srcH = 320;\n    texture.repeat.set(srcW / img.width, srcH / img.height);\n    // UV origin is bottom-left; source rect top-left, so offset y = 1 - srcH/img.height\n    texture.offset.set(0, 1 - srcH / img.height);\n  } else {\n    // Fallback: assume texture is exactly the region\n    texture.repeat.set(1, 1);\n    texture.offset.set(0, 0);\n  }\n\n  const aspect = 512 / 320; // ≈1.6\n  const geometry = new PlaneGeometry(aspect, 1);\n  const material = new MeshBasicNodeMaterial({\n    map: texture,\n    transparent: true,\n  });\n  const plane = new Mesh(geometry, material);\n  group.add(plane);\n\n  // ── Text “Features 2” ──────────────────────────────────────────────\n  // Use headline size from design tokens (0.34 scene units), Lora serif weight 400.\n  const textMesh = ctx.fontAtlas.createText(textContent.text, {\n    fontSize: 0.34,\n    fontFamily: 'Lora',\n    fontWeight: 400,\n    color: colors.paper || '#e8ecf2',\n    align: 'center',\n    baseline: 'middle',\n  });\n  textMesh.position.z = 0.01; // slightly above the plane\n  group.add(textMesh);\n\n  // ── Placement ──────────────────────────────────────────────────────\n  group.position.copy(position);\n  group.rotation.set(rotation.x, rotation.y, rotation.z);\n  group.scale.copy(scale);\n\n  // ── Handlers (none required) ───────────────────────────────────────\n  group.userData.handlers = {};\n\n  // ── Cleanup ────────────────────────────────────────────────────────\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n    // No GSAP timelines to kill.\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-37-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 88935,
+  "apiMs": 86530,
+  "usage": {
+    "promptTokens": 4025,
+    "completionTokens": 10247,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.056303,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture as textureNode } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Create plane geometry with correct aspect ratio (512x320 = 1.6:1)\n  const geometry = new THREE.PlaneGeometry(1.6, 1.0);\n  \n  // Load texture from assets\n  const imageUrl = config.assetsPaths?.imageUrl || '/prism-mock/home/nodes/feature-card.png';\n  const mapTexture = ctx.textureLoader.load(imageUrl);\n  mapTexture.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create material with TSL texture node\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n  material.colorNode = textureNode(mapTexture);\n  \n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n  \n  // Apply scene transform\n  const position = config.scenePosition || [1.25, 1.6, 0];\n  const rotation = config.sceneRotation || [0, 0, 0];\n  const scale = config.sceneScale || [1, 1, 1];\n  \n  group.position.set(position[0], position[1], position[2]);\n  group.rotation.order = 'XYZ';\n  group.rotation.set(rotation[0], rotation[1], rotation[2]);\n  group.scale.set(scale[0], scale[1], scale[2]);\n  \n  // Store initial Y for animation reference\n  const baseY = mesh.position.y;\n  \n  // Define interaction handlers\n  group.userData.handlers = {\n    onPointerEnter: () => {\n      // Rise-in preset: y +0.15, power3.out, 0.7s\n      gsap.to(mesh.position, {\n        y: baseY + 0.15,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n    },\n    onPointerLeave: () => {\n      // Return to base position\n      gsap.to(mesh.position, {\n        y: baseY,\n        duration: 0.5,\n        ease: 'power2.out',\n      });\n    },\n    onClick: () => {\n      // Emit hub-pricing.select event\n      if (ctx.emit) {\n        ctx.emit('hub-pricing.select', { nodeId: config.id });\n      }\n    },\n  };\n  \n  // Apply cinematic primitives from config\n  if (config.cinematicPrimitives && Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach(({ name, params }) => {\n      if (ctx.primitives && typeof ctx.primitives[name] === 'function') {\n        ctx.primitives[name](group, params || {});\n      }\n    });\n  }\n  \n  // Define cleanup function\n  group.userData.cleanup = () => {\n    // Kill all GSAP animations on this mesh\n    gsap.killTweensOf(mesh.position);\n    \n    // Dispose of Three.js resources\n    geometry.dispose();\n    material.dispose();\n    mapTexture.dispose();\n  };\n  \n  return group;\n}\n```"
+}

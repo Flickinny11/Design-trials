@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-22-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 14848,
+  "usage": {
+    "promptTokens": 1703,
+    "completionTokens": 2362
+  },
+  "costUsd": 0.00089978,
+  "transportAttempts": 4,
+  "billing": "metered",
+  "output": "```javascript\nimport { Group, PlaneGeometry, MeshBasicNodeMaterial, TextureLoader } from 'three/webgpu';\nimport { texture, color, mul } from 'three/tsl';\nimport gsap from 'gsap';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n  group.position.set(-3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // --- Background plane ---\n  const bgTexture = ctx.textureLoader.get(config.assets.imageUrl);\n  bgTexture.wrapS = bgTexture.wrapT = 1000; // Repeat? Better clamp\n  bgTexture.wrapS = bgTexture.wrapT = 1001; // ClampToEdge\n\n  // Plane size derived from source rect aspect ratio\n  const srcW = 512, srcH = 320;\n  const planeWidth = 2;\n  const planeHeight = planeWidth * (srcH / srcW);\n  const bgGeom = new PlaneGeometry(planeWidth, planeHeight);\n  const bgMat = new MeshBasicNodeMaterial({\n    map: bgTexture,\n    transparent: true,\n    opacity: 1,\n  });\n  const bgMesh = new THREE.Mesh(bgGeom, bgMat);\n  bgMesh.name = 'background';\n  group.add(bgMesh);\n\n  // --- Text plane ---\n  const textColor = color('#16161d'); // ink\n  const textMesh = createTextMesh({\n    text: 'Pricing 1',\n    fontFamily: 'Lora',\n    fontWeight: 400,\n    fontSize: 0.2, // subhead scene units\n    color: textColor,\n    align: 'center',\n    anchor: 'center',\n  });\n  textMesh.position.set(0, 0, 0.001); // slight Z offset to avoid z-fighting\n  textMesh.name = 'text';\n  group.add(textMesh);\n\n  // --- UserData handlers & cleanup ---\n  group.userData.handlers = {};\n\n  const materials = [bgMat, textMesh.material].filter(Boolean);\n  const geometries = [bgGeom, textMesh.geometry].filter(Boolean);\n  const textures = [bgTexture];\n\n  group.userData.cleanup = () => {\n    materials.forEach((m) => {\n      if (m.dispose) m.dispose();\n    });\n    geometries.forEach((g) => {\n      if (g.dispose) g.dispose();\n    });\n    textures.forEach((t) => {\n      if (t.dispose) t.dispose();\n    });\n    // Kill any GSAP timelines (none in this node but for consistency)\n    gsap.killTweensOf(group);\n  };\n\n  // Apply cinematic primitives (none specified)\n  if (config.cinematicPrimitives) {\n    config.cinematicPrimitives.forEach((prim) => {\n      ctx.primitives[prim.name](group, prim.params);\n    });\n  }\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-05-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 105516,
+  "apiMs": 102932,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 10856,
+    "cacheCreation": 0,
+    "cacheRead": 21547
+  },
+  "costUsd": 0.0574197,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Apply scene position, rotation, and scale from config\n  if (config.scenePosition) {\n    const pos = config.scenePosition;\n    group.position.set(pos.x || 0, pos.y || 0, pos.z || 0);\n    \n    if (pos.rotationXYZ) {\n      group.rotation.order = 'XYZ';\n      group.rotation.set(pos.rotationXYZ.x || 0, pos.rotationXYZ.y || 0, pos.rotationXYZ.z || 0);\n    }\n    \n    if (pos.scaleXYZ) {\n      group.scale.set(pos.scaleXYZ.x || 1, pos.scaleXYZ.y || 1, pos.scaleXYZ.z || 1);\n    }\n  }\n\n  // Create plane geometry with atlas-region aspect ratio (512:320 = 1.6:1)\n  const planeWidth = 1.6;\n  const planeHeight = 1.0;\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  // Load brushed-metal texture\n  const imageUrl = config.imageUrl || '/prism-assets/chrome/brushed-metal.map.png';\n  const texture = ctx.textureLoader.load(imageUrl);\n\n  // Create material for textured plane\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.map = texture;\n\n  // Create and add plane mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Extract and prepare text content\n  const textContent = typeof config.textContent === 'string'\n    ? config.textContent\n    : (config.textContent?.primary || 'Get started');\n\n  // Parse color values\n  const colors = config.colors || {};\n  let textColor = colors.ink || '#16161d';\n  if (typeof textColor === 'string') {\n    textColor = parseInt(textColor.replace('#', ''), 16);\n  }\n\n  // Create MSDF text mesh via fontAtlas\n  const textMesh = ctx.fontAtlas.createText({\n    text: textContent,\n    font: 'Lora',\n    fontSize: 0.34, // headline scale from design tokens\n    fontWeight: 400,\n    color: textColor,\n    align: 'center',\n  });\n\n  // Position text above plane surface\n  textMesh.position.z = 0.1;\n  group.add(textMesh);\n\n  // Cleanup function: dispose all resources and kill timelines\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (texture) texture.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n    gsap.killTweensOf(group);\n    gsap.killTweensOf(textMesh);\n  };\n\n  // Event handlers (none for static label)\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

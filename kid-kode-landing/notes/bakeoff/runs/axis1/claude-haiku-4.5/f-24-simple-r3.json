@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-24-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 93295,
+  "apiMs": 90777,
+  "usage": {
+    "promptTokens": 3967,
+    "completionTokens": 10016,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.055047,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const container = new THREE.Group();\n  \n  // Aspect ratio of atlas region (512 × 320)\n  const PLANE_WIDTH = 1.6;\n  const PLANE_HEIGHT = 1.0;\n  \n  // Create plane geometry for textured sprite\n  const geometry = new THREE.PlaneGeometry(PLANE_WIDTH, PLANE_HEIGHT);\n  \n  // Load ceramic grain texture\n  const textureUrl = config.assetUrl || config.assets?.imageUrl;\n  const textureMap = ctx.textureLoader.load(textureUrl);\n  textureMap.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create material using TSL texture node\n  const textureNode = texture(textureMap);\n  const material = new THREE.MeshBasicNodeMaterial({\n    map: textureNode,\n    side: THREE.DoubleSide\n  });\n  \n  // Add textured plane to container\n  const plane = new THREE.Mesh(geometry, material);\n  container.add(plane);\n  \n  // Add text overlay if provided\n  if (config.textContent && config.textContent.length > 0) {\n    const textSpec = config.textContent[0];\n    const textMesh = ctx.fontAtlas.createText(textSpec.text, {\n      fontSize: textSpec.fontSize || 39,\n      fontFamily: 'Lora',\n      fontWeight: textSpec.fontWeight || 400,\n      color: '#16161d'\n    });\n    \n    if (textMesh) {\n      textMesh.position.z = 0.01; // Layer above texture\n      container.add(textMesh);\n    }\n  }\n  \n  // Apply scene placement\n  const { position = {}, rotation = {}, scale = {} } = config;\n  container.position.set(position.x ?? 0, position.y ?? 0, position.z ?? 0);\n  container.rotation.set(rotation.x ?? 0, rotation.y ?? 0, rotation.z ?? 0);\n  container.scale.set(scale.x ?? 1, scale.y ?? 1, scale.z ?? 1);\n  \n  // Apply cinematic primitives\n  const primitives = config.cinematicPrimitives || [];\n  primitives.forEach(({ name, params }) => {\n    if (ctx.primitives?.[name]) {\n      ctx.primitives[name](container, params || {});\n    }\n  });\n  \n  // Cleanup function\n  container.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    textureMap.dispose();\n    gsap.killTweensOf(container);\n    gsap.killTweensOf(plane);\n  };\n  \n  return container;\n}\n```"
+}

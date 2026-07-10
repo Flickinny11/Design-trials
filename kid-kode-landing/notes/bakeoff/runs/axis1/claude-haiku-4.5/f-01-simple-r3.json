@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-01-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 92602,
+  "apiMs": 90399,
+  "usage": {
+    "promptTokens": 3951,
+    "completionTokens": 9585,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.05285999999999999,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Apply scene placement\n  group.position.set(...(config.scenePosition || [0, 3, 0]));\n  if (config.sceneRotation) {\n    group.rotation.set(...config.sceneRotation);\n  }\n  if (config.sceneScale) {\n    group.scale.set(...config.sceneScale);\n  }\n  \n  const resourcesToDispose = [];\n  const timelinesToKill = [];\n  \n  // Load image texture\n  const imageTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  resourcesToDispose.push(imageTexture);\n  \n  // Create plane geometry (512:320 aspect ratio ≈ 1.6:1)\n  const planeGeometry = new THREE.PlaneGeometry(2.4, 1.5);\n  resourcesToDispose.push(planeGeometry);\n  \n  // Create material with image texture\n  const planeMaterial = new MeshBasicNodeMaterial({\n    map: imageTexture\n  });\n  resourcesToDispose.push(planeMaterial);\n  \n  // Create and add plane mesh\n  const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);\n  group.add(planeMesh);\n  \n  // Render text content if available\n  if (config.textContent && ctx.fontAtlas) {\n    try {\n      const textGeometry = ctx.fontAtlas.createGeometry(\n        config.textContent,\n        {\n          font: 'JetBrains Mono',\n          size: 0.031,\n          weight: 400,\n          color: 0x16161d,\n          align: 'left',\n          width: 2.2\n        }\n      );\n      \n      if (textGeometry) {\n        textGeometry.position.set(0, -0.9, 0.01);\n        group.add(textGeometry);\n        resourcesToDispose.push(textGeometry);\n      }\n    } catch (error) {\n      // fontAtlas unavailable; continue without text\n    }\n  }\n  \n  // Define cleanup function\n  group.userData.cleanup = () => {\n    resourcesToDispose.forEach(resource => {\n      if (resource && typeof resource.dispose === 'function') {\n        resource.dispose();\n      }\n    });\n    \n    timelinesToKill.forEach(timeline => {\n      if (timeline && typeof timeline.kill === 'function') {\n        timeline.kill();\n      }\n    });\n  };\n  \n  return group;\n}\n```"
+}

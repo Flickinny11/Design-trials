@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-03-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 35911,
+  "usage": {
+    "promptTokens": 1695,
+    "completionTokens": 3952
+  },
+  "costUsd": 0.00134386,
+  "transportAttempts": 3,
+  "billing": "metered",
+  "output": "```js\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2, MeshBasicNodeMaterial } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  // Geometry sized to source rect aspect ratio (512/320 = 1.6)\n  const aspect = 512 / 320;\n  const geometry = new THREE.PlaneGeometry(aspect, 1);\n\n  // Load texture (assumed cached / synchronous)\n  const loadedTexture = ctx.textureLoader.load(config.imageUrl);\n\n  // Set up material with TSL texture node (full UV, no atlas offset – source rect is the full image)\n  const material = new MeshBasicNodeMaterial();\n  const textureNode = texture(loadedTexture).uv(uv());\n  material.mapNode = textureNode;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(config.position.x, config.position.y, config.position.z);\n  mesh.rotation.set(config.rotation.x, config.rotation.y, config.rotation.z);\n  mesh.scale.set(config.scale.x, config.scale.y, config.scale.z);\n\n  // Billboard toward camera every frame\n  const updateHandler = () => {\n    mesh.lookAt(ctx.camera.position);\n  };\n\n  mesh.userData.handlers = {\n    update: updateHandler\n  };\n\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (loadedTexture) loadedTexture.dispose();\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

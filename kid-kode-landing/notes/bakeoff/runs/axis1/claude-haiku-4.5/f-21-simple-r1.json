@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-21-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 76023,
+  "apiMs": 73929,
+  "usage": {
+    "promptTokens": 3954,
+    "completionTokens": 7818,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.044011,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { sampler } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Atlas region dimensions (512x320 from spec)\n  const atlasRegion = config.atlasRegion || { x: 0, y: 0, width: 512, height: 320 };\n  const aspectRatio = atlasRegion.width / atlasRegion.height;\n  \n  // Create plane geometry with correct aspect ratio\n  const height = 1.0;\n  const width = height * aspectRatio;\n  const geometry = new THREE.PlaneGeometry(width, height);\n  \n  // Load texture from asset URL\n  const texture = ctx.textureLoader.load(config.assets.imageUrl);\n  texture.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create material using TSL nodes\n  const material = new THREE.MeshBasicNodeMaterial({\n    colorNode: sampler(texture),\n    transparent: true,\n    depthWrite: false,\n    side: THREE.DoubleSide,\n  });\n  \n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  \n  // Apply scene placement configuration\n  if (config.placement) {\n    mesh.position.fromArray(config.placement.position);\n    mesh.rotation.order = 'XYZ';\n    mesh.rotation.fromArray(config.placement.rotation);\n    mesh.scale.fromArray(config.placement.scale);\n  }\n  \n  group.add(mesh);\n  \n  // Resource cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n  };\n  \n  // Event handlers (none for static sprite)\n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

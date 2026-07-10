@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-46-complex-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 57006,
+  "apiMs": 54840,
+  "usage": {
+    "promptTokens": 4097,
+    "completionTokens": 6262,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.03653200000000001,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu'\nimport gsap from 'gsap'\n\nexport default function createNode(config, ctx) {\n  // Create root container\n  const root = new THREE.Group()\n  \n  // Load GLB mesh from cache via ctx.glbLoader\n  const glbData = ctx.glbLoader.load(config.meshUrl)\n  const mesh = glbData.scene\n  \n  // Parse placement transforms\n  const [px, py, pz] = config.scenePosition || [0, 0, 0]\n  const [rx, ry, rz] = config.rotation || [0, 0, 0]\n  const [sx, sy, sz] = config.scale || [1, 1, 1]\n  \n  // Apply transforms to mesh (positions it in world space)\n  mesh.position.set(px, py, pz)\n  mesh.rotation.set(rx, ry, rz)\n  mesh.scale.set(sx, sy, sz)\n  \n  root.add(mesh)\n  root.position.set(px, py, pz)\n  \n  // Apply cinematic primitives (parallax-scroll, magnetic-cursor, etc.)\n  if (config.cinematicPrimitives && Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach(({ name, params }) => {\n      if (ctx.primitives && typeof ctx.primitives[name] === 'function') {\n        ctx.primitives[name](root, params)\n      }\n    })\n  }\n  \n  // State for hover animation\n  let hoverTimeline = null\n  const baseY = py\n  \n  // Attach event handlers\n  root.userData.handlers = {\n    onHover() {\n      if (hoverTimeline) hoverTimeline.kill()\n      hoverTimeline = gsap.to(root.position, {\n        y: baseY + 0.15,\n        duration: 0.7,\n        ease: 'power3.out'\n      })\n    },\n    \n    onHoverOut() {\n      if (hoverTimeline) hoverTimeline.kill()\n      hoverTimeline = gsap.to(root.position, {\n        y: baseY,\n        duration: 0.7,\n        ease: 'power3.out'\n      })\n    },\n    \n    onClick() {\n      // Selection event; framework emits hub-collection.select\n    }\n  }\n  \n  // Cleanup function\n  root.userData.cleanup = () => {\n    if (hoverTimeline) {\n      hoverTimeline.kill()\n    }\n    \n    // Dispose all geometries and materials\n    mesh.traverse(node => {\n      if (node instanceof THREE.Mesh) {\n        if (node.geometry) {\n          node.geometry.dispose()\n        }\n        if (node.material) {\n          if (Array.isArray(node.material)) {\n            node.material.forEach(mat => mat.dispose())\n          } else {\n            node.material.dispose()\n          }\n        }\n      }\n    })\n  }\n  \n  return root\n}\n```"
+}

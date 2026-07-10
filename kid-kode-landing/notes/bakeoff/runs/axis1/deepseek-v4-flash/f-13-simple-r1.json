@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-13-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 17334,
+  "usage": {
+    "promptTokens": 1694,
+    "completionTokens": 2453
+  },
+  "costUsd": 0.000924,
+  "transportAttempts": 3,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial, PlaneGeometry, Object3D, Group, Mesh } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const { scenePosition, textContent } = config;\n\n  // Create group for the title element\n  const group = new Group();\n\n  // --- Background plane ---\n  const texture = ctx.textureLoader.load('/prism-mock/home/nodes/feature-card.png');\n  \n  // Determine plane aspect ratio from texture naturals (fallback to 512/320 from atlas region)\n  const ratio = texture.image ? texture.image.width / texture.image.height : 512 / 320;\n  const planeWidth = 2.0;  // arbitrary width, adjust to scene units\n  const planeHeight = planeWidth / ratio;\n\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n  const material = new MeshBasicNodeMaterial({ map: texture });\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  // --- Text overlay ---\n  // Use headline height from design tokens: 0.34 scene units\n  const fontSize = 0.34;\n  \n  const textOptions = {\n    text: 'Collection',\n    fontSize: fontSize,\n    fontFamily: 'Lora',           // display serif\n    fontWeight: 400,\n    color: '#16161d',             // ink color\n    textAlign: 'center',\n    anchorX: 'center',\n    anchorY: 'middle'\n  };\n\n  // Assumes ctx.fontAtlas.createText returns a THREE.Mesh or Object3D\n  const textMesh = ctx.fontAtlas.createText('Collection', textOptions);\n  textMesh.position.set(0, 0, 0.01); // slightly in front of plane\n  group.add(textMesh);\n\n  // --- Apply scene placement ---\n  if (scenePosition) {\n    group.position.copy(scenePosition.position || new THREE.Vector3(0, 3, 0));\n    group.rotation.set(\n      scenePosition.rotation?._x || 0,\n      scenePosition.rotation?._y || 0,\n      scenePosition.rotation?._z || 0\n    );\n    group.scale.set(\n      scenePosition.scale?._x || 1,\n      scenePosition.scale?._y || 1,\n      scenePosition.scale?._z || 1\n    );\n  } else {\n    group.position.set(0, 3, 0);\n  }\n\n  // --- No event handlers ---\n  group.userData.handlers = {};\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (texture) texture.dispose();\n    // Dispose text resources if they expose dispose\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n    // Kill any GSAP timelines (none in this element)\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-16-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 12414,
+  "usage": {
+    "promptTokens": 1686,
+    "completionTokens": 1679
+  },
+  "costUsd": 0.0007061600000000001,
+  "transportAttempts": 2,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  PlaneGeometry,\n  Mesh,\n  MeshBasicNodeMaterial,\n  TextureLoader,\n  Object3D,\n  PlaneGeometry,\n} from 'three/webgpu';\nimport {\n  uv,\n  vec3,\n  vec2,\n  float,\n  mix,\n  sin,\n  texture,\n  tslFn,\n  Fn,\n  smoothstep,\n  clamp,\n  normalize,\n  length,\n  dot,\n  exp,\n  screenCoordinate,\n  screenSize,\n  uniform,\n} from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  // Preload texture using context loader\n  const textureUrl = config.assets?.imageUrl || '/prism-mock/home/nodes/orb-decor.png';\n  const imgTexture = ctx.textureLoader.load(textureUrl);\n\n  // Define procedural grain function (static per pixel, based on UV)\n  const grain = Fn(() => {\n    const u = uv();\n    // Simple hash\n    const seed = dot(u, vec2(12.9898, 78.233));\n    const noise = sin(seed) * 43758.5453;\n    return fract(noise);\n  });\n\n  // Define gradient: from surface (dark) to accent (red) bottom-to-top\n  const gradientColor = Fn(() => {\n    const u = uv();\n    const t = smoothstep(0.0, 1.0, u.y);\n    const color1 = vec3(0.043, 0.043, 0.039); // near-black surface\n    const color2 = vec3(1.0, 0.165, 0.22);   // accent\n    return mix(color1, color2, t);\n  });\n\n  // Build material: combine gradient, grain, and texture\n  const material = new MeshBasicNodeMaterial({\n    colorNode: Fn(() => {\n      const base = gradientColor();\n      const grainVal = grain();\n      const grainStrength = float(0.04); // subtle grain\n      const grainMix = mix(base, vec3(1.0, 1.0, 1.0), grainVal.mul(grainStrength));\n      // Apply texture overlay (multiply, keeping grain)\n      const tex = texture(imgTexture, uv());\n      return grainMix.mul(tex);\n    })(),\n    transparent: true,\n    side: DoubleSide,\n  });\n\n  // Geometry – plane with 1x1 unit, scaled via scale\n  const geometry = new PlaneGeometry(1, 1);\n\n  // Mesh\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(\n    config.scenePosition?.x ?? 0,\n    config.scenePosition?.y ?? -0.3,\n    config.scenePosition?.z ?? 0\n  );\n  mesh.rotation.set(\n    config.sceneRotation?.x ?? 0,\n    config.sceneRotation?.y ?? 0,\n    config.sceneRotation?.z ?? 0\n  );\n  mesh.scale.set(\n    config.sceneScale?.x ?? 1,\n    config.sceneScale?.y ?? 1,\n    config.sceneScale?.z ?? 1\n  );\n\n  // UserData: handlers and cleanup\n  mesh.userData.handlers = {};\n\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    imgTexture.dispose();\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

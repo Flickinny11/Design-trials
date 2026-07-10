@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-39-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 15553,
+  "apiMs": 13043,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1427,
+    "cacheCreation": 3476,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0726865,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshStandardNodeMaterial } from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'home-ornamental-divider';\n  group.position.set(-2.5, 0.7, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const timelines = [];\n  let disposed = false;\n  let mesh = null;\n\n  const fallbackGeo = new THREE.BoxGeometry(2.0, 0.02, 0.02);\n  const fallbackMat = new MeshStandardNodeMaterial({\n    color: new THREE.Color(0x16161d),\n    metalness: 0.55,\n    roughness: 0.5,\n  });\n  const fallbackMesh = new THREE.Mesh(fallbackGeo, fallbackMat);\n  fallbackMesh.name = 'divider-fallback-rule';\n\n  const jewelGeo = new THREE.OctahedronGeometry(0.06, 0);\n  const jewelMat = new MeshStandardNodeMaterial({\n    color: new THREE.Color(0xff2a38),\n    metalness: 0.3,\n    roughness: 0.35,\n  });\n  const jewel = new THREE.Mesh(jewelGeo, jewelMat);\n  jewel.name = 'divider-jewel';\n  jewel.position.set(0, 0, 0);\n\n  group.add(fallbackMesh);\n  group.add(jewel);\n\n  const meshUrl = '/prism-mock/home/nodes/cta-hero.glb';\n  try {\n    const gltf = ctx.glbLoader.load(meshUrl);\n    if (gltf && gltf.scene) {\n      mesh = gltf.scene;\n      mesh.name = 'divider-mesh';\n      group.remove(fallbackMesh);\n      group.add(mesh);\n    }\n  } catch (e) {\n    // keep fallback\n  }\n\n  const primitives = (config.cinematicPrimitives || []);\n  for (const primitive of primitives) {\n    if (ctx.primitives[primitive.name]) {\n      ctx.primitives[primitive.name](group, primitive.params);\n    }\n  }\n\n  const baseY = group.position.y;\n\n  function onHover() {\n    const tl = gsap.timeline();\n    tl.to(group.position, {\n      y: baseY + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n    timelines.push(tl);\n  }\n\n  function onHoverOut() {\n    const tl = gsap.timeline();\n    tl.to(group.position, {\n      y: baseY,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n    timelines.push(tl);\n  }\n\n  function onClick() {\n    const tl = gsap.timeline();\n    tl.to(group.scale, {\n      x: 0.97,\n      y: 0.97,\n      z: 0.97,\n      duration: 0.12,\n      ease: 'back.out',\n      yoyo: true,\n      repeat: 1,\n    });\n    timelines.push(tl);\n\n    if (group.userData.emit) {\n      group.userData.emit('hub-home.select', { nodeId: config.id || 'home-ornamental-divider' });\n    }\n  }\n\n  group.userData.handlers = {\n    onHover,\n    onHoverOut,\n    onClick,\n  };\n\n  group.userData.cleanup = function cleanup() {\n    if (disposed) return;\n    disposed = true;\n\n    timelines.forEach((tl) => tl.kill());\n    timelines.length = 0;\n\n    fallbackGeo.dispose();\n    fallbackMat.dispose();\n    jewelGeo.dispose();\n    jewelMat.dispose();\n\n    if (mesh) {\n      mesh.traverse((child) => {\n        if (child.geometry) child.geometry.dispose();\n        if (child.material) {\n          if (Array.isArray(child.material)) {\n            child.material.forEach((m) => m.dispose());\n          } else {\n            child.material.dispose();\n          }\n        }\n      });\n    }\n  };\n\n  return group;\n}\n```"
+}

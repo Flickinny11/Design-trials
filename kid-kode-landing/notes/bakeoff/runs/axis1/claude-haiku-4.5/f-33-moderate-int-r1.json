@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-33-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 69203,
+  "apiMs": 67274,
+  "usage": {
+    "promptTokens": 4019,
+    "completionTokens": 7283,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.041481000000000004,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture as textureNode, uv } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.position.set(\n    config.scenePosition?.x ?? 3.2,\n    config.scenePosition?.y ?? 1,\n    config.scenePosition?.z ?? 0.06\n  );\n\n  if (config.sceneRotation) {\n    group.rotation.set(\n      config.sceneRotation.x ?? 0,\n      config.sceneRotation.y ?? 0,\n      config.sceneRotation.z ?? 0\n    );\n  }\n\n  if (config.sceneScale) {\n    group.scale.set(\n      config.sceneScale.x ?? 1,\n      config.sceneScale.y ?? 1,\n      config.sceneScale.z ?? 1\n    );\n  }\n\n  // Plane geometry: atlas rect 512x320 → 1.6:1 aspect ratio\n  const geometry = new THREE.PlaneGeometry(1.6, 1.0);\n\n  // Load texture\n  const texture = ctx.textureLoader.load(config.assets.imageUrl);\n  texture.colorSpace = THREE.SRGBColorSpace;\n\n  // TSL material\n  const colorNode = textureNode(texture, uv());\n  const material = new THREE.MeshBasicNodeMaterial({\n    colorNode,\n    side: THREE.DoubleSide,\n  });\n\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Text via font atlas\n  const textContent = config.textContent?.[0] ?? 'Journal 3';\n  const inkColor = parseInt(config.colors?.ink?.replace('#', '') ?? '16161d', 16);\n\n  const textMesh = ctx.fontAtlas.createText({\n    text: textContent,\n    size: 0.34, // headline scale\n    weight: 400,\n    font: 'display', // Lora serif\n    color: inkColor,\n    anchor: { x: 0.5, y: 0.5 },\n  });\n\n  if (textMesh) {\n    textMesh.position.z = 0.01;\n    group.add(textMesh);\n  }\n\n  // Animation state\n  const baseY = group.position.y;\n  let hoverTimeline = null;\n\n  // Event handlers\n  group.userData.handlers = {\n    pointerenter: () => {\n      if (hoverTimeline) hoverTimeline.kill();\n      hoverTimeline = gsap.to(group.position, {\n        y: baseY + 0.15,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n    },\n    pointerleave: () => {\n      if (hoverTimeline) hoverTimeline.kill();\n      hoverTimeline = gsap.to(group.position, {\n        y: baseY,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n    },\n    click: () => {\n      if (config.emitEvent) {\n        config.emitEvent('hub-journal.select', {});\n      }\n    },\n  };\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    if (hoverTimeline) hoverTimeline.kill();\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n    if (textMesh) {\n      if (textMesh.geometry) textMesh.geometry.dispose();\n      if (textMesh.material) textMesh.material.dispose();\n    }\n  };\n\n  return group;\n}\n```"
+}

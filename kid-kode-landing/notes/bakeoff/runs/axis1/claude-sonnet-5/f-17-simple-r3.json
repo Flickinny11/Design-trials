@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-17-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 10616,
+  "apiMs": 8063,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 800,
+    "cacheCreation": 0,
+    "cacheRead": 5484
+  },
+  "costUsd": 0.023834,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, mix, positionLocal } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-collection-card-1-label';\n\n  const width = 1.6;\n  const height = (320 / 512) * width;\n\n  const geometry = new THREE.PlaneGeometry(width, height, 1, 1);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const map = ctx.textureLoader.load('/prism-assets/chrome/brushed-metal.map.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const surfaceColor = new THREE.Color(0x0b0b10);\n  const inkColor = new THREE.Color(0x16161d);\n\n  const texNode = texture(map, uv());\n  const gradientNode = mix(vec4(surfaceColor, 1.0), vec4(inkColor, 1.0), uv().y);\n  material.colorNode = mix(gradientNode, texNode, 0.55);\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'collection-card-1-label-plane';\n  group.add(mesh);\n\n  const textMesh = ctx.fontAtlas.createText({\n    text: 'Collection 2',\n    font: 'display',\n    weight: 400,\n    size: 0.34,\n    color: '#e8ecf2',\n    atlasIndex: 0,\n    sourceRect: [0, 0, 512, 320],\n    align: 'center',\n    anchor: 'center'\n  });\n  textMesh.name = 'collection-card-1-label-text';\n  textMesh.position.set(0, 0, 0.01);\n  group.add(textMesh);\n\n  group.position.set(0, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n  };\n\n  return group;\n}\n```"
+}

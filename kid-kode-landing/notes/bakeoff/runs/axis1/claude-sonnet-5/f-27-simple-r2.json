@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-27-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 11183,
+  "apiMs": 8646,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 875,
+    "cacheCreation": 3368,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0577015,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import * as THREE from 'three/webgpu';\nimport { texture, uv, vec2 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-journal-title';\n\n  const rectW = 512, rectH = 320, atlasW = 512, atlasH = 320;\n  const aspect = rectW / rectH;\n  const height = 0.9;\n  const width = height * aspect;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const map = ctx.textureLoader.load(config.assets?.imageUrl || '/prism-mock/home/nodes/floating-accent.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const offsetX = 0, offsetY = 0;\n  const scaleX = rectW / atlasW, scaleY = rectH / atlasH;\n  const uvNode = uv().mul(vec2(scaleX, scaleY)).add(vec2(offsetX, offsetY));\n  material.map = map;\n  material.colorNode = texture(map, uvNode);\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'journal-title-plane';\n  group.add(plane);\n\n  let textMesh = null;\n  if (ctx.fontAtlas && ctx.fontAtlas.createText) {\n    textMesh = ctx.fontAtlas.createText({\n      text: 'Journal',\n      font: 'display',\n      weight: 400,\n      size: 0.62,\n      color: config.visual?.colors?.paper || '#e8ecf2',\n      align: 'center',\n    });\n    textMesh.name = 'journal-title-text';\n    textMesh.position.set(0, 0, 0.01);\n    group.add(textMesh);\n  }\n\n  group.position.set(0, 3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    if (textMesh) {\n      if (textMesh.geometry) textMesh.geometry.dispose();\n      if (textMesh.material) textMesh.material.dispose();\n    }\n  };\n\n  group.onBeforeRender = (renderer, scene, camera) => {\n    group.quaternion.copy(camera.quaternion);\n  };\n\n  return group;\n}"
+}

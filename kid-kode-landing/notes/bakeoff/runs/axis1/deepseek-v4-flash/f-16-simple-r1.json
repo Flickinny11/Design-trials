@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-16-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 15231,
+  "usage": {
+    "promptTokens": 1686,
+    "completionTokens": 1915
+  },
+  "costUsd": 0.00077224,
+  "transportAttempts": 2,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  PlaneGeometry,\n  MeshBasicNodeMaterial,\n  Mesh,\n  DoubleSide,\n  Object3D,\n  TextureLoader\n} from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  // Destructure config\n  const { assets, scenePosition, cinematicPrimitives } = config;\n  const { imageUrl } = assets;\n\n  // Load texture via context loader\n  const texture = ctx.textureLoader.load(imageUrl);\n  texture.colorSpace = 'srgb'; // Ensure correct color space\n\n  // Create geometry (aspect ratio from source rect: 512/320 ≈ 1.6)\n  const geometry = new PlaneGeometry(1.6, 1.0);\n  geometry.translate(0, 0, 0);\n\n  // Material – MeshBasicNodeMaterial for unlit look\n  const material = new MeshBasicNodeMaterial({\n    map: texture,\n    side: DoubleSide, // visible from both sides if needed\n    transparent: false,\n    depthWrite: true\n  });\n\n  // Mesh\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(\n    scenePosition.x || 0,\n    scenePosition.y || -0.3,\n    scenePosition.z || 0\n  );\n  mesh.rotation.set(\n    scenePosition.rotationX || 0,\n    scenePosition.rotationY || 0,\n    scenePosition.rotationZ || 0\n  );\n  mesh.scale.set(\n    scenePosition.scaleX || 1,\n    scenePosition.scaleY || 1,\n    scenePosition.scaleZ || 1\n  );\n\n  // User data for cleanup and handlers\n  mesh.userData = {\n    handlers: {}, // No interactions defined\n    cleanup: () => {\n      texture.dispose();\n      material.dispose();\n      geometry.dispose();\n      // No GSAP timelines to kill\n    }\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

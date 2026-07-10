@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-17-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 14636,
+  "usage": {
+    "promptTokens": 1660,
+    "completionTokens": 1986
+  },
+  "costUsd": 0.0014406,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import {\n  Mesh,\n  PlaneGeometry,\n  Group,\n  Vector3,\n  Euler,\n} from 'three/webgpu';\nimport {\n  MeshBasicNodeMaterial,\n  texture,\n} from 'three/tsl';\nimport { gsap } from 'gsap';\nimport primitives from '@/primitives';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  // Root container\n  const root = new Group();\n\n  // Apply scene placement\n  const pos = config.position ?? { x: 0, y: 0, z: 0 };\n  const rot = config.rotation ?? { x: 0, y: 0, z: 0 };\n  const scl = config.scale ?? { x: 1, y: 1, z: 1 };\n\n  root.position.set(pos.x, pos.y, pos.z);\n  root.rotation.set(rot.x, rot.y, rot.z);\n  root.scale.set(scl.x, scl.y, scl.z);\n\n  // ---------- Background Plane ----------\n  const bgTexture = ctx.textureLoader.load(\n    '/prism-assets/chrome/brushed-metal.map.png'\n  );\n\n  const bgMaterial = new MeshBasicNodeMaterial({\n    map: texture(bgTexture),\n    toneMapped: true,\n  });\n\n  const bgGeometry = new PlaneGeometry(1, 1);\n  const bgMesh = new Mesh(bgGeometry, bgMaterial);\n  bgMesh.position.set(0, 0, 0);\n  root.add(bgMesh);\n\n  // ---------- Text Mesh ----------\n  // Expected config shape for text\n  const textContent = (config.textContent && config.textContent[0]) || 'Collection 2';\n  const inkColor = (config.colors && config.colors.ink) || '#16161d';\n\n  const textMesh = createTextMesh({\n    text: textContent,\n    fontAtlas: ctx.fontAtlas,\n    atlasRegion: { x: 0, y: 0, width: 512, height: 320 },\n    color: inkColor,\n    // Choose a size that roughly matches the headline type scale\n    // (scene‑unit em height ≈ 0.34). We scale the plane accordingly.\n    size: 0.34,\n    // Align centered\n    anchorX: 0.5,\n    anchorY: 0.5,\n    // Slightly in front of the background plane\n    offsetZ: 0.001,\n  });\n\n  root.add(textMesh);\n\n  // ---------- Apply cinematic primitives ----------\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const primitive of config.cinematicPrimitives) {\n      const fn = ctx.primitives[primitive.name];\n      if (typeof fn === 'function') {\n        fn(root, primitive.params);\n      }\n    }\n  }\n\n  // ---------- Event handlers placeholder ----------\n  root.userData.handlers = {};\n\n  // ---------- Cleanup ----------\n  const timelines = []; // store any GSAP timelines we may create later\n\n  root.userData.cleanup = () => {\n    // Dispose geometries and materials\n    bgGeometry.dispose();\n    bgMaterial.dispose();\n    // Dispose texture if it is not shared (optional, guard against double‑dispose)\n    if (bgTexture && bgTexture.isTexture) {\n      bgTexture.dispose();\n    }\n\n    // Cleanup text mesh (expects it to expose a dispose method)\n    if (textMesh && typeof textMesh.userData?.cleanup === 'function') {\n      textMesh.userData.cleanup();\n    } else if (textMesh) {\n      if (textMesh.geometry) textMesh.geometry.dispose();\n      if (textMesh.material) textMesh.material.dispose();\n    }\n\n    // Kill any GSAP timelines\n    timelines.forEach((tl) => tl.kill());\n    timelines.length = 0;\n  };\n\n  return root;\n}"
+}

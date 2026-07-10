@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-19-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 14619,
+  "apiMs": 11995,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1321,
+    "cacheCreation": 3357,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.06875150000000001,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, float } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-collection-card-2-label';\n\n  const position = config.scenePosition?.position ?? [3.2, 1, 0.06];\n  const rotation = config.scenePosition?.rotation ?? [0, 0, 0];\n  const scale = config.scenePosition?.scale ?? [1, 1, 1];\n  group.position.set(...position);\n  group.rotation.set(...rotation);\n  group.scale.set(...scale);\n\n  const colors = {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10',\n  };\n\n  // Plane geometry sized to atlas rect aspect ratio (512x320)\n  const width = 1.6;\n  const height = width * (320 / 512);\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  const imageTexture = ctx.textureLoader.load('/prism-mock/home/nodes/feature-card.png');\n  imageTexture.colorSpace = THREE.SRGBColorSpace;\n\n  // Atlas UV mapping: rect (0,0,512,320) within atlas 0\n  const atlasWidth = 512;\n  const atlasHeight = 320;\n  const rect = { x: 0, y: 0, w: 512, h: 320 };\n  const uMin = rect.x / atlasWidth;\n  const uMax = (rect.x + rect.w) / atlasWidth;\n  const vMin = 1 - (rect.y + rect.h) / atlasHeight;\n  const vMax = 1 - rect.y / atlasHeight;\n\n  const uvNode = uv();\n  const mappedU = uvNode.x.mul(uMax - uMin).add(uMin);\n  const mappedV = uvNode.y.mul(vMax - vMin).add(vMin);\n  const mappedUV = mappedU.add(mappedV.mul(0)); // placeholder to keep tree simple\n\n  const remappedUV = uv().mul(vec4(1, 1, 0, 0)).xy; // fallback simplified\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.colorNode = texture(imageTexture, uvNode.mul(\n    new THREE.Vector2(uMax - uMin, vMax - vMin)\n  ).add(new THREE.Vector2(uMin, vMin)));\n  material.transparent = true;\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'card-image';\n  group.add(plane);\n\n  // Headline text: \"Collection 3\"\n  const textMesh = createTextMesh(ctx.fontAtlas, {\n    text: 'Collection 3',\n    font: 'display',\n    weight: 400,\n    size: 0.34,\n    color: colors.paper,\n    align: 'left',\n    anchor: 'center',\n  });\n  textMesh.name = 'collection-3-headline';\n  textMesh.position.set(0, -height / 2 + 0.2, 0.01);\n  group.add(textMesh);\n\n  // No cinematic primitives to apply per spec\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (imageTexture && imageTexture.dispose) imageTexture.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) {\n      if (Array.isArray(textMesh.material)) {\n        textMesh.material.forEach((m) => m.dispose());\n      } else {\n        textMesh.material.dispose();\n      }\n    }\n  };\n\n  return group;\n}\n```"
+}

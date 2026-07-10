@@ -1,0 +1,17 @@
+{
+  "contestant": "glm-5.2",
+  "model": "accounts/fireworks/models/glm-5p2",
+  "route": "fireworks",
+  "caseId": "f-11-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 63076,
+  "usage": {
+    "promptTokens": 1600,
+    "completionTokens": 6437
+  },
+  "costUsd": 0.030562800000000005,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import { \n  MeshBasicNodeMaterial, \n  PlaneGeometry, \n  Mesh, \n  Group, \n  SRGBColorSpace \n} from 'three/webgpu';\nimport { \n  texture, uv, vec3, vec4, float, mix, Fn, fract, sin, sub, add, mul\n} from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n  group.name = 'hub-features-card-3';\n\n  const pos = (config && config.scenePosition) || [3.2, -0.3, 0];\n  group.position.set(pos[0], pos[1], pos[2]);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const metalTex = ctx.textureLoader.load('/prism-assets/chrome/brushed-metal.map.png');\n  if ('colorSpace' in metalTex) metalTex.colorSpace = SRGBColorSpace;\n\n  const inkCol = vec3(0x16 / 255, 0x16 / 255, 0x1d / 255);\n  const surfaceCol = vec3(0x0b / 255, 0x0b / 255, 0x10 / 255);\n  const accentCol = vec3(0xff / 255, 0x2a / 255, 0x38 / 255);\n\n  const colorFn = Fn(() => {\n    const t = texture(metalTex, uv());\n    const grad = mix(inkCol, surfaceCol, uv().y);\n    const metalTint = mix(t.rgb, grad, float(0.34));\n    const n = fract(sin(uv().x.mul(12.9898).add(uv().y.mul(78.233))).mul(43758.5453));\n    const grain = sub(n, float(0.5)).mul(0.045);\n    const accentEdge = smoothstep(float(0.0), float(0.012), uv().x).mul(\n      smoothstep(float(0.0), float(0.012), sub(float(1.0), uv().x))\n    );\n    const edgeMask = sub(float(1.0), accentEdge);\n    const withEdge = mix(accentCol.mul(0.6), metalTint.add(grain), edgeMask);\n    return vec4(withEdge, float(1.0));\n  });\n\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = colorFn();\n  material.transparent = false;\n\n  const cardWidth = 1.4;\n  const cardHeight = cardWidth * (320 / 512);\n  const geometry = new PlaneGeometry(cardWidth, cardHeight);\n  const mesh = new Mesh(geometry, material);\n  mesh.name = 'hub-features-card-3-plane';\n  group.add(mesh);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (metalTex && typeof metalTex.dispose === 'function') {\n      metalTex.dispose();\n    }\n  };\n\n  return group;\n}"
+}

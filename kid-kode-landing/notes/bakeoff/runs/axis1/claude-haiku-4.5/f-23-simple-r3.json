@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-23-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 56462,
+  "apiMs": 54069,
+  "usage": {
+    "promptTokens": 3941,
+    "completionTokens": 5760,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.03372000000000001,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  // Create plane geometry maintaining 512:320 aspect ratio (1.6:1)\n  const width = 2.5;\n  const height = width / 1.6;\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  // Load brushed metal texture\n  const metalTexture = ctx.textureLoader.load('/prism-assets/chrome/brushed-metal.map.png');\n  metalTexture.colorSpace = THREE.SRGBColorSpace;\n\n  // Create material with TSL texture node\n  const colorNode = texture(metalTexture);\n  const material = new MeshBasicNodeMaterial({\n    colorNode: colorNode,\n  });\n\n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n\n  // Set scene placement properties\n  mesh.position.set(0, -0.3, 0);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  // Setup cleanup\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    metalTexture.dispose();\n  };\n\n  mesh.userData.handlers = {};\n\n  return mesh;\n}\n```"
+}

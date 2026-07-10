@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-23-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 14469,
+  "usage": {
+    "promptTokens": 1687,
+    "completionTokens": 1842
+  },
+  "costUsd": 0.0007519400000000002,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  // Destructure scene placement\n  const { position, rotation, scale } = config.scenePlacement;\n\n  // Load the brushed metal texture (cached loader)\n  const texture = ctx.textureLoader.load(config.assets.imageUrl);\n\n  // Create plane geometry (1x1 unit; scale will be applied via transform)\n  const geometry = new THREE.PlaneGeometry(1, 1);\n\n  // Static material: MeshBasicNodeMaterial (no lighting)\n  const material = new THREE.MeshBasicNodeMaterial({\n    map: texture,\n  });\n\n  // Build the mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(position[0], position[1], position[2]);\n  mesh.rotation.set(rotation[0], rotation[1], rotation[2]);\n  mesh.scale.set(scale[0], scale[1], scale[2]);\n\n  // No event handlers (non-interactive)\n  mesh.userData.handlers = {};\n\n  // Cleanup: dispose GPU resources and kill any GSAP timelines (none here)\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

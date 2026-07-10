@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-07-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 6076,
+  "usage": {
+    "promptTokens": 1687,
+    "completionTokens": 852
+  },
+  "costUsd": 0.0004747400000000001,
+  "transportAttempts": 4,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  PlaneGeometry,\n  MeshBasicNodeMaterial,\n  Mesh,\n  TextureNode,\n  Object3D\n} from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  // --- geometry ---\n  const aspect = 512 / 320; // from atlas source rect\n  const width = 1.6;        // ~aspect * 1.0 height\n  const height = 1.0;\n  const geometry = new PlaneGeometry(width, height);\n\n  // --- texture ---\n  const texture = ctx.textureLoader.load(config.assets.imageUrl);\n  // Optional: use a TextureNode for TSL compliance (not required here)\n  const material = new MeshBasicNodeMaterial({\n    map: texture,\n    side: THREE.DoubleSide, // visible from both sides if needed\n    transparent: true\n  });\n\n  // --- mesh ---\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(-3.2, -0.3, 0);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  // --- user data ---\n  mesh.userData = {\n    handlers: {}, // no interactions\n    cleanup: () => {\n      geometry.dispose();\n      material.dispose();\n      if (texture) texture.dispose();\n      // No GSAP timelines to kill\n    }\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-40-moderate",
+  "run": 3,
+  "ok": true,
+  "wallMs": 95752,
+  "apiMs": 93287,
+  "usage": {
+    "promptTokens": 4066,
+    "completionTokens": 11054,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.06043,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```js\nimport { PlaneGeometry, MeshStandardMaterial, Mesh, Group, Vector3 } from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // Load textures via context loader (cached)\n  const colorTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  const depthTexture = ctx.textureLoader.load(config.assets.depthMapUrl);\n\n  // Create tessellated plane geometry for displacement\n  const geometry = new PlaneGeometry(1, 1, 64, 64);\n\n  // Create material with machined metal PBR properties\n  const material = new MeshStandardMaterial({\n    map: colorTexture,\n    normalMap: depthTexture,\n    normalScale: new Vector3(1.5, 1.5),\n    metalness: 0.35,\n    roughness: 0.65,\n    clearcoat: 0.15,\n    clearcoatRoughness: 0.8,\n  });\n\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  // Apply scene transforms\n  if (config.sceneNodeData) {\n    group.position.set(...config.sceneNodeData.position);\n    group.rotation.order = 'YXZ';\n    group.rotation.set(...config.sceneNodeData.rotation);\n    group.scale.set(...config.sceneNodeData.scale);\n  }\n\n  // Apply cinematic primitives\n  if (config.cinematicPrimitives?.length) {\n    for (const prim of config.cinematicPrimitives) {\n      ctx.primitives?.[prim.name]?.(group, prim.params || {});\n    }\n  }\n\n  // Animation state\n  const timelines = [];\n  const baseY = config.sceneNodeData?.position?.[1] ?? 0;\n\n  // Event handlers\n  group.userData.handlers = {\n    onMouseEnter: () => {\n      timelines.forEach(t => t.kill());\n      timelines.length = 0;\n      const tl = gsap.to(group.position, {\n        y: baseY + 0.15,\n        duration: 0.5,\n        ease: 'power2.out',\n      });\n      timelines.push(tl);\n    },\n\n    onMouseLeave: () => {\n      timelines.forEach(t => t.kill());\n      timelines.length = 0;\n      const tl = gsap.to(group.position, {\n        y: baseY,\n        duration: 0.5,\n        ease: 'power2.out',\n      });\n      timelines.push(tl);\n    },\n\n    onClick: () => {\n      timelines.forEach(t => t.kill());\n      timelines.length = 0;\n      const tl = gsap.timeline()\n        .to(mesh.scale, {\n          x: 0.97,\n          y: 0.97,\n          z: 0.97,\n          duration: 0.12,\n          ease: 'back.out',\n        })\n        .to(mesh.scale, {\n          x: 1,\n          y: 1,\n          z: 1,\n          duration: 0.12,\n          ease: 'back.out',\n        }, '>');\n      timelines.push(tl);\n    },\n  };\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    timelines.forEach(t => t.kill());\n    timelines.length = 0;\n    geometry.dispose();\n    material.dispose();\n    colorTexture.dispose();\n    depthTexture.dispose();\n  };\n\n  return group;\n}\n```"
+}

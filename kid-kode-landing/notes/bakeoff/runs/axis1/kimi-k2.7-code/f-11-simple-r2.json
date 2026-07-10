@@ -1,0 +1,9 @@
+{
+  "contestant": "kimi-k2.7-code",
+  "model": "accounts/fireworks/models/kimi-k2p7-code",
+  "route": "fireworks",
+  "caseId": "f-11-simple",
+  "run": 2,
+  "ok": false,
+  "transportError": "transport failure after retries: HTTP 412: {\"message\":\"Account logantbaird-6990a8 is suspended, possibly due to reaching the monthly spending limit or failure to pay past invoices. Please go to https://fireworks.ai/account/billing for more inf"
+}

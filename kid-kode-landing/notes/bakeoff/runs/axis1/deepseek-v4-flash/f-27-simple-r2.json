@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-27-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 39653,
+  "usage": {
+    "promptTokens": 1707,
+    "completionTokens": 6093
+  },
+  "costUsd": 0.0019450200000000002,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  Group,\n  PlaneGeometry,\n  MeshBasicNodeMaterial,\n  Mesh,\n  RepeatWrapping\n} from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // Load background texture from atlas region\n  const texUrl =\n    config.assets?.find(a => a.type === 'imageUrl')?.url ||\n    '/prism-mock/home/nodes/floating-accent.png';\n  const texture = ctx.textureLoader.load(texUrl);\n\n  // Atlas source rect: (0,0,512,320)\n  // Assume texture may be larger than region -> compute UV repeat\n  texture.wrapS = RepeatWrapping;\n  texture.wrapT = RepeatWrapping;\n  // If texture image dimensions known (synchronous), use them; otherwise assume 1x1\n  const img = texture.image;\n  const texW = img?.width || 512;\n  const texH = img?.height || 320;\n  const srcW = 512;\n  const srcH = 320;\n  texture.offset.set(0, 0);\n  texture.repeat.set(srcW / texW, srcH / texH);\n\n  // Plane dimensions based on atlas aspect ratio\n  const aspect = srcW / srcH;\n  const height = 1.0; // base unit – adjust as needed\n  const width = height * aspect;\n\n  const bgGeo = new PlaneGeometry(width, height);\n  const bgMat = new MeshBasicNodeMaterial({ map: texture, transparent: true });\n  const bgMesh = new Mesh(bgGeo, bgMat);\n  group.add(bgMesh);\n\n  // Text content – \"Journal\" headline\n  const textEntry = config.textContent?.find(t => t.role === 'headline');\n  if (textEntry) {\n    const textMesh = ctx.fontAtlas.createText({\n      text: textEntry.text,\n      fontFamily: 'Lora',\n      fontWeight: 400,\n      fontSize: 0.62, // hero depth (scene units)\n      color: '#e8ecf2', // paper against dark background\n      align: 'center'\n    });\n    // Slight z offset to avoid z-fighting with background plane\n    textMesh.position.set(0, 0, 0.01);\n    group.add(textMesh);\n  }\n\n  // Scene placement from config\n  const sp = config.scenePlacement || {};\n  group.position.set(\n    sp.position?.[0] ?? 0,\n    sp.position?.[1] ?? 3,\n    sp.position?.[2] ?? 0\n  );\n  group.rotation.set(\n    sp.rotation?.[0] ?? 0,\n    sp.rotation?.[1] ?? 0,\n    sp.rotation?.[2] ?? 0\n  );\n  group.scale.set(\n    sp.scale?.[0] ?? 1,\n    sp.scale?.[1] ?? 1,\n    sp.scale?.[2] ?? 1\n  );\n\n  // Billboard behaviour – update handler keeps the group facing the camera\n  const textMeshRef = textEntry ? group.children[1] : null; // safe reference\n  group.userData.handlers = {\n    update: (camera) => {\n      group.lookAt(camera.position);\n    }\n  };\n\n  // Cleanup – dispose geometry, material, texture, and any text resources\n  group.userData.cleanup = () => {\n    bgGeo.dispose();\n    bgMat.dispose();\n    texture.dispose();\n    if (textMeshRef) {\n      textMeshRef.geometry.dispose();\n      textMeshRef.material.dispose();\n    }\n    // No GSAP timelines to kill\n  };\n\n  // No cinematic primitives to apply\n  // (config.cinematicPrimitives is empty)\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

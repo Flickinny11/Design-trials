@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-13-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 86765,
+  "apiMs": 84261,
+  "usage": {
+    "promptTokens": 3948,
+    "completionTokens": 9270,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.051259,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, MeshBasicNodeMaterial } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Load texture from imageUrl\n  const textureAsset = ctx.textureLoader.load(config.imageUrl);\n  \n  // Create plane geometry with correct aspect ratio (512:320 = 1.6:1)\n  const planeGeometry = new THREE.PlaneGeometry(512 / 320, 1);\n  \n  // Create TSL-based material with texture\n  const textureNode = texture(textureAsset);\n  const planeMaterial = new MeshBasicNodeMaterial({\n    colorNode: textureNode,\n    transparent: true\n  });\n  \n  // Create and add plane mesh\n  const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);\n  group.add(planeMesh);\n  \n  // Render text content via fontAtlas\n  if (config.textContent && ctx.fontAtlas) {\n    const textMesh = ctx.fontAtlas.createMesh(config.textContent, {\n      font: 'Lora',\n      fontSize: 0.34,\n      fontWeight: 400,\n      color: config.colors?.ink || '#16161d',\n      align: 'center',\n      anchorX: 'center',\n      anchorY: 'middle'\n    });\n    \n    if (textMesh) {\n      textMesh.position.z = 0.1;\n      group.add(textMesh);\n    }\n  }\n  \n  // Apply cinematic primitives\n  if (config.cinematicPrimitives && config.cinematicPrimitives.length > 0) {\n    for (const prim of config.cinematicPrimitives) {\n      if (ctx.primitives && typeof ctx.primitives[prim.name] === 'function') {\n        ctx.primitives[prim.name](group, prim.params || {});\n      }\n    }\n  }\n  \n  // Apply scene transforms\n  if (config.scenePosition) {\n    group.position.set(...config.scenePosition);\n  }\n  if (config.sceneRotation) {\n    group.rotation.set(...config.sceneRotation);\n  }\n  if (config.sceneScale) {\n    group.scale.set(...config.sceneScale);\n  }\n  \n  // Setup cleanup function\n  group.userData.cleanup = () => {\n    planeGeometry.dispose();\n    planeMaterial.dispose();\n    textureAsset.dispose();\n    gsap.killTweensOf(group);\n  };\n  \n  // Setup event handlers\n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

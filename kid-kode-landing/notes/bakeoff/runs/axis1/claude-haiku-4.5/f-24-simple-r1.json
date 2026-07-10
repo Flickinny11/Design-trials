@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-24-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 100777,
+  "apiMs": 98174,
+  "usage": {
+    "promptTokens": 3967,
+    "completionTokens": 10669,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.058307,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Load texture from assets\n  const textureAsset = ctx.textureLoader.load(config.assets.imageUrl);\n\n  // Create plane geometry with aspect ratio 512 / 320 = 1.6\n  const geometry = new THREE.PlaneGeometry(1.6, 1.0);\n\n  // Create material with texture node\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = texture(textureAsset);\n  material.transparent = true;\n  material.side = THREE.DoubleSide;\n\n  // Create mesh and add to group\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Apply position from config\n  if (config.scenePosition) {\n    group.position.set(\n      config.scenePosition.x ?? 0,\n      config.scenePosition.y ?? 0,\n      config.scenePosition.z ?? 0\n    );\n  }\n\n  // Billboard rotation: face camera (rotate π around Y axis)\n  group.rotation.y = Math.PI;\n\n  // Apply scale from config\n  if (config.scale) {\n    group.scale.set(\n      config.scale.x ?? 1,\n      config.scale.y ?? 1,\n      config.scale.z ?? 1\n    );\n  }\n\n  // Setup cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    textureAsset.dispose();\n  };\n\n  return group;\n}\n```"
+}

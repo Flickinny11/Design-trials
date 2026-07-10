@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-03-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 76853,
+  "apiMs": 74485,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 7657,
+    "cacheCreation": 0,
+    "cacheRead": 21548
+  },
+  "costUsd": 0.0414108,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\nimport { texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Calculate plane dimensions from atlas region\n  // Source rect: 0, 0, 512, 320 (width × height)\n  const sourceWidth = 512;\n  const sourceHeight = 320;\n  const aspectRatio = sourceWidth / sourceHeight;\n  \n  // Create plane geometry scaled to atlas aspect ratio\n  const planeHeight = 0.5;\n  const planeWidth = planeHeight * aspectRatio;\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n  \n  // Load texture via context (cached resource)\n  const imageUrl = config.imageUrl || '/prism-mock/home/nodes/floating-accent.png';\n  const textureMap = ctx.textureLoader.load(imageUrl);\n  \n  // Create material with TSL texture node for WebGPU compatibility\n  const colorNode = texture(textureMap);\n  const material = new THREE.MeshBasicMaterial({\n    colorNode: colorNode,\n    transparent: true,\n    side: THREE.DoubleSide,\n  });\n  \n  // Create and mount mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n  \n  // Apply scene position, rotation, and scale from config\n  const scenePos = config.scenePosition;\n  if (scenePos) {\n    group.position.set(scenePos.x ?? 0, scenePos.y ?? 0, scenePos.z ?? 0);\n    if (scenePos.rotationXYZ) {\n      const [rx, ry, rz] = scenePos.rotationXYZ;\n      group.rotation.set(rx ?? 0, ry ?? 0, rz ?? 0);\n    }\n    if (scenePos.scaleXYZ) {\n      const [sx, sy, sz] = scenePos.scaleXYZ;\n      group.scale.set(sx ?? 1, sy ?? 1, sz ?? 1);\n    }\n  }\n  \n  // Cleanup handler: dispose geometry, material, and texture\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    textureMap.dispose();\n  };\n  \n  // No event handlers for this static accent element\n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

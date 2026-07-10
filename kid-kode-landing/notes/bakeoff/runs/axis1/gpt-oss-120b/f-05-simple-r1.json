@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-05-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 13602,
+  "usage": {
+    "promptTokens": 1652,
+    "completionTokens": 2031
+  },
+  "costUsd": 0.0014663999999999999,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import { Mesh, PlaneGeometry, Group, Color, Vector3, Euler } from 'three/webgpu';\nimport {\n  MeshBasicNodeMaterial,\n  texture,\n  color,\n  mix,\n  vec4,\n  float,\n  positionNormalNode,\n} from 'three/tsl';\nimport { gsap } from 'gsap';\nimport { createMSDFMaterial } from '@/text';\nimport { NodeConfig, NodeContext } from '@/primitives';\n\nexport default function createNode(config: NodeConfig, ctx: NodeContext): Group {\n  // --- Geometry --------------------------------------------------------------\n  const geometry = new PlaneGeometry(1, 1);\n\n  // --- Base texture -----------------------------------------------------------\n  const baseTex = ctx.textureLoader(config.assets?.imageUrl);\n  const baseMaterial = new MeshBasicNodeMaterial({\n    map: texture(baseTex),\n    side: THREE.DoubleSide,\n  });\n\n  const baseMesh = new Mesh(geometry, baseMaterial);\n  baseMesh.castShadow = false;\n  baseMesh.receiveShadow = false;\n\n  // --- Text rendering ---------------------------------------------------------\n  const text = config.textContent?.[0]?.text ?? '';\n  // Default to accent color for CTA label\n  const textColor = new Color(config.colors?.accent ?? '#ff2a38');\n\n  // Assume createMSDFMaterial returns a MeshBasicNodeMaterial using the font atlas\n  const textMaterial = createMSDFMaterial(text, ctx.fontAtlas, {\n    color: textColor,\n    size: config.typography?.text?.size ?? 0.13,\n  });\n\n  const textMesh = new Mesh(geometry, textMaterial);\n  // Slight offset to avoid Z‑fighting with the base plane\n  textMesh.position.z = 0.001;\n  textMesh.castShadow = false;\n  textMesh.receiveShadow = false;\n\n  // --- Group assembly ---------------------------------------------------------\n  const group = new Group();\n  group.add(baseMesh);\n  group.add(textMesh);\n\n  // Apply placement\n  if (config.position) {\n    group.position.set(...config.position);\n  }\n  if (config.rotation) {\n    group.rotation.set(...config.rotation);\n  }\n  if (config.scale) {\n    group.scale.set(...config.scale);\n  }\n\n  // --- Event handlers placeholder ---------------------------------------------\n  group.userData.handlers = {};\n\n  // --- Cleanup ---------------------------------------------------------------\n  const timelines: gsap.core.Animation[] = [];\n\n  group.userData.cleanup = () => {\n    // Dispose geometry (shared)\n    geometry.dispose();\n\n    // Dispose materials (do not dispose textures; they are managed by the context)\n    baseMaterial.dispose();\n    textMaterial.dispose();\n\n    // Kill any GSAP timelines that might have been created elsewhere\n    timelines.forEach((tl) => tl.kill());\n    timelines.length = 0;\n  };\n\n  // --- Apply cinematic primitives if any -------------------------------------\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const primitive of config.cinematicPrimitives) {\n      const fn = ctx.primitives?.[primitive.name];\n      if (typeof fn === 'function') {\n        fn(group, primitive.params);\n      }\n    }\n  }\n\n  return group;\n}"
+}

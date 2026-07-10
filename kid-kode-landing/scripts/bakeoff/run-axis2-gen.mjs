@@ -36,6 +36,9 @@ const modelOverride = argOf('--model-override', null);
 // the lane runs with a reduced completion budget (truncations recorded via
 // finish_reason and disclosed).
 const maxTokensArg = Number(argOf('--max-tokens', '12288'));
+// Inter-call pacing for tightly TPM-capped tiers (Groq on_demand: 8K TPM).
+const paceMs = Number(argOf('--pace-ms', '0'));
+const concArg = argOf('--concurrency', null);
 
 const L1 = readFileSync(path.join(FUNCTIONAL, 'l1-system.txt'), 'utf8');
 const L2 = readFileSync(path.join(FUNCTIONAL, 'l2-world.txt'), 'utf8');
@@ -156,6 +159,7 @@ async function pool(items, worker, concurrency) {
       const r = await worker(item);
       done += 1; if (r === 'err') err += 1;
       if (done % 10 === 0) console.log(`  ...${done} done (${err} errors) — $${ledger.totals.totalUsd.toFixed(2)}`);
+      if (paceMs > 0 && r !== 'skip') await new Promise((ok) => setTimeout(ok, paceMs));
     }
   }));
   return { done, err };
@@ -182,7 +186,7 @@ for (const ct of active) {
   console.log(`[${ct.id}] axis2: ${activeCases.length} visual cases x ${RUNS_PER_NODE} runs`);
   const items = [];
   for (const c of activeCases) for (let r = 1; r <= RUNS_PER_NODE; r += 1) items.push({ c, r });
-  const conc = ct.route === 'claude-cli' ? 3 : 6;
+  const conc = concArg ? Number(concArg) : ct.route === 'claude-cli' ? 3 : 6;
   const res = await pool(items, (it) => runOne(ct, it.c, it.r), conc);
   console.log(`[${ct.id}] done (${res.err} transport errors)`);
 }

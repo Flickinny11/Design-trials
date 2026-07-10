@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-34-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 96192,
+  "apiMs": 93766,
+  "usage": {
+    "promptTokens": 4057,
+    "completionTokens": 10800,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.059132000000000004,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const root = new THREE.Group();\n  root.position.set(-2.5, 1.6, 0);\n  root.scale.set(1, 1, 1);\n  root.rotation.set(0, 0, 0);\n\n  const timelines = [];\n  const disposables = [];\n\n  // Load GLB mesh for machined surface\n  let glbScene = null;\n  if (config.meshUrl && ctx.glbLoader) {\n    try {\n      const glb = ctx.glbLoader.load(config.meshUrl);\n      if (glb && glb.scene) {\n        glbScene = glb.scene;\n        glbScene.traverse((node) => {\n          if (node instanceof THREE.Mesh) {\n            node.castShadow = true;\n            node.receiveShadow = true;\n          }\n        });\n        root.add(glbScene);\n        disposables.push(glbScene);\n      }\n    } catch (error) {\n      console.error('[StatTile] Failed to load GLB:', error);\n    }\n  }\n\n  // Apply cinematic primitive: parallax-scroll\n  if (ctx.primitives && ctx.primitives['parallax-scroll']) {\n    try {\n      ctx.primitives['parallax-scroll'](root, {\n        intensity: 0.25\n      });\n    } catch (error) {\n      console.error('[StatTile] Failed to apply parallax-scroll:', error);\n    }\n  }\n\n  // Interaction handlers\n  const handlers = {};\n\n  handlers.onHover = () => {\n    timelines.forEach(tl => tl.kill());\n    timelines.length = 0;\n\n    // Rise-in: move up 0.15 units over 0.7s with power3.out easing\n    const tl = gsap.timeline();\n    tl.to(root.position, {\n      y: root.position.y + 0.15,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n    timelines.push(tl);\n  };\n\n  handlers.onUnhover = () => {\n    timelines.forEach(tl => tl.kill());\n    timelines.length = 0;\n\n    const tl = gsap.timeline();\n    tl.to(root.position, {\n      y: 1.6,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n    timelines.push(tl);\n  };\n\n  handlers.onClick = () => {\n    timelines.forEach(tl => tl.kill());\n    timelines.length = 0;\n\n    // Press-down effect: scale to 0.97 (120ms, back.out), then restore\n    const tl = gsap.timeline();\n    tl.to(root.scale, {\n      x: 0.97,\n      y: 0.97,\n      z: 0.97,\n      duration: 0.12,\n      ease: 'back.out'\n    });\n    tl.to(root.scale, {\n      x: 1.0,\n      y: 1.0,\n      z: 1.0,\n      duration: 0.15,\n      ease: 'back.out'\n    });\n    timelines.push(tl);\n  };\n\n  // Cleanup: dispose timelines and Three.js resources\n  root.userData.cleanup = () => {\n    timelines.forEach(tl => tl.kill());\n    timelines.length = 0;\n\n    disposables.forEach(obj => {\n      obj.traverse((node) => {\n        if (node instanceof THREE.Mesh) {\n          if (node.geometry) {\n            node.geometry.dispose();\n          }\n          if (node.material) {\n            if (Array.isArray(node.material)) {\n              node.material.forEach(m => m.dispose());\n            } else {\n              node.material.dispose();\n            }\n          }\n        }\n      });\n    });\n  };\n\n  root.userData.handlers = handlers;\n\n  return root;\n}\n```"
+}

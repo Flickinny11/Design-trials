@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-09-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 22541,
+  "usage": {
+    "promptTokens": 1698,
+    "completionTokens": 2339
+  },
+  "costUsd": 0.0008926400000000001,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  PlaneGeometry,\n  Mesh,\n  MeshBasicNodeMaterial,\n  TextureLoader,\n} from 'three/webgpu';\nimport { texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  // --- Load texture from atlas ---\n  const texLoader = ctx.textureLoader;\n  const imgUrl = config.assets.imageUrl;\n  const atlasTex = texLoader.load(imgUrl);\n\n  // Source rect defines the region in the atlas. Here the whole image is used.\n  // Set UV offset and repeat if needed (default full texture).\n  // If the actual atlas is larger, adjust accordingly, but we assume 512x320.\n  atlasTex.offset.set(0, 0);\n  atlasTex.repeat.set(1, 1);\n\n  // --- Build sprite plane (billboarded quad) ---\n  const srcW = 512; // from source rect width\n  const srcH = 320; // source rect height\n  const aspect = srcW / srcH;\n  const width = 1.0;\n  const height = width / aspect; // ~0.625\n\n  const geometry = new PlaneGeometry(width, height);\n  const mapNode = texture(atlasTex);\n  const material = new MeshBasicNodeMaterial({\n    map: mapNode,\n    transparent: true, // in case image has alpha\n    depthWrite: false, // sprite-like\n  });\n\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(\n    config.scenePlacement.position[0],\n    config.scenePlacement.position[1],\n    config.scenePlacement.position[2]\n  );\n  mesh.rotation.set(\n    config.scenePlacement.rotation[0],\n    config.scenePlacement.rotation[1],\n    config.scenePlacement.rotation[2]\n  );\n  mesh.scale.set(\n    config.scenePlacement.scale[0],\n    config.scenePlacement.scale[1],\n    config.scenePlacement.scale[2]\n  );\n\n  // --- Billboard handler ---\n  mesh.userData.handlers = {\n    update: (_delta, camera) => {\n      mesh.lookAt(camera.position);\n    },\n    // No interaction handlers required (no interactions defined)\n  };\n\n  // --- Cleanup ---\n  mesh.userData.cleanup = () => {\n    // Dispose geometry and material (texture is cached by loader, skip disposal)\n    geometry.dispose();\n    material.dispose();\n    // Remove from parent if any\n    if (mesh.parent) {\n      mesh.parent.remove(mesh);\n    }\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-25-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 10630,
+  "usage": {
+    "promptTokens": 1650,
+    "completionTokens": 1489
+  },
+  "costUsd": 0.0011409,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import { Mesh, PlaneGeometry } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport { Object3D } from 'three';\n\nexport default function createNode(config, ctx) {\n  // Load texture (cached by ctx)\n  const imageUrl = config.assets?.imageUrl;\n  const texture = imageUrl ? ctx.textureLoader(imageUrl) : null;\n\n  // Geometry – unit plane; texture aspect handled by scaling later if needed\n  const geometry = new PlaneGeometry(1, 1);\n\n  // Material – basic node material with texture map\n  const material = new MeshBasicNodeMaterial({\n    map: texture,\n  });\n\n  const mesh = new Mesh(geometry, material);\n\n  // Helper to apply vec3 from array or object\n  const applyVec3 = (target, value) => {\n    if (Array.isArray(value) && value.length === 3) {\n      target.set(value[0], value[1], value[2]);\n    } else if (value && typeof value === 'object') {\n      target.set(value.x ?? 0, value.y ?? 0, value.z ?? 0);\n    }\n  };\n\n  // Position / rotation / scale from config (fallback to defaults)\n  const position = config.position ?? config.scenePlacement?.position ?? [0, 0, 0];\n  const rotation = config.rotation ?? config.scenePlacement?.rotation ?? [0, 0, 0];\n  const scale = config.scale ?? config.scenePlacement?.scale ?? [1, 1, 1];\n\n  applyVec3(mesh.position, position);\n  applyVec3(mesh.rotation, rotation);\n  applyVec3(mesh.scale, scale);\n\n  // No cinematic primitives to apply for this node\n  // (placeholder for future primitives)\n\n  // Event handlers container (empty for this static node)\n  mesh.userData.handlers = {};\n\n  // Keep track of any GSAP timelines (none in this static node, but pattern kept)\n  const _timelines = [];\n\n  // Cleanup routine\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (texture) texture.dispose();\n    _timelines.forEach((t) => t.kill());\n  };\n\n  return mesh;\n}"
+}

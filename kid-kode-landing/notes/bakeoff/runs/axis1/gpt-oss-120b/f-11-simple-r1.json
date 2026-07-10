@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-11-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 36694,
+  "usage": {
+    "promptTokens": 1649,
+    "completionTokens": 1386
+  },
+  "costUsd": 0.00107895,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import {\n  Mesh,\n  PlaneGeometry,\n  Object3D,\n  Euler,\n  Vector3,\n} from 'three/webgpu';\nimport {\n  MeshBasicNodeMaterial,\n  texture,\n} from 'three/tsl';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {Object} assets\n * @property {string} assets.imageUrl\n * @property {Array<number>} position\n * @property {Array<number>} rotation\n * @property {Array<number>} scale\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {{ load: (url: string) => import('three').Texture }} textureLoader\n * @property {{ [key: string]: (obj: Object3D, params: any) => void }} primitives\n * @property {{ fontAtlas: any }} fontAtlas\n */\n\n/**\n * Creates the Features card 3 node.\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {Object3D}\n */\nexport default function createNode(config, ctx) {\n  const { assets = {}, position = [0, 0, 0], rotation = [0, 0, 0], scale = [1, 1, 1] } = config;\n\n  // Load the brushed-metal texture\n  const tex = ctx.textureLoader.load(assets.imageUrl);\n\n  // Plane geometry (unit size, will be scaled via object scale)\n  const geometry = new PlaneGeometry(1, 1);\n\n  // Basic node material using the texture as color\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = texture(tex);\n  material.transparent = true;\n\n  // Mesh\n  const mesh = new Mesh(geometry, material);\n\n  // Apply transforms\n  mesh.position.set(...position);\n  mesh.rotation.set(...rotation);\n  mesh.scale.set(...scale);\n\n  // User data for event handlers and cleanup\n  mesh.userData = {\n    handlers: {},\n    cleanup: () => {\n      // Stop any gsap timelines (none expected here but safe)\n      gsap.killTweensOf(mesh);\n      geometry.dispose();\n      material.dispose();\n      // Dispose texture only if it is not shared (optional guard)\n      if (tex && tex.dispose) tex.dispose();\n    },\n  };\n\n  // No cinematic primitives to apply for this node\n  // (If any were listed, they would be applied here via ctx.primitives)\n\n  return mesh;\n}"
+}

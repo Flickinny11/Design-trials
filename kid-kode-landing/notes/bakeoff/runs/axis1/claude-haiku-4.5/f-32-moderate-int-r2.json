@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-32-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 75384,
+  "apiMs": 73161,
+  "usage": {
+    "promptTokens": 4010,
+    "completionTokens": 8569,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.047878000000000004,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Create plane geometry\n  const geometry = new THREE.PlaneGeometry(1, 1);\n  \n  // Load and apply texture\n  const texture = ctx.textureLoader.load(config.assets.imageUrl);\n  const material = new THREE.MeshBasicMaterial({\n    map: texture,\n    transparent: true,\n  });\n  \n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n  \n  // Apply scene placement\n  const [px, py, pz] = config.scenePosition;\n  const [rx, ry, rz] = config.sceneRotation;\n  const [sx, sy, sz] = config.sceneScale;\n  \n  group.position.set(px, py, pz);\n  group.rotation.set(rx, ry, rz);\n  group.scale.set(sx, sy, sz);\n  \n  // Manage animation timelines\n  let hoverTl = null;\n  let clickTl = null;\n  let badgeMesh = null;\n  \n  // Event handlers\n  const handlers = {};\n  \n  // Hover animation: rise-in preset (0.15 scene units, power3.out, 0.7s)\n  handlers.onHover = () => {\n    if (hoverTl) hoverTl.kill();\n    hoverTl = gsap.to(group.position, {\n      y: py + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n  };\n  \n  handlers.onHoverOut = () => {\n    if (hoverTl) hoverTl.kill();\n    hoverTl = gsap.to(group.position, {\n      y: py,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n  };\n  \n  // Click animation: press-down (scale 0.97, back.out, 0.12s)\n  handlers.onClick = () => {\n    if (clickTl) clickTl.kill();\n    clickTl = gsap.timeline();\n    \n    clickTl.to(group.scale, {\n      x: sx * 0.97,\n      y: sy * 0.97,\n      duration: 0.12,\n      ease: 'back.out',\n    }).to(group.scale, {\n      x: sx,\n      y: sy,\n      duration: 0.12,\n      ease: 'back.out',\n    });\n  };\n  \n  // Stock badge: bind to inStock data (trpc.inventory.status.inStock)\n  handlers.updateStockBadge = (inStock) => {\n    if (!badgeMesh) {\n      const badgeGeo = new THREE.PlaneGeometry(0.15, 0.15);\n      const badgeMat = new THREE.MeshBasicMaterial({\n        color: new THREE.Color(inStock ? '#ff2a38' : '#999999'),\n      });\n      badgeMesh = new THREE.Mesh(badgeGeo, badgeMat);\n      badgeMesh.position.set(0.425, 0.425, 0.01);\n      group.add(badgeMesh);\n    } else {\n      badgeMesh.material.color.set(inStock ? '#ff2a38' : '#999999');\n    }\n  };\n  \n  // Cleanup: dispose resources and kill animations\n  group.userData.cleanup = () => {\n    if (hoverTl) hoverTl.kill();\n    if (clickTl) clickTl.kill();\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n    if (badgeMesh) {\n      badgeMesh.geometry.dispose();\n      badgeMesh.material.dispose();\n    }\n  };\n  \n  group.userData.handlers = handlers;\n  \n  return group;\n}\n```"
+}

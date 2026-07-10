@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-01-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 95513,
+  "apiMs": 92985,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 11076,
+    "cacheCreation": 21556,
+    "cacheRead": 0
+  },
+  "costUsd": 0.099486,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\ninterface NodeConfig {\n  imageUrl?: string;\n  textContent?: Array<{\n    text: string;\n    fontSize?: number;\n    color?: string;\n    fontFamily?: string;\n  }>;\n  scenePosition?: {\n    x?: number;\n    y?: number;\n    z?: number;\n    rotationXYZ?: [number, number, number];\n    scaleXYZ?: [number, number, number];\n  };\n  cinematicPrimitives?: Array<{\n    name: string;\n    params?: Record<string, any>;\n  }>;\n}\n\ninterface NodeContext {\n  textureLoader: {\n    load(url: string): THREE.Texture;\n  };\n  fontAtlas: {\n    createText(text: string, options: Record<string, any>): THREE.Object3D;\n  };\n  primitives?: {\n    [key: string]: (target: THREE.Object3D, params?: Record<string, any>) => void;\n  };\n}\n\nexport default function createNode(config: NodeConfig, ctx: NodeContext): THREE.Object3D {\n  const group = new THREE.Group();\n  \n  const resources = {\n    geometries: [] as THREE.BufferGeometry[],\n    materials: [] as THREE.Material[],\n    textures: [] as THREE.Texture[],\n  };\n  \n  // Apply scene position from config\n  if (config.scenePosition) {\n    group.position.set(\n      config.scenePosition.x ?? 0,\n      config.scenePosition.y ?? 0,\n      config.scenePosition.z ?? 0\n    );\n    if (config.scenePosition.rotationXYZ) {\n      group.rotation.order = 'XYZ';\n      group.rotation.set(\n        config.scenePosition.rotationXYZ[0] ?? 0,\n        config.scenePosition.rotationXYZ[1] ?? 0,\n        config.scenePosition.rotationXYZ[2] ?? 0\n      );\n    }\n    if (config.scenePosition.scaleXYZ) {\n      group.scale.set(\n        config.scenePosition.scaleXYZ[0] ?? 1,\n        config.scenePosition.scaleXYZ[1] ?? 1,\n        config.scenePosition.scaleXYZ[2] ?? 1\n      );\n    }\n  }\n\n  // Create plane geometry\n  const planeGeometry = new THREE.PlaneGeometry(1, 1);\n  resources.geometries.push(planeGeometry);\n  \n  // Load texture from imageUrl\n  let texture: THREE.Texture | null = null;\n  if (config.imageUrl) {\n    texture = ctx.textureLoader.load(config.imageUrl);\n    texture.colorSpace = THREE.SRGBColorSpace;\n    resources.textures.push(texture);\n  }\n  \n  // Create material\n  const material = new THREE.MeshBasicMaterial({\n    map: texture ?? undefined,\n    side: THREE.DoubleSide,\n    transparent: true,\n  });\n  resources.materials.push(material);\n  \n  // Create mesh\n  const mesh = new THREE.Mesh(planeGeometry, material);\n  group.add(mesh);\n  \n  // Render text content via fontAtlas\n  if (config.textContent && config.textContent.length > 0) {\n    const textSpec = config.textContent[0];\n    if (textSpec.text) {\n      const textObject = ctx.fontAtlas.createText(textSpec.text, {\n        fontSize: textSpec.fontSize ?? 0.13,\n        fontFamily: textSpec.fontFamily ?? 'JetBrains Mono',\n        color: textSpec.color ?? new THREE.Color(0x16161d),\n        align: 'center',\n      });\n      \n      textObject.position.z = 0.01;\n      textObject.position.y = -0.2;\n      group.add(textObject);\n    }\n  }\n  \n  // Setup cleanup\n  group.userData.cleanup = () => {\n    resources.geometries.forEach(g => g.dispose());\n    resources.materials.forEach(m => m.dispose());\n    resources.textures.forEach(t => t.dispose());\n    gsap.killTweensOf(group);\n  };\n  \n  // Setup event handlers\n  group.userData.handlers = {\n    onClick: undefined,\n    onPointerOver: undefined,\n    onPointerOut: undefined,\n  };\n  \n  return group;\n}\n```"
+}

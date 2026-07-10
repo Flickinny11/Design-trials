@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-22-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 14331,
+  "apiMs": 11763,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1078,
+    "cacheCreation": 3364,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0627345,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, color, mix, uniform, positionLocal, time, mx_noise_float } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'pricing-card-1-label';\n  group.position.set(-3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 1.6;\n  const height = 1.0;\n\n  const geometry = new THREE.PlaneGeometry(width, height, 1, 1);\n\n  const inkColor = color('#16161d');\n  const paperColor = color('#e8ecf2');\n  const surfaceColor = color('#0b0b10');\n  const accentColor = color('#ff2a38');\n\n  const uvNode = uv();\n\n  const grain = mx_noise_float(positionLocal.mul(80.0)).mul(0.03);\n\n  const gradient = mix(surfaceColor, inkColor, uvNode.y.clamp(0.0, 1.0));\n  const accentEdge = uvNode.x.smoothstep(0.0, 0.04).oneMinus().mul(accentColor).mul(0.4);\n\n  const baseColorNode = gradient.add(grain).add(accentEdge);\n\n  const material = new THREE.MeshBasicNodeMaterial({\n    transparent: true,\n  });\n  material.colorNode = baseColorNode;\n\n  let imageTexture = null;\n  const imgUrl = config?.assets?.imageUrl || '/prism-mock/home/nodes/orb-decor.png';\n  try {\n    imageTexture = ctx.textureLoader.load(imgUrl);\n  } catch (e) {\n    imageTexture = null;\n  }\n\n  if (imageTexture) {\n    imageTexture.colorSpace = THREE.SRGBColorSpace;\n    const texNode = texture(imageTexture, uvNode);\n    material.colorNode = mix(baseColorNode, texNode.rgb, texNode.a.mul(0.6));\n  }\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'pricing-card-1-plane';\n  group.add(mesh);\n\n  // Headline text: \"Pricing 1\"\n  const headlineHeight = 0.34;\n  const textMesh = createTextMesh(ctx.fontAtlas, {\n    text: 'Pricing 1',\n    font: 'Lora',\n    weight: 400,\n    size: headlineHeight,\n    color: '#e8ecf2',\n    align: 'center',\n    anchor: 'center',\n  });\n  textMesh.position.set(0, 0, 0.01);\n  group.add(textMesh);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (imageTexture) imageTexture.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n  };\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-05-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 11807,
+  "apiMs": 9215,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 971,
+    "cacheCreation": 0,
+    "cacheRead": 5473
+  },
+  "costUsd": 0.028096499999999996,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2, vec3, mix, float, uniform } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'home-cta';\n  group.position.set(0, -2.85, 0.26);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 1.7;\n  const height = 1.06;\n\n  const map = ctx.textureLoader.load('/prism-assets/chrome/brushed-metal.map.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n  map.wrapS = THREE.RepeatWrapping;\n  map.wrapT = THREE.RepeatWrapping;\n\n  const geometry = new THREE.PlaneGeometry(width, height, 1, 1);\n  const material = new THREE.MeshBasicNodeMaterial();\n\n  const baseTex = texture(map, uv());\n\n  const ink = vec3(0x16 / 255, 0x16 / 255, 0x1d / 255);\n  const accent = vec3(0xff / 255, 0x2a / 255, 0x38 / 255);\n\n  // engineered gradient: vertical mix between ink and accent tint, modulated by brushed metal map\n  const gradientMix = uv().y.clamp(0.0, 1.0);\n  const gradient = mix(ink, mix(ink, accent, float(0.18)), gradientMix);\n\n  const grainStrength = uniform(0.035);\n  const combined = gradient.mul(baseTex.rgb).add(baseTex.rgb.mul(grainStrength));\n\n  material.colorNode = vec3(combined.r, combined.g, combined.b);\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'home-cta-plane';\n  group.add(plane);\n\n  const textMesh = createTextMesh({\n    text: 'Get started',\n    font: 'Lora',\n    weight: 400,\n    sizeEm: 0.34,\n    color: '#e8ecf2',\n    atlas: ctx.fontAtlas,\n    anchor: 'center',\n  });\n  textMesh.position.set(0, 0, 0.01);\n  group.add(textMesh);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    map.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) {\n      if (Array.isArray(textMesh.material)) {\n        textMesh.material.forEach((m) => m.dispose());\n      } else {\n        textMesh.material.dispose();\n      }\n    }\n  };\n\n  return group;\n}\n```"
+}

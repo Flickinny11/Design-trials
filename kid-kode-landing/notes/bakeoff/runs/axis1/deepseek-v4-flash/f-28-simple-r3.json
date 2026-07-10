@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-28-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 6122,
+  "usage": {
+    "promptTokens": 1688,
+    "completionTokens": 800
+  },
+  "costUsd": 0.00046032000000000007,
+  "transportAttempts": 2,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  PlaneGeometry,\n  MeshBasicNodeMaterial,\n  texture as textureNode,\n  uniform,\n  float,\n} from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { scenePosition } = config;\n  const texture = ctx.textureLoader.load('/prism-mock/home/nodes/orb-decor.png');\n  \n  // Use a plane size matching the source aspect ratio 512:320 = 1.6\n  // Choose a reasonable size in scene units: width 2, height 1.25\n  const width = 2.0;\n  const height = 1.25;\n  const geometry = new PlaneGeometry(width, height);\n  \n  // Create a node material using the texture node\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = textureNode(texture);\n\n  // Support color-space and mapping (assume sRGB)\n  texture.colorSpace = 'srgb';\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(\n    scenePosition.x,\n    scenePosition.y,\n    scenePosition.z\n  );\n  mesh.rotation.set(\n    scenePosition.rotationX || 0,\n    scenePosition.rotationY || 0,\n    scenePosition.rotationZ || 0\n  );\n  mesh.scale.set(\n    scenePosition.scaleX || 1,\n    scenePosition.scaleY || 1,\n    scenePosition.scaleZ || 1\n  );\n\n  // Attach empty handlers (no interactive behaviors for this node)\n  mesh.userData.handlers = {};\n  \n  // Cleanup: dispose geometry, material, texture\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n    // No GSAP timelines to kill for this static node\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

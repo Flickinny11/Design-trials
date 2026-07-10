@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-24-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 80084,
+  "apiMs": 77569,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 7576,
+    "cacheCreation": 0,
+    "cacheRead": 21572
+  },
+  "costUsd": 0.04104220000000001,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Ceramic grain texture background plane\n  const texture = ctx.textureLoader.load('/prism-assets/chrome/ceramic-grain.map.png');\n  texture.colorSpace = THREE.SRGBColorSpace;\n\n  const geometry = new THREE.PlaneGeometry(1.6, 1); // Atlas aspect ratio 512:320\n  const material = new THREE.MeshBasicMaterial({\n    map: texture,\n    side: THREE.DoubleSide,\n  });\n\n  const plane = new THREE.Mesh(geometry, material);\n  group.add(plane);\n\n  // Text: \"Pricing 2\"\n  const textString = (typeof config.textContent === 'string'\n    ? config.textContent\n    : config.textContent?.content) || 'Pricing 2';\n\n  const textMesh = ctx.fontAtlas.createText(textString, {\n    fontSize: 0.2,\n    fontWeight: 400,\n    fontFamily: 'Lora',\n    color: 0xe8ecf2, // paper\n  });\n\n  if (textMesh) {\n    textMesh.position.y = 0.2;\n    textMesh.position.z = 0.01;\n    group.add(textMesh);\n  }\n\n  // Resource cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

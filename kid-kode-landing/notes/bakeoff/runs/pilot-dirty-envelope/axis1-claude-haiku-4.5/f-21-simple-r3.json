@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-21-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 85601,
+  "apiMs": 83188,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 8797,
+    "cacheCreation": 0,
+    "cacheRead": 21559
+  },
+  "costUsd": 0.0471229,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Load texture via cached loader\n  const textureUrl = config.imageUrl || '/prism-mock/home/nodes/floating-accent.png';\n  const texture = ctx.textureLoader.load(textureUrl);\n\n  // Create plane geometry with atlas region aspect ratio (512:320 = 1.6:1)\n  const aspectRatio = 512 / 320;\n  const geometry = new THREE.PlaneGeometry(aspectRatio, 1);\n\n  // Create basic material with texture\n  const material = new THREE.MeshBasicMaterial({\n    map: texture,\n    transparent: true,\n    toneMapped: false,\n  });\n\n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n\n  // Apply transform from config or use spec defaults\n  if (config.scenePosition) {\n    const { x, y, z } = config.scenePosition;\n    mesh.position.set(x, y, z);\n    if (config.scenePosition.rotationXYZ) {\n      const [rx, ry, rz] = config.scenePosition.rotationXYZ;\n      mesh.rotation.set(rx, ry, rz);\n    }\n    if (config.scenePosition.scaleXYZ) {\n      const [sx, sy, sz] = config.scenePosition.scaleXYZ;\n      mesh.scale.set(sx, sy, sz);\n    }\n  } else {\n    mesh.position.set(-3.2, -0.3, 0);\n  }\n\n  group.add(mesh);\n\n  // Setup cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n  };\n\n  // Setup event handlers\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

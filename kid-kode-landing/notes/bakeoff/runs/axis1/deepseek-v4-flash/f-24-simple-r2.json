@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-24-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 17401,
+  "usage": {
+    "promptTokens": 1715,
+    "completionTokens": 2636
+  },
+  "costUsd": 0.0009781800000000002,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  Mesh,\n  PlaneGeometry,\n  MeshBasicNodeMaterial,\n  TextureLoader,\n  ClampToEdgeWrapping,\n  Vector3,\n} from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  // --- Geometry ---\n  // Source rect: 512 x 320 -> aspect 1.6\n  const aspect = 512 / 320;\n  const geometry = new PlaneGeometry(aspect, 1);\n\n  // --- Material (TSL) ---\n  const texture = ctx.textureLoader.load(config.imageUrl);\n  texture.wrapS = texture.wrapT = ClampToEdgeWrapping;\n\n  // Set UV repeat/offset after texture loads (async but synchronous function can set callback)\n  texture.onLoad = () => {\n    const img = texture.image;\n    const w = img ? img.width : 512;\n    const h = img ? img.height : 320;\n    texture.repeat.set(512 / w, 320 / h);\n    texture.offset.set(0, 0);\n    texture.needsUpdate = true;\n  };\n\n  const material = new MeshBasicNodeMaterial();\n  material.mapNode = texture; // three/tsl node for texture\n\n  // --- Mesh ---\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(config.position.x, config.position.y, config.position.z);\n  mesh.rotation.set(config.rotation.x, config.rotation.y, config.rotation.z);\n  mesh.scale.set(config.scale.x, config.scale.y, config.scale.z);\n\n  // --- Billboard behavior ---\n  const up = new Vector3(0, 1, 0);\n  mesh.onBeforeRender = function (renderer, scene, camera) {\n    this.quaternion.setFromRotationMatrix(\n      new THREE.Matrix4().lookAt(this.position, camera.position, up)\n    );\n    // Preserve original scale (lookAt may affect scale if matrix is applied directly)\n    this.scale.set(config.scale.x, config.scale.y, config.scale.z);\n  };\n\n  // --- User data ---\n  mesh.userData.handlers = {};\n\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n    // Remove onBeforeRender reference\n    mesh.onBeforeRender = null;\n    // Kill any GSAP timelines (none in this node)\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

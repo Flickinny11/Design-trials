@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-43-moderate",
+  "run": 2,
+  "ok": true,
+  "wallMs": 24889,
+  "usage": {
+    "promptTokens": 1755,
+    "completionTokens": 2876
+  },
+  "costUsd": 0.00105098,
+  "transportAttempts": 3,
+  "billing": "metered",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { scenePosition, cinematicPrimitives } = config;\n  const geometry = new THREE.PlaneGeometry(1.6, 1);\n  const texture = ctx.textureLoader.load(config.imageUrl);\n  const material = new THREE.MeshBasicNodeMaterial({ map: texture, transparent: true });\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(scenePosition.x, scenePosition.y, scenePosition.z);\n  mesh.rotation.set(scenePosition.rotation?.x || 0, scenePosition.rotation?.y || 0, scenePosition.rotation?.z || 0);\n  mesh.scale.set(scenePosition.scale?.x || 1, scenePosition.scale?.y || 1, scenePosition.scale?.z || 1);\n\n  const origY = mesh.position.y;\n  let hoverTween, pressTween;\n\n  const handlers = {\n    pointerenter: () => {\n      if (hoverTween) hoverTween.kill();\n      hoverTween = gsap.to(mesh.position, { y: origY + 0.15, duration: 0.7, ease: 'power3.out' });\n    },\n    pointerleave: () => {\n      if (hoverTween) hoverTween.kill();\n      hoverTween = gsap.to(mesh.position, { y: origY, duration: 0.5, ease: 'power2.out' });\n    },\n    pointerdown: () => {\n      if (pressTween) pressTween.kill();\n      pressTween = gsap.to(mesh.scale, { x: 0.97, y: 0.97, z: 0.97, duration: 0.12, ease: 'back.out' });\n    },\n    pointerup: () => {\n      if (pressTween) pressTween.kill();\n      pressTween = gsap.to(mesh.scale, { x: 1, y: 1, z: 1, duration: 0.2, ease: 'power2.out' });\n    },\n    click: () => {\n      if (ctx.emit) ctx.emit('navigate', { to: 'hub-journal.select' });\n    }\n  };\n  mesh.userData.handlers = handlers;\n\n  // Apply cinematic primitives\n  if (cinematicPrimitives && cinematicPrimitives.length) {\n    cinematicPrimitives.forEach(primitive => {\n      if (ctx.primitives[primitive.name]) {\n        ctx.primitives[primitive.name](mesh, primitive.params);\n      }\n    });\n  }\n\n  // Mark as interactive for raycasting\n  mesh.userData.interactive = true;\n\n  // Cleanup\n  mesh.userData.cleanup = () => {\n    if (hoverTween) hoverTween.kill();\n    if (pressTween) pressTween.kill();\n    geometry.dispose();\n    material.dispose();\n    if (texture) texture.dispose();\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-18-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 13157,
+  "usage": {
+    "promptTokens": 1665,
+    "completionTokens": 2462
+  },
+  "costUsd": 0.00172695,
+  "transportAttempts": 3,
+  "billing": "metered",
+  "output": "import * as THREE from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {Array<number>} [position]\n * @property {Array<number>} [rotation]\n * @property {Array<number>} [scale]\n * @property {Object} [assets]\n * @property {string} [assets.imageUrl]\n * @property {Object} [atlas]\n * @property {Array<number>} [atlas.sourceRect] // [x, y, w, h]\n * @property {Array<Object>} [cinematicPrimitives]\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {{ load: (url:string)=>THREE.Texture }} textureLoader\n * @property {THREE.Camera} [camera]\n * @property {Object.<string, Function>} primitives\n */\n\n/**\n * Creates a billboarded textured plane.\n *\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  const {\n    position = [0, 0, 0],\n    rotation = [0, 0, 0],\n    scale = [1, 1, 1],\n    assets = {},\n    atlas = {},\n    cinematicPrimitives = [],\n  } = config;\n\n  // Load texture synchronously via the provided loader\n  const tex = ctx.textureLoader.load(assets.imageUrl);\n\n  // Apply atlas UV offset/repeat if a source rect is defined\n  if (atlas.sourceRect && tex.image) {\n    const [srcX, srcY, srcW, srcH] = atlas.sourceRect;\n    const img = tex.image;\n    tex.offset.set(srcX / img.width, srcY / img.height);\n    tex.repeat.set(srcW / img.width, srcH / img.height);\n  }\n\n  // Determine plane aspect ratio from atlas rect (fallback to 1:1)\n  const aspect = atlas.sourceRect\n    ? atlas.sourceRect[2] / atlas.sourceRect[3]\n    : 1;\n\n  const geometry = new THREE.PlaneGeometry(aspect, 1);\n  const material = new MeshBasicNodeMaterial({\n    map: texture(tex),\n    transparent: true,\n    depthTest: true,\n  });\n\n  const mesh = new THREE.Mesh(geometry, material);\n\n  // Apply transforms from config\n  mesh.position.set(...position);\n  mesh.rotation.set(...rotation);\n  mesh.scale.set(...scale);\n\n  // Simple billboard: face the supplied camera each frame\n  mesh.userData.update = () => {\n    if (ctx.camera) {\n      mesh.lookAt(ctx.camera.position);\n    }\n  };\n\n  // Attach empty handler map for external wiring\n  mesh.userData.handlers = {};\n\n  // Cleanup routine\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    // Texture may be shared; do not forcibly dispose.\n    // Cancel any GSAP timelines that might have been started elsewhere.\n    gsap.globalTimeline.clear();\n  };\n\n  // Apply any cinematic primitives declared in the config\n  for (const primitive of cinematicPrimitives) {\n    const fn = ctx.primitives[primitive.name];\n    if (typeof fn === 'function') {\n      fn(mesh, primitive.params);\n    }\n  }\n\n  return mesh;\n}"
+}

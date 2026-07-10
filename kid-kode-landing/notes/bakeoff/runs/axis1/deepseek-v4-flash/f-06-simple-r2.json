@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-06-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 32866,
+  "usage": {
+    "promptTokens": 1708,
+    "completionTokens": 4081
+  },
+  "costUsd": 0.0013818,
+  "transportAttempts": 2,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial, PlaneGeometry, Group } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  // Load texture (synchronous, cached)\n  const texture = ctx.textureLoader.load(config.assets.imageUrl);\n\n  // Atlas region source rect: 0,0,512,320\n  // Assume texture is exactly this region – no UV offset needed\n  // Aspect ratio for geometry\n  const aspect = 512 / 320;\n\n  const geometry = new PlaneGeometry(aspect, 1);\n\n  const material = new MeshBasicNodeMaterial({\n    map: texture,\n  });\n\n  const mesh = new Group(); // Use group as container for plane\n  const plane = new THREE.Mesh(geometry, material);\n  // Rotate to face camera (default orientation already faces -Z)\n  // Camera is at (0,0,10) looking at origin – this works.\n  mesh.add(plane);\n\n  // Placement\n  mesh.position.set(config.position.x, config.position.y, config.position.z);\n  mesh.rotation.set(config.rotation.x, config.rotation.y, config.rotation.z);\n  mesh.scale.set(config.scale.x, config.scale.y, config.scale.z);\n\n  // No interactions\n  mesh.userData.handlers = {};\n\n  // Cleanup\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

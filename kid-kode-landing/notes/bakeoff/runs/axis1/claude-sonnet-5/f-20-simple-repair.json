@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-20-simple",
+  "run": "repair",
+  "ok": true,
+  "wallMs": 10992,
+  "apiMs": 8371,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 869,
+    "cacheCreation": 3782,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.06196449999999999,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import { MeshBasicNodeMaterial, PlaneGeometry, Mesh, Object3D, Color, sRGBEncoding } from 'three/webgpu';\nimport { texture, uv, vec4, mix, float } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new Object3D();\n  group.name = 'hub-pricing-title';\n\n  const { position = [0, 3, 0], rotation = [0, 0, 0], scale = [1, 1, 1] } = config.scenePosition || {};\n\n  const imageUrl = '/prism-mock/home/nodes/cta-hero-isolated.png';\n  const map = ctx.textureLoader.load(imageUrl);\n\n  const geometry = new PlaneGeometry(3.2, 2.0, 1, 1);\n  const material = new MeshBasicNodeMaterial({ transparent: true });\n\n  const tex = texture(map, uv());\n  const grain = float(0.0);\n  material.colorNode = mix(tex, vec4(new Color(0x16161d), 1.0), grain);\n\n  const plane = new Mesh(geometry, material);\n  group.add(plane);\n\n  const textMeshes = [];\n  const textContent = config.textContent || [\n    { role: 'headline', text: 'Pricing', size: 96, weight: 400 }\n  ];\n\n  textContent.forEach((entry, i) => {\n    const text = typeof entry === 'string' ? entry : entry.text;\n    const role = (entry && entry.role) || 'headline';\n    const mesh = ctx.fontAtlas.createText({\n      text,\n      font: 'display',\n      weight: (entry && entry.weight) || 400,\n      size: role === 'headline' ? 0.34 : 0.2,\n      color: '#e8ecf2',\n      align: 'center'\n    });\n    mesh.position.set(0, 0, 0.01 + i * 0.001);\n    group.add(mesh);\n    textMeshes.push(mesh);\n  });\n\n  group.position.set(position[0], position[1], position[2]);\n  group.rotation.set(rotation[0], rotation[1], rotation[2]);\n  group.scale.set(scale[0], scale[1], scale[2]);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    textMeshes.forEach((m) => {\n      if (m.geometry) m.geometry.dispose();\n      if (m.material) m.material.dispose();\n    });\n  };\n\n  return group;\n}"
+}

@@ -1,0 +1,17 @@
+{
+  "contestant": "glm-5.2",
+  "model": "accounts/fireworks/models/glm-5p2",
+  "route": "fireworks",
+  "caseId": "f-25-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 33201,
+  "usage": {
+    "promptTokens": 1601,
+    "completionTokens": 3241
+  },
+  "costUsd": 0.016501800000000004,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial, PlaneGeometry, Mesh, SRGBColorSpace } from 'three/webgpu';\nimport { texture, uv, float, vec4, hash, floor } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const tex = ctx.textureLoader(config.assets.imageUrl);\n  try { tex.colorSpace = SRGBColorSpace; } catch (e) {}\n\n  const aspect = 512 / 320;\n  const planeWidth = 2.0;\n  const planeHeight = planeWidth / aspect;\n  const geometry = new PlaneGeometry(planeWidth, planeHeight, 1, 1);\n\n  const material = new MeshBasicNodeMaterial();\n  material.transparent = true;\n  material.opacity = 0;\n\n  const baseColor = texture(tex, uv());\n\n  const grainScale = float(900.0);\n  const grainCell = uv().mul(grainScale).floor();\n  const grainVal = hash(grainCell);\n  const grainAmt = grainVal.mul(float(0.05)).sub(float(0.025));\n\n  material.colorNode = baseColor.add(vec4(grainAmt, grainAmt, grainAmt, float(0.0)));\n\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(3.2, -0.3, 0);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  const startY = -0.3 + 0.2;\n  mesh.position.y = startY;\n\n  const tl = gsap.timeline();\n  tl.to(mesh.material, { opacity: 1, duration: 0.5, ease: 'power2.out' }, 0);\n  tl.to(mesh.position, { y: -0.3, duration: 0.5, ease: 'power2.out' }, 0);\n\n  mesh.userData.handlers = {};\n  mesh.userData.cleanup = () => {\n    tl.kill();\n    geometry.dispose();\n    material.dispose();\n  };\n\n  return mesh;\n}"
+}

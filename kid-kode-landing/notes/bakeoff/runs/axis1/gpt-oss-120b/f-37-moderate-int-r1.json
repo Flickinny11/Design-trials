@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-37-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 57069,
+  "usage": {
+    "promptTokens": 1723,
+    "completionTokens": 1950
+  },
+  "costUsd": 0.00142845,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {{ x: number, y: number, z: number }} position\n * @property {{ x: number, y: number, z: number }} rotation\n * @property {{ x: number, y: number, z: number }} scale\n * @property {Array<{ name: string, params: any }>} cinematicPrimitives\n * @property {string} imageUrl\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {(url: string) => THREE.Texture} textureLoader\n * @property {{ [key: string]: (obj: THREE.Object3D, params?: any) => void }} primitives\n * @property {{ emit?: (event: string) => void }} [emit] - optional event emitter\n */\n\n/**\n * Create a textured plane node with hover lift and click emit behavior,\n * applying requested cinematic primitives.\n *\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  // Geometry – unit plane, size will be driven by scaling if needed\n  const geometry = new THREE.PlaneGeometry(1, 1);\n\n  // Load texture (synchronous via ctx.textureLoader)\n  const texture = ctx.textureLoader(config.imageUrl);\n  texture.needsUpdate = true;\n  texture.minFilter = THREE.LinearMipmapLinearFilter;\n  texture.magFilter = THREE.LinearFilter;\n\n  // Material – basic node material with the texture map\n  const material = new THREE.MeshBasicNodeMaterial({ map: texture });\n\n  // Mesh creation\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(config.position.x, config.position.y, config.position.z);\n  mesh.rotation.set(\n    config.rotation.x,\n    config.rotation.y,\n    config.rotation.z\n  );\n  mesh.scale.set(config.scale.x, config.scale.y, config.scale.z);\n\n  // Apply cinematic primitives\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const primitive of config.cinematicPrimitives) {\n      const fn = ctx.primitives[primitive.name];\n      if (typeof fn === 'function') {\n        fn(mesh, primitive.params);\n      }\n    }\n  }\n\n  // Hover lift animation (rise‑in) – subtle 0.15 scene units\n  const hoverTimeline = gsap.timeline({ paused: true });\n  hoverTimeline.to(\n    mesh.position,\n    {\n      y: mesh.position.y + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    },\n    0\n  );\n\n  // Event handlers attached to userData\n  mesh.userData.handlers = {\n    /**\n     * Called when pointer enters the object.\n     */\n    hoverEnter: () => {\n      hoverTimeline.play();\n    },\n\n    /**\n     * Called when pointer leaves the object.\n     */\n    hoverLeave: () => {\n      hoverTimeline.reverse();\n    },\n\n    /**\n     * Called on click – emits navigation event.\n     */\n    click: () => {\n      if (ctx.emit && typeof ctx.emit === 'function') {\n        ctx.emit('hub-pricing.select');\n      }\n    },\n  };\n\n  // Cleanup routine\n  mesh.userData.cleanup = () => {\n    hoverTimeline.kill();\n    geometry.dispose();\n    material.dispose();\n    if (texture) {\n      texture.dispose();\n    }\n    // Remove handlers reference\n    delete mesh.userData.handlers;\n    delete mesh.userData.cleanup;\n  };\n\n  return mesh;\n}"
+}

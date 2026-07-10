@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-04-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 56253,
+  "apiMs": 53866,
+  "usage": {
+    "promptTokens": 3932,
+    "completionTokens": 5902,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.034392,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, uv, texture, mul, add, mix, fract, sin, vec3 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Load the main image texture\n  const imageTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  imageTexture.colorSpace = THREE.SRGBColorSpace;\n\n  // Create plane geometry with aspect ratio from atlas region\n  // Atlas region 512x320 → aspect 1.6\n  const aspectRatio = 512 / 320;\n  const height = 2.0;\n  const width = height * aspectRatio;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  // Build TSL material with engineered gradient and subtle grain\n  const uvNode = uv();\n  \n  // Sample main texture\n  const mainTexNode = texture(imageTexture, uvNode);\n  \n  // Engineered gradient overlay (vertical fade for depth)\n  const gradientFade = mix(\n    vec3(1.0, 1.0, 1.0),\n    vec3(0.97, 0.97, 0.97),\n    uvNode.y\n  );\n  const textureWithGradient = mul(mainTexNode, gradientFade);\n  \n  // Procedural grain using sine-based pattern\n  const grainPattern = fract(\n    add(\n      sin(mul(uvNode.x, 43.0)),\n      sin(mul(uvNode.y, 73.0))\n    )\n  );\n  const grainOverlay = mul(grainPattern, 0.02);\n  \n  // Composite: gradient-modulated texture + grain\n  const finalColor = add(textureWithGradient, grainOverlay);\n\n  const material = new MeshBasicNodeMaterial({\n    colorNode: finalColor,\n    transparent: true\n  });\n\n  const mesh = new THREE.Mesh(geometry, material);\n  \n  // Apply scene placement\n  mesh.position.set(0, -2.85, 0.2);\n  mesh.rotation.order = 'XYZ';\n  mesh.scale.set(1, 1, 1);\n\n  group.add(mesh);\n\n  // Cleanup resources\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    imageTexture.dispose();\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

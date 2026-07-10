@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-01-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 15336,
+  "apiMs": 12944,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1401,
+    "cacheCreation": 3361,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.07078749999999999,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, uniform, mix, float } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'home-headline';\n\n  const pos = config.scenePosition || { x: 0, y: 3, z: 0 };\n  const rot = config.sceneRotation || { x: 0, y: 0, z: 0 };\n  const scl = config.sceneScale || { x: 1, y: 1, z: 1 };\n  group.position.set(pos.x, pos.y, pos.z);\n  group.rotation.set(rot.x, rot.y, rot.z);\n  group.scale.set(scl.x, scl.y, scl.z);\n\n  const colors = {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n\n  const width = 5.5;\n  const height = 5.5 * (320 / 512);\n\n  const planeGeo = new THREE.PlaneGeometry(width, height);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  let map = null;\n  const imageUrl = '/prism-mock/home/nodes/feature-card.png';\n  if (ctx.textureLoader) {\n    try {\n      map = ctx.textureLoader.load(imageUrl);\n      map.colorSpace = THREE.SRGBColorSpace;\n    } catch (e) {\n      map = null;\n    }\n  }\n\n  const uNoiseSeed = uniform(0.035);\n\n  if (map) {\n    const texNode = texture(map, uv());\n    const inkColor = vec4(\n      new THREE.Color(colors.ink).r,\n      new THREE.Color(colors.ink).g,\n      new THREE.Color(colors.ink).b,\n      1.0\n    );\n    // engineered gradient overlay: blend texture with ink gradient based on uv.y\n    const gradFactor = uv().y;\n    const gradColor = mix(inkColor, texNode, gradFactor.mul(0.6).add(0.4));\n    material.colorNode = mix(texNode, gradColor, float(0.35));\n    material.opacityNode = texNode.a;\n  } else {\n    material.colorNode = vec4(\n      new THREE.Color(colors.surface).r,\n      new THREE.Color(colors.surface).g,\n      new THREE.Color(colors.surface).b,\n      1.0\n    );\n  }\n\n  const planeMesh = new THREE.Mesh(planeGeo, material);\n  planeMesh.name = 'home-headline-plane';\n  group.add(planeMesh);\n\n  // Body text content rendered via MSDF font atlas\n  const textContent = 'A machined-metal watch atelier landing with catalog, pricing, jo';\n  let textMesh = null;\n  try {\n    textMesh = createTextMesh({\n      text: textContent,\n      font: 'JetBrains Mono',\n      weight: 400,\n      size: 0.13,\n      color: colors.paper,\n      maxWidth: width * 0.85,\n      align: 'left',\n      atlas: ctx.fontAtlas\n    });\n    if (textMesh) {\n      textMesh.position.set(-width / 2 + 0.25, -height / 2 + 0.3, 0.01);\n      textMesh.name = 'home-headline-text';\n      group.add(textMesh);\n    }\n  } catch (e) {\n    textMesh = null;\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    planeGeo.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    if (textMesh) {\n      if (textMesh.geometry) textMesh.geometry.dispose();\n      if (textMesh.material) {\n        if (Array.isArray(textMesh.material)) {\n          textMesh.material.forEach((m) => m.dispose());\n        } else {\n          textMesh.material.dispose();\n        }\n      }\n    }\n  };\n\n  return group;\n}\n```"
+}

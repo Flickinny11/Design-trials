@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-27-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 69714,
+  "apiMs": 67358,
+  "usage": {
+    "promptTokens": 3960,
+    "completionTokens": 7403,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.041948,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture as textureNode } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Apply scene placement\n  if (config.position) {\n    group.position.set(config.position[0], config.position[1], config.position[2]);\n  }\n  if (config.rotation) {\n    group.rotation.set(config.rotation[0], config.rotation[1], config.rotation[2]);\n  }\n  if (config.scale) {\n    group.scale.set(config.scale[0], config.scale[1], config.scale[2]);\n  }\n  \n  // Load sprite texture\n  const spriteTexture = ctx.textureLoader.load(config.imageUrl);\n  spriteTexture.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create plane geometry (512x320 atlas region → 1.6:1 aspect ratio)\n  const spriteGeometry = new THREE.PlaneGeometry(1.6, 1);\n  \n  // Material with TSL texture node\n  const texNode = textureNode(spriteTexture);\n  const spriteMaterial = new THREE.MeshBasicNodeMaterial({\n    colorNode: texNode,\n    transparent: true,\n  });\n  \n  // Sprite mesh\n  const spriteMesh = new THREE.Mesh(spriteGeometry, spriteMaterial);\n  group.add(spriteMesh);\n  \n  // Render text from font atlas\n  if (config.textContent) {\n    let textStr = config.textContent;\n    \n    // Normalize text content format\n    if (Array.isArray(textStr) && textStr.length > 0) {\n      textStr = textStr[0];\n    }\n    if (typeof textStr === 'object' && textStr !== null) {\n      textStr = textStr.text || '';\n    }\n    \n    if (typeof textStr === 'string' && textStr.length > 0) {\n      const textMesh = ctx.fontAtlas.createText(textStr, {\n        font: 'display',\n        size: 0.34,\n        weight: 400,\n        color: config.colors?.ink || '#16161d',\n        alignment: 'center',\n      });\n      \n      if (textMesh) {\n        textMesh.position.z = 0.05;\n        group.add(textMesh);\n      }\n    }\n  }\n  \n  // Cleanup\n  group.userData.cleanup = () => {\n    spriteGeometry.dispose();\n    spriteMaterial.dispose();\n    spriteTexture.dispose();\n  };\n  \n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

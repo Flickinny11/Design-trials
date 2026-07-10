@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-03-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 12692,
+  "usage": {
+    "promptTokens": 1695,
+    "completionTokens": 1753
+  },
+  "costUsd": 0.0007281400000000001,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  PlaneGeometry,\n  MeshBasicNodeMaterial,\n  Mesh,\n  Vector2,\n} from 'three/webgpu';\nimport { texture } from 'three/tsl';\n\n/**\n * @param {Object} config - NodeConfig from the system\n * @param {Object} ctx - NodeContext with textureLoader, etc.\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  // Load the texture from the configured asset URL\n  const tex = ctx.textureLoader.load('/prism-mock/home/nodes/floating-accent.png');\n\n  // Set texture wrapping to clamp (default is repeat, but we use exact region)\n  tex.wrapS = tex.wrapT = 1000; // ClampToEdgeWrapping\n\n  // Atlas region: source rect (0,0,512,320). If the full texture is exactly 512x320,\n  // we don't need UV offset. But we set it explicitly for clarity.\n  tex.repeat.set(1, 1);\n  tex.offset.set(0, 0);\n\n  // Aspect ratio of the texture region\n  const aspect = 512 / 320; // ~1.6\n\n  // Geometry: width = 1 unit, height = 1 / aspect to preserve ratio\n  const geometry = new PlaneGeometry(1, 1 / aspect);\n\n  // Material using TSL texture node\n  const material = new MeshBasicNodeMaterial({\n    colorNode: texture(tex),\n    transparent: true,\n    depthWrite: false,\n  });\n\n  const mesh = new Mesh(geometry, material);\n\n  // Apply position, rotation, scale from config\n  mesh.position.set(0, -0.35, -0.6);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  // Attach cleanup function to dispose resources\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    tex.dispose();\n  };\n\n  // No handlers needed since there are no interactions\n  mesh.userData.handlers = {};\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

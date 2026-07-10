@@ -1,0 +1,12 @@
+{
+  "contestant": "mercury-2",
+  "label": "Mercury 2",
+  "status": "UNREACHABLE",
+  "proof": "No Inception Labs credentials; fireworks id probe 404 (fireworks-id-probe.json); not in deepinfra catalog; no OpenRouter key exists.",
+  "probes": [
+    "notes/bakeoff/probes/probe-summary.json",
+    "notes/bakeoff/probes/fireworks-id-probe.json",
+    "notes/bakeoff/probes/deepinfra-models.json"
+  ],
+  "recordedAt": "2026-07-10T01:36:14.272Z"
+}

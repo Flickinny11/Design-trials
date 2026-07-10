@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-25-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 10172,
+  "apiMs": 7789,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 714,
+    "cacheCreation": 0,
+    "cacheRead": 5472
+  },
+  "costUsd": 0.021655999999999998,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture, uv, vec2, vec4, float, mix } from 'three/tsl';\nimport * as THREE from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-pricing-card-2';\n\n  const width = 2.4;\n  const height = 1.5;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial();\n\n  const map = ctx.textureLoader('/prism-mock/home/nodes/feature-card.png');\n  if (map) {\n    map.colorSpace = THREE.SRGBColorSpace;\n  }\n\n  const uvNode = uv();\n\n  // Engineered gradient overlay: subtle vertical gradient from surface to ink,\n  // blended with the base texture for a machined-metal feel.\n  const surfaceColor = vec4(0.043, 0.043, 0.063, 1.0); // #0b0b10\n  const inkColor = vec4(0.086, 0.086, 0.114, 1.0); // #16161d\n  const gradient = mix(surfaceColor, inkColor, uvNode.y);\n\n  let colorNode;\n  if (map) {\n    const texColor = texture(map, uvNode);\n    colorNode = mix(texColor, gradient, float(0.12));\n  } else {\n    colorNode = gradient;\n  }\n\n  material.colorNode = colorNode;\n  material.transparent = false;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'hub-pricing-card-2-plane';\n  group.add(mesh);\n\n  group.position.set(3.2, -0.3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) {\n      map.dispose();\n    }\n  };\n\n  return group;\n}"
+}

@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-12-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 29841,
+  "usage": {
+    "promptTokens": 1715,
+    "completionTokens": 3667
+  },
+  "costUsd": 0.00126686,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  MeshBasicNodeMaterial,\n  Mesh,\n  PlaneGeometry,\n  Group,\n  SpriteMaterial,\n  Sprite,\n} from 'three/webgpu';\nimport { texture, vec2, uv } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  // --- Setup texture and atlas region ---\n  const tex = ctx.textureLoader(config.assets.imageUrl);\n  tex.wrapS = tex.wrapT = 1000; // ClampToEdgeWrapping\n  const fullW = tex.image.width;\n  const fullH = tex.image.height;\n  const regionW = 512;\n  const regionH = 320;\n  tex.repeat.set(regionW / fullW, regionH / fullH);\n  tex.offset.set(0, 1 - regionH / fullH); // flip Y if needed? Usually atlas top-left = (0,1) offset. We'll assume (0,1 - regionH/fullH) for correct orientation.\n\n  // --- Build background plane ---\n  const aspect = regionW / regionH;\n  const geo = new PlaneGeometry(1, 1 / aspect);\n  const mat = new MeshBasicNodeMaterial();\n  mat.map = tex;\n  mat.transparent = true; // likely has alpha for grain\n  mat.needsUpdate = true;\n\n  const plane = new Mesh(geo, mat);\n\n  // --- Build text using fontAtlas ---\n  // Use headline size (0.34) and Lora font, weight 400\n  const textOptions = {\n    fontFamily: 'Lora',\n    fontWeight: 400,\n    fontSize: 0.34, // scene units (headline from typography scale)\n    align: 'center',\n    // other options from ctx.fontAtlas API assumed\n  };\n  const textMesh = ctx.fontAtlas.createText(config.textContent['headline'], textOptions);\n  // Position text slightly above the plane and centered\n  textMesh.position.set(0, 0, 0.01);\n\n  // --- Compose group ---\n  const group = new Group();\n  group.add(plane);\n  group.add(textMesh);\n\n  // Apply placement and scale from config\n  group.position.set(config.scenePlacement.position[0], config.scenePlacement.position[1], config.scenePlacement.position[2]);\n  group.rotation.set(config.scenePlacement.rotation[0], config.scenePlacement.rotation[1], config.scenePlacement.rotation[2]);\n  group.scale.set(config.scenePlacement.scale[0], config.scenePlacement.scale[1], config.scenePlacement.scale[2]);\n\n  // --- Billboarding update ---\n  group.userData.handlers = {\n    update: (camera) => {\n      // Make the entire group face the camera (billboard)\n      group.lookAt(camera.position);\n    },\n  };\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    geo.dispose();\n    mat.dispose();\n    tex.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    // Kill any GSAP timelines if present (none here)\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

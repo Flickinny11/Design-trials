@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-39-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 49356,
+  "apiMs": 47543,
+  "usage": {
+    "promptTokens": 4040,
+    "completionTokens": 5533,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.032783,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  // Create container group for divider element\n  const group = new THREE.Group();\n  \n  // Apply scene placement\n  const position = config.position || [-2.5, 0.7, 0];\n  const rotation = config.rotation || [0, 0, 0];\n  const scale = config.scale || [1, 1, 1];\n  \n  group.position.set(...position);\n  group.rotation.set(...rotation);\n  group.scale.set(...scale);\n  \n  // Load GLB mesh\n  const gltf = ctx.glbLoader.load(config.meshUrl);\n  const modelScene = gltf.scene.clone();\n  group.add(modelScene);\n  \n  // Interaction state\n  let isHovered = false;\n  const activeTimelines = [];\n  const baseY = position[1];\n  \n  // Initialize event handlers\n  group.userData.handlers = {};\n  \n  // Hover enter: rise-in (lift by 0.15 units, power3.out, 0.7s)\n  group.userData.handlers.onPointerEnter = () => {\n    if (isHovered) return;\n    isHovered = true;\n    \n    activeTimelines.forEach(tl => tl.kill());\n    activeTimelines.length = 0;\n    \n    const tl = gsap.to(group.position, {\n      y: baseY + 0.15,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n    activeTimelines.push(tl);\n  };\n  \n  // Hover exit: return to base position\n  group.userData.handlers.onPointerLeave = () => {\n    if (!isHovered) return;\n    isHovered = false;\n    \n    activeTimelines.forEach(tl => tl.kill());\n    activeTimelines.length = 0;\n    \n    const tl = gsap.to(group.position, {\n      y: baseY,\n      duration: 0.5,\n      ease: 'power2.out'\n    });\n    activeTimelines.push(tl);\n  };\n  \n  // Click: emit hub-home.select event\n  group.userData.handlers.onClick = () => {\n    if (ctx.emit) {\n      ctx.emit('hub-home.select', {});\n    }\n  };\n  \n  // Slot data binding handler\n  group.userData.handlers.onSlotUpdate = (slotData) => {\n    group.userData.currentSlot = slotData;\n  };\n  \n  // Cleanup: dispose resources and kill animations\n  group.userData.cleanup = () => {\n    activeTimelines.forEach(tl => tl.kill());\n    activeTimelines.length = 0;\n    \n    modelScene.traverse((child) => {\n      if (child.geometry) child.geometry.dispose();\n      if (child.material) {\n        if (Array.isArray(child.material)) {\n          child.material.forEach(m => m.dispose());\n        } else {\n          child.material.dispose();\n        }\n      }\n    });\n  };\n  \n  return group;\n}\n```"
+}

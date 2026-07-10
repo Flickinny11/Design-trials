@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-39-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 14994,
+  "apiMs": 12462,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1581,
+    "cacheCreation": 0,
+    "cacheRead": 5603
+  },
+  "costUsd": 0.043499499999999997,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshPhysicalNodeMaterial, color } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'home-ornamental-divider';\n  group.position.set(-2.5, 0.7, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  let mesh = null;\n  let jewelMat = null;\n  let ruleMat = null;\n\n  const ink = new THREE.Color(config?.visual?.colors?.ink || '#16161d');\n  const accent = new THREE.Color(config?.visual?.colors?.accent || '#ff2a38');\n\n  const meshUrl = '/prism-mock/home/nodes/cta-hero.glb';\n\n  const fallback = () => {\n    const ruleGeo = new THREE.BoxGeometry(1.6, 0.02, 0.02);\n    ruleMat = new MeshPhysicalNodeMaterial();\n    ruleMat.colorNode = color(ink);\n    ruleMat.metalness = 0.5;\n    ruleMat.roughness = 0.55;\n    ruleMat.clearcoat = 0.2;\n    const rule = new THREE.Mesh(ruleGeo, ruleMat);\n\n    const jewelGeo = new THREE.SphereGeometry(0.06, 24, 24);\n    jewelMat = new MeshPhysicalNodeMaterial();\n    jewelMat.colorNode = color(accent);\n    jewelMat.metalness = 0.4;\n    jewelMat.roughness = 0.3;\n    jewelMat.clearcoat = 0.25;\n    const jewel = new THREE.Mesh(jewelGeo, jewelMat);\n\n    const holder = new THREE.Group();\n    holder.add(rule, jewel);\n    mesh = holder;\n    group.add(holder);\n  };\n\n  try {\n    const gltf = ctx.glbLoader.load(meshUrl);\n    if (gltf && gltf.scene) {\n      mesh = gltf.scene;\n      group.add(mesh);\n    } else {\n      fallback();\n    }\n  } catch (e) {\n    fallback();\n  }\n\n  (config?.cinematicPrimitives || []).forEach((primitive) => {\n    if (ctx.primitives[primitive.name]) {\n      ctx.primitives[primitive.name](group, primitive.params);\n    }\n  });\n\n  let hoverTl = null;\n  let pressTl = null;\n\n  const baseY = group.position.y;\n\n  const onHoverIn = () => {\n    hoverTl && hoverTl.kill();\n    hoverTl = gsap.timeline();\n    hoverTl.to(group.position, {\n      y: baseY + 0.15,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n  };\n\n  const onHoverOut = () => {\n    hoverTl && hoverTl.kill();\n    hoverTl = gsap.timeline();\n    hoverTl.to(group.position, {\n      y: baseY,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n  };\n\n  const onClick = () => {\n    pressTl && pressTl.kill();\n    pressTl = gsap.timeline();\n    pressTl.to(group.scale, {\n      x: 0.97,\n      y: 0.97,\n      z: 0.97,\n      duration: 0.12,\n      ease: 'back.out'\n    }).to(group.scale, {\n      x: 1,\n      y: 1,\n      z: 1,\n      duration: 0.2,\n      ease: 'back.out'\n    });\n\n    if (group.userData.emit) {\n      group.userData.emit('hub-home.select', { itemId: group.name });\n    }\n  };\n\n  group.userData.handlers = {\n    hover: onHoverIn,\n    hoverIn: onHoverIn,\n    hoverOut: onHoverOut,\n    click: onClick\n  };\n\n  group.userData.cleanup = () => {\n    hoverTl && hoverTl.kill();\n    pressTl && pressTl.kill();\n\n    group.traverse((obj) => {\n      if (obj.geometry) obj.geometry.dispose();\n      if (obj.material) {\n        const mats = Array.isArray(obj.material) ? obj.material : [obj.material];\n        mats.forEach((m) => {\n          if (m.map) m.map.dispose();\n          m.dispose();\n        });\n      }\n    });\n\n    if (ruleMat) ruleMat.dispose();\n    if (jewelMat) jewelMat.dispose();\n  };\n\n  return group;\n}\n```"
+}

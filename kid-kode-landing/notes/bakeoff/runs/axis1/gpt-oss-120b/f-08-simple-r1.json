@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-08-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 28873,
+  "usage": {
+    "promptTokens": 1665,
+    "completionTokens": 1827
+  },
+  "costUsd": 0.00134595,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\nimport { gsap } from 'gsap';\n\n/**\n * @param {Object} config - Node configuration object.\n * @param {Object} ctx - Node context providing loaders and primitives.\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  const root = new THREE.Object3D();\n  root.position.set(\n    config.position?.x ?? -3.2,\n    config.position?.y ?? 1,\n    config.position?.z ?? 0.06\n  );\n  root.rotation.set(\n    config.rotation?.x ?? 0,\n    config.rotation?.y ?? 0,\n    config.rotation?.z ?? 0\n  );\n  root.scale.set(\n    config.scale?.x ?? 1,\n    config.scale?.y ?? 1,\n    config.scale?.z ?? 1\n  );\n\n  // ---------- Main textured plane ----------\n  const imageTex = ctx.textureLoader.load(\n    config.assets?.imageUrl ||\n      '/prism-mock/home/nodes/cta-hero-isolated.png'\n  );\n\n  const planeGeo = new THREE.PlaneGeometry(1, 1);\n  const planeMat = new MeshBasicNodeMaterial({\n    map: imageTex,\n    transparent: true,\n  });\n\n  const planeMesh = new THREE.Mesh(planeGeo, planeMat);\n  planeMesh.position.set(0, 0, 0);\n  root.add(planeMesh);\n\n  // ---------- Text overlay ----------\n  // Expecting an atlas texture at index 0\n  const atlasTex = ctx.fontAtlas[0];\n  const textGeo = new THREE.PlaneGeometry(1, 1);\n  const textMat = new MeshBasicNodeMaterial({\n    map: atlasTex,\n    transparent: true,\n  });\n\n  // Apply UV transform based on source rect (0,0,512,320) -> full texture\n  // If a different rect were required, adjust offset/repeat here.\n  if (atlasTex) {\n    const source = config.atlas?.sourceRect ?? { x: 0, y: 0, w: 512, h: 320 };\n    const atlasSize = { w: atlasTex.image?.width || 512, h: atlasTex.image?.height || 320 };\n    textMat.map.offset.set(source.x / atlasSize.w, 1 - (source.y + source.h) / atlasSize.h);\n    textMat.map.repeat.set(source.w / atlasSize.w, source.h / atlasSize.h);\n    textMat.map.needsUpdate = true;\n  }\n\n  const textMesh = new THREE.Mesh(textGeo, textMat);\n  textMesh.position.set(0, 0, 0.001); // slight offset to avoid z‑fighting\n  root.add(textMesh);\n\n  // ---------- Handlers & cleanup ----------\n  root.userData.handlers = {};\n\n  root.userData.cleanup = () => {\n    // Dispose of materials & geometries (textures are cached, do not dispose)\n    planeMat.dispose();\n    planeGeo.dispose();\n    textMat.dispose();\n    textGeo.dispose();\n\n    // Kill any GSAP timelines associated with this node (none in this node, but safe)\n    gsap.globalTimeline.killTweensOf(root);\n  };\n\n  // Apply any cinematic primitives listed in config (none for this node)\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const fn = ctx.primitives[prim.name];\n      if (typeof fn === 'function') {\n        fn(root, prim.params);\n      }\n    }\n  }\n\n  return root;\n}"
+}

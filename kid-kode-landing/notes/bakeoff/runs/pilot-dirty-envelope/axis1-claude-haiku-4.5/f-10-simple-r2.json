@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-10-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 60372,
+  "apiMs": 58155,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 6346,
+    "cacheCreation": 0,
+    "cacheRead": 21560
+  },
+  "costUsd": 0.034879,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Apply scene position, rotation, and scale\n  if (config.scenePosition) {\n    const { x = 0, y = 0, z = 0, rotationXYZ, scaleXYZ } = config.scenePosition;\n    group.position.set(x, y, z);\n    if (rotationXYZ && Array.isArray(rotationXYZ)) {\n      group.rotation.set(rotationXYZ[0], rotationXYZ[1], rotationXYZ[2]);\n    }\n    if (scaleXYZ && Array.isArray(scaleXYZ)) {\n      group.scale.set(scaleXYZ[0], scaleXYZ[1], scaleXYZ[2]);\n    }\n  }\n\n  // Create plane geometry\n  const geometry = new THREE.PlaneGeometry(1, 1);\n\n  // Load texture via cached loader\n  const textureMap = config.imageUrl ? ctx.textureLoader.load(config.imageUrl) : null;\n\n  // Create basic material (no lighting needed for static composition)\n  const material = new MeshBasicNodeMaterial({\n    map: textureMap,\n    transparent: true,\n    side: THREE.DoubleSide,\n    toneMapped: false,\n  });\n\n  // Create and add plane mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Render text via MSDF fontAtlas\n  if (config.textContent && ctx.fontAtlas) {\n    const textObject = ctx.fontAtlas.create({\n      text: config.textContent,\n      fontSize: 0.34,\n      font: 'Lora',\n      weight: 400,\n      color: new THREE.Color('#16161d'),\n    });\n    if (textObject) {\n      textObject.position.z = 0.01;\n      group.add(textObject);\n    }\n  }\n\n  // Initialize handlers\n  group.userData.handlers = {};\n\n  // Cleanup function\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (textureMap) {\n      textureMap.dispose();\n    }\n    group.traverse(child => {\n      if (child instanceof THREE.Mesh && child !== mesh) {\n        if (child.geometry) {\n          child.geometry.dispose();\n        }\n        if (child.material) {\n          if (Array.isArray(child.material)) {\n            child.material.forEach(m => m?.dispose?.());\n          } else {\n            child.material?.dispose?.();\n          }\n        }\n      }\n    });\n  };\n\n  return group;\n}\n```"
+}

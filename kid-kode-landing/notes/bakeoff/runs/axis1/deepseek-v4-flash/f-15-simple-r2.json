@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-15-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 37458,
+  "usage": {
+    "promptTokens": 1713,
+    "completionTokens": 4507
+  },
+  "costUsd": 0.0015017799999999999,
+  "transportAttempts": 3,
+  "billing": "metered",
+  "output": "```javascript\nimport { PlaneGeometry, Mesh, Group, Vector3 } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\n\nconst createNode = (config, ctx) => {\n  // Load texture from atlas region (source rect 0,0,512,320)\n  const texture = ctx.textureLoader.load(config.assets.imageUrl);\n  // Assume texture is exactly 512x320, no offset needed\n  texture.needsUpdate = true;\n\n  // Plane geometry sized to atlas aspect ratio (512/320 = 1.6)\n  const width = 0.5; // scene units, matches scale 1\n  const height = width / (512 / 320);\n  const geometry = new PlaneGeometry(width, height);\n\n  // MeshBasicNodeMaterial with map node\n  const material = new MeshBasicNodeMaterial();\n  material.map = texture;\n  material.transparent = true;\n\n  // Sprite mesh (plane)\n  const sprite = new Mesh(geometry, material);\n\n  // Text content: \"Collection 1\" – headline using Lora serif, 0.34 scene-unit height\n  const textMesh = ctx.fontAtlas.createText('Collection 1', {\n    font: 'Lora',\n    fontSize: 0.34,\n    fontWeight: 400,\n    color: '#e8ecf2' // paper color\n  });\n  // Position text slightly in front of sprite (z-offset)\n  textMesh.position.z = 0.001;\n\n  // Group to contain both sprite and text\n  const group = new Group();\n  group.add(sprite);\n  group.add(textMesh);\n\n  // Apply scene placement\n  group.position.set(-3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Billboard: face camera each frame\n  group.onBeforeRender = (renderer, scene, camera) => {\n    const worldPos = new Vector3();\n    group.getWorldPosition(worldPos);\n    group.lookAt(camera.position.x, camera.position.y, camera.position.z);\n  };\n\n  // Cleanup resources\n  group.userData.cleanup = () => {\n    texture.dispose();\n    geometry.dispose();\n    material.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    // No GSAP timelines to kill\n  };\n\n  return group;\n};\n\nexport default createNode;\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

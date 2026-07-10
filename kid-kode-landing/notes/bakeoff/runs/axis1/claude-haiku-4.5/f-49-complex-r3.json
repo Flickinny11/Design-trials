@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-49-complex",
+  "run": 3,
+  "ok": true,
+  "wallMs": 68813,
+  "apiMs": 66323,
+  "usage": {
+    "promptTokens": 4065,
+    "completionTokens": 7634,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.043323,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Scene placement\n  const position = config.position || [-2.5, -1.1, 0];\n  group.position.set(position[0], position[1], position[2]);\n  \n  group.userData.handlers = {};\n  const timelines = [];\n  \n  // Geometry: tessellated plane for displacement\n  const scale = config.scale || [3.5, 2.2, 1];\n  const geometry = new THREE.PlaneGeometry(scale[0], scale[1], 64, 64);\n  \n  // Load textures via cached loaders\n  const imageUrl = config.imageUrl || '/prism-mock/home/nodes/parallax-stack.png';\n  const depthUrl = config.depthMapUrl || '/prism-mock/home/nodes/parallax-stack.depth.png';\n  \n  const colorMap = ctx.textureLoader.load(imageUrl);\n  const displacementMap = ctx.textureLoader.load(depthUrl);\n  \n  // Machined-metal PBR material with displacement\n  const material = new THREE.MeshStandardMaterial({\n    map: colorMap,\n    displacementMap: displacementMap,\n    displacementScale: 0.08,\n    metalness: 0.45,\n    roughness: 0.65,\n    clearcoat: 0.15,\n    clearcoatRoughness: 0.8,\n    color: 0xe8ecf2, // paper\n  });\n  \n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n  \n  // Apply cinematic primitives: parallax-scroll, depth-rotate\n  if (config.cinematicPrimitives && Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach((primitive) => {\n      if (ctx.primitives && typeof ctx.primitives[primitive.name] === 'function') {\n        ctx.primitives[primitive.name](group, primitive.params || {});\n      }\n    });\n  }\n  \n  // Entrance animation: weighted-settle (power4.out, 0.9s, overshoot effect)\n  const startY = group.position.y;\n  gsap.set(group, { opacity: 0, y: startY + 0.4 });\n  \n  const entranceTl = gsap.timeline();\n  entranceTl.to(group, {\n    opacity: 1,\n    y: startY,\n    duration: 0.9,\n    ease: 'power4.out',\n  }, 0);\n  timelines.push(entranceTl);\n  \n  // Hover interaction: rise-in effect (0.15 scene units, power3.out, 0.7s)\n  group.userData.handlers.hover = (isEntering) => {\n    gsap.killTweensOf(group, 'y');\n    const hoverTl = gsap.timeline();\n    hoverTl.to(group, {\n      y: isEntering ? startY + 0.15 : startY,\n      duration: 0.7,\n      ease: 'power3.out',\n    }, 0);\n    timelines.push(hoverTl);\n  };\n  \n  // Click interaction: emit hub-home.select\n  group.userData.handlers.click = () => {\n    group.dispatchEvent({ type: 'select' });\n  };\n  \n  // Resource cleanup\n  group.userData.cleanup = () => {\n    timelines.forEach((timeline) => timeline.kill());\n    geometry.dispose();\n    material.dispose();\n    colorMap.dispose();\n    displacementMap.dispose();\n  };\n  \n  return group;\n}\n```"
+}

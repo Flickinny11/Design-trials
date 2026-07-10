@@ -1,0 +1,9 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "openai/gpt-oss-120b",
+  "route": "groq",
+  "caseId": "v-17-data-ribbon",
+  "run": 2,
+  "ok": false,
+  "transportError": "transport failure after retries: HTTP 429"
+}

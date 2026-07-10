@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-05-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 61505,
+  "apiMs": 59137,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 6450,
+    "cacheCreation": 0,
+    "cacheRead": 21547
+  },
+  "costUsd": 0.03537470000000001,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Apply scene position, rotation, scale\n  const sp = config.scenePosition || { x: 0, y: 0, z: 0 };\n  group.position.set(sp.x ?? 0, sp.y ?? 0, sp.z ?? 0);\n  if (sp.rotationXYZ) {\n    group.rotation.set(sp.rotationXYZ[0] ?? 0, sp.rotationXYZ[1] ?? 0, sp.rotationXYZ[2] ?? 0);\n  }\n  if (sp.scaleXYZ) {\n    group.scale.set(sp.scaleXYZ[0] ?? 1, sp.scaleXYZ[1] ?? 1, sp.scaleXYZ[2] ?? 1);\n  }\n\n  // Load brushed metal texture\n  const texture = ctx.textureLoader.load(\n    config.imageUrl || '/prism-assets/chrome/brushed-metal.map.png'\n  );\n  texture.colorSpace = THREE.SRGBColorSpace;\n\n  // Create plane (512x320 atlas region = 1.6:1 aspect)\n  const planeGeo = new THREE.PlaneGeometry(1.6, 1);\n  const planeMat = new THREE.MeshBasicNodeMaterial({\n    map: texture,\n    side: THREE.DoubleSide,\n  });\n  const plane = new THREE.Mesh(planeGeo, planeMat);\n  group.add(plane);\n\n  // Render \"Get started\" text via MSDF fontAtlas\n  if (ctx.fontAtlas) {\n    const textMesh = ctx.fontAtlas.createTextMesh({\n      text: 'Get started',\n      font: 'Lora',\n      size: 0.42,\n      weight: 400,\n      color: new THREE.Color('#16161d'),\n      anchorX: 'center',\n      anchorY: 'middle',\n    });\n    textMesh.position.z = 0.01;\n    group.add(textMesh);\n  }\n\n  // Cleanup handler\n  group.userData.cleanup = () => {\n    planeGeo.dispose();\n    planeMat.dispose();\n    texture.dispose();\n    gsap.killTweensOf(group);\n  };\n\n  // Event handlers (empty for static CTA)\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

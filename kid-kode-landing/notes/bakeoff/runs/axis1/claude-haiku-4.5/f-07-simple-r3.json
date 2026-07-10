@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-07-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 58473,
+  "apiMs": 55992,
+  "usage": {
+    "promptTokens": 3941,
+    "completionTokens": 5782,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.0338,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Create plane geometry with 512:320 aspect ratio (1.6:1)\n  const geometry = new THREE.PlaneGeometry(1.6, 1);\n\n  // Load texture asynchronously via cached loader\n  const imageTexture = ctx.textureLoader.load(config.assets.imageUrl);\n\n  // Create material with TSL shader nodes\n  const material = new THREE.MeshBasicNodeMaterial({\n    colorNode: texture(imageTexture),\n    transparent: true,\n  });\n\n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n\n  // Apply scene placement from config\n  mesh.position.set(\n    config.scenePosition[0],\n    config.scenePosition[1],\n    config.scenePosition[2]\n  );\n  mesh.rotation.set(\n    config.sceneRotation[0],\n    config.sceneRotation[1],\n    config.sceneRotation[2]\n  );\n  mesh.scale.set(\n    config.sceneScale[0],\n    config.sceneScale[1],\n    config.sceneScale[2]\n  );\n\n  group.add(mesh);\n\n  // Setup cleanup function to dispose resources\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    imageTexture.dispose();\n  };\n\n  // Setup event handlers (empty for static card)\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

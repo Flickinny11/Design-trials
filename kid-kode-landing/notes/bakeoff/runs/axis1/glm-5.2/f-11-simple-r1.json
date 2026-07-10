@@ -1,0 +1,17 @@
+{
+  "contestant": "glm-5.2",
+  "model": "accounts/fireworks/models/glm-5p2",
+  "route": "fireworks",
+  "caseId": "f-11-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 90268,
+  "usage": {
+    "promptTokens": 1600,
+    "completionTokens": 8192
+  },
+  "costUsd": 0.0382848,
+  "transportAttempts": 2,
+  "billing": "metered",
+  "output": "import {\n  Mesh,\n  PlaneGeometry,\n  MeshBasicNodeMaterial,\n  SRGBColorSpace\n} from 'three/webgpu';\nimport {\n  uv, texture, vec2, vec3, float, mix, fract, sin, dot, smoothstep, sub, add, mul\n} from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const position = config.scenePosition || { x: 3.2, y: -0.3, z: 0 };\n  const rotation = config.sceneRotation || { x: 0, y: 0, z: 0 };\n  const scale = config.sceneScale || { x: 1, y: 1, z: 1 };\n  const imageUrl = config.assets?.imageUrl || '/prism-assets/chrome/brushed-metal.map.png';\n  const rect = config.atlasRegion?.sourceRect || { x: 0, y: 0, w: 512, h: 320 };\n\n  // Cached synchronous texture load\n  const mapTexture = ctx.textureLoader(imageUrl);\n  if (mapTexture) mapTexture.colorSpace = SRGBColorSpace;\n\n  // Plane sized to atlas aspect (512:320 = 1.6)\n  const aspect = rect.w / rect.h;\n  const planeW = 0.8;\n  const planeH = planeW / aspect;\n  const geometry = new PlaneGeometry(planeW, planeH, 1, 1);\n\n  // Palette\n  const surfaceColor = vec3(0.0431, 0.0431, 0.0627); // #0b0b10\n  const inkColor = vec3(0.0863, 0.0863, 0.1137); // #16161d\n  const accentColor = vec3(1.0, 0.165, 0.220); // #ff2a38\n\n  const uvNode = uv();\n\n  // Engineered vertical gradient (surface -> ink)\n  const grad = mix(surfaceColor, inkColor, uvNode.y);\n\n  // Brushed metal sample, modulated into the gradient\n  let base;\n  if (mapTexture) {\n    const metal = texture(mapTexture, uvNode).rgb;\n    base = mix(grad, metal.mul(0.6).add(grad.mul(0.4)), float(0.55));\n  } else {\n    base = grad;\n  }\n\n  // Accent edge line near bottom (engineered detail)\n  const edgeDist = sub(float(1.0), uvNode.y);\n  const accentLine = sub(float(1.0), smoothstep(float(0.0), float(0.018), edgeDist));\n  const withAccent = mix(base, accentColor, accentLine.mul(0.8));\n\n  // Subtle static grain\n  const hashInput = uvNode.mul(float(100.0));\n  const grain = sub(fract(sin(dot(hashInput, vec2(127.1, 311.7))).mul(43758.5453)), float(0.5));\n  const finalColor = add(withAccent, grain.mul(0.022));\n\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = finalColor;\n  material.toneMapped = false;\n  material.transparent = false;\n\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(position.x, position.y, position.z);\n  mesh.rotation.set(rotation.x, rotation.y, rotation.z);\n  mesh.scale.set(scale.x, scale.y, scale"
+}

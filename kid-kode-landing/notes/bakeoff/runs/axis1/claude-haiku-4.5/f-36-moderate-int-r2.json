@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-36-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 81392,
+  "apiMs": 78925,
+  "usage": {
+    "promptTokens": 4013,
+    "completionTokens": 9268,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.051384,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.position.set(0, 1.6, 0);\n  \n  // Design token for accent color\n  const accentColor = '#ff2a38';\n  \n  // Badge plane geometry and material\n  const badgeGeometry = new THREE.PlaneGeometry(0.8, 0.3);\n  const badgeTexture = ctx.textureLoader.load('/prism-assets/chrome/ceramic-grain.map.png');\n  badgeTexture.colorSpace = THREE.SRGBColorSpace;\n  \n  const badgeMaterial = new THREE.MeshBasicNodeMaterial({\n    map: badgeTexture,\n    transparent: true\n  });\n  \n  const badgeMesh = new THREE.Mesh(badgeGeometry, badgeMaterial);\n  group.add(badgeMesh);\n  \n  // Accent edge border with emissive glow\n  const edgeGeometry = new THREE.PlaneGeometry(0.84, 0.34);\n  const edgeMaterial = new THREE.MeshBasicMaterial({\n    color: accentColor,\n    emissive: accentColor,\n    emissiveIntensity: 0.3,\n    transparent: true,\n    opacity: 0.6,\n    side: THREE.BackSide\n  });\n  const edgeMesh = new THREE.Mesh(edgeGeometry, edgeMaterial);\n  edgeMesh.position.z = -0.001;\n  group.add(edgeMesh);\n  \n  // Animation timeline references\n  let hoverTimeline = null;\n  let clickTimeline = null;\n  \n  // Event handlers\n  group.userData.handlers = {};\n  \n  // Hover: rise-in preset (y +0.15, power3.out, 0.7s)\n  group.userData.handlers.hover = () => {\n    if (hoverTimeline) hoverTimeline.kill();\n    hoverTimeline = gsap.to(group.position, {\n      y: 1.75,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n  };\n  \n  // Unhover: return to original position\n  group.userData.handlers.unhover = () => {\n    if (hoverTimeline) hoverTimeline.kill();\n    hoverTimeline = gsap.to(group.position, {\n      y: 1.6,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n  };\n  \n  // Click: press-down effect (scale 0.97, 120ms, back.out) + event emission\n  group.userData.handlers.click = () => {\n    if (clickTimeline) clickTimeline.kill();\n    clickTimeline = gsap.timeline();\n    \n    clickTimeline.to(group.scale, {\n      x: 0.97,\n      y: 0.97,\n      duration: 0.12,\n      ease: 'back.out'\n    });\n    \n    clickTimeline.to(group.scale, {\n      x: 1,\n      y: 1,\n      duration: 0.12,\n      ease: 'back.out'\n    }, 0.1);\n    \n    // Emit hub-collection.select event\n    if (config.onEvent) {\n      config.onEvent('hub-collection.select');\n    }\n  };\n  \n  // Focus: enhance accent edge with increased glow\n  group.userData.handlers.focus = () => {\n    gsap.to(edgeMaterial, {\n      emissiveIntensity: 0.7,\n      opacity: 1,\n      duration: 0.3,\n      ease: 'power2.out'\n    });\n  };\n  \n  // Blur: reduce accent edge to default state\n  group.userData.handlers.blur = () => {\n    gsap.to(edgeMaterial, {\n      emissiveIntensity: 0.3,\n      opacity: 0.6,\n      duration: 0.3,\n      ease: 'power2.out'\n    });\n  };\n  \n  // Resource cleanup\n  group.userData.cleanup = () => {\n    gsap.killTweensOf(group.position);\n    gsap.killTweensOf(group.scale);\n    gsap.killTweensOf(edgeMaterial);\n    \n    badgeGeometry.dispose();\n    edgeGeometry.dispose();\n    badgeMaterial.dispose();\n    edgeMaterial.dispose();\n    badgeTexture.dispose();\n  };\n  \n  return group;\n}\n```"
+}

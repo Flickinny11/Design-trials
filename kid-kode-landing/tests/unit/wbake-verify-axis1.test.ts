@@ -113,7 +113,11 @@ describe.skipIf(process.env.WBAKE_VERIFY_AXIS1 !== '1')('W-BAKE Axis 1 verificat
         const rr = completed.filter((r) => r.run === ri);
         return rr.length ? rr.filter((r) => r.verified).length / rr.length : null;
       }).filter((x): x is number => x !== null);
-      const repairRows = perRun.filter((r) => r.contestant === cid && r.run === 'repair');
+      const repairRowsAll = perRun.filter((r) => r.contestant === cid && r.run === 'repair');
+      // Transport-blocked repair attempts (e.g. the Fireworks 412 suspension)
+      // are NOT model failures — reported separately.
+      const repairRows = repairRowsAll.filter((r) => !(r as { transportError?: string }).transportError);
+      const repairBlocked = repairRowsAll.length - repairRows.length;
       summary[cid] = {
         generations: rows.length,
         transportErrors: rows.length - completed.length,
@@ -128,11 +132,12 @@ describe.skipIf(process.env.WBAKE_VERIFY_AXIS1 !== '1')('W-BAKE Axis 1 verificat
         topViolationRules: Object.entries(
           completed.flatMap((r) => (r.violationRules as string[]) ?? []).reduce<Record<string, number>>((acc, v) => { acc[v] = (acc[v] ?? 0) + 1; return acc; }, {}),
         ).sort((a, b) => b[1] - a[1]).slice(0, 6),
-        repair: repairRows.length
+        repair: repairRowsAll.length
           ? {
               attempted: repairRows.length,
               fixedAtDepth1: repairRows.filter((r) => r.verified).length,
               stillFailing: repairRows.filter((r) => !r.verified).length,
+              transportBlocked: repairBlocked,
             }
           : null,
       };

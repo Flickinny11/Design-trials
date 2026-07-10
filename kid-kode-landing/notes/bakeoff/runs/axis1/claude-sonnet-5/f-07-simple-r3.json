@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-07-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 12189,
+  "apiMs": 9558,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 774,
+    "cacheCreation": 0,
+    "cacheRead": 5463
+  },
+  "costUsd": 0.0231455,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, mix, float, uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'feature-card-1';\n  group.position.set(-3.2, -0.3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 1.6;\n  const height = 1.0;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const map = ctx.textureLoader('/prism-mock/home/nodes/feature-card.png');\n  if (map) {\n    map.colorSpace = THREE.SRGBColorSpace;\n  }\n\n  const grainStrength = uniform(0.035);\n\n  if (map) {\n    const texNode = texture(map, uv());\n\n    // simple procedural grain based on uv (static, no interaction/animation)\n    const grain = uv().x.mul(12.9898).add(uv().y.mul(78.233)).sin().mul(43758.5453).fract();\n    const grainSigned = grain.sub(0.5).mul(grainStrength);\n\n    const inkColor = vec4(0.086, 0.086, 0.114, 1.0); // #16161d\n    const engineeredGradient = mix(texNode, inkColor, float(0.04));\n\n    const finalColor = vec4(\n      engineeredGradient.r.add(grainSigned),\n      engineeredGradient.g.add(grainSigned),\n      engineeredGradient.b.add(grainSigned),\n      engineeredGradient.a\n    );\n\n    material.colorNode = finalColor;\n  } else {\n    material.colorNode = vec4(0.086, 0.086, 0.114, 1.0);\n  }\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'feature-card-1-mesh';\n  group.add(mesh);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n  };\n\n  return group;\n}\n```"
+}

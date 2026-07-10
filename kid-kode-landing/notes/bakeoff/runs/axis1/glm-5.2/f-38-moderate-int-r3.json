@@ -1,0 +1,9 @@
+{
+  "contestant": "glm-5.2",
+  "model": "accounts/fireworks/models/glm-5p2",
+  "route": "fireworks",
+  "caseId": "f-38-moderate-int",
+  "run": 3,
+  "ok": false,
+  "transportError": "transport failure after retries: HTTP 412: {\"message\":\"Account logantbaird-6990a8 is suspended, possibly due to reaching the monthly spending limit or failure to pay past invoices. Please go to https://fireworks.ai/account/billing for more inf"
+}

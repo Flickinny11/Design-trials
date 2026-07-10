@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-06-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 48202,
+  "apiMs": 45662,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 5011,
+    "cacheCreation": 0,
+    "cacheRead": 21565
+  },
+  "costUsd": 0.028194499999999997,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Load ceramic grain texture\n  const tex = ctx.textureLoader.load(config.assets.imageUrl);\n  tex.colorSpace = THREE.SRGBColorSpace;\n\n  // Create plane geometry with atlas region aspect ratio (512:320 = 1.6:1)\n  const planeHeight = 0.8;\n  const planeWidth = planeHeight * (512 / 320);\n  const geom = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  // TSL material with texture node\n  const texNode = texture(tex);\n  const mat = new MeshBasicNodeMaterial({\n    colorNode: texNode,\n    side: THREE.DoubleSide,\n  });\n\n  const plane = new THREE.Mesh(geom, mat);\n  group.add(plane);\n\n  // Render text using fontAtlas\n  if (ctx.fontAtlas && config.textContent?.length) {\n    const textStr = config.textContent[0];\n    const textGeom = ctx.fontAtlas.createGeometry({\n      text: textStr,\n      fontSize: 0.34, // Headline size from design tokens\n      anchor: [0.5, 0.5],\n    });\n    const textMat = ctx.fontAtlas.createMaterial({\n      color: 0xe8ecf2, // paper color\n    });\n    const textMesh = new THREE.Mesh(textGeom, textMat);\n    textMesh.position.z = 0.1;\n    group.add(textMesh);\n  }\n\n  // Apply scene position\n  const pos = config.scenePosition || { x: 0, y: 0, z: 0 };\n  group.position.set(pos.x, pos.y, pos.z);\n\n  // Cleanup resources\n  group.userData.cleanup = () => {\n    geom.dispose();\n    mat.dispose();\n    tex.dispose();\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

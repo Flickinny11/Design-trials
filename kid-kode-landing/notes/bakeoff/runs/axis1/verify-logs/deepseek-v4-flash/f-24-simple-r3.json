@@ -1,0 +1,21 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "caseId": "f-24-simple",
+  "run": 3,
+  "rawCompliant": false,
+  "fenced": true,
+  "parsed": true,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "MISSING_TEXT_CONTENT",
+      "severity": "error",
+      "message": "nodes with non-empty textContent must iterate config.textContent and call ctx.fontAtlas (§10.C L385)"
+    },
+    {
+      "rule": "MISSING_CLEANUP",
+      "severity": "error",
+      "message": "returned object must define userData.cleanup (§10.C L386)"
+    }
+  ]
+}

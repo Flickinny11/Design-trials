@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-32-moderate-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 62878,
+  "apiMs": 60654,
+  "usage": {
+    "promptTokens": 4010,
+    "completionTokens": 10539,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.057753,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  // Create plane geometry with 16:10 aspect ratio\n  const geometry = new THREE.PlaneGeometry(2, 1.25);\n  \n  // Load texture from imageUrl\n  const textureMap = ctx.textureLoader.load(config.assets.imageUrl);\n  \n  // Create material using MeshBasicNodeMaterial\n  const material = new MeshBasicNodeMaterial({\n    map: textureMap,\n  });\n  \n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  \n  // Apply scene placement from config\n  const position = config.scenePosition || { x: 3.2, y: -0.3, z: 0 };\n  const rotation = config.sceneRotation || { x: 0, y: 0, z: 0 };\n  const scale = config.sceneScale || { x: 1, y: 1, z: 1 };\n  \n  mesh.position.set(position.x, position.y, position.z);\n  mesh.rotation.set(rotation.x, rotation.y, rotation.z);\n  mesh.scale.set(scale.x, scale.y, scale.z);\n  \n  // Store original transform for animations\n  const originalPos = mesh.position.clone();\n  const originalScale = mesh.scale.clone();\n  \n  // Initialize event handlers\n  mesh.userData.handlers = {};\n  \n  // Hover: rise-in animation (0.15 scene units up)\n  mesh.userData.handlers.onHover = () => {\n    gsap.killTweensOf(mesh.position);\n    gsap.to(mesh.position, {\n      y: originalPos.y + 0.15,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n  };\n  \n  mesh.userData.handlers.onHoverOut = () => {\n    gsap.killTweensOf(mesh.position);\n    gsap.to(mesh.position, {\n      y: originalPos.y,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n  };\n  \n  // Click: press-down animation and emit event\n  mesh.userData.handlers.onClick = () => {\n    gsap.killTweensOf(mesh.scale);\n    \n    gsap.to(mesh.scale, {\n      x: 0.97,\n      y: 0.97,\n      z: 0.97,\n      duration: 0.12,\n      ease: 'back.out'\n    });\n    \n    gsap.to(mesh.scale, {\n      x: originalScale.x,\n      y: originalScale.y,\n      z: originalScale.z,\n      delay: 0.12,\n      duration: 0.08,\n      ease: 'back.out'\n    });\n    \n    if (ctx.emit) {\n      ctx.emit('hub-journal.select', {});\n    }\n  };\n  \n  // Focus: accent edge highlight in signal red\n  let accentEdge = null;\n  \n  mesh.userData.handlers.onFocus = () => {\n    if (!accentEdge) {\n      const edges = new THREE.EdgesGeometry(geometry);\n      const line = new THREE.LineSegments(\n        edges,\n        new THREE.LineBasicMaterial({\n          color: 0xff2a38,\n          linewidth: 2\n        })\n      );\n      mesh.add(line);\n      accentEdge = line;\n    }\n  };\n  \n  mesh.userData.handlers.onBlur = () => {\n    if (accentEdge) {\n      mesh.remove(accentEdge);\n      accentEdge.geometry.dispose();\n      accentEdge.material.dispose();\n      accentEdge = null;\n    }\n  };\n  \n  // Cleanup function\n  mesh.userData.cleanup = () => {\n    gsap.killTweensOf(mesh.position);\n    gsap.killTweensOf(mesh.scale);\n    \n    if (accentEdge) {\n      mesh.remove(accentEdge);\n      accentEdge.geometry.dispose();\n      accentEdge.material.dispose();\n    }\n    \n    geometry.dispose();\n    material.dispose();\n    textureMap.dispose();\n    \n    mesh.userData.handlers = {};\n  };\n  \n  return mesh;\n}"
+}

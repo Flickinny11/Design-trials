@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-24-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 14690,
+  "apiMs": 12376,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1257,
+    "cacheCreation": 0,
+    "cacheRead": 5508
+  },
+  "costUsd": 0.035284,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2, uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-pricing-card-1-label';\n  group.position.set(0, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const atlasW = 512;\n  const atlasH = 512;\n  const rect = { x: 0, y: 0, w: 512, h: 320 };\n\n  const aspect = rect.w / rect.h;\n  const planeHeight = 0.34;\n  const planeWidth = planeHeight * aspect;\n\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const uOffset = uniform(vec2(rect.x / atlasW, 1 - (rect.y + rect.h) / atlasH));\n  const uScale = uniform(vec2(rect.w / atlasW, rect.h / atlasH));\n\n  let baseTexture = null;\n  const handleTexture = (tex) => {\n    tex.wrapS = THREE.ClampToEdgeWrapping;\n    tex.wrapT = THREE.ClampToEdgeWrapping;\n    tex.colorSpace = THREE.SRGBColorSpace;\n    baseTexture = tex;\n    const texNode = texture(tex, uv().mul(uScale).add(uOffset));\n    material.map = texNode;\n    material.needsUpdate = true;\n  };\n\n  try {\n    const tex = ctx.textureLoader.load('/prism-assets/chrome/ceramic-grain.map.png');\n    handleTexture(tex);\n  } catch (e) {\n    // fallback: flat surface color if texture load fails\n    material.color = new THREE.Color('#0b0b10');\n  }\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'label-plane';\n  group.add(mesh);\n\n  // Billboard behavior handled per-frame by ctx if it exposes camera; otherwise implement\n  // a lightweight self-billboard using userData.update hook pattern if ctx supports it.\n  group.userData.isBillboard = true;\n  group.userData.update = (camera) => {\n    if (camera) {\n      group.quaternion.copy(camera.quaternion);\n    }\n  };\n\n  // MSDF text: \"Pricing 2\" headline\n  let textNode = null;\n  try {\n    textNode = ctx.fontAtlas.createText({\n      text: 'Pricing 2',\n      font: 'display',\n      weight: 400,\n      sizeEm: 0.34,\n      color: '#e8ecf2',\n      anchor: 'center',\n    });\n    textNode.position.set(0, 0, 0.001);\n    group.add(textNode);\n  } catch (e) {\n    // if fontAtlas API differs, gracefully skip\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (baseTexture && baseTexture.dispose) baseTexture.dispose();\n    if (textNode && textNode.userData && typeof textNode.userData.cleanup === 'function') {\n      textNode.userData.cleanup();\n    } else if (textNode) {\n      textNode.traverse((obj) => {\n        if (obj.geometry) obj.geometry.dispose();\n        if (obj.material) obj.material.dispose();\n      });\n    }\n    group.userData.handlers = {};\n  };\n\n  return group;\n}\n```"
+}

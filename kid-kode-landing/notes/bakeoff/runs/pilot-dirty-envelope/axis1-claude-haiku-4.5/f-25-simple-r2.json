@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-25-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 45990,
+  "apiMs": 43577,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 4724,
+    "cacheCreation": 0,
+    "cacheRead": 21547
+  },
+  "costUsd": 0.026749699999999998,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Load texture\n  const texture = ctx.textureLoader.load(config.imageUrl);\n  texture.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create plane geometry (aspect ratio 512/320 = 1.6)\n  const geometry = new THREE.PlaneGeometry(1.6, 1);\n  \n  // Create material\n  const material = new THREE.MeshBasicMaterial({\n    map: texture,\n  });\n  \n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  \n  // Apply scene position from config\n  if (config.scenePosition) {\n    const { x = 0, y = 0, z = 0, rotationXYZ, scaleXYZ } = config.scenePosition;\n    mesh.position.set(x, y, z);\n    \n    if (rotationXYZ) {\n      mesh.rotation.order = 'XYZ';\n      mesh.rotation.x = rotationXYZ[0];\n      mesh.rotation.y = rotationXYZ[1];\n      mesh.rotation.z = rotationXYZ[2];\n    }\n    \n    if (scaleXYZ) {\n      mesh.scale.set(scaleXYZ[0], scaleXYZ[1], scaleXYZ[2]);\n    }\n  }\n  \n  group.add(mesh);\n  \n  // Event handlers (required structure)\n  group.userData.handlers = {};\n  \n  // Cleanup function\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n  };\n  \n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-28-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 64745,
+  "apiMs": 62368,
+  "usage": {
+    "promptTokens": 3943,
+    "completionTokens": 6319,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.036504,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  // Load the texture via cached loader\n  const baseTexture = ctx.textureLoader.load('/prism-mock/home/nodes/orb-decor.png');\n  baseTexture.colorSpace = THREE.SRGBColorSpace;\n  baseTexture.magFilter = THREE.LinearFilter;\n  baseTexture.minFilter = THREE.LinearFilter;\n\n  // Create plane geometry with aspect ratio 512:320 = 1.6:1\n  const geometry = new THREE.PlaneGeometry(1.6, 1, 1, 1);\n  \n  // Create material using TSL nodes\n  const textureNode = texture(baseTexture);\n  const material = new MeshBasicNodeMaterial({\n    colorNode: textureNode,\n    side: THREE.DoubleSide,\n    transparent: true,\n  });\n\n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  \n  // Apply scene placement from specification\n  mesh.position.set(-3.2, -0.3, 0);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  // Initialize event handlers\n  mesh.userData.handlers = {};\n\n  // Resource cleanup\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    baseTexture.dispose();\n  };\n\n  return mesh;\n}\n```"
+}

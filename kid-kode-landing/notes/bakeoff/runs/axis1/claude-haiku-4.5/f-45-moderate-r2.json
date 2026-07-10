@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-45-moderate",
+  "run": 2,
+  "ok": true,
+  "wallMs": 80046,
+  "apiMs": 77687,
+  "usage": {
+    "promptTokens": 4052,
+    "completionTokens": 8404,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.047157000000000004,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { sampler2D, uv, positionLocal, normalLocal, mul, add, float } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const basePosition = config.position;\n  \n  // Create tessellated plane (64x64 segments for detailed displacement)\n  // Aspect ratio: 512/320 = 1.6\n  const geometry = new THREE.PlaneGeometry(1.6, 1, 64, 64);\n  \n  // Load color and depth textures\n  const colorTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  const depthTexture = ctx.textureLoader.load(config.assets.depthMapUrl);\n  \n  // Create material with machined-metal aesthetic\n  const material = new THREE.MeshStandardMaterial({\n    map: colorTexture,\n    metalness: 0.35,      // Machined metal (≤0.55)\n    roughness: 0.55,      // Slightly worn surface (≥0.5)\n    clearcoat: 0.2        // Subtle clearcoat (≤0.25)\n  });\n  \n  // Add displacement mapping via TSL nodes\n  const depthSampler = sampler2D(depthTexture);\n  const displacementScale = float(0.02);\n  \n  // Displace vertices along normals based on depth texture\n  material.positionNode = add(\n    positionLocal,\n    mul(normalLocal, mul(depthSampler.sample(uv()).r, displacementScale))\n  );\n  \n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(basePosition[0], basePosition[1], basePosition[2]);\n  mesh.scale.set(config.scale[0], config.scale[1], config.scale[2]);\n  mesh.rotation.set(config.rotation[0], config.rotation[1], config.rotation[2]);\n  \n  // State for GSAP animations\n  const animState = { y: basePosition[1] };\n  let activeTimeline = null;\n  \n  // Event handlers\n  mesh.userData.handlers = {\n    pointerenter: () => {\n      if (activeTimeline) activeTimeline.kill();\n      activeTimeline = gsap.to(animState, {\n        y: basePosition[1] + 0.15,\n        duration: 0.7,\n        ease: 'power3.out',\n        onUpdate: () => {\n          mesh.position.y = animState.y;\n        }\n      });\n    },\n    pointerleave: () => {\n      if (activeTimeline) activeTimeline.kill();\n      activeTimeline = gsap.to(animState, {\n        y: basePosition[1],\n        duration: 0.7,\n        ease: 'power3.out',\n        onUpdate: () => {\n          mesh.position.y = animState.y;\n        }\n      });\n    },\n    click: () => {\n      if (config.emit) {\n        config.emit('hub-features.select', {});\n      }\n    }\n  };\n  \n  // Cleanup function\n  mesh.userData.cleanup = () => {\n    if (activeTimeline) activeTimeline.kill();\n    gsap.killTweensOf(animState);\n    geometry.dispose();\n    material.dispose();\n    colorTexture.dispose();\n    depthTexture.dispose();\n  };\n  \n  return mesh;\n}\n```"
+}

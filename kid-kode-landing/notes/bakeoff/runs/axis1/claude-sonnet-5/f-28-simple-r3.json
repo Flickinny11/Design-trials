@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-28-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 12040,
+  "apiMs": 9883,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 933,
+    "cacheCreation": 0,
+    "cacheRead": 5469
+  },
+  "costUsd": 0.0271405,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import { PlaneGeometry, Mesh, MeshStandardNodeMaterial, Color } from 'three/webgpu';\nimport { texture, uv, vec2, vec3, vec4, uniform, mix, float, mul, add, sub, sin, positionLocal } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const width = 1.6;\n  const height = 1.0;\n\n  const geometry = new PlaneGeometry(width, height, 1, 1);\n  const material = new MeshStandardNodeMaterial();\n  material.metalness = 0.35;\n  material.roughness = 0.6;\n\n  let map = null;\n  const imageUrl = '/prism-mock/home/nodes/orb-decor.png';\n  if (imageUrl && ctx.textureLoader) {\n    map = ctx.textureLoader.load(imageUrl);\n  }\n\n  const inkColor = uniform(new Color('#16161d'));\n  const surfaceColor = uniform(new Color('#0b0b10'));\n  const accentColor = uniform(new Color('#ff2a38'));\n\n  const vUv = uv();\n\n  // engineered gradient surface (linear-ish diagonal gradient, no soft blur)\n  const gradientT = add(mul(vUv.x, 0.6), mul(vUv.y, 0.4));\n  const baseGradient = mix(surfaceColor, inkColor, gradientT);\n\n  // subtle grain via high-frequency sine noise pattern\n  const grainFreq = 400.0;\n  const grainA = sin(mul(vUv.x, grainFreq));\n  const grainB = sin(mul(vUv.y, grainFreq * 1.37));\n  const grain = mul(mul(grainA, grainB), 0.015);\n\n  let colorNode = add(baseGradient, vec3(grain, grain, grain));\n\n  if (map) {\n    const texColor = texture(map, vUv);\n    colorNode = mix(colorNode, texColor.rgb, texColor.a);\n  }\n\n  // thin accent edge line at bottom of card for engineered feel\n  const edgeMask = sub(1.0, vUv.y).greaterThan(float(0.97));\n  colorNode = mix(colorNode, accentColor, mul(float(edgeMask), 0.6));\n\n  material.colorNode = colorNode;\n\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(-3.2, -0.3, 0);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  mesh.userData.handlers = {};\n\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n  };\n\n  return mesh;\n}"
+}

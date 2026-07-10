@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-20-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 92436,
+  "apiMs": 90017,
+  "usage": {
+    "promptTokens": 3953,
+    "completionTokens": 10194,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.055889,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Load texture\n  const imageTexture = ctx.textureLoader.load(config.imageUrl || '/prism-mock/home/nodes/cta-hero-isolated.png');\n  \n  // Create plane geometry (512:320 aspect ratio = 1.6)\n  const geometry = new THREE.PlaneGeometry(3.2, 2.0);\n  \n  // Create material with TSL texture node\n  const texNode = texture(imageTexture);\n  const material = new THREE.MeshBasicMaterial({\n    colorNode: texNode,\n    transparent: true,\n  });\n  \n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n  \n  // Add text content using fontAtlas\n  if (config.textContent && config.textContent[0]) {\n    const textStr = typeof config.textContent[0] === 'string' \n      ? config.textContent[0] \n      : config.textContent[0].text;\n    \n    if (textStr && ctx.fontAtlas) {\n      const textMesh = ctx.fontAtlas(textStr, {\n        font: 'Lora',\n        size: 0.34,\n        weight: 400,\n        color: '#16161d',\n        align: 'center',\n      });\n      textMesh.position.z = 0.15;\n      group.add(textMesh);\n    }\n  }\n  \n  // Apply scene placement\n  if (config.scenePosition) {\n    if (Array.isArray(config.scenePosition)) {\n      group.position.set(config.scenePosition[0], config.scenePosition[1], config.scenePosition[2]);\n    } else {\n      group.position.copy(config.scenePosition);\n    }\n  } else {\n    group.position.set(0, 3, 0);\n  }\n  \n  if (config.sceneRotation) {\n    if (Array.isArray(config.sceneRotation)) {\n      group.rotation.set(config.sceneRotation[0], config.sceneRotation[1], config.sceneRotation[2]);\n    } else {\n      group.rotation.copy(config.sceneRotation);\n    }\n  }\n  \n  if (config.sceneScale) {\n    if (Array.isArray(config.sceneScale)) {\n      group.scale.set(config.sceneScale[0], config.sceneScale[1], config.sceneScale[2]);\n    } else {\n      group.scale.copy(config.sceneScale);\n    }\n  }\n  \n  // Initialize handlers\n  group.userData.handlers = {};\n  \n  // Cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    imageTexture.dispose();\n  };\n  \n  return group;\n}\n```"
+}

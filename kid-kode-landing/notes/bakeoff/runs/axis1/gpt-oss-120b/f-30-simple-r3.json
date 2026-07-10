@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-30-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 12845,
+  "usage": {
+    "promptTokens": 1663,
+    "completionTokens": 1967
+  },
+  "costUsd": 0.0014296500000000002,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import {\n  Mesh,\n  PlaneGeometry,\n  Object3D,\n  Vector3,\n  Quaternion,\n} from 'three/webgpu';\nimport {\n  MeshBasicNodeMaterial,\n  texture,\n  uv,\n  mul,\n  add,\n  vec2,\n  vec4,\n} from 'three/tsl';\nimport { killTweensOf } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  // --- Prepare texture ------------------------------------------------------\n  const tex = ctx.textureLoader(config.assets?.imageUrl ?? '');\n\n  // --- Atlas region handling -----------------------------------------------\n  // Expect config.atlasRegion = { x, y, width, height, atlasWidth, atlasHeight }\n  const region = config.atlasRegion || {\n    x: 0,\n    y: 0,\n    width: 512,\n    height: 320,\n    atlasWidth: 512,\n    atlasHeight: 320,\n  };\n\n  const uvOffset = vec2(\n    region.x / region.atlasWidth,\n    region.y / region.atlasHeight\n  );\n  const uvScale = vec2(\n    region.width / region.atlasWidth,\n    region.height / region.atlasHeight\n  );\n\n  const uvNode = add(mul(uv(), uvScale), uvOffset);\n  const texNode = texture(tex, uvNode);\n\n  // --- Material ------------------------------------------------------------\n  const material = new MeshBasicNodeMaterial();\n  material.mapNode = texNode;\n  material.transparent = true;\n  material.depthTest = true;\n  material.depthWrite = false;\n\n  // --- Geometry ------------------------------------------------------------\n  const aspect = region.width / region.height;\n  const geometry = new PlaneGeometry(aspect, 1, 1, 1);\n\n  // --- Mesh -----------------------------------------------------------------\n  const mesh = new Mesh(geometry, material);\n  mesh.name = config.id || 'journal-card-2';\n\n  // Position / rotation / scale from config\n  const pos = config.position || { x: 0, y: -0.3, z: 0 };\n  mesh.position.set(pos.x, pos.y, pos.z);\n\n  const rot = config.rotation || { x: 0, y: 0, z: 0 };\n  mesh.rotation.set(rot.x, rot.y, rot.z);\n\n  const scl = config.scale || { x: 1, y: 1, z: 1 };\n  mesh.scale.set(scl.x, scl.y, scl.z);\n\n  // --- Billboard logic ------------------------------------------------------\n  mesh.onBeforeRender = function (_renderer, _scene, camera) {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  // --- Handlers placeholder -------------------------------------------------\n  mesh.userData.handlers = {};\n\n  // --- Cleanup --------------------------------------------------------------\n  mesh.userData.cleanup = function () {\n    killTweensOf(mesh);\n    geometry.dispose();\n    material.dispose();\n    if (tex && tex.dispose) tex.dispose();\n  };\n\n  return mesh;\n}"
+}

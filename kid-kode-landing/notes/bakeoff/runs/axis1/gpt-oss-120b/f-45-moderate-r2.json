@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-45-moderate",
+  "run": 2,
+  "ok": true,
+  "wallMs": 13809,
+  "usage": {
+    "promptTokens": 1748,
+    "completionTokens": 2556
+  },
+  "costUsd": 0.0017958,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import * as THREE from 'three/webgpu';\nimport { MeshStandardNodeMaterial, texture as texNode, float as floatNode, mul as mulNode } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\n/**\n * @param {Object} config\n * @param {Object} ctx\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n\t// ---------- Load assets ----------\n\tconst srcImg = config.assets?.imageUrl ?? '';\n\tconst srcDepth = config.assets?.depthMapUrl ?? '';\n\n\tconst tex = ctx.textureLoader(srcImg);\n\tconst depthTex = ctx.textureLoader(srcDepth);\n\n\t// ---------- Geometry ----------\n\tconst geometry = new THREE.PlaneGeometry(2, 0.1, 64, 64);\n\n\t// ---------- Material (TSL) ----------\n\tconst material = new MeshStandardNodeMaterial();\n\tmaterial.colorNode = texNode(tex);\n\t// displacement = depth texture * scaleFactor\n\tconst dispScale = 0.05; // subtle displacement\n\tmaterial.displacementNode = mulNode(texNode(depthTex), floatNode(dispScale));\n\tmaterial.displacementScaleNode = floatNode(1.0);\n\tmaterial.transparent = true;\n\n\tconst mesh = new THREE.Mesh(geometry, material);\n\tmesh.position.set(\n\t\t-1.25,\n\t\t-0.19999999999999996,\n\t\t0\n\t);\n\tmesh.rotation.set(0, 0, 0);\n\tmesh.scale.set(1, 1, 1);\n\n\t// ---------- Apply cinematic primitives from config ----------\n\tif (Array.isArray(config.cinematicPrimitives)) {\n\t\tfor (const prim of config.cinematicPrimitives) {\n\t\t\tconst fn = ctx.primitives?.[prim.name];\n\t\t\tif (typeof fn === 'function') {\n\t\t\t\tfn(mesh, prim.params);\n\t\t\t}\n\t\t}\n\t}\n\n\t// ---------- Ensure parallax effect ----------\n\tif (ctx.primitives?.['parallax-scroll']) {\n\t\tctx.primitives['parallax-scroll'](mesh, { intensity: 0.1 });\n\t}\n\n\t// ---------- Interaction handlers ----------\n\tconst hoverTL = gsap.timeline({ paused: true, defaults: { ease: 'power3.out', duration: 0.15 } });\n\thoverTL.to(mesh.position, { y: mesh.position.y + 0.15 });\n\n\tconst handlers = {\n\t\thover: (event) => {\n\t\t\tif (event?.type === 'enter') {\n\t\t\t\thoverTL.play();\n\t\t\t} else if (event?.type === 'leave') {\n\t\t\t\thoverTL.reverse();\n\t\t\t}\n\t\t},\n\t\tclick: () => {\n\t\t\tif (typeof ctx.emit === 'function') {\n\t\t\t\tctx.emit('hub-features.select');\n\t\t\t}\n\t\t}\n\t};\n\n\tmesh.userData.handlers = handlers;\n\n\t// ---------- Cleanup ----------\n\tmesh.userData.cleanup = () => {\n\t\thoverTL.kill();\n\t\tgeometry.dispose();\n\t\tmaterial.dispose();\n\t\t// textures are shared via ctx.loader; do not dispose here\n\t};\n\n\treturn mesh;\n}"
+}

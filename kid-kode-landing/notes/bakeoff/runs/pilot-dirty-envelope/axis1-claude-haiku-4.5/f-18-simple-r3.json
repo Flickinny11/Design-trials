@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-18-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 41381,
+  "apiMs": 38862,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 6238,
+    "cacheCreation": 0,
+    "cacheRead": 21558
+  },
+  "costUsd": 0.0343368,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\nimport { texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Geometry: plane sized to atlas region aspect ratio (512x320 = 1.6:1)\n  const geometry = new THREE.PlaneGeometry(1.6, 1.0);\n\n  // Load texture (cached synchronously)\n  const map = ctx.textureLoader.load(config.imageUrl);\n  \n  // Configure atlas region (0, 0, 512, 320) in 1024x1024 atlas\n  map.offset.set(0, 0);\n  map.repeat.set(0.5, 0.3125);\n\n  // Create TSL material\n  const mapNode = texture(map);\n  const material = new THREE.MeshBasicNodeMaterial({\n    colorNode: mapNode,\n    side: THREE.DoubleSide,\n  });\n\n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Apply scene position\n  const pos = config.scenePosition || {};\n  group.position.set(pos.x || 0, pos.y || 0, pos.z || 0);\n\n  // Apply rotation\n  if (pos.rotationXYZ) {\n    group.rotation.order = 'YXZ';\n    group.rotation.set(pos.rotationXYZ[0] || 0, pos.rotationXYZ[1] || 0, pos.rotationXYZ[2] || 0);\n  }\n\n  // Apply scale\n  if (pos.scaleXYZ) {\n    group.scale.set(pos.scaleXYZ[0] || 1, pos.scaleXYZ[1] || 1, pos.scaleXYZ[2] || 1);\n  }\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    map.dispose();\n  };\n\n  // Event handlers (empty for static element)\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

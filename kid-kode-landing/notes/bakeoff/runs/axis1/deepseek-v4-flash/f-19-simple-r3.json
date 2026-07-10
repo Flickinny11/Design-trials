@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-19-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 28260,
+  "usage": {
+    "promptTokens": 1701,
+    "completionTokens": 3616
+  },
+  "costUsd": 0.00125062,
+  "transportAttempts": 3,
+  "billing": "metered",
+  "output": "```javascript\nimport { Group, PlaneGeometry, MeshBasicNodeMaterial, Mesh, DoubleSide } from 'three/webgpu';\n\nfunction createNode(config, ctx) {\n    const group = new Group();\n\n    // --- Plane with texture ---\n    // Determine size from aspect ratio of source rect (512 × 320)\n    const width = 1.5; // arbitrary, could be driven by design\n    const height = width * (320 / 512);\n    const geometry = new PlaneGeometry(width, height);\n    const texture = ctx.textureLoader.load(config.imageUrl);\n    const material = new MeshBasicNodeMaterial({\n        map: texture,\n        side: DoubleSide,\n    });\n    const mesh = new Mesh(geometry, material);\n    group.add(mesh);\n\n    // --- Text overlay ---\n    let textMesh = null;\n    if (config.textContent && config.textContent.headline) {\n        const fontSize = 0.34; // scene-unit height (headline token)\n        textMesh = ctx.fontAtlas.createText({\n            text: config.textContent.headline,\n            fontFamily: 'Lora',\n            fontWeight: 400,\n            fontSize,\n            color: '#e8ecf2', // paper\n        });\n        textMesh.position.set(0, 0, 0.01); // slightly forward\n        group.add(textMesh);\n    }\n\n    // --- Scene placement ---\n    const pos = config.scenePosition || { x: 0, y: 0, z: 0 };\n    const rot = config.sceneRotation || { x: 0, y: 0, z: 0 };\n    const scl = config.sceneScale || { x: 1, y: 1, z: 1 };\n    group.position.set(pos.x, pos.y, pos.z);\n    group.rotation.set(rot.x, rot.y, rot.z);\n    group.scale.set(scl.x, scl.y, scl.z);\n\n    // --- Event handlers (none) ---\n    group.userData.handlers = {};\n\n    // --- Cleanup ---\n    group.userData.cleanup = () => {\n        geometry.dispose();\n        material.dispose();\n        if (texture) texture.dispose();\n        if (textMesh) {\n            if (textMesh.geometry) textMesh.geometry.dispose();\n            if (textMesh.material) textMesh.material.dispose();\n        }\n        // No GSAP timelines for this node\n    };\n\n    // Apply any cinematic primitives (none for this spec)\n    if (config.cinematicPrimitives && config.cinematicPrimitives.length > 0) {\n        config.cinematicPrimitives.forEach(primitive => {\n            ctx.primitives[primitive.name](group, primitive.params);\n        });\n    }\n\n    return group;\n}\n\nexport default createNode;\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

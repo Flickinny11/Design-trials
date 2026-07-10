@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-19-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 68931,
+  "apiMs": 67311,
+  "usage": {
+    "promptTokens": 3955,
+    "completionTokens": 7059,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.040233,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.position.set(3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Card background plane\n  const cardGeometry = new THREE.PlaneGeometry(1, 1);\n  const cardTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  \n  const cardMaterial = new THREE.MeshBasicNodeMaterial({\n    map: cardTexture,\n    transparent: true,\n  });\n\n  const cardMesh = new THREE.Mesh(cardGeometry, cardMaterial);\n  group.add(cardMesh);\n\n  // Text overlay\n  if (config.textContent && config.textContent.length > 0) {\n    const textMesh = ctx.fontAtlas.createText(config.textContent[0], {\n      size: 0.34,\n      weight: 400,\n      color: 0x16161d,\n    });\n    textMesh.position.z = 0.01;\n    group.add(textMesh);\n  }\n\n  // Resource cleanup\n  group.userData.cleanup = () => {\n    cardGeometry.dispose();\n    cardMaterial.dispose();\n    if (cardTexture) cardTexture.dispose();\n  };\n\n  // Event handlers (none for this static element)\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-04-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 9546,
+  "usage": {
+    "promptTokens": 1643,
+    "completionTokens": 1354
+  },
+  "costUsd": 0.0010588499999999999,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import { Mesh, PlaneGeometry, Object3D, Vector3, Euler } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {{ imageUrl?: string }} assets\n * @property {[number, number, number]?} position\n * @property {[number, number, number]?} rotation\n * @property {[number, number, number]?} scale\n * @property {Array<{ name: string, params: any }>} [cinematicPrimitives]\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {(url: string) => any} textureLoader\n * @property {{ [key: string]: (target: Object3D, params: any) => void }} primitives\n */\n\n/**\n * Creates a textured plane node.\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  const { assets = {}, position = [0, 0, 0], rotation = [0, 0, 0], scale = [1, 1, 1] } = config;\n\n  // Geometry (unit plane)\n  const geometry = new PlaneGeometry(1, 1);\n\n  // Load texture (synchronous via cached loader)\n  const texture = assets.imageUrl ? ctx.textureLoader(assets.imageUrl) : null;\n\n  // Material\n  const material = new MeshBasicNodeMaterial({\n    map: texture ?? undefined,\n    transparent: true,\n    depthWrite: true,\n  });\n\n  // Mesh\n  const plane = new Mesh(geometry, material);\n  plane.position.set(...position);\n  plane.rotation.set(...rotation);\n  plane.scale.set(...scale);\n\n  // Apply cinematic primitives if any\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const fn = ctx.primitives[prim.name];\n      if (typeof fn === 'function') {\n        fn(plane, prim.params);\n      }\n    }\n  }\n\n  // Handlers placeholder (no interactions defined)\n  plane.userData.handlers = {};\n\n  // GSAP timelines tracking\n  const timelines = [];\n\n  // Cleanup routine\n  plane.userData.cleanup = () => {\n    // Kill GSAP timelines\n    for (const tl of timelines) {\n      tl.kill();\n    }\n    // Dispose resources\n    geometry.dispose();\n    material.dispose();\n    if (texture && typeof texture.dispose === 'function') {\n      texture.dispose();\n    }\n  };\n\n  return plane;\n}"
+}

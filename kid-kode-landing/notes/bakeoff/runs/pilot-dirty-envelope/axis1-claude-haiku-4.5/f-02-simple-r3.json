@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-02-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 83620,
+  "apiMs": 81175,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 9270,
+    "cacheCreation": 0,
+    "cacheRead": 21556
+  },
+  "costUsd": 0.049479600000000006,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Load texture\n  const texture = ctx.textureLoader.load(config.imageUrl);\n  \n  // Create plane geometry with 1.6:1 aspect ratio (512x320 pixels)\n  const width = 1.6;\n  const height = 1.0;\n  const geometry = new THREE.PlaneGeometry(width, height);\n  \n  // Create material\n  const material = new THREE.MeshBasicMaterial({\n    map: texture,\n    side: THREE.DoubleSide,\n  });\n  \n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n  \n  // Apply scene position\n  const scenePos = config.scenePosition || {};\n  group.position.set(\n    scenePos.x ?? 0,\n    scenePos.y ?? 1.85,\n    scenePos.z ?? 0\n  );\n  \n  // Apply rotation\n  if (scenePos.rotationXYZ) {\n    group.rotation.order = 'XYZ';\n    group.rotation.set(\n      scenePos.rotationXYZ.x ?? 0,\n      scenePos.rotationXYZ.y ?? 0,\n      scenePos.rotationXYZ.z ?? 0\n    );\n  }\n  \n  // Apply scale\n  if (scenePos.scaleXYZ) {\n    group.scale.set(\n      scenePos.scaleXYZ.x ?? 1,\n      scenePos.scaleXYZ.y ?? 1,\n      scenePos.scaleXYZ.z ?? 1\n    );\n  }\n  \n  // Render text content via fontAtlas\n  if (config.textContent && config.textContent.length > 0) {\n    const textData = config.textContent[0];\n    const textMesh = ctx.fontAtlas.createMesh({\n      text: textData.text || 'Atelier Noir — precise · luxury · technical',\n      fontSize: 0.3, // Headline size from design tokens\n      color: 0xe8ecf2, // Paper color\n      anchorX: 'center',\n      anchorY: 'middle',\n    });\n    \n    textMesh.position.z = 0.01; // Slightly above the plane\n    group.add(textMesh);\n  }\n  \n  // Apply cinematic primitives\n  if (config.cinematicPrimitives && config.cinematicPrimitives.length > 0) {\n    for (const primitive of config.cinematicPrimitives) {\n      if (ctx.primitives[primitive.name]) {\n        ctx.primitives[primitive.name](group, primitive.params);\n      }\n    }\n  }\n  \n  // Setup cleanup function\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n  };\n  \n  // Setup event handlers\n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

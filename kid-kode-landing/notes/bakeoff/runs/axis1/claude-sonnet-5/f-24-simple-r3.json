@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-24-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 12873,
+  "apiMs": 10740,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1160,
+    "cacheCreation": 0,
+    "cacheRead": 5508
+  },
+  "costUsd": 0.032864000000000004,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2, uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-pricing-card-2-label';\n\n  const pos = config.position || [0, 1, 0.06];\n  const rot = config.rotation || [0, 0, 0];\n  const scl = config.scale || [1, 1, 1];\n  group.position.set(pos[0], pos[1], pos[2]);\n  group.rotation.set(rot[0], rot[1], rot[2]);\n  group.scale.set(scl[0], scl[1], scl[2]);\n\n  // Atlas region params\n  const atlasSize = vec2(512, 512);\n  const rect = { x: 0, y: 0, w: 512, h: 320 };\n  const uvOffset = new THREE.Vector2(rect.x / 512, 1 - (rect.y + rect.h) / 512);\n  const uvScale = new THREE.Vector2(rect.w / 512, rect.h / 512);\n\n  const aspect = rect.w / rect.h;\n  const planeHeight = 0.34;\n  const planeWidth = planeHeight * aspect;\n\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  const map = ctx.textureLoader.load('/prism-assets/chrome/ceramic-grain.map.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const uvOffsetUniform = uniform(uvOffset);\n  const uvScaleUniform = uniform(uvScale);\n  const mappedUV = uv().mul(uvScaleUniform).add(uvOffsetUniform);\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.map = map;\n  material.mapNode = texture(map, mappedUV);\n  material.transparent = true;\n\n  const bgMesh = new THREE.Mesh(geometry, material);\n  bgMesh.name = 'card-label-bg';\n  group.add(bgMesh);\n\n  // MSDF text content: \"Pricing 2\"\n  let textMesh = null;\n  try {\n    textMesh = ctx.fontAtlas.createText({\n      text: 'Pricing 2',\n      font: 'display',\n      weight: 400,\n      size: 0.34 * (39 / 62),\n      color: config.colors?.paper || '#e8ecf2',\n      align: 'center',\n      anchor: 'center',\n    });\n    textMesh.name = 'card-label-text';\n    textMesh.position.set(0, 0, 0.001);\n    group.add(textMesh);\n  } catch (e) {\n    // fontAtlas may throw if unavailable; fail gracefully\n  }\n\n  // Billboard toward camera each frame\n  const onBeforeRender = (renderer, scene, camera) => {\n    group.quaternion.copy(camera.quaternion);\n  };\n  group.onBeforeRender = onBeforeRender;\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    if (textMesh) {\n      if (textMesh.geometry) textMesh.geometry.dispose();\n      if (textMesh.material) textMesh.material.dispose();\n    }\n  };\n\n  return group;\n}\n```"
+}

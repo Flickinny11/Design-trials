@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-17-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 20608,
+  "usage": {
+    "promptTokens": 1700,
+    "completionTokens": 2910
+  },
+  "costUsd": 0.0010528000000000002,
+  "transportAttempts": 2,
+  "billing": "metered",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  // --- extract config ---\n  const {\n    imageUrl,\n    textContent,\n    scenePlacement = { position: [0, 1, 0.06], rotation: [0, 0, 0], scale: [1, 1, 1] },\n    // atlasRegion is ignored for background texture, font atlas uses its own\n  } = config;\n\n  const pos = new THREE.Vector3(...scenePlacement.position);\n  const rot = new THREE.Euler(...scenePlacement.rotation);\n  const scl = new THREE.Vector3(...scenePlacement.scale);\n\n  // --- load texture (synchronous cached) ---\n  const texture = ctx.textureLoader.load(imageUrl);\n  texture.colorSpace = THREE.SRGBColorSpace;\n\n  // --- background plane ---\n  const bgGeo = new THREE.PlaneGeometry(1.2, 0.35);\n  const bgMat = new THREE.MeshBasicNodeMaterial({\n    map: texture,\n    color: new THREE.Color('#16161d'), // ink tone for deep base\n    transparent: true,\n  });\n  const bgMesh = new THREE.Mesh(bgGeo, bgMat);\n  bgMesh.position.z = 0;\n\n  // --- text using font atlas ---\n  let textMesh = null;\n  if (textContent && ctx.fontAtlas && ctx.fontAtlas.createText) {\n    // assume textContent is an array or string\n    const textStr = Array.isArray(textContent)\n      ? textContent[0]?.text || 'Collection 2'\n      : textContent;\n    const textOpts = {\n      font: 'Lora',\n      fontSize: 39,\n      fontWeight: 400,\n      color: '#e8ecf2', // paper color for readability\n    };\n    textMesh = ctx.fontAtlas.createText(textStr, textOpts);\n    // center text on the plane\n    textMesh.position.set(0, 0, 0.001);\n  }\n\n  // --- group ---\n  const group = new THREE.Group();\n  group.add(bgMesh);\n  if (textMesh) group.add(textMesh);\n\n  group.position.copy(pos);\n  group.rotation.copy(rot);\n  group.scale.copy(scl);\n\n  // --- event handlers (none) ---\n  group.userData.handlers = {};\n\n  // --- cleanup ---\n  group.userData.cleanup = () => {\n    bgGeo.dispose();\n    bgMat.dispose();\n    texture.dispose();\n    if (textMesh) {\n      textMesh.geometry?.dispose();\n      textMesh.material?.dispose();\n    }\n    // kill any gsap timelines on this group\n    gsap.killTweensOf(group);\n    group.traverse((child) => {\n      if (child.isMesh) {\n        child.geometry?.dispose();\n        child.material?.dispose();\n      }\n    });\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

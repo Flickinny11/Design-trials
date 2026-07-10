@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-33-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 78050,
+  "apiMs": 75568,
+  "usage": {
+    "promptTokens": 4019,
+    "completionTokens": 8474,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.047436000000000006,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const container = new THREE.Group();\n\n  // Load background texture\n  const texture = ctx.textureLoader.load(config.assets.imageUrl);\n  texture.minFilter = THREE.LinearFilter;\n  texture.magFilter = THREE.LinearFilter;\n\n  // Create background plane (512x320 atlas rect → 1.6:1 aspect)\n  const planeGeometry = new THREE.PlaneGeometry(1.6, 1.0);\n  const planeMaterial = new MeshBasicNodeMaterial({\n    map: texture,\n    transparent: true,\n  });\n\n  const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);\n  container.add(planeMesh);\n\n  // Add text label via font atlas\n  const textObj = ctx.fontAtlas.createText('Journal 3', {\n    fontSize: 0.34, // headline scale from type scale\n    fontWeight: 400,\n    fontFamily: 'Lora',\n    color: 0xff2a38, // accent red\n    align: 'center',\n  });\n\n  if (textObj) {\n    textObj.position.z = 0.02;\n    container.add(textObj);\n  }\n\n  // Apply scene placement\n  container.position.set(3.2, 1, 0.06);\n  container.rotation.set(0, 0, 0);\n  container.scale.set(1, 1, 1);\n\n  // Track GSAP timelines for cleanup\n  const timelines = [];\n  const baseY = 1;\n\n  // Interaction handlers\n  container.userData.handlers = {\n    hover: {\n      enter: () => {\n        gsap.killTweensOf(container.position);\n        const tl = gsap.to(container.position, {\n          y: baseY + 0.15,\n          duration: 0.7,\n          ease: 'power3.out',\n        });\n        timelines.push(tl);\n      },\n      leave: () => {\n        gsap.killTweensOf(container.position);\n        const tl = gsap.to(container.position, {\n          y: baseY,\n          duration: 0.5,\n          ease: 'power2.out',\n        });\n        timelines.push(tl);\n      },\n    },\n    click: () => {\n      gsap.killTweensOf(container.scale);\n      const tl = gsap.timeline();\n      tl.to(container.scale, {\n        x: 0.97,\n        y: 0.97,\n        z: 0.97,\n        duration: 0.12,\n        ease: 'back.out',\n      });\n      tl.to(container.scale, {\n        x: 1,\n        y: 1,\n        z: 1,\n        duration: 0.15,\n        ease: 'back.out',\n      });\n      timelines.push(tl);\n    },\n  };\n\n  // Cleanup function\n  container.userData.cleanup = () => {\n    timelines.forEach(tl => tl.kill());\n    planeGeometry.dispose();\n    planeMaterial.dispose();\n    texture.dispose();\n  };\n\n  return container;\n}\n```"
+}

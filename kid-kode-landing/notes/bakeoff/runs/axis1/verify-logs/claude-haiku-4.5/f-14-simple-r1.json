@@ -1,0 +1,16 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "caseId": "f-14-simple",
+  "run": 1,
+  "rawCompliant": false,
+  "fenced": true,
+  "parsed": true,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "MISSING_CLEANUP",
+      "severity": "error",
+      "message": "returned object must define userData.cleanup (§10.C L386)"
+    }
+  ]
+}

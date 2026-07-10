@@ -1,0 +1,16 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "caseId": "f-38-moderate-int",
+  "run": 3,
+  "rawCompliant": false,
+  "fenced": true,
+  "parsed": true,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "ADD_EVENT_LISTENER",
+      "severity": "error",
+      "message": ".addEventListener is forbidden — attach handlers to userData.handlers.*"
+    }
+  ]
+}

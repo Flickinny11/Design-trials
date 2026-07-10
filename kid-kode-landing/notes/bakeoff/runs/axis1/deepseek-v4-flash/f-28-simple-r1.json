@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-28-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 12178,
+  "usage": {
+    "promptTokens": 1688,
+    "completionTokens": 1866
+  },
+  "costUsd": 0.0007588000000000001,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  PlaneGeometry,\n  Mesh,\n  MeshBasicNodeMaterial,\n  TextureLoader,\n} from 'three/webgpu';\nimport { texture2D, uv } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  // --- Load texture from the provided imageUrl ---\n  const textureLoader = ctx.textureLoader || new TextureLoader();\n  const texture = textureLoader.load(config.assets.imageUrl);\n  texture.wrapS = texture.wrapT = 1000; // ClampToEdge (using three.js integer constant)\n  texture.anisotropy = 16; // optional, for sharp edges\n\n  // --- Determine plane size from atlas region aspect ratio (512x320) ---\n  const aspect = 512 / 320; // ≈1.6\n  const width = 1.6;\n  const height = width / aspect; // ≈1.0\n\n  // --- Build material with TSL nodes ---\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = texture2D(texture, uv());\n\n  // --- Geometry and mesh ---\n  const geometry = new PlaneGeometry(width, height);\n  const mesh = new Mesh(geometry, material);\n\n  // --- Apply placement from config.scenePosition ---\n  const pos = config.scenePosition;\n  mesh.position.set(pos.x, pos.y, pos.z);\n  mesh.rotation.set(pos.rotX || 0, pos.rotY || 0, pos.rotZ || 0);\n  if (pos.scale !== undefined) {\n    mesh.scale.set(pos.scale.x, pos.scale.y, pos.scale.z);\n  }\n\n  // --- Apply all cinematic primitives (none in spec) ---\n  if (config.cinematicPrimitives) {\n    config.cinematicPrimitives.forEach((prim) => {\n      ctx.primitives[prim.name](mesh, prim.params);\n    });\n  }\n\n  // --- Attach event handlers (none) ---\n  mesh.userData.handlers = {};\n\n  // --- Cleanup ---\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n    // If any GSAP timeline were present, kill it here\n    if (mesh.userData.timeline) {\n      mesh.userData.timeline.kill();\n    }\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

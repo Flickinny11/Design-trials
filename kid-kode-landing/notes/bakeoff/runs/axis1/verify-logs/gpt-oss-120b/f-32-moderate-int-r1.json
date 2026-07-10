@@ -1,0 +1,16 @@
+{
+  "contestant": "gpt-oss-120b",
+  "caseId": "f-32-moderate-int",
+  "run": 1,
+  "rawCompliant": true,
+  "fenced": false,
+  "parsed": true,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "MISSING_CLEANUP",
+      "severity": "error",
+      "message": "returned object must define userData.cleanup (§10.C L386)"
+    }
+  ]
+}

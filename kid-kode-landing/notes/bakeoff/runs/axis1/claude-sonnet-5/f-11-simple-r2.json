@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-11-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 11675,
+  "apiMs": 9129,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 858,
+    "cacheCreation": 0,
+    "cacheRead": 5464
+  },
+  "costUsd": 0.025272000000000003,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2, vec4, float, mix, uniform, time } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const width = 1.6;\n  const height = 1.0;\n\n  const geometry = new THREE.PlaneGeometry(width, height, 1, 1);\n  const material = new THREE.MeshStandardNodeMaterial({\n    metalness: 0.5,\n    roughness: 0.55,\n  });\n\n  const map = ctx.textureLoader.load('/prism-assets/chrome/brushed-metal.map.png');\n  if (map) {\n    map.colorSpace = THREE.SRGBColorSpace;\n    map.wrapS = THREE.RepeatWrapping;\n    map.wrapT = THREE.RepeatWrapping;\n  }\n\n  const uvNode = uv();\n  const baseTex = texture(map, uvNode);\n\n  const ink = vec4(0x16 / 255, 0x16 / 255, 0x1d / 255, 1.0);\n  const paper = vec4(0xe8 / 255, 0xec / 255, 0xf2 / 255, 1.0);\n\n  // engineered gradient: linear blend across Y based on uv, combined with brushed metal texture\n  const gradientFactor = uvNode.y.clamp(0.0, 1.0);\n  const gradient = mix(ink, paper.mul(0.35).add(ink.mul(0.65)), gradientFactor);\n\n  // subtle grain via pseudo-random noise from uv + time (static-ish, low amplitude)\n  const grainSeed = uvNode.x.mul(1237.13).add(uvNode.y.mul(917.71));\n  const grain = grainSeed.sin().mul(43758.5453).fract().sub(0.5).mul(0.035);\n\n  const combined = baseTex.mul(0.6).add(gradient.mul(0.4));\n  const withGrain = vec4(combined.rgb.add(grain), 1.0);\n\n  material.colorNode = withGrain;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(3.2, -0.3, 0);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  mesh.userData.handlers = {};\n\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n  };\n\n  return mesh;\n}\n```"
+}

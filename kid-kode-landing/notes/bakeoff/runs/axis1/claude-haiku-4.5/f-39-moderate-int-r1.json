@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-39-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 47690,
+  "apiMs": 45855,
+  "usage": {
+    "promptTokens": 4040,
+    "completionTokens": 5507,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.032643,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Load GLB mesh\n  const gltf = ctx.glbLoader.load(config.meshUrl);\n  group.add(gltf.scene);\n\n  // Apply scene placement\n  const pos = config.position || config.scenePosition || [0, 0, 0];\n  const rot = config.rotation || config.sceneRotation || [0, 0, 0];\n  const scale = config.scale || config.sceneScale || [1, 1, 1];\n\n  group.position.set(pos[0], pos[1], pos[2]);\n  group.rotation.set(rot[0], rot[1], rot[2]);\n  group.scale.set(scale[0], scale[1], scale[2]);\n\n  // Store original Y for hover animation\n  const originalY = group.position.y;\n\n  // Track timelines for cleanup\n  const timelines = [];\n  let activeTimeline = null;\n\n  // Event handlers\n  const handlers = {\n    hover: () => {\n      if (activeTimeline) activeTimeline.kill();\n\n      // Rise-in: +0.15 y, power3.out, 0.7s\n      activeTimeline = gsap.to(group.position, {\n        y: originalY + 0.15,\n        duration: 0.7,\n        ease: 'power3.out'\n      });\n      timelines.push(activeTimeline);\n    },\n\n    unhover: () => {\n      if (activeTimeline) activeTimeline.kill();\n\n      // Return to original position\n      activeTimeline = gsap.to(group.position, {\n        y: originalY,\n        duration: 0.7,\n        ease: 'power3.out'\n      });\n      timelines.push(activeTimeline);\n    },\n\n    click: () => {\n      // Emit click event\n      if (config.behaviors) {\n        const clickBehavior = config.behaviors.find(b => b.event === 'click');\n        if (clickBehavior && clickBehavior.effect.startsWith('emit:')) {\n          const eventName = clickBehavior.effect.replace('emit:', '');\n          if (ctx.events && typeof ctx.events.emit === 'function') {\n            ctx.events.emit(eventName);\n          }\n        }\n      }\n    }\n  };\n\n  group.userData.handlers = handlers;\n\n  // Cleanup function\n  group.userData.cleanup = () => {\n    // Kill all GSAP timelines\n    timelines.forEach(tl => tl.kill());\n    if (activeTimeline) activeTimeline.kill();\n\n    // Dispose materials and geometries\n    gltf.scene.traverse(child => {\n      if (child instanceof THREE.Mesh) {\n        if (child.geometry) child.geometry.dispose();\n        if (child.material) {\n          if (Array.isArray(child.material)) {\n            child.material.forEach(mat => mat.dispose());\n          } else {\n            child.material.dispose();\n          }\n        }\n      }\n    });\n\n    // Remove from parent\n    if (group.parent) group.parent.remove(group);\n  };\n\n  return group;\n}\n```"
+}

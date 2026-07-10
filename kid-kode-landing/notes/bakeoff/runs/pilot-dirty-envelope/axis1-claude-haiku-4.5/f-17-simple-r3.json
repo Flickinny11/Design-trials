@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-17-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 77492,
+  "apiMs": 75667,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 8130,
+    "cacheCreation": 0,
+    "cacheRead": 21559
+  },
+  "costUsd": 0.0437979,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\nimport { texture as textureNode } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Set position from scenePosition\n  group.position.set(0, 1, 0.06);\n\n  // Create plane geometry for the card\n  const planeGeometry = new THREE.PlaneGeometry(2.0, 1.25);\n\n  // Load brushed-metal texture\n  const metalTexture = ctx.textureLoader.load(\n    config.assets?.imageUrl || '/prism-assets/chrome/brushed-metal.map.png'\n  );\n  metalTexture.colorSpace = THREE.SRGBColorSpace;\n\n  // Create material using TSL nodes\n  const colorNode = textureNode(metalTexture);\n  const planeMaterial = new THREE.MeshBasicNodeMaterial({\n    colorNode,\n  });\n\n  // Create and add plane mesh\n  const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);\n  group.add(planeMesh);\n\n  // Create text using fontAtlas\n  const textObj = ctx.fontAtlas.createText('Collection 2', {\n    fontSize: 0.34,\n    fontFamily: 'Lora',\n    fontWeight: 400,\n    color: config.colors?.ink || '#16161d',\n    align: 'center',\n  });\n\n  if (textObj) {\n    textObj.position.z = 0.01;\n    group.add(textObj);\n  }\n\n  // Cleanup function\n  group.userData.cleanup = () => {\n    planeGeometry.dispose();\n    planeMaterial.dispose();\n    metalTexture.dispose();\n  };\n\n  // Event handlers\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

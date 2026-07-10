@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-08-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 79510,
+  "apiMs": 77292,
+  "usage": {
+    "promptTokens": 3957,
+    "completionTokens": 8759,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.048717,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture as textureNode } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Load texture asset\n  const textureAsset = ctx.textureLoader.load(config.assets.imageUrl);\n  textureAsset.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create plane geometry matching atlas aspect ratio (512x320)\n  const planeWidth = 2.4;\n  const planeHeight = (320 / 512) * planeWidth;\n  \n  const planeGeometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n  \n  // Material using TSL nodes\n  const planeMaterial = new THREE.MeshBasicNodeMaterial({\n    colorNode: textureNode(textureAsset),\n    transparent: true\n  });\n  \n  // Create plane mesh\n  const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);\n  group.add(planeMesh);\n  \n  // Render text content via fontAtlas\n  if (config.textContent) {\n    const textInput = Array.isArray(config.textContent)\n      ? config.textContent[0]\n      : config.textContent;\n    \n    const textString = typeof textInput === 'string'\n      ? textInput\n      : (textInput.content || 'Features 1');\n    \n    const textMesh = ctx.fontAtlas.render({\n      text: textString,\n      fontSize: 39,\n      fontFamily: 'Lora',\n      fontWeight: 400,\n      fillStyle: config.colors?.ink || '#16161d'\n    });\n    \n    // Position text label below the card\n    textMesh.position.set(0, -planeHeight / 2 - 0.25, 0.01);\n    group.add(textMesh);\n  }\n  \n  // Apply scene transforms\n  const [posX, posY, posZ] = config.scenePosition || [-3.2, 1, 0.06];\n  const [rotX, rotY, rotZ] = config.sceneRotation || [0, 0, 0];\n  const [scaleX, scaleY, scaleZ] = config.sceneScale || [1, 1, 1];\n  \n  group.position.set(posX, posY, posZ);\n  group.rotation.set(rotX, rotY, rotZ);\n  group.scale.set(scaleX, scaleY, scaleZ);\n  \n  // Setup event handlers\n  group.userData.handlers = {};\n  \n  // Setup resource cleanup\n  group.userData.cleanup = () => {\n    planeGeometry.dispose();\n    planeMaterial.dispose();\n    textureAsset.dispose();\n  };\n  \n  return group;\n}\n```"
+}

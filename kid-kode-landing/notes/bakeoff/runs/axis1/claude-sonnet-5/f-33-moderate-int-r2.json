@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-33-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 14761,
+  "apiMs": 12378,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1460,
+    "cacheCreation": 0,
+    "cacheRead": 5577
+  },
+  "costUsd": 0.040445499999999995,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, color } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-journal-card-2-label';\n  group.position.set(3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const colors = {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10',\n  };\n\n  // Background plane (small accent card behind text)\n  const planeGeo = new THREE.PlaneGeometry(1.4, 0.3);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  let map = null;\n  try {\n    map = ctx.textureLoader.load('/prism-mock/home/nodes/floating-accent.png');\n  } catch (e) {\n    map = null;\n  }\n\n  if (map) {\n    map.colorSpace = THREE.SRGBColorSpace;\n    const tex = texture(map, uv());\n    material.colorNode = tex.mul(vec4(1, 1, 1, 1));\n  } else {\n    material.colorNode = vec4(color(colors.surface), 0.0);\n  }\n\n  const plane = new THREE.Mesh(planeGeo, material);\n  plane.name = 'card-label-plane';\n  group.add(plane);\n\n  // Text content: \"Journal 3\" headline\n  let textMesh = null;\n  try {\n    textMesh = ctx.fontAtlas.createText({\n      text: 'Journal 3',\n      font: 'display',\n      weight: 400,\n      size: 0.34,\n      color: colors.paper,\n      align: 'center',\n      anchor: 'center',\n    });\n    textMesh.position.set(0, 0, 0.01);\n    group.add(textMesh);\n  } catch (e) {\n    // fontAtlas unavailable — fail gracefully without HTML fallback\n  }\n\n  // Interaction state\n  const state = {\n    hovered: false,\n    baseY: group.position.y,\n  };\n\n  let hoverTween = null;\n  let pressTween = null;\n\n  const handlers = {\n    onPointerOver: () => {\n      if (state.hovered) return;\n      state.hovered = true;\n      if (hoverTween) hoverTween.kill();\n      hoverTween = gsap.to(group.position, {\n        y: state.baseY + 0.15,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n    },\n    onPointerOut: () => {\n      state.hovered = false;\n      if (hoverTween) hoverTween.kill();\n      hoverTween = gsap.to(group.position, {\n        y: state.baseY,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n    },\n    onPointerDown: () => {\n      if (pressTween) pressTween.kill();\n      pressTween = gsap.to(group.scale, {\n        x: 0.97,\n        y: 0.97,\n        z: 0.97,\n        duration: 0.12,\n        ease: 'back.out',\n      });\n    },\n    onPointerUp: () => {\n      if (pressTween) pressTween.kill();\n      pressTween = gsap.to(group.scale, {\n        x: 1,\n        y: 1,\n        z: 1,\n        duration: 0.12,\n        ease: 'back.out',\n      });\n    },\n    onClick: () => {\n      group.userData.emit && group.userData.emit('hub-journal.select', {\n        id: 'hub-journal-card-2',\n      });\n    },\n  };\n\n  group.userData.handlers = handlers;\n\n  group.userData.cleanup = () => {\n    if (hoverTween) hoverTween.kill();\n    if (pressTween) pressTween.kill();\n    gsap.killTweensOf(group.position);\n    gsap.killTweensOf(group.scale);\n\n    planeGeo.dispose();\n    material.dispose();\n    if (map) map.dispose();\n\n    if (textMesh) {\n      if (textMesh.geometry) textMesh.geometry.dispose();\n      if (textMesh.material) textMesh.material.dispose();\n    }\n  };\n\n  return group;\n}\n```"
+}

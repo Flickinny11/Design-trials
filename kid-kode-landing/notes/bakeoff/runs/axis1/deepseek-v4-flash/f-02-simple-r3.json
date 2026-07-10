@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-02-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 13478,
+  "usage": {
+    "promptTokens": 1703,
+    "completionTokens": 1961
+  },
+  "costUsd": 0.0007875,
+  "transportAttempts": 3,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  MeshBasicNodeMaterial,\n  Mesh,\n  PlaneGeometry,\n  Group,\n  TextureLoader,\n  Cache,\n  Color\n} from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // --- Background image plane ---\n  const atlasRegion = config.atlasRegion || { x: 0, y: 0, width: 512, height: 320 };\n  const aspect = atlasRegion.width / atlasRegion.height;\n  const planeWidth = 2.4; // arbitrary but keeps scale 1\n  const planeHeight = planeWidth / aspect;\n\n  const bgGeo = new PlaneGeometry(planeWidth, planeHeight);\n  const bgMat = new MeshBasicNodeMaterial({\n    map: ctx.textureLoader ? ctx.textureLoader.load(config.imageUrl) : null,\n    transparent: true,\n    side: 0 // default front\n  });\n  const bgMesh = new Mesh(bgGeo, bgMat);\n  bgMesh.position.set(0, 0, -0.01); // slightly behind text\n  group.add(bgMesh);\n\n  // --- Text via font atlas ---\n  let textMesh = null;\n  if (config.textContent && ctx.fontAtlas) {\n    const textConfig = {\n      text: config.textContent, // \"Atelier Noir — precise · luxury · technical\"\n      fontFamily: 'Lora', // from typography display\n      fontWeight: 400,\n      fontSize: 0.34, // scene units – headline size from design tokens\n      color: new Color(config.colors?.paper || '#e8ecf2'),\n      align: 'center',\n      // offset to center on plane\n      position: { x: 0, y: 0, z: 0.01 }\n    };\n    // Assuming ctx.fontAtlas.createText returns an Object3D\n    textMesh = ctx.fontAtlas.createText(textConfig);\n    textMesh.position.set(0, 0, 0.01);\n    group.add(textMesh);\n  }\n\n  // --- Scene placement ---\n  if (config.scenePosition) {\n    group.position.set(\n      config.scenePosition.x || 0,\n      config.scenePosition.y || 1.85,\n      config.scenePosition.z || 0\n    );\n  }\n  if (config.sceneRotation) {\n    group.rotation.set(\n      config.sceneRotation.x || 0,\n      config.sceneRotation.y || 0,\n      config.sceneRotation.z || 0\n    );\n  }\n  if (config.sceneScale) {\n    group.scale.set(\n      config.sceneScale.x || 1,\n      config.sceneScale.y || 1,\n      config.sceneScale.z || 1\n    );\n  }\n\n  // --- No handlers or data bindings ---\n  group.userData.handlers = {};\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    bgGeo.dispose();\n    bgMat.dispose();\n    if (bgMat.map) bgMat.map.dispose();\n    if (textMesh && textMesh.userData.cleanup) {\n      textMesh.userData.cleanup();\n    }\n    // Kill any GSAP tweens on this object\n    gsap.killTweensOf(group);\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

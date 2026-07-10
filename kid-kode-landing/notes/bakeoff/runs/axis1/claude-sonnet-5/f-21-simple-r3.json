@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-21-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 10638,
+  "apiMs": 8491,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 788,
+    "cacheCreation": 0,
+    "cacheRead": 5491
+  },
+  "costUsd": 0.0235225,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2, mix, uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const atlasRect = { x: 0, y: 0, w: 512, h: 320 };\n  const atlasSize = { w: 512, h: 320 };\n\n  const aspect = atlasRect.w / atlasRect.h;\n  const height = 1.6;\n  const width = height * aspect;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  const tex = ctx.textureLoader.load('/prism-mock/home/nodes/floating-accent.png');\n  tex.colorSpace = THREE.SRGBColorSpace;\n  tex.wrapS = THREE.ClampToEdgeWrapping;\n  tex.wrapT = THREE.ClampToEdgeWrapping;\n\n  const offsetX = atlasRect.x / atlasSize.w;\n  const offsetY = atlasRect.y / atlasSize.h;\n  const scaleX = atlasRect.w / atlasSize.w;\n  const scaleY = atlasRect.h / atlasSize.h;\n\n  const uvNode = uv().mul(vec2(scaleX, scaleY)).add(vec2(offsetX, offsetY));\n  const grain = uniform(0.03);\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.map = tex;\n  material.colorNode = texture(tex, uvNode);\n  material.transparent = true;\n  material.opacity = 1.0;\n  material.toneMapped = false;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(-3.2, -0.3, 0);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  const group = new THREE.Group();\n  group.name = 'pricing-card-1-accent';\n  group.add(mesh);\n  group.position.copy(mesh.position);\n  mesh.position.set(0, 0, 0);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (tex && tex.dispose) tex.dispose();\n  };\n\n  return group;\n}\n```"
+}

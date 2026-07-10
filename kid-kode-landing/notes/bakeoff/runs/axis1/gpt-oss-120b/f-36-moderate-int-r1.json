@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-36-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 63646,
+  "usage": {
+    "promptTokens": 1714,
+    "completionTokens": 2219
+  },
+  "costUsd": 0.0015884999999999999,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import {\n  Mesh,\n  PlaneGeometry,\n  Object3D,\n  Texture,\n  MeshBasicNodeMaterial,\n} from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport { NodeConfig, NodeContext } from '@/types'; // assumed type declarations\n\nexport default function createNode(\n  config: NodeConfig,\n  ctx: NodeContext\n): Object3D {\n  // --- Geometry ------------------------------------------------------------\n  const geometry = new PlaneGeometry(1, 1);\n\n  // --- Texture --------------------------------------------------------------\n  const tex: Texture = ctx.textureLoader.load(\n    '/prism-assets/chrome/ceramic-grain.map.png'\n  );\n\n  // --- Material (node based) ------------------------------------------------\n  const material = new MeshBasicNodeMaterial();\n  material.map = texture(tex);\n  material.transparent = true;\n\n  // --- Mesh -----------------------------------------------------------------\n  const mesh = new Mesh(geometry, material);\n  mesh.name = config?.name ?? 'badge-collection';\n\n  // --- Placement ------------------------------------------------------------\n  const pos = config?.placement?.position ?? { x: 0, y: 1.6, z: 0 };\n  const rot = config?.placement?.rotation ?? { x: 0, y: 0, z: 0 };\n  const scl = config?.placement?.scale ?? { x: 1, y: 1, z: 1 };\n\n  mesh.position.set(pos.x, pos.y, pos.z);\n  mesh.rotation.set(rot.x, rot.y, rot.z);\n  mesh.scale.set(scl.x, scl.y, scl.z);\n\n  // --- Interaction ----------------------------------------------------------\n  const timelines: any[] = [];\n\n  const originalY = mesh.position.y;\n  const liftAmount = 0.15; // subtle lift per spec\n\n  const handleHover = () => {\n    const tl = gsap.to(mesh.position, {\n      y: originalY + liftAmount,\n      duration: 0.3,\n      ease: 'power3.out',\n    });\n    timelines.push(tl);\n  };\n\n  const handleHoverOut = () => {\n    const tl = gsap.to(mesh.position, {\n      y: originalY,\n      duration: 0.2,\n      ease: 'power3.out',\n    });\n    timelines.push(tl);\n  };\n\n  const handleClick = () => {\n    if (typeof ctx.emit === 'function') {\n      ctx.emit('hub-collection.select');\n    }\n  };\n\n  // Attach handlers to userData\n  mesh.userData.handlers = {\n    hoverEnter: handleHover,\n    hoverLeave: handleHoverOut,\n    click: handleClick,\n  };\n\n  // --- Data binding placeholder ---------------------------------------------\n  // The node does not render textual data, but we store the bound rows for\n  // potential downstream usage.\n  if (Array.isArray(config?.bindings?.rows)) {\n    mesh.userData.rows = config.bindings.rows;\n  }\n\n  // --- Cleanup --------------------------------------------------------------\n  mesh.userData.cleanup = () => {\n    // Dispose Three.js resources\n    geometry.dispose();\n    material.dispose();\n    tex.dispose();\n\n    // Kill GSAP timelines\n    timelines.forEach((tl) => {\n      if (tl && typeof tl.kill === 'function') tl.kill();\n    });\n    timelines.length = 0;\n\n    // Remove handlers reference\n    mesh.userData.handlers = null;\n  };\n\n  return mesh;\n}"
+}

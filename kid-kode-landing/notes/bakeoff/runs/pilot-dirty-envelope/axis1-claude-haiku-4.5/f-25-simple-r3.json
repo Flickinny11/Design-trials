@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-25-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 39627,
+  "apiMs": 37064,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 3917,
+    "cacheCreation": 0,
+    "cacheRead": 21547
+  },
+  "costUsd": 0.0227147,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport { Group, PlaneGeometry, MeshBasicNodeMaterial, Mesh } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n  \n  // Load texture\n  const texture = ctx.textureLoader.load(config.imageUrl);\n  \n  // Create plane geometry with aspect ratio 512:320\n  const geometry = new PlaneGeometry(1.6, 1);\n  \n  // Create basic material\n  const material = new MeshBasicNodeMaterial({ map: texture });\n  \n  // Create mesh\n  const mesh = new Mesh(geometry, material);\n  \n  // Apply scene position\n  const pos = config.scenePosition || { x: 0, y: 0, z: 0 };\n  mesh.position.set(pos.x, pos.y, pos.z);\n  \n  if (pos.rotationXYZ) {\n    mesh.rotation.order = 'XYZ';\n    mesh.rotation.set(pos.rotationXYZ[0], pos.rotationXYZ[1], pos.rotationXYZ[2]);\n  }\n  \n  if (pos.scaleXYZ) {\n    mesh.scale.set(pos.scaleXYZ[0], pos.scaleXYZ[1], pos.scaleXYZ[2]);\n  }\n  \n  group.add(mesh);\n  \n  // Cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n  };\n  \n  // Handlers\n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

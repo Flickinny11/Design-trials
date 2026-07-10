@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-49-complex",
+  "run": 2,
+  "ok": true,
+  "wallMs": 126674,
+  "apiMs": 124232,
+  "usage": {
+    "promptTokens": 4065,
+    "completionTokens": 14332,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.076813,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { \n  positionLocal, \n  normalLocal, \n  uv, \n  texture, \n  add, \n  mul, \n  sub, \n  float,\n} from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.position.set(-2.5, -1.1, 0);\n\n  // Create high-tessellation plane for displacement mapping\n  const geometry = new THREE.PlaneGeometry(1, 1, 64, 64);\n\n  // Load textures via cached context loaders\n  const colorTexture = ctx.textureLoader.load('/prism-mock/home/nodes/parallax-stack.png');\n  const depthTexture = ctx.textureLoader.load('/prism-mock/home/nodes/parallax-stack.depth.png');\n\n  // Configure texture properties for quality\n  colorTexture.colorSpace = THREE.SRGBColorSpace;\n  colorTexture.magFilter = THREE.LinearFilter;\n  colorTexture.minFilter = THREE.LinearMipmapLinearFilter;\n\n  depthTexture.magFilter = THREE.LinearFilter;\n  depthTexture.minFilter = THREE.LinearMipmapLinearFilter;\n\n  // Create TSL nodes for displacement\n  const colorNode = texture(colorTexture, uv());\n  const depthNode = texture(depthTexture, uv());\n\n  // Displacement calculation: (depth - 0.5) * 0.05\n  const displacement = mul(\n    sub(depthNode, float(0.5)),\n    float(0.05)\n  );\n\n  // Displace vertices along surface normal\n  const displacedPosition = add(\n    positionLocal,\n    mul(normalLocal, displacement)\n  );\n\n  // Create machined-metal PBR material\n  const material = new THREE.MeshPhysicalNodeMaterial({\n    colorNode: colorNode,\n    positionNode: displacedPosition,\n    metalness: 0.4,\n    roughness: 0.6,\n    clearcoat: 0.15,\n    clearcoatRoughness: 0.5,\n    anisotropy: 0.3,\n  });\n\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Apply cinematic primitives\n  if (ctx.primitives.parallaxScroll) {\n    ctx.primitives.parallaxScroll(mesh, { intensity: 0.4 });\n  }\n\n  if (ctx.primitives.depthRotate) {\n    ctx.primitives.depthRotate(mesh, { maxDeg: 8 });\n  }\n\n  // Setup GSAP animation timeline\n  const timeline = gsap.timeline({ paused: true });\n  let isHovering = false;\n\n  // Event handlers\n  group.userData.handlers = {\n    onHover: (hovered) => {\n      if (hovered && !isHovering) {\n        isHovering = true;\n        // Rise-in effect: +0.15 units, power3.out easing, 0.7s duration\n        timeline.to(group.position, {\n          y: -1.1 + 0.15,\n          duration: 0.7,\n          ease: 'power3.out'\n        }, 0);\n      } else if (!hovered && isHovering) {\n        isHovering = false;\n        // Return to original position\n        timeline.to(group.position, {\n          y: -1.1,\n          duration: 0.7,\n          ease: 'power3.out'\n        }, 0);\n      }\n    },\n    onClick: () => {\n      group.dispatchEvent({ type: 'hub-home.select' });\n    }\n  };\n\n  // Cleanup function\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    colorTexture.dispose();\n    depthTexture.dispose();\n    timeline.kill();\n  };\n\n  return group;\n}\n```"
+}

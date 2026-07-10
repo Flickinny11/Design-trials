@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-29-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 91951,
+  "apiMs": 89551,
+  "usage": {
+    "promptTokens": 3955,
+    "completionTokens": 10285,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.056363,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  // Create plane geometry\n  const geometry = new THREE.PlaneGeometry(1.6, 1.0);\n  \n  // Load brushed-metal texture\n  const baseTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  baseTexture.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create material with TSL texture node\n  const textureNode = texture(baseTexture);\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = textureNode;\n  material.transparent = true;\n  \n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  \n  // Apply position from config\n  const { scenePosition, sceneRotation, sceneScale } = config;\n  if (scenePosition) {\n    mesh.position.fromArray(scenePosition);\n  }\n  if (sceneRotation) {\n    mesh.rotation.fromArray(sceneRotation);\n  }\n  if (sceneScale) {\n    mesh.scale.fromArray(sceneScale);\n  }\n  \n  // Render text content via fontAtlas\n  if (config.textContent && config.textContent.length > 0) {\n    const textContent = config.textContent[0];\n    const textMesh = ctx.fontAtlas.createText({\n      text: textContent.text,\n      fontSize: textContent.fontSize,\n      fontFamily: 'Lora',\n      fontWeight: textContent.fontWeight,\n      color: new THREE.Color(config.colors.ink),\n    });\n    \n    // Position text slightly above plane\n    textMesh.position.z = 0.01;\n    mesh.add(textMesh);\n  }\n  \n  // Setup resource cleanup\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (baseTexture) baseTexture.dispose();\n  };\n  \n  mesh.userData.handlers = {};\n  \n  return mesh;\n}\n```"
+}

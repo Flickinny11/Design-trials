@@ -1,0 +1,17 @@
+{
+  "contestant": "glm-5.2",
+  "model": "accounts/fireworks/models/glm-5p2",
+  "route": "fireworks",
+  "caseId": "f-25-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 38116,
+  "usage": {
+    "promptTokens": 1601,
+    "completionTokens": 4475
+  },
+  "costUsd": 0.0219314,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import * as THREE from 'three/webgpu';\nimport { texture, uv, vec2, vec3, float, mix, sin, fract } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const pos = config.scenePosition ?? { x: 3.2, y: -0.3, z: 0 };\n  const rot = config.sceneRotation ?? { x: 0, y: 0, z: 0 };\n  const scl = config.sceneScale ?? { x: 1, y: 1, z: 1 };\n  const atlas = config.atlas ?? { index: 0, sourceRect: [0, 0, 512, 320] };\n\n  const tex = ctx.textureLoader('/prism-mock/home/nodes/feature-card.png');\n\n  const [sx, sy, sw, sh] = atlas.sourceRect;\n  const atlasW = 512;\n  const atlasH = 320;\n  const u0 = sx / atlasW;\n  const v0 = sy / atlasH;\n  const u1 = (sx + sw) / atlasW;\n  const v1 = (sy + sh) / atlasH;\n\n  const aspect = sw / sh;\n  const planeW = 1.6;\n  const planeH = planeW / aspect;\n\n  const geom = new THREE.PlaneGeometry(planeW, planeH);\n\n  // Atlas-aware UV remap so we only sample the source rect region.\n  const remapUV = vec2(\n    mix(float(u0), float(u1), uv().x),\n    mix(float(v0), float(v1), uv().y)\n  );\n\n  const sampled = texture(tex, remapUV);\n\n  // Static subtle grain — engineered, non-animated surface texture.\n  const seed = uv().x.mul(12.9898).add(uv().y.mul(78.233));\n  const grainAmt = fract(sin(seed).mul(43758.5453)).sub(0.5).mul(0.03);\n  const colorNode = sampled.rgb.add(vec3(grainAmt, grainAmt, grainAmt));\n\n  const mat = new THREE.MeshBasicNodeMaterial();\n  mat.colorNode = colorNode;\n  mat.transparent = true;\n  mat.opacityNode = new THREE.UniformNode(0);\n\n  const mesh = new THREE.Mesh(geom, mat);\n  mesh.position.set(pos.x, pos.y, pos.z);\n  mesh.rotation.set(rot.x, rot.y, rot.z);\n  mesh.scale.set(scl.x, scl.y, scl.z);\n\n  mesh.userData.handlers = {};\n\n  // fade-up entry preset (opacity 0 -> 1, y +0.2 -> 0, power2.out, 0.5s)\n  const tl = gsap.timeline();\n  tl.to(mat.opacityNode, { value: 1, duration: 0.5, ease: 'power2.out' }, 0);\n  tl.from(mesh.position, { y: pos.y + 0.2, duration: 0.5, ease: 'power2.out' }, 0);\n\n  mesh.userData.cleanup = () => {\n    tl.kill();\n    geom.dispose();\n    mat.dispose();\n  };\n\n  return mesh;\n}"
+}

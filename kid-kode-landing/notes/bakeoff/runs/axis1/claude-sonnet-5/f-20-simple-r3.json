@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-20-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 14387,
+  "apiMs": 11846,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1198,
+    "cacheCreation": 0,
+    "cacheRead": 5488
+  },
+  "costUsd": 0.03377,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, float, uniform, mix } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-pricing-title';\n  group.position.set(0, 3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const disposables = [];\n\n  const imageUrl = config?.assets?.imageUrl || '/prism-mock/home/nodes/cta-hero-isolated.png';\n  const tex = ctx.textureLoader(imageUrl);\n  if (tex) {\n    tex.colorSpace = THREE.SRGBColorSpace;\n  }\n\n  const planeWidth = 3.2;\n  const planeHeight = 2.0;\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n  disposables.push(geometry);\n\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const grainStrength = uniform(0.03);\n  const accentColor = uniform(new THREE.Color('#ff2a38'));\n  const inkColor = uniform(new THREE.Color('#16161d'));\n\n  const uvNode = uv();\n\n  let colorNode;\n  if (tex) {\n    const texNode = texture(tex, uvNode);\n    // subtle engineered gradient overlay from ink to accent based on vertical uv\n    const gradient = mix(inkColor, accentColor, uvNode.y.mul(0.15));\n    const grain = uvNode.x.mul(uvNode.y).fract().sub(0.5).mul(grainStrength);\n    colorNode = vec4(\n      texNode.rgb.mul(0.9).add(gradient.mul(0.1)).add(grain),\n      texNode.a\n    );\n  } else {\n    const gradient = mix(inkColor, accentColor, uvNode.y);\n    colorNode = vec4(gradient, float(1.0));\n  }\n\n  material.colorNode = colorNode;\n  disposables.push(material);\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'pricing-title-plane';\n  group.add(plane);\n\n  // Text content: \"Pricing\" headline\n  const textContent = config?.textContent?.[0]?.text || 'Pricing';\n  let textMesh = null;\n  try {\n    textMesh = createTextMesh({\n      text: textContent,\n      font: 'Lora',\n      weight: 400,\n      size: 0.62 * 0.55, // headline scale, scaled down to fit plane\n      color: '#e8ecf2',\n      atlas: ctx.fontAtlas,\n      anchor: 'center',\n    });\n    if (textMesh) {\n      textMesh.position.set(0, 0, 0.02);\n      group.add(textMesh);\n      disposables.push(textMesh.geometry);\n      if (textMesh.material) disposables.push(textMesh.material);\n    }\n  } catch (e) {\n    // fail silently if font atlas unavailable, plane still renders\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    disposables.forEach((d) => {\n      if (d && typeof d.dispose === 'function') {\n        d.dispose();\n      }\n    });\n    while (group.children.length) {\n      group.remove(group.children[0]);\n    }\n  };\n\n  return group;\n}\n```"
+}

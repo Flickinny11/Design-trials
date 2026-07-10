@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-12-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 19635,
+  "usage": {
+    "promptTokens": 1678,
+    "completionTokens": 2614
+  },
+  "costUsd": 0.0018200999999999998,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import { PlaneGeometry, Mesh, Object3D, Vector2 } from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture as texNodeFunc, uv, uvTransform } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\nexport default function createNode(config, ctx) {\n  // --- placement ---\n  const placement = config.placement || {};\n  const pos = placement.position || [0, 0, 0];\n  const rot = placement.rotation || [0, 0, 0];\n  const scl = placement.scale || [1, 1, 1];\n\n  // --- texture loading ---\n  const imageUrl = config.assets?.imageUrl;\n  const loadedTexture = imageUrl ? ctx.textureLoader.load(imageUrl) : null;\n\n  // --- atlas region handling ---\n  const atlas = config.atlasRegion || { x: 0, y: 0, w: 512, h: 320, atlasWidth: 512, atlasHeight: 320 };\n  const texW = atlas.atlasWidth ?? 512;\n  const texH = atlas.atlasHeight ?? 320;\n  const u0 = atlas.x / texW;\n  const v0 = atlas.y / texH;\n  const uSize = atlas.w / texW;\n  const vSize = atlas.h / texH;\n\n  // --- geometry (aspect ratio based on atlas region) ---\n  const aspect = atlas.w / atlas.h;\n  const geometry = new PlaneGeometry(aspect, 1);\n\n  // --- material with UV‑offset for atlas region ---\n  const material = new MeshBasicNodeMaterial();\n  if (loadedTexture) {\n    const uvNode = uv();\n    const uvAdjusted = uvTransform(uvNode, new Vector2(u0, v0), new Vector2(uSize, vSize));\n    material.mapNode = texNodeFunc(loadedTexture, uvAdjusted);\n  }\n\n  // --- mesh creation ---\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(pos[0], pos[1], pos[2]);\n  mesh.rotation.set(rot[0], rot[1], rot[2]);\n  mesh.scale.set(scl[0], scl[1], scl[2]);\n\n  // --- billboard behavior (faces camera) ---\n  mesh.onBeforeRender = (renderer, scene, camera) => {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  // --- container object ---\n  const container = new Object3D();\n  container.add(mesh);\n\n  // --- placeholder for event handlers ---\n  container.userData.handlers = {};\n\n  // --- cleanup routine ---\n  container.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (loadedTexture) loadedTexture.dispose();\n    // kill any GSAP timelines that might have been created elsewhere\n    gsap.globalTimeline.clear();\n  };\n\n  // --- apply cinematic primitives if any ---\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const fn = ctx.primitives?.[prim.name];\n      if (typeof fn === 'function') {\n        fn(container, prim.params);\n      }\n    }\n  }\n\n  return container;\n}"
+}

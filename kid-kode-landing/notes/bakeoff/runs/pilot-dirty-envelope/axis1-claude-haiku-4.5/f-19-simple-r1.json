@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-19-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 73808,
+  "apiMs": 71856,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 10663,
+    "cacheCreation": 21560,
+    "cacheRead": 0
+  },
+  "costUsd": 0.097428,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Load image texture\n  const imageUrl = config.assetUrls?.imageUrl;\n  if (!imageUrl) {\n    console.warn('No imageUrl provided for card');\n    return group;\n  }\n\n  const texture = ctx.textureLoader.load(imageUrl);\n\n  // Create card plane (512:320 aspect ratio = 1.6:1)\n  const cardGeometry = new THREE.PlaneGeometry(1.6, 1);\n  const cardMaterial = new THREE.MeshBasicMaterial({\n    map: texture,\n    side: THREE.DoubleSide,\n  });\n\n  const cardMesh = new THREE.Mesh(cardGeometry, cardMaterial);\n  group.add(cardMesh);\n\n  // Add text label using MSDF\n  if (ctx.fontAtlas) {\n    const textMesh = ctx.fontAtlas.createTextMesh({\n      text: 'Collection 3',\n      fontSize: 0.34,\n      fontFamily: 'Lora',\n      fontWeight: 400,\n      color: 0x16161d,\n      anchorX: 'center',\n      anchorY: 'middle',\n    });\n\n    if (textMesh) {\n      textMesh.position.z = 0.01;\n      group.add(textMesh);\n    }\n  }\n\n  // Apply scene position transform\n  const pos = config.scenePosition || {};\n  group.position.set(pos.x || 0, pos.y || 0, pos.z || 0);\n\n  if (pos.rotationXYZ) {\n    group.rotation.fromArray(pos.rotationXYZ);\n  }\n  if (pos.scaleXYZ) {\n    group.scale.fromArray(pos.scaleXYZ);\n  }\n\n  // Resource cleanup\n  group.userData.cleanup = () => {\n    cardGeometry.dispose();\n    cardMaterial.dispose();\n    texture.dispose();\n    gsap.killTweensOf(group);\n  };\n\n  // Event handlers (empty for static node)\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

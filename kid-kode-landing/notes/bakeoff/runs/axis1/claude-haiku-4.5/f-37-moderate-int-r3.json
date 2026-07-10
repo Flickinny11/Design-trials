@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-37-moderate-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 105408,
+  "apiMs": 103050,
+  "usage": {
+    "promptTokens": 4025,
+    "completionTokens": 12386,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.066998,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  // Create plane geometry\n  const geometry = new THREE.PlaneGeometry(1, 1);\n  \n  // Load texture\n  const imageUrl = config.assetUrls?.imageUrl;\n  const tex = imageUrl ? ctx.textureLoader(imageUrl) : null;\n  \n  // Create material with TSL\n  const materialConfig = { transparent: true };\n  if (tex) materialConfig.colorNode = texture(tex);\n  const material = new MeshBasicNodeMaterial(materialConfig);\n  \n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  \n  // Apply scene placement\n  const pos = config.scenePosition || {};\n  const rot = config.sceneRotation || {};\n  const scale = config.sceneScale || {};\n  \n  mesh.position.set(pos.x ?? 0, pos.y ?? 0, pos.z ?? 0);\n  mesh.rotation.set(rot.x ?? 0, rot.y ?? 0, rot.z ?? 0);\n  mesh.scale.set(scale.x ?? 1, scale.y ?? 1, scale.z ?? 1);\n  \n  // Store original transforms\n  const origPos = mesh.position.clone();\n  const origScale = mesh.scale.clone();\n  \n  // Initialize event handlers\n  mesh.userData.handlers = {};\n  const timelines = [];\n  let currentHoverTl = null;\n  \n  // Hover enter: rise-in animation (0.15 units up, 0.7s, power3.out)\n  mesh.userData.handlers.onPointerEnter = () => {\n    if (currentHoverTl) currentHoverTl.kill();\n    \n    currentHoverTl = gsap.to(mesh.position, {\n      y: origPos.y + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n    timelines.push(currentHoverTl);\n  };\n  \n  // Hover leave: return to original position\n  mesh.userData.handlers.onPointerLeave = () => {\n    if (currentHoverTl) currentHoverTl.kill();\n    \n    currentHoverTl = gsap.to(mesh.position, {\n      y: origPos.y,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n    timelines.push(currentHoverTl);\n  };\n  \n  // Click: press-down effect (scale 0.97, 120ms, back.out) and emit event\n  mesh.userData.handlers.onClick = () => {\n    const pressTl = gsap.timeline();\n    pressTl.to(mesh.scale, {\n      x: origScale.x * 0.97,\n      y: origScale.y * 0.97,\n      z: origScale.z * 0.97,\n      duration: 0.12,\n      ease: 'back.out',\n    }, 0);\n    pressTl.to(mesh.scale, {\n      x: origScale.x,\n      y: origScale.y,\n      z: origScale.z,\n      duration: 0.12,\n      ease: 'back.out',\n    }, 0.12);\n    timelines.push(pressTl);\n    \n    // Emit event from interaction specification\n    const clickInteraction = config.interactions?.find(i => i.event === 'click');\n    if (clickInteraction?.effect?.startsWith('emit:')) {\n      const eventName = clickInteraction.effect.substring(5);\n      mesh.dispatchEvent({ type: eventName });\n    }\n  };\n  \n  // Apply cinematic primitives\n  if (config.cinematicPrimitives?.length) {\n    config.cinematicPrimitives.forEach(primitive => {\n      const primitiveFunc = ctx.primitives?.[primitive.name];\n      if (primitiveFunc) {\n        primitiveFunc(mesh, primitive.params || {});\n      }\n    });\n  }\n  \n  // Cleanup function\n  mesh.userData.cleanup = () => {\n    timelines.forEach(tl => tl.kill());\n    geometry.dispose();\n    material.dispose();\n  };\n  \n  return mesh;\n}\n```"
+}

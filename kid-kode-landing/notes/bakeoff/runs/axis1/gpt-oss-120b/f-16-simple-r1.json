@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-16-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 54271,
+  "usage": {
+    "promptTokens": 1649,
+    "completionTokens": 1764
+  },
+  "costUsd": 0.0013057499999999998,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {number[]} position - [x, y, z]\n * @property {number[]} rotation - [x, y, z] in radians\n * @property {number[]} scale - [x, y, z]\n * @property {Object} assets\n * @property {string} assets.imageUrl\n * @property {Array<{name:string,params:any}>} cinematicPrimitives\n * @property {any} textContent\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {(url:string)=>THREE.Texture} textureLoader\n * @property {Object.<string, Function>} primitives\n * @property {any} fontAtlas\n */\n\n/**\n * Creates a textured plane node.\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  const {\n    position = [0, 0, 0],\n    rotation = [0, 0, 0],\n    scale = [1, 1, 1],\n    assets = {},\n    cinematicPrimitives = [],\n    textContent = null,\n  } = config;\n\n  const { imageUrl } = assets;\n\n  // Load texture (synchronous via cached loader)\n  const tex = ctx.textureLoader(imageUrl);\n\n  // Atlas region defines a 512×320 source rect → aspect 1.6\n  const aspect = 512 / 320;\n  const geometry = new THREE.PlaneGeometry(aspect, 1);\n\n  // Node‑based basic material displaying the texture\n  const material = new MeshBasicNodeMaterial({ map: tex });\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(...position);\n  mesh.rotation.set(...rotation);\n  mesh.scale.set(...scale);\n\n  // Apply any cinematic primitives specified in the config\n  for (const primitive of cinematicPrimitives) {\n    const fn = ctx.primitives[primitive.name];\n    if (typeof fn === 'function') {\n      fn(mesh, primitive.params);\n    }\n  }\n\n  // Event handler container (empty for this node)\n  mesh.userData.handlers = {};\n\n  // Store timelines (none for this node but kept for consistency)\n  const timelines = [];\n\n  // Cleanup routine\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    // Do not dispose tex here: it is managed by the texture loader cache.\n    timelines.forEach((tl) => tl.kill && tl.kill());\n    timelines.length = 0;\n  };\n\n  return mesh;\n}"
+}

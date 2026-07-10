@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-22-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 63964,
+  "apiMs": 61394,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 6843,
+    "cacheCreation": 21563,
+    "cacheRead": 0
+  },
+  "costUsd": 0.078322,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import * as THREE from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Apply scene position, rotation, scale\n  const pos = config.scenePosition || {};\n  group.position.set(pos.x ?? 0, pos.y ?? 0, pos.z ?? 0);\n  \n  if (pos.rotationXYZ) {\n    group.rotation.order = 'XYZ';\n    group.rotation.x = pos.rotationXYZ[0];\n    group.rotation.y = pos.rotationXYZ[1];\n    group.rotation.z = pos.rotationXYZ[2];\n  }\n  \n  if (pos.scaleXYZ) {\n    group.scale.x = pos.scaleXYZ[0];\n    group.scale.y = pos.scaleXYZ[1];\n    group.scale.z = pos.scaleXYZ[2];\n  }\n  \n  // Create plane mesh with texture\n  const geometry = new THREE.PlaneGeometry(1, 1);\n  const texture = config.imageUrl ? ctx.textureLoader.load(config.imageUrl) : null;\n  \n  const material = new THREE.MeshBasicMaterial({\n    map: texture,\n    transparent: true,\n    side: THREE.DoubleSide,\n  });\n  \n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n  \n  // Render text content via fontAtlas\n  if (config.textContent && config.textContent.length > 0 && ctx.fontAtlas) {\n    const textSpec = config.textContent[0];\n    const textMesh = ctx.fontAtlas.createText({\n      text: textSpec.text || 'Pricing 1',\n      fontSize: 0.34, // headline size from type scale\n      fontFamily: 'Lora',\n      fontWeight: 400,\n      color: 0xe8ecf2, // paper color\n    });\n    group.add(textMesh);\n  }\n  \n  // Apply cinematic primitives (none in this specification)\n  if (config.cinematicPrimitives && config.cinematicPrimitives.length > 0) {\n    for (const primitive of config.cinematicPrimitives) {\n      if (ctx.primitives && ctx.primitives[primitive.name]) {\n        ctx.primitives[primitive.name](group, primitive.params || {});\n      }\n    }\n  }\n  \n  // Cleanup resources\n  group.userData.cleanup = function() {\n    geometry.dispose();\n    material.dispose();\n    if (texture) {\n      texture.dispose();\n    }\n  };\n  \n  // Event handlers (none specified for this static node)\n  group.userData.handlers = {};\n  \n  return group;\n}"
+}

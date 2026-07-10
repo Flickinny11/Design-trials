@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-39-moderate-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 59779,
+  "apiMs": 57220,
+  "usage": {
+    "promptTokens": 4040,
+    "completionTokens": 6387,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.037048000000000005,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  // Load mesh from GLB via cached loader\n  const glb = ctx.glbLoader.load('/prism-mock/home/nodes/cta-hero.glb');\n  const mesh = glb.scene.clone();\n\n  // Apply scene transforms from config\n  const scenePosition = config.scenePosition || [-2.5, 0.7, 0];\n  const rotation = config.rotation || [0, 0, 0];\n  const scale = config.scale || [1, 1, 1];\n\n  mesh.position.fromArray(scenePosition);\n  mesh.rotation.fromArray(rotation);\n  mesh.scale.fromArray(scale);\n\n  // Store base Y position for hover animation\n  const baseY = mesh.position.y;\n\n  // Animation state\n  let hoverAnimation = null;\n\n  // Event handlers\n  mesh.userData.handlers = {};\n\n  // Hover: rise 0.15 units with power3.out easing\n  mesh.userData.handlers.onHover = () => {\n    if (hoverAnimation) hoverAnimation.kill();\n    hoverAnimation = gsap.to(mesh.position, {\n      y: baseY + 0.15,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n  };\n\n  // Hover end: return to base position\n  mesh.userData.handlers.onHoverEnd = () => {\n    if (hoverAnimation) hoverAnimation.kill();\n    hoverAnimation = gsap.to(mesh.position, {\n      y: baseY,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n  };\n\n  // Click: emit hub-home.select event\n  mesh.userData.handlers.onClick = () => {\n    mesh.dispatchEvent({ type: 'hub-home.select' });\n  };\n\n  // Data binding metadata\n  mesh.userData.dataBindings = {\n    confirmPanel: 'trpc.visits.book.slot'\n  };\n\n  // Cleanup: dispose geometries, materials, and kill timelines\n  mesh.userData.cleanup = () => {\n    if (hoverAnimation) {\n      hoverAnimation.kill();\n    }\n\n    mesh.traverse((child) => {\n      if (child.geometry) {\n        child.geometry.dispose();\n      }\n      if (child.material) {\n        if (Array.isArray(child.material)) {\n          child.material.forEach(material => material.dispose());\n        } else {\n          child.material.dispose();\n        }\n      }\n    });\n  };\n\n  return mesh;\n}\n```"
+}

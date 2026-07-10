@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-23-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 24961,
+  "usage": {
+    "promptTokens": 1647,
+    "completionTokens": 1567
+  },
+  "costUsd": 0.00118725,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import { Mesh, PlaneGeometry, Object3D, DoubleSide, SRGBColorSpace } from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture } from 'three/tsl';\nimport { TimelineMax } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\n/**\n * @typedef {import('three/webgpu').Object3D} THREEObject3D\n * @typedef {Object} NodeConfig\n * @property {Object} [assets]\n * @property {string} [assets.imageUrl]\n * @property {Object} [scenePlacement]\n * @property {Array<number>} [scenePlacement.position]\n * @property {Array<number>} [scenePlacement.rotation]\n * @property {Array<number>} [scenePlacement.scale]\n * @property {Object} [visual]\n * @property {Object} [visual.colors]\n *\n * @typedef {Object} NodeContext\n * @property {{ load: (url:string)=>import('three').Texture }} textureLoader\n * @property {{ [key:string]: (target:THREEObject3D, params:any)=>void }} primitives\n * @property {{ fontAtlas: any }} fontAtlas\n */\n\n/**\n * Creates a textured plane node.\n *\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {THREEObject3D}\n */\nexport default function createNode(config, ctx) {\n  // --- Geometry --------------------------------------------------------------\n  const geometry = new PlaneGeometry(1, 1);\n\n  // --- Texture ---------------------------------------------------------------\n  const imageUrl = (config.assets && config.assets.imageUrl) || '';\n  const tex = ctx.textureLoader.load(imageUrl);\n  tex.colorSpace = SRGBColorSpace;\n  tex.wrapS = tex.wrapT = tex.repeat ? tex.repeat : tex.wrapS;\n  tex.needsUpdate = true;\n\n  // --- Material ---------------------------------------------------------------\n  const material = new MeshBasicNodeMaterial({\n    map: texture(tex),\n    side: DoubleSide,\n  });\n\n  // --- Mesh -------------------------------------------------------------------\n  const mesh = new Mesh(geometry, material);\n\n  // Apply scene placement\n  const pos = (config.scenePlacement && config.scenePlacement.position) || [0, 0, 0];\n  const rot = (config.scenePlacement && config.scenePlacement.rotation) || [0, 0, 0];\n  const scl = (config.scenePlacement && config.scenePlacement.scale) || [1, 1, 1];\n\n  mesh.position.set(pos[0], pos[1], pos[2]);\n  mesh.rotation.set(rot[0], rot[1], rot[2]);\n  mesh.scale.set(scl[0], scl[1], scl[2]);\n\n  // --- User Data --------------------------------------------------------------\n  mesh.userData.handlers = {};\n\n  // Store any timelines we might create in the future\n  /** @type {TimelineMax[]} */\n  const timelines = [];\n\n  // --- Cleanup ---------------------------------------------------------------\n  mesh.userData.cleanup = () => {\n    // Kill GSAP timelines\n    timelines.forEach((tl) => tl.kill());\n    timelines.length = 0;\n\n    // Dispose Three.js resources\n    material.dispose();\n    geometry.dispose();\n    // Do NOT dispose the texture here – it may be shared via the loader cache\n  };\n\n  // No cinematic primitives to apply for this node (as per spec)\n\n  return mesh;\n}"
+}

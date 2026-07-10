@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-07-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 11728,
+  "apiMs": 9121,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 893,
+    "cacheCreation": 3336,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0578125,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2, mix, uniform, time, float } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'features-card-1-plane';\n\n  const width = 1.6;\n  const height = 1.0;\n  const geometry = new THREE.PlaneGeometry(width, height, 1, 1);\n\n  const imageUrl = config?.assets?.imageUrl || '/prism-mock/home/nodes/feature-card.png';\n  const map = ctx.textureLoader.load(imageUrl);\n  map.colorSpace = THREE.SRGBColorSpace;\n  map.needsUpdate = true;\n\n  const material = new THREE.MeshBasicNodeMaterial();\n\n  const texNode = texture(map, uv());\n\n  // subtle engineered gradient overlay (ink -> surface) for machined-metal-adjacent flat look\n  const inkColor = uniform(new THREE.Color(config?.visual?.colors?.ink || '#16161d'));\n  const surfaceColor = uniform(new THREE.Color(config?.visual?.colors?.surface || '#0b0b10'));\n\n  const gradientFactor = uv().y;\n  const gradient = mix(surfaceColor, inkColor, gradientFactor);\n\n  // subtle grain via time-varying noise-like blend (cheap, static-feeling since amplitude tiny)\n  const grainAmount = float(0.02);\n  const grainNode = mix(texNode.rgb, gradient, grainAmount);\n\n  material.colorNode = vec2 ? texNode : texNode; // keep base texture primary\n  material.colorNode = texNode;\n  material.transparent = true;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'features-card-1-mesh';\n  group.add(mesh);\n\n  const pos = config?.scenePlacement?.position || [-3.2, -0.3, 0];\n  const rot = config?.scenePlacement?.rotation || [0, 0, 0];\n  const scl = config?.scenePlacement?.scale || [1, 1, 1];\n\n  group.position.set(pos[0], pos[1], pos[2]);\n  group.rotation.set(rot[0], rot[1], rot[2]);\n  group.scale.set(scl[0], scl[1], scl[2]);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n  };\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-42-moderate",
+  "run": 2,
+  "ok": true,
+  "wallMs": 78549,
+  "apiMs": 76087,
+  "usage": {
+    "promptTokens": 4002,
+    "completionTokens": 8826,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.049142,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture, color } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { scenePosition, sceneRotation, sceneScale } = config;\n  \n  // Load ceramic grain texture\n  const textureMap = ctx.textureLoader.load('/prism-assets/chrome/ceramic-grain.map.png');\n  textureMap.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create TSL nodes for material\n  const colorNode = texture(textureMap);\n  const emissiveNode = color(new THREE.Color(0xff2a38)); // Accent red #ff2a38\n  \n  // Create material with accent edge light\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = colorNode;\n  material.emissiveNode = emissiveNode;\n  material.emissiveIntensity = 0.3;\n  \n  // Create plane geometry for capsule badge\n  const geometry = new THREE.PlaneGeometry(0.8, 0.35);\n  const mesh = new THREE.Mesh(geometry, material);\n  \n  // Apply scene transforms\n  mesh.position.set(...scenePosition);\n  mesh.rotation.set(...sceneRotation);\n  mesh.scale.set(...sceneScale);\n  \n  // Store initial position for hover animation\n  const initialPos = mesh.position.clone();\n  let hoverTimeline, clickTimeline;\n  \n  // Store event metadata for framework\n  mesh.userData.event = 'hub-pricing.select';\n  \n  // Setup interaction handlers\n  mesh.userData.handlers = {\n    onHover: (isHovering) => {\n      if (hoverTimeline) hoverTimeline.kill();\n      const targetY = isHovering ? initialPos.y + 0.15 : initialPos.y;\n      hoverTimeline = gsap.to(mesh.position, {\n        y: targetY,\n        duration: 0.7,\n        ease: 'power3.out'\n      });\n    },\n    onClick: () => {\n      if (clickTimeline) clickTimeline.kill();\n      clickTimeline = gsap.to(mesh.scale, {\n        x: 0.97,\n        y: 0.97,\n        duration: 0.12,\n        ease: 'back.out',\n        yoyo: true,\n        repeat: 1\n      });\n    }\n  };\n  \n  // Cleanup function to dispose resources\n  mesh.userData.cleanup = () => {\n    if (hoverTimeline) hoverTimeline.kill();\n    if (clickTimeline) clickTimeline.kill();\n    geometry.dispose();\n    textureMap.dispose();\n    material.dispose();\n  };\n  \n  return mesh;\n}\n```"
+}

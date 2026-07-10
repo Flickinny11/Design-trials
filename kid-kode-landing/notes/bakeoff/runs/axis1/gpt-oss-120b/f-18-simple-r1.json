@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-18-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 63080,
+  "usage": {
+    "promptTokens": 1665,
+    "completionTokens": 1859
+  },
+  "costUsd": 0.0013651499999999999,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import { Mesh, PlaneGeometry, Object3D, Euler } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  // --- Load texture (synchronously via cached loader) ---\n  const texture = ctx.textureLoader(config.assets?.imageUrl ?? '');\n\n  // --- Determine plane size based on atlas region aspect ratio ---\n  // Fallback to a 1 × 1 size if region data is missing.\n  const atlasRect = config.atlasRegion ?? { x: 0, y: 0, width: 512, height: 320 };\n  const aspect = atlasRect.width / atlasRect.height || 1;\n  const planeWidth = aspect;\n  const planeHeight = 1;\n\n  // --- Create geometry and material ---\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n  const material = new MeshBasicNodeMaterial({ map: texture, side: 2 /* DoubleSide */ });\n\n  // Apply UV offset / repeat for atlas region if known.\n  if (texture && atlasRect && typeof ctx.atlasSize === 'object') {\n    const atlasW = ctx.atlasSize.width || 1;\n    const atlasH = ctx.atlasSize.height || 1;\n    texture.offset.set(atlasRect.x / atlasW, atlasRect.y / atlasH);\n    texture.repeat.set(atlasRect.width / atlasW, atlasRect.height / atlasH);\n    texture.needsUpdate = true;\n  }\n\n  const mesh = new Mesh(geometry, material);\n\n  // --- Placement ---\n  const pos = config.position ?? [0, 0, 0];\n  mesh.position.set(pos[0], pos[1], pos[2]);\n\n  const rot = config.rotation ?? [0, 0, 0];\n  mesh.rotation.set(rot[0], rot[1], rot[2]);\n\n  const scl = config.scale ?? [1, 1, 1];\n  mesh.scale.set(scl[0], scl[1], scl[2]);\n\n  // --- Billboard toward camera (onBeforeRender) ---\n  mesh.onBeforeRender = (renderer, scene, camera) => {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  // --- User data for event handlers and cleanup ---\n  mesh.userData.handlers = {};\n\n  mesh.userData.cleanup = () => {\n    // Stop any GSAP timelines that might have been started elsewhere.\n    gsap.globalTimeline.clear();\n\n    geometry.dispose();\n    material.dispose();\n    if (texture) {\n      texture.dispose();\n    }\n    mesh.onBeforeRender = null;\n  };\n\n  return mesh;\n}"
+}

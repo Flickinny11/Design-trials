@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-22-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 52857,
+  "apiMs": 51001,
+  "usage": {
+    "promptTokens": 3958,
+    "completionTokens": 8179,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.045824000000000004,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture as textureNode } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Design palette\n  const COLOR_PAPER = 0xe8ecf2;\n  \n  // Create background plane (1.6:1 aspect from 512x320)\n  const planeGeometry = new THREE.PlaneGeometry(1.6, 1.0);\n  \n  // Load and configure texture\n  const mapTexture = ctx.textureLoader.load(config.imageUrl);\n  mapTexture.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create material with TSL\n  const mapColorNode = textureNode(mapTexture);\n  const planeMaterial = new THREE.MeshBasicNodeMaterial({\n    colorNode: mapColorNode\n  });\n  \n  // Create and position plane\n  const plane = new THREE.Mesh(planeGeometry, planeMaterial);\n  plane.position.copy(config.scenePosition);\n  if (config.sceneRotation) {\n    plane.rotation.order = 'YXZ';\n    plane.rotation.setFromVector3(config.sceneRotation);\n  }\n  if (config.sceneScale) {\n    plane.scale.copy(config.sceneScale);\n  }\n  \n  group.add(plane);\n  \n  // Render text content via fontAtlas\n  if (config.textContent?.length > 0) {\n    const textSpec = config.textContent[0];\n    const textMesh = ctx.fontAtlas.createTextMesh(textSpec.text, {\n      font: 'Lora',\n      size: 0.34,\n      weight: 400,\n      color: COLOR_PAPER\n    });\n    \n    textMesh.position.set(-0.6, 0, 0.01);\n    group.add(textMesh);\n  }\n  \n  // Cleanup handler\n  group.userData.cleanup = () => {\n    planeGeometry.dispose();\n    planeMaterial.dispose();\n    mapTexture.dispose();\n    gsap.killTweensOf(group);\n  };\n  \n  // Event handlers\n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

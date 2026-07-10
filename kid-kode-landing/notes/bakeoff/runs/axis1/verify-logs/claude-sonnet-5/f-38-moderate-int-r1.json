@@ -1,0 +1,10 @@
+{
+  "contestant": "claude-sonnet-5",
+  "caseId": "f-38-moderate-int",
+  "run": 1,
+  "rawCompliant": false,
+  "fenced": true,
+  "parsed": true,
+  "verified": true,
+  "violations": []
+}

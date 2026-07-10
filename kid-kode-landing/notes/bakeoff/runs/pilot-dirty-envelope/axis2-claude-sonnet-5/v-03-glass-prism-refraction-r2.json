@@ -1,0 +1,17 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "v-03-glass-prism-refraction",
+  "run": 2,
+  "ok": true,
+  "wallMs": 331241,
+  "apiMs": 328875,
+  "usage": {
+    "promptTokens": 24,
+    "completionTokens": 33131
+  },
+  "costUsd": 1.4538420000000003,
+  "billing": "subscription-equivalent",
+  "output": "   letterSpacing: headlineTypo.letterSpacing,\n    lineHeight: headlineTypo.lineHeight,\n    color: paperColor,\n    align: 'center',\n    anchor: 'center',\n  });\n  headlineMesh.name = 'headline-text';\n  headlineMesh.position.set(0, -1.75, 0.05);\n  group.add(headlineMesh);\n\n  const captionMesh = createMSDFText(\n    captionItem.content || 'SAPPHIRE OVER DIAL / ZERO DISTORTION',\n    {\n      fontAtlas: ctx.fontAtlas,\n      family: captionTypo.family,\n      weight: captionTypo.fontWeight,\n      fontSize: 0.09,\n      letterSpacing: captionTypo.letterSpacing,\n      lineHeight: captionTypo.lineHeight,\n      color: paperColor,\n      align: 'center',\n      anchor: 'center',\n    }\n  );\n  captionMesh.name = 'caption-text';\n  captionMesh.position.set(0, -2.25, 0.05);\n  group.add(captionMesh);\n\n  // ================= CINEMATIC PRIMITIVES =================\n  group.userData.handlers = {};\n\n  const primitiveDisposers = [];\n  const cinematicPrimitives = Array.isArray(cfg.cinematicPrimitives) ? cfg.cinematicPrimitives : [];\n  cinematicPrimitives.forEach((primitive) => {\n    const applyPrimitive = ctx.primitives && ctx.primitives[primitive.name];\n    if (typeof applyPrimitive === 'function') {\n      const disposer = applyPrimitive(group, primitive.params || {});\n      if (typeof disposer === 'function') primitiveDisposers.push(disposer);\n    }\n  });\n\n  // ================= CLEANUP =================\n  group.userData.cleanup = () => {\n    primitiveDisposers.forEach((dispose) => {\n      try {\n        dispose();\n      } catch (e) {\n        /* noop */\n      }\n    });\n\n    gsap.killTweensOf(group);\n    gsap.killTweensOf(group.position);\n    gsap.killTweensOf(group.rotation);\n    gsap.killTweensOf(group.scale);\n    gsap.killTweensOf(causticMesh.scale);\n    gsap.killTweensOf(prismMesh.rotation);\n\n    causticMesh.onBeforeRender = null;\n\n    prismGeometry.dispose();\n    prismMaterial.dispose();\n    coreGeometry.dispose();\n    coreMaterial.dispose();\n    causticGeometry.dispose();\n    causticMaterial.dispose();\n\n    [headlineMesh, captionMesh].forEach((textObj) => {\n      textObj.traverse((child) => {\n        if (child.geometry) child.geometry.dispose();\n        if (child.material) {\n          if (Array.isArray(child.material)) {\n            child.material.forEach((m) => m.dispose());\n          } else {\n            child.material.dispose();\n          }\n        }\n      });\n      if (typeof textObj.userData?.dispose === 'function') {\n        textObj.userData.dispose();\n      }\n    });\n\n    if (typeof rimLight.dispose === 'function') rimLight.dispose();\n\n    group.userData.handlers = {};\n  };\n\n  return group;\n}"
+}

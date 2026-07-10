@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-10-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 11793,
+  "apiMs": 9290,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1001,
+    "cacheCreation": 0,
+    "cacheRead": 5477
+  },
+  "costUsd": 0.0288415,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, mix, float } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-features-card-1-label';\n\n  const width = 1.6;\n  const height = 1.0;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial({ transparent: true });\n\n  let map = null;\n  const imageUrl = '/prism-mock/home/nodes/orb-decor.png';\n  if (imageUrl && ctx.textureLoader) {\n    map = ctx.textureLoader.load(imageUrl);\n    if (map) {\n      map.colorSpace = THREE.SRGBColorSpace;\n    }\n  }\n\n  const inkColor = vec4(0x16 / 255, 0x16 / 255, 0x1d / 255, 1.0);\n  const surfaceColor = vec4(0x0b / 255, 0x0b / 255, 0x10 / 255, 1.0);\n\n  if (map) {\n    const texNode = texture(map, uv());\n    // engineered gradient blended subtly over the source image\n    const gradientMix = mix(surfaceColor, inkColor, uv().y);\n    material.colorNode = mix(texNode, gradientMix, float(0.08));\n  } else {\n    material.colorNode = mix(surfaceColor, inkColor, uv().y);\n  }\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'card-1-label-plane';\n  group.add(plane);\n\n  const textMesh = createTextMesh(ctx.fontAtlas, {\n    text: 'Features 2',\n    fontFamily: 'Lora',\n    weight: 400,\n    role: 'headline',\n    sizeEm: 0.34,\n    color: '#e8ecf2',\n    align: 'center',\n    anchor: 'middle',\n    atlasIndex: 0,\n    sourceRect: { x: 0, y: 0, w: 512, h: 320 },\n  });\n\n  if (textMesh) {\n    textMesh.position.set(0, 0, 0.01);\n    textMesh.name = 'card-1-label-text';\n    group.add(textMesh);\n  }\n\n  group.position.set(0, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n    if (textMesh) {\n      if (textMesh.geometry) textMesh.geometry.dispose();\n      if (textMesh.material) textMesh.material.dispose();\n    }\n  };\n\n  return group;\n}"
+}

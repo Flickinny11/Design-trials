@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-05-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 59960,
+  "apiMs": 59254,
+  "usage": {
+    "promptTokens": 3942,
+    "completionTokens": 8839,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.049111999999999996,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport { Group, PlaneGeometry, Mesh } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // Resource tracking for cleanup\n  const resources = {\n    geometries: [],\n    materials: [],\n    textures: []\n  };\n\n  // Create plane geometry for button surface\n  const planeGeometry = new PlaneGeometry(2.5, 0.6);\n  resources.geometries.push(planeGeometry);\n\n  // Load brushed metal texture\n  const metalTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  metalTexture.colorSpace = 'srgb';\n  resources.textures.push(metalTexture);\n\n  // Create material\n  const material = new MeshBasicNodeMaterial({\n    map: metalTexture,\n    toneMapped: false\n  });\n  resources.materials.push(material);\n\n  // Create surface mesh\n  const surfaceMesh = new Mesh(planeGeometry, material);\n  group.add(surfaceMesh);\n\n  // Render text using font atlas\n  if (ctx.fontAtlas) {\n    try {\n      const textContent = Array.isArray(config.textContent)\n        ? config.textContent[0]\n        : config.textContent;\n\n      const text = typeof textContent === 'string'\n        ? textContent\n        : textContent.text;\n\n      const textMesh = ctx.fontAtlas({\n        text: text || 'Get started',\n        fontSize: 0.34,\n        font: 'Lora',\n        fontWeight: 400,\n        color: '#ff2a38',\n        align: 'center'\n      });\n\n      if (textMesh) {\n        textMesh.position.z = 0.02;\n        group.add(textMesh);\n      }\n    } catch (error) {\n      // Font atlas unavailable, continue with surface only\n    }\n  }\n\n  // Apply scene transforms\n  group.position.set(0, -2.85, 0.26);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Setup cleanup function\n  group.userData.cleanup = () => {\n    resources.geometries.forEach(geometry => geometry.dispose());\n    resources.materials.forEach(mat => mat.dispose());\n    resources.textures.forEach(tex => tex.dispose());\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

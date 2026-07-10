@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-18-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 41314,
+  "apiMs": 38940,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 4040,
+    "cacheCreation": 21558,
+    "cacheRead": 0
+  },
+  "costUsd": 0.064307,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture as textureNode } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Load ceramic grain texture\n  const imageTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  imageTexture.colorSpace = THREE.SRGBColorSpace;\n  imageTexture.magFilter = THREE.LinearFilter;\n  imageTexture.minFilter = THREE.LinearMipmapLinearFilter;\n\n  // Create plane geometry matching 512:320 aspect ratio (1.6:1)\n  const width = 1.6;\n  const height = 1.0;\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  // TSL material: textured plane\n  const colorNode = textureNode(imageTexture);\n  const material = new MeshBasicNodeMaterial({\n    colorNode,\n    side: THREE.DoubleSide,\n    transparent: true,\n  });\n\n  // Mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Apply scene position\n  const pos = config.scenePosition;\n  group.position.set(pos.x, pos.y, pos.z);\n\n  if (pos.rotationXYZ) {\n    group.rotation.order = 'XYZ';\n    group.rotation.set(\n      pos.rotationXYZ[0] || 0,\n      pos.rotationXYZ[1] || 0,\n      pos.rotationXYZ[2] || 0\n    );\n  }\n\n  if (pos.scaleXYZ) {\n    group.scale.set(\n      pos.scaleXYZ[0] || 1,\n      pos.scaleXYZ[1] || 1,\n      pos.scaleXYZ[2] || 1\n    );\n  }\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    imageTexture.dispose();\n  };\n\n  // Handlers\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

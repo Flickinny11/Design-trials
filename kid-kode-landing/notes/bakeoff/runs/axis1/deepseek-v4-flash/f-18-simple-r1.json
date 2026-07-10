@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-18-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 17648,
+  "usage": {
+    "promptTokens": 1701,
+    "completionTokens": 2326
+  },
+  "costUsd": 0.00088942,
+  "transportAttempts": 2,
+  "billing": "metered",
+  "output": "```javascript\nimport { PlaneGeometry, SpriteNodeMaterial, Vector2, Mesh } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const tex = ctx.textureLoader(config.imageUrl);\n  const img = tex.image;\n  const atlasW = img.width;\n  const atlasH = img.height;\n\n  // source rect: (0, 0, 512, 320)\n  const uvRepeat = new Vector2(512 / atlasW, 320 / atlasH);\n  const uvOffset = new Vector2(0, 0);\n  tex.repeat.copy(uvRepeat);\n  tex.offset.copy(uvOffset);\n  tex.wrapS = tex.wrapT = 1000; // ClampToEdgeWrapping: 1000\n\n  const aspect = 512 / 320; // width/height\n  const height = 1 / aspect;\n  const geometry = new PlaneGeometry(1, height);\n\n  const material = new SpriteNodeMaterial({\n    map: tex,\n  });\n\n  const mesh = new Mesh(geometry, material);\n  mesh.position.copy(config.position);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  // no handlers, no text, no primitives\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

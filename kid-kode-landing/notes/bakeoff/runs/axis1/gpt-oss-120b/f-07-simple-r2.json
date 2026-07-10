@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-07-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 8106,
+  "usage": {
+    "promptTokens": 1650,
+    "completionTokens": 1325
+  },
+  "costUsd": 0.0010425,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import { Object3D, Mesh, PlaneGeometry } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {{ imageUrl: string }} assets\n * @property {[number, number, number]} position\n * @property {[number, number, number]} rotation\n * @property {[number, number, number]} scale\n *\n * @typedef {Object} NodeContext\n * @property {(url: string) => import('three').Texture} textureLoader\n * @property {{ [key: string]: Function }} primitives\n */\n\n/**\n * Creates a textured plane node for the Features card.\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  // Geometry respects the source rectangle aspect (512 × 320 → 1.6 : 1)\n  const geometry = new PlaneGeometry(1.6, 1);\n\n  // Load texture (cached by ctx.textureLoader)\n  const texture = ctx.textureLoader(config.assets.imageUrl);\n\n  // Basic unlit material with the loaded texture\n  const material = new MeshBasicNodeMaterial({\n    map: texture,\n    transparent: true,\n    alphaTest: 0.01,\n  });\n\n  // Create mesh and apply placement transforms\n  const mesh = new Mesh(geometry, material);\n  if (Array.isArray(config.position)) mesh.position.set(...config.position);\n  if (Array.isArray(config.rotation)) mesh.rotation.set(...config.rotation);\n  if (Array.isArray(config.scale)) mesh.scale.set(...config.scale);\n\n  // Container object (allows future extensibility)\n  const root = new Object3D();\n  root.add(mesh);\n\n  // Event handler placeholder (no interactions defined)\n  root.userData.handlers = {};\n\n  // Cleanup disposes of owned resources; texture is reference‑counted by the loader\n  root.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    // If a timeline were created it would be killed here:\n    // gsap.globalTimeline.kill(); // placeholder – none used in this node\n  };\n\n  return root;\n}"
+}

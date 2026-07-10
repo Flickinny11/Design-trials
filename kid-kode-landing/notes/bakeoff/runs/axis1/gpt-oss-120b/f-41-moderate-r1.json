@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-41-moderate",
+  "run": 1,
+  "ok": true,
+  "wallMs": 62672,
+  "usage": {
+    "promptTokens": 1707,
+    "completionTokens": 2255
+  },
+  "costUsd": 0.0016090499999999999,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import { Mesh, PlaneGeometry, Object3D } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\n/**\n * @param {any} config\n * @param {any} ctx\n * @returns {Object3D}\n */\nexport default function createNode(config, ctx) {\n  // --- Geometry & Material -------------------------------------------------\n  const geometry = new PlaneGeometry(1, 1);\n\n  const texture = ctx.textureLoader.load(config.assets?.imageUrl ?? '');\n  const material = new MeshBasicNodeMaterial();\n  // Node materials accept a texture via the map property\n  material.map = texture;\n\n  const mesh = new Mesh(geometry, material);\n\n  // --- Placement -----------------------------------------------------------\n  const pos = config.position ?? [0, 0, 0];\n  const rot = config.rotation ?? [0, 0, 0];\n  const scl = config.scale ?? [1, 1, 1];\n\n  mesh.position.set(pos[0], pos[1], pos[2]);\n  mesh.rotation.set(rot[0], rot[1], rot[2]);\n  mesh.scale.set(scl[0], scl[1], scl[2]);\n\n  // Store original Y for hover animation\n  const originalY = mesh.position.y;\n\n  // Keep track of GSAP timelines for cleanup\n  const _timelines = [];\n\n  // --- Interaction Handlers ------------------------------------------------\n  const handlers = {\n    hover: {\n      /** @param {MouseEvent} _event */\n      enter: () => {\n        const tl = gsap.to(mesh.position, {\n          y: originalY + 0.15,\n          duration: 0.15,\n          ease: 'power3.out',\n        });\n        _timelines.push(tl);\n      },\n      /** @param {MouseEvent} _event */\n      leave: () => {\n        const tl = gsap.to(mesh.position, {\n          y: originalY,\n          duration: 0.15,\n          ease: 'power3.in',\n        });\n        _timelines.push(tl);\n      },\n    },\n    click: () => {\n      // press‑down animation\n      const down = gsap.to(mesh.scale, {\n        x: 0.97,\n        y: 0.97,\n        z: 0.97,\n        duration: 0.12,\n        ease: 'back.out(1.7)',\n        onComplete: () => {\n          const up = gsap.to(mesh.scale, {\n            x: 1,\n            y: 1,\n            z: 1,\n            duration: 0.12,\n            ease: 'back.out(1.7)',\n          });\n          _timelines.push(up);\n        },\n      });\n      _timelines.push(down);\n\n      // emit selection event if context provides an emitter\n      if (typeof ctx.emit === 'function') {\n        ctx.emit('hub-collection.select');\n      }\n    },\n  };\n\n  // --- UserData ------------------------------------------------------------\n  mesh.userData.handlers = handlers;\n\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (texture) texture.dispose();\n    _timelines.forEach((t) => t.kill && t.kill());\n    _timelines.length = 0;\n  };\n\n  return mesh;\n}"
+}

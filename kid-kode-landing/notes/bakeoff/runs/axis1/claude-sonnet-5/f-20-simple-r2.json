@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-20-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 10675,
+  "apiMs": 8131,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 804,
+    "cacheCreation": 0,
+    "cacheRead": 5488
+  },
+  "costUsd": 0.023915,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import { MeshBasicNodeMaterial, PlaneGeometry, Mesh, Object3D, Color } from 'three/webgpu';\nimport { texture, uv, vec4, mix, float } from 'three/tsl';\nimport { createText } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new Object3D();\n  group.name = 'hub-pricing-title';\n  group.position.set(0, 3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 3.2;\n  const height = 2.0;\n\n  const geometry = new PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial({ transparent: true });\n\n  let map = null;\n  try {\n    map = ctx.textureLoader('/prism-mock/home/nodes/cta-hero-isolated.png');\n  } catch (e) {\n    map = null;\n  }\n\n  if (map) {\n    map.colorSpace = 'srgb';\n    const texNode = texture(map, uv());\n    const inkColor = vec4(new Color('#16161d'), 1.0);\n    const gradientMix = mix(inkColor, texNode, float(0.85));\n    material.colorNode = gradientMix;\n  } else {\n    material.colorNode = vec4(new Color('#16161d'), 1.0);\n  }\n\n  const plane = new Mesh(geometry, material);\n  plane.name = 'pricing-title-plane';\n  group.add(plane);\n\n  let textMesh = null;\n  try {\n    textMesh = createText({\n      text: 'Pricing',\n      font: 'Lora',\n      weight: 400,\n      size: 0.34,\n      color: '#e8ecf2',\n      atlas: ctx.fontAtlas,\n    });\n    textMesh.name = 'pricing-title-text';\n    textMesh.position.set(0, 0, 0.01);\n    group.add(textMesh);\n  } catch (e) {\n    textMesh = null;\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    if (textMesh && textMesh.userData && typeof textMesh.userData.cleanup === 'function') {\n      textMesh.userData.cleanup();\n    }\n  };\n\n  return group;\n}"
+}

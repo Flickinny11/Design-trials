@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-29-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 21872,
+  "usage": {
+    "promptTokens": 1701,
+    "completionTokens": 2376
+  },
+  "costUsd": 0.00090342,
+  "transportAttempts": 2,
+  "billing": "metered",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  // --- Constants ---\n  const PLANE_WIDTH = 1.5;\n  const PLANE_HEIGHT = 0.5;\n  const TEXT_Z_OFFSET = 0.001; // avoid z-fighting\n\n  // --- Background plane ---\n  const bgTex = ctx.textureLoader.load(config.assets.imageUrl);\n  bgTex.colorSpace = THREE.SRGBColorSpace;\n\n  const bgMat = new MeshBasicNodeMaterial({\n    map: bgTex,\n    toneMapped: false, // maintain raw color appearance\n  });\n  const bgGeom = new THREE.PlaneGeometry(PLANE_WIDTH, PLANE_HEIGHT);\n  const bgMesh = new THREE.Mesh(bgGeom, bgMat);\n\n  // --- Text mesh ---\n  // textContent is an array; find the \"headline\" style item\n  const textItem = config.textContent?.find(t => t.style === 'headline') || config.textContent?.[0];\n  const textStr = textItem?.content || '';\n  const textSize = 0.34; // headline scene unit height (from token typography)\n  const textOptions = {\n    size: textSize,\n    weight: textItem?.weight || 400,\n    font: 'Lora', // serif display font\n    anchor: { x: 0.5, y: 0.5 }, // center\n  };\n  const textMesh = ctx.fontAtlas.createMesh(textStr, textOptions);\n  textMesh.position.z = TEXT_Z_OFFSET;\n\n  // --- Group ---\n  const group = new THREE.Group();\n  group.add(bgMesh);\n  group.add(textMesh);\n\n  // Apply scene placement\n  const sp = config.scenePosition;\n  group.position.set(sp.position.x, sp.position.y, sp.position.z);\n  group.rotation.set(sp.rotation.x, sp.rotation.y, sp.rotation.z);\n  group.scale.set(sp.scale.x, sp.scale.y, sp.scale.z);\n\n  // --- Handlers (none) ---\n  group.userData.handlers = {};\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    bgGeom.dispose();\n    bgMat.dispose();\n    bgTex.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n    // textMesh from fontAtlas may have internal resources – dispose its children if any\n    textMesh.traverse(child => {\n      if (child.isMesh) {\n        child.geometry?.dispose();\n        child.material?.dispose();\n      }\n    });\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

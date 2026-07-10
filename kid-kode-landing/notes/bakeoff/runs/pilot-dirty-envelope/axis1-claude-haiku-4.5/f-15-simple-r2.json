@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-15-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 87608,
+  "apiMs": 85343,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 8600,
+    "cacheCreation": 0,
+    "cacheRead": 21571
+  },
+  "costUsd": 0.0461461,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport { PlaneGeometry, Mesh, Group } from 'three/webgpu';\nimport { texture as textureNode } from 'three/tsl';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // Load image texture from URL (cached by ctx.textureLoader)\n  const imageTexture = ctx.textureLoader.load(config.imageUrl);\n\n  // Create plane geometry sized to atlas region aspect ratio (512:320)\n  const aspectRatio = 512 / 320;\n  const planeWidth = 1.0;\n  const planeHeight = planeWidth / aspectRatio;\n  const planeGeometry = new PlaneGeometry(planeWidth, planeHeight);\n\n  // Create material using TSL texture node\n  const colorNode = textureNode(imageTexture);\n  const material = new MeshBasicNodeMaterial({\n    colorNode,\n    transparent: true,\n  });\n\n  // Create and add textured plane\n  const plane = new Mesh(planeGeometry, material);\n  group.add(plane);\n\n  // Render text content via fontAtlas\n  if (config.textContent && config.textContent.text) {\n    const textMesh = ctx.fontAtlas.renderText(\n      config.textContent.text,\n      {\n        fontSize: config.textContent.size || 0.34,\n        weight: config.textContent.weight || 400,\n        font: 'Lora',\n      }\n    );\n    // Position text above card center\n    textMesh.position.set(0, planeHeight * 0.2, 0.01);\n    group.add(textMesh);\n  }\n\n  // Apply cinematic primitives if specified\n  if (config.cinematicPrimitives && config.cinematicPrimitives.length > 0) {\n    for (const primitive of config.cinematicPrimitives) {\n      ctx.primitives[primitive.name](group, primitive.params);\n    }\n  }\n\n  // Setup cleanup\n  group.userData.cleanup = () => {\n    planeGeometry.dispose();\n    material.dispose();\n  };\n\n  // Setup event handlers\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

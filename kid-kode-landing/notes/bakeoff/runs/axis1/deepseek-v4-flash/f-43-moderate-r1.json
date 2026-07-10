@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-43-moderate",
+  "run": 1,
+  "ok": true,
+  "wallMs": 9498,
+  "usage": {
+    "promptTokens": 1755,
+    "completionTokens": 1210
+  },
+  "costUsd": 0.0005845,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  MeshBasicNodeMaterial,\n  PlaneGeometry,\n  Mesh,\n  Object3D,\n  TextureLoader\n} from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const {\n    scenePlacement,\n    behavior,\n    assets,\n    cinematicPrimitives\n  } = config;\n\n  // Create geometry and material\n  const geometry = new PlaneGeometry(1, 1);\n  const material = new MeshBasicNodeMaterial({\n    map: ctx.textureLoader.load(assets.imageUrl)\n  });\n\n  // Create mesh\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(scenePlacement.position.x, scenePlacement.position.y, scenePlacement.position.z);\n  mesh.rotation.set(scenePlacement.rotation.x, scenePlacement.rotation.y, scenePlacement.rotation.z);\n  mesh.scale.set(scenePlacement.scale.x, scenePlacement.scale.y, scenePlacement.scale.z);\n\n  // Make interactive\n  mesh.userData.interactive = true;\n\n  // --- Event Handlers ---\n  const handlers = {};\n\n  // Hover: rise-in preset (subtle, 0.15 units)\n  let hoverTimeline = null;\n  handlers.hoverStart = () => {\n    if (hoverTimeline) hoverTimeline.kill();\n    hoverTimeline = gsap.to(mesh.position, {\n      y: mesh.position.y + 0.15,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n  };\n  handlers.hoverEnd = () => {\n    if (hoverTimeline) hoverTimeline.kill();\n    hoverTimeline = gsap.to(mesh.position, {\n      y: mesh.position.y,\n      duration: 0.5,\n      ease: 'power2.out'\n    });\n  };\n\n  // Click: emit hub-journal.select\n  handlers.click = () => {\n    if (typeof window !== 'undefined') {\n      window.dispatchEvent(new CustomEvent('hub-journal.select', { detail: { source: 'quote-panel' } }));\n    }\n  };\n\n  mesh.userData.handlers = handlers;\n\n  // --- Apply Cinematic Primitives ---\n  if (ctx.primitives && cinematicPrimitives) {\n    cinematicPrimitives.forEach(prim => {\n      if (ctx.primitives[prim.name]) {\n        ctx.primitives[prim.name](mesh, prim.params);\n      }\n    });\n  }\n\n  // --- Cleanup ---\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (material.map) material.map.dispose();\n    if (hoverTimeline) hoverTimeline.kill();\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

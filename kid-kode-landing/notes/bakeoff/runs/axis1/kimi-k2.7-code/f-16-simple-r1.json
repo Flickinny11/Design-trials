@@ -1,0 +1,17 @@
+{
+  "contestant": "kimi-k2.7-code",
+  "model": "accounts/fireworks/models/kimi-k2p7-code",
+  "route": "fireworks",
+  "caseId": "f-16-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 3159,
+  "usage": {
+    "promptTokens": 1607,
+    "completionTokens": 512
+  },
+  "costUsd": 0.0035746499999999995,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import * as THREE from 'three/webgpu';\nimport { texture, uv, color, uniform, vec4 } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  const position = config.scenePosition || { x: 0, y: -0.3, z: 0 };\n  const rotation = config.sceneRotation || { x: 0, y: 0, z: 0 };\n  const scale = config.sceneScale || { x: 1, y: 1, z: 1 };\n\n  group.position.set(position.x, position.y, position.z);\n  group.rotation.set(rotation.x, rotation.y, rotation.z);\n  group.scale.set(scale.x, scale.y, scale.z);\n\n  const width = 1.28;\n  const height = 0.8;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  const map = ctx.textureLoader.load('/prism-mock/home/nodes/orb-decor.png');\n\n  const material = new THREE.MeshBasicNodeMaterial({\n    colorNode: texture(map).mul(color(config.visual.colors.surface || '#0b0b10'))\n  });\n\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  const tweens = [];\n\n  if (config.cinematicPrimitives) {\n    for (const primitive of config.cinematicPrimitives) {\n      if (ctx.primitives && ctx.primitives[primitive.name]) {\n        ctx.primitives[primitive.name](group, primitive.params);\n      }\n    }\n  }\n\n  group.userData.handlers = {};\n  group.userData.tweens = tweens;\n\n  group.userData.cleanup = () => {\n    for (const t of tweens) {\n      t.kill();\n    }\n    tweens.length = 0;\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n  };\n\n  return group;\n}"
+}

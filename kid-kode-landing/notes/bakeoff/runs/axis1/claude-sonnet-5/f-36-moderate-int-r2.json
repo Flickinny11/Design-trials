@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-36-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 14930,
+  "apiMs": 12453,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1387,
+    "cacheCreation": 0,
+    "cacheRead": 5576
+  },
+  "costUsd": 0.038593999999999996,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import { MeshStandardNodeMaterial } from 'three/webgpu';\nimport { color, uv, vec3, mix, smoothstep, float } from 'three/tsl';\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-collection-badge';\n\n  const width = 1.1;\n  const height = 0.34;\n\n  const geometry = new THREE.PlaneGeometry(width, height, 1, 1);\n\n  const tex = ctx.textureLoader.load('/prism-assets/chrome/ceramic-grain.map.png');\n  tex.colorSpace = THREE.SRGBColorSpace;\n\n  const inkColor = color('#16161d');\n  const accentColor = color('#ff2a38');\n\n  const uvNode = uv();\n  // edge light: distance from left/right edges\n  const edgeDist = float(1.0).sub(smoothstep(0.0, 0.06, uvNode.x.oneMinus().min(uvNode.x)));\n  const baseColor = mix(inkColor, vec3(tex), 0.35);\n  const finalColor = mix(baseColor, accentColor, edgeDist.mul(0.85));\n\n  const material = new MeshStandardNodeMaterial();\n  material.colorNode = finalColor;\n  material.metalness = 0.45;\n  material.roughness = 0.55;\n  material.clearcoat = 0.2;\n  material.envMapIntensity = 1.0;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'hub-collection-badge-mesh';\n  group.add(mesh);\n\n  group.position.set(0, 1.6, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const baseScale = group.scale.clone();\n  const baseY = group.position.y;\n\n  let hoverTl = null;\n  let pressTl = null;\n\n  const handlers = {};\n\n  handlers.onPointerOver = () => {\n    if (hoverTl) hoverTl.kill();\n    hoverTl = gsap.timeline();\n    hoverTl.to(group.position, {\n      y: baseY + 0.15,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n  };\n\n  handlers.onPointerOut = () => {\n    if (hoverTl) hoverTl.kill();\n    hoverTl = gsap.timeline();\n    hoverTl.to(group.position, {\n      y: baseY,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n  };\n\n  handlers.onPointerDown = () => {\n    if (pressTl) pressTl.kill();\n    pressTl = gsap.timeline();\n    pressTl.to(group.scale, {\n      x: baseScale.x * 0.97,\n      y: baseScale.y * 0.97,\n      z: baseScale.z * 0.97,\n      duration: 0.12,\n      ease: 'back.out'\n    });\n  };\n\n  handlers.onPointerUp = () => {\n    if (pressTl) pressTl.kill();\n    pressTl = gsap.timeline();\n    pressTl.to(group.scale, {\n      x: baseScale.x,\n      y: baseScale.y,\n      z: baseScale.z,\n      duration: 0.12,\n      ease: 'back.out'\n    });\n  };\n\n  handlers.onClick = () => {\n    if (typeof ctx.emit === 'function') {\n      ctx.emit('hub-collection.select', { id: 'hub-collection-badge' });\n    }\n  };\n\n  group.userData.handlers = handlers;\n\n  group.userData.cleanup = () => {\n    if (hoverTl) hoverTl.kill();\n    if (pressTl) pressTl.kill();\n    geometry.dispose();\n    material.dispose();\n    if (tex && tex.dispose) tex.dispose();\n  };\n\n  return group;\n}"
+}

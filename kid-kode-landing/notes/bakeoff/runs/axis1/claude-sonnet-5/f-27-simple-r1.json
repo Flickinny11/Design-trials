@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-27-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 16065,
+  "apiMs": 13605,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1515,
+    "cacheCreation": 3368,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0736965,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2, vec4 } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-journal-title';\n\n  const pos = config.position || [0, 3, 0];\n  const rot = config.rotation || [0, 0, 0];\n  const scl = config.scale || [1, 1, 1];\n  group.position.set(pos[0], pos[1], pos[2]);\n  group.rotation.set(rot[0], rot[1], rot[2]);\n  group.scale.set(scl[0], scl[1], scl[2]);\n\n  // ---- Background sprite (atlas region) ----\n  const atlasRect = { x: 0, y: 0, w: 512, h: 320 };\n  const atlasSize = { w: 512, h: 320 }; // assume single-region atlas texture matches source dims\n\n  const aspect = atlasRect.w / atlasRect.h;\n  const height = 0.62; // headline-scale em height reference\n  const width = height * aspect * 1.5;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  const rawTexture = ctx.textureLoader.load(config.imageUrl || '/prism-mock/home/nodes/floating-accent.png');\n  rawTexture.colorSpace = THREE.SRGBColorSpace;\n  rawTexture.wrapS = THREE.ClampToEdgeWrapping;\n  rawTexture.wrapT = THREE.ClampToEdgeWrapping;\n\n  const uOffset = atlasRect.x / atlasSize.w;\n  const vOffset = 1 - (atlasRect.y + atlasRect.h) / atlasSize.h;\n  const uScale = atlasRect.w / atlasSize.w;\n  const vScale = atlasRect.h / atlasSize.h;\n\n  const atlasUv = uv().mul(vec2(uScale, vScale)).add(vec2(uOffset, vOffset));\n  const mapNode = texture(rawTexture, atlasUv);\n\n  const material = new THREE.MeshBasicNodeMaterial({\n    transparent: true,\n    depthWrite: false,\n  });\n  material.colorNode = mapNode;\n  material.opacityNode = mapNode.a;\n\n  const spriteMesh = new THREE.Mesh(geometry, material);\n  spriteMesh.name = 'hub-journal-title-bg';\n  group.add(spriteMesh);\n\n  // ---- Billboard behavior (manual, since this is a plane not THREE.Sprite) ----\n  const billboardUpdate = () => {\n    if (ctx.camera) {\n      spriteMesh.quaternion.copy(ctx.camera.quaternion);\n    }\n  };\n  if (ctx.registerFrameCallback) {\n    ctx.registerFrameCallback(billboardUpdate);\n  }\n\n  // ---- Headline text: \"Journal\" ----\n  let textMesh = null;\n  try {\n    textMesh = createTextMesh({\n      text: 'Journal',\n      font: 'Lora',\n      weight: 400,\n      fontSize: 96,\n      color: config.colors?.ink || '#16161d',\n      fontAtlas: ctx.fontAtlas,\n      maxWidth: width * 0.9,\n      align: 'center',\n      anchor: 'center',\n    });\n    if (textMesh) {\n      textMesh.position.set(0, 0, 0.01);\n      group.add(textMesh);\n    }\n  } catch (e) {\n    // text creation guarded to keep node robust\n  }\n\n  // ---- Cleanup ----\n  group.userData.handlers = {};\n  group.userData.cleanup = () => {\n    if (ctx.unregisterFrameCallback && billboardUpdate) {\n      ctx.unregisterFrameCallback(billboardUpdate);\n    }\n    geometry.dispose();\n    material.dispose();\n    if (rawTexture && rawTexture.dispose) rawTexture.dispose();\n    if (textMesh) {\n      textMesh.traverse((child) => {\n        if (child.geometry) child.geometry.dispose();\n        if (child.material) {\n          if (Array.isArray(child.material)) {\n            child.material.forEach((m) => m.dispose());\n          } else {\n            child.material.dispose();\n          }\n        }\n      });\n    }\n  };\n\n  return group;\n}\n```"
+}

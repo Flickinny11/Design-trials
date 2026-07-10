@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-06-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 28901,
+  "usage": {
+    "promptTokens": 1708,
+    "completionTokens": 3842
+  },
+  "costUsd": 0.00131488,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  // Load texture from atlas\n  const texture = ctx.textureLoader.load(config.assets.imageUrl);\n  // Assume texture is already loaded (cached) and has .image dimensions\n  const texW = texture.image.width;\n  const texH = texture.image.height;\n\n  // Atlas source rect from config (pixels)\n  const { x: rectX, y: rectY, width: rectW, height: rectH } = config.atlasRegion?.sourceRect || { x: 0, y: 0, width: 512, height: 320 };\n\n  // UV offset/repeat for the sub‑region (v-flipped because Three.js v=0 at bottom)\n  const uOff = rectX / texW;\n  const vOff = 1 - (rectY + rectH) / texH;\n  const uScale = rectW / texW;\n  const vScale = rectH / texH;\n  texture.offset.set(uOff, vOff);\n  texture.repeat.set(uScale, vScale);\n  texture.needsUpdate = true;\n\n  // Plane sized to match rect aspect ratio\n  const aspect = rectW / rectH;\n  const geometry = new THREE.PlaneGeometry(aspect, 1);\n  const material = new MeshBasicNodeMaterial({\n    map: texture,\n    transparent: true, // assume alpha channel present\n    depthWrite: false,\n  });\n\n  const mesh = new THREE.Mesh(geometry, material);\n\n  // Apply scene placement\n  mesh.position.copy(config.position || new THREE.Vector3(0, 3, 0));\n  mesh.rotation.setFromVector3(config.rotation || new THREE.Vector3(0, 0, 0));\n  mesh.scale.copy(config.scale || new THREE.Vector3(1, 1, 1));\n\n  // Manual billboarding – keep face toward camera\n  const billboardHandler = (camera) => {\n    mesh.lookAt(camera.position);\n  };\n  mesh.userData.handlers = {\n    update: billboardHandler,\n  };\n\n  // Cleanup\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n    // No GSAP timelines in this node\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

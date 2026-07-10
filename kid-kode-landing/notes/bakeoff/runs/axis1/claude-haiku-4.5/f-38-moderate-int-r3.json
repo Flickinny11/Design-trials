@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-38-moderate-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 81052,
+  "apiMs": 78338,
+  "usage": {
+    "promptTokens": 4020,
+    "completionTokens": 8930,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.04971300000000001,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.position.set(2.5, 1.6, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Load image texture\n  const imageTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  imageTexture.colorSpace = THREE.SRGBColorSpace;\n\n  // Main image plane (512x320 → 1.0 × 0.625 aspect)\n  const geometry = new THREE.PlaneGeometry(1, 0.625);\n  const material = new THREE.MeshBasicMaterial({\n    map: imageTexture,\n    transparent: true,\n    side: THREE.FrontSide\n  });\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Accent border mesh (for focus/hover effect)\n  const borderGeometry = new THREE.PlaneGeometry(1.05, 0.656);\n  const borderMaterial = new THREE.MeshBasicMaterial({\n    color: 0xff2a38, // accent red\n    transparent: true,\n    opacity: 0,\n    depthWrite: false,\n    side: THREE.FrontSide\n  });\n  const borderMesh = new THREE.Mesh(borderGeometry, borderMaterial);\n  borderMesh.position.z = -0.01;\n  group.add(borderMesh);\n\n  // Track all active timelines for cleanup\n  const timelines = [];\n\n  const handlers = {\n    onHover: () => {\n      timelines.forEach(t => t.kill());\n      timelines.length = 0;\n\n      // Rise-in animation: y +0.15, power3.out, 0.7s\n      const riseTimeline = gsap.to(group.position, {\n        y: group.position.y + 0.15,\n        duration: 0.7,\n        ease: 'power3.out'\n      });\n      timelines.push(riseTimeline);\n\n      // Accent border reveals\n      const borderTimeline = gsap.to(borderMaterial, {\n        opacity: 0.3,\n        duration: 0.4,\n        ease: 'power2.out'\n      });\n      timelines.push(borderTimeline);\n    },\n\n    onHoverEnd: () => {\n      timelines.forEach(t => t.kill());\n      timelines.length = 0;\n\n      // Settle back\n      const settleTimeline = gsap.to(group.position, {\n        y: 1.6,\n        duration: 0.5,\n        ease: 'power2.inOut'\n      });\n      timelines.push(settleTimeline);\n\n      // Border fades\n      const borderTimeline = gsap.to(borderMaterial, {\n        opacity: 0,\n        duration: 0.3,\n        ease: 'power2.out'\n      });\n      timelines.push(borderTimeline);\n    },\n\n    onClick: () => {\n      timelines.forEach(t => t.kill());\n      timelines.length = 0;\n\n      // Press-down: scale 0.97, back.out 120ms, then spring back\n      const pressTimeline = gsap.timeline();\n      pressTimeline.to(group.scale, {\n        x: 0.97,\n        y: 0.97,\n        duration: 0.12,\n        ease: 'back.out'\n      }, 0)\n      .to(group.scale, {\n        x: 1,\n        y: 1,\n        duration: 0.2,\n        ease: 'elastic.out'\n      }, 0.12);\n\n      timelines.push(pressTimeline);\n    }\n  };\n\n  group.userData.handlers = handlers;\n\n  group.userData.cleanup = () => {\n    timelines.forEach(t => t.kill());\n    timelines.length = 0;\n    geometry.dispose();\n    material.dispose();\n    borderGeometry.dispose();\n    borderMaterial.dispose();\n    imageTexture.dispose();\n  };\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-21-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 34831,
+  "usage": {
+    "promptTokens": 1665,
+    "completionTokens": 2659
+  },
+  "costUsd": 0.0018451499999999998,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import { Object3D, PlaneGeometry, Mesh, Vector2 } from 'three/webgpu';\nimport { MeshBasicNodeMaterial, uv, texture, mul, add, vec2 } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\nexport default function createNode(config, ctx) {\n  // Root container\n  const root = new Object3D();\n\n  // ---- Transform ---------------------------------------------------------\n  const pos = config.position || [-3.2, -0.3, 0];\n  const rot = config.rotation || [0, 0, 0];\n  const scl = config.scale || [1, 1, 1];\n\n  root.position.set(pos[0], pos[1], pos[2]);\n  root.rotation.set(rot[0], rot[1], rot[2]);\n  root.scale.set(scl[0], scl[1], scl[2]);\n\n  // ---- Texture ------------------------------------------------------------\n  const imageUrl = (config.assets && config.assets.imageUrl) || '/prism-mock/home/nodes/floating-accent.png';\n  const tex = ctx.textureLoader.load(imageUrl);\n\n  // ---- Atlas region -------------------------------------------------------\n  const region = (config.atlasRegion) || { x: 0, y: 0, width: 512, height: 320 };\n  const img = tex.image;\n  const atlasWidth = (img && img.width) || 1;\n  const atlasHeight = (img && img.height) || 1;\n\n  const uvScale = new Vector2(region.width / atlasWidth, region.height / atlasHeight);\n  const uvOffset = new Vector2(region.x / atlasWidth, region.y / atlasHeight);\n\n  const uvNode = add(mul(uv(), vec2(uvScale.x, uvScale.y)), vec2(uvOffset.x, uvOffset.y));\n  const texNode = texture(tex, uvNode);\n\n  // ---- Material -----------------------------------------------------------\n  const material = new MeshBasicNodeMaterial({ map: texNode, transparent: true });\n\n  // ---- Geometry -----------------------------------------------------------\n  const aspect = region.width / region.height;\n  const geometry = new PlaneGeometry(aspect, 1);\n\n  // ---- Mesh ---------------------------------------------------------------\n  const mesh = new Mesh(geometry, material);\n  mesh.onBeforeRender = (renderer, scene, camera) => {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n  root.add(mesh);\n\n  // ---- Primitives ---------------------------------------------------------\n  // No cinematic primitives defined for this node.\n\n  // ---- UserData -----------------------------------------------------------\n  root.userData.handlers = {};\n\n  root.userData.cleanup = () => {\n    mesh.onBeforeRender = null;\n    geometry.dispose();\n    material.dispose();\n    // Texture is cached via ctx.textureLoader; do not dispose here.\n    gsap.globalTimeline.clear(); // ensure any GSAP timelines are killed (none expected)\n  };\n\n  return root;\n}"
+}

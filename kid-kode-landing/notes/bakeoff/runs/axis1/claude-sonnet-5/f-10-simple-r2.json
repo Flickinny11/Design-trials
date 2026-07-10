@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-10-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 11461,
+  "apiMs": 9098,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 938,
+    "cacheCreation": 0,
+    "cacheRead": 5477
+  },
+  "costUsd": 0.027281500000000004,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, float, mix, uniform } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-features-card-1-label';\n\n  const pos = config.scenePosition || { x: 0, y: 1, z: 0.06 };\n  const rot = config.sceneRotation || { x: 0, y: 0, z: 0 };\n  const scl = config.sceneScale || { x: 1, y: 1, z: 1 };\n  group.position.set(pos.x, pos.y, pos.z);\n  group.rotation.set(rot.x, rot.y, rot.z);\n  group.scale.set(scl.x, scl.y, scl.z);\n\n  const width = 1.4;\n  const height = (320 / 512) * width;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  const map = ctx.textureLoader.load('/prism-mock/home/nodes/orb-decor.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const texNode = texture(map, uv());\n  const grainAmount = uniform(0.03);\n\n  const accent = vec4(1.0, 0.165, 0.22, 1.0);\n  const ink = vec4(0.086, 0.086, 0.114, 1.0);\n\n  const gradientMix = mix(ink, accent, uv().y);\n  const finalColor = mix(texNode, gradientMix, float(0.12));\n\n  material.colorNode = finalColor;\n  material.opacityNode = texNode.a;\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'features-card-1-label-plane';\n  group.add(plane);\n\n  const textMesh = createTextMesh({\n    text: 'Features 2',\n    fontAtlas: ctx.fontAtlas,\n    font: 'Lora',\n    weight: 400,\n    sizeEm: 0.34,\n    color: '#e8ecf2',\n    align: 'center',\n    anchor: 'center',\n  });\n  textMesh.position.set(0, 0, 0.01);\n  group.add(textMesh);\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n    while (group.children.length) group.remove(group.children[0]);\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

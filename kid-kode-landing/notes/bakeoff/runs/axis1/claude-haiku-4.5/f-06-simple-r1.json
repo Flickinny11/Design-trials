@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-06-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 121633,
+  "apiMs": 119318,
+  "usage": {
+    "promptTokens": 3960,
+    "completionTokens": 12690,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.06838300000000001,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport * as TSL from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Content group positioned in scene\n  const content = new THREE.Group();\n  content.position.set(0, 3, 0);\n  group.add(content);\n  \n  // Load ceramic grain texture\n  const texture = ctx.textureLoader.load('/prism-assets/chrome/ceramic-grain.map.png');\n  \n  // Create billboard plane (512x320 aspect ratio = 1.6)\n  const geometry = new THREE.PlaneGeometry(1.6, 1);\n  const colorNode = TSL.texture(texture);\n  const material = new THREE.MeshBasicNodeMaterial({\n    colorNode,\n    transparent: true,\n    side: THREE.DoubleSide,\n  });\n  \n  // Add textured background mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  content.add(mesh);\n  \n  // Render text overlay via fontAtlas\n  if (ctx.fontAtlas) {\n    let text = 'Features';\n    if (config.textContent && Array.isArray(config.textContent)) {\n      const item = config.textContent[0];\n      text = typeof item === 'string' ? item : item?.text || item?.content || text;\n    }\n    \n    const textMesh = ctx.fontAtlas.render(text, {\n      fontSize: 0.34,\n      fontWeight: 400,\n      fontFamily: 'Lora',\n      color: '#16161d',\n    });\n    \n    if (textMesh) {\n      textMesh.position.z = 0.1;\n      content.add(textMesh);\n    }\n  }\n  \n  // Cleanup resources\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n  };\n  \n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

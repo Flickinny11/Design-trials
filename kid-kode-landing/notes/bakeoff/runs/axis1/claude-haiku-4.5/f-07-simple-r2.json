@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-07-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 57979,
+  "apiMs": 55567,
+  "usage": {
+    "promptTokens": 3941,
+    "completionTokens": 6249,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.036140000000000005,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Scene placement\n  group.position.set(-3.2, -0.3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n  \n  // Load texture from configuration\n  const imageTexture = ctx.textureLoader.load(config.imageUrl || '/prism-mock/home/nodes/feature-card.png');\n  imageTexture.colorSpace = THREE.SRGBColorSpace;\n  \n  // Plane geometry with 512:320 aspect ratio (1.6:1)\n  const geometry = new THREE.PlaneGeometry(1.6, 1.0);\n  \n  // Material using TSL texture node\n  const material = new MeshBasicNodeMaterial({\n    colorNode: texture(imageTexture),\n    side: THREE.DoubleSide,\n    transparent: true,\n  });\n  \n  // Mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n  \n  // Apply cinematic primitives if configured\n  if (config.cinematicPrimitives && Array.isArray(config.cinematicPrimitives)) {\n    for (const primitive of config.cinematicPrimitives) {\n      if (ctx.primitives[primitive.name]) {\n        ctx.primitives[primitive.name](group, primitive.params || {});\n      }\n    }\n  }\n  \n  // Cleanup function\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    imageTexture.dispose();\n  };\n  \n  // Event handlers container\n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

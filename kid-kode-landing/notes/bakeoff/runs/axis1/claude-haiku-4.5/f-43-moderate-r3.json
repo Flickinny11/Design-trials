@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-43-moderate",
+  "run": 3,
+  "ok": true,
+  "wallMs": 103909,
+  "apiMs": 101481,
+  "usage": {
+    "promptTokens": 4010,
+    "completionTokens": 11268,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.061378,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  // Create plane geometry (512×320 aspect ratio = 1.6:1)\n  const geometry = new THREE.PlaneGeometry(1.6, 1);\n  \n  // Load texture\n  const textureAsset = ctx.textureLoader.load(config.assets.imageUrl);\n  \n  // Create material with TSL nodes\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.colorNode = texture(textureAsset);\n  \n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  \n  // Apply transformation from config\n  const pos = config.scenePosition || [0, 0, 0];\n  const rot = config.sceneRotation || [0, 0, 0];\n  const scl = config.sceneScale || [1, 1, 1];\n  \n  mesh.position.set(pos[0], pos[1], pos[2]);\n  mesh.rotation.set(rot[0], rot[1], rot[2]);\n  mesh.scale.set(scl[0], scl[1], scl[2]);\n  \n  // Store original Y position for animations\n  const originalY = mesh.position.y;\n  let hoverTimeline;\n  \n  // Attach event handlers\n  mesh.userData.handlers = {};\n  \n  // Hover event: rise-in (y +0.15, power3.out, 0.7s)\n  mesh.userData.handlers.hover = (isEntering) => {\n    if (hoverTimeline) hoverTimeline.kill();\n    hoverTimeline = gsap.to(mesh.position, {\n      y: isEntering ? originalY + 0.15 : originalY,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n  };\n  \n  // Click event: emit hub-journal.select\n  mesh.userData.handlers.click = () => {\n    const emitter = config.eventEmitter || ctx.eventEmitter;\n    if (emitter?.emit) {\n      emitter.emit('hub-journal.select');\n    }\n  };\n  \n  // Apply cinematic primitives\n  const primitives = config.cinematicPrimitives || [];\n  for (const prim of primitives) {\n    if (ctx.primitives?.[prim.name]) {\n      ctx.primitives[prim.name](mesh, prim.params || {});\n    }\n  }\n  \n  // Cleanup function\n  mesh.userData.cleanup = () => {\n    gsap.killTweensOf(mesh.position);\n    geometry.dispose();\n    material.dispose();\n    textureAsset.dispose();\n  };\n  \n  return mesh;\n}\n```"
+}

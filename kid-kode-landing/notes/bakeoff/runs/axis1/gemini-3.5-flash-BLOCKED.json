@@ -1,0 +1,8 @@
+{
+  "contestant": "gemini-3.5-flash",
+  "model": "google/gemini-3.5-flash",
+  "route": "deepinfra",
+  "httpStatus": 402,
+  "reprobedAt": "2026-07-10T01:36:14.173Z",
+  "note": "account unfunded; founder console action D-01/D-02 pending"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-31-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 14967,
+  "apiMs": 12310,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1322,
+    "cacheCreation": 0,
+    "cacheRead": 5592
+  },
+  "costUsd": 0.037006000000000004,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import * as THREE from 'three/webgpu';\nimport { texture, uv, vec4 } from 'three/tsl';\nimport gsap from 'gsap';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-journal-card-1-label';\n  group.position.set(0, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 1.6;\n  const height = 1.0;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const map = ctx.textureLoader.load('/prism-mock/home/nodes/feature-card.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const uvNode = uv();\n  material.colorNode = texture(map, uvNode);\n  material.opacityNode = vec4(1, 1, 1, 1).a;\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'card-plane';\n  group.add(plane);\n\n  const textMesh = createTextMesh({\n    text: 'Journal 2',\n    font: 'Lora',\n    weight: 400,\n    sizeEm: 0.34,\n    color: config.colors?.paper || '#e8ecf2',\n    atlas: ctx.fontAtlas,\n    maxWidth: width * 0.85\n  });\n  textMesh.position.set(0, 0, 0.01);\n  group.add(textMesh);\n\n  // Cinematic primitive: parallax-scroll\n  ctx.primitives['parallax-scroll'](group, { intensity: 0.25 });\n\n  // Interaction state\n  const basePosition = group.position.clone();\n  let hoverTween = null;\n  let pressTween = null;\n\n  function onPointerOver() {\n    if (pressTween) pressTween.kill();\n    hoverTween = gsap.to(group.position, {\n      y: basePosition.y + 0.15,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n  }\n\n  function onPointerOut() {\n    if (hoverTween) hoverTween.kill();\n    hoverTween = gsap.to(group.position, {\n      y: basePosition.y,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n  }\n\n  function onClick() {\n    if (hoverTween) hoverTween.kill();\n    pressTween = gsap.timeline()\n      .to(group.scale, { x: 0.97, y: 0.97, z: 0.97, duration: 0.12, ease: 'back.out' })\n      .to(group.scale, { x: 1, y: 1, z: 1, duration: 0.3, ease: 'back.out' });\n\n    if (group.userData.emit) {\n      group.userData.emit('hub-journal.select', { id: 'hub-journal-card-1' });\n    }\n  }\n\n  group.userData.handlers = {\n    onPointerOver,\n    onPointerOut,\n    onClick\n  };\n\n  group.userData.emit = (eventName, payload) => {\n    if (ctx.eventBus && typeof ctx.eventBus.emit === 'function') {\n      ctx.eventBus.emit(eventName, payload);\n    }\n  };\n\n  group.userData.cleanup = () => {\n    if (hoverTween) hoverTween.kill();\n    if (pressTween) pressTween.kill();\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    if (textMesh.userData && typeof textMesh.userData.cleanup === 'function') {\n      textMesh.userData.cleanup();\n    }\n    if (group.userData.parallaxCleanup) {\n      group.userData.parallaxCleanup();\n    }\n  };\n\n  return group;\n}"
+}

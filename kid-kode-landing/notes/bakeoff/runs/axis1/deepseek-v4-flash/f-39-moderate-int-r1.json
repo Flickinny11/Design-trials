@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-39-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 16229,
+  "usage": {
+    "promptTokens": 1789,
+    "completionTokens": 2252
+  },
+  "costUsd": 0.00088102,
+  "transportAttempts": 2,
+  "billing": "metered",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'ornamental-divider';\n\n  // Load GLB mesh\n  const glbScene = ctx.glbLoader.get(config.meshUrl);\n  const mesh = glbScene.clone(true);\n  // Assume the GLB is a single model; add as child\n  group.add(mesh);\n\n  // Apply transform\n  if (config.position) {\n    group.position.set(config.position[0], config.position[1], config.position[2]);\n  }\n  if (config.rotation) {\n    group.rotation.set(config.rotation[0], config.rotation[1], config.rotation[2]);\n  }\n  if (config.scale) {\n    group.scale.set(config.scale[0], config.scale[1], config.scale[2]);\n  }\n\n  // Store original position for hover animation\n  const originalY = group.position.y;\n\n  // GSAP timer references for cleanup\n  const tweens = [];\n\n  // --- Interaction handlers (pointer events on the group) ---\n  const handlers = {\n    pointerover: () => {\n      // Rise-in subtle (0.15 scene units up)\n      const tween = gsap.to(group.position, {\n        y: originalY + 0.15,\n        duration: 0.7,\n        ease: 'power3.out',\n        overwrite: 'auto'\n      });\n      tweens.push(tween);\n    },\n    pointerout: () => {\n      const tween = gsap.to(group.position, {\n        y: originalY,\n        duration: 0.5,\n        ease: 'power2.out',\n        overwrite: 'auto'\n      });\n      tweens.push(tween);\n    },\n    pointerdown: () => {\n      // Press-down effect\n      const tween = gsap.to(group.scale, {\n        x: 0.97,\n        y: 0.97,\n        z: 0.97,\n        duration: 0.12,\n        ease: 'back.out',\n        overwrite: 'auto'\n      });\n      tweens.push(tween);\n    },\n    pointerup: () => {\n      // Return with weighted-settle (overshoot)\n      const tween = gsap.to(group.scale, {\n        x: 1,\n        y: 1,\n        z: 1,\n        duration: 0.9,\n        ease: 'power4.out',\n        overwrite: 'auto'\n      });\n      tweens.push(tween);\n    },\n    click: () => {\n      // Emit navigation event\n      if (typeof ctx.emit === 'function') {\n        ctx.emit('hub-home.select');\n      }\n      // Also trigger press-up if not already (safety)\n      handlers.pointerup();\n    }\n  };\n\n  group.userData.handlers = handlers;\n\n  // Data bindings from config (e.g., trpc.visits.book.slot -> confirmPanel)\n  group.userData.dataBindings = config.dataBindings || [];\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    // Kill all GSAP animations for this group\n    tweens.forEach(tween => tween.kill());\n    gsap.killTweensOf(group.position);\n    gsap.killTweensOf(group.scale);\n    // Dispose GLB resources\n    mesh.traverse((child) => {\n      if (child.isMesh) {\n        child.geometry.dispose();\n        if (Array.isArray(child.material)) {\n          child.material.forEach(mat => mat.dispose());\n        } else if (child.material) {\n          child.material.dispose();\n        }\n      }\n    });\n    // Remove from parent if any\n    if (group.parent) {\n      group.parent.remove(group);\n    }\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

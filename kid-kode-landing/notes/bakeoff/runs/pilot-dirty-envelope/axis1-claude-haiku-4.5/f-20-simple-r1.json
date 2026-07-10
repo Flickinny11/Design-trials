@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-20-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 92342,
+  "apiMs": 89940,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 10532,
+    "cacheCreation": 21558,
+    "cacheRead": 0
+  },
+  "costUsd": 0.09675700000000001,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  const resources = { geometries: [], materials: [], textures: [] };\n  \n  // Load texture\n  const texture = ctx.textureLoader.load(config.imageUrl);\n  texture.colorSpace = THREE.SRGBColorSpace;\n  resources.textures.push(texture);\n  \n  // Create background plane\n  const planeGeometry = new THREE.PlaneGeometry(5.12, 3.2);\n  const planeMaterial = new MeshBasicNodeMaterial({ map: texture, side: THREE.DoubleSide });\n  resources.geometries.push(planeGeometry);\n  resources.materials.push(planeMaterial);\n  group.add(new THREE.Mesh(planeGeometry, planeMaterial));\n  \n  // Create MSDF text\n  if (ctx.fontAtlas?.createText) {\n    const textMesh = ctx.fontAtlas.createText({\n      text: config.textContent || 'Pricing',\n      font: 'Lora',\n      fontSize: 0.34,\n      fontWeight: 400,\n      color: 0x16161d,\n      anchorX: 'center',\n      anchorY: 'middle',\n    });\n    \n    if (textMesh && textMesh instanceof THREE.Object3D) {\n      textMesh.position.z = 0.1;\n      group.add(textMesh);\n      if (textMesh.geometry) resources.geometries.push(textMesh.geometry);\n      if (textMesh.material) resources.materials.push(textMesh.material);\n    }\n  }\n  \n  // Apply cinematicPrimitives\n  if (config.cinematicPrimitives?.length) {\n    config.cinematicPrimitives.forEach(p => {\n      ctx.primitives?.[p.name]?.(group, p.params);\n    });\n  }\n  \n  // Apply scene transforms\n  const pos = config.scenePosition || {};\n  group.position.set(pos.x ?? 0, pos.y ?? 3, pos.z ?? 0);\n  if (pos.rotationXYZ) group.rotation.set(...pos.rotationXYZ);\n  if (pos.scaleXYZ) group.scale.set(...pos.scaleXYZ);\n  \n  // Cleanup\n  group.userData.cleanup = () => {\n    resources.geometries.forEach(g => g?.dispose?.());\n    resources.materials.forEach(m => m?.dispose?.());\n    resources.textures.forEach(t => t?.dispose?.());\n  };\n  \n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

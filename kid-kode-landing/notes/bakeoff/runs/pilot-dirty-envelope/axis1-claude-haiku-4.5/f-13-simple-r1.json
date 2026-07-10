@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-13-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 83185,
+  "apiMs": 81139,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 8449,
+    "cacheCreation": 21553,
+    "cacheRead": 0
+  },
+  "costUsd": 0.08631699999999999,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  if (config.scenePosition) {\n    const pos = config.scenePosition;\n    group.position.set(pos.x ?? 0, pos.y ?? 0, pos.z ?? 0);\n    if (pos.rotationXYZ) {\n      const [rx, ry, rz] = pos.rotationXYZ;\n      group.rotation.order = 'XYZ';\n      group.rotation.set(rx, ry, rz);\n    }\n    if (pos.scaleXYZ) {\n      const [sx, sy, sz] = pos.scaleXYZ;\n      group.scale.set(sx, sy, sz);\n    }\n  }\n\n  if (config.imageUrl) {\n    const texture = ctx.textureLoader.load(config.imageUrl);\n    texture.colorSpace = THREE.SRGBColorSpace;\n    texture.magFilter = THREE.LinearFilter;\n    texture.minFilter = THREE.LinearMipmapLinearFilter;\n\n    const aspect = 512 / 320;\n    const geometry = new THREE.PlaneGeometry(aspect, 1);\n    const material = new THREE.MeshBasicMaterial({\n      map: texture,\n      side: THREE.DoubleSide,\n      toneMapped: false,\n    });\n\n    const mesh = new THREE.Mesh(geometry, material);\n    group.add(mesh);\n  }\n\n  if (config.textContent && ctx.fontAtlas) {\n    const text = typeof config.textContent === 'string'\n      ? config.textContent\n      : String(config.textContent);\n\n    const textMesh = ctx.fontAtlas.createText(text, {\n      fontSize: 0.34,\n      color: 0x16161d,\n      anchor: 'center',\n      lineHeight: 1.2,\n      maxWidth: 3,\n    });\n\n    if (textMesh) {\n      textMesh.position.z = 0.1;\n      group.add(textMesh);\n    }\n  }\n\n  if (config.cinematicPrimitives?.length > 0 && ctx.primitives) {\n    for (const primitive of config.cinematicPrimitives) {\n      if (ctx.primitives[primitive.name]) {\n        ctx.primitives[primitive.name](group, primitive.params);\n      }\n    }\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    group.traverse((child) => {\n      if (child instanceof THREE.Mesh) {\n        child.geometry?.dispose();\n        const mats = Array.isArray(child.material) ? child.material : [child.material];\n        mats.forEach(mat => {\n          mat?.map?.dispose();\n          mat?.dispose();\n        });\n      }\n    });\n    gsap.killTweensOf(group);\n  };\n\n  return group;\n}\n```"
+}

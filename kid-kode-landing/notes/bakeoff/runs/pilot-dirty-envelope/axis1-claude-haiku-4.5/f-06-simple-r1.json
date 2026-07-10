@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-06-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 66546,
+  "apiMs": 63877,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 6492,
+    "cacheCreation": 21565,
+    "cacheRead": 0
+  },
+  "costUsd": 0.076573,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Load atlas texture\n  const atlasTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  atlasTexture.colorSpace = THREE.SRGBColorSpace;\n\n  // Atlas region specification from config (pixel coordinates)\n  const atlasRegionX = 0;\n  const atlasRegionY = 0;\n  const atlasRegionWidth = 512;\n  const atlasRegionHeight = 320;\n\n  // Assuming 512×512 atlas (standard size matching region width)\n  const atlasSize = 512;\n\n  // Compute normalized UV bounds for this region\n  const uvMinX = atlasRegionX / atlasSize;\n  const uvMaxX = (atlasRegionX + atlasRegionWidth) / atlasSize;\n  const uvMinY = atlasRegionY / atlasSize;\n  const uvMaxY = (atlasRegionY + atlasRegionHeight) / atlasSize;\n\n  // Create plane geometry with aspect ratio matching atlas region\n  const aspectRatio = atlasRegionWidth / atlasRegionHeight;\n  const planeWidth = 2.0;\n  const planeHeight = planeWidth / aspectRatio;\n\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  // Remap UVs to sample the correct atlas region\n  const uvAttribute = geometry.attributes.uv;\n  for (let i = 0; i < uvAttribute.count; i++) {\n    const baseU = uvAttribute.getX(i);\n    const baseV = uvAttribute.getY(i);\n\n    const mappedU = uvMinX + baseU * (uvMaxX - uvMinX);\n    const mappedV = uvMinY + baseV * (uvMaxY - uvMinY);\n\n    uvAttribute.setXY(i, mappedU, mappedV);\n  }\n  uvAttribute.needsUpdate = true;\n\n  // Create material with TSL texture node\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    toneMapped: false,\n    side: THREE.DoubleSide\n  });\n  material.colorNode = texture(atlasTexture);\n\n  // Create mesh and add to group\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Cleanup function\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    atlasTexture.dispose();\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

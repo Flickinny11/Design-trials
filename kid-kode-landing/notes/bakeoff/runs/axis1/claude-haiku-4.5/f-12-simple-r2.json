@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-12-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 98930,
+  "apiMs": 96807,
+  "usage": {
+    "promptTokens": 3967,
+    "completionTokens": 10364,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.056767,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { Mesh, PlaneGeometry, MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Load the ceramic grain texture\n  const textureMap = ctx.textureLoader.load(config.assets.imageUrl);\n  textureMap.colorSpace = THREE.SRGBColorSpace;\n\n  // Create plane geometry with 512:320 aspect ratio\n  const aspectRatio = 512 / 320;\n  const width = 0.8;\n  const height = width / aspectRatio;\n  const geometry = new PlaneGeometry(width, height);\n\n  // Create material with TSL texture node\n  const colorNode = texture(textureMap);\n  const material = new MeshBasicNodeMaterial({\n    colorNode,\n    transparent: true,\n  });\n\n  // Create plane mesh\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  // Render text content \"Features 3\"\n  if (config.textContent && ctx.fontAtlas) {\n    const textMesh = ctx.fontAtlas.render(config.textContent, {\n      size: 39,\n      weight: 400,\n      font: 'Lora',\n      color: config.colors.ink,\n      align: 'center',\n      vAlign: 'center',\n    });\n\n    if (textMesh) {\n      textMesh.position.z = 0.01;\n      group.add(textMesh);\n    }\n  }\n\n  // Apply position, rotation, and scale from config\n  group.position.set(config.position[0], config.position[1], config.position[2]);\n  group.rotation.set(config.rotation[0], config.rotation[1], config.rotation[2]);\n  group.scale.set(config.scale[0], config.scale[1], config.scale[2]);\n\n  // Attach billboard handler for camera-facing updates\n  group.userData.handlers = {\n    updateBillboard: (camera) => {\n      group.lookAt(camera.position);\n    },\n  };\n\n  // Cleanup function for resource disposal\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (textureMap) {\n      textureMap.dispose();\n    }\n  };\n\n  return group;\n}\n```"
+}

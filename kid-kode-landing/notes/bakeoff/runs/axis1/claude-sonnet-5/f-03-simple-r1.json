@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-03-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 10867,
+  "apiMs": 8302,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 855,
+    "cacheCreation": 3350,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0570095,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2, uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const assetUrl = '/prism-mock/home/nodes/floating-accent.png';\n  const map = ctx.textureLoader.load(assetUrl);\n  map.colorSpace = THREE.SRGBColorSpace;\n  map.wrapS = THREE.ClampToEdgeWrapping;\n  map.wrapT = THREE.ClampToEdgeWrapping;\n\n  // Atlas region: 0,0,512,320 within atlas index 0 (assume full-image atlas layout unknown size;\n  // default to full texture since atlas dimensions aren't provided beyond this region)\n  const atlasW = 512;\n  const atlasH = 320;\n  const rect = { x: 0, y: 0, w: 512, h: 320 };\n\n  const uvOffset = uniform(vec2(rect.x / atlasW, 1 - (rect.y + rect.h) / atlasH));\n  const uvScale = uniform(vec2(rect.w / atlasW, rect.h / atlasH));\n\n  const mappedUV = uv().mul(uvScale).add(uvOffset);\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.colorNode = texture(map, mappedUV);\n  material.transparent = true;\n  material.depthWrite = false;\n  material.toneMapped = false;\n\n  const aspect = rect.w / rect.h;\n  const height = 2.0;\n  const width = height * aspect;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'home-hero-showpiece';\n\n  mesh.position.set(0, -0.35, -0.6);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  const container = new THREE.Object3D();\n  container.name = 'home-hero-showpiece-container';\n  container.add(mesh);\n\n  container.onBeforeRender = (renderer, scene, camera) => {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  container.userData.handlers = {};\n\n  container.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    container.onBeforeRender = null;\n  };\n\n  return container;\n}\n```"
+}

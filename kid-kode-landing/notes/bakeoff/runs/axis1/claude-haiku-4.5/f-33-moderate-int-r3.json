@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-33-moderate-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 108374,
+  "apiMs": 105968,
+  "usage": {
+    "promptTokens": 4019,
+    "completionTokens": 12002,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.06507600000000001,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Apply scene placement\n  const pos = config.scenePosition || [3.2, 1, 0.06];\n  group.position.set(pos[0], pos[1], pos[2]);\n  \n  const rot = config.sceneRotation || [0, 0, 0];\n  group.rotation.set(rot[0], rot[1], rot[2]);\n  \n  const scale = config.sceneScale || [1, 1, 1];\n  group.scale.set(scale[0], scale[1], scale[2]);\n  \n  // Design token colors\n  const colors = config.colors || {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10',\n  };\n  \n  // Load texture (cached via ctx)\n  const textureMap = ctx.textureLoader.load(\n    config.assets?.imageUrl || '/prism-mock/home/nodes/floating-accent.png'\n  );\n  textureMap.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create textured plane (512x320 image = 1.6:1 aspect ratio)\n  const geometry = new THREE.PlaneGeometry(1.6, 1.0);\n  const textureNode = texture(textureMap);\n  const material = new THREE.MeshBasicNodeMaterial({\n    colorNode: textureNode,\n    transparent: true,\n  });\n  \n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n  \n  // Add text via font atlas\n  const textContent = config.textContent || 'Journal 3';\n  if (ctx.fontAtlas) {\n    const textMesh = ctx.fontAtlas.createMesh({\n      text: textContent,\n      size: 0.34, // headline size from design tokens\n      weight: 400,\n      font: 'Lora',\n      color: colors.ink,\n    });\n    if (textMesh) {\n      textMesh.position.z = 0.01; // Render text in front\n      group.add(textMesh);\n    }\n  }\n  \n  // Store original position for animations\n  const originalY = group.position.y;\n  let isHovering = false;\n  \n  // Interaction handlers\n  group.userData.handlers = {\n    hover: () => {\n      if (isHovering) return;\n      isHovering = true;\n      // rise-in: move up 0.15 scene units over 0.7s\n      gsap.to(group.position, {\n        y: originalY + 0.15,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n    },\n    unhover: () => {\n      if (!isHovering) return;\n      isHovering = false;\n      // Return to original position\n      gsap.to(group.position, {\n        y: originalY,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n    },\n    click: () => {\n      // press-down: scale to 0.97 then back to 1.0\n      gsap.to(group.scale, {\n        x: 0.97,\n        y: 0.97,\n        duration: 0.12,\n        ease: 'back.out',\n      });\n      gsap.to(group.scale, {\n        x: 1,\n        y: 1,\n        duration: 0.12,\n        ease: 'back.out',\n        delay: 0.12,\n      });\n      // Emit hub-journal.select event\n      config.onSelect?.();\n    },\n  };\n  \n  // Cleanup function\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    textureMap.dispose();\n    gsap.killTweensOf(group.position);\n    gsap.killTweensOf(group.scale);\n  };\n  \n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-25-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 10342,
+  "apiMs": 7825,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 720,
+    "cacheCreation": 0,
+    "cacheRead": 5472
+  },
+  "costUsd": 0.021811,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, float, mix } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const width = 2.2;\n  const height = 1.375; // 512:320 aspect ratio preserved\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const imageUrl = config?.assets?.imageUrl || '/prism-mock/home/nodes/feature-card.png';\n  const map = ctx.textureLoader.load(imageUrl);\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const texNode = texture(map, uv());\n\n  // Subtle engineered gradient overlay using ink/surface tones, plus faint grain via uv-based noise-ish mix\n  const inkColor = vec4(0x16 / 255, 0x16 / 255, 0x1d / 255, 1.0);\n  const surfaceColor = vec4(0x0b / 255, 0x0b / 255, 0x10 / 255, 1.0);\n  const gradientFactor = uv().y.clamp(0.0, 1.0);\n  const gradient = mix(surfaceColor, inkColor, gradientFactor);\n\n  const finalColor = mix(texNode, gradient, float(0.06));\n  material.colorNode = finalColor;\n  material.opacityNode = texNode.a;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'hub-pricing-card-2-visual';\n\n  const node = new THREE.Object3D();\n  node.name = 'hub-pricing-card-2';\n  node.add(mesh);\n\n  node.position.set(3.2, -0.3, 0);\n  node.rotation.set(0, 0, 0);\n  node.scale.set(1, 1, 1);\n\n  node.userData.handlers = {};\n\n  node.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n  };\n\n  return node;\n}\n```"
+}

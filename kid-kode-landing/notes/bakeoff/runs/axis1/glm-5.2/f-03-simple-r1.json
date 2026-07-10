@@ -1,0 +1,17 @@
+{
+  "contestant": "glm-5.2",
+  "model": "accounts/fireworks/models/glm-5p2",
+  "route": "fireworks",
+  "caseId": "f-03-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 100931,
+  "usage": {
+    "promptTokens": 1608,
+    "completionTokens": 7089
+  },
+  "costUsd": 0.0334428,
+  "transportAttempts": 3,
+  "billing": "metered",
+  "output": "import { PlaneGeometry, Mesh, MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture, uv, vec2 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const assets = config.assets || {};\n  const tex = ctx.textureLoader(assets.imageUrl);\n\n  const atlas = config.atlas || {};\n  const rect = atlas.sourceRect || { x: 0, y: 0, w: 512, h: 320 };\n\n  // Plane sized to the atlas region aspect ratio\n  const aspect = rect.w / rect.h;\n  const planeW = 2.0;\n  const planeH = planeW / aspect;\n  const geometry = new PlaneGeometry(planeW, planeH);\n\n  // Resolve atlas texture dimensions (fallback to region if unknown)\n  const img = tex && tex.image;\n  const texW = (img && (img.width || img.videoWidth)) || rect.w;\n  const texH = (img && (img.height || img.videoHeight)) || rect.h;\n\n  // Compute UV offset/repeat for the atlas region (respect flipY)\n  const flipY = tex ? tex.flipY !== false : true;\n  const offX = rect.x / texW;\n  const repX = rect.w / texW;\n  const repY = rect.h / texH;\n  const offY = flipY ? 1 - (rect.y + rect.h) / texH : rect.y / texH;\n\n  // TSL: sample the atlas sub-region\n  const atlasUV = uv().mul(vec2(repX, repY)).add(vec2(offX, offY));\n  const texNode = texture(tex, atlasUV);\n\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = texNode;\n  material.transparent = true;\n  material.depthWrite = false;\n  material.toneMapped = false;\n\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(0, -0.35, -0.6);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n  mesh.renderOrder = 1;\n\n  // Billboard toward the camera (sprite render mode)\n  mesh.onBeforeRender = (_renderer, _scene, camera) => {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  mesh.userData.handlers = {};\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    // texture owned by shared loader cache; not disposed here\n  };\n\n  return mesh;\n}"
+}

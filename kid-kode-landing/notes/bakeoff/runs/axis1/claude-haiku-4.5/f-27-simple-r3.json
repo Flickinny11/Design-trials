@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-27-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 89977,
+  "apiMs": 87499,
+  "usage": {
+    "promptTokens": 3960,
+    "completionTokens": 9852,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.054193,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture as textureNode } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  const resources = [];\n  \n  // Load sprite texture\n  const spriteTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  spriteTexture.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create sprite plane (atlas aspect ratio: 512x320 = 1.6:1)\n  const atlasAspect = 512 / 320;\n  const spriteW = 1.6;\n  const spriteH = spriteW / atlasAspect;\n  \n  const spriteGeom = new THREE.PlaneGeometry(spriteW, spriteH);\n  const spriteMat = new MeshBasicNodeMaterial({\n    colorNode: textureNode(spriteTexture),\n  });\n  const spriteMesh = new THREE.Mesh(spriteGeom, spriteMat);\n  spriteMesh.position.z = -0.05;\n  group.add(spriteMesh);\n  \n  resources.push(spriteGeom, spriteMat, spriteTexture);\n  \n  // Render text using font atlas if available\n  if (config.textContent && ctx.fontAtlas) {\n    const textMesh = ctx.fontAtlas.createText(config.textContent, {\n      font: 'display',\n      size: 0.34,\n      weight: 400,\n      color: 0x16161d,\n      align: 'center',\n    });\n    if (textMesh) {\n      textMesh.position.z = 0.05;\n      group.add(textMesh);\n    }\n  }\n  \n  // Apply scene position\n  group.position.set(0, 3, 0);\n  \n  // Setup cleanup\n  group.userData.cleanup = () => {\n    resources.forEach(res => res.dispose?.());\n  };\n  \n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

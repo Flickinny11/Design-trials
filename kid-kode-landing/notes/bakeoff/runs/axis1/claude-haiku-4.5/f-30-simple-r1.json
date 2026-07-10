@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-30-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 52102,
+  "apiMs": 49896,
+  "usage": {
+    "promptTokens": 3951,
+    "completionTokens": 5354,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.0317,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.position.set(0, -0.3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n  \n  // Atlas region: 512 × 320 pixels → aspect ratio 1.6:1\n  const aspectRatio = 512 / 320;\n  \n  // Create plane geometry with matching aspect ratio\n  const planeGeometry = new THREE.PlaneGeometry(aspectRatio, 1);\n  \n  // Load texture\n  const imageUrl = config.imageUrl || '/prism-assets/chrome/ceramic-grain.map.png';\n  const textureMap = ctx.textureLoader.load(imageUrl);\n  textureMap.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create TSL texture node\n  const textureNode = texture(textureMap);\n  \n  // Create material with texture node\n  const material = new MeshBasicNodeMaterial({\n    colorNode: textureNode,\n    transparent: true,\n    side: THREE.DoubleSide\n  });\n  \n  // Create and add mesh\n  const mesh = new THREE.Mesh(planeGeometry, material);\n  group.add(mesh);\n  \n  // Setup cleanup handler\n  group.userData.cleanup = () => {\n    planeGeometry.dispose();\n    material.dispose();\n    textureMap.dispose();\n  };\n  \n  // Setup empty handlers object\n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

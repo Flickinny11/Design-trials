@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-23-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 47850,
+  "apiMs": 45637,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 4830,
+    "cacheCreation": 0,
+    "cacheRead": 21546
+  },
+  "costUsd": 0.0272936,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Apply scene position and transforms\n  const scenePos = config.scenePosition || {};\n  group.position.set(\n    scenePos.x ?? 0,\n    scenePos.y ?? 0,\n    scenePos.z ?? 0\n  );\n  \n  if (scenePos.rotationXYZ) {\n    group.rotation.order = 'XYZ';\n    group.rotation.set(\n      scenePos.rotationXYZ[0] ?? 0,\n      scenePos.rotationXYZ[1] ?? 0,\n      scenePos.rotationXYZ[2] ?? 0\n    );\n  }\n  \n  if (scenePos.scaleXYZ) {\n    group.scale.set(\n      scenePos.scaleXYZ[0] ?? 1,\n      scenePos.scaleXYZ[1] ?? 1,\n      scenePos.scaleXYZ[2] ?? 1\n    );\n  }\n  \n  // Create plane geometry with 512:320 atlas aspect ratio\n  const width = 2.56;\n  const height = 1.6;\n  const geometry = new THREE.PlaneGeometry(width, height);\n  \n  // Load brushed-metal texture\n  const texture = ctx.textureLoader.load(\n    config.imageUrl || '/prism-assets/chrome/brushed-metal.map.png'\n  );\n  \n  // Create material with machined-metal PBR per design tokens\n  const material = new THREE.MeshStandardNodeMaterial({\n    map: texture,\n    metalness: 0.5,           // ≤ 0.55\n    roughness: 0.6,           // ≥ 0.5\n    clearcoat: 0.2,           // ≤ 0.25\n    clearcoatRoughness: 0.3,\n    side: THREE.DoubleSide,\n  });\n  \n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n  \n  // Setup cleanup function\n  group.userData.cleanup = function() {\n    geometry.dispose();\n    material.dispose();\n    if (texture && typeof texture.dispose === 'function') {\n      texture.dispose();\n    }\n    gsap.killTweensOf(group);\n  };\n  \n  // Initialize event handlers (empty for static card)\n  group.userData.handlers = {};\n  \n  return group;\n}"
+}

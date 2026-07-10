@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-08-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 12446,
+  "apiMs": 9935,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1051,
+    "cacheCreation": 0,
+    "cacheRead": 5483
+  },
+  "costUsd": 0.0300965,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4 } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-features-label-1';\n  group.position.set(-3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 1.6;\n  const height = 1.0;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const imgTex = ctx.textureLoader.load('/prism-mock/home/nodes/cta-hero-isolated.png');\n  imgTex.colorSpace = THREE.SRGBColorSpace;\n\n  const rectU0 = 0 / 512;\n  const rectV0 = 1 - (0 + 320) / 320;\n  const rectU1 = (0 + 512) / 512;\n  const rectV1 = 1 - 0 / 320;\n\n  const uvNode = uv();\n  const remappedU = uvNode.x.mul(rectU1 - rectU0).add(rectU0);\n  const remappedV = uvNode.y.mul(rectV1 - rectV0).add(rectV0);\n  const remappedUV = uvNode.toVar();\n  remappedUV.x = remappedU;\n  remappedUV.y = remappedV;\n\n  material.colorNode = texture(imgTex, remappedUV);\n  material.opacityNode = texture(imgTex, remappedUV).a;\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'features-card-1-image';\n  group.add(plane);\n\n  let textMesh = null;\n  try {\n    textMesh = createTextMesh({\n      text: 'Features 1',\n      font: 'Lora',\n      weight: 400,\n      sizePx: 39,\n      color: config?.visualSpec?.colors?.paper ?? '#e8ecf2',\n      fontAtlas: ctx.fontAtlas,\n      maxWidth: width * 0.9\n    });\n    textMesh.name = 'features-card-1-headline';\n    textMesh.position.set(0, -height / 2 - 0.14, 0.01);\n    group.add(textMesh);\n  } catch (e) {\n    // fontAtlas unavailable — skip text render gracefully\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (imgTex && imgTex.dispose) imgTex.dispose();\n    if (textMesh) {\n      if (textMesh.geometry) textMesh.geometry.dispose();\n      if (textMesh.material) {\n        if (Array.isArray(textMesh.material)) {\n          textMesh.material.forEach(m => m.dispose());\n        } else {\n          textMesh.material.dispose();\n        }\n      }\n    }\n  };\n\n  return group;\n}\n```"
+}

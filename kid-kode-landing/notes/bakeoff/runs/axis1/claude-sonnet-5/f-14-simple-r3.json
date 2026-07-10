@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-14-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 11743,
+  "apiMs": 9224,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 878,
+    "cacheCreation": 0,
+    "cacheRead": 5473
+  },
+  "costUsd": 0.0257585,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, float, uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const width = 1.6;\n  const height = 1.0;\n\n  const geometry = new THREE.PlaneGeometry(width, height, 1, 1);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const imageUrl = (config.assets && config.assets.imageUrl) || '/prism-mock/home/nodes/cta-hero-isolated.png';\n  const map = ctx.textureLoader.load(imageUrl);\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const grainAmount = uniform(0.035);\n\n  const uvNode = uv();\n  const texColor = texture(map, uvNode);\n\n  // Simple procedural grain using a pseudo-random hash based on uv coordinates.\n  const hashInput = uvNode.mul(1234.5678);\n  const grain = hashInput.x.fract().mul(hashInput.y.fract()).fract().sub(0.5).mul(grainAmount);\n\n  const finalColor = vec4(\n    texColor.r.add(grain),\n    texColor.g.add(grain),\n    texColor.b.add(grain),\n    texColor.a\n  );\n\n  material.colorNode = finalColor;\n\n  const mesh = new THREE.Mesh(geometry, material);\n\n  const pos = (config.scenePosition && config.scenePosition.position) || [-3.2, -0.3, 0];\n  const rot = (config.scenePosition && config.scenePosition.rotation) || [0, 0, 0];\n  const scl = (config.scenePosition && config.scenePosition.scale) || [1, 1, 1];\n\n  mesh.position.set(pos[0], pos[1], pos[2]);\n  mesh.rotation.set(rot[0], rot[1], rot[2]);\n  mesh.scale.set(scl[0], scl[1], scl[2]);\n\n  mesh.name = 'hub-collection-card-1-plane';\n\n  const primitives = (config.cinematicPrimitives || []);\n  primitives.forEach((primitive) => {\n    const fn = ctx.primitives[primitive.name];\n    if (fn) {\n      fn(mesh, primitive.params);\n    }\n  });\n\n  mesh.userData.handlers = {};\n\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n  };\n\n  return mesh;\n}\n```"
+}

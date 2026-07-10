@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-20-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 22099,
+  "usage": {
+    "promptTokens": 1700,
+    "completionTokens": 2566
+  },
+  "costUsd": 0.00095648,
+  "transportAttempts": 4,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial, PlaneGeometry, Mesh, Group, Box3, Vector3 } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const { scenePosition, sceneRotation, sceneScale, textContent, visual } = config;\n\n  const group = new Group();\n  group.position.set(scenePosition.x, scenePosition.y, scenePosition.z);\n  group.rotation.set(sceneRotation.x, sceneRotation.y, sceneRotation.z);\n  group.scale.set(sceneScale.x, sceneScale.y, sceneScale.z);\n\n  // --- Text layer ---\n  const textNode = ctx.fontAtlas.createText({\n    text: textContent?.headline || 'Pricing',\n    fontFamily: 'Lora',\n    fontWeight: 400,\n    fontSize: 0.62, // hero scene unit height\n    align: 'center',\n    verticalAlign: 'middle',\n    color: visual?.colors?.ink || '#16161d'\n  });\n\n  // Compute text bounding box for background sizing\n  const textBounds = new Box3().setFromObject(textNode);\n  const textSize = textBounds.getSize(new Vector3());\n  const padding = 0.25; // spacing rhythm base unit\n\n  const planeWidth = textSize.x + 2 * padding;\n  const planeHeight = textSize.y + 2 * padding;\n\n  // --- Background layer ---\n  const bgTexture = ctx.textureLoader.load(\n    config.assets?.imageUrl || '/prism-mock/home/nodes/cta-hero-isolated.png'\n  );\n  bgTexture.needsUpdate = true;\n\n  const bgMat = new MeshBasicNodeMaterial({ map: bgTexture });\n  const bgGeo = new PlaneGeometry(planeWidth, planeHeight);\n  const bgMesh = new Mesh(bgGeo, bgMat);\n  bgMesh.position.set(0, 0, -0.01); // slight offset behind text\n\n  // --- Assemble ---\n  group.add(bgMesh);\n  group.add(textNode);\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    bgGeo.dispose();\n    bgMat.dispose();\n    bgTexture.dispose();\n    if (textNode.userData?.cleanup) {\n      textNode.userData.cleanup();\n    }\n    // No GSAP timelines to kill\n  };\n\n  // No event handlers (no interactions)\n  group.userData.handlers = {};\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

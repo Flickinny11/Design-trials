@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-48-complex",
+  "run": 1,
+  "ok": true,
+  "wallMs": 37865,
+  "usage": {
+    "promptTokens": 1773,
+    "completionTokens": 1812
+  },
+  "costUsd": 0.00135315,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\nexport default function createNode(config, ctx) {\n  // Root container\n  const root = new THREE.Group();\n\n  // Apply transform\n  if (config.position) root.position.set(...config.position);\n  if (config.rotation) root.rotation.set(...config.rotation);\n  if (config.scale) root.scale.set(...config.scale);\n\n  // Load GLB mesh (synchronous via cached loader)\n  const gltf = ctx.glbLoader(config.meshUrl);\n  const mesh = gltf.scene ?? gltf;\n  root.add(mesh);\n\n  // Apply cinematic primitives\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const fn = ctx.primitives?.[prim.name];\n      if (typeof fn === 'function') {\n        fn(root, prim.params);\n      }\n    }\n  }\n\n  // Interaction handling\n  const originalY = root.position.y;\n  let hoverTimeline = null;\n\n  root.userData.handlers = {};\n\n  // Hover (rise‑in) – pointerover / pointerout\n  root.userData.handlers.pointerover = () => {\n    if (hoverTimeline) hoverTimeline.kill();\n    hoverTimeline = gsap.to(root.position, {\n      y: originalY + 0.15,\n      duration: 0.15,\n      ease: 'power3.out',\n    });\n  };\n\n  root.userData.handlers.pointerout = () => {\n    if (hoverTimeline) hoverTimeline.kill();\n    hoverTimeline = gsap.to(root.position, {\n      y: originalY,\n      duration: 0.15,\n      ease: 'power3.out',\n    });\n  };\n\n  // Click – emit selection event\n  root.userData.handlers.click = () => {\n    if (typeof ctx.emit === 'function') {\n      ctx.emit('hub-journal.select');\n    }\n  };\n\n  // Cleanup resources\n  root.userData.cleanup = () => {\n    if (hoverTimeline) hoverTimeline.kill();\n    root.traverse((obj) => {\n      if (obj.isMesh) {\n        if (obj.geometry) obj.geometry.dispose();\n        if (obj.material) {\n          if (Array.isArray(obj.material)) {\n            obj.material.forEach((m) => m.dispose());\n          } else {\n            obj.material.dispose();\n          }\n        }\n      }\n    });\n  };\n\n  return root;\n}"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-04-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 59434,
+  "apiMs": 57377,
+  "usage": {
+    "promptTokens": 3932,
+    "completionTokens": 5603,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.032907000000000006,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three';\nimport { MeshBasicNodeMaterial, texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  // Load image texture\n  const imageUrl = config.assets?.imageUrl || '/prism-mock/home/nodes/orb-decor.png';\n  const textureMap = ctx.textureLoader.load(imageUrl);\n  \n  // Create plane geometry with 512:320 aspect ratio\n  const geometry = new THREE.PlaneGeometry(1.6, 1.0);\n  \n  // Create material using TSL nodes\n  const material = new MeshBasicNodeMaterial({\n    colorNode: texture(textureMap)\n  });\n  \n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  \n  // Apply scene placement\n  mesh.position.set(0, -2.85, 0.2);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n  \n  // Setup user data\n  mesh.userData.handlers = {};\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    textureMap.dispose();\n  };\n  \n  return mesh;\n}\n```"
+}

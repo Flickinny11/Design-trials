@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-24-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 91095,
+  "apiMs": 88601,
+  "usage": {
+    "promptTokens": 3967,
+    "completionTokens": 9292,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.051407,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Create sprite plane based on atlas region aspect ratio (512x320)\n  const aspectRatio = 512 / 320;\n  const height = 0.5;\n  const width = height * aspectRatio;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  // Load and apply ceramic grain texture\n  const textureAsset = ctx.textureLoader.load('/prism-assets/chrome/ceramic-grain.map.png');\n\n  // Create TSL-based material with texture node\n  const textureNode = texture(textureAsset);\n  const material = new THREE.MeshBasicNodeMaterial({\n    colorNode: textureNode\n  });\n\n  const spriteMesh = new THREE.Mesh(geometry, material);\n  group.add(spriteMesh);\n\n  // Render text content via font atlas\n  if (config.textContent && ctx.fontAtlas) {\n    const textStr = typeof config.textContent === 'string'\n      ? config.textContent\n      : (Array.isArray(config.textContent) ? config.textContent[0] : null);\n\n    if (textStr) {\n      const textMesh = ctx.fontAtlas.create(textStr, {\n        font: 'Lora',\n        size: 0.34,\n        weight: 400,\n        color: '#16161d',\n        align: 'center'\n      });\n\n      if (textMesh) {\n        textMesh.position.z = 0.01;\n        group.add(textMesh);\n      }\n    }\n  }\n\n  // Apply scene placement\n  group.position.set(0, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Setup event handlers and cleanup\n  group.userData.handlers = {};\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    textureAsset.dispose();\n  };\n\n  return group;\n}\n```"
+}

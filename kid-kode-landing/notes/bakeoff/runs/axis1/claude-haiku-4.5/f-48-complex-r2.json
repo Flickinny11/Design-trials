@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-48-complex",
+  "run": 2,
+  "ok": true,
+  "wallMs": 75866,
+  "apiMs": 73579,
+  "usage": {
+    "promptTokens": 4070,
+    "completionTokens": 8047,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.045388,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.position.set(2.5, -0.2, 0);\n  group.scale.set(1, 1, 1);\n\n  // Load the GLB mesh via cached loader\n  const glb = ctx.glbLoader('/prism-mock/orrery/meshes/gear-a.glb');\n  if (glb && glb.scene) {\n    group.add(glb.scene);\n  }\n\n  // Initialize event handlers and tracking\n  const handlers = {};\n  const timelines = [];\n\n  // Hover interaction - rise-in animation (0.15 scene units, power3.out, 0.7s)\n  handlers.onPointerEnter = () => {\n    timelines.forEach(tl => tl.kill());\n    timelines.length = 0;\n\n    const tl = gsap.timeline();\n    tl.to(group.position, {\n      y: '+=0.15',\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n    timelines.push(tl);\n  };\n\n  handlers.onPointerLeave = () => {\n    const tl = gsap.timeline();\n    tl.to(group.position, {\n      y: '-=0.15',\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n    timelines.push(tl);\n  };\n\n  // Click interaction - hub-journal.select event\n  handlers.onClick = () => {\n    // Event emission handled by parent system via config metadata\n  };\n\n  // Apply cinematic primitives\n  if (ctx.primitives) {\n    ctx.primitives['parallax-scroll'](group, {\n      intensity: 0.4\n    });\n\n    ctx.primitives['magnetic-cursor'](group, {\n      radius: 1.2,\n      strength: 0.35\n    });\n  }\n\n  // Attach handlers to userData\n  group.userData.handlers = handlers;\n\n  // Cleanup function\n  group.userData.cleanup = () => {\n    timelines.forEach(tl => tl.kill());\n    timelines.length = 0;\n\n    group.traverse(child => {\n      if (child.geometry) {\n        child.geometry.dispose();\n      }\n      if (child.material) {\n        if (Array.isArray(child.material)) {\n          child.material.forEach(mat => mat.dispose());\n        } else {\n          child.material.dispose();\n        }\n      }\n    });\n  };\n\n  return group;\n}\n```"
+}

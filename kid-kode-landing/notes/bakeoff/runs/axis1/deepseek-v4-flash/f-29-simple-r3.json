@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-29-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 19099,
+  "usage": {
+    "promptTokens": 1701,
+    "completionTokens": 2737
+  },
+  "costUsd": 0.0010045000000000002,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial, PlaneGeometry, Mesh, Group } from 'three/webgpu';\nimport gsap from 'gsap';\n// Note: '@/text' import is not used directly; ctx.fontAtlas is used instead.\n\nexport default function createNode(config, ctx) {\n  const { scenePosition, scale, rotation, textContent } = config;\n  const group = new Group();\n\n  // Load the brushed-metal texture\n  const texture = ctx.textureLoader.load('/prism-assets/chrome/brushed-metal.map.png');\n\n  // Create the label background plane\n  const geometry = new PlaneGeometry(1, 1);\n  const material = new MeshBasicNodeMaterial({ map: texture });\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  // Extract text configuration (first element in textContent array)\n  const textConfig = textContent?.[0] || { text: 'Journal 1', style: 'headline', weight: 400 };\n  const fontSize = 0.34; // headline scene-unit em\n\n  // Create text mesh using the font atlas\n  const textMesh = ctx.fontAtlas.createText(textConfig.text, {\n    fontFamily: 'Lora',\n    fontWeight: textConfig.weight || 400,\n    fontSize: fontSize,\n    color: '#e8ecf2', // paper color for contrast\n    align: 'center'\n  });\n  // Slight Z offset to prevent z-fighting with background\n  textMesh.position.set(0, 0, 0.01);\n  group.add(textMesh);\n\n  // Apply spatial properties\n  group.position.copy(scenePosition);\n  group.rotation.set(rotation.x, rotation.y, rotation.z);\n  group.scale.copy(scale);\n\n  // Event handlers (none for this static label)\n  group.userData.handlers = {};\n\n  // Cleanup resources\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-01-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 83446,
+  "apiMs": 80783,
+  "usage": {
+    "promptTokens": 3951,
+    "completionTokens": 9151,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.05067,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Apply scene transform\n  const position = config.scenePosition || [0, 3, 0];\n  const rotation = config.sceneRotation || [0, 0, 0];\n  const scale = config.sceneScale || [1, 1, 1];\n  \n  group.position.set(position[0], position[1], position[2]);\n  group.rotation.set(rotation[0], rotation[1], rotation[2]);\n  group.scale.set(scale[0], scale[1], scale[2]);\n  \n  // Plane dimensions from atlas region (512x320)\n  const planeWidth = 5.0;\n  const planeHeight = planeWidth * (320 / 512);\n  \n  // Create plane geometry\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n  \n  // Load image texture\n  const imageUrl = config.imageUrl || '/prism-mock/home/nodes/feature-card.png';\n  const texture = ctx.textureLoader.load(imageUrl);\n  texture.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create MeshBasicNodeMaterial\n  const material = new THREE.MeshBasicNodeMaterial({\n    map: texture,\n    transparent: true,\n    depthWrite: false,\n  });\n  \n  const planeMesh = new THREE.Mesh(geometry, material);\n  group.add(planeMesh);\n  \n  // Render text content via fontAtlas\n  if (config.textContent && ctx.fontAtlas) {\n    const textMesh = ctx.fontAtlas.createText({\n      text: config.textContent,\n      font: 'JetBrains Mono',\n      size: 0.31,\n      weight: 400,\n      color: new THREE.Color('#e8ecf2'),\n    });\n    \n    if (textMesh) {\n      const padding = 0.25;\n      textMesh.position.set(\n        -planeWidth / 2 + padding,\n        planeHeight / 2 - padding,\n        0.01\n      );\n      group.add(textMesh);\n    }\n  }\n  \n  // Setup cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n    gsap.killTweensOf(group);\n  };\n  \n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

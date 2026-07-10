@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-28-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 10361,
+  "apiMs": 7791,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 653,
+    "cacheCreation": 3342,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0518745,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, mix, float, uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const width = 1.6;\n  const height = 1.0;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const map = ctx.textureLoader('/prism-mock/home/nodes/orb-decor.png');\n  if (map) {\n    map.colorSpace = THREE.SRGBColorSpace;\n  }\n\n  const grainAmount = uniform(0.03);\n\n  if (map) {\n    const uvNode = uv();\n    const texColor = texture(map, uvNode);\n\n    // simple pseudo-random grain based on uv\n    const grain = uvNode.x.mul(12.9898).add(uvNode.y.mul(78.233)).sin().mul(43758.5453).fract();\n    const grainSigned = grain.sub(0.5).mul(grainAmount);\n\n    const surfaceColor = vec4(\n      texColor.r.add(grainSigned),\n      texColor.g.add(grainSigned),\n      texColor.b.add(grainSigned),\n      texColor.a\n    );\n\n    material.colorNode = surfaceColor;\n  } else {\n    material.colorNode = vec4(0.043, 0.043, 0.063, 1.0);\n  }\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(-3.2, -0.3, 0);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  mesh.userData.handlers = {};\n\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n  };\n\n  return mesh;\n}"
+}

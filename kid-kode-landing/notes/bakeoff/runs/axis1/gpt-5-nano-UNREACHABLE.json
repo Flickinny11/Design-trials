@@ -1,0 +1,12 @@
+{
+  "contestant": "gpt-5-nano",
+  "label": "GPT-5-nano",
+  "status": "UNREACHABLE",
+  "proof": "No OpenAI credentials; not hosted by any keyed provider (deepinfra catalog grep: no gpt-5 models); no OpenRouter key exists.",
+  "probes": [
+    "notes/bakeoff/probes/probe-summary.json",
+    "notes/bakeoff/probes/fireworks-id-probe.json",
+    "notes/bakeoff/probes/deepinfra-models.json"
+  ],
+  "recordedAt": "2026-07-10T01:36:14.245Z"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-34-moderate-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 57500,
+  "apiMs": 55166,
+  "usage": {
+    "promptTokens": 4057,
+    "completionTokens": 9194,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.051117,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Apply scene placement\n  group.position.set(-2.5, 1.6, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  let mesh = null;\n  const timelines = [];\n  let hoverTimeline = null;\n  const originalPosition = { y: 1.6 };\n\n  // Load GLB mesh\n  if (config.meshUrl) {\n    const glb = ctx.glbLoader(config.meshUrl);\n    mesh = glb.scene.clone();\n    group.add(mesh);\n  }\n\n  // Event handlers\n  const handlers = {\n    hover: (isHovering) => {\n      if (hoverTimeline) hoverTimeline.kill();\n      \n      if (isHovering) {\n        // Rise-in: move up 0.15 units with power3.out easing\n        hoverTimeline = gsap.to(group.position, {\n          y: originalPosition.y + 0.15,\n          duration: 0.7,\n          ease: 'power3.out'\n        });\n      } else {\n        // Return to original with weighted-settle\n        hoverTimeline = gsap.to(group.position, {\n          y: originalPosition.y,\n          duration: 0.9,\n          ease: 'power4.out'\n        });\n      }\n      timelines.push(hoverTimeline);\n    },\n\n    click: () => {\n      // Press-down effect: scale down to 0.97\n      const pressTimeline = gsap.to(group.scale, {\n        x: 0.97,\n        y: 0.97,\n        z: 0.97,\n        duration: 0.12,\n        ease: 'back.out',\n        yoyo: true,\n        repeat: 1\n      });\n      timelines.push(pressTimeline);\n\n      // Emit selection event\n      if (config.onEvent) {\n        config.onEvent('hub-home.select');\n      }\n    },\n\n    focus: () => {\n      // Accent edge on focus\n      const accentColor = new THREE.Color(0xff2a38);\n      if (mesh) {\n        mesh.traverse((child) => {\n          if (child.isMesh && child.material) {\n            const mat = child.material;\n            if (!mat._originalEmissive) {\n              mat._originalEmissive = mat.emissive.getHex();\n            }\n            mat.emissive.copy(accentColor);\n            mat.emissiveIntensity = 0.3;\n          }\n        });\n      }\n    },\n\n    blur: () => {\n      // Remove accent edge\n      if (mesh) {\n        mesh.traverse((child) => {\n          if (child.isMesh && child.material) {\n            const mat = child.material;\n            if (mat._originalEmissive !== undefined) {\n              mat.emissive.setHex(mat._originalEmissive);\n            } else {\n              mat.emissive.set(0x000000);\n            }\n            mat.emissiveIntensity = 0;\n          }\n        });\n      }\n    }\n  };\n\n  // Apply cinematic primitive: parallax-scroll\n  if (ctx.primitives && typeof ctx.primitives['parallax-scroll'] === 'function') {\n    ctx.primitives['parallax-scroll'](group, {\n      intensity: 0.25,\n      trigger: 'scroll'\n    });\n  }\n\n  // Attach handlers and cleanup function\n  group.userData = {\n    handlers,\n    cleanup() {\n      // Kill all GSAP timelines\n      timelines.forEach(tl => tl && tl.kill());\n      if (hoverTimeline) hoverTimeline.kill();\n\n      // Dispose mesh resources\n      if (mesh) {\n        mesh.traverse((child) => {\n          if (child.geometry) child.geometry.dispose();\n          if (child.material) {\n            if (Array.isArray(child.material)) {\n              child.material.forEach(m => m.dispose());\n            } else {\n              child.material.dispose();\n            }\n          }\n        });\n      }\n    }\n  };\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-47-complex-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 46859,
+  "usage": {
+    "promptTokens": 1845,
+    "completionTokens": 3243
+  },
+  "costUsd": 0.00116634,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  Object3D,\n  PlaneGeometry,\n  Mesh,\n  NodeMaterial,\n  TextureLoader,\n  Color,\n  Euler,\n  Vector3\n} from 'three/webgpu';\nimport {\n  texture,\n  uv,\n  displacementMap,\n  vec3,\n  mul,\n  float\n} from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  // --- load textures ---\n  const mapTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  const depthTexture = ctx.textureLoader.load(config.assets.depthMapUrl);\n\n  // --- geometry ---\n  const aspect = 512 / 320; // from source rect\n  const geo = new PlaneGeometry(aspect, 1, 64, 64);\n\n  // --- displacement node (TSL) ---\n  const depthNode = texture(depthTexture, uv());\n  // map depth (0‐1) to displacement offset (e.g., scale 0.05)\n  const displacementScale = float(0.05);\n  const displacementNode = mul(depthNode, displacementScale);\n\n  // --- material (NodeMaterial with physical features) ---\n  const material = new NodeMaterial();\n  material.map = mapTexture;\n  material.displacementNode = displacementNode;\n  material.roughness = 0.6;\n  material.metalness = 0.5;\n  material.clearcoat = 0.25;\n  material.clearcoatRoughness = 0.3;\n  material.envMapIntensity = 1.0;\n\n  // --- mesh ---\n  const mesh = new Mesh(geo, material);\n  mesh.position.set(\n    config.scenePlacement.position[0],\n    config.scenePlacement.position[1],\n    config.scenePlacement.position[2]\n  );\n  mesh.rotation.set(\n    config.scenePlacement.rotation[0],\n    config.scenePlacement.rotation[1],\n    config.scenePlacement.rotation[2]\n  );\n  mesh.scale.set(\n    config.scenePlacement.scale[0],\n    config.scenePlacement.scale[1],\n    config.scenePlacement.scale[2]\n  );\n\n  // store original position for hover reset\n  const origY = mesh.position.y;\n\n  // --- weighted‑settle entrance (GSAP) ---\n  const entranceTimeline = gsap.timeline({ paused: false });\n  entranceTimeline.fromTo(\n    mesh.scale,\n    { x: 0, y: 0, z: 0 },\n    { x: 1, y: 1, z: 1, duration: 0.9, ease: 'power4.out', overwrite: 'auto' }\n  );\n\n  // --- event handlers (hover, click) ---\n  const handlers = {};\n\n  handlers.pointerenter = () => {\n    gsap.to(mesh.position, {\n      y: origY + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n      overwrite: 'auto'\n    });\n  };\n\n  handlers.pointerleave = () => {\n    gsap.to(mesh.position, {\n      y: origY,\n      duration: 0.7,\n      ease: 'power3.out',\n      overwrite: 'auto'\n    });\n  };\n\n  handlers.click = () => {\n    mesh.dispatchEvent({ type: 'hub-pricing.select' });\n  };\n\n  mesh.userData.handlers = handlers;\n\n  // --- apply cinematic primitives ---\n  if (config.cinematicPrimitives && Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach((primitive) => {\n      if (ctx.primitives && typeof ctx.primitives[primitive.name] === 'function') {\n        ctx.primitives[primitive.name](mesh, primitive.params);\n      }\n    });\n  }\n\n  // --- cleanup ---\n  mesh.userData.cleanup = () => {\n    entranceTimeline.kill();\n    geometry.dispose();\n    material.dispose();\n    mapTexture.dispose();\n    depthTexture.dispose();\n    // Remove any primitives cleanup if necessary\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

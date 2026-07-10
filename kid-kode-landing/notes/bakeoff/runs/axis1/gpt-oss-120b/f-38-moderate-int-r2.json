@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-38-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 12652,
+  "usage": {
+    "promptTokens": 1717,
+    "completionTokens": 2029
+  },
+  "costUsd": 0.0014749499999999998,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import {\n  Mesh,\n  PlaneGeometry,\n  Object3D,\n  Vector3,\n  Euler,\n  Color\n} from 'three';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { gsap } from 'gsap';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {string} imageUrl\n * @property {Array<number>} position\n * @property {Array<number>} rotation\n * @property {Array<number>} scale\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {(url:string)=>THREE.Texture} textureLoader\n * @property {{[key:string]:(obj:THREE.Object3D,params:any)=>void}} primitives\n * @property {{emit?: (event:string)=>void}} [events]\n */\n\n/**\n * Creates a textured plane thumbnail card.\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  const {\n    imageUrl,\n    position = [0, 0, 0],\n    rotation = [0, 0, 0],\n    scale = [1, 1, 1]\n  } = config;\n\n  // Load texture (cached)\n  const tex = ctx.textureLoader(imageUrl);\n\n  // Plane size derived from atlas region (512 × 320 → 1.6 × 1)\n  const width = 512 / 320; // 1.6\n  const height = 1;\n\n  const geometry = new PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial({\n    map: texture(tex)\n  });\n\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(...position);\n  mesh.rotation.set(...rotation);\n  mesh.scale.set(...scale);\n\n  // Store base Y for hover animation\n  const baseY = mesh.position.y;\n\n  // Handlers container\n  mesh.userData.handlers = {};\n\n  // Hover lift (rise‑in) – subtle 0.15 scene units\n  mesh.userData.handlers.hover = () => {\n    if (mesh.userData._hoverTween) mesh.userData._hoverTween.kill();\n    mesh.userData._hoverTween = gsap.to(mesh.position, {\n      y: baseY + 0.15,\n      duration: 0.15,\n      ease: 'power3.out'\n    });\n  };\n\n  // Optional mouseout to restore position (if the system calls it)\n  mesh.userData.handlers.hoverOut = () => {\n    if (mesh.userData._hoverTween) mesh.userData._hoverTween.kill();\n    mesh.userData._hoverTween = gsap.to(mesh.position, {\n      y: baseY,\n      duration: 0.15,\n      ease: 'power3.out'\n    });\n  };\n\n  // Click emits navigation event\n  mesh.userData.handlers.click = () => {\n    if (ctx.events && typeof ctx.events.emit === 'function') {\n      ctx.events.emit('hub-journal.select');\n    }\n  };\n\n  // Cleanup routine\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (tex && typeof tex.dispose === 'function') tex.dispose();\n    if (mesh.userData._hoverTween) mesh.userData._hoverTween.kill();\n    mesh.userData.handlers = null;\n  };\n\n  return mesh;\n}"
+}

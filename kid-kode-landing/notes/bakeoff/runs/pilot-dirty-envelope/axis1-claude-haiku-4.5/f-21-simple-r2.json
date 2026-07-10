@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-21-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 48971,
+  "apiMs": 46350,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 7021,
+    "cacheCreation": 0,
+    "cacheRead": 21559
+  },
+  "costUsd": 0.03823790000000001,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```ts\nimport {\n  Group,\n  Mesh,\n  PlaneGeometry,\n  Vector2,\n} from 'three/webgpu';\nimport {\n  MeshBasicNodeMaterial,\n  texture as textureNode,\n  uv,\n} from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n  \n  // Apply scene placement\n  group.position.set(-3.2, -0.3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Atlas region specification\n  const atlasRegion = config.atlasRegion || { x: 0, y: 0, width: 512, height: 320 };\n  \n  // Create plane geometry with aspect ratio matching atlas region\n  const aspectRatio = atlasRegion.width / atlasRegion.height;\n  const geometry = new PlaneGeometry(aspectRatio, 1);\n\n  // Load texture asset\n  const texture = ctx.textureLoader.load(config.imageUrl);\n\n  // Calculate UV mapping for atlas region\n  const atlasWidth = config.atlasWidth || atlasRegion.width;\n  const atlasHeight = config.atlasHeight || atlasRegion.height;\n\n  const uvOffset = new Vector2(\n    atlasRegion.x / atlasWidth,\n    atlasRegion.y / atlasHeight\n  );\n  const uvScale = new Vector2(\n    atlasRegion.width / atlasWidth,\n    atlasRegion.height / atlasHeight\n  );\n\n  // Create TSL-based material with texture and UV mapping\n  const texNode = textureNode(texture);\n  const uvNode = uv().mul(uvScale).add(uvOffset);\n  \n  const material = new MeshBasicNodeMaterial({\n    colorNode: texNode(uvNode),\n  });\n\n  // Create and add mesh to group\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  // Setup resource cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n  };\n\n  // Setup event handlers (empty for static card)\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

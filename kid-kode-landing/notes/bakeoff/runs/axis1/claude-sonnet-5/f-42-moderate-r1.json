@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-42-moderate",
+  "run": 1,
+  "ok": true,
+  "wallMs": 17956,
+  "apiMs": 16255,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1668,
+    "cacheCreation": 3432,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.07821349999999999,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import { MeshStandardNodeMaterial, Group } from 'three/webgpu';\nimport { texture, uv, uniform, vec3, vec4, float, mix, smoothstep, distance, vec2 } from 'three/tsl';\nimport * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n  group.name = 'hub-pricing-badge';\n  group.position.set(1.25, 0.7000000000000001, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 0.9;\n  const height = 0.32;\n\n  const geometry = new THREE.PlaneGeometry(width, height, 32, 8);\n\n  const map = ctx.textureLoader.load('/prism-assets/chrome/ceramic-grain.map.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const inkColor = new THREE.Color('#16161d');\n  const paperColor = new THREE.Color('#e8ecf2');\n  const accentColor = new THREE.Color('#ff2a38');\n\n  const uHover = uniform(0.0);\n  const uAccent = uniform(1.0);\n\n  const material = new MeshStandardNodeMaterial();\n  material.metalness = 0.45;\n  material.roughness = 0.55;\n  material.clearcoat = 0.2;\n  material.transparent = true;\n\n  const vUv = uv();\n  // capsule shape via rounded distance field on uv, edge-light near border\n  const centered = vUv.sub(vec2(0.5, 0.5));\n  const edgeDist = distance(vec2(centered.x.mul(width), centered.y.mul(height)).length(), 0.0);\n\n  const baseTex = texture(map, vUv);\n  const baseColor = mix(vec3(inkColor.r, inkColor.g, inkColor.b), vec3(paperColor.r, paperColor.g, paperColor.b), baseTex.r.mul(0.15).add(0.85));\n\n  // edge glow: stronger near border of uv (0 or 1) on x axis (capsule ends)\n  const edgeX = smoothstep(0.0, 0.06, vUv.x).oneMinus().add(smoothstep(0.94, 1.0, vUv.x));\n  const edgeGlow = vec3(accentColor.r, accentColor.g, accentColor.b).mul(edgeX.mul(uAccent));\n\n  const finalColor = baseColor.add(edgeGlow);\n\n  material.colorNode = vec4(finalColor, 1.0);\n  material.emissiveNode = edgeGlow.mul(0.6);\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'hub-pricing-badge-mesh';\n  group.add(mesh);\n\n  // interactive: hover rise-in, click emit\n  let baseY = group.position.y;\n  const timelines = [];\n\n  const onHoverIn = () => {\n    const tl = gsap.timeline();\n    tl.to(group.position, { y: baseY + 0.15, duration: 0.7, ease: 'power3.out' });\n    tl.to(uHover, { value: 1.0, duration: 0.7, ease: 'power3.out' }, 0);\n    tl.to(uAccent, { value: 1.6, duration: 0.7, ease: 'power3.out' }, 0);\n    timelines.push(tl);\n  };\n\n  const onHoverOut = () => {\n    const tl = gsap.timeline();\n    tl.to(group.position, { y: baseY, duration: 0.5, ease: 'power2.out' });\n    tl.to(uHover, { value: 0.0, duration: 0.5, ease: 'power2.out' }, 0);\n    tl.to(uAccent, { value: 1.0, duration: 0.5, ease: 'power2.out' }, 0);\n    timelines.push(tl);\n  };\n\n  const onClick = () => {\n    const tl = gsap.timeline();\n    tl.to(group.scale, { x: 0.97, y: 0.97, z: 0.97, duration: 0.12, ease: 'back.out' });\n    tl.to(group.scale, { x: 1, y: 1, z: 1, duration: 0.2, ease: 'back.out' });\n    timelines.push(tl);\n\n    if (group.userData.emit) {\n      group.userData.emit('hub-pricing.select', { source: 'hub-pricing-badge' });\n    }\n  };\n\n  group.userData.handlers = {\n    onHoverIn,\n    onHoverOut,\n    onClick,\n  };\n\n  group.userData.cleanup = () => {\n    timelines.forEach((tl) => tl.kill());\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n  };\n\n  return group;\n}"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-25-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 51920,
+  "apiMs": 49718,
+  "usage": {
+    "promptTokens": 3942,
+    "completionTokens": 5441,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.032117,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, mul, add, sin } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.position.set(3.2, -0.3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Load texture\n  const imageTexture = ctx.textureLoader.load(config.assets.imageUrl);\n\n  // Create plane: source rect 512x320, aspect ratio 1.6:1\n  const geometry = new THREE.PlaneGeometry(1.6, 1.0);\n\n  // TSL material with subtle grain overlay\n  const uv = new THREE.uv();\n\n  // Procedural grain using sin-based pattern\n  const grain = mul(\n    sin(mul(uv.x, 80.0) + mul(uv.y, 80.0)),\n    0.02\n  );\n\n  // Apply grain to base texture\n  const baseColor = texture(imageTexture);\n  const grainedColor = mul(baseColor, add(1.0, grain));\n\n  const material = new THREE.MeshBasicNodeMaterial({\n    colorNode: grainedColor,\n  });\n\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    imageTexture.dispose();\n    gsap.killTweensOf(group);\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

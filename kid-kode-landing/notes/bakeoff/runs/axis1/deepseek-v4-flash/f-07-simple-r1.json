@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-07-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 8099,
+  "usage": {
+    "promptTokens": 1687,
+    "completionTokens": 1195
+  },
+  "costUsd": 0.0005707800000000001,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  PlaneGeometry,\n  Mesh,\n  MeshBasicNodeMaterial,\n  Vector3,\n} from 'three/webgpu';\nimport { texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  // Load texture from config.imageUrl (pre-cached)\n  const map = ctx.textureLoader.load(config.imageUrl || '/prism-mock/home/nodes/feature-card.png');\n\n  // Geometry dimensions derived from atlas source rect (512x320) => aspect ratio 1.6\n  const width = 1.6;\n  const height = 1.0;\n  const geometry = new PlaneGeometry(width, height);\n\n  // Material with basic texture, no lighting needed per visual spec\n  const material = new MeshBasicNodeMaterial({\n    side: THREE.DoubleSide,\n    transparent: true,\n    needsUpdate: true,\n  });\n  // Assign texture via TSL node\n  material.colorNode = texture(map);\n\n  const mesh = new Mesh(geometry, material);\n\n  // Set scene placement from config (position, rotation, scale)\n  if (config.scenePosition) {\n    mesh.position.set(\n      config.scenePosition.x ?? 0,\n      config.scenePosition.y ?? 0,\n      config.scenePosition.z ?? 0\n    );\n  }\n  if (config.sceneRotation) {\n    mesh.rotation.set(\n      config.sceneRotation.x ?? 0,\n      config.sceneRotation.y ?? 0,\n      config.sceneRotation.z ?? 0\n    );\n  }\n  if (config.sceneScale) {\n    mesh.scale.set(\n      config.sceneScale.x ?? 1,\n      config.sceneScale.y ?? 1,\n      config.sceneScale.z ?? 1\n    );\n  }\n\n  // No event handlers needed for static card\n  mesh.userData.handlers = {};\n\n  // Cleanup function\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    // map is cached, not owned, so skip dispose\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-26-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 18658,
+  "usage": {
+    "promptTokens": 1707,
+    "completionTokens": 2429
+  },
+  "costUsd": 0.0009191000000000002,
+  "transportAttempts": 2,
+  "billing": "metered",
+  "output": "```javascript\nimport { PlaneGeometry, MeshBasicNodeMaterial, TextureLoader, Group } from 'three/webgpu';\nimport { texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n  group.userData.cleanup = () => {\n    // Placeholder for resources that will be created\n  };\n\n  const imageUrl = config.assets.imageUrl;\n  if (!imageUrl) {\n    console.warn('Pricing card label: no imageUrl provided');\n    return group;\n  }\n\n  // Load texture using context texture loader\n  const texLoader = ctx.textureLoader;\n  const mapTexture = texLoader.load(imageUrl);\n\n  // Calculate plane dimensions based on texture aspect ratio\n  const image = new Image();\n  image.src = imageUrl;\n  const naturalWidth = image.naturalWidth || 512;\n  const naturalHeight = image.naturalHeight || 320;\n  const aspect = naturalWidth / naturalHeight;\n  const planeWidth = 1.5;\n  const planeHeight = planeWidth / aspect;\n\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n  const material = new MeshBasicNodeMaterial({\n    map: mapTexture,\n    side: THREE.DoubleSide,\n  });\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(config.scenePlacement.position.x, config.scenePlacement.position.y, config.scenePlacement.position.z);\n  mesh.rotation.set(config.scenePlacement.rotation.x, config.scenePlacement.rotation.y, config.scenePlacement.rotation.z);\n  mesh.scale.set(config.scenePlacement.scale.x, config.scenePlacement.scale.y, config.scenePlacement.scale.z);\n  group.add(mesh);\n\n  // Render text content if provided\n  if (config.textContent && config.textContent.length > 0) {\n    // Assume first text entry is the headline\n    const textEntry = config.textContent[0];\n    const fontSize = 0.34; // scene units for headline from type scale\n    const textMesh = ctx.fontAtlas.createText(textEntry.text, {\n      fontSize: 0.34,\n      fontFamily: 'Lora',\n      fontWeight: 400,\n      color: '#16161d', // ink color\n      align: 'center',\n      baseline: 'center',\n    });\n    // Position text in front of the plane slightly\n    textMesh.position.set(0, 0, 0.01);\n    group.add(textMesh);\n    // Store for cleanup\n    group.userData._textMesh = textMesh;\n  }\n\n  // No cinematic primitives to apply\n\n  // Event handlers (none)\n  group.userData.handlers = {};\n\n  // Cleanup function\n  const originalCleanup = group.userData.cleanup;\n  group.userData.cleanup = () => {\n    // Dispose geometry and material\n    geometry.dispose();\n    material.dispose();\n    mapTexture.dispose();\n    if (group.userData._textMesh) {\n      group.userData._textMesh.material.dispose();\n      group.userData._textMesh.geometry.dispose();\n    }\n    // No GSAP timelines to kill\n    originalCleanup();\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

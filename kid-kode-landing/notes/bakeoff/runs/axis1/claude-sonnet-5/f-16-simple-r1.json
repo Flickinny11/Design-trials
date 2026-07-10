@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-16-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 10951,
+  "apiMs": 8630,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 777,
+    "cacheCreation": 3339,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0549575,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2, vec3, mix, float, uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const width = 1.6;\n  const height = 1.0;\n\n  const geometry = new THREE.PlaneGeometry(width, height, 1, 1);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const map = ctx.textureLoader('/prism-mock/home/nodes/orb-decor.png');\n  if (map) {\n    map.colorSpace = THREE.SRGBColorSpace;\n  }\n\n  const inkColor = vec3(0x16 / 255, 0x16 / 255, 0x1d / 255);\n  const surfaceColor = vec3(0x0b / 255, 0x0b / 255, 0x10 / 255);\n\n  const uvNode = uv();\n\n  // engineered gradient surface, top-to-bottom, subtle\n  const gradientMix = mix(surfaceColor, inkColor, uvNode.y);\n\n  // subtle grain via a cheap pseudo-random function based on uv\n  const grainSeed = uvNode.x.mul(12.9898).add(uvNode.y.mul(78.233)).sin().mul(43758.5453);\n  const grain = grainSeed.fract().sub(0.5).mul(0.04);\n\n  const baseColor = gradientMix.add(vec3(grain, grain, grain));\n\n  if (map) {\n    const texColor = texture(map, uvNode);\n    material.colorNode = mix(baseColor, texColor.rgb, texColor.a);\n    material.opacityNode = float(1.0);\n  } else {\n    material.colorNode = baseColor;\n  }\n\n  const mesh = new THREE.Mesh(geometry, material);\n\n  mesh.position.set(0, -0.3, 0);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  mesh.name = 'hub-collection-card-2-decor';\n\n  mesh.userData.handlers = {};\n\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n  };\n\n  return mesh;\n}\n```"
+}

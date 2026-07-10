@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-05-simple",
+  "run": "repair",
+  "ok": true,
+  "wallMs": 14804,
+  "apiMs": 12465,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1364,
+    "cacheCreation": 4982,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0873375,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec3, vec4, mix, mul, add, float, sin } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'cta-label';\n\n  const width = 2.4;\n  const height = (320 / 512) * width;\n\n  const geometry = new THREE.PlaneGeometry(width, height, 1, 1);\n\n  const brushedMap = ctx.textureLoader('/prism-assets/chrome/brushed-metal.map.png');\n  if (brushedMap) {\n    brushedMap.wrapS = THREE.RepeatWrapping;\n    brushedMap.wrapT = THREE.RepeatWrapping;\n  }\n\n  const inkColor = vec3(0x16 / 255, 0x16 / 255, 0x1d / 255);\n  const surfaceColor = vec3(0x0b / 255, 0x0b / 255, 0x10 / 255);\n  const accentColor = vec3(1.0, 0x2a / 255, 0x38 / 255);\n\n  const vUv = uv();\n\n  const gradientMix = add(mul(vUv.x, 0.6), mul(vUv.y, 0.4));\n  const baseGradient = mix(surfaceColor, inkColor, gradientMix);\n\n  const grain = mul(sin(mul(vUv.x, 400.0)), sin(mul(vUv.y, 400.0)));\n  const grainAmount = mul(grain, 0.015);\n  const grainedColor = add(baseGradient, vec3(grainAmount, grainAmount, grainAmount));\n\n  let colorNode;\n  if (brushedMap) {\n    const metalSample = texture(brushedMap, vUv);\n    const blended = mix(grainedColor, mul(grainedColor, metalSample.rgb), 0.35);\n    colorNode = blended;\n  } else {\n    colorNode = grainedColor;\n  }\n\n  const edgeBand = float(0.04);\n  const isEdge = vUv.y.lessThan(edgeBand);\n  const withEdge = mix(colorNode, accentColor, mul(isEdge.select(1.0, 0.0), 0.9));\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.colorNode = vec4(withEdge, 1.0);\n  material.transparent = false;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'cta-label-plane';\n  group.add(mesh);\n\n  const textMeshes = [];\n  const textContent = Array.isArray(config.textContent) ? config.textContent : [];\n\n  for (const entry of textContent) {\n    const textMesh = ctx.fontAtlas.createText({\n      text: entry.text,\n      font: entry.role === 'headline' ? 'display' : 'text',\n      weight: entry.weight || 400,\n      sizeEm: entry.role === 'headline' ? 0.34 : 0.13,\n      color: '#e8ecf2',\n      align: 'center',\n      anchor: 'center',\n    });\n    textMesh.position.set(0, 0, 0.01);\n    group.add(textMesh);\n    textMeshes.push(textMesh);\n  }\n\n  group.position.set(0, -2.85, 0.26);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (brushedMap && brushedMap.dispose) brushedMap.dispose();\n    for (const textMesh of textMeshes) {\n      if (textMesh.geometry) textMesh.geometry.dispose();\n      if (textMesh.material) textMesh.material.dispose();\n      if (textMesh.userData && typeof textMesh.userData.cleanup === 'function') {\n        textMesh.userData.cleanup();\n      }\n    }\n  };\n\n  return group;\n}\n```"
+}

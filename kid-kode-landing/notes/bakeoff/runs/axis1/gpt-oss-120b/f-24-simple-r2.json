@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-24-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 13433,
+  "usage": {
+    "promptTokens": 1676,
+    "completionTokens": 2347
+  },
+  "costUsd": 0.0016596,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import { Object3D, Mesh, PlaneGeometry, Vector2 } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\nexport default function createNode(config, ctx) {\n  // Base Object3D\n  const node = new Object3D();\n\n  // Apply transform\n  const pos = config.position ?? [0, 0, 0];\n  const rot = config.rotation ?? [0, 0, 0];\n  const scl = config.scale ?? [1, 1, 1];\n  node.position.set(...pos);\n  node.rotation.set(...rot);\n  node.scale.set(...scl);\n\n  // ----------------------------\n  // Textured plane (artifact sprite)\n  // ----------------------------\n  const ATLAS = config.atlasRegion ?? { x: 0, y: 0, w: 512, h: 320 };\n  const aspect = ATLAS.w / ATLAS.h;\n\n  const geometry = new PlaneGeometry(aspect, 1);\n  const texture = ctx.textureLoader('/prism-assets/chrome/ceramic-grain.map.png');\n\n  // Configure UV offset / repeat based on atlas region (assumes texture size equals atlas size)\n  if (texture && texture.image) {\n    const img = texture.image;\n    const texW = img.width || 1;\n    const texH = img.height || 1;\n    texture.offset.set(ATLAS.x / texW, 1 - (ATLAS.y + ATLAS.h) / texH);\n    texture.repeat.set(ATLAS.w / texW, ATLAS.h / texH);\n    texture.needsUpdate = true;\n  }\n\n  const material = new MeshBasicNodeMaterial({ map: texture });\n  const plane = new Mesh(geometry, material);\n  node.add(plane);\n\n  // ----------------------------\n  // MSDF Text rendering (label)\n  // ----------------------------\n  const text = config.textContent ?? '';\n  if (text && ctx.fontAtlas && typeof ctx.fontAtlas.createTextMesh === 'function') {\n    const textMesh = ctx.fontAtlas.createTextMesh(text, {\n      // use design tokens where possible\n      color: config.colors?.ink ?? '#16161d',\n      font: 'display', // Lora serif per spec\n      // approximate headline size (scene‑unit em height 0.34)\n      size: 0.34,\n      // place text slightly in front of the plane to avoid Z‑fighting\n      position: new Vector2(0, 0.02)\n    });\n    if (textMesh) node.add(textMesh);\n  }\n\n  // ----------------------------\n  // Cinematic primitives (if any)\n  // ----------------------------\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const primitive of config.cinematicPrimitives) {\n      const fn = ctx.primitives?.[primitive.name];\n      if (typeof fn === 'function') fn(node, primitive.params);\n    }\n  }\n\n  // ----------------------------\n  // Event handlers container (no interactions defined)\n  // ----------------------------\n  node.userData.handlers = {};\n\n  // ----------------------------\n  // Cleanup routine\n  // ----------------------------\n  node.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (texture) texture.dispose();\n    // destroy any GSAP timelines that might have been created elsewhere\n    gsap.killTweensOf(node);\n    if (node.userData.handlers) {\n      for (const key in node.userData.handlers) {\n        const handler = node.userData.handlers[key];\n        if (handler && typeof handler.dispose === 'function') handler.dispose();\n      }\n    }\n  };\n\n  return node;\n}"
+}

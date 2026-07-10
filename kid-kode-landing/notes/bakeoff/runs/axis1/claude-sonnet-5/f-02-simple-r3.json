@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-02-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 11753,
+  "apiMs": 9266,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 831,
+    "cacheCreation": 0,
+    "cacheRead": 5488
+  },
+  "costUsd": 0.024623,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, uniform, mix } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'home-subhead';\n  group.position.set(0, 1.85, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 3.2;\n  const height = 2.0;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const map = ctx.textureLoader.load('/prism-mock/home/nodes/cta-hero-isolated.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const grainStrength = uniform(0.03);\n  const texNode = texture(map, uv());\n\n  // subtle static grain via a pseudo-random pattern based on uv\n  const uvNode = uv();\n  const grain = uvNode.x.mul(12.9898).add(uvNode.y.mul(78.233)).sin().mul(43758.5453).fract();\n  const grained = texNode.rgb.add(grain.sub(0.5).mul(grainStrength));\n\n  material.colorNode = vec4(grained, texNode.a);\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'home-subhead-plane';\n  group.add(plane);\n\n  // Headline text rendered via MSDF atlas\n  const textMesh = createTextMesh({\n    text: 'Atelier Noir — precise · luxury · technical',\n    font: 'Lora',\n    weight: 400,\n    sizeEm: 0.34,\n    color: '#e8ecf2',\n    align: 'center',\n    fontAtlas: ctx.fontAtlas,\n  });\n  textMesh.name = 'home-subhead-text';\n  textMesh.position.set(0, 0, 0.01);\n  group.add(textMesh);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n  };\n\n  return group;\n}"
+}

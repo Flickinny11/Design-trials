@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-30-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 39500,
+  "usage": {
+    "promptTokens": 1663,
+    "completionTokens": 1747
+  },
+  "costUsd": 0.00129765,
+  "transportAttempts": 3,
+  "billing": "metered",
+  "output": "import {\n  Mesh,\n  PlaneGeometry,\n  Object3D,\n} from 'three/webgpu';\nimport {\n  MeshBasicNodeMaterial,\n  texture,\n} from 'three/tsl';\nimport { gsap } from 'gsap';\nimport { OrbitControls } from '@/primitives'; // placeholder import to satisfy alias usage, not used directly\n\nexport default function createNode(config, ctx) {\n  // Load texture (synchronous via cached loader)\n  const tex = ctx.textureLoader.load(config.assets?.imageUrl ?? '');\n\n  // Determine aspect ratio from atlas region if provided\n  const rect = config.atlas?.sourceRect ?? { width: 512, height: 320 };\n  const aspect = rect.width / rect.height;\n\n  // Create a plane geometry matching the aspect ratio\n  const geometry = new PlaneGeometry(aspect, 1, 1, 1);\n\n  // Build a node material using the loaded texture\n  const texNode = texture(tex);\n  const material = new MeshBasicNodeMaterial({\n    mapNode: texNode,\n    toneMapped: false,\n    transparent: true,\n    depthWrite: false,\n  });\n\n  // Assemble mesh\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(\n    config.placement?.position?.[0] ?? 0,\n    config.placement?.position?.[1] ?? -0.3,\n    config.placement?.position?.[2] ?? 0\n  );\n  mesh.rotation.set(\n    config.placement?.rotation?.[0] ?? 0,\n    config.placement?.rotation?.[1] ?? 0,\n    config.placement?.rotation?.[2] ?? 0\n  );\n  mesh.scale.set(\n    config.placement?.scale?.[0] ?? 1,\n    config.placement?.scale?.[1] ?? 1,\n    config.placement?.scale?.[2] ?? 1\n  );\n\n  // Billboard: face the camera each frame\n  mesh.onBeforeRender = function (_, __, camera) {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  // Apply any cinematic primitives listed in the config\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const fn = ctx.primitives?.[prim.name];\n      if (typeof fn === 'function') {\n        fn(mesh, prim.params);\n      }\n    }\n  }\n\n  // Event handlers placeholder (none defined)\n  mesh.userData.handlers = {};\n\n  // Track GSAP timelines for cleanup (none created here but structure kept)\n  const _timelines = [];\n\n  // Cleanup routine\n  mesh.userData.cleanup = function () {\n    geometry.dispose();\n    material.dispose();\n    if (tex?.dispose) tex.dispose();\n    for (const tl of _timelines) {\n      tl.kill();\n    }\n  };\n\n  return mesh;\n}"
+}

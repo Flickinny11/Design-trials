@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-44-moderate",
+  "run": 1,
+  "ok": true,
+  "wallMs": 45693,
+  "usage": {
+    "promptTokens": 1728,
+    "completionTokens": 1681
+  },
+  "costUsd": 0.0012678,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import { Object3D } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\n/**\n * @typedef {import('three/webgpu').Object3D} THREEObject3D\n * @typedef {Object} NodeConfig\n * @property {[number, number, number]} position\n * @property {[number, number, number]} rotation\n * @property {[number, number, number]} scale\n * @property {string} meshUrl\n *\n * @typedef {Object} NodeContext\n * @property {(url:string)=>any} glbLoader            // synchronously returns a GLTF-like object\n */\n\n/**\n * Creates the thumbnail card node.\n *\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {THREEObject3D}\n */\nexport default function createNode(config, ctx) {\n    // root container\n    const root = new Object3D();\n\n    // apply transform\n    if (config.position) root.position.set(...config.position);\n    if (config.rotation) root.rotation.set(...config.rotation);\n    if (config.scale) root.scale.set(...config.scale);\n\n    // load GLB (synchronous via ctx.glbLoader)\n    const gltf = ctx.glbLoader(config.meshUrl);\n    let meshRoot = null;\n\n    if (gltf && gltf.scene) {\n        meshRoot = gltf.scene.clone();\n    } else if (gltf && gltf.isObject3D) {\n        meshRoot = gltf.clone();\n    } else {\n        console.warn('GLB loader did not return a usable object for', config.meshUrl);\n        meshRoot = new Object3D(); // fallback placeholder\n    }\n\n    root.add(meshRoot);\n\n    // ----- Hover lift animation (rise‑in) -----\n    const liftAmount = 0.15; // scene units\n    const hoverTimeline = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });\n    hoverTimeline.to(root.position, {\n        y: root.position.y + liftAmount,\n        duration: 0.3,\n    });\n\n    // ----- Event handlers -----\n    root.userData.handlers = {\n        pointerover: () => {\n            hoverTimeline.play();\n        },\n        pointerout: () => {\n            hoverTimeline.reverse();\n        },\n        click: () => {\n            // Emit semantic event for navigation\n            root.dispatchEvent({ type: 'hub-home.select' });\n        },\n    };\n\n    // ----- Cleanup -----\n    root.userData.cleanup = () => {\n        hoverTimeline.kill();\n\n        // Dispose geometries and materials from the loaded GLB\n        meshRoot.traverse((obj) => {\n            if (obj.isMesh) {\n                if (obj.geometry) obj.geometry.dispose();\n                if (Array.isArray(obj.material)) {\n                    obj.material.forEach((m) => m && m.dispose && m.dispose());\n                } else if (obj.material && obj.material.dispose) {\n                    obj.material.dispose();\n                }\n            }\n        });\n    };\n\n    return root;\n}"
+}

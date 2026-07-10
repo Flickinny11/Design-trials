@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-29-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 86979,
+  "apiMs": 84459,
+  "usage": {
+    "promptTokens": 3955,
+    "completionTokens": 9727,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.053557999999999995,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Load brushed-metal texture map\n  const metalTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  \n  // Create material using tsl texture node\n  const material = new MeshBasicNodeMaterial({\n    colorNode: texture(metalTexture),\n    toneMapped: false\n  });\n  \n  // Create plane geometry (atlas aspect ratio 512:320 = 1.6:1)\n  const geometry = new THREE.PlaneGeometry(1.2, 0.75);\n  const plane = new THREE.Mesh(geometry, material);\n  group.add(plane);\n  \n  // Render text label via ctx.fontAtlas\n  if (config.textContent && config.textContent.length > 0) {\n    const textSpec = config.textContent[0];\n    const textMesh = ctx.fontAtlas(config, {\n      text: textSpec.content || 'Journal 1',\n      fontFamily: 'Lora',\n      fontSize: 0.34,\n      fontWeight: 400,\n      color: 0x16161d,\n      align: 'center'\n    });\n    \n    if (textMesh) {\n      textMesh.position.z = 0.01;\n      group.add(textMesh);\n    }\n  }\n  \n  // Apply scene positioning\n  if (config.scenePosition) {\n    group.position.fromArray(config.scenePosition);\n  }\n  \n  // Apply scene rotation\n  if (config.sceneRotation) {\n    group.rotation.fromArray(config.sceneRotation);\n  }\n  \n  // Apply scene scale\n  if (config.sceneScale) {\n    group.scale.fromArray(config.sceneScale);\n  }\n  \n  // Initialize handlers object\n  group.userData.handlers = {};\n  \n  // Define cleanup function\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    metalTexture.dispose();\n  };\n  \n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-38-moderate-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 15314,
+  "apiMs": 12792,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1377,
+    "cacheCreation": 0,
+    "cacheRead": 5579
+  },
+  "costUsd": 0.038357499999999996,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, color, mix, step } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-journal-card-thumbnail';\n  group.position.set(2.5, 1.6, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 1.6;\n  const height = 1.0;\n  const captionHeight = 0.22;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const map = ctx.textureLoader.load('/prism-mock/home/nodes/cta-hero-isolated.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n  const imgTex = texture(map, uv());\n\n  const captionColor = color(0x16161d);\n  const captionThreshold = captionHeight / height;\n  const captionMask = step(uv().y, captionThreshold);\n\n  const finalColor = mix(imgTex.rgb, captionColor, captionMask);\n  material.colorNode = vec4(finalColor, 1.0);\n\n  const cardMesh = new THREE.Mesh(geometry, material);\n  cardMesh.name = 'thumbnail-plane';\n  group.add(cardMesh);\n\n  // accent edge (focus indicator), hidden by default\n  const edgeGeo = new THREE.PlaneGeometry(width + 0.03, height + 0.03);\n  const edgeMat = new THREE.MeshBasicNodeMaterial({\n    transparent: true,\n    opacity: 0,\n    color: new THREE.Color(0xff2a38),\n  });\n  const edgeMesh = new THREE.Mesh(edgeGeo, edgeMat);\n  edgeMesh.position.z = -0.001;\n  edgeMesh.name = 'accent-edge';\n  group.add(edgeMesh);\n\n  const basePosition = group.position.clone();\n  let hoverTween = null;\n  let pressTween = null;\n\n  function onHoverIn() {\n    if (hoverTween) hoverTween.kill();\n    hoverTween = gsap.to(group.position, {\n      y: basePosition.y + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n    gsap.to(edgeMat, { opacity: 0.6, duration: 0.3 });\n  }\n\n  function onHoverOut() {\n    if (hoverTween) hoverTween.kill();\n    hoverTween = gsap.to(group.position, {\n      y: basePosition.y,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n    gsap.to(edgeMat, { opacity: 0, duration: 0.3 });\n  }\n\n  function onClick() {\n    if (pressTween) pressTween.kill();\n    pressTween = gsap.timeline()\n      .to(group.scale, { x: 0.97, y: 0.97, z: 0.97, duration: 0.12, ease: 'back.out' })\n      .to(group.scale, { x: 1, y: 1, z: 1, duration: 0.2, ease: 'back.out' });\n\n    if (group.userData.emit) {\n      group.userData.emit('hub-journal.select', { nodeId: 'hub-journal-card-thumbnail' });\n    }\n  }\n\n  group.userData.handlers = {\n    onHoverIn,\n    onHoverOut,\n    onClick,\n  };\n\n  group.userData.cleanup = () => {\n    if (hoverTween) hoverTween.kill();\n    if (pressTween) pressTween.kill();\n    geometry.dispose();\n    material.dispose();\n    edgeGeo.dispose();\n    edgeMat.dispose();\n    if (map) map.dispose();\n  };\n\n  return group;\n}"
+}

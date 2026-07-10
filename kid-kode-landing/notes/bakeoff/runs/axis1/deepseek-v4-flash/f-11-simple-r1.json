@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-11-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 12376,
+  "usage": {
+    "promptTokens": 1688,
+    "completionTokens": 1229
+  },
+  "costUsd": 0.0005804400000000001,
+  "transportAttempts": 2,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial, PlaneGeometry, Mesh, Object3D } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  // --- Geometry ---\n  const geometry = new PlaneGeometry(2, 1.25); // aspect ratio 512/320 = 1.6, but we use unit size; adjust later if needed\n\n  // --- Texture ---\n  const texture = ctx.textureLoader.load(config.assets?.imageUrl || '/prism-assets/chrome/brushed-metal.map.png');\n  // Assuming atlas region is exactly the texture's full size; otherwise UV offset/scale could be applied.\n  // If atlas is larger, we'd need atlas dimensions from config. Here we assume no offset needed.\n\n  // --- Material ---\n  const material = new MeshBasicNodeMaterial({\n    map: texture,\n    color: 0xffffff,\n    roughness: 0.6, // subtle grain hint\n    metalness: 0.3,\n  });\n\n  // --- Mesh ---\n  const mesh = new Mesh(geometry, material);\n  mesh.castShadow = false;\n  mesh.receiveShadow = false;\n\n  // --- Position / Rotation / Scale from config ---\n  const sp = config.scenePosition || {};\n  mesh.position.set(sp.x ?? 3.2, sp.y ?? -0.3, sp.z ?? 0);\n  mesh.rotation.set(sp.rotX ?? 0, sp.rotY ?? 0, sp.rotZ ?? 0);\n  mesh.scale.set(sp.sX ?? 1, sp.sY ?? 1, sp.sZ ?? 1);\n\n  // --- User data ---\n  mesh.userData.handlers = {};\n  mesh.userData.cleanup = () => {\n    texture.dispose();\n    material.dispose();\n    geometry.dispose();\n  };\n\n  // --- Apply cinematic primitives (none) ---\n  if (config.cinematicPrimitives) {\n    for (const prim of config.cinematicPrimitives) {\n      ctx.primitives[prim.name](mesh, prim.params);\n    }\n  }\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

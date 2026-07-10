@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-23-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 12539,
+  "apiMs": 10028,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1028,
+    "cacheCreation": 3345,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0613025,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, uniform, vec3, mix, float, mul } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-pricing-card-1-plane';\n\n  const width = 2.6;\n  const height = 1.625;\n\n  const geometry = new THREE.PlaneGeometry(width, height, 1, 1);\n  const material = new THREE.MeshStandardNodeMaterial();\n\n  const ink = new THREE.Color('#16161d');\n  const paper = new THREE.Color('#e8ecf2');\n  const accent = new THREE.Color('#ff2a38');\n  const surface = new THREE.Color('#0b0b10');\n\n  let map = null;\n  try {\n    map = ctx.textureLoader('/prism-assets/chrome/brushed-metal.map.png');\n    if (map) {\n      map.wrapS = THREE.RepeatWrapping;\n      map.wrapT = THREE.RepeatWrapping;\n      map.colorSpace = THREE.SRGBColorSpace;\n    }\n  } catch (e) {\n    map = null;\n  }\n\n  const vUv = uv();\n\n  // Engineered gradient: vertical mix from surface (near-black) to ink,\n  // with a subtle accent sheen band and brushed-metal texture modulation.\n  const gradientMix = mix(\n    vec3(surface.r, surface.g, surface.b),\n    vec3(ink.r, ink.g, ink.b),\n    vUv.y\n  );\n\n  const sheenBand = float(0.06).mul(\n    vUv.y.sub(0.5).abs().oneMinus().smoothstep(0.85, 1.0)\n  );\n  const accentSheen = mix(\n    gradientMix,\n    vec3(accent.r, accent.g, accent.b),\n    sheenBand\n  );\n\n  let colorNode = accentSheen;\n\n  if (map) {\n    const texSample = texture(map, vUv);\n    colorNode = mix(accentSheen, accentSheen.mul(texSample.rgb), float(0.35));\n  }\n\n  material.colorNode = colorNode;\n  material.roughnessNode = float(0.55);\n  material.metalnessNode = float(0.45);\n  material.clearcoat = 0.18;\n  material.clearcoatRoughness = 0.4;\n  material.roughness = 0.55;\n  material.metalness = 0.45;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'hub-pricing-card-1-mesh';\n  group.add(mesh);\n\n  group.position.set(0, -0.3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) {\n      map.dispose();\n    }\n  };\n\n  return group;\n}\n```"
+}

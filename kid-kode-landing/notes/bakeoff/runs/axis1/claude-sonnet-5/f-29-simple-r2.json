@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-29-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 12844,
+  "apiMs": 10586,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1189,
+    "cacheCreation": 0,
+    "cacheRead": 5486
+  },
+  "costUsd": 0.03354599999999999,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, mix, float } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'journal-card-1-label';\n  group.position.set(-3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const colors = {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10',\n  };\n\n  const width = 1.6;\n  const height = (320 / 512) * width;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const material = new THREE.MeshBasicNodeMaterial();\n\n  let map = null;\n  try {\n    map = ctx.textureLoader.load('/prism-assets/chrome/brushed-metal.map.png');\n    if (map) {\n      map.colorSpace = THREE.SRGBColorSpace;\n      map.wrapS = THREE.ClampToEdgeWrapping;\n      map.wrapT = THREE.ClampToEdgeWrapping;\n    }\n  } catch (e) {\n    map = null;\n  }\n\n  const inkColor = new THREE.Color(colors.ink);\n  const surfaceColor = new THREE.Color(colors.surface);\n\n  if (map) {\n    const texNode = texture(map, uv());\n    const gradient = mix(\n      vec4(surfaceColor.r, surfaceColor.g, surfaceColor.b, 1.0),\n      vec4(inkColor.r, inkColor.g, inkColor.b, 1.0),\n      uv().y\n    );\n    material.colorNode = mix(gradient, texNode, float(0.55));\n  } else {\n    material.colorNode = mix(\n      vec4(surfaceColor.r, surfaceColor.g, surfaceColor.b, 1.0),\n      vec4(inkColor.r, inkColor.g, inkColor.b, 1.0),\n      uv().y\n    );\n  }\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'journal-card-1-label-plane';\n  group.add(plane);\n\n  let textMesh = null;\n  try {\n    textMesh = createTextMesh({\n      text: config?.textContent?.[0]?.value || 'Journal 1',\n      fontAtlas: ctx.fontAtlas,\n      font: 'Lora',\n      weight: 400,\n      size: 0.34,\n      color: colors.paper,\n      align: 'left',\n    });\n    if (textMesh) {\n      textMesh.position.set(-width / 2 + 0.12, height / 2 - 0.22, 0.01);\n      group.add(textMesh);\n    }\n  } catch (e) {\n    textMesh = null;\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    if (textMesh) {\n      if (textMesh.geometry) textMesh.geometry.dispose();\n      if (textMesh.material) {\n        if (Array.isArray(textMesh.material)) {\n          textMesh.material.forEach((m) => m.dispose());\n        } else {\n          textMesh.material.dispose();\n        }\n      }\n    }\n  };\n\n  return group;\n}\n```"
+}

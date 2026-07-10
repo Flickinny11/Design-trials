@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-19-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 94575,
+  "apiMs": 92337,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 10127,
+    "cacheCreation": 0,
+    "cacheRead": 21560
+  },
+  "costUsd": 0.053784,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Apply scene position, rotation, scale\n  if (config.scenePosition) {\n    const { x = 0, y = 0, z = 0, rotationXYZ, scaleXYZ } = config.scenePosition;\n    group.position.set(x, y, z);\n    \n    if (rotationXYZ) {\n      group.rotation.set(rotationXYZ[0], rotationXYZ[1], rotationXYZ[2]);\n    }\n    \n    if (scaleXYZ) {\n      group.scale.set(scaleXYZ[0], scaleXYZ[1], scaleXYZ[2]);\n    }\n  }\n\n  // Create card plane with feature image texture\n  const cardGeom = new THREE.PlaneGeometry(1, 0.625); // 512:320 aspect ratio\n  const cardTexture = ctx.textureLoader.load(config.imageUrl || '/prism-mock/home/nodes/feature-card.png');\n  \n  const cardMaterial = new THREE.MeshBasicNodeMaterial({\n    map: cardTexture,\n    transparent: true,\n    side: THREE.FrontSide,\n  });\n  \n  const cardMesh = new THREE.Mesh(cardGeom, cardMaterial);\n  group.add(cardMesh);\n\n  // Render text label via fontAtlas\n  if (config.textContent?.length) {\n    const textStr = config.textContent[0];\n    \n    const textMesh = ctx.fontAtlas.createTextMesh(textStr, {\n      fontSize: 0.34,\n      fontName: 'Lora',\n      fontWeight: 400,\n      align: 'left',\n      anchorX: 'left',\n      anchorY: 'top',\n      color: 0xe8ecf2,\n    });\n    \n    if (textMesh) {\n      textMesh.position.set(-0.45, 0.25, 0.01);\n      group.add(textMesh);\n    }\n  }\n\n  // Apply cinematic primitives if configured\n  if (config.cinematicPrimitives?.length && ctx.primitives) {\n    for (const prim of config.cinematicPrimitives) {\n      const applyPrim = ctx.primitives[prim.name];\n      if (typeof applyPrim === 'function') {\n        applyPrim(group, prim.params || {});\n      }\n    }\n  }\n\n  // Setup resource cleanup\n  group.userData.cleanup = () => {\n    cardGeom.dispose();\n    cardMaterial.dispose();\n    cardTexture.dispose();\n    \n    gsap.killTweensOf(group);\n    \n    group.traverse((child) => {\n      if (child.geometry) child.geometry.dispose();\n      if (child.material) {\n        const mats = Array.isArray(child.material) ? child.material : [child.material];\n        mats.forEach(m => m?.dispose?.());\n      }\n    });\n  };\n\n  // Event handlers\n  group.userData.handlers = {};\n\n  return group;\n}"
+}

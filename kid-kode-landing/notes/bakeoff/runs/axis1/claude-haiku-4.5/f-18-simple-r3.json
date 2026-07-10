@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-18-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 97099,
+  "apiMs": 94906,
+  "usage": {
+    "promptTokens": 3953,
+    "completionTokens": 10611,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.057994000000000004,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture as textureNode } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const ATLAS_RECT = { x: 0, y: 0, width: 512, height: 320 };\n  const SCENE_HEIGHT = 1.0;\n  \n  // Calculate geometry dimensions based on atlas aspect ratio\n  const aspectRatio = ATLAS_RECT.width / ATLAS_RECT.height;\n  const sceneWidth = SCENE_HEIGHT * aspectRatio;\n  \n  // Create plane geometry\n  const geometry = new THREE.PlaneGeometry(sceneWidth, SCENE_HEIGHT);\n  \n  // Load texture via cached texture loader\n  const texture = ctx.textureLoader.load(config.imageUrl);\n  texture.colorSpace = THREE.SRGBColorSpace;\n  \n  // Apply atlas UV offsets if texture is larger than source region\n  if (texture.image) {\n    const tw = texture.image.width;\n    const th = texture.image.height;\n    \n    const minU = ATLAS_RECT.x / tw;\n    const maxU = (ATLAS_RECT.x + ATLAS_RECT.width) / tw;\n    const minV = ATLAS_RECT.y / th;\n    const maxV = (ATLAS_RECT.y + ATLAS_RECT.height) / th;\n    \n    const uv = geometry.getAttribute('uv');\n    const uvArray = uv.array;\n    \n    for (let i = 0; i < uvArray.length; i += 2) {\n      uvArray[i] = minU + uvArray[i] * (maxU - minU);\n      uvArray[i + 1] = minV + uvArray[i + 1] * (maxV - minV);\n    }\n    uv.needsUpdate = true;\n  }\n  \n  // Create material with texture node\n  const textureColorNode = textureNode(texture);\n  const material = new MeshBasicNodeMaterial({\n    colorNode: textureColorNode,\n    transparent: true,\n    side: THREE.DoubleSide,\n  });\n  \n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  \n  // Apply transformation\n  mesh.position.set(config.position[0], config.position[1], config.position[2]);\n  mesh.rotation.set(config.rotation[0], config.rotation[1], config.rotation[2]);\n  mesh.scale.set(config.scale[0], config.scale[1], config.scale[2]);\n  \n  // Setup resource cleanup\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n  };\n  \n  // Setup event handlers\n  mesh.userData.handlers = {};\n  \n  return mesh;\n}\n```"
+}

@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-25-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 9814,
+  "usage": {
+    "promptTokens": 1650,
+    "completionTokens": 1662
+  },
+  "costUsd": 0.0012446999999999998,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import { Mesh, PlaneGeometry, Object3D, Vector3, Euler } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\nexport default function createNode(config, ctx) {\n\t// ----- Scene placement -------------------------------------------------\n\tconst placement = config.scenePlacement ?? {};\n\tconst position = placement.position ?? [0, 0, 0];\n\tconst rotation = placement.rotation ?? [0, 0, 0];\n\tconst scale = placement.scale ?? [1, 1, 1];\n\n\t// ----- Geometry size from atlas region (fallback to unit plane) -----\n\tlet width = 1;\n\tlet height = 1;\n\tif (config.atlasRegion && config.atlasRegion.sourceRect) {\n\t\tconst [, , w, h] = config.atlasRegion.sourceRect; // x, y, w, h\n\t\twidth = w;\n\t\theight = h;\n\t}\n\n\tconst geometry = new PlaneGeometry(width, height);\n\n\t// ----- Texture ---------------------------------------------------------\n\tconst imageUrl = config.assets?.imageUrl ?? null;\n\tconst texture = imageUrl ? ctx.textureLoader.load(imageUrl) : null;\n\n\t// ----- Material --------------------------------------------------------\n\tconst material = new MeshBasicNodeMaterial({\n\t\tmap: texture,\n\t\ttransparent: true,\n\t});\n\n\t// ----- Mesh ------------------------------------------------------------\n\tconst mesh = new Mesh(geometry, material);\n\tmesh.position.set(...position);\n\tmesh.rotation.set(...rotation);\n\tmesh.scale.set(...scale);\n\n\t// ----- Handlers --------------------------------------------------------\n\tmesh.userData.handlers = {};\n\n\t// ----- Cleanup ---------------------------------------------------------\n\tconst timelines = [];\n\n\tmesh.userData.cleanup = () => {\n\t\t// Kill any GSAP timelines that might have been created later\n\t\ttimelines.forEach((t) => t.kill());\n\t\t// Dispose Three.js resources\n\t\tgeometry.dispose();\n\t\tmaterial.dispose();\n\t\tif (texture) texture.dispose();\n\t};\n\n\t// ----- No cinematic primitives to apply --------------------------------\n\t// (config.cinematicPrimitives is empty)\n\n\treturn mesh;\n}"
+}

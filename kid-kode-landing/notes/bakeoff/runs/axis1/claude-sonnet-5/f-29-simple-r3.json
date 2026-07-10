@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-29-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 11501,
+  "apiMs": 9008,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 860,
+    "cacheCreation": 0,
+    "cacheRead": 5486
+  },
+  "costUsd": 0.025320999999999996,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, mix, uniform } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'journal-card-1-label';\n  group.position.set(-3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 1.6;\n  const height = 1.0;\n\n  const map = ctx.textureLoader.load('/prism-assets/chrome/brushed-metal.map.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  const inkColor = new THREE.Color('#16161d');\n  const surfaceColor = new THREE.Color('#0b0b10');\n\n  const gradientMix = uniform(0.35);\n  const uvNode = uv();\n  const baseTex = texture(map, uvNode);\n  const engineeredGradient = mix(\n    vec4(surfaceColor.r, surfaceColor.g, surfaceColor.b, 1.0),\n    vec4(inkColor.r, inkColor.g, inkColor.b, 1.0),\n    uvNode.y\n  );\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.colorNode = mix(baseTex, engineeredGradient, gradientMix);\n  material.transparent = false;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'journal-card-1-label-plane';\n  group.add(mesh);\n\n  const textMesh = createTextMesh({\n    text: 'Journal 1',\n    font: 'Lora',\n    weight: 400,\n    sizeEm: 0.34,\n    color: '#e8ecf2',\n    atlas: ctx.fontAtlas,\n    align: 'left',\n    anchor: 'center'\n  });\n\n  textMesh.position.set(-width / 2 + 0.25, 0, 0.01);\n  group.add(textMesh);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n    group.clear();\n  };\n\n  return group;\n}\n```"
+}

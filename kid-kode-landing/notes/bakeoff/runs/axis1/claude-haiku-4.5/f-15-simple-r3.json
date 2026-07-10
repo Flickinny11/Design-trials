@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-15-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 87706,
+  "apiMs": 85228,
+  "usage": {
+    "promptTokens": 3966,
+    "completionTokens": 9368,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.051805,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Create plane geometry with atlas aspect ratio (512:320 = 1.6)\n  const atlasAspectRatio = 512 / 320;\n  const planeHeight = 0.6;\n  const planeWidth = planeHeight * atlasAspectRatio;\n  \n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n  \n  // Load texture via cached loader\n  const textureMap = ctx.textureLoader.load(\n    config.imageUrl || '/prism-mock/home/nodes/floating-accent.png'\n  );\n  textureMap.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create TSL-based material\n  const material = new MeshBasicNodeMaterial({\n    colorNode: texture(textureMap),\n    side: THREE.DoubleSide,\n    transparent: true,\n  });\n  \n  // Create and position mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(...(config.position || [-3.2, 1, 0.06]));\n  mesh.rotation.order = 'YXZ';\n  mesh.rotation.set(...(config.rotation || [0, 0, 0]));\n  mesh.scale.set(...(config.scale || [1, 1, 1]));\n  \n  group.add(mesh);\n  \n  // Add text content via fontAtlas\n  if (config.textContent && Array.isArray(config.textContent) && config.textContent.length > 0) {\n    const textData = config.textContent[0];\n    const textValue = textData.value || textData || 'Collection 1';\n    \n    const colorValue = config.colors?.ink\n      ? parseInt(config.colors.ink.replace('#', ''), 16)\n      : 0x16161d;\n    \n    const textMesh = ctx.fontAtlas.createText(textValue, {\n      size: 0.34, // headline size\n      weight: textData.weight || 400,\n      color: colorValue,\n      align: 'center',\n      valign: 'middle',\n    });\n    \n    if (textMesh) {\n      textMesh.position.copy(mesh.position);\n      textMesh.position.z += 0.01;\n      group.add(textMesh);\n    }\n  }\n  \n  // Cleanup handler\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    textureMap.dispose();\n  };\n  \n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

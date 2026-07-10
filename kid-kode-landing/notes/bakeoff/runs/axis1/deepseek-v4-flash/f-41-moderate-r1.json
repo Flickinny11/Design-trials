@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-41-moderate",
+  "run": 1,
+  "ok": true,
+  "wallMs": 34190,
+  "usage": {
+    "promptTokens": 1749,
+    "completionTokens": 3685
+  },
+  "costUsd": 0.0012766600000000002,
+  "transportAttempts": 3,
+  "billing": "metered",
+  "output": "```javascript\nimport { PlaneGeometry, Mesh, MeshBasicNodeMaterial, Texture, Object3D } from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  // Destructure config\n  const { textContent, cinematicPrimitives, behavior, scenePosition, sceneRotation, sceneScale } = config;\n  const { textureLoader } = ctx;\n\n  // Load brushed metal texture\n  const texture = textureLoader.load('/prism-assets/chrome/brushed-metal.map.png');\n  texture.wrapS = texture.wrapT = Texture.RepeatWrapping;\n\n  // Create geometry for the row plane\n  const rowWidth = 4.0;\n  const rowHeight = 0.4;\n  const geometry = new PlaneGeometry(rowWidth, rowHeight);\n\n  // Material with texture\n  const material = new MeshBasicNodeMaterial({\n    map: texture,\n    color: 0xffffff,\n  });\n\n  const plane = new Mesh(geometry, material);\n  plane.castShadow = false;\n  plane.receiveShadow = false;\n\n  // Create group to hold the row and additional elements\n  const group = new Object3D();\n  group.position.set(scenePosition.x, scenePosition.y, scenePosition.z);\n  group.rotation.set(sceneRotation.x, sceneRotation.y, sceneRotation.z);\n  group.scale.set(sceneScale.x, sceneScale.y, sceneScale.z);\n  group.add(plane);\n\n  // Add subtle divider at bottom edge\n  const dividerHeight = 0.01;\n  const dividerY = -rowHeight / 2 + dividerHeight / 2;\n  const dividerGeo = new PlaneGeometry(rowWidth, dividerHeight);\n  const dividerMat = new MeshBasicNodeMaterial({\n    color: 0xe8ecf2, // paper\n    transparent: true,\n    opacity: 0.3,\n  });\n  const divider = new Mesh(dividerGeo, dividerMat);\n  divider.position.set(0, dividerY, 0.001); // slightly in front to avoid z-fight\n  group.add(divider);\n\n  // Store original Y position for hover animation\n  let baseY = scenePosition.y;\n\n  // ----- Interactions -----\n  const handlers = {};\n\n  // Hover: rise-in by 0.15 units\n  handlers.hover = {\n    enter: () => {\n      gsap.killTweensOf(group.position, 'y');\n      gsap.to(group.position, {\n        y: baseY + 0.15,\n        duration: 0.3,\n        ease: 'power3.out',\n        overwrite: 'auto',\n      });\n    },\n    leave: () => {\n      gsap.killTweensOf(group.position, 'y');\n      gsap.to(group.position, {\n        y: baseY,\n        duration: 0.3,\n        ease: 'power3.out',\n        overwrite: 'auto',\n      });\n    },\n  };\n\n  // Click: press-down and emit event\n  handlers.click = () => {\n    // Press-down animation\n    gsap.to(group.scale, {\n      x: 0.97,\n      y: 0.97,\n      z: 0.97,\n      duration: 0.12,\n      ease: 'back.out',\n      yoyo: true,\n      repeat: 1,\n      overwrite: 'auto',\n    });\n\n    // Emit navigation event if ctx supports it\n    if (typeof ctx.emit === 'function') {\n      ctx.emit('hub-collection.select');\n    }\n  };\n\n  group.userData.handlers = handlers;\n\n  // ----- Cleanup -----\n  group.userData.cleanup = () => {\n    gsap.killTweensOf(group);\n    gsap.killTweensOf(plane);\n    geometry.dispose();\n    material.dispose();\n    dividerGeo.dispose();\n    dividerMat.dispose();\n    // Texture is cached, no dispose needed\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

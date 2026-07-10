@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-10-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 63879,
+  "apiMs": 61352,
+  "usage": {
+    "promptTokens": 3955,
+    "completionTokens": 6437,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.037122999999999996,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  const disposables = [];\n\n  // Position and orientation from scene specification\n  group.position.set(0, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Load and cache the background image texture\n  const imageTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  disposables.push(imageTexture);\n\n  // Create plane geometry matching the atlas region aspect ratio (512:320 = 1.6:1)\n  const width = 2.0;\n  const height = width / (512 / 320);\n  const geometry = new THREE.PlaneGeometry(width, height);\n  disposables.push(geometry);\n\n  // Material using Three.js Shading Language (TSL)\n  const material = new MeshBasicNodeMaterial({\n    colorNode: texture(imageTexture),\n  });\n  disposables.push(material);\n\n  // Create and add the textured plane mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Render text overlay via MSDF font atlas\n  if (config.textContent) {\n    const textMesh = ctx.fontAtlas.render(config.textContent, {\n      size: 0.34, // Headline scale from design tokens\n      weight: 400,\n      font: 'Lora', // Display serif font\n      color: config.colors.ink,\n      align: 'center',\n      anchorX: 'center',\n      anchorY: 'middle',\n    });\n    textMesh.position.z = 0.05;\n    group.add(textMesh);\n    disposables.push(textMesh);\n  }\n\n  // Apply any cinematic primitives from the configuration\n  if (config.cinematicPrimitives && config.cinematicPrimitives.length > 0) {\n    config.cinematicPrimitives.forEach((primitive) => {\n      if (ctx.primitives && typeof ctx.primitives[primitive.name] === 'function') {\n        ctx.primitives[primitive.name](group, primitive.params);\n      }\n    });\n  }\n\n  // Setup event handlers (static element, no interactions)\n  group.userData.handlers = {};\n\n  // Resource cleanup\n  group.userData.cleanup = () => {\n    disposables.forEach((disposable) => {\n      if (disposable && typeof disposable.dispose === 'function') {\n        disposable.dispose();\n      }\n    });\n    gsap.killTweensOf(group);\n  };\n\n  return group;\n}\n```"
+}

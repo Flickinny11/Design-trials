@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-29-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 67225,
+  "apiMs": 65051,
+  "usage": {
+    "promptTokens": 3955,
+    "completionTokens": 7214,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.040992999999999995,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Load brushed metal texture\n  const metalTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  \n  // Create plane geometry (512x320 px atlas = 1.6:1 aspect ratio)\n  const planeGeometry = new THREE.PlaneGeometry(1.6, 1.0);\n  \n  // Material with brushed metal map\n  const planeMaterial = new MeshBasicNodeMaterial({\n    map: metalTexture,\n    side: THREE.DoubleSide,\n  });\n  \n  // Plane mesh\n  const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);\n  group.add(planeMesh);\n  \n  // Render text \"Journal 1\" via fontAtlas\n  if (config.textContent && config.textContent.length > 0) {\n    const text = config.textContent[0];\n    const textMesh = ctx.fontAtlas.render(text, {\n      size: 0.34, // headline scale\n      color: config.colors.ink,\n      align: 'center',\n    });\n    textMesh.position.z = 0.01;\n    group.add(textMesh);\n  }\n  \n  // Apply transforms\n  const [px, py, pz] = config.scenePosition;\n  const [rx, ry, rz] = config.rotation;\n  const [sx, sy, sz] = config.scale;\n  \n  group.position.set(px, py, pz);\n  group.rotation.order = 'YXZ';\n  group.rotation.set(rx, ry, rz);\n  group.scale.set(sx, sy, sz);\n  \n  // Cleanup\n  group.userData.cleanup = () => {\n    planeGeometry.dispose();\n    planeMaterial.dispose();\n    metalTexture.dispose();\n  };\n  \n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

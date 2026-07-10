@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-26-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 12138,
+  "apiMs": 9597,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1010,
+    "cacheCreation": 0,
+    "cacheRead": 5495
+  },
+  "costUsd": 0.0290955,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2, uniform, mix, float } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-pricing-card-0-label-node';\n  group.position.set(3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const assetUrl = '/prism-mock/home/nodes/cta-hero-isolated.png';\n  const map = ctx.textureLoader.load(assetUrl);\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const atlasRect = { x: 0, y: 0, w: 512, h: 320 };\n  const atlasSize = { w: 512, h: 320 };\n  const uvScale = vec2(atlasRect.w / atlasSize.w, atlasRect.h / atlasSize.h);\n  const uvOffset = vec2(atlasRect.x / atlasSize.w, atlasRect.y / atlasSize.h);\n  const scaledUV = uv().mul(uvScale).add(uvOffset);\n\n  const grainAmount = uniform(0.035);\n  const baseColor = texture(map, scaledUV);\n\n  const noise = float(\n    Math.random()\n  );\n\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n  material.colorNode = mix(baseColor, baseColor.add(noise.mul(grainAmount)), 0.5);\n\n  const width = 1.6;\n  const height = width * (atlasRect.h / atlasRect.w);\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'pricing-card-3-label-plane';\n  group.add(plane);\n\n  const textMesh = createTextMesh({\n    text: 'Pricing 3',\n    font: 'Lora',\n    weight: 400,\n    sizeEm: 0.34,\n    color: config?.visual?.colors?.paper || '#e8ecf2',\n    anchor: 'center',\n    fontAtlas: ctx.fontAtlas,\n  });\n  textMesh.position.set(0, 0, 0.01);\n  group.add(textMesh);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) {\n      if (Array.isArray(textMesh.material)) {\n        textMesh.material.forEach((m) => m.dispose());\n      } else {\n        textMesh.material.dispose();\n      }\n    }\n    group.userData.handlers = {};\n  };\n\n  return group;\n}\n```"
+}

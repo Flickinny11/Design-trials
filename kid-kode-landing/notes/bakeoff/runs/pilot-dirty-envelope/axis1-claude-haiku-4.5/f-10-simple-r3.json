@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-10-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 76421,
+  "apiMs": 73996,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 8402,
+    "cacheCreation": 0,
+    "cacheRead": 21560
+  },
+  "costUsd": 0.045164,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Apply scene position and transforms\n  if (config.scenePosition) {\n    const { x = 0, y = 0, z = 0, rotationXYZ = [0, 0, 0], scaleXYZ = [1, 1, 1] } = config.scenePosition;\n    group.position.set(x, y, z);\n    group.rotation.set(rotationXYZ[0], rotationXYZ[1], rotationXYZ[2]);\n    group.scale.set(scaleXYZ[0], scaleXYZ[1], scaleXYZ[2]);\n  }\n\n  const resources = [];\n\n  // Create textured background plane\n  const texture = ctx.textureLoader.load(config.imageUrl);\n  resources.push(texture);\n  \n  const geometry = new THREE.PlaneGeometry(1, 1);\n  resources.push(geometry);\n  \n  const material = new THREE.MeshBasicMaterial({\n    map: texture,\n    side: THREE.DoubleSide,\n    transparent: true,\n  });\n  resources.push(material);\n  \n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Render text label\n  if (config.textContent) {\n    const textMesh = ctx.fontAtlas.createTextMesh(config.textContent, {\n      fontSize: 0.34,\n      fontWeight: 400,\n      fontFamily: 'Lora',\n      color: '#16161d',\n      align: 'center',\n      verticalAlign: 'middle',\n    });\n    \n    if (textMesh) {\n      textMesh.position.z = 0.01;\n      group.add(textMesh);\n    }\n  }\n\n  // Apply cinematic primitives\n  if (config.cinematicPrimitives && config.cinematicPrimitives.length > 0) {\n    config.cinematicPrimitives.forEach(primitive => {\n      if (ctx.primitives[primitive.name]) {\n        ctx.primitives[primitive.name](group, primitive.params || {});\n      }\n    });\n  }\n\n  // Resource cleanup\n  group.userData.cleanup = () => {\n    resources.forEach(resource => resource.dispose());\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

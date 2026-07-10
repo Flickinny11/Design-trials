@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-47-complex-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 98756,
+  "apiMs": 96913,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 11324,
+    "cacheCreation": 0,
+    "cacheRead": 4097
+  },
+  "costUsd": 0.0581747,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, mul, add, attribute } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.position.set(1.25, -0.2, 0);\n  group.scale.set(1, 1, 1);\n  group.userData.handlers = {};\n  \n  const timelines = [];\n\n  // Load textures via context (cached)\n  const imageTexture = ctx.textureLoader.load('/prism-mock/home/nodes/parallax-stack.png');\n  const depthMapTexture = ctx.textureLoader.load('/prism-mock/home/nodes/parallax-stack.depth.png');\n  \n  // Tessellated plane for smooth displacement\n  const geometry = new THREE.PlaneGeometry(1, 0.625, 64, 64);\n  \n  // TSL displacement mapping\n  const depthSample = texture(depthMapTexture).r;\n  const displacementScale = 0.08;\n  const displacementAmount = mul(depthSample, displacementScale);\n  const displacedPosition = add(\n    attribute('position'),\n    mul(attribute('normal'), displacementAmount)\n  );\n  \n  // Machined-metal PBR material\n  const material = new THREE.MeshStandardNodeMaterial({\n    colorNode: texture(imageTexture),\n    metalness: 0.45,\n    roughness: 0.6,\n    clearcoat: 0.2,\n    clearcoatRoughness: 0.3,\n    positionNode: displacedPosition,\n  });\n  \n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.castShadow = true;\n  mesh.receiveShadow = true;\n  group.add(mesh);\n\n  // Apply cinematic primitives\n  if (ctx.primitives) {\n    if (typeof ctx.primitives['parallax-scroll'] === 'function') {\n      ctx.primitives['parallax-scroll'](mesh, { intensity: 0.4 });\n    }\n    if (typeof ctx.primitives['depth-rotate'] === 'function') {\n      ctx.primitives['depth-rotate'](mesh, { maxDeg: 8 });\n    }\n  }\n\n  // Hover handler: rise-in effect (0.15 scene units)\n  group.userData.handlers.hover = () => {\n    const tl = gsap.timeline();\n    tl.to(group.position, {\n      y: -0.05,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n    timelines.push(tl);\n  };\n\n  // Unhover handler: return to original position\n  group.userData.handlers.unhover = () => {\n    const tl = gsap.timeline();\n    tl.to(group.position, {\n      y: -0.2,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n    timelines.push(tl);\n  };\n\n  // Click handler: press-down effect + emit event\n  group.userData.handlers.click = () => {\n    const tl = gsap.timeline();\n    tl.to(mesh.scale, {\n      x: 0.97,\n      y: 0.97,\n      z: 0.97,\n      duration: 0.12,\n      ease: 'back.out',\n    }, 0);\n    tl.to(mesh.scale, {\n      x: 1,\n      y: 1,\n      z: 1,\n      duration: 0.12,\n      ease: 'back.out',\n    }, 0.12);\n    timelines.push(tl);\n    \n    // Emit navigation event\n    if (config.eventEmitter && typeof config.eventEmitter.emit === 'function') {\n      config.eventEmitter.emit('hub-pricing.select', {\n        nodeId: config.id,\n        timestamp: Date.now(),\n      });\n    }\n  };\n\n  // Cleanup function\n  group.userData.cleanup = () => {\n    timelines.forEach(tl => tl.kill());\n    timelines.length = 0;\n    \n    geometry.dispose();\n    material.dispose();\n    imageTexture.dispose();\n    depthMapTexture.dispose();\n  };\n\n  return group;\n}\n```"
+}

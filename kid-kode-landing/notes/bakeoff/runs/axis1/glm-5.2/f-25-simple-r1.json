@@ -1,0 +1,17 @@
+{
+  "contestant": "glm-5.2",
+  "model": "accounts/fireworks/models/glm-5p2",
+  "route": "fireworks",
+  "caseId": "f-25-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 32586,
+  "usage": {
+    "promptTokens": 1601,
+    "completionTokens": 3886
+  },
+  "costUsd": 0.019339800000000004,
+  "transportAttempts": 3,
+  "billing": "metered",
+  "output": "import * as THREE from 'three/webgpu';\nimport { uv, vec2, texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const pos = (config && config.scenePosition) || { x: 3.2, y: -0.3, z: 0 };\n  const rot = (config && config.sceneRotation) || { x: 0, y: 0, z: 0 };\n  const scl = (config && config.sceneScale) || { x: 1, y: 1, z: 1 };\n\n  // Cached, synchronous texture fetch\n  const tex = ctx.textureLoader.load('/prism-mock/home/nodes/feature-card.png');\n  tex.colorSpace = THREE.SRGBColorSpace;\n  tex.minFilter = THREE.LinearMipmapLinearFilter;\n  tex.magFilter = THREE.LinearFilter;\n  tex.generateMipmaps = true;\n  tex.anisotropy = 4;\n\n  // Atlas region — atlas 0, source rect (0, 0, 512, 320)\n  const rect = { x: 0, y: 0, w: 512, h: 320 };\n  const img = tex.image;\n  const atlasW = (img && img.width) ? img.width : rect.w;\n  const atlasH = (img && img.height) ? img.height : rect.h;\n\n  const uScale = rect.w / atlasW;\n  const vScale = rect.h / atlasH;\n  const uOffset = rect.x / atlasW;\n  // Flip Y because Three's UV origin is bottom-left while atlas rect origin is top-left.\n  const vOffset = 1.0 - (rect.y + rect.h) / atlasH;\n\n  // Plane proportions honor the source rect aspect (512:320 -> 1.6:1)\n  const aspect = rect.w / rect.h;\n  const geometry = new THREE.PlaneGeometry(1, 1 / aspect, 1, 1);\n\n  // TSL UV remap into the atlas sub-rect\n  const sampleUv = vec2(\n    uv().x.mul(uScale).add(uOffset),\n    uv().y.mul(vScale).add(vOffset)\n  );\n\n  // Static composition — no lighting required, MeshBasicNodeMaterial\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.colorNode = texture(tex, sampleUv);\n  material.transparent = true;\n  material.depthWrite = true;\n  material.side = THREE.DoubleSide;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(pos.x, pos.y, pos.z);\n  mesh.rotation.set(rot.x, rot.y, rot.z);\n  mesh.scale.set(scl.x, scl.y, scl.z);\n  mesh.renderOrder = 0;\n\n  // No cinematic primitives applied — node ships without primitive.\n  // No interactions, no text content, no data bindings.\n  mesh.userData.handlers = {};\n\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n  };\n\n  return mesh;\n}"
+}

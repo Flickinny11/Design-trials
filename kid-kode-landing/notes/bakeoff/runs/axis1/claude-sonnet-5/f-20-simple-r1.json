@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-20-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 7124,
+  "apiMs": 5111,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 221,
+    "cacheCreation": 3361,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.041279500000000004,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import { MeshBasicNodeMaterial, PlaneGeometry, Mesh, Color } from 'three/webgpu';\nimport { texture, uv, vec4, mix, float } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new (Mesh.prototype.constructor.name ? Object.getPrototypeOf(Mesh) : Object)();\n}\n\n// (rewritten cleanly below)\n\nimport * as THREE from 'three/webgpu';\n\nexport function createNodeImpl(config, ctx) {}\n\nWait, module must export default single function. Let me produce final clean file."
+}

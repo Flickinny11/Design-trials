@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-30-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 39725,
+  "apiMs": 37235,
+  "usage": {
+    "promptTokens": 3951,
+    "completionTokens": 5678,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.033319999999999995,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport { PlaneGeometry, Object3D, Mesh } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const container = new Object3D();\n  \n  // Load texture from cache\n  const textureResource = ctx.textureLoader.load(config.assets.imageUrl);\n  \n  // Atlas region dimensions: 512x320 → aspect ratio 1.6:1\n  const aspectRatio = 512 / 320;\n  \n  // Create plane geometry with correct aspect ratio\n  const geometry = new PlaneGeometry(aspectRatio, 1);\n  \n  // Create material with TSL texture node\n  const material = new MeshBasicNodeMaterial({\n    map: texture(textureResource),\n    toneMapped: false,\n  });\n  \n  // Create mesh\n  const mesh = new Mesh(geometry, material);\n  \n  // Apply transforms from config\n  const position = config.position || [0, 0, 0];\n  const rotation = config.rotation || [0, 0, 0];\n  const scale = config.scale || [1, 1, 1];\n  \n  mesh.position.set(position[0], position[1], position[2]);\n  mesh.rotation.set(rotation[0], rotation[1], rotation[2]);\n  mesh.scale.set(scale[0], scale[1], scale[2]);\n  \n  container.add(mesh);\n  \n  // Cleanup resources\n  container.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n  };\n  \n  return container;\n}\n```"
+}

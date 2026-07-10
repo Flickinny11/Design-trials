@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-50-complex",
+  "run": 3,
+  "ok": true,
+  "wallMs": 107582,
+  "apiMs": 105075,
+  "usage": {
+    "promptTokens": 4064,
+    "completionTokens": 11262,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.061471,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  const timelines = [];\n\n  // Load the mesh\n  const gltf = ctx.glbLoader.load('/prism-mock/orrery/meshes/gear-a.glb');\n  const mesh = gltf.scene;\n\n  // Add mesh to group (preserve mesh's internal transforms)\n  group.add(mesh);\n\n  // Apply scene placement to group\n  group.position.set(-1.25, -1.1, 0);\n\n  // Initialize handlers\n  group.userData.handlers = {};\n\n  // Store original position for hover revert\n  const originalY = group.position.y;\n\n  // Hover interaction: rise-in (0.15 scene units)\n  group.userData.handlers.hover = (event) => {\n    gsap.killTweensOf(group.position);\n    const tl = gsap.timeline();\n    tl.to(group.position, {\n      y: originalY - 0.15,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n    timelines.push(tl);\n  };\n\n  // Unhover: return to original position\n  group.userData.handlers.unhover = (event) => {\n    gsap.killTweensOf(group.position);\n    const tl = gsap.timeline();\n    tl.to(group.position, {\n      y: originalY,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n    timelines.push(tl);\n  };\n\n  // Click interaction: emit hub-features.select\n  group.userData.handlers.click = (event) => {\n    if (ctx.emit) {\n      ctx.emit('hub-features.select');\n    }\n  };\n\n  // Apply cinematic primitives\n  if (config.cinematicPrimitives && Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach(primitive => {\n      const primitiveFn = ctx.primitives[primitive.name];\n      if (primitiveFn && typeof primitiveFn === 'function') {\n        primitiveFn(group, primitive.params);\n      }\n    });\n  }\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    // Kill all timelines\n    timelines.forEach(tl => tl.kill());\n    timelines.length = 0;\n\n    // Dispose mesh resources\n    mesh.traverse(child => {\n      if (child.geometry) {\n        child.geometry.dispose();\n      }\n      if (child.material) {\n        if (Array.isArray(child.material)) {\n          child.material.forEach(m => m.dispose());\n        } else {\n          child.material.dispose();\n        }\n      }\n    });\n  };\n\n  return group;\n}\n```"
+}

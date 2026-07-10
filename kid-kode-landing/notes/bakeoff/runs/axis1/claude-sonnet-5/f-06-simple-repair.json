@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-06-simple",
+  "run": "repair",
+  "ok": true,
+  "wallMs": 11881,
+  "apiMs": 10057,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1154,
+    "cacheCreation": 4592,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.07782549999999999,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2, uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-features-title';\n  group.position.set(0, 3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const atlasRect = { x: 0, y: 0, w: 512, h: 320 };\n  const atlasSize = 512;\n  const aspect = atlasRect.w / atlasRect.h;\n\n  const planeHeight = 0.62;\n  const planeWidth = planeHeight * aspect;\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  const grainMap = ctx.textureLoader.load(\n    '/prism-assets/chrome/ceramic-grain.map.png'\n  );\n  grainMap.colorSpace = THREE.SRGBColorSpace;\n  grainMap.wrapS = THREE.ClampToEdgeWrapping;\n  grainMap.wrapT = THREE.ClampToEdgeWrapping;\n\n  const uOffset = uniform(vec2(atlasRect.x / atlasSize, atlasRect.y / atlasSize));\n  const uScale = uniform(vec2(atlasRect.w / atlasSize, atlasRect.h / atlasSize));\n\n  const mappedUV = uv().mul(uScale).add(uOffset);\n  const mapNode = texture(grainMap, mappedUV);\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.map = grainMap;\n  material.colorNode = mapNode;\n  material.transparent = true;\n\n  const backgroundPlane = new THREE.Mesh(geometry, material);\n  backgroundPlane.name = 'features-title-bg';\n  group.add(backgroundPlane);\n\n  const paperColor = new THREE.Color(config?.colors?.paper ?? '#e8ecf2');\n\n  const textMeshes = [];\n  const textContent = Array.isArray(config?.textContent) ? config.textContent : [];\n\n  textContent.forEach((entry, index) => {\n    const isHeadline = entry.role === 'headline';\n    const size = isHeadline ? 0.34 : 0.13;\n    const textMesh = ctx.fontAtlas.createText({\n      text: entry.text ?? entry.value ?? '',\n      font: 'display',\n      weight: entry.weight ?? 400,\n      size,\n      color: paperColor,\n      align: 'center',\n      anchor: 'center',\n    });\n    textMesh.name = `features-title-text-${index}`;\n    textMesh.position.set(0, 0, 0.01);\n    group.add(textMesh);\n    textMeshes.push(textMesh);\n  });\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (grainMap && typeof grainMap.dispose === 'function') {\n      grainMap.dispose();\n    }\n    textMeshes.forEach((textMesh) => {\n      if (textMesh?.geometry?.dispose) textMesh.geometry.dispose();\n      if (textMesh?.material?.dispose) textMesh.material.dispose();\n    });\n  };\n\n  return group;\n}\n```"
+}

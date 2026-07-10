@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-13-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 71770,
+  "apiMs": 69617,
+  "usage": {
+    "promptTokens": 3948,
+    "completionTokens": 7578,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.042794,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { TextureNode, MeshBasicNodeMaterial } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Configuration defaults\n  const imageUrl = config.assets?.imageUrl || '/prism-mock/home/nodes/feature-card.png';\n  const textContent = config.textContent || 'Collection';\n  const position = config.scenePosition || { x: 0, y: 3, z: 0 };\n  \n  // Load texture for plane background\n  const texture = ctx.textureLoader.load(imageUrl);\n  texture.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create plane mesh with node material\n  const planeGeo = new THREE.PlaneGeometry(4, 2);\n  const planeMaterial = new MeshBasicNodeMaterial({\n    colorNode: new TextureNode(texture),\n    side: THREE.DoubleSide\n  });\n  const planeMesh = new THREE.Mesh(planeGeo, planeMaterial);\n  group.add(planeMesh);\n  \n  // Create text mesh using font atlas\n  const text = Array.isArray(textContent) ? textContent[0] : String(textContent);\n  const textMesh = ctx.fontAtlas.create({\n    text: text,\n    font: 'Lora',\n    size: 0.34,\n    weight: 400,\n    color: new THREE.Color('#16161d'),\n    align: 'center'\n  });\n  textMesh.position.z = 0.1;\n  group.add(textMesh);\n  \n  // Apply scene position\n  const { x = 0, y = 3, z = 0 } = position;\n  group.position.set(x, y, z);\n  \n  // Setup handlers and cleanup\n  group.userData.handlers = {};\n  group.userData.cleanup = () => {\n    planeGeo.dispose();\n    planeMaterial.dispose();\n    texture.dispose();\n  };\n  \n  return group;\n}\n```"
+}

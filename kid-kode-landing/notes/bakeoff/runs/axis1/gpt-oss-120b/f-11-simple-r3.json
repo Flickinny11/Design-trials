@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-11-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 17609,
+  "usage": {
+    "promptTokens": 1649,
+    "completionTokens": 2238
+  },
+  "costUsd": 0.0015901499999999998,
+  "transportAttempts": 4,
+  "billing": "metered",
+  "output": "import { Mesh, PlaneGeometry } from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {Object} assets\n * @property {string} assets.imageUrl\n * @property {Object} placement\n * @property {(number[]|Object)} placement.position\n * @property {(number[]|Object)} [placement.rotation]\n * @property {(number[]|Object)} [placement.scale]\n * @property {Array<{name:string,params:any}>} [cinematicPrimitives]\n * @property {Object} [atlasRegion]\n * @property {number[]} [atlasRegion.sourceRect] // [x, y, width, height]\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {function(string):THREE.Texture} textureLoader\n * @property {Object<string,function(THREE.Object3D,any):void>} primitives\n */\n\n/**\n * Create a textured plane node.\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n\t// ---------- helpers ----------\n\tconst vecFrom = (value, def = [0, 0, 0]) => {\n\t\tif (Array.isArray(value) && value.length === 3) return value;\n\t\tif (value && typeof value === 'object') return [value.x ?? 0, value.y ?? 0, value.z ?? 0];\n\t\treturn def;\n\t};\n\n\t// ---------- geometry ----------\n\tconst sourceRect = config.atlasRegion?.sourceRect ?? [0, 0, 512, 320];\n\tconst texWidth = sourceRect[2];\n\tconst texHeight = sourceRect[3];\n\tconst aspect = texHeight / texWidth;\n\n\tconst geometry = new PlaneGeometry(1, aspect);\n\n\t// ---------- material ----------\n\tconst tex = ctx.textureLoader(config.assets.imageUrl);\n\tconst mat = new MeshBasicNodeMaterial();\n\tmat.colorNode = texture(tex);\n\t// allow transparency if the texture has an alpha channel\n\tmat.transparent = true;\n\n\t// ---------- mesh ----------\n\tconst mesh = new Mesh(geometry, mat);\n\n\t// ---------- placement ----------\n\tconst pos = vecFrom(config.placement?.position ?? config.position, [0, 0, 0]);\n\tconst rot = vecFrom(config.placement?.rotation ?? config.rotation, [0, 0, 0]);\n\tconst scl = vecFrom(config.placement?.scale ?? config.scale, [1, 1, 1]);\n\n\tmesh.position.set(pos[0], pos[1], pos[2]);\n\tmesh.rotation.set(rot[0], rot[1], rot[2]);\n\tmesh.scale.set(scl[0], scl[1], scl[2]);\n\n\t// ---------- cinematic primitives ----------\n\tif (Array.isArray(config.cinematicPrimitives)) {\n\t\tfor (const prim of config.cinematicPrimitives) {\n\t\t\tconst fn = ctx.primitives[prim.name];\n\t\t\tif (typeof fn === 'function') {\n\t\t\t\tfn(mesh, prim.params);\n\t\t\t}\n\t\t}\n\t}\n\n\t// ---------- userData ----------\n\tconst timelines = [];\n\n\tmesh.userData = {\n\t\thandlers: {},\n\t\tcleanup: () => {\n\t\t\tgeometry.dispose();\n\t\t\tmat.dispose();\n\t\t\ttex?.dispose();\n\t\t\t// kill any GSAP timelines created by this node\n\t\t\ttimelines.forEach(t => t.kill());\n\t\t},\n\t\t// expose a method for node internals to register timelines if needed\n\t\t_registerTimeline: (tl) => {\n\t\t\tif (tl && typeof tl.kill === 'function') timelines.push(tl);\n\t\t}\n\t};\n\n\treturn mesh;\n}"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-44-moderate",
+  "run": 2,
+  "ok": true,
+  "wallMs": 60280,
+  "apiMs": 58171,
+  "usage": {
+    "promptTokens": 4019,
+    "completionTokens": 6685,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.038495999999999996,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Load mesh from GLB\n  const gltf = ctx.glbLoader('/prism-mock/orrery/meshes/gear-a.glb');\n  const mesh = gltf.scene.clone();\n  group.add(mesh);\n\n  // Apply scene placement transform\n  group.position.set(-2.5, -0.2, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // State tracking\n  let isHovering = false;\n  let hoverTimeline = null;\n  let pressTimeline = null;\n\n  const initialY = -0.2;\n\n  // Event handlers\n  const handlers = {\n    onPointerEnter() {\n      if (isHovering) return;\n      isHovering = true;\n\n      if (hoverTimeline) hoverTimeline.kill();\n\n      // rise-in: y +0.15, power3.out, 0.7s\n      hoverTimeline = gsap.to(group.position, {\n        y: initialY + 0.15,\n        duration: 0.7,\n        ease: 'power3.out'\n      });\n    },\n\n    onPointerLeave() {\n      isHovering = false;\n\n      if (hoverTimeline) hoverTimeline.kill();\n\n      // Settle back to rest position\n      hoverTimeline = gsap.to(group.position, {\n        y: initialY,\n        duration: 0.5,\n        ease: 'power2.out'\n      });\n    },\n\n    onClick() {\n      // press-down: scale 0.97, 120ms, back.out\n      if (pressTimeline) pressTimeline.kill();\n\n      pressTimeline = gsap.timeline()\n        .to(group.scale, {\n          x: 0.97,\n          y: 0.97,\n          z: 0.97,\n          duration: 0.12,\n          ease: 'back.out'\n        }, 0)\n        .to(group.scale, {\n          x: 1,\n          y: 1,\n          z: 1,\n          duration: 0.2,\n          ease: 'back.out'\n        });\n\n      // Emit navigation event\n      if (config.eventEmitter) {\n        config.eventEmitter('hub-home.select', { source: group });\n      }\n    }\n  };\n\n  group.userData.handlers = handlers;\n  group.userData.interactive = true;\n\n  // Cleanup resources\n  group.userData.cleanup = function() {\n    if (hoverTimeline) hoverTimeline.kill();\n    if (pressTimeline) pressTimeline.kill();\n\n    mesh.traverse((child) => {\n      if (child.geometry) child.geometry.dispose();\n      if (child.material) {\n        if (Array.isArray(child.material)) {\n          child.material.forEach(m => m.dispose());\n        } else {\n          child.material.dispose();\n        }\n      }\n    });\n  };\n\n  return group;\n}\n```"
+}

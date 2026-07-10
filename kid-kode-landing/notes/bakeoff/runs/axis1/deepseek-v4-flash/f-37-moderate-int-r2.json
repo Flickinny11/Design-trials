@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-37-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 29176,
+  "usage": {
+    "promptTokens": 1768,
+    "completionTokens": 3895
+  },
+  "costUsd": 0.0013381200000000002,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport { PlaneGeometry, MeshBasicNodeMaterial, Mesh, Vector2 } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const {\n    imageUrl,\n    scenePosition,\n    sceneRotation,\n    sceneScale,\n    interactions,\n    cinematicPrimitives,\n    atlasRegion,\n    atlas\n  } = config;\n\n  // Load texture\n  const texture = ctx.textureLoader.load(imageUrl);\n\n  // Handle atlas region: offset and repeat\n  if (atlasRegion && atlas !== undefined) {\n    const sourceRect = atlasRegion;\n    const atlasSize = new Vector2(512, 320); // Assumed from spec; adjust if needed\n    texture.repeat.set(\n      sourceRect.width / atlasSize.x,\n      sourceRect.height / atlasSize.y\n    );\n    texture.offset.set(\n      sourceRect.x / atlasSize.x,\n      1 - (sourceRect.y + sourceRect.height) / atlasSize.y\n    );\n  }\n\n  // Plane geometry with aspect ratio\n  const img = texture.image;\n  const aspect = img ? img.width / img.height : 1.6;\n  const width = aspect > 1 ? aspect : 1;\n  const height = aspect > 1 ? 1 : 1 / aspect;\n  const geometry = new PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial({ map: texture });\n  const mesh = new Mesh(geometry, material);\n\n  // Transform\n  mesh.position.set(scenePosition.x, scenePosition.y, scenePosition.z);\n  mesh.rotation.set(sceneRotation.x, sceneRotation.y, sceneRotation.z);\n  mesh.scale.set(sceneScale.x, sceneScale.y, sceneScale.z);\n\n  // Handlers container\n  mesh.userData.handlers = {};\n  let hoverTween = null;\n\n  // Hover: rise-in\n  const hoverPreset = interactions?.find(i => i.event === 'hover')?.effect;\n  const riseDelta = hoverPreset?.includes('0.15') ? 0.15 : 0.15;\n  mesh.userData.handlers.pointerover = () => {\n    if (hoverTween) hoverTween.kill();\n    hoverTween = gsap.to(mesh.position, {\n      y: mesh.position.y + riseDelta,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n  };\n  mesh.userData.handlers.pointerout = () => {\n    if (hoverTween) hoverTween.kill();\n    hoverTween = gsap.to(mesh.position, {\n      y: scenePosition.y,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n  };\n\n  // Click: press-down and emit\n  mesh.userData.handlers.click = () => {\n    // Press-down scale animation\n    gsap.to(mesh.scale, {\n      x: 0.97,\n      y: 0.97,\n      duration: 0.12,\n      ease: 'back.out',\n      onComplete: () => {\n        gsap.to(mesh.scale, {\n          x: sceneScale.x,\n          y: sceneScale.y,\n          duration: 0.12,\n          ease: 'back.out'\n        });\n      }\n    });\n    // Emit event – parent is expected to listen on the object or use ctx.emit\n    if (ctx.emit) ctx.emit('hub-pricing.select');\n  };\n\n  // Apply cinematic primitives\n  if (cinematicPrimitives) {\n    cinematicPrimitives.forEach(primitive => {\n      const fn = ctx.primitives[primitive.name];\n      if (fn) fn(mesh, primitive.params);\n    });\n  }\n\n  // Cleanup\n  mesh.userData.cleanup = () => {\n    if (hoverTween) hoverTween.kill();\n    texture.dispose();\n    geometry.dispose();\n    material.dispose();\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

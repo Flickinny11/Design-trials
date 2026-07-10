@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-09-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 20297,
+  "usage": {
+    "promptTokens": 1698,
+    "completionTokens": 1719
+  },
+  "costUsd": 0.0007190400000000001,
+  "transportAttempts": 4,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  Sprite,\n  SpriteMaterial,\n  Texture,\n  PlaneGeometry\n} from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  // Load the texture (synchronous – pre‑cached by the loader)\n  const texture = ctx.textureLoader(config.assets.imageUrl);\n\n  // Material using standard SpriteMaterial (no custom shader required)\n  const material = new SpriteMaterial({\n    map: texture,\n    transparent: true,\n    depthWrite: false,\n    // SpriteMaterial automatically billboards\n  });\n\n  // Create the sprite\n  const sprite = new Sprite(material);\n  sprite.position.set(0, -0.3, 0);\n  sprite.rotation.set(0, 0, 0);\n  sprite.scale.set(1, 1, 1);\n\n  // User‑data for event handlers (none defined)\n  sprite.userData.handlers = {};\n\n  // Cleanup: dispose material, texture, and the sprite’s internal geometry\n  sprite.userData.cleanup = () => {\n    material.dispose();\n    texture.dispose();\n    if (sprite.geometry) sprite.geometry.dispose();\n  };\n\n  // No cinematic primitives to apply – spec lists none\n\n  return sprite;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-50-complex",
+  "run": "repair",
+  "ok": true,
+  "wallMs": 23987,
+  "apiMs": 21511,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 2464,
+    "cacheCreation": 4819,
+    "cacheRead": 0
+  },
+  "costUsd": 0.02382,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const container = new THREE.Group();\n  container.position.set(-1.25, -1.1, 0);\n  container.rotation.set(0, 0, 0);\n  container.scale.set(1, 1, 1);\n  \n  // Load GLB mesh from cache\n  const gltf = ctx.glbLoader.load(config.meshUrl);\n  const mesh = gltf.scene || gltf;\n  container.add(mesh);\n  \n  // Apply cinematic primitives from config\n  if (config.cinematicPrimitives && Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach(primitive => {\n      ctx.primitives[primitive.name](container, primitive.params);\n    });\n  }\n  \n  // Initialize event handlers\n  container.userData.handlers = {};\n  \n  let hoverTimeline = null;\n  const originalY = container.position.y;\n  \n  // Hover interaction: rise-in effect (0.15 unit displacement)\n  container.userData.handlers.onHover = (isHovering) => {\n    if (hoverTimeline) hoverTimeline.kill();\n    \n    if (isHovering) {\n      hoverTimeline = gsap.to(container.position, {\n        y: originalY + 0.15,\n        duration: 0.7,\n        ease: 'power3.out'\n      });\n    } else {\n      hoverTimeline = gsap.to(container.position, {\n        y: originalY,\n        duration: 0.7,\n        ease: 'power3.out'\n      });\n    }\n  };\n  \n  // Click interaction: emit hub-features.select event\n  container.userData.handlers.onClick = () => {\n    if (ctx.emit) {\n      ctx.emit('hub-features.select', {});\n    }\n  };\n  \n  // Cleanup resources\n  container.userData.cleanup = () => {\n    if (hoverTimeline) {\n      hoverTimeline.kill();\n    }\n    \n    container.traverse((child) => {\n      if (child.geometry) {\n        child.geometry.dispose();\n      }\n      if (child.material) {\n        if (Array.isArray(child.material)) {\n          child.material.forEach(mat => mat.dispose());\n        } else {\n          child.material.dispose();\n        }\n      }\n    });\n  };\n  \n  return container;\n}\n```"
+}

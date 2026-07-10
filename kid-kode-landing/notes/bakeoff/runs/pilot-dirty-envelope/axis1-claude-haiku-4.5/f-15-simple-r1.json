@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-15-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 84057,
+  "apiMs": 81832,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 8890,
+    "cacheCreation": 21571,
+    "cacheRead": 0
+  },
+  "costUsd": 0.08858100000000001,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Sprite dimensions: 512:320 aspect ratio\n  const spriteHeight = 1.0;\n  const spriteWidth = (512 / 320) * spriteHeight;\n  \n  // Geometry for billboard sprite\n  const geometry = new THREE.PlaneGeometry(spriteWidth, spriteHeight);\n  \n  // Load and configure texture\n  const textureUrl = config.imageUrl || '/prism-mock/home/nodes/floating-accent.png';\n  const textureMap = ctx.textureLoader.load(textureUrl);\n  textureMap.colorSpace = THREE.SRGBColorSpace;\n  \n  // Material for sprite\n  const material = new THREE.MeshBasicNodeMaterial({\n    map: textureMap,\n    transparent: true,\n    side: THREE.FrontSide,\n  });\n  \n  // Sprite mesh\n  const sprite = new THREE.Mesh(geometry, material);\n  group.add(sprite);\n  \n  // Add text overlay\n  if (config.textContent?.[0] && ctx.fontAtlas) {\n    const textContent = config.textContent[0];\n    const textStr = typeof textContent === 'string' ? textContent : textContent.text;\n    \n    const textMesh = ctx.fontAtlas.createText(textStr, {\n      fontSize: 0.34,\n      fontFamily: 'Lora',\n      fontWeight: 400,\n      color: new THREE.Color(0x16161d),\n      align: 'center',\n    });\n    \n    if (textMesh) {\n      textMesh.position.z = 0.01;\n      textMesh.position.y = 0.1;\n      group.add(textMesh);\n    }\n  }\n  \n  // Apply scene transforms\n  const pos = config.scenePosition;\n  if (pos) {\n    group.position.set(pos.x ?? 0, pos.y ?? 0, pos.z ?? 0);\n    if (pos.rotationXYZ) {\n      group.rotation.set(pos.rotationXYZ[0], pos.rotationXYZ[1], pos.rotationXYZ[2]);\n    }\n    if (pos.scaleXYZ) {\n      group.scale.set(pos.scaleXYZ[0], pos.scaleXYZ[1], pos.scaleXYZ[2]);\n    }\n  }\n  \n  // Apply cinematic primitives\n  if (Array.isArray(config.cinematicPrimitives) && ctx.primitives) {\n    for (const prim of config.cinematicPrimitives) {\n      ctx.primitives[prim.name]?.(group, prim.params || {});\n    }\n  }\n  \n  // Event handlers\n  group.userData.handlers = {};\n  \n  // Cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    textureMap.dispose();\n    gsap.killTweensOf(group);\n  };\n  \n  return group;\n}\n```"
+}

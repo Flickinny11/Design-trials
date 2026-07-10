@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-13-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 71361,
+  "apiMs": 69345,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 7353,
+    "cacheCreation": 0,
+    "cacheRead": 21553
+  },
+  "costUsd": 0.0398913,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Create plane geometry for textured plane render mode\n  const planeGeometry = new THREE.PlaneGeometry(2, 1.25);\n  \n  // Create material with texture if available\n  let planeMaterial;\n  if (config.imageUrl) {\n    const texture = ctx.textureLoader.load(config.imageUrl);\n    planeMaterial = new THREE.MeshBasicMaterial({\n      map: texture,\n      transparent: true\n    });\n  } else {\n    planeMaterial = new THREE.MeshBasicMaterial({\n      color: new THREE.Color(0xe8ecf2),\n      transparent: true\n    });\n  }\n  \n  const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);\n  group.add(planeMesh);\n  \n  // Render text content via font atlas (MSDF)\n  if (config.textContent && config.textContent.length > 0) {\n    const textContent = config.textContent[0];\n    \n    const textMesh = ctx.fontAtlas.createTextMesh(textContent, {\n      fontSize: 0.34,\n      color: new THREE.Color(0x16161d),\n      align: 'center'\n    });\n    \n    if (textMesh) {\n      textMesh.position.z = 0.01;\n      group.add(textMesh);\n    }\n  }\n  \n  // Apply cinematic primitives if any\n  if (config.cinematicPrimitives && config.cinematicPrimitives.length > 0) {\n    config.cinematicPrimitives.forEach((primitive) => {\n      ctx.primitives[primitive.name](group, primitive.params);\n    });\n  }\n  \n  // Apply scene position\n  if (config.scenePosition) {\n    group.position.set(\n      config.scenePosition.x,\n      config.scenePosition.y,\n      config.scenePosition.z\n    );\n    \n    if (config.scenePosition.rotationXYZ) {\n      group.rotation.order = 'XYZ';\n      group.rotation.set(\n        config.scenePosition.rotationXYZ[0],\n        config.scenePosition.rotationXYZ[1],\n        config.scenePosition.rotationXYZ[2]\n      );\n    }\n    \n    if (config.scenePosition.scaleXYZ) {\n      group.scale.set(\n        config.scenePosition.scaleXYZ[0],\n        config.scenePosition.scaleXYZ[1],\n        config.scenePosition.scaleXYZ[2]\n      );\n    }\n  }\n  \n  // Cleanup function\n  group.userData.cleanup = () => {\n    planeGeometry.dispose();\n    planeMaterial.dispose();\n    \n    if (planeMaterial.map) {\n      planeMaterial.map.dispose();\n    }\n    \n    group.traverse((child) => {\n      if (child.geometry && child !== planeMesh) {\n        child.geometry.dispose();\n      }\n      if (child.material && child !== planeMesh) {\n        if (Array.isArray(child.material)) {\n          child.material.forEach(m => m.dispose());\n        } else {\n          child.material.dispose();\n        }\n      }\n    });\n    \n    gsap.killTweensOf(group);\n  };\n  \n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

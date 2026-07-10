@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-12-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 67992,
+  "apiMs": 65599,
+  "usage": {
+    "promptTokens": 3967,
+    "completionTokens": 7301,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.041467000000000004,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Design tokens\n  const colors = {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10',\n  };\n\n  // ========== Textured Plane (Sprite Base) ==========\n\n  // Atlas aspect ratio: 512 / 320 = 1.6\n  const atlasAspectRatio = 512 / 320;\n\n  // Plane geometry sized to atlas aspect ratio\n  const planeWidth = 1.4;\n  const planeHeight = planeWidth / atlasAspectRatio;\n  const planeGeometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  // Load ceramic grain texture via cached loader\n  const textureMap = ctx.textureLoader.load('/prism-assets/chrome/ceramic-grain.map.png');\n  textureMap.colorSpace = THREE.SRGBColorSpace;\n\n  // Create material using TSL texture node\n  const textureNode = texture(textureMap);\n  const material = new MeshBasicNodeMaterial({\n    colorNode: textureNode,\n    transparent: true,\n  });\n\n  // Create mesh\n  const mesh = new THREE.Mesh(planeGeometry, material);\n\n  // Apply scene placement from config\n  const position = config.position || [0, 0, 0];\n  const rotation = config.rotation || [0, 0, 0];\n  const scale = config.scale || [1, 1, 1];\n\n  mesh.position.set(position[0], position[1], position[2]);\n  mesh.rotation.set(rotation[0], rotation[1], rotation[2]);\n  mesh.scale.set(scale[0], scale[1], scale[2]);\n\n  group.add(mesh);\n\n  // ========== Text Overlay ==========\n\n  if (config.textContent) {\n    const textObject = ctx.fontAtlas.render({\n      text: config.textContent,\n      size: 0.2,\n      weight: 400,\n      family: 'Lora',\n      color: colors.ink,\n      align: 'center',\n    });\n\n    textObject.position.z = 0.01;\n    group.add(textObject);\n  }\n\n  // ========== Event Handlers & Cleanup ==========\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    planeGeometry.dispose();\n    material.dispose();\n    textureMap.dispose();\n    gsap.killTweensOf(group);\n    gsap.killTweensOf(mesh);\n  };\n\n  return group;\n}\n```"
+}

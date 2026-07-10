@@ -1,0 +1,16 @@
+{
+  "contestant": "claude-sonnet-5",
+  "caseId": "f-48-complex",
+  "run": 2,
+  "rawCompliant": false,
+  "fenced": true,
+  "parsed": true,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "MISSING_GLB_LOADER",
+      "severity": "error",
+      "message": "renderMode \"mesh\" must call ctx.glbLoader.load(config.meshUrl, ...) (§10.C L383)"
+    }
+  ]
+}

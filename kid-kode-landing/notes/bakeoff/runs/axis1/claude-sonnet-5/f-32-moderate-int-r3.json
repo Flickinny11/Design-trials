@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-32-moderate-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 17159,
+  "apiMs": 14624,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1693,
+    "cacheCreation": 0,
+    "cacheRead": 5565
+  },
+  "costUsd": 0.046240500000000004,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2, vec4, uniform, mix } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const width = 1.6;\n  const height = 1.0;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const material = new THREE.MeshStandardNodeMaterial({\n    roughness: 0.55,\n    metalness: 0.3,\n    side: THREE.FrontSide,\n  });\n\n  const imageUrl = '/prism-mock/home/nodes/cta-hero-isolated.png';\n  const map = ctx.textureLoader.load(imageUrl);\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const uvNode = uv();\n  const rectMin = vec2(0.0, 0.0);\n  const rectMax = vec2(1.0, 0.625); // 320/512\n\n  const remappedUv = vec2(\n    uvNode.x,\n    rectMin.y.add(uvNode.y.mul(rectMax.y.sub(rectMin.y)))\n  );\n\n  const texSample = texture(map, remappedUv);\n\n  const hoverUniform = uniform(0.0);\n  const accentColor = new THREE.Color('#ff2a38');\n  const edgeMix = uv().x.smoothstep(0.0, 0.03).oneMinus()\n    .add(uv().x.smoothstep(0.97, 1.0))\n    .clamp(0.0, 1.0);\n\n  const finalColor = mix(texSample.rgb, vec4(accentColor.r, accentColor.g, accentColor.b, 1.0).rgb, edgeMix.mul(hoverUniform));\n\n  material.colorNode = vec4(finalColor, texSample.a);\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(3.2, -0.3, 0);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n  mesh.name = 'hub-journal-card-3';\n\n  mesh.userData = mesh.userData || {};\n\n  // Data binding: stock badge indicator (small plane)\n  const badgeGeometry = new THREE.PlaneGeometry(0.14, 0.14);\n  const badgeMaterial = new THREE.MeshBasicNodeMaterial({ transparent: true });\n  const badgeColorUniform = uniform(new THREE.Color('#16161d'));\n  badgeMaterial.colorNode = vec4(badgeColorUniform, 1.0);\n  const badgeMesh = new THREE.Mesh(badgeGeometry, badgeMaterial);\n  badgeMesh.position.set(width / 2 - 0.12, height / 2 - 0.12, 0.01);\n  mesh.add(badgeMesh);\n\n  mesh.userData.setStockStatus = (inStock) => {\n    badgeColorUniform.value.set(inStock ? '#2ecc71' : '#ff2a38');\n  };\n  // default state\n  mesh.userData.setStockStatus(true);\n\n  // Interaction state\n  let baseY = mesh.position.y;\n  let hoverTween = null;\n  let pressTween = null;\n\n  const onHoverStart = () => {\n    hoverUniform.value = 1.0;\n    if (hoverTween) hoverTween.kill();\n    hoverTween = gsap.to(mesh.position, {\n      y: baseY + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n  };\n\n  const onHoverEnd = () => {\n    hoverUniform.value = 0.0;\n    if (hoverTween) hoverTween.kill();\n    hoverTween = gsap.to(mesh.position, {\n      y: baseY,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n  };\n\n  const onClick = () => {\n    if (pressTween) pressTween.kill();\n    pressTween = gsap.to(mesh.scale, {\n      x: 0.97,\n      y: 0.97,\n      z: 0.97,\n      duration: 0.12,\n      ease: 'back.out',\n      yoyo: true,\n      repeat: 1,\n    });\n\n    if (mesh.userData.emit) {\n      mesh.userData.emit('hub-journal.select', { id: 'hub-journal-card-3' });\n    }\n  };\n\n  mesh.userData.handlers = {\n    onPointerOver: onHoverStart,\n    onPointerOut: onHoverEnd,\n    onClick,\n  };\n\n  mesh.userData.cleanup = () => {\n    if (hoverTween) hoverTween.kill();\n    if (pressTween) pressTween.kill();\n    geometry.dispose();\n    material.dispose();\n    badgeGeometry.dispose();\n    badgeMaterial.dispose();\n    if (map) map.dispose();\n  };\n\n  return mesh;\n}\n```"
+}

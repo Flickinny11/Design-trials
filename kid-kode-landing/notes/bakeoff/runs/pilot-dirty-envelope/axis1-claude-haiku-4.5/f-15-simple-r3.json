@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-15-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 68936,
+  "apiMs": 66481,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 6760,
+    "cacheCreation": 0,
+    "cacheRead": 21571
+  },
+  "costUsd": 0.03694610000000001,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```ts\nimport * as THREE from 'three/webgpu';\nimport { texture as texNode } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Load sprite texture (cached by ctx.textureLoader)\n  const textureUrl = config.assets?.imageUrl || '/prism-mock/home/nodes/floating-accent.png';\n  const spriteTexture = ctx.textureLoader.load(textureUrl);\n  \n  // Plane geometry sized to atlas aspect ratio (512×320 = 1.6:1)\n  const atlasAspect = 512 / 320;\n  const planeHeight = 1.2;\n  const planeWidth = planeHeight * atlasAspect;\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n  \n  // TSL-based material with texture node\n  const material = new THREE.MeshBasicNodeMaterial({\n    colorNode: texNode(spriteTexture),\n  });\n  \n  const planeMesh = new THREE.Mesh(geometry, material);\n  group.add(planeMesh);\n  \n  // Add MSDF text label\n  const textContent = config.textContent?.text || 'Collection 1';\n  const textMesh = ctx.fontAtlas.createText(textContent, {\n    fontSize: 0.34,\n    font: 'Lora',\n    weight: 400,\n    align: 'center',\n  });\n  textMesh.position.z = 0.01;\n  group.add(textMesh);\n  \n  // Resource cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    spriteTexture.dispose();\n  };\n  \n  // No event handlers for static element\n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

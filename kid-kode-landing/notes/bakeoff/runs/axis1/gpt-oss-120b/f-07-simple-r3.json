@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-07-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 7068,
+  "usage": {
+    "promptTokens": 1650,
+    "completionTokens": 1183
+  },
+  "costUsd": 0.0009572999999999999,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import {\n  Object3D,\n  Mesh,\n  PlaneGeometry,\n  Texture,\n  Vector3,\n  Euler\n} from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport * as primitives from '@/primitives';\nimport * as text from '@/text';\n\nexport default function createNode(config, ctx) {\n  // ------- Geometry -------\n  const geometry = new PlaneGeometry(1, 1, 1, 1);\n\n  // ------- Texture -------\n  let texture = null;\n  const imageUrl = config.assets?.imageUrl;\n  if (imageUrl) {\n    texture = ctx.textureLoader(imageUrl);\n  }\n\n  // ------- Material -------\n  const material = new MeshBasicNodeMaterial();\n  if (texture) {\n    material.map = texture;\n    // Ensure correct mapping orientation\n    material.map.flipY = false;\n  }\n\n  // ------- Mesh -------\n  const mesh = new Mesh(geometry, material);\n  mesh.name = config.id ?? 'node';\n\n  // ------- Transform -------\n  const pos = config.position ?? [-3.2, -0.3, 0];\n  const rot = config.rotation ?? [0, 0, 0];\n  const scl = config.scale ?? [1, 1, 1];\n\n  mesh.position.set(pos[0], pos[1], pos[2]);\n  mesh.rotation.set(rot[0], rot[1], rot[2]);\n  mesh.scale.set(scl[0], scl[1], scl[2]);\n\n  // ------- Cinematic Primitives -------\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const primitive of config.cinematicPrimitives) {\n      const fn = ctx.primitives?.[primitive.name];\n      if (typeof fn === 'function') {\n        fn(mesh, primitive.params);\n      }\n    }\n  }\n\n  // ------- Event Handlers Placeholder -------\n  mesh.userData.handlers = {};\n\n  // ------- Cleanup ----------\n  const timelines = [];\n\n  mesh.userData.cleanup = () => {\n    // Kill GSAP timelines\n    timelines.forEach(t => t.kill());\n\n    // Dispose resources\n    geometry.dispose();\n    material.dispose();\n    if (texture) {\n      texture.dispose();\n    }\n\n    // Remove from parent if attached\n    if (mesh.parent) {\n      mesh.parent.remove(mesh);\n    }\n  };\n\n  return mesh;\n}"
+}

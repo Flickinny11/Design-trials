@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-20-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 79884,
+  "apiMs": 77491,
+  "usage": {
+    "promptTokens": 3953,
+    "completionTokens": 8549,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.047664,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Apply scene placement\n  group.position.set(0, 3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Create plane geometry\n  // Atlas region 512×320 → aspect ratio 1.6:1\n  const geometry = new THREE.PlaneGeometry(3.2, 2.0);\n\n  // Load texture\n  let texture = null;\n  if (config.assets?.imageUrl) {\n    texture = ctx.textureLoader.load(config.assets.imageUrl);\n    texture.colorSpace = THREE.SRGBColorSpace;\n  }\n\n  // Create TSL material\n  const colorNode = texture\n    ? uniform(texture)\n    : uniform(new THREE.Color(0xe8ecf2)); // paper fallback\n\n  const material = new MeshBasicNodeMaterial({\n    colorNode,\n    transparent: true,\n    depthWrite: false,\n    side: THREE.DoubleSide\n  });\n\n  // Create plane mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Render text content\n  if (ctx.fontAtlas && config.textContent) {\n    let text = 'Pricing';\n\n    // Parse text from config\n    if (Array.isArray(config.textContent)) {\n      const first = config.textContent[0];\n      text = (first?.text || first) ?? text;\n    } else if (typeof config.textContent === 'string') {\n      text = config.textContent;\n    } else if (config.textContent?.text) {\n      text = config.textContent.text;\n    }\n\n    // Create text mesh\n    const textMesh = ctx.fontAtlas.createTextMesh({\n      text,\n      fontSize: 0.96,\n      fontWeight: 400,\n      fontFamily: 'Lora',\n      color: 0x16161d,\n      align: 'center'\n    });\n\n    if (textMesh) {\n      textMesh.position.z = 0.1;\n      group.add(textMesh);\n    }\n  }\n\n  // Setup cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (texture) texture.dispose();\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

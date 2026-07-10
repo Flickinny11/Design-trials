@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-39-moderate-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 15568,
+  "apiMs": 13022,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1522,
+    "cacheCreation": 0,
+    "cacheRead": 5603
+  },
+  "costUsd": 0.042034499999999995,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshStandardNodeMaterial, color } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'home-divider-cta-hero';\n  group.position.set(-2.5, 0.7000000000000001, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const baseY = group.position.y;\n  const timelines = [];\n  let jewelMesh = null;\n\n  const gltf = ctx.glbLoader.load('/prism-mock/home/nodes/cta-hero.glb');\n  const meshRoot = gltf.scene ? gltf.scene.clone(true) : gltf;\n  group.add(meshRoot);\n\n  meshRoot.traverse((child) => {\n    if (child.isMesh) {\n      child.castShadow = true;\n      child.receiveShadow = true;\n      if (!jewelMesh || (child.geometry && child.geometry.boundingSphere && jewelMesh.geometry && child.geometry.boundingSphere.radius < jewelMesh.geometry.boundingSphere.radius)) {\n        // heuristically pick smallest mesh as jewel accent\n        if (!jewelMesh) jewelMesh = child;\n      }\n      if (child.material && !(child.material instanceof MeshStandardNodeMaterial)) {\n        const mat = new MeshStandardNodeMaterial();\n        mat.metalness = Math.min(child.material.metalness ?? 0.5, 0.55);\n        mat.roughness = Math.max(child.material.roughness ?? 0.5, 0.5);\n        mat.clearcoat = 0.2;\n        mat.color = child.material.color ? child.material.color.clone() : color(0x16161d);\n        mat.map = child.material.map || null;\n        child.material = mat;\n      }\n    }\n  });\n\n  if (jewelMesh && jewelMesh.material) {\n    jewelMesh.material.emissive = new THREE.Color(0xff2a38);\n    jewelMesh.material.emissiveIntensity = 0.4;\n  }\n\n  // Hover: rise-in subtle (0.15 units)\n  let hoverTl = null;\n  const onHover = () => {\n    if (hoverTl) hoverTl.kill();\n    hoverTl = gsap.timeline();\n    timelines.push(hoverTl);\n    hoverTl.to(group.position, {\n      y: baseY + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n  };\n\n  const onHoverOut = () => {\n    if (hoverTl) hoverTl.kill();\n    hoverTl = gsap.timeline();\n    timelines.push(hoverTl);\n    hoverTl.to(group.position, {\n      y: baseY,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n  };\n\n  // Click: press-down + emit select event\n  const onClick = () => {\n    const pressTl = gsap.timeline();\n    timelines.push(pressTl);\n    pressTl.to(group.scale, {\n      x: 0.97,\n      y: 0.97,\n      z: 0.97,\n      duration: 0.12,\n      ease: 'back.out',\n      yoyo: true,\n      repeat: 1,\n    });\n\n    if (ctx.emit) {\n      ctx.emit('hub-home.select', { nodeId: 'home-divider-cta-hero' });\n    }\n\n    if (ctx.trpc && ctx.trpc.visits && ctx.trpc.visits.book) {\n      ctx.trpc.visits.book.mutate({ slotIso: new Date().toISOString() })\n        .then((result) => {\n          group.userData.confirmPanel = result.slot;\n        })\n        .catch(() => {});\n    }\n  };\n\n  group.userData.handlers = {\n    onPointerOver: onHover,\n    onPointerOut: onHoverOut,\n    onClick,\n  };\n\n  group.userData.cleanup = () => {\n    timelines.forEach((tl) => tl.kill());\n    meshRoot.traverse((child) => {\n      if (child.isMesh) {\n        if (child.geometry) child.geometry.dispose();\n        if (child.material) {\n          if (child.material.map) child.material.map.dispose();\n          child.material.dispose();\n        }\n      }\n    });\n    group.clear();\n  };\n\n  return group;\n}\n```"
+}

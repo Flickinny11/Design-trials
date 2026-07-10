@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-22-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 36435,
+  "apiMs": 34429,
+  "usage": {
+    "promptTokens": 3958,
+    "completionTokens": 5105,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.030469,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, color, texture, mix } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Scene placement\n  group.position.set(-3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Plane geometry (512:320 aspect ratio from atlas region)\n  const planeWidth = 1.6;\n  const planeHeight = 1.0;\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  // Load decorative image texture\n  const imageTexture = ctx.textureLoader.load('/prism-mock/home/nodes/orb-decor.png');\n  imageTexture.colorSpace = THREE.SRGBColorSpace;\n\n  // Create engineered gradient surface with TSL nodes\n  const paperColor = color(new THREE.Color(0xe8ecf2)); // paper\n  const inkColor = color(new THREE.Color(0x16161d));   // ink\n\n  // Subtle gradient overlay\n  const gradientOverlay = mix(paperColor, inkColor, 0.12);\n\n  // Composite: blend image with gradient for engineered effect\n  const textureNode = texture(imageTexture);\n  const finalColor = mix(textureNode, gradientOverlay, 0.18);\n\n  // Material with engineered gradient surface\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = finalColor;\n\n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Render text content: \"Pricing 1\"\n  if (ctx.fontAtlas) {\n    const textContent = config.textContent?.[0] || 'Pricing 1';\n\n    const textMesh = ctx.fontAtlas.createText({\n      text: textContent,\n      font: 'Lora',\n      size: 0.39,\n      weight: 400,\n      color: 0x16161d,\n      anchor: 'center'\n    });\n\n    textMesh.position.z = 0.01;\n    group.add(textMesh);\n  }\n\n  // Resource cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    imageTexture.dispose();\n  };\n\n  // No event handlers for static composition\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

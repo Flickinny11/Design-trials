@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-21-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 16373,
+  "usage": {
+    "promptTokens": 1701,
+    "completionTokens": 1834
+  },
+  "costUsd": 0.0007516600000000001,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  Sprite,\n  SpriteNodeMaterial,\n  Object3D,\n  Vector2,\n} from 'three/webgpu';\nimport { Node } from 'three/tsl';\n\n/**\n * Creates a sprite node for a pricing card.\n *\n * @param {import('./types').NodeConfig} config\n * @param {import('./types').NodeContext} ctx\n * @returns {Object3D}\n */\nexport default function createNode(config, ctx) {\n  const {\n    imageUrl,\n    atlasRegion,\n    position,\n    rotation,\n    scale,\n  } = config;\n\n  // Load texture (cached)\n  const texture = ctx.textureLoader.load(imageUrl);\n\n  // Apply atlas region offset / repeat\n  if (atlasRegion) {\n    const { x, y, width, height } = atlasRegion;\n    const imgW = texture.image.width;\n    const imgH = texture.image.height;\n    if (imgW && imgH) {\n      texture.repeat.set(width / imgW, height / imgH);\n      texture.offset.set(x / imgW, y / imgH);\n      texture.needsUpdate = true;\n    }\n  }\n\n  // Build sprite material\n  const material = new SpriteNodeMaterial({\n    map: texture,\n    transparent: true,\n    depthWrite: false,\n  });\n\n  // Create sprite\n  const sprite = new Sprite(material);\n  sprite.position.copy(position);\n  sprite.rotation.set(rotation.x, rotation.y, rotation.z);\n  sprite.scale.copy(scale);\n\n  // Attach handler container\n  sprite.userData.handlers = {};\n\n  // Cleanup\n  sprite.userData.cleanup = () => {\n    texture.dispose();\n    material.dispose();\n    // No GSAP timelines to kill in this node\n  };\n\n  return sprite;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

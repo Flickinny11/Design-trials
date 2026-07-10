@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-04-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 91176,
+  "apiMs": 88659,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 9746,
+    "cacheCreation": 0,
+    "cacheRead": 21537
+  },
+  "costUsd": 0.0518537,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Load texture (cached by ctx.textureLoader)\n  const imageUrl = config.assets?.imageUrl || '/prism-mock/home/nodes/orb-decor.png';\n  const texture = ctx.textureLoader.load(imageUrl);\n  \n  // Create plane geometry (16:10 aspect ratio based on atlas region 512x320)\n  const geometry = new THREE.PlaneGeometry(1, 0.625);\n  \n  // Create material using Node-based shader system for WebGPU\n  const material = new THREE.MeshBasicNodeMaterial({\n    map: texture,\n    transparent: true,\n  });\n  \n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  \n  // Apply scene position, rotation, and scale\n  const scenePos = config.scenePosition || {\n    x: 0,\n    y: 0,\n    z: 0,\n  };\n  \n  mesh.position.set(scenePos.x, scenePos.y, scenePos.z);\n  \n  if (scenePos.rotationXYZ) {\n    mesh.rotation.set(\n      scenePos.rotationXYZ[0],\n      scenePos.rotationXYZ[1],\n      scenePos.rotationXYZ[2]\n    );\n  }\n  \n  if (scenePos.scaleXYZ) {\n    mesh.scale.set(\n      scenePos.scaleXYZ[0],\n      scenePos.scaleXYZ[1],\n      scenePos.scaleXYZ[2]\n    );\n  }\n  \n  group.add(mesh);\n  \n  // Setup resource cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n  };\n  \n  // Initialize event handlers (empty for this static element)\n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

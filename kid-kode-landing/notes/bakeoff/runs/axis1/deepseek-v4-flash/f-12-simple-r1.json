@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-12-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 28292,
+  "usage": {
+    "promptTokens": 1715,
+    "completionTokens": 3278
+  },
+  "costUsd": 0.00115794,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport { Sprite, SpriteMaterial, Object3D, Vector3, Euler } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  // Create container group\n  const group = new Object3D();\n\n  // Load texture\n  const texture = ctx.textureLoader.load(config.imageUrl);\n\n  // Create sprite material\n  const material = new SpriteMaterial({\n    map: texture,\n    transparent: true,\n    depthTest: true,\n    depthWrite: false\n  });\n\n  // Create sprite (automatically billboards toward camera)\n  const sprite = new Sprite(material);\n  sprite.position.copy(new Vector3().fromArray(config.position || [3.2, 1, 0.06]));\n  sprite.rotation.copy(new Euler().fromArray(config.rotation || [0, 0, 0]));\n  sprite.scale.copy(new Vector3().fromArray(config.scale || [1, 1, 1]));\n\n  // Size sprite to atlas region aspect ratio\n  const region = config.atlasRegion || { x: 0, y: 0, width: 512, height: 320 };\n  const aspect = region.width / region.height;\n  // Set base width to 1 unit, scale height accordingly\n  sprite.scale.x = 1;\n  sprite.scale.y = 1 / aspect;\n\n  group.add(sprite);\n\n  // Apply cinematic primitives (none in this spec, but handle generically)\n  if (config.cinematicPrimitives && config.cinematicPrimitives.length > 0) {\n    config.cinematicPrimitives.forEach(primitive => {\n      if (ctx.primitives[primitive.name]) {\n        ctx.primitives[primitive.name](group, primitive.params);\n      }\n    });\n  }\n\n  // Attach event handlers (none in this spec)\n  group.userData.handlers = {};\n\n  // Cleanup function\n  group.userData.cleanup = () => {\n    material.dispose();\n    texture.dispose();\n    // Kill any GSAP timelines (none created)\n    gsap.killTweensOf(sprite);\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

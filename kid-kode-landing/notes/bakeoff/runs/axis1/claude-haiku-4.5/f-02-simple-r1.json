@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-02-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 85486,
+  "apiMs": 83317,
+  "usage": {
+    "promptTokens": 3951,
+    "completionTokens": 9026,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.05005,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Load image texture\n  const imageTexture = ctx.textureLoader.load(config.assetPaths.imageUrl);\n  \n  // Create plane geometry with aspect ratio 512:320 = 1.6:1\n  const width = 1.6;\n  const height = 1;\n  const geometry = new THREE.PlaneGeometry(width, height);\n  \n  // Create material with texture using TSL nodes\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.colorNode = texture(imageTexture);\n  \n  // Create mesh\n  const imageMesh = new THREE.Mesh(geometry, material);\n  group.add(imageMesh);\n  \n  // Render text content via fontAtlas\n  if (config.textContent && config.textContent.length > 0) {\n    const textContent = config.textContent[0];\n    const textMesh = ctx.fontAtlas.render(textContent, {\n      fontName: 'Lora',\n      fontSize: 0.42,\n      fontWeight: 400,\n      color: config.colors.ink,\n      align: 'center',\n      anchorX: 0.5,\n      anchorY: 0.5\n    });\n    \n    // Position text in front of image\n    textMesh.position.z = 0.05;\n    group.add(textMesh);\n  }\n  \n  // Apply scene placement\n  if (config.scenePosition) {\n    group.position.set(...config.scenePosition);\n  }\n  if (config.sceneRotation) {\n    group.rotation.set(...config.sceneRotation);\n  }\n  if (config.sceneScale) {\n    group.scale.set(...config.sceneScale);\n  }\n  \n  // Setup cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    imageTexture.dispose();\n    gsap.killTweensOf(group);\n  };\n  \n  // No event handlers (static composition)\n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

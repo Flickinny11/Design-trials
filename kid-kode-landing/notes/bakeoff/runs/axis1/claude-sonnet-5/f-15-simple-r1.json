@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-15-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 12081,
+  "apiMs": 9508,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 948,
+    "cacheCreation": 3375,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.059602499999999996,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import * as THREE from 'three/webgpu';\nimport { texture, uv, vec2 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-collection-card-1-label';\n  group.position.set(-3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const rectW = 512, rectH = 320, atlasW = 512, atlasH = 320;\n  const aspect = rectW / rectH;\n  const planeH = 0.5;\n  const planeW = planeH * aspect;\n\n  const geometry = new THREE.PlaneGeometry(planeW, planeH);\n\n  const map = ctx.textureLoader.load(config.assets?.imageUrl || '/prism-mock/home/nodes/floating-accent.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const offsetX = 0 / atlasW;\n  const offsetY = 0 / atlasH;\n  const repeatX = rectW / atlasW;\n  const repeatY = rectH / atlasH;\n\n  const uvNode = uv().mul(vec2(repeatX, repeatY)).add(vec2(offsetX, offsetY));\n\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n  material.colorNode = texture(map, uvNode);\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'card-image';\n  group.add(mesh);\n\n  // Billboard behavior: continually face camera via onBeforeRender\n  mesh.onBeforeRender = (renderer, scene, camera) => {\n    group.quaternion.copy(camera.quaternion);\n  };\n\n  // Text content: headline \"Collection 1\"\n  let textMesh = null;\n  if (ctx.fontAtlas && ctx.fontAtlas.createText) {\n    textMesh = ctx.fontAtlas.createText({\n      text: 'Collection 1',\n      font: 'Lora',\n      weight: 400,\n      size: 0.34,\n      color: config.visual?.colors?.paper || '#e8ecf2',\n    });\n    textMesh.name = 'headline-text';\n    textMesh.position.set(-planeW / 2 + 0.06, -planeH / 2 + 0.08, 0.01);\n    group.add(textMesh);\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    if (textMesh) {\n      textMesh.geometry?.dispose?.();\n      textMesh.material?.dispose?.();\n    }\n  };\n\n  return group;\n}"
+}

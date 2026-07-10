@@ -145,6 +145,10 @@ for (const [caseId, list] of [...byCase.entries()].sort()) {
         }
         const mustFix = [...(j.verdict.mustFix ?? [])];
         for (const v of depViolations) mustFix.push({ defect: 'DEP_GATE_VIOLATION', region: `disallowed source ${v}` });
+        // Deterministic: the contestant module THREW at createNode time — the
+        // frame shows the runtime's fallback plane, not the model's design.
+        const rtErr = j.meta?.probe?.moduleRuntimeError;
+        if (rtErr) mustFix.push({ defect: 'RUNTIME_ERROR', region: rtErr });
         results.push({
           bundleId: j.bundleId, contestant: j.contestant, caseId: j.caseId, tag: j.tag, batchNo,
           score: j.verdict.score, mustFix, notes: j.verdict.notes,

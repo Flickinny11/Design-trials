@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-16-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 81888,
+  "apiMs": 79749,
+  "usage": {
+    "promptTokens": 3941,
+    "completionTokens": 9258,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.051195000000000004,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, uniform, texture, uv, mul, add, sin } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Load texture\n  const tex = ctx.textureLoader.load(config.assets.imageUrl);\n  tex.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create plane geometry with atlas region aspect ratio (512x320 = 1.6:1)\n  const aspectRatio = 512 / 320;\n  const geom = new THREE.PlaneGeometry(aspectRatio, 1);\n  \n  // Create material with TSL shader nodes\n  const mat = new MeshBasicNodeMaterial();\n  \n  // Sample base texture\n  const texColor = texture(tex, uv());\n  \n  // Engineered gradient effect (vertical, subtle)\n  const gradIntensity = uniform(0.1);\n  const vertGrad = add(1.0, mul(uv().y, gradIntensity));\n  const gradColor = mul(texColor, vertGrad);\n  \n  // Subtle procedural grain\n  const grainFreq = uniform(50.0);\n  const grainStr = uniform(0.06);\n  const grainNoise = mul(\n    sin(add(mul(uv().x, grainFreq), mul(uv().y, grainFreq))),\n    grainStr\n  );\n  \n  // Composite: gradient texture + grain\n  mat.colorNode = add(gradColor, grainNoise);\n  mat.transparent = true;\n  \n  // Create mesh\n  const mesh = new THREE.Mesh(geom, mat);\n  \n  // Apply scene transforms from config\n  const pos = config.scenePosition || {};\n  mesh.position.set(pos.x || 0, pos.y || 0, pos.z || 0);\n  \n  const rot = config.sceneRotation || {};\n  mesh.rotation.set(rot.x || 0, rot.y || 0, rot.z || 0);\n  \n  const scale = config.sceneScale || {};\n  mesh.scale.set(scale.x || 1, scale.y || 1, scale.z || 1);\n  \n  // Apply cinematic primitives if specified\n  if (config.cinematicPrimitives && config.cinematicPrimitives.length > 0) {\n    config.cinematicPrimitives.forEach(prim => {\n      if (ctx.primitives && typeof ctx.primitives[prim.name] === 'function') {\n        ctx.primitives[prim.name](mesh, prim.params || {});\n      }\n    });\n  }\n  \n  group.add(mesh);\n  \n  // Setup event handlers\n  group.userData.handlers = {};\n  \n  // Cleanup function for resource disposal\n  group.userData.cleanup = function() {\n    geom.dispose();\n    mat.dispose();\n    tex.dispose();\n  };\n  \n  return group;\n}\n```"
+}

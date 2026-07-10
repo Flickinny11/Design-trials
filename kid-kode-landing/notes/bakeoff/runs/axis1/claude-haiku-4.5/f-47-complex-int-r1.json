@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-47-complex-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 62749,
+  "apiMs": 60705,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 6991,
+    "cacheCreation": 4097,
+    "cacheRead": 0
+  },
+  "costUsd": 0.044294,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport * as tsl from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Load textures via cached loaders\n  const colorTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  const depthTexture = ctx.textureLoader.load(config.assets.depthMapUrl);\n  \n  // Tessellated plane geometry (64x64 segments for displacement detail)\n  const geometry = new THREE.PlaneGeometry(2, 1.25, 64, 64);\n  \n  // TSL nodes for displacement shader\n  const uv = tsl.uv();\n  const posLocal = tsl.positionLocal;\n  const normalLocal = tsl.normalLocal;\n  \n  // Displacement mapping: sample depth texture and apply to vertices\n  const depthSample = tsl.texture(depthTexture, uv).r;\n  const displacementIntensity = tsl.uniform(0.08);\n  const displacement = depthSample.mul(displacementIntensity);\n  \n  // Displace position along normal\n  const displacedPosition = posLocal.add(normalLocal.mul(displacement));\n  \n  // Create material with machined-metal PBR aesthetics\n  const material = new THREE.MeshStandardMaterial({\n    map: colorTexture,\n    metalness: 0.35,\n    roughness: 0.55,\n    clearcoat: 0.2,\n    side: THREE.DoubleSide,\n  });\n  \n  // Apply displacement node to material\n  material.positionNode = displacedPosition;\n  \n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(\n    config.scenePosition[0],\n    config.scenePosition[1],\n    config.scenePosition[2]\n  );\n  mesh.rotation.set(\n    config.sceneRotation[0],\n    config.sceneRotation[1],\n    config.sceneRotation[2]\n  );\n  mesh.scale.set(\n    config.sceneScale[0],\n    config.sceneScale[1],\n    config.sceneScale[2]\n  );\n  \n  group.add(mesh);\n  \n  // Store original position for hover animation\n  const originalY = mesh.position.y;\n  let hoverTween = null;\n  \n  // Apply cinematic primitives\n  if (config.cinematicPrimitives && Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach(primitive => {\n      if (ctx.primitives && typeof ctx.primitives[primitive.name] === 'function') {\n        ctx.primitives[primitive.name](mesh, primitive.params || {});\n      }\n    });\n  }\n  \n  // Attach event handlers\n  group.userData.handlers = {\n    pointerenter: () => {\n      if (hoverTween) hoverTween.kill();\n      // Rise-in hover effect: 0.15 scene units upward\n      hoverTween = gsap.to(mesh.position, {\n        y: originalY + 0.15,\n        duration: 0.7,\n        ease: 'power3.out'\n      });\n    },\n    pointerleave: () => {\n      if (hoverTween) hoverTween.kill();\n      // Return to original position\n      hoverTween = gsap.to(mesh.position, {\n        y: originalY,\n        duration: 0.7,\n        ease: 'power3.out'\n      });\n    },\n    click: () => {\n      // Emit pricing selection event\n      if (typeof config.onEvent === 'function') {\n        config.onEvent('hub-pricing.select');\n      }\n    }\n  };\n  \n  // Cleanup resources\n  group.userData.cleanup = () => {\n    if (hoverTween) hoverTween.kill();\n    geometry.dispose();\n    material.dispose();\n    colorTexture.dispose();\n    depthTexture.dispose();\n  };\n  \n  return group;\n}\n```"
+}

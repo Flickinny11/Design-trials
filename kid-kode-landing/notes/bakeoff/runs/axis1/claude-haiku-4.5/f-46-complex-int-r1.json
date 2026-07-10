@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-46-complex-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 109464,
+  "apiMs": 107297,
+  "usage": {
+    "promptTokens": 4097,
+    "completionTokens": 12019,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.065322,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.userData.handlers = {};\n  group.userData.dataBindings = config.dataBindings || [];\n  \n  let hoverTimeline = null;\n  \n  // Load mesh from GLB\n  const gltf = ctx.glbLoader.load(config.meshUrl);\n  const mesh = gltf.scene.children[0] || gltf.scene;\n  \n  if (mesh) {\n    group.add(mesh);\n  }\n  \n  // Apply scene transforms\n  const pos = config.scenePosition || { x: 0, y: 0, z: 0 };\n  group.position.set(pos.x, pos.y, pos.z);\n  \n  const rot = config.rotation || { x: 0, y: 0, z: 0 };\n  group.rotation.order = 'XYZ';\n  group.rotation.set(rot.x, rot.y, rot.z);\n  \n  const scl = config.scale || { x: 1, y: 1, z: 1 };\n  group.scale.set(scl.x, scl.y, scl.z);\n  \n  // Apply cinematic primitives\n  if (config.cinematicPrimitives && Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach((primitive) => {\n      if (ctx.primitives && typeof ctx.primitives[primitive.name] === 'function') {\n        ctx.primitives[primitive.name](group, primitive.params || {});\n      }\n    });\n  }\n  \n  // Store original position for hover reset\n  const originalY = group.position.y;\n  \n  // Hover handler: rise-in animation (0.15 scene units, power3.out, 0.7s)\n  group.userData.handlers.onHover = () => {\n    if (hoverTimeline) hoverTimeline.kill();\n    hoverTimeline = gsap.timeline();\n    hoverTimeline.to(group.position, {\n      y: originalY + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    }, 0);\n  };\n  \n  group.userData.handlers.onHoverEnd = () => {\n    if (hoverTimeline) hoverTimeline.kill();\n    hoverTimeline = gsap.timeline();\n    hoverTimeline.to(group.position, {\n      y: originalY,\n      duration: 0.7,\n      ease: 'power3.out',\n    }, 0);\n  };\n  \n  // Click handler: emit hub-collection.select event\n  group.userData.handlers.onClick = () => {\n    if (typeof config.onEvent === 'function') {\n      config.onEvent('hub-collection.select');\n    }\n  };\n  \n  // Cleanup function\n  group.userData.cleanup = () => {\n    // Kill hover animation timeline\n    if (hoverTimeline) hoverTimeline.kill();\n    \n    // Dispose geometry and materials\n    group.traverse((node) => {\n      if (node.isMesh) {\n        if (node.geometry) node.geometry.dispose();\n        if (Array.isArray(node.material)) {\n          node.material.forEach((m) => m?.dispose?.());\n        } else if (node.material) {\n          node.material.dispose();\n        }\n      }\n    });\n  };\n  \n  return group;\n}\n```"
+}

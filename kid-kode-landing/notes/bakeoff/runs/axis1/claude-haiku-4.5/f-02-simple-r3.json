@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-02-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 52642,
+  "apiMs": 50759,
+  "usage": {
+    "promptTokens": 3951,
+    "completionTokens": 7843,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.044149999999999995,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Apply scene placement from specification\n  group.position.set(0, 1.85, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n  \n  // Create plane geometry for the background image\n  // 512x320 source → 1.6:1 aspect ratio\n  const planeGeometry = new THREE.PlaneGeometry(3.2, 2.0);\n  \n  // Load the texture\n  const imageUrl = config.imageUrl || '/prism-mock/home/nodes/cta-hero-isolated.png';\n  const texture = ctx.textureLoader.load(imageUrl);\n  texture.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create material for static textured plane\n  const material = new THREE.MeshBasicMaterial({\n    map: texture,\n  });\n  \n  // Create and add the plane mesh\n  const planeMesh = new THREE.Mesh(planeGeometry, material);\n  group.add(planeMesh);\n  \n  // Render text content overlay via font atlas\n  const textContent = config.textContent || 'Atelier Noir — precise · luxury · technical';\n  \n  const textMesh = ctx.fontAtlas.createText(textContent, {\n    size: 0.25,\n    weight: 400,\n    fontFamily: 'Lora',\n    color: config.colors?.ink || 0x16161d,\n    align: 'center',\n    anchorX: 'center',\n    anchorY: 'middle',\n  });\n  \n  if (textMesh) {\n    textMesh.position.z = 0.2;\n    group.add(textMesh);\n  }\n  \n  // Initialize event handlers (empty for static composition)\n  group.userData.handlers = {};\n  \n  // Cleanup function for resource disposal\n  group.userData.cleanup = function() {\n    planeGeometry.dispose();\n    material.dispose();\n    texture.dispose();\n  };\n  \n  return group;\n}\n```"
+}

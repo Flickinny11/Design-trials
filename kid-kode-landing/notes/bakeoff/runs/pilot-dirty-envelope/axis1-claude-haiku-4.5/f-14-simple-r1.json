@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-14-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 52903,
+  "apiMs": 50898,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 5609,
+    "cacheCreation": 21549,
+    "cacheRead": 0
+  },
+  "costUsd": 0.07211,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\n\nexport default function createNode(config: NodeConfig, ctx: NodeContext): THREE.Object3D {\n  const group = new THREE.Group();\n  \n  // Load texture (cached via ctx.textureLoader)\n  const imageUrl = config.imageUrl || '/prism-mock/home/nodes/cta-hero-isolated.png';\n  const texture = ctx.textureLoader.load(imageUrl);\n  texture.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create material: unlit textured plane\n  const material = new THREE.MeshBasicMaterial({\n    map: texture,\n    side: THREE.DoubleSide,\n    transparent: true\n  });\n  \n  // Create geometry: plane with 512:320 aspect ratio (1.6:1)\n  const geometry = new THREE.PlaneGeometry(1.6, 1);\n  const mesh = new THREE.Mesh(geometry, material);\n  \n  // Apply scene position, rotation, and scale from config\n  if (config.scenePosition) {\n    const sp = config.scenePosition;\n    mesh.position.set(sp.x ?? 0, sp.y ?? 0, sp.z ?? 0);\n    \n    if (sp.rotationXYZ) {\n      mesh.rotation.order = 'XYZ';\n      mesh.rotation.x = sp.rotationXYZ.x ?? 0;\n      mesh.rotation.y = sp.rotationXYZ.y ?? 0;\n      mesh.rotation.z = sp.rotationXYZ.z ?? 0;\n    }\n    \n    if (sp.scaleXYZ) {\n      mesh.scale.set(\n        sp.scaleXYZ.x ?? 1,\n        sp.scaleXYZ.y ?? 1,\n        sp.scaleXYZ.z ?? 1\n      );\n    }\n  }\n  \n  group.add(mesh);\n  \n  // Setup cleanup function for resource disposal\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n  };\n  \n  // Setup empty handlers object\n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

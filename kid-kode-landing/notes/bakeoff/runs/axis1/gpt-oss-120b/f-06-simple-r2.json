@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-06-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 13269,
+  "usage": {
+    "promptTokens": 1671,
+    "completionTokens": 2264
+  },
+  "costUsd": 0.0016090499999999997,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import * as THREE from 'three/webgpu';\nimport {\n  MeshBasicNodeMaterial,\n  texture,\n  uv,\n  uvTransform\n} from 'three/tsl';\nimport { gsap } from 'gsap';\nimport { primitives } from '@/primitives';\nimport { text } from '@/text';\n\nexport default function createNode(config, ctx) {\n  // --- Root object ---------------------------------------------------------\n  const root = new THREE.Object3D();\n\n  // Position / Rotation / Scale from config (defaults if missing)\n  const pos = config.position ?? [0, 0, 0];\n  const rot = config.rotation ?? [0, 0, 0];\n  const scl = config.scale ?? [1, 1, 1];\n\n  root.position.set(pos[0], pos[1], pos[2]);\n  root.rotation.set(rot[0], rot[1], rot[2]);\n  root.scale.set(scl[0], scl[1], scl[2]);\n\n  // --- Texture -------------------------------------------------------------\n  const tex = ctx.textureLoader.load(config.assets?.imageUrl);\n  // Assume texture is already loaded synchronously (cached)\n\n  // --- Atlas UV region ------------------------------------------------------\n  const atlasInfo = config.atlasRegion ?? {};\n  const srcRect = atlasInfo.sourceRect ?? [0, 0, 512, 320];\n  const [sx, sy, sw, sh] = srcRect;\n\n  // Fallback to texture dimensions if atlas size not explicit\n  const atlasWidth = atlasInfo.atlasWidth ?? (tex.image?.width ?? sw);\n  const atlasHeight = atlasInfo.atlasHeight ?? (tex.image?.height ?? sh);\n\n  const repeatU = sw / atlasWidth;\n  const repeatV = sh / atlasHeight;\n  const offsetU = sx / atlasWidth;\n  const offsetV = sy / atlasHeight;\n\n  // UV transform node to select the sub‑region\n  const uvNode = uv();\n  const uvRegion = uvTransform(uvNode, offsetU, offsetV, repeatU, repeatV);\n\n  // Texture sampling node with transformed UVs\n  const texNode = texture(tex, uvRegion);\n\n  // --- Material -------------------------------------------------------------\n  const material = new MeshBasicNodeMaterial({ map: texNode, transparent: true });\n\n  // --- Geometry -------------------------------------------------------------\n  const aspect = sw / sh;\n  const geometry = new THREE.PlaneGeometry(aspect, 1);\n\n  // --- Mesh (billboard) -----------------------------------------------------\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.onBeforeRender = (renderer, scene, camera) => {\n    // Keep the plane facing the camera\n    mesh.quaternion.copy(camera.quaternion);\n  };\n  root.add(mesh);\n\n  // --- Cinematic primitives -------------------------------------------------\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const primitive of config.cinematicPrimitives) {\n      const fn = ctx.primitives[primitive.name];\n      if (typeof fn === 'function') {\n        fn(root, primitive.params);\n      }\n    }\n  }\n\n  // --- User data ------------------------------------------------------------\n  root.userData.handlers = {};\n\n  root.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    tex.dispose();\n    // Kill any GSAP timelines that might have been created (none here)\n    gsap.globalTimeline.clear(true);\n  };\n\n  return root;\n}"
+}

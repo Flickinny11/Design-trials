@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-30-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 12334,
+  "apiMs": 9876,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1010,
+    "cacheCreation": 0,
+    "cacheRead": 5485
+  },
+  "costUsd": 0.029081500000000003,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, uniform, mix, float } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const width = 1.6;\n  const aspect = 320 / 512;\n  const height = width * aspect;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const map = ctx.textureLoader.load('/prism-assets/chrome/ceramic-grain.map.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n  map.wrapS = THREE.ClampToEdgeWrapping;\n  map.wrapT = THREE.ClampToEdgeWrapping;\n\n  // atlas region 0,0,512,320 out of a 512x320 atlas (region 0) -> full extent\n  const atlasWidth = 512;\n  const atlasHeight = 320;\n  const rectX = 0, rectY = 0, rectW = 512, rectH = 320;\n\n  const uOffset = rectX / atlasWidth;\n  const vOffset = 1.0 - (rectY + rectH) / atlasHeight;\n  const uScale = rectW / atlasWidth;\n  const vScale = rectH / atlasHeight;\n\n  const offsetNode = uniform(new THREE.Vector2(uOffset, vOffset));\n  const scaleNode = uniform(new THREE.Vector2(uScale, vScale));\n\n  const remappedUv = uv().mul(scaleNode).add(offsetNode);\n  const texSample = texture(map, remappedUv);\n\n  // engineered gradient tint using surface -> ink colors, subtle\n  const surfaceColor = vec4(0.043, 0.043, 0.063, 1.0);\n  const inkColor = vec4(0.086, 0.086, 0.114, 1.0);\n  const gradientMix = mix(surfaceColor, inkColor, uv().y);\n\n  material.colorNode = texSample.mul(0.85).add(gradientMix.mul(0.15));\n  material.opacityNode = texSample.a;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(0, -0.3, 0);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n  mesh.name = 'hub-journal-card-1-image';\n\n  // billboard toward camera each frame via onBeforeRender\n  mesh.onBeforeRender = function (renderer, scene, camera) {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  mesh.userData.handlers = {};\n\n  mesh.userData.cleanup = function () {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    mesh.onBeforeRender = null;\n  };\n\n  return mesh;\n}\n```"
+}

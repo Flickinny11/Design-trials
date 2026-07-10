@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-38-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 93461,
+  "apiMs": 91112,
+  "usage": {
+    "promptTokens": 4020,
+    "completionTokens": 10668,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.058393,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Load image via cached loader\n  const imageUrl = config.assets?.imageUrl || '/prism-mock/home/nodes/cta-hero-isolated.png';\n  const tex = ctx.textureLoader.load(imageUrl);\n\n  // Create plane geometry (1.0 × 0.625 for 512×320 aspect ratio)\n  const geometry = new THREE.PlaneGeometry(1, 0.625);\n\n  // Material using TSL texture node\n  const colorNode = texture(tex);\n  const material = new MeshBasicNodeMaterial({\n    colorNode: colorNode,\n  });\n\n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n\n  // Apply scene placement\n  const pos = config.scenePosition || [2.5, 1.6, 0];\n  mesh.position.set(pos[0], pos[1], pos[2]);\n\n  const rot = config.sceneRotation || [0, 0, 0];\n  mesh.rotation.set(rot[0], rot[1], rot[2]);\n\n  const scl = config.sceneScale || [1, 1, 1];\n  mesh.scale.set(scl[0], scl[1], scl[2]);\n\n  group.add(mesh);\n\n  // Store originals for animation reset\n  const origY = mesh.position.y;\n  const origSx = mesh.scale.x;\n  const origSy = mesh.scale.y;\n\n  // Timeline references\n  let hoverTl = null;\n  let clickTl = null;\n\n  // Event handlers\n  const handlers = {};\n\n  // Hover: rise-in (y +0.15, power3.out, 0.7s)\n  handlers.mouseenter = () => {\n    if (hoverTl) hoverTl.kill();\n    hoverTl = gsap.to(mesh.position, {\n      y: origY + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n      overwrite: 'auto'\n    });\n  };\n\n  handlers.mouseleave = () => {\n    if (hoverTl) hoverTl.kill();\n    hoverTl = gsap.to(mesh.position, {\n      y: origY,\n      duration: 0.7,\n      ease: 'power3.out',\n      overwrite: 'auto'\n    });\n  };\n\n  // Click: press-down (scale 0.97, back.out, 120ms) + emit navigation\n  handlers.click = () => {\n    if (clickTl) clickTl.kill();\n    clickTl = gsap.timeline();\n\n    clickTl.to(mesh.scale, {\n      x: 0.97,\n      y: 0.97,\n      duration: 0.12,\n      ease: 'back.out'\n    }, 0);\n\n    clickTl.to(mesh.scale, {\n      x: origSx,\n      y: origSy,\n      duration: 0.12,\n      ease: 'back.out'\n    }, 0.12);\n\n    // Emit navigation event\n    if (ctx.emit) {\n      ctx.emit('hub-journal.select', { card: group });\n    }\n  };\n\n  // Focus/blur: accent edge state (parent can read for visual feedback)\n  handlers.focus = () => {\n    group.userData.focused = true;\n  };\n\n  handlers.blur = () => {\n    group.userData.focused = false;\n  };\n\n  group.userData.handlers = handlers;\n\n  // Cleanup function\n  group.userData.cleanup = () => {\n    if (hoverTl) hoverTl.kill();\n    if (clickTl) clickTl.kill();\n    geometry.dispose();\n    material.dispose();\n    tex.dispose();\n  };\n\n  return group;\n}\n```"
+}

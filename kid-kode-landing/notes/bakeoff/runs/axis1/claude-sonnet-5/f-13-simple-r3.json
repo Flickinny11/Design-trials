@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-13-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 13570,
+  "apiMs": 11008,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1003,
+    "cacheCreation": 0,
+    "cacheRead": 5477
+  },
+  "costUsd": 0.0288795,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, mix, uniform, positionLocal } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-collection-title';\n  group.position.set(0, 3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 3.2;\n  const height = 2.0;\n\n  const geometry = new THREE.PlaneGeometry(width, height, 1, 1);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const imgTex = ctx.textureLoader.load('/prism-mock/home/nodes/feature-card.png');\n  imgTex.colorSpace = THREE.SRGBColorSpace;\n\n  const uvNode = uv();\n  const texColor = texture(imgTex, uvNode);\n\n  // engineered gradient overlay: ink -> surface, subtle vertical gradient\n  const inkColor = uniform(new THREE.Color(0x16161d));\n  const surfaceColor = uniform(new THREE.Color(0x0b0b10));\n  const gradFactor = uvNode.y;\n  const gradientColor = mix(surfaceColor, inkColor, gradFactor);\n\n  // grain via simple hash based on position (static, no time dependency)\n  const grainSeed = uvNode.x.mul(1234.5).add(uvNode.y.mul(789.1));\n  const grain = grainSeed.sin().mul(43758.5453).fract().mul(0.04).sub(0.02);\n\n  const finalColor = texColor.rgb.mul(0.7).add(gradientColor.mul(0.3)).add(grain);\n  material.colorNode = vec4(finalColor, texColor.a);\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'hub-collection-title-plane';\n  group.add(plane);\n\n  // Headline text: \"Collection\"\n  const textMesh = createTextMesh(ctx.fontAtlas, {\n    text: 'Collection',\n    font: 'Lora',\n    weight: 400,\n    sizeEm: 0.34,\n    color: '#e8ecf2',\n    align: 'center',\n    anchor: 'center'\n  });\n  textMesh.name = 'hub-collection-title-text';\n  textMesh.position.set(0, 0, 0.01);\n  group.add(textMesh);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (imgTex && imgTex.dispose) imgTex.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n  };\n\n  return group;\n}\n```"
+}

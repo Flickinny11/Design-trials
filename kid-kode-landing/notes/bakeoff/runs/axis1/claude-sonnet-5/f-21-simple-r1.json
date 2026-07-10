@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-21-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 10307,
+  "apiMs": 7594,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 694,
+    "cacheCreation": 3364,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.05313549999999999,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import { SpriteNodeMaterial, texture, uv, vec4 } from 'three/tsl';\nimport * as THREE from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'pricing-card-1-sprite';\n  group.position.set(-3.2, -0.3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const atlasTex = ctx.textureLoader.load('/prism-mock/home/nodes/floating-accent.png');\n  atlasTex.colorSpace = THREE.SRGBColorSpace;\n\n  const rect = { x: 0, y: 0, w: 512, h: 320, atlasW: 512, atlasH: 320 };\n  const aspect = rect.w / rect.h;\n\n  const width = 1.6;\n  const height = width / aspect;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  const uOffset = rect.x / rect.atlasW;\n  const vOffset = 1 - (rect.y + rect.h) / rect.atlasH;\n  const uScale = rect.w / rect.atlasW;\n  const vScale = rect.h / rect.atlasH;\n\n  const uvNode = uv().mul([uScale, vScale]).add([uOffset, vOffset]);\n  const mapNode = texture(atlasTex, uvNode);\n\n  const material = new SpriteNodeMaterial({ transparent: true });\n  material.colorNode = mapNode;\n  material.opacityNode = vec4(mapNode).a;\n\n  const sprite = new THREE.Sprite(material);\n  sprite.scale.set(width, height, 1);\n  sprite.name = 'pricing-card-1-sprite-mesh';\n\n  group.add(sprite);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    material.dispose();\n    if (atlasTex) atlasTex.dispose();\n    geometry.dispose();\n  };\n\n  return group;\n}"
+}

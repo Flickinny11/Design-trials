@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-04-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 35765,
+  "apiMs": 34490,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 5471,
+    "cacheCreation": 0,
+    "cacheRead": 21537
+  },
+  "costUsd": 0.0304687,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport { Group, PlaneGeometry, MeshBasicMaterial, Mesh, DoubleSide } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n  \n  // Apply scene position from config\n  const scenePos = config.scenePosition || {};\n  group.position.set(\n    scenePos.x !== undefined ? scenePos.x : 0,\n    scenePos.y !== undefined ? scenePos.y : 0,\n    scenePos.z !== undefined ? scenePos.z : 0\n  );\n  \n  // Apply rotation\n  const rot = scenePos.rotationXYZ || [0, 0, 0];\n  group.rotation.order = 'YXZ';\n  group.rotation.x = rot[0];\n  group.rotation.y = rot[1];\n  group.rotation.z = rot[2];\n  \n  // Apply scale\n  const scale = scenePos.scaleXYZ || [1, 1, 1];\n  group.scale.set(scale[0], scale[1], scale[2]);\n  \n  // Create plane geometry\n  // Atlas region 512x320 → 1.6:1 aspect ratio\n  const geometry = new PlaneGeometry(1.6, 1.0);\n  \n  // Load texture\n  let texture = null;\n  if (config.imageUrl && ctx.textureLoader) {\n    texture = ctx.textureLoader.load(config.imageUrl);\n  }\n  \n  // Create material\n  const material = new MeshBasicMaterial({\n    map: texture || undefined,\n    color: texture ? 0xffffff : 0xff2a38,\n    transparent: true,\n    side: DoubleSide,\n    toneMapped: false\n  });\n  \n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n  \n  // Cleanup function\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (texture) {\n      texture.dispose();\n    }\n  };\n  \n  // Event handlers object\n  group.userData.handlers = {\n    onPointerOver: null,\n    onClick: null,\n    onPointerOut: null\n  };\n  \n  return group;\n}\n```"
+}

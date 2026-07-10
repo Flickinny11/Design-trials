@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-14-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 14062,
+  "usage": {
+    "promptTokens": 1691,
+    "completionTokens": 608
+  },
+  "costUsd": 0.00040698000000000004,
+  "transportAttempts": 4,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  Mesh,\n  PlaneGeometry,\n  MeshBasicNodeMaterial,\n  texture,\n  uniform,\n  vec2,\n  vec4,\n  float,\n  add,\n  mul,\n  mix,\n  uv,\n} from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { assets, scenePosition, sceneRotation, sceneScale } = config;\n\n  // Load texture\n  const map = ctx.textureLoader.load(assets.imageUrl);\n\n  // Unlit material\n  const material = new MeshBasicNodeMaterial({\n    map: map,\n    transparent: true,\n    side: THREE.DoubleSide,\n  });\n\n  // Geometry: 1x1 aspect (will be scaled) – source rect 512x320 => aspect 1.6\n  const aspect = 512 / 320;\n  const geometry = new PlaneGeometry(1, 1 / aspect);\n\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(scenePosition[0], scenePosition[1], scenePosition[2]);\n  mesh.rotation.set(sceneRotation[0], sceneRotation[1], sceneRotation[2]);\n  mesh.scale.set(sceneScale[0], sceneScale[1], sceneScale[2]);\n\n  // No handlers\n  mesh.userData.handlers = {};\n\n  // Cleanup\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    map?.dispose?.();\n  };\n\n  // Apply cinematic primitives (none)\n  const primitives = config.cinematicPrimitives || [];\n  for (const p of primitives) {\n    ctx.primitives[p.name](mesh, p.params);\n  }\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

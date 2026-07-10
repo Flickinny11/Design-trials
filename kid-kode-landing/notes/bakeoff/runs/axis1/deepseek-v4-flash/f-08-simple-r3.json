@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-08-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 17299,
+  "usage": {
+    "promptTokens": 1704,
+    "completionTokens": 2341
+  },
+  "costUsd": 0.00089404,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport { Group, PlaneGeometry, Mesh, Vector2 } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\nimport { createText } from '@/text';\n\nexport default function createNode(config, ctx) {\n  // Destructure config\n  const { position, rotation, scale, textContent, assets } = config;\n  const group = new Group();\n\n  // Plane with texture\n  const texture = ctx.textureLoader.load(assets.imageUrl);\n  const aspect = texture.image ? texture.image.width / texture.image.height : 1.6;\n  const planeWidth = 1.5;\n  const planeHeight = planeWidth / aspect;\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n  const material = new MeshBasicNodeMaterial({ map: texture });\n  const plane = new Mesh(geometry, material);\n  group.add(plane);\n\n  // Text overlay – headline “Features 1” (scene-unit height 0.34)\n  const textMesh = createText(textContent.text, {\n    fontFamily: 'Lora',\n    fontWeight: 400,\n    fontSize: 0.34,            // headline height in scene units\n    align: 'center',\n    anchor: { x: 0.5, y: 0.5 } // center\n  });\n  textMesh.position.z = 0.001; // slight offset to avoid z-fighting\n  group.add(textMesh);\n\n  // Apply scene placement\n  group.position.set(position.x, position.y, position.z);\n  group.rotation.set(rotation.x, rotation.y, rotation.z);\n  group.scale.set(scale.x, scale.y, scale.z);\n\n  // Attach empty handler container\n  group.userData.handlers = {};\n\n  // Cleanup: dispose resources (no GSAP timelines to kill)\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

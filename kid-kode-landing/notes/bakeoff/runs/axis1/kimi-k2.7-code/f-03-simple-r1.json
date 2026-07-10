@@ -1,0 +1,17 @@
+{
+  "contestant": "kimi-k2.7-code",
+  "model": "accounts/fireworks/models/kimi-k2p7-code",
+  "route": "fireworks",
+  "caseId": "f-03-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 42770,
+  "usage": {
+    "promptTokens": 1619,
+    "completionTokens": 7324
+  },
+  "costUsd": 0.030834049999999998,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import * as THREE from 'three/webgpu';\nimport { uv, vec2, texture } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { imageUrl } = config.assets;\n  const [rx, ry, rw, rh] = config.atlasRegion?.sourceRect ?? [0, 0, 512, 320];\n  const placement = config.scenePlacement;\n\n  const tex = ctx.textureLoader(imageUrl);\n\n  const aspect = rw / rh;\n  const planeHeight = 1;\n  const planeWidth = planeHeight * aspect;\n\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  const fullWidth = tex.image?.width ?? rw;\n  const fullHeight = tex.image?.height ?? rh;\n\n  const uRepeat = rw / fullWidth;\n  const vRepeat = rh / fullHeight;\n  const uOffset = rx / fullWidth;\n  const vOffset = 1 - ((ry + rh) / fullHeight);\n\n  const atlasUV = uv().mul(vec2(uRepeat, vRepeat)).add(vec2(uOffset, vOffset));\n\n  const mapNode = texture(tex);\n  mapNode.uvNode = atlasUV;\n\n  const material = new THREE.MeshBasicNodeMaterial({\n    map: mapNode,\n    transparent: true,\n    side: THREE.DoubleSide,\n    depthWrite: false,\n  });\n\n  const sprite = new THREE.Mesh(geometry, material);\n  sprite.position.set(placement.position.x, placement.position.y, placement.position.z);\n  sprite.rotation.set(placement.rotation.x, placement.rotation.y, placement.rotation.z);\n  sprite.scale.set(placement.scale.x, placement.scale.y, placement.scale.z);\n\n  const timelines = [];\n\n  const billboard = (renderer, scene, camera) => {\n    if (camera) {\n      sprite.quaternion.copy(camera.quaternion);\n    }\n  };\n\n  Object.assign(sprite.userData, {\n    handlers: {\n      onBeforeRender: billboard,\n    },\n    timelines,\n    cleanup: () => {\n      timelines.forEach((tl) => tl && tl.kill && tl.kill());\n      geometry.dispose();\n      material.dispose();\n    },\n  });\n\n  sprite.onBeforeRender = sprite.userData.handlers.onBeforeRender;\n\n  return sprite;\n}"
+}

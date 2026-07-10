@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-50-complex",
+  "run": 1,
+  "ok": true,
+  "wallMs": 16350,
+  "usage": {
+    "promptTokens": 1810,
+    "completionTokens": 2616
+  },
+  "costUsd": 0.0009858800000000002,
+  "transportAttempts": 3,
+  "billing": "metered",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\nimport { TextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  // Destructure config\n  const {\n    scenePosition = { x: -1.25, y: -1.1, z: 0, rx: 0, ry: 0, rz: 0, sx: 1, sy: 1, sz: 1 },\n    interactions = [],\n    cinematicPrimitives = [],\n  } = config;\n\n  // Create root group\n  const group = new THREE.Group();\n  group.position.set(scenePosition.x, scenePosition.y, scenePosition.z);\n  group.rotation.set(scenePosition.rx, scenePosition.ry, scenePosition.rz);\n  group.scale.set(scenePosition.sx, scenePosition.sy, scenePosition.sz);\n\n  // Load mesh (cached via ctx.glbLoader)\n  const glb = ctx.glbLoader.load('/prism-mock/orrery/meshes/gear-a.glb');\n  const mesh = glb.scene ? glb.scene.clone() : glb.clone(); // assume .scene if GLTF\n  group.add(mesh);\n\n  // Store timeline for cleanup\n  let settleTimeline = null;\n  let hoverTimeline = null;\n\n  // Weighted-settle entrance (scale overshoot)\n  settleTimeline = gsap.timeline({ paused: true });\n  settleTimeline.to(group.scale, {\n    x: 1, y: 1, z: 1,\n    duration: 0.9,\n    ease: 'power4.out',\n    overwrite: 'auto',\n  });\n  // Set initial overshoot scale\n  group.scale.set(1.04, 1.04, 1.04);\n  settleTimeline.play();\n\n  // Attach interaction handlers\n  const handlers = {};\n\n  // Hover: rise-in (subtle, 0.15 units)\n  const hoverInTween = gsap.to(group.position, {\n    y: group.position.y + 0.15,\n    duration: 0.7,\n    ease: 'power3.out',\n    paused: true,\n    overwrite: 'auto',\n  });\n  const hoverOutTween = gsap.to(group.position, {\n    y: group.position.y,\n    duration: 0.7,\n    ease: 'power3.out',\n    paused: true,\n    overwrite: 'auto',\n  });\n\n  handlers.hover = (event) => {\n    if (event.type === 'pointerenter') {\n      hoverInTween.play();\n    } else if (event.type === 'pointerleave') {\n      hoverOutTween.play();\n    }\n  };\n\n  // Click: emit hub-features.select\n  handlers.click = () => {\n    if (ctx.emit) {\n      ctx.emit('hub-features.select', {});\n    }\n  };\n\n  group.userData.handlers = handlers;\n\n  // Apply cinematic primitives\n  cinematicPrimitives.forEach((prim) => {\n    if (prim.name === 'parallax-scroll') {\n      ctx.primitives.parallaxScroll(group, prim.params);\n    } else if (prim.name === 'magnetic-cursor') {\n      ctx.primitives.magneticCursor(group, prim.params);\n    }\n  });\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    // Kill GSAP timelines\n    if (settleTimeline) settleTimeline.kill();\n    if (hoverInTween) hoverInTween.kill();\n    if (hoverOutTween) hoverOutTween.kill();\n\n    // Dispose mesh resources\n    mesh.traverse((child) => {\n      if (child.isMesh) {\n        child.geometry.dispose();\n        if (child.material) {\n          if (Array.isArray(child.material)) {\n            child.material.forEach(m => m.dispose());\n          } else {\n            child.material.dispose();\n          }\n        }\n      }\n    });\n\n    // Remove from parent if any\n    if (group.parent) {\n      group.parent.remove(group);\n    }\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

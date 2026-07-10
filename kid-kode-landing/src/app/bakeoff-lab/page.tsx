@@ -49,6 +49,9 @@ declare global {
       renderables: number;
       nodeMounted: boolean;
       bundleId: string | null;
+      /** Set when the contestant module THREW at createNode time (the frame
+       *  then shows the standard coderef fallback plane). */
+      moduleRuntimeError?: string;
     };
   }
 }
@@ -106,7 +109,12 @@ export default function BakeoffLabPage() {
           three: THREE_WEBGPU,
           gsap,
           '@/primitives': ctx.primitives,
-          '@/text': textUtils,
+          // '@/text' is promised by L1 as "MSDF text utilities" but no such
+          // module exists in the product — the harness implements the alias
+          // as the shared text module PLUS a `createText` binding delegating
+          // to the live fontAtlas (the one real MSDF text entry point).
+          // Hallucinated names (createTextMesh etc.) still fail honestly.
+          '@/text': { ...textUtils, createText: (content: string, opts?: unknown) => ctx.fontAtlas.createText(content, opts as never) },
         };
         const requireShim = (spec: string) => {
           if (spec in DEPS) return DEPS[spec];
@@ -121,7 +129,20 @@ export default function BakeoffLabPage() {
         if (typeof factory !== 'function') throw new Error('module did not default-export a function');
 
         const codeRefKey = `bakeoff:${bundle.id}`;
-        registerCodeRef(codeRefKey, factory as Parameters<typeof registerCodeRef>[1]);
+        // Wrap the contestant factory so a RUNTIME crash is RECORDED on the
+        // probe before the standard coderef fallback grafts the default
+        // plane — otherwise a crashing module silently renders as a white
+        // placeholder and the failure is mis-attributed to composition.
+        type FactoryFn = Parameters<typeof registerCodeRef>[1];
+        const recordingFactory: FactoryFn = (n, c) => {
+          try {
+            return (factory as FactoryFn)(n, c);
+          } catch (err) {
+            probe.moduleRuntimeError = err instanceof Error ? `${err.name}: ${err.message}`.slice(0, 300) : String(err).slice(0, 300);
+            throw err;
+          }
+        };
+        registerCodeRef(codeRefKey, recordingFactory);
 
         const hub: PrismHub = {
           hubId: 'hub-visual-stage',

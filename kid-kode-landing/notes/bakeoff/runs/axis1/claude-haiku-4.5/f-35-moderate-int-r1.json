@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-35-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 98973,
+  "apiMs": 96497,
+  "usage": {
+    "promptTokens": 4070,
+    "completionTokens": 11197,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.061147999999999994,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Load textures via cached loader\n  const imageTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  const depthTexture = ctx.textureLoader.load(config.assets.depthMapUrl);\n  \n  // Tessellated plane geometry for parallax displacement\n  const geometry = new THREE.PlaneGeometry(2, 1.25, 64, 64);\n  \n  // Main displaced surface with machined-metal PBR\n  const material = new THREE.MeshStandardMaterial({\n    map: imageTexture,\n    displacementMap: depthTexture,\n    displacementScale: 0.05,\n    metalness: 0.3,\n    roughness: 0.6,\n    clearcoat: 0.15,\n  });\n  \n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n  \n  // Focus state edge indicator with accent color\n  const edges = new THREE.EdgesGeometry(geometry);\n  const edgeMaterial = new THREE.LineBasicMaterial({\n    color: 0xff2a38, // accent red\n    transparent: true,\n    opacity: 0,\n  });\n  const edgeLines = new THREE.LineSegments(edges, edgeMaterial);\n  edgeLines.position.z = 0.001;\n  group.add(edgeLines);\n  \n  // Scene placement\n  group.position.set(-1.25, 1.6, 0);\n  const originalY = group.position.y;\n  \n  // Hover: rise-in effect (subtle, 0.15 scene units)\n  const onHoverEnter = () => {\n    gsap.to(group.position, {\n      y: originalY + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n  };\n  \n  const onHoverExit = () => {\n    gsap.to(group.position, {\n      y: originalY,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n  };\n  \n  // Focus: show accent edge\n  const onFocus = () => {\n    gsap.to(edgeMaterial, {\n      opacity: 1,\n      duration: 0.3,\n      ease: 'power2.out',\n    });\n  };\n  \n  const onBlur = () => {\n    gsap.to(edgeMaterial, {\n      opacity: 0,\n      duration: 0.3,\n      ease: 'power2.out',\n    });\n  };\n  \n  // Click: press-down effect (scale to 0.97)\n  const onPointerDown = () => {\n    gsap.to(group.scale, {\n      x: 0.97,\n      y: 0.97,\n      z: 0.97,\n      duration: 0.12,\n      ease: 'back.out',\n    });\n  };\n  \n  const onPointerUp = () => {\n    gsap.to(group.scale, {\n      x: 1,\n      y: 1,\n      z: 1,\n      duration: 0.12,\n      ease: 'back.out',\n    });\n  };\n  \n  // Attach event handlers\n  group.userData.handlers = {\n    onHoverEnter,\n    onHoverExit,\n    onFocus,\n    onBlur,\n    onPointerDown,\n    onPointerUp,\n  };\n  \n  // Resource cleanup and timeline disposal\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    edges.dispose();\n    edgeMaterial.dispose();\n    imageTexture.dispose();\n    depthTexture.dispose();\n    gsap.killTweensOf(group.position);\n    gsap.killTweensOf(group.scale);\n    gsap.killTweensOf(edgeMaterial);\n  };\n  \n  return group;\n}\n```"
+}

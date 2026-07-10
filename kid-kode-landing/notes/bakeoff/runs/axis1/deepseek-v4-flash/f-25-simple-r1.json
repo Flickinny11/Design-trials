@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-25-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 4071,
+  "usage": {
+    "promptTokens": 1688,
+    "completionTokens": 620
+  },
+  "costUsd": 0.0004099200000000001,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  PlaneGeometry,\n  Mesh,\n  MeshBasicNodeMaterial,\n  TextureLoader,\n  Vector3,\n  Euler,\n} from 'three/webgpu';\nimport { texture } from 'three/tsl';\n\n/**\n * Creates a static pricing card plane with an image.\n * @param {import('@/primitives').NodeConfig} config\n * @param {import('@/primitives').NodeContext} ctx\n * @returns {THREE.Object3D}\n */\nexport default function createPricingCard3(config, ctx) {\n  // --- Geometry & Material ---\n  const geometry = new PlaneGeometry(1, 1); // scaled via config\n  const texLoader = ctx.textureLoader;\n  const tex = texLoader.load(config.imageUrl);\n  const material = new MeshBasicNodeMaterial({\n    map: tex,\n    transparent: false,\n    side: 2, // DoubleSide\n  });\n\n  const mesh = new Mesh(geometry, material);\n  mesh.position.copy(\n    new Vector3(\n      config.scenePosition.x,\n      config.scenePosition.y,\n      config.scenePosition.z\n    )\n  );\n  mesh.rotation.copy(\n    new Euler(\n      config.scenePosition.rotation?.x ?? 0,\n      config.scenePosition.rotation?.y ?? 0,\n      config.scenePosition.rotation?.z ?? 0\n    )\n  );\n  mesh.scale.copy(\n    new Vector3(\n      config.scenePosition.scale?.x ?? 1,\n      config.scenePosition.scale?.y ?? 1,\n      config.scenePosition.scale?.z ?? 1\n    )\n  );\n\n  // --- Atlas region (unused for plane but available) ---\n  // config.atlasRegion provided, but plane texture is separate image.\n\n  // --- No handlers, no cinematicPrimitives, no data bindings ---\n\n  // --- Cleanup ---\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    tex.dispose();\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

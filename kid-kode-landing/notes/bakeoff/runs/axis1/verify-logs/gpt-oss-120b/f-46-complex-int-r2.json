@@ -1,0 +1,16 @@
+{
+  "contestant": "gpt-oss-120b",
+  "caseId": "f-46-complex-int",
+  "run": 2,
+  "rawCompliant": true,
+  "fenced": false,
+  "parsed": true,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "MISSING_GLB_LOADER",
+      "severity": "error",
+      "message": "renderMode \"mesh\" must call ctx.glbLoader.load(config.meshUrl, ...) (§10.C L383)"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-33-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 14120,
+  "apiMs": 11735,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1353,
+    "cacheCreation": 3450,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0705505,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, color } from 'three/tsl';\nimport gsap from 'gsap';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-journal-card-3-label';\n\n  const pos = config.scenePosition?.position ?? [3.2, 1, 0.06];\n  const rot = config.scenePosition?.rotation ?? [0, 0, 0];\n  const scl = config.scenePosition?.scale ?? [1, 1, 1];\n  group.position.set(...pos);\n  group.rotation.set(...rot);\n  group.scale.set(...scl);\n\n  const width = 0.9;\n  const height = width * (320 / 512);\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const tex = ctx.textureLoader('/prism-mock/home/nodes/floating-accent.png');\n  if (tex) {\n    tex.colorSpace = THREE.SRGBColorSpace;\n    material.colorNode = texture(tex, uv());\n  } else {\n    material.colorNode = vec4(color(0x16161d), 1.0);\n  }\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'card-plane';\n  group.add(plane);\n\n  const textMesh = createTextMesh({\n    text: 'Journal 3',\n    fontAtlas: ctx.fontAtlas,\n    font: 'Lora',\n    weight: 400,\n    size: 0.34,\n    color: '#e8ecf2',\n    align: 'center',\n  });\n  textMesh.position.set(0, 0, 0.01);\n  group.add(textMesh);\n\n  const baseY = pos[1];\n  const baseScale = scl[0];\n\n  let hoverTl = null;\n  let pressTl = null;\n\n  group.userData.handlers = {\n    onPointerOver: () => {\n      if (hoverTl) hoverTl.kill();\n      hoverTl = gsap.timeline();\n      hoverTl.to(group.position, {\n        y: baseY + 0.15,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n    },\n    onPointerOut: () => {\n      if (hoverTl) hoverTl.kill();\n      hoverTl = gsap.timeline();\n      hoverTl.to(group.position, {\n        y: baseY,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n    },\n    onPointerDown: () => {\n      if (pressTl) pressTl.kill();\n      pressTl = gsap.timeline();\n      pressTl.to(group.scale, {\n        x: baseScale * 0.97,\n        y: baseScale * 0.97,\n        z: baseScale * 0.97,\n        duration: 0.12,\n        ease: 'back.out',\n      });\n    },\n    onPointerUp: () => {\n      if (pressTl) pressTl.kill();\n      pressTl = gsap.timeline();\n      pressTl.to(group.scale, {\n        x: baseScale,\n        y: baseScale,\n        z: baseScale,\n        duration: 0.12,\n        ease: 'back.out',\n      });\n      if (ctx.emit) {\n        ctx.emit('hub-journal.select');\n      }\n    },\n  };\n\n  group.userData.cleanup = () => {\n    if (hoverTl) hoverTl.kill();\n    if (pressTl) pressTl.kill();\n    geometry.dispose();\n    material.dispose();\n    if (tex && tex.dispose) tex.dispose();\n    if (textMesh.userData?.cleanup) textMesh.userData.cleanup();\n    else if (textMesh.geometry) {\n      textMesh.geometry.dispose();\n      if (textMesh.material) textMesh.material.dispose();\n    }\n  };\n\n  return group;\n}\n```"
+}

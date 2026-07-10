@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-18-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 10798,
+  "apiMs": 8373,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 589,
+    "cacheCreation": 3360,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0504645,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, mix } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const width = 1.6;\n  const height = width * (320 / 512);\n\n  const geometry = new THREE.PlaneGeometry(width, height, 1, 1);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const map = ctx.textureLoader('/prism-assets/chrome/ceramic-grain.map.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const texNode = texture(map, uv());\n  const inkTint = vec4(\n    THREE.MathUtils.euclideanModulo(0x16 / 255, 1),\n    THREE.MathUtils.euclideanModulo(0x16 / 255, 1),\n    THREE.MathUtils.euclideanModulo(0x1d / 255, 1),\n    1.0\n  );\n\n  material.colorNode = mix(texNode, inkTint, 0.06);\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(3.2, -0.3, 0);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  mesh.userData.handlers = {};\n\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && typeof map.dispose === 'function') {\n      map.dispose();\n    }\n  };\n\n  mesh.onBeforeRender = (renderer, scene, camera) => {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  return mesh;\n}"
+}

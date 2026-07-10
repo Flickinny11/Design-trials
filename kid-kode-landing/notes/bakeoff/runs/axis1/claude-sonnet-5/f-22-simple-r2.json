@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-22-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 13228,
+  "apiMs": 10666,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1139,
+    "cacheCreation": 0,
+    "cacheRead": 5491
+  },
+  "costUsd": 0.0323165,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, mix, float, uniform } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'pricing-card-1-label';\n\n  const pos = config.scenePosition || { x: -3.2, y: 1, z: 0.06 };\n  const rot = config.sceneRotation || { x: 0, y: 0, z: 0 };\n  const scl = config.sceneScale || { x: 1, y: 1, z: 1 };\n  group.position.set(pos.x, pos.y, pos.z);\n  group.rotation.set(rot.x, rot.y, rot.z);\n  group.scale.set(scl.x, scl.y, scl.z);\n\n  const width = 1.6;\n  const height = 1.0;\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  const imgTex = ctx.textureLoader.load('/prism-mock/home/nodes/orb-decor.png');\n  imgTex.colorSpace = THREE.SRGBColorSpace;\n\n  const inkColor = uniform(new THREE.Color('#16161d'));\n  const surfaceColor = uniform(new THREE.Color('#0b0b10'));\n  const grainStrength = uniform(0.035);\n\n  const material = new THREE.MeshBasicNodeMaterial();\n\n  const vUv = uv();\n  const gradient = mix(surfaceColor, inkColor, vUv.y);\n\n  const texSample = texture(imgTex, vUv);\n\n  // simple pseudo-random grain based on uv\n  const grainSeed = vUv.x.mul(12.9898).add(vUv.y.mul(78.233)).sin().mul(43758.5453);\n  const grainVal = grainSeed.fract().sub(0.5).mul(grainStrength);\n\n  const composited = mix(gradient, texSample.rgb, texSample.a).add(grainVal);\n\n  material.colorNode = vec4(composited, float(1.0));\n  material.transparent = false;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'pricing-card-1-label-surface';\n  group.add(mesh);\n\n  // Headline text: \"Pricing 1\"\n  const textMesh = createTextMesh({\n    text: 'Pricing 1',\n    font: 'Lora',\n    weight: 400,\n    sizeEm: 0.34,\n    color: '#e8ecf2',\n    atlas: ctx.fontAtlas,\n    align: 'center',\n    anchor: 'center'\n  });\n\n  if (textMesh) {\n    textMesh.position.set(0, 0, 0.001);\n    group.add(textMesh);\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (imgTex) imgTex.dispose();\n    if (textMesh) {\n      if (textMesh.geometry) textMesh.geometry.dispose();\n      if (textMesh.material) {\n        if (Array.isArray(textMesh.material)) {\n          textMesh.material.forEach(m => m.dispose());\n        } else {\n          textMesh.material.dispose();\n        }\n      }\n    }\n  };\n\n  return group;\n}\n```"
+}

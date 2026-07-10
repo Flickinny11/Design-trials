@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-10-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 64083,
+  "apiMs": 61564,
+  "usage": {
+    "promptTokens": 3955,
+    "completionTokens": 6810,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.038993,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Scene placement\n  group.position.set(0, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const toDispose = [];\n\n  // Background image plane\n  const bgTexture = ctx.textureLoader.load(config.imageUrl || '/prism-mock/home/nodes/orb-decor.png');\n  bgTexture.colorSpace = THREE.SRGBColorSpace;\n  toDispose.push(bgTexture);\n\n  // Geometry: 512x320 aspect ratio (1.6:1)\n  const bgGeometry = new THREE.PlaneGeometry(1.6, 1);\n  toDispose.push(bgGeometry);\n\n  const bgMaterial = new MeshBasicNodeMaterial({\n    map: bgTexture,\n    transparent: true,\n  });\n  toDispose.push(bgMaterial);\n\n  const bgMesh = new THREE.Mesh(bgGeometry, bgMaterial);\n  group.add(bgMesh);\n\n  // Text via fontAtlas\n  if (config.textContent && config.textContent.length > 0) {\n    const textConfig = config.textContent[0];\n    const textMesh = ctx.fontAtlas.createTextMesh({\n      text: textConfig.text || 'Features 2',\n      fontSize: 0.34,\n      fontFamily: 'Lora',\n      fontWeight: 400,\n      color: 0x16161d,\n    });\n\n    if (textMesh) {\n      textMesh.position.z = 0.01;\n      group.add(textMesh);\n    }\n  }\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    toDispose.forEach(item => item.dispose?.());\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

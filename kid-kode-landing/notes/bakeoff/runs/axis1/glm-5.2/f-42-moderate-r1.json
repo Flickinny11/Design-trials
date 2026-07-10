@@ -1,0 +1,9 @@
+{
+  "contestant": "glm-5.2",
+  "model": "accounts/fireworks/models/glm-5p2",
+  "route": "fireworks",
+  "caseId": "f-42-moderate",
+  "run": 1,
+  "ok": false,
+  "transportError": "transport failure after retries: HTTP 429"
+}

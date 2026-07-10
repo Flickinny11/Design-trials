@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-28-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 9003,
+  "usage": {
+    "promptTokens": 1651,
+    "completionTokens": 1316
+  },
+  "costUsd": 0.00103725,
+  "transportAttempts": 2,
+  "billing": "metered",
+  "output": "import { Mesh, PlaneGeometry, MeshBasicNodeMaterial, DoubleSide } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {Object} assets\n * @property {string} assets.imageUrl\n * @property {Object} scenePlacement\n * @property {Array<number>} scenePlacement.position\n * @property {Array<number>} scenePlacement.rotation\n * @property {Array<number>} scenePlacement.scale\n * @property {Object} cinematicPrimitives\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {{ load: (url: string) => import('three').Texture }} textureLoader\n * @property {{ [key: string]: (obj: THREE.Object3D, params: any) => void }} primitives\n */\n\n/**\n * Creates a textured plane node.\n *\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {import('three').Object3D}\n */\nexport default function createNode(config, ctx) {\n  // Load texture synchronously via the provided loader\n  const texture = ctx.textureLoader.load(config.assets.imageUrl);\n\n  // Create material using NodeMaterial system\n  const material = new MeshBasicNodeMaterial({\n    map: texture,\n    side: DoubleSide,\n    transparent: true,\n  });\n\n  // Simple plane geometry; size will be controlled by object scale\n  const geometry = new PlaneGeometry(1, 1);\n\n  // Assemble mesh\n  const mesh = new Mesh(geometry, material);\n\n  // Apply placement transforms\n  const [px, py, pz] = config.scenePlacement.position || [0, 0, 0];\n  const [rx, ry, rz] = config.scenePlacement.rotation || [0, 0, 0];\n  const [sx, sy, sz] = config.scenePlacement.scale || [1, 1, 1];\n\n  mesh.position.set(px, py, pz);\n  mesh.rotation.set(rx, ry, rz);\n  mesh.scale.set(sx, sy, sz);\n\n  // Prepare userData structure\n  mesh.userData = {\n    handlers: {},\n    /** @type {() => void} */\n    cleanup: () => {\n      // Dispose of three.js resources\n      geometry.dispose();\n      material.dispose();\n      if (texture) {\n        texture.dispose();\n      }\n      // Kill any GSAP timelines that might have been created (none in this node)\n      gsap.globalTimeline.clear();\n    },\n  };\n\n  // No cinematic primitives to apply for this node\n\n  return mesh;\n}\n"
+}

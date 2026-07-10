@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-48-complex",
+  "run": 3,
+  "ok": true,
+  "wallMs": 67549,
+  "apiMs": 65190,
+  "usage": {
+    "promptTokens": 4070,
+    "completionTokens": 7428,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.04230299999999999,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  const startPosition = new THREE.Vector3(2.5, -0.2, 0);\n\n  // Load GLB mesh\n  const gltf = ctx.glbLoader('/prism-mock/orrery/meshes/gear-a.glb');\n  const mesh = gltf.scene.clone();\n\n  // Apply scene transform\n  group.position.copy(startPosition);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n  group.add(mesh);\n\n  // Track GSAP timelines for cleanup\n  const timelines = [];\n\n  // Event handlers\n  const handleHover = () => {\n    timelines.forEach(tl => tl.kill());\n    timelines.length = 0;\n    const tl = gsap.to(group.position, {\n      y: startPosition.y + 0.15,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n    timelines.push(tl);\n  };\n\n  const handleHoverOut = () => {\n    timelines.forEach(tl => tl.kill());\n    timelines.length = 0;\n    const tl = gsap.to(group.position, {\n      y: startPosition.y,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n    timelines.push(tl);\n  };\n\n  const handleClick = () => {\n    if (config.emit) {\n      config.emit('hub-journal.select');\n    }\n  };\n\n  group.userData.handlers = {\n    hover: handleHover,\n    hoverOut: handleHoverOut,\n    click: handleClick\n  };\n\n  // Apply cinematic primitives\n  if (ctx.primitives['parallax-scroll']) {\n    ctx.primitives['parallax-scroll'](group, { intensity: 0.4 });\n  }\n\n  if (ctx.primitives['magnetic-cursor']) {\n    ctx.primitives['magnetic-cursor'](group, { radius: 1.2, strength: 0.35 });\n  }\n\n  // Cleanup resources\n  group.userData.cleanup = () => {\n    timelines.forEach(tl => tl.kill());\n    mesh.traverse((child) => {\n      if (child.geometry) child.geometry.dispose();\n      if (child.material) {\n        if (Array.isArray(child.material)) {\n          child.material.forEach(mat => mat.dispose());\n        } else {\n          child.material.dispose();\n        }\n      }\n    });\n  };\n\n  return group;\n}\n```"
+}

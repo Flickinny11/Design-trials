@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-45-moderate",
+  "run": 3,
+  "ok": true,
+  "wallMs": 107065,
+  "apiMs": 104603,
+  "usage": {
+    "promptTokens": 4052,
+    "completionTokens": 12243,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.06635200000000001,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, positionGeometry, materialNormal } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Load textures via context\n  const colorMap = ctx.textureLoader.load(config.assets.imageUrl);\n  const depthMap = ctx.textureLoader.load(config.assets.depthMapUrl);\n  \n  colorMap.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create heavily tessellated plane for displacement mapping\n  const geometry = new THREE.PlaneGeometry(1, 0.625, 64, 64);\n  \n  // NodeMaterial with TSL displacement node\n  const material = new THREE.NodeMaterial();\n  \n  // TSL displacement calculation: depth map R channel * strength * surface normal\n  const depthSample = texture(depthMap);\n  const displacementStrength = 0.05;\n  const displacedPosition = positionGeometry.add(\n    depthSample.r.mul(displacementStrength).mul(materialNormal)\n  );\n  \n  material.positionNode = displacedPosition;\n  material.colorNode = texture(colorMap);\n  material.metalnessNode = 0.45;\n  material.roughnessNode = 0.6;\n  \n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n  \n  // Apply scene transformations\n  group.position.fromArray(config.scenePosition);\n  group.rotation.fromArray(config.sceneRotation);\n  group.scale.fromArray(config.sceneScale);\n  \n  // Animation state\n  const anim = {\n    hoverActive: false,\n    baseY: config.scenePosition[1],\n    baseScale: config.sceneScale[0],\n    hoverTL: null,\n    clickTL: null,\n    parallaxTL: null,\n  };\n  \n  // Event handlers\n  group.userData.handlers = {\n    hover() {\n      if (anim.hoverActive) return;\n      anim.hoverActive = true;\n      if (anim.hoverTL) anim.hoverTL.kill();\n      \n      anim.hoverTL = gsap.to(group.position, {\n        y: anim.baseY + 0.15,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n    },\n    \n    unhover() {\n      if (!anim.hoverActive) return;\n      anim.hoverActive = false;\n      if (anim.hoverTL) anim.hoverTL.kill();\n      \n      anim.hoverTL = gsap.to(group.position, {\n        y: anim.baseY,\n        duration: 0.5,\n        ease: 'power2.out',\n      });\n    },\n    \n    click() {\n      if (anim.clickTL) anim.clickTL.kill();\n      anim.clickTL = gsap.timeline();\n      \n      anim.clickTL.to(group.scale, {\n        x: anim.baseScale * 0.97,\n        y: anim.baseScale * 0.97,\n        z: anim.baseScale * 0.97,\n        duration: 0.12,\n        ease: 'back.out',\n      }, 0);\n      \n      anim.clickTL.to(group.scale, {\n        x: anim.baseScale,\n        y: anim.baseScale,\n        z: anim.baseScale,\n        duration: 0.3,\n        ease: 'power2.out',\n      });\n      \n      if (group.userData.emit) {\n        group.userData.emit('hub-features.select', {});\n      }\n    },\n    \n    cursorMove(ndc) {\n      if (!ndc) return;\n      if (anim.parallaxTL) anim.parallaxTL.kill();\n      \n      anim.parallaxTL = gsap.to(mesh.rotation, {\n        x: (ndc.y || 0) * 0.03,\n        y: (ndc.x || 0) * 0.03,\n        duration: 0.5,\n        ease: 'power2.out',\n      });\n    },\n  };\n  \n  // Cleanup function: dispose of resources and kill animations\n  group.userData.cleanup = () => {\n    if (anim.hoverTL) anim.hoverTL.kill();\n    if (anim.clickTL) anim.clickTL.kill();\n    if (anim.parallaxTL) anim.parallaxTL.kill();\n    \n    geometry.dispose();\n    material.dispose();\n    colorMap.dispose();\n    depthMap.dispose();\n  };\n  \n  return group;\n}\n```"
+}

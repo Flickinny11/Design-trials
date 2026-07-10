@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-14-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 11043,
+  "apiMs": 9401,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 797,
+    "cacheCreation": 3346,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0555255,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2, vec4, float, uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const width = 1.6;\n  const height = 1.0;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const imageUrl = config.assets?.imageUrl || '/prism-mock/home/nodes/cta-hero-isolated.png';\n  const map = ctx.textureLoader.load(imageUrl);\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const grainAmount = uniform(0.03);\n\n  const uvNode = uv();\n  const baseColor = texture(map, uvNode);\n\n  // subtle static grain via hashed noise from uv (no time dependency -> static composition)\n  const hashInput = uvNode.mul(vec2(512.0, 320.0));\n  const noise = hashInput.x.mul(12.9898).add(hashInput.y.mul(78.233)).sin().mul(43758.5453).fract();\n  const grain = noise.sub(0.5).mul(grainAmount);\n\n  const finalColor = vec4(\n    baseColor.rgb.add(vec2(grain, grain).x),\n    baseColor.a\n  );\n\n  material.colorNode = finalColor;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'hub-collection-card-1-plane';\n\n  const pos = config.scenePlacement?.position || { x: -3.2, y: -0.3, z: 0 };\n  const rot = config.scenePlacement?.rotation || { x: 0, y: 0, z: 0 };\n  const scl = config.scenePlacement?.scale || { x: 1, y: 1, z: 1 };\n\n  mesh.position.set(pos.x, pos.y, pos.z);\n  mesh.rotation.set(rot.x, rot.y, rot.z);\n  mesh.scale.set(scl.x, scl.y, scl.z);\n\n  mesh.userData.handlers = {};\n\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n  };\n\n  return mesh;\n}\n```"
+}

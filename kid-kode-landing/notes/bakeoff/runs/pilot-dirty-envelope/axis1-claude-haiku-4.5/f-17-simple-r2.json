@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-17-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 79992,
+  "apiMs": 77492,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 9017,
+    "cacheCreation": 0,
+    "cacheRead": 21559
+  },
+  "costUsd": 0.04821790000000001,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\nimport { texture, MeshBasicNodeMaterial } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Apply scene position and transforms\n  if (config.scenePosition) {\n    const { x = 0, y = 0, z = 0, rotationXYZ = [0, 0, 0], scaleXYZ = [1, 1, 1] } = config.scenePosition;\n    group.position.set(x, y, z);\n    group.rotation.order = 'YXZ';\n    group.rotation.set(rotationXYZ[0], rotationXYZ[1], rotationXYZ[2]);\n    group.scale.set(scaleXYZ[0], scaleXYZ[1], scaleXYZ[2]);\n  }\n\n  // Create plane geometry\n  const geometry = new THREE.PlaneGeometry(1, 1);\n  \n  // Create TSL material with textured surface\n  const material = new MeshBasicNodeMaterial();\n  const textures = [];\n  \n  if (config.imageUrl) {\n    const map = ctx.textureLoader.load(config.imageUrl);\n    map.colorSpace = THREE.SRGBColorSpace;\n    textures.push(map);\n    material.colorNode = texture(map);\n  }\n\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Render text content via fontAtlas (MSDF, never TextGeometry)\n  if (config.textContent && Array.isArray(config.textContent)) {\n    for (const textItem of config.textContent) {\n      const textMesh = ctx.fontAtlas.createTextMesh({\n        text: textItem.text,\n        fontSize: textItem.fontSize || 0.34,\n        fontFamily: 'Lora',\n        fontWeight: textItem.fontWeight || '400',\n        color: 0xE8ECF2, // paper color from design tokens\n        anchorX: 'center',\n        anchorY: 'middle',\n        maxWidth: 0.9\n      });\n      textMesh.position.z = 0.01; // Slightly above plane to prevent z-fighting\n      group.add(textMesh);\n    }\n  }\n\n  // Apply cinematic primitives\n  if (config.cinematicPrimitives && Array.isArray(config.cinematicPrimitives)) {\n    for (const primitive of config.cinematicPrimitives) {\n      if (ctx.primitives[primitive.name]) {\n        ctx.primitives[primitive.name](group, primitive.params || {});\n      }\n    }\n  }\n\n  // Event handlers (attach to userData, never use renderer.domElement.addEventListener)\n  group.userData.handlers = {\n    onPointerOver: null,\n    onPointerOut: null,\n    onClick: null,\n    onPointerDown: null,\n    onPointerUp: null\n  };\n\n  // Cleanup function (must dispose resources and kill GSAP timelines)\n  group.userData.cleanup = () => {\n    // Dispose geometry and material\n    geometry.dispose();\n    material.dispose();\n    \n    // Dispose textures\n    textures.forEach(tex => tex.dispose());\n  };\n\n  return group;\n}\n```"
+}

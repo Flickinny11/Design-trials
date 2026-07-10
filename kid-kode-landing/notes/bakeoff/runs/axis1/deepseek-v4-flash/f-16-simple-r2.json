@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-16-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 13281,
+  "usage": {
+    "promptTokens": 1686,
+    "completionTokens": 1822
+  },
+  "costUsd": 0.0007462,
+  "transportAttempts": 2,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  PlaneGeometry,\n  MeshBasicNodeMaterial,\n  TextureNode,\n  vec2,\n  uv,\n  mul,\n  add,\n  uniform,\n  float,\n  noise,\n  timerGlobal,\n  Mesh,\n  Object3D,\n} from 'three/webgpu';\nimport { texture } from 'three/tsl';\n\n/**\n * Creates a static collection card with an engineered gradient surface and subtle grain.\n * The card is a textured plane using the provided image, positioned as specified.\n * No interactive behavior or data bindings are applied.\n *\n * @param {NodeConfig} config - Configuration provided by the framework.\n * @param {NodeContext} ctx - Context with texture loader and other utilities.\n * @returns {THREE.Object3D} The card mesh with cleanup and handler placeholders.\n */\nexport default function createNode(config, ctx) {\n  // ---- Geometry ----\n  // Use the atlas region aspect ratio (512:320 = 1.6) as the plane proportions.\n  const aspect = 512 / 320;\n  const geometry = new PlaneGeometry(aspect, 1);\n\n  // ---- Texture ----\n  // Load the provided image via the cached texture loader.\n  const imgUrl = '/prism-mock/home/nodes/orb-decor.png';\n  const texNode = texture(ctx.textureLoader.load(imgUrl));\n\n  // ---- Material ----\n  // Add subtle grain using TSL noise for the \"subtle grain\" effect described.\n  const grainStrength = uniform(0.012);\n  const grain = mul(\n    noise(mul(uv(), vec2(800, 800))),\n    grainStrength\n  );\n  const colorWithGrain = add(texNode, grain);\n  const material = new MeshBasicNodeMaterial({ colorNode: colorWithGrain });\n\n  // ---- Mesh ----\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(0, -0.3, 0);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  // ---- Handlers (none required) ----\n  mesh.userData.handlers = {};\n\n  // ---- Cleanup ----\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    // The texture is also owned by the material, so disposing the material is sufficient.\n    // However, if needed, we can also dispose the texture node's source.\n    if (texNode && texNode.source) {\n      texNode.source.data?.dispose?.();\n    }\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

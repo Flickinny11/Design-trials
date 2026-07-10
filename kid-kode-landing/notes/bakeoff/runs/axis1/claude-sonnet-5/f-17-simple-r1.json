@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-17-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 18011,
+  "apiMs": 15614,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1297,
+    "cacheCreation": 3357,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0681505,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, mix, float } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-collection-card-1-label';\n\n  const position = config.scenePosition || { x: 0, y: 1, z: 0.06 };\n  const rotation = config.sceneRotation || { x: 0, y: 0, z: 0 };\n  const scale = config.sceneScale || { x: 1, y: 1, z: 1 };\n\n  group.position.set(position.x, position.y, position.z);\n  group.rotation.set(rotation.x, rotation.y, rotation.z);\n  group.scale.set(scale.x, scale.y, scale.z);\n\n  const colors = {\n    ink: 0x16161d,\n    paper: 0xe8ecf2,\n    accent: 0xff2a38,\n    surface: 0x0b0b10\n  };\n\n  // Background plane with engineered gradient surface\n  const planeWidth = 1.6;\n  const planeHeight = 0.4;\n  const planeGeo = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  const bgMaterial = new THREE.MeshBasicNodeMaterial();\n\n  let map = null;\n  const imageUrl = config.assets && config.assets.imageUrl;\n  if (imageUrl) {\n    map = ctx.textureLoader.load(imageUrl);\n    map.wrapS = THREE.ClampToEdgeWrapping;\n    map.wrapT = THREE.ClampToEdgeWrapping;\n  }\n\n  if (map) {\n    const texNode = texture(map, uv());\n    const inkColor = vec4(0x16 / 255, 0x16 / 255, 0x1d / 255, 1.0);\n    bgMaterial.colorNode = mix(inkColor, texNode, float(0.35));\n  } else {\n    bgMaterial.colorNode = vec4(0x16 / 255, 0x16 / 255, 0x1d / 255, 1.0);\n  }\n\n  const bgMesh = new THREE.Mesh(planeGeo, bgMaterial);\n  bgMesh.name = 'hub-collection-card-1-label-bg';\n  group.add(bgMesh);\n\n  // Headline text via fontAtlas MSDF\n  const textContent = (config.textContent && config.textContent.text) || 'Collection 2';\n  const fontSizeEm = 0.34; // headline scale token\n\n  let textMesh = null;\n  if (ctx.fontAtlas && typeof ctx.fontAtlas.createText === 'function') {\n    textMesh = ctx.fontAtlas.createText({\n      text: textContent,\n      font: 'Lora',\n      weight: 400,\n      size: fontSizeEm,\n      color: colors.paper,\n      align: 'center',\n      anchor: 'center'\n    });\n    if (textMesh) {\n      textMesh.position.set(0, 0, 0.001);\n      textMesh.name = 'hub-collection-card-1-label-text';\n      group.add(textMesh);\n    }\n  }\n\n  // No cinematic primitives to apply per spec (none listed)\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    planeGeo.dispose();\n    bgMaterial.dispose();\n    if (map && typeof map.dispose === 'function') {\n      map.dispose();\n    }\n    if (textMesh) {\n      if (textMesh.geometry) textMesh.geometry.dispose();\n      if (textMesh.material) {\n        if (Array.isArray(textMesh.material)) {\n          textMesh.material.forEach(m => m.dispose());\n        } else {\n          textMesh.material.dispose();\n        }\n      }\n    }\n  };\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-14-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 35299,
+  "apiMs": 32990,
+  "usage": {
+    "promptTokens": 3944,
+    "completionTokens": 3548,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.022640999999999998,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const container = new THREE.Group();\n  \n  // Load texture from asset URL\n  const imageUrl = config.assets?.imageUrl || '/prism-mock/home/nodes/cta-hero-isolated.png';\n  const textureMap = ctx.textureLoader.load(imageUrl);\n  textureMap.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create plane geometry with aspect ratio from atlas region (512x320)\n  const atlasAspect = 512 / 320;\n  const baseWidth = 1.6;\n  const baseHeight = baseWidth / atlasAspect;\n  \n  const geometry = new THREE.PlaneGeometry(baseWidth, baseHeight);\n  \n  // Material: MeshBasicNodeMaterial with texture (no lighting for static composition)\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.colorNode = texture(textureMap);\n  \n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  \n  // Apply transform from config\n  const position = config.scenePosition || [-3.2, -0.3, 0];\n  const rotation = config.sceneRotation || [0, 0, 0];\n  const scale = config.sceneScale || [1, 1, 1];\n  \n  mesh.position.fromArray(position);\n  mesh.rotation.fromArray(rotation);\n  mesh.scale.fromArray(scale);\n  \n  container.add(mesh);\n  \n  // Cleanup resources\n  container.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    textureMap.dispose();\n  };\n  \n  // Handler registry (static card, no interactions)\n  container.userData.handlers = {};\n  \n  return container;\n}\n```"
+}

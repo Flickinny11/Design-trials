@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-34-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 18157,
+  "usage": {
+    "promptTokens": 1805,
+    "completionTokens": 2794
+  },
+  "costUsd": 0.00103502,
+  "transportAttempts": 2,
+  "billing": "metered",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\n/**\n * Stat tile for Home: a compact metric card (value + label) on a machined surface.\n * Loads a gear GLB mesh as the card visual, applies parallax-scroll cinematic primitive,\n * and attaches hover (rise-in) and click (emit:hub-home.select) interactions.\n */\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // --- Scene placement ---\n  const pos = config.scenePlacement.position;\n  const rot = config.scenePlacement.rotation;\n  const scl = config.scenePlacement.scale;\n  group.position.set(pos.x, pos.y, pos.z);\n  group.rotation.set(rot.x, rot.y, rot.z);\n  group.scale.set(scl.x, scl.y, scl.z);\n\n  // --- Load GLB mesh (cached) ---\n  const gltf = ctx.glbLoader.get(config.meshUrl);\n  if (gltf && gltf.scene) {\n    const mesh = gltf.scene.clone();\n    group.add(mesh);\n  }\n\n  // --- Apply cinematic primitives ---\n  if (config.cinematicPrimitives) {\n    for (const prim of config.cinematicPrimitives) {\n      const fn = ctx.primitives[prim.name];\n      if (fn) {\n        fn(group, prim.params);\n      }\n    }\n  }\n\n  // --- Interaction handlers ---\n  const handlers = {};\n  let originalY = group.position.y; // used for hover revert\n  if (config.interactions) {\n    for (const interaction of config.interactions) {\n      if (interaction.event === 'hover') {\n        handlers.pointerover = () => {\n          gsap.to(group.position, {\n            y: originalY + 0.15,\n            duration: 0.3,\n            ease: 'power2.out',\n          });\n        };\n        handlers.pointerout = () => {\n          gsap.to(group.position, {\n            y: originalY,\n            duration: 0.3,\n            ease: 'power2.out',\n          });\n        };\n      } else if (interaction.event === 'click' && interaction.effect?.startsWith('emit:')) {\n        const eventName = interaction.effect.replace('emit:', '');\n        handlers.click = () => {\n          group.dispatchEvent({ type: eventName });\n          // Also call a global handler if available (optional)\n          if (typeof ctx.onEmit === 'function') ctx.onEmit(eventName);\n        };\n      }\n    }\n  }\n  group.userData.handlers = handlers;\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    gsap.killTweensOf(group.position);\n    // Dispose loaded mesh resources\n    group.traverse((child) => {\n      if (child.isMesh) {\n        child.geometry.dispose();\n        if (Array.isArray(child.material)) {\n          child.material.forEach((m) => m.dispose());\n        } else if (child.material) {\n          child.material.dispose();\n        }\n      }\n    });\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

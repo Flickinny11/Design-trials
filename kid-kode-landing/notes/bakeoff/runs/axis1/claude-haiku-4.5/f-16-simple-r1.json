@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-16-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 75803,
+  "apiMs": 73288,
+  "usage": {
+    "promptTokens": 3941,
+    "completionTokens": 8148,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.04565,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport TSL from 'three/tsl';\n\nconst { texture, uv, mix, sin, fract, vec3, float } = TSL;\n\nexport default function createNode(config, ctx) {\n  // Create plane geometry\n  const geometry = new THREE.PlaneGeometry(1, 1);\n  \n  // Load image texture from assets\n  const imageTexture = ctx.textureLoader.load(config.assets.imageUrl);\n  imageTexture.colorSpace = THREE.SRGBColorSpace;\n  \n  // Create material using TSL nodes\n  const material = new MeshBasicNodeMaterial();\n  \n  // Get UV coordinates\n  const uvCoord = uv();\n  \n  // Sample base texture\n  const texColor = texture(imageTexture, uvCoord);\n  \n  // Generate subtle grain pattern using procedural noise\n  const noiseVal = sin(\n    uvCoord.x.mul(12.9898).add(uvCoord.y.mul(78.233))\n  ).mul(43758.5453);\n  const grainPattern = fract(noiseVal);\n  \n  // Blend texture with 2% grain effect for engineered surface\n  const finalColor = mix(texColor, vec3(grainPattern), float(0.02));\n  \n  // Assign final color to material\n  material.colorNode = finalColor;\n  \n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  \n  // Apply scene placement from config or defaults from spec\n  const pos = config.scenePosition || [0, -0.3, 0];\n  const rot = config.sceneRotation || [0, 0, 0];\n  const scale = config.sceneScale || [1, 1, 1];\n  \n  mesh.position.fromArray(pos);\n  mesh.rotation.order = 'XYZ';\n  mesh.rotation.fromArray(rot);\n  mesh.scale.fromArray(scale);\n  \n  // Setup cleanup handler\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    imageTexture.dispose();\n  };\n  \n  return mesh;\n}\n```"
+}

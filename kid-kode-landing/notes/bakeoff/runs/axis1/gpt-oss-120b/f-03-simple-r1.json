@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-03-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 27997,
+  "usage": {
+    "promptTokens": 1658,
+    "completionTokens": 1744
+  },
+  "costUsd": 0.0012951,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import { Mesh, PlaneGeometry, Float32BufferAttribute, Object3D } from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture as texNode } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\nexport default function createNode(config, ctx) {\n  // --- Load texture (synchronous via ctx.textureLoader) ---\n  const tex = ctx.textureLoader.load(config.assets?.imageUrl ?? '');\n\n  // --- Determine atlas region ---\n  // Expected format: config.atlas?.sourceRect = [x, y, width, height]\n  const rect = (config.atlas && config.atlas.sourceRect) ? config.atlas.sourceRect : [0, 0, 512, 320];\n  const [rx, ry, rw, rh] = rect;\n\n  // Compute aspect ratio based on atlas region\n  const aspect = rw / rh;\n\n  // --- Create plane geometry matching aspect ratio ---\n  const geometry = new PlaneGeometry(aspect, 1, 1, 1);\n\n  // --- Adjust UVs to map only the atlas region ---\n  // Assuming the texture has already been loaded and its image dimensions are available\n  const img = tex.image;\n  const texW = img?.width ?? 1;\n  const texH = img?.height ?? 1;\n\n  const u0 = rx / texW;\n  const v0 = ry / texH;\n  const u1 = (rx + rw) / texW;\n  const v1 = (ry + rh) / texH;\n\n  // PlaneGeometry default UVs order: (0,0), (1,0), (0,1), (1,1)\n  const uvs = new Float32Array([\n    u0, v1,\n    u1, v1,\n    u0, v0,\n    u1, v0,\n  ]);\n  geometry.setAttribute('uv', new Float32BufferAttribute(uvs, 2));\n\n  // --- Create node‑based material ---\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    depthWrite: false,\n  });\n  material.colorNode = texNode(tex);\n\n  // --- Assemble mesh ---\n  const mesh = new Mesh(geometry, material);\n  mesh.name = config.name ?? 'hero-showpiece';\n\n  // Apply placement transforms (position, rotation, scale)\n  if (config.position) mesh.position.set(...config.position);\n  if (config.rotation) mesh.rotation.set(...config.rotation);\n  if (config.scale) mesh.scale.set(...config.scale);\n\n  // --- Billboard behavior (always faces camera) ---\n  mesh.onBeforeRender = (renderer, scene, camera) => {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  // --- Event handlers container (empty for this node) ---\n  mesh.userData.handlers = {};\n\n  // --- Cleanup routine ---\n  mesh.userData.cleanup = () => {\n    // Dispose geometry and material\n    geometry.dispose();\n    material.dispose();\n\n    // Kill any GSAP timelines that might have been attached (none for this node)\n    gsap.globalTimeline.kill();\n\n    // Remove reference to texture if it was uniquely created for this node\n    // (Usually managed by ctx.textureLoader cache, so we do not dispose it here)\n  };\n\n  // No cinematic primitives to apply per specification\n  // If future primitives are added, they can be invoked here:\n  // (config.cinematicPrimitives || []).forEach(p => {\n  //   if (ctx.primitives[p.name]) ctx.primitives[p.name](mesh, p.params);\n  // });\n\n  return mesh;\n}"
+}

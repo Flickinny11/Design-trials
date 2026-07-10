@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-19-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 65993,
+  "apiMs": 63703,
+  "usage": {
+    "promptTokens": 3955,
+    "completionTokens": 6832,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.039098,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Load and prepare texture\n  const texture = ctx.textureLoader.load(config.assets.imageUrl);\n  texture.colorSpace = THREE.SRGBColorSpace;\n\n  // Create plane geometry with card aspect ratio\n  const geometry = new THREE.PlaneGeometry(1.6, 1);\n\n  // Create material\n  const material = new THREE.MeshBasicNodeMaterial({\n    map: texture,\n    side: THREE.DoubleSide\n  });\n\n  // Create and position plane mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(\n    config.scenePosition.x,\n    config.scenePosition.y,\n    config.scenePosition.z\n  );\n  mesh.rotation.order = 'XYZ';\n  mesh.rotation.set(\n    config.rotation.x,\n    config.rotation.y,\n    config.rotation.z\n  );\n  mesh.scale.set(\n    config.scale.x,\n    config.scale.y,\n    config.scale.z\n  );\n  group.add(mesh);\n\n  // Render text content via font atlas\n  if (config.textContent && config.textContent.length > 0) {\n    const textSpec = config.textContent[0];\n    const textMesh = ctx.fontAtlas.createTextMesh(textSpec.text, {\n      fontSize: textSpec.size,\n      fontFamily: textSpec.fontFamily || 'Lora',\n      fontWeight: textSpec.weight,\n      color: config.colors.ink\n    });\n    textMesh.position.z = 0.01; // Slightly in front of plane\n    group.add(textMesh);\n  }\n\n  // Cleanup handler\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n    gsap.killTweensOf(group);\n  };\n\n  return group;\n}\n```"
+}

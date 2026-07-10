@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-16-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 87570,
+  "apiMs": 85085,
+  "usage": {
+    "promptTokens": 3941,
+    "completionTokens": 9689,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.053355,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Load texture\n  const textureAsset = ctx.textureLoader.load(config.assets.imageUrl);\n  \n  // Plane dimensions maintain 512:320 aspect ratio\n  const height = 0.6;\n  const width = height * (512 / 320);\n  \n  // Create geometry and material\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const material = new THREE.MeshBasicNodeMaterial({\n    colorNode: texture(textureAsset),\n    transparent: true,\n  });\n  \n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  \n  // Apply transform from config\n  if (config.scenePosition) {\n    mesh.position.set(config.scenePosition.x, config.scenePosition.y, config.scenePosition.z);\n  } else {\n    mesh.position.set(0, -0.3, 0);\n  }\n  \n  if (config.sceneRotation) {\n    mesh.rotation.set(config.sceneRotation.x, config.sceneRotation.y, config.sceneRotation.z);\n  }\n  \n  if (config.sceneScale) {\n    mesh.scale.set(config.sceneScale.x, config.sceneScale.y, config.sceneScale.z);\n  }\n  \n  group.add(mesh);\n  \n  // Initialize handlers and cleanup\n  group.userData.handlers = {};\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    textureAsset.dispose();\n    gsap.killTweensOf(group);\n    gsap.killTweensOf(mesh);\n  };\n  \n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-31-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 98944,
+  "apiMs": 96519,
+  "usage": {
+    "promptTokens": 4027,
+    "completionTokens": 10853,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.059347000000000004,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  // Create plane geometry with 1.6:1 aspect ratio (512:320)\n  const width = 1;\n  const height = 1 / 1.6;\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  // Load texture\n  const imageUrl = config.imageUrl || '/prism-mock/home/nodes/feature-card.png';\n  const texture = ctx.textureLoader.load(imageUrl);\n  texture.colorSpace = THREE.SRGBColorSpace;\n\n  // Create material\n  const material = new THREE.MeshBasicNodeMaterial({\n    map: texture,\n    transparent: true,\n    side: THREE.DoubleSide,\n  });\n\n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n\n  // Container group\n  const group = new THREE.Group();\n  group.add(mesh);\n\n  // Apply scene placement\n  const position = config.scenePosition || [0, 1, 0.06];\n  const rotation = config.sceneRotation || [0, 0, 0];\n  const scale = config.sceneScale || [1, 1, 1];\n\n  group.position.set(position[0], position[1], position[2]);\n  group.rotation.set(rotation[0], rotation[1], rotation[2]);\n  group.scale.set(scale[0], scale[1], scale[2]);\n\n  // Add text content\n  if (config.textContent) {\n    const textStr = typeof config.textContent === 'string'\n      ? config.textContent\n      : (config.textContent[0]?.text || 'Journal 2');\n\n    const textMesh = ctx.fontAtlas.createTextMesh({\n      text: textStr,\n      fontSize: 0.34,\n      fontWeight: 400,\n      fontFamily: 'Lora',\n      color: 0x16161d,\n    });\n\n    textMesh.position.z = 0.01;\n    group.add(textMesh);\n  }\n\n  // Animation tracking\n  const timelines = [];\n  const tweens = [];\n  const basePos = { x: position[0], y: position[1], z: position[2] };\n\n  // Event handlers\n  const handlers = {\n    onPointerEnter: () => {\n      tweens.forEach(t => t.kill());\n      tweens.length = 0;\n\n      const tween = gsap.to(group.position, {\n        y: basePos.y + 0.15,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n      tweens.push(tween);\n    },\n\n    onPointerLeave: () => {\n      tweens.forEach(t => t.kill());\n      tweens.length = 0;\n\n      const tween = gsap.to(group.position, {\n        y: basePos.y,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n      tweens.push(tween);\n    },\n\n    onPointerDown: () => {\n      tweens.forEach(t => t.kill());\n      tweens.length = 0;\n\n      const tl = gsap.timeline();\n      tl.to(group.scale, {\n        x: 0.97,\n        y: 0.97,\n        z: 0.97,\n        duration: 0.12,\n        ease: 'back.out',\n      }, 0)\n      .to(group.scale, {\n        x: 1,\n        y: 1,\n        z: 1,\n        duration: 0.12,\n        ease: 'back.out',\n      }, 0.12);\n\n      timelines.push(tl);\n\n      if (ctx.eventEmitter) {\n        ctx.eventEmitter.emit('hub-journal.select');\n      }\n    },\n  };\n\n  group.userData.handlers = handlers;\n\n  // Apply cinematic primitives\n  if (config.cinematicPrimitives?.length) {\n    config.cinematicPrimitives.forEach(prim => {\n      ctx.primitives?.[prim.name]?.(group, prim.params || {});\n    });\n  }\n\n  // Cleanup function\n  group.userData.cleanup = () => {\n    timelines.forEach(tl => tl.kill());\n    tweens.forEach(t => t.kill());\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n  };\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-11-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 34426,
+  "apiMs": 31903,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 3346,
+    "cacheCreation": 0,
+    "cacheRead": 21547
+  },
+  "costUsd": 0.0198647,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture, uv } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  const metalTexture = ctx.textureLoader.load(\n    '/prism-assets/chrome/brushed-metal.map.png'\n  );\n  metalTexture.colorSpace = THREE.SRGBColorSpace;\n\n  const aspectRatio = 512 / 320;\n  const geometry = new THREE.PlaneGeometry(aspectRatio, 1);\n\n  const mat = new MeshBasicNodeMaterial();\n  mat.colorNode = texture(metalTexture, uv());\n\n  const mesh = new THREE.Mesh(geometry, mat);\n  group.add(mesh);\n\n  if (config.scenePosition) {\n    const pos = config.scenePosition;\n    group.position.set(pos.x ?? 0, pos.y ?? 0, pos.z ?? 0);\n    if (pos.rotationXYZ) {\n      const [rx, ry, rz] = pos.rotationXYZ;\n      group.rotation.order = 'XYZ';\n      group.rotation.set(rx, ry, rz);\n    }\n    if (pos.scaleXYZ) {\n      const [sx, sy, sz] = pos.scaleXYZ;\n      group.scale.set(sx, sy, sz);\n    }\n  }\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    mat.dispose();\n    metalTexture.dispose();\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}"
+}

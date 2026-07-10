@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-15-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 127238,
+  "apiMs": 124916,
+  "usage": {
+    "promptTokens": 3966,
+    "completionTokens": 13027,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.07009499999999999,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport * as TSL from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const colors = config.colors || {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10',\n  };\n\n  const container = new THREE.Group();\n  container.position.set(-3.2, 1, 0.06);\n\n  // Load sprite texture\n  const texture = ctx.textureLoader.load('/prism-mock/home/nodes/floating-accent.png');\n  texture.colorSpace = THREE.SRGBColorSpace;\n\n  // Create plane geometry with 1.6:1 aspect ratio (512×320)\n  const geometry = new THREE.PlaneGeometry(1.6, 1);\n\n  // Create TSL-based material\n  const colorNode = TSL.texture(texture);\n  const material = new THREE.MeshBasicNodeMaterial({\n    colorNode,\n    transparent: true,\n  });\n\n  // Create sprite mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.rotation.y = Math.PI;\n  container.add(mesh);\n\n  // Render text content via fontAtlas\n  let textMesh = null;\n  const textContent = config.textContent || 'Collection 1';\n  textMesh = ctx.fontAtlas.render(textContent, {\n    font: 'Lora',\n    size: 0.34,\n    weight: 400,\n    color: colors.ink,\n  });\n\n  if (textMesh) {\n    textMesh.position.z = 0.1;\n    container.add(textMesh);\n  }\n\n  // Billboard effect: update each frame to face camera\n  container.userData.update = (camera) => {\n    mesh.lookAt(camera.position);\n  };\n\n  // Resource cleanup\n  container.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n    if (textMesh?.geometry) textMesh.geometry.dispose();\n    if (textMesh?.material) textMesh.material.dispose();\n  };\n\n  container.userData.handlers = {};\n\n  return container;\n}\n```"
+}

@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-15-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 42973,
+  "usage": {
+    "promptTokens": 1713,
+    "completionTokens": 5118
+  },
+  "costUsd": 0.0016728600000000002,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport {\n  uv,\n  texture,\n  mix,\n  MeshBasicNodeMaterial,\n} from 'three/tsl';\n\nfunction createNode(config, ctx) {\n  const { atlasRegion } = config;\n  const src = atlasRegion.src || { x: 0, y: 0, w: 512, h: 320 };\n  const aspect = src.w / src.h; // 512/320 = 1.6\n\n  // Load background texture\n  const bgTexture = ctx.textureLoader.load(config.imageUrl);\n  bgTexture.wrapS = bgTexture.wrapT = THREE.ClampToEdgeWrapping;\n  bgTexture.offset.set(src.x / bgTexture.image.width, 1 - (src.y + src.h) / bgTexture.image.height);\n  bgTexture.repeat.set(src.w / bgTexture.image.width, src.h / bgTexture.image.height);\n\n  // Get text texture from font atlas\n  const textTexture = ctx.fontAtlas.getTexture({\n    text: config.textContent?.[0]?.text || '',\n    fontFamily: 'Lora',\n    fontWeight: '400',\n    fontSize: 39,\n    color: config.colors.ink, // '#16161d'\n  });\n  textTexture.wrapS = textTexture.wrapT = THREE.ClampToEdgeWrapping;\n  textTexture.offset.set(0, 0);\n  textTexture.repeat.set(1, 1);\n\n  // Build composite material using TSL nodes\n  const bgColorNode = texture(bgTexture, uv());\n  const textUv = uv().mul(0.85).add(0.075); // centre text in 85% of the plane\n  const textColorNode = texture(textTexture, textUv);\n  const finalColor = mix(bgColorNode, textColorNode, textColorNode.a);\n\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = finalColor;\n\n  // Plane geometry sized to atlas aspect ratio\n  const width = 1.0;\n  const height = width / aspect;\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(config.position?.x ?? 0, config.position?.y ?? 0, config.position?.z ?? 0);\n  mesh.rotation.set(config.rotation?.x ?? 0, config.rotation?.y ?? 0, config.rotation?.z ?? 0);\n  mesh.scale.set(config.scale?.x ?? 1, config.scale?.y ?? 1, config.scale?.z ?? 1);\n\n  // Billboard toward camera every frame\n  mesh.userData.handlers = {\n    update: (_, camera) => {\n      mesh.lookAt(camera.position);\n    },\n  };\n\n  // Cleanup\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    // textures are cached – no disposal needed\n  };\n\n  return mesh;\n}\n\nexport default createNode;\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-01-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 67542,
+  "usage": {
+    "promptTokens": 1660,
+    "completionTokens": 1811
+  },
+  "costUsd": 0.0013356,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { createMSDFMaterial } from '@/text';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {{imageUrl:string}} assets\n * @property {string[]} textContent\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {{load: (url:string)=>THREE.Texture}} textureLoader\n * @property {{texture:THREE.Texture}} fontAtlas\n * @property {{[key:string]: Function}} primitives\n */\n\nexport default function createNode(config, ctx) {\n    // root object ------------------------------------------------------------\n    const root = new THREE.Object3D();\n    root.position.set(0, 3, 0);\n    root.rotation.set(0, 0, 0);\n    root.scale.set(1, 1, 1);\n\n    // ------------------------------------------------------------------------\n    // Image plane (hero headline background)\n    // ------------------------------------------------------------------------\n    const tex = ctx.textureLoader.load(config.assets.imageUrl);\n    // source rect 512x320 → aspect 1.6\n    const planeGeom = new THREE.PlaneGeometry(1.6, 1);\n    const planeMat = new THREE.MeshBasicNodeMaterial({\n        map: tex,\n        transparent: true,\n        depthWrite: false,\n    });\n    const planeMesh = new THREE.Mesh(planeGeom, planeMat);\n    root.add(planeMesh);\n\n    // ------------------------------------------------------------------------\n    // Text plane – rendered with MSDF from the shared font atlas\n    // ------------------------------------------------------------------------\n    const txt = (Array.isArray(config.textContent) ? config.textContent[0] : config.textContent) || '';\n    const textMaterial = createMSDFMaterial({\n        map: ctx.fontAtlas.texture,\n        color: new THREE.Color('#16161d'), // ink\n        opacity: 1,\n        // optional: set vertex/fragment node specifics if needed\n    });\n\n    // approximate size based on body scale (0.13) and character count\n    const textWidth = txt.length * 0.07; // rough estimate per glyph\n    const textHeight = 0.13;\n    const textGeom = new THREE.PlaneGeometry(textWidth, textHeight);\n    const textMesh = new THREE.Mesh(textGeom, textMaterial);\n    // position slightly above the image plane\n    textMesh.position.set(0, 0.6, 0.01);\n    root.add(textMesh);\n\n    // ------------------------------------------------------------------------\n    // UserData: handlers placeholder & cleanup\n    // ------------------------------------------------------------------------\n    root.userData.handlers = {};\n\n    const timelines = []; // keep any GSAP timelines (none for this node)\n\n    root.userData.cleanup = () => {\n        // dispose geometry & materials\n        planeGeom.dispose();\n        planeMat.dispose();\n        tex.dispose();\n\n        textGeom.dispose();\n        textMaterial.dispose();\n\n        // kill any GSAP timelines that might have been added later\n        timelines.forEach((t) => {\n            try {\n                t.kill();\n            } catch (_) {}\n        });\n        timelines.length = 0;\n    };\n\n    return root;\n}"
+}

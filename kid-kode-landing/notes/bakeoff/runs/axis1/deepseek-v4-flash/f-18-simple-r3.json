@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-18-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 22632,
+  "usage": {
+    "promptTokens": 1701,
+    "completionTokens": 2874
+  },
+  "costUsd": 0.00104286,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport { Sprite, SpriteMaterial, Vector3 } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const { atlasRegion, imageUrl, position, scale } = config;\n  const { x: sx, y: sy, width: sw, height: sh } = atlasRegion;\n\n  // Load the atlas texture (cached)\n  const texture = ctx.textureLoader.load(imageUrl);\n\n  // Compute UV offset and repeat so the geometry maps only the atlas region\n  const texW = texture.image.width;\n  const texH = texture.image.height;\n  const u0 = sx / texW;\n  const v0 = sy / texH;\n  const u1 = (sx + sw) / texW;\n  const v1 = (sy + sh) / texH;\n  texture.offset.set(u0, v0);\n  texture.repeat.set(u1 - u0, v1 - v0);\n\n  // Create sprite material and sprite\n  const material = new SpriteMaterial({ map: texture });\n  const sprite = new Sprite(material);\n\n  // Set size: base width 1, height to match atlas region aspect ratio\n  const aspect = sh / sw;\n  const baseWidth = 1;\n  const baseHeight = baseWidth * aspect;\n\n  // Apply config scale\n  const sc = scale || [1, 1, 1];\n  sprite.scale.set(baseWidth * sc[0], baseHeight * sc[1], 1 * sc[2]);\n\n  // Position\n  if (position) {\n    sprite.position.copy(new Vector3(position[0], position[1], position[2]));\n  }\n\n  // Cleanup\n  sprite.userData.cleanup = () => {\n    texture.dispose();\n    material.dispose();\n  };\n\n  return sprite;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

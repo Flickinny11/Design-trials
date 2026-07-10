@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-23-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 11733,
+  "apiMs": 9331,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 894,
+    "cacheCreation": 0,
+    "cacheRead": 5472
+  },
+  "costUsd": 0.026165,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import * as THREE from 'three/webgpu';\nimport { texture, uv, vec3, vec4, float, mix, uniform, mx_noise_float } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-pricing-card-2-bg';\n\n  const width = 1.6;\n  const height = 1.0;\n\n  const geometry = new THREE.PlaneGeometry(width, height, 1, 1);\n\n  const map = ctx.textureLoader.load('/prism-assets/chrome/brushed-metal.map.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n  map.wrapS = THREE.RepeatWrapping;\n  map.wrapT = THREE.RepeatWrapping;\n\n  const inkColor = uniform(new THREE.Color(0x16161d));\n  const surfaceColor = uniform(new THREE.Color(0x0b0b10));\n  const accentColor = uniform(new THREE.Color(0xff2a38));\n\n  const uvNode = uv();\n  const texSample = texture(map, uvNode);\n\n  // engineered gradient: vertical blend between surface and ink\n  const gradientMix = uvNode.y.clamp(0.0, 1.0);\n  const gradient = mix(surfaceColor, inkColor, gradientMix);\n\n  // subtle grain via noise\n  const grain = mx_noise_float(uvNode.mul(512.0)).mul(0.03);\n\n  // thin accent edge line near top of card\n  const edgeLine = uvNode.y.smoothstep(0.96, 0.985).sub(uvNode.y.smoothstep(0.985, 1.0));\n  const withAccent = mix(gradient, accentColor, edgeLine.mul(0.6));\n\n  const combined = withAccent.add(vec3(grain, grain, grain)).mul(texSample.rgb.mul(0.85).add(0.15));\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.colorNode = vec4(combined, 1.0);\n  material.transparent = false;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'hub-pricing-card-2-bg-mesh';\n  group.add(mesh);\n\n  group.position.set(0, -0.3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n  };\n\n  return group;\n}"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-31-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 14015,
+  "apiMs": 11864,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1345,
+    "cacheCreation": 3465,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0704885,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import { MeshStandardNodeMaterial } from 'three/webgpu';\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec3, color } from 'three/tsl';\nimport gsap from 'gsap';\nimport { getFontAtlas } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-journal-card-2-label';\n  group.position.set(0, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 1.6, height = 1.0;\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  const map = ctx.textureLoader.load('/prism-mock/home/nodes/feature-card.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const material = new MeshStandardNodeMaterial();\n  material.colorNode = texture(map, uv());\n  material.roughness = 0.55;\n  material.metalness = 0.4;\n  material.color = color(0x16161d);\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'journal-card-2-plane';\n  group.add(mesh);\n\n  // Text: headline \"Journal 2\"\n  let textMesh = null;\n  const fontAtlas = ctx.fontAtlas || (ctx.getFontAtlas ? ctx.getFontAtlas('display') : null);\n  const atlas = fontAtlas || getFontAtlas?.('Lora');\n  if (atlas && atlas.createTextMesh) {\n    textMesh = atlas.createTextMesh('Journal 2', {\n      size: 0.34,\n      color: '#e8ecf2',\n      weight: 400,\n      font: 'Lora',\n    });\n    textMesh.position.set(-width / 2 + 0.25, 0, 0.01);\n    group.add(textMesh);\n  }\n\n  // Apply cinematic primitives\n  if (config.cinematicPrimitives) {\n    for (const primitive of config.cinematicPrimitives) {\n      const fn = ctx.primitives[primitive.name];\n      if (fn) fn(group, primitive.params);\n    }\n  }\n\n  // Interaction state\n  let hoverTl = null;\n  let pressTl = null;\n  const baseY = group.position.y;\n\n  const onHover = () => {\n    if (hoverTl) hoverTl.kill();\n    hoverTl = gsap.to(group.position, {\n      y: baseY + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n  };\n\n  const onHoverOut = () => {\n    if (hoverTl) hoverTl.kill();\n    hoverTl = gsap.to(group.position, {\n      y: baseY,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n  };\n\n  const onClick = () => {\n    if (pressTl) pressTl.kill();\n    pressTl = gsap.timeline()\n      .to(group.scale, { x: 0.97, y: 0.97, z: 0.97, duration: 0.12, ease: 'back.out' })\n      .to(group.scale, { x: 1, y: 1, z: 1, duration: 0.12, ease: 'back.out' });\n\n    if (group.userData.emit) {\n      group.userData.emit('hub-journal.select', { source: 'hub-journal-card-2-label' });\n    }\n  };\n\n  group.userData.handlers = {\n    onHover,\n    onHoverOut,\n    onClick,\n  };\n\n  group.userData.cleanup = () => {\n    if (hoverTl) hoverTl.kill();\n    if (pressTl) pressTl.kill();\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n    if (textMesh) {\n      textMesh.geometry?.dispose();\n      textMesh.material?.dispose();\n    }\n  };\n\n  return group;\n}"
+}

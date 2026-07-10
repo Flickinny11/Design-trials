@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-11-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 56808,
+  "apiMs": 54671,
+  "usage": {
+    "promptTokens": 3942,
+    "completionTokens": 5954,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.034682,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture as tslTexture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  // Create plane geometry\n  const geometry = new THREE.PlaneGeometry(1, 1);\n\n  // Load the brushed metal texture\n  const textureAsset = ctx.textureLoader.load(config.assets.imageUrl);\n  textureAsset.colorSpace = THREE.SRGBColorSpace;\n\n  // Create material using TSL nodes for color\n  const colorNode = tslTexture(textureAsset);\n  const material = new THREE.MeshBasicNodeMaterial({\n    colorNode: colorNode,\n  });\n\n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n\n  // Apply scene placement from config\n  const scenePos = config.scenePosition;\n  if (scenePos) {\n    mesh.position.set(scenePos.x, scenePos.y, scenePos.z);\n  }\n\n  const sceneRot = config.sceneRotation;\n  if (sceneRot) {\n    mesh.rotation.set(sceneRot.x, sceneRot.y, sceneRot.z);\n  }\n\n  const sceneScale = config.sceneScale;\n  if (sceneScale) {\n    mesh.scale.set(sceneScale.x, sceneScale.y, sceneScale.z);\n  }\n\n  // Initialize userData\n  mesh.userData.handlers = {};\n\n  // Cleanup function\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    textureAsset.dispose();\n  };\n\n  return mesh;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-11-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 42507,
+  "apiMs": 40022,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 5768,
+    "cacheCreation": 21547,
+    "cacheRead": 0
+  },
+  "costUsd": 0.07292399999999999,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Create plane geometry with aspect ratio from atlas region (512:320 ≈ 1.6:1)\n  const geometry = new THREE.PlaneGeometry(1.6, 1);\n  \n  // Load texture from cache\n  const texture = ctx.textureLoader.load(\n    config.imageUrl || '/prism-assets/chrome/brushed-metal.map.png'\n  );\n  \n  // Static material - engineered surface with no special lighting effects\n  const material = new THREE.MeshBasicMaterial({\n    map: texture,\n    side: THREE.DoubleSide,\n  });\n  \n  // Create and configure mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  \n  // Apply scene position and transforms\n  if (config.scenePosition) {\n    mesh.position.set(\n      config.scenePosition.x ?? 0,\n      config.scenePosition.y ?? 0,\n      config.scenePosition.z ?? 0\n    );\n    \n    if (config.scenePosition.rotationXYZ) {\n      const [rx, ry, rz] = config.scenePosition.rotationXYZ;\n      mesh.rotation.set(rx, ry, rz);\n    }\n    \n    if (config.scenePosition.scaleXYZ) {\n      const [sx, sy, sz] = config.scenePosition.scaleXYZ;\n      mesh.scale.set(sx, sy, sz);\n    }\n  }\n  \n  group.add(mesh);\n  \n  // Resource cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n  };\n  \n  // No event handlers (static composition)\n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

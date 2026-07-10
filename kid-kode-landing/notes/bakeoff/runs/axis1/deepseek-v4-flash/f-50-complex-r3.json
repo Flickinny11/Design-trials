@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-50-complex",
+  "run": 3,
+  "ok": true,
+  "wallMs": 13405,
+  "usage": {
+    "promptTokens": 1810,
+    "completionTokens": 2057
+  },
+  "costUsd": 0.0008293600000000001,
+  "transportAttempts": 2,
+  "billing": "metered",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.position.set(-1.25, -1.1, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Load GLB mesh\n  const gearScene = ctx.glbLoader('/prism-mock/orrery/meshes/gear-a.glb').scene.clone();\n  const mesh = gearScene.children[0]; // assume single mesh\n  \n  // Optional: ensure material properties for machined-metal look\n  if (mesh.isMesh && mesh.material) {\n    const mat = mesh.material;\n    // Set PBR properties per design tokens (if not already present)\n    mat.metalness = 0.55;\n    mat.roughness = 0.5;\n    mat.clearcoat = 0.25;\n    // Brushed anisotropy - requires anisotropy property, not standard in MeshStandardMaterial\n    // We'll skip or use MeshPhysicalNodeMaterial? Since GLB likely has it.\n    // For WebGPU, use node material if needed:\n    // if (mat.isMeshStandardMaterial) {\n    //   mat.anisotropy = 0.5;\n    //   mat.anisotropyRotation = Math.PI / 4;\n    // }\n  }\n  group.add(mesh);\n\n  // Weighted-settle entrance animation\n  const tl = gsap.timeline({ paused: true });\n  tl.fromTo(group.scale, { x: 0, y: 0, z: 0 }, {\n    x: 1.04, y: 1.04, z: 1.04,\n    duration: 0.4,\n    ease: 'power4.out',\n    onComplete: () => {\n      gsap.to(group.scale, {\n        x: 1, y: 1, z: 1,\n        duration: 0.3,\n        ease: 'power4.out'\n      });\n    }\n  });\n  tl.play();\n\n  // Interactions\n  let hoverTween = null;\n  group.userData.handlers = {\n    pointerenter: () => {\n      if (hoverTween) hoverTween.kill();\n      hoverTween = gsap.to(group.position, {\n        y: group.position.y + 0.15,\n        duration: 0.3,\n        ease: 'power2.out'\n      });\n    },\n    pointerleave: () => {\n      if (hoverTween) hoverTween.kill();\n      hoverTween = gsap.to(group.position, {\n        y: group.position.y,\n        duration: 0.3,\n        ease: 'power2.out'\n      });\n    },\n    click: () => {\n      // Emit hub-features.select event (assumes context can handle)\n      if (config.onAction) {\n        config.onAction('hub-features.select');\n      }\n      // Also fire a custom event on the group for broader compatibility\n      group.dispatchEvent({ type: 'select', source: 'hub-features' });\n    }\n  };\n\n  // Cinematic primitives\n  if (config.cinematicPrimitives) {\n    config.cinematicPrimitives.forEach(primitive => {\n      const fn = ctx.primitives[primitive.name];\n      if (fn) {\n        fn(group, primitive.params);\n      }\n    });\n  }\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    tl.kill();\n    if (hoverTween) hoverTween.kill();\n    // Dispose mesh geometry and material if cloned\n    mesh.geometry.dispose();\n    if (mesh.material) {\n      if (Array.isArray(mesh.material)) {\n        mesh.material.forEach(m => m.dispose());\n      } else {\n        mesh.material.dispose();\n      }\n    }\n    // Remove from parent if added to scene\n    if (group.parent) {\n      group.parent.remove(group);\n    }\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

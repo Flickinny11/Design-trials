@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-21-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 9967,
+  "apiMs": 7400,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 702,
+    "cacheCreation": 0,
+    "cacheRead": 5491
+  },
+  "costUsd": 0.0213875,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const atlasRect = { x: 0, y: 0, w: 512, h: 320 };\n  const atlasSize = { w: 512, h: 320 };\n\n  const aspect = atlasRect.w / atlasRect.h;\n  const baseHeight = 1.6;\n  const geometry = new THREE.PlaneGeometry(baseHeight * aspect, baseHeight);\n\n  const map = ctx.textureLoader.load('/prism-mock/home/nodes/floating-accent.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const uOffset = atlasRect.x / atlasSize.w;\n  const vOffset = 1.0 - (atlasRect.y + atlasRect.h) / atlasSize.h;\n  const uScale = atlasRect.w / atlasSize.w;\n  const vScale = atlasRect.h / atlasSize.h;\n\n  const uvNode = uv().mul(vec2(uScale, vScale)).add(vec2(uOffset, vOffset));\n\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n  material.colorNode = texture(map, uvNode);\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'pricing-card-1-accent';\n\n  mesh.position.set(-3.2, -0.3, 0);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  mesh.onBeforeRender = (renderer, scene, camera) => {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  mesh.userData.handlers = {};\n\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n    mesh.onBeforeRender = null;\n  };\n\n  return mesh;\n}\n```"
+}

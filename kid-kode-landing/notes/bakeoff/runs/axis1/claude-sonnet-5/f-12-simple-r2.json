@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-12-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 11975,
+  "apiMs": 9487,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1011,
+    "cacheCreation": 0,
+    "cacheRead": 5498
+  },
+  "costUsd": 0.029129,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-features-card-2-label';\n  group.position.set(3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const atlasRect = { x: 0, y: 0, w: 512, h: 320, atlasSize: 512 };\n  const aspect = atlasRect.w / atlasRect.h;\n  const planeHeight = 0.34;\n  const planeWidth = planeHeight * aspect;\n\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  const map = ctx.textureLoader.load('/prism-assets/chrome/ceramic-grain.map.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n  map.wrapS = THREE.ClampToEdgeWrapping;\n  map.wrapT = THREE.ClampToEdgeWrapping;\n\n  const uOffset = atlasRect.x / atlasRect.atlasSize;\n  const vOffset = 1.0 - (atlasRect.y + atlasRect.h) / atlasRect.atlasSize;\n  const uScale = atlasRect.w / atlasRect.atlasSize;\n  const vScale = atlasRect.h / atlasRect.atlasSize;\n\n  const atlasUV = uv().mul(vec2(uScale, vScale)).add(vec2(uOffset, vOffset));\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.map = map;\n  material.colorNode = texture(map, atlasUV);\n  material.transparent = true;\n  material.depthWrite = false;\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'label-plane';\n  group.add(plane);\n\n  const textMesh = ctx.fontAtlas.createText({\n    text: 'Features 3',\n    font: 'Lora',\n    weight: 400,\n    size: 39 / 512,\n    color: config?.colors?.paper || '#e8ecf2',\n    anchor: 'center',\n  });\n  textMesh.position.set(0, 0, 0.001);\n  group.add(textMesh);\n\n  group.userData.handlers = {};\n\n  group.onBeforeRender = (renderer, scene, camera) => {\n    group.quaternion.copy(camera.quaternion);\n  };\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    if (textMesh) {\n      if (textMesh.geometry) textMesh.geometry.dispose();\n      if (textMesh.material) textMesh.material.dispose();\n    }\n    group.onBeforeRender = null;\n  };\n\n  return group;\n}\n```"
+}

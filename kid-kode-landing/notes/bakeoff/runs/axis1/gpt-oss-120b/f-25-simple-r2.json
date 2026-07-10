@@ -1,0 +1,9 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-25-simple",
+  "run": 2,
+  "ok": false,
+  "transportError": "transport failure after retries: HTTP 429"
+}

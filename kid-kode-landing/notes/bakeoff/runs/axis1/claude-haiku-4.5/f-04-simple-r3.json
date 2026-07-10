@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-04-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 58333,
+  "apiMs": 58213,
+  "usage": {
+    "promptTokens": 3932,
+    "completionTokens": 8638,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.048082,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport { Mesh, Group, PlaneGeometry, MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture, mul, add, sub, uv, sin, fract, vec3 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n  \n  // Load the decorative orb texture\n  const tex = ctx.textureLoader.load(config.assets.imageUrl);\n  \n  // Create plane geometry (1.6:1 aspect from 512x320 atlas region)\n  const geometry = new PlaneGeometry(1.6, 1);\n  \n  // Compose shader effects using TSL nodes\n  const uv_coord = uv();\n  \n  // Base texture color\n  const base = texture(tex);\n  \n  // Engineered gradient: subtle darkening towards bottom for machined aesthetic\n  const grad_mask = sub(1.0, uv_coord.y);\n  const gradient = mul(vec3(0.15, 0.12, 0.10), grad_mask);\n  \n  // Subtle grain effect: pseudo-random noise pattern\n  const grain_uv = mul(uv_coord, 25.0);\n  const grain_val = mul(fract(sin(add(grain_uv.x, mul(grain_uv.y, 1.5)))), 0.08);\n  const grain = mul(vec3(1), grain_val);\n  \n  // Combine all effects: base + gradient + grain\n  const color = add(base, add(gradient, grain));\n  \n  // Create material with composed shader\n  const material = new MeshBasicNodeMaterial({\n    colorNode: color,\n    transparent: true\n  });\n  \n  // Create and position mesh\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(0, -2.85, 0.2);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n  \n  group.add(mesh);\n  \n  // Setup resource cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n  };\n  \n  // Event handlers object (empty for static element)\n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

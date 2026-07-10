@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-17-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 15695,
+  "usage": {
+    "promptTokens": 1700,
+    "completionTokens": 1864
+  },
+  "costUsd": 0.0007599200000000001,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```js\nimport { Mesh, PlaneGeometry, Group, Vector2 } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  // --- Configuration ---\n  const { scenePosition } = config;\n  const pos = scenePosition || { x: 0, y: 1, z: 0.06 };\n  const rot = config.sceneRotation || { x: 0, y: 0, z: 0 };\n  const scl = config.sceneScale || { x: 1, y: 1, z: 1 };\n\n  // --- Texture ---\n  const texture = ctx.textureLoader.load('/prism-assets/chrome/brushed-metal.map.png');\n  texture.needsUpdate = true;\n\n  // --- Plane material and geometry ---\n  const material = new MeshBasicNodeMaterial({\n    map: texture,\n    color: 0xffffff,\n  });\n  const geometry = new PlaneGeometry(1.0, 0.3); // placeholder size; adjust as needed\n  const plane = new Mesh(geometry, material);\n\n  // --- Text (headline \"Collection 2\") ---\n  // Use ctx.fontAtlas (MSDF text). Assume it returns a mesh or a function that creates one.\n  const textOptions = {\n    text: 'Collection 2',\n    fontFamily: 'Lora', // display font\n    fontWeight: 400,\n    fontSize: 39 * 0.01, // scale to scene units (39px -> ~0.39 scene units? adjust)\n    color: '#16161d', // ink color for contrast\n    align: 'center',\n    baseline: 'middle',\n  };\n  const textMesh = ctx.fontAtlas.createText(textOptions);\n  // Position text centered on the plane, slightly in front\n  textMesh.position.set(0, 0, 0.001);\n  textMesh.scale.set(0.5, 0.5, 1); // scale down to fit; adjust based on actual size\n\n  // --- Group everything ---\n  const group = new Group();\n  group.add(plane);\n  group.add(textMesh);\n\n  // --- Apply transforms ---\n  group.position.set(pos.x, pos.y, pos.z);\n  group.rotation.set(rot.x, rot.y, rot.z);\n  group.scale.set(scl.x, scl.y, scl.z);\n\n  // --- UserData ---\n  group.userData.type = 'collection-card-2-label';\n  group.userData.handlers = {};\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    material.dispose();\n    geometry.dispose();\n    texture.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

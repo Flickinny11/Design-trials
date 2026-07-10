@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-36-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 10034,
+  "usage": {
+    "promptTokens": 1714,
+    "completionTokens": 1692
+  },
+  "costUsd": 0.0012722999999999999,
+  "transportAttempts": 4,
+  "billing": "metered",
+  "output": "import {\n  Object3D,\n  Mesh,\n  PlaneGeometry,\n  Color,\n} from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\n/**\n * @param {Object} config - Node configuration\n * @param {Object} ctx - Runtime context (provides textureLoader, emit, etc.)\n * @returns {Object3D}\n */\nexport default function createNode(config, ctx) {\n  // ---- Extract configuration -------------------------------------------------\n  const {\n    assets: { imageUrl },\n    colors = {},\n    position = [0, 0, 0],\n    rotation = [0, 0, 0],\n    scale = [1, 1, 1],\n  } = config;\n\n  // ---- Load texture -----------------------------------------------------------\n  const texture = ctx.textureLoader(imageUrl);\n  texture.encoding = ctx.renderer?.outputEncoding ?? texture.encoding;\n\n  // ---- Create material ---------------------------------------------------------\n  const material = new MeshBasicNodeMaterial({\n    map: texture,\n    color: new Color(colors.paper ?? '#e8ecf2'),\n    transparent: true,\n  });\n\n  // ---- Plane geometry ---------------------------------------------------------\n  const geometry = new PlaneGeometry(1, 0.4); // capsule‑like aspect ratio\n  const plane = new Mesh(geometry, material);\n  plane.scale.set(1, 1, 1);\n  plane.rotation.set(0, 0, 0);\n  plane.position.set(0, 0, 0);\n\n  // ---- Assemble root object ---------------------------------------------------\n  const root = new Object3D();\n  root.position.fromArray(position);\n  root.rotation.fromArray(rotation);\n  root.scale.fromArray(scale);\n  root.add(plane);\n\n  // ---- Interaction state -------------------------------------------------------\n  const baseY = root.position.y;\n  let hoverTween = null;\n\n  const onHoverEnter = () => {\n    if (hoverTween) hoverTween.kill();\n    hoverTween = gsap.to(root.position, {\n      y: baseY + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n  };\n\n  const onHoverLeave = () => {\n    if (hoverTween) hoverTween.kill();\n    hoverTween = gsap.to(root.position, {\n      y: baseY,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n  };\n\n  const onClick = () => {\n    if (typeof ctx.emit === 'function') {\n      ctx.emit('hub-collection.select');\n    } else if (ctx.events && typeof ctx.events.emit === 'function') {\n      ctx.events.emit('hub-collection.select');\n    }\n  };\n\n  // ---- Attach handlers ---------------------------------------------------------\n  root.userData.handlers = {\n    pointerenter: onHoverEnter,\n    pointerleave: onHoverLeave,\n    click: onClick,\n  };\n\n  // ---- Cleanup -----------------------------------------------------------------\n  root.userData.cleanup = () => {\n    if (hoverTween) hoverTween.kill();\n    material.dispose();\n    if (texture) texture.dispose();\n    geometry.dispose();\n  };\n\n  return root;\n}"
+}

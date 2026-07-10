@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-01-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 77303,
+  "apiMs": 74770,
+  "usage": {
+    "promptTokens": 3951,
+    "completionTokens": 8436,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.04710500000000001,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture, uv } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Apply scene transforms\n  group.position.set(...(config.scenePosition || [0, 3, 0]));\n  group.rotation.set(...(config.sceneRotation || [0, 0, 0]));\n  group.scale.set(...(config.sceneScale || [1, 1, 1]));\n\n  // Create plane geometry (aspect ratio 512:320 ≈ 1.6:1)\n  const width = 4;\n  const height = width * (320 / 512);\n  const geometry = new THREE.PlaneGeometry(width, height);\n  \n  // Load texture\n  const textureMap = ctx.textureLoader.load(\n    config.imageUrl || '/prism-mock/home/nodes/feature-card.png'\n  );\n  \n  // Create TSL material with texture\n  const materialNode = new MeshBasicNodeMaterial();\n  materialNode.colorNode = texture(textureMap, uv());\n  \n  // Create mesh and add to group\n  const mesh = new THREE.Mesh(geometry, materialNode);\n  group.add(mesh);\n\n  // Render text content via fontAtlas\n  if (config.textContent && Array.isArray(config.textContent)) {\n    for (const textItem of config.textContent) {\n      const text = typeof textItem === 'string' ? textItem : (textItem?.text || '');\n      const size = textItem?.size || 31;\n      const weight = textItem?.weight || 400;\n      \n      if (text && ctx.fontAtlas?.renderText) {\n        const textMesh = ctx.fontAtlas.renderText(text, {\n          size,\n          weight,\n          family: 'JetBrains Mono',\n          color: config.colors?.paper || 0xe8ecf2\n        });\n        \n        if (textMesh) {\n          textMesh.position.z = 0.01;\n          group.add(textMesh);\n        }\n      }\n    }\n  }\n\n  // Apply cinematic primitives\n  if (config.cinematicPrimitives && Array.isArray(config.cinematicPrimitives)) {\n    for (const primitive of config.cinematicPrimitives) {\n      if (ctx.primitives?.[primitive.name]) {\n        ctx.primitives[primitive.name](group, primitive.params || {});\n      }\n    }\n  }\n\n  // Setup resource cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    materialNode.dispose();\n    textureMap.dispose();\n    gsap.killTweensOf(group);\n  };\n\n  // Setup event handlers\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-46-complex-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 67079,
+  "apiMs": 64788,
+  "usage": {
+    "promptTokens": 4097,
+    "completionTokens": 7226,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.041352,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Load GLB mesh from provided URL\n  const meshUrl = config.meshUrl || '/prism-mock/orrery/meshes/gear-a.glb';\n  const gltf = ctx.glbLoader(meshUrl);\n  const mesh = gltf.scene;\n  group.add(mesh);\n\n  // Apply scene placement from config\n  if (config.scenePosition) {\n    group.position.set(\n      config.scenePosition[0],\n      config.scenePosition[1],\n      config.scenePosition[2]\n    );\n  }\n  if (config.rotation) {\n    group.rotation.set(\n      config.rotation[0],\n      config.rotation[1],\n      config.rotation[2]\n    );\n  }\n  if (config.scale) {\n    group.scale.set(\n      config.scale[0],\n      config.scale[1],\n      config.scale[2]\n    );\n  }\n\n  // Apply cinematic primitives\n  if (config.cinematicPrimitives && Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach(primitive => {\n      if (primitive.name && ctx.primitives?.[primitive.name]) {\n        ctx.primitives[primitive.name](group, primitive.params || {});\n      }\n    });\n  }\n\n  // Setup interaction state\n  const hoverTimeline = gsap.timeline({ paused: true });\n  let anchorY = 0;\n\n  // Event handlers\n  const handlers = {};\n\n  handlers.onHoverEnter = () => {\n    anchorY = group.position.y;\n    hoverTimeline.clear();\n    hoverTimeline.to(group.position, {\n      y: anchorY + 0.15,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n  };\n\n  handlers.onHoverLeave = () => {\n    hoverTimeline.clear();\n    hoverTimeline.to(group.position, {\n      y: anchorY,\n      duration: 0.5,\n      ease: 'power2.out'\n    });\n  };\n\n  handlers.onClick = () => {\n    group.dispatchEvent({ type: 'hub-collection.select' });\n  };\n\n  group.userData.handlers = handlers;\n  group.userData.dataBindings = config.dataBindings || [];\n\n  // Cleanup function\n  group.userData.cleanup = () => {\n    hoverTimeline.kill();\n    gsap.killTweensOf(group.position);\n    gsap.killTweensOf(group.scale);\n    gsap.killTweensOf(group.rotation);\n\n    mesh.traverse(node => {\n      if (node.geometry) node.geometry.dispose();\n      if (node.material) {\n        if (Array.isArray(node.material)) {\n          node.material.forEach(mat => mat.dispose?.());\n        } else {\n          node.material.dispose?.();\n        }\n      }\n    });\n  };\n\n  return group;\n}\n```"
+}

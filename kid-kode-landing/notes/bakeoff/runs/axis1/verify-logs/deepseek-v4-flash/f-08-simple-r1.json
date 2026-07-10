@@ -1,0 +1,16 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "caseId": "f-08-simple",
+  "run": 1,
+  "rawCompliant": false,
+  "fenced": true,
+  "parsed": true,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "TEXT_GEOMETRY",
+      "severity": "error",
+      "message": "TextGeometry is forbidden — use ctx.fontAtlas (MSDF) for text"
+    }
+  ]
+}

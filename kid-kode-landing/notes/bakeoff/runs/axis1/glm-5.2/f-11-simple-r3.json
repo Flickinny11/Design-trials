@@ -1,0 +1,17 @@
+{
+  "contestant": "glm-5.2",
+  "model": "accounts/fireworks/models/glm-5p2",
+  "route": "fireworks",
+  "caseId": "f-11-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 61724,
+  "usage": {
+    "promptTokens": 1600,
+    "completionTokens": 6363
+  },
+  "costUsd": 0.030237200000000002,
+  "transportAttempts": 2,
+  "billing": "metered",
+  "output": "import { Mesh, PlaneGeometry, MeshBasicNodeMaterial, DoubleSide } from 'three/webgpu';\nimport { texture, uv, vec3, mix, float, hash } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const mapTexture = ctx.textureLoader(config.imageUrl);\n\n  const region = config.atlasRegion || { x: 0, y: 0, w: 512, h: 320 };\n  const aspect = region.w / region.h;\n\n  const geometry = new PlaneGeometry(aspect, 1, 1, 1);\n\n  // Remap UVs into the atlas region (flipY-safe for image-space top-left origin)\n  const img = mapTexture && mapTexture.image;\n  if (img && img.width && img.height) {\n    const tw = img.width;\n    const th = img.height;\n    const u0 = region.x / tw;\n    const u1 = (region.x + region.w) / tw;\n    const v1 = 1.0 - (region.y / th);\n    const v0 = 1.0 - ((region.y + region.h) / th);\n    const uvAttr = geometry.attributes.uv;\n    const arr = uvAttr.array;\n    for (let i = 0; i < uvAttr.count; i++) {\n      const u = arr[i * 2];\n      const v = arr[i * 2 + 1];\n      arr[i * 2] = u0 + u * (u1 - u0);\n      arr[i * 2 + 1] = v0 + v * (v1 - v0);\n    }\n    uvAttr.needsUpdate = true;\n  }\n\n  // TSL color graph: brushed-metal sample * engineered gradient + static grain\n  const texColor = texture(mapTexture, uv());\n\n  // Engineered vertical gradient — paper-bright top, ink-shaded bottom (subtle)\n  const shade = mix(float(0.88), float(1.02), uv().y);\n\n  // Static grain (no time animation — \"static composition\")\n  const grain = hash(uv().mul(2048.0)).sub(float(0.5)).mul(0.035);\n\n  const colorNode = texColor.rgb.mul(shade).add(vec3(grain));\n\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = colorNode;\n  material.side = DoubleSide;\n  material.transparent = false;\n  material.toneMapped = false;\n\n  const mesh = new Mesh(geometry, material);\n\n  const pos = config.position || [3.2, -0.3, 0];\n  const rot = config.rotation || [0, 0, 0];\n  const scl = config.scale || [1, 1, 1];\n  mesh.position.set(pos[0], pos[1], pos[2]);\n  mesh.rotation.set(rot[0], rot[1], rot[2]);\n  mesh.scale.set(scl[0], scl[1], scl[2]);\n\n  mesh.userData.atlasRegion = region;\n  mesh.userData.handlers = {};\n\n  let disposed = false;\n  mesh.userData.cleanup = () => {\n    if (disposed) return;\n    disposed = true;\n    geometry.dispose();\n    material.dispose();\n    // NOTE: mapTexture is owned by ctx.textureLoader cache — do not dispose here.\n  };\n\n  return mesh;\n}"
+}

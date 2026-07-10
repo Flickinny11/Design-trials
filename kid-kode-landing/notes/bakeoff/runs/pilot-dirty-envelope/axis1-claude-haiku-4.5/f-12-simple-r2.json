@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-12-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 84644,
+  "apiMs": 82909,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 9044,
+    "cacheCreation": 0,
+    "cacheRead": 21572
+  },
+  "costUsd": 0.0483872,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture, uv } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Sprite mode: textured plane (512×320 px atlas → 1.6:1 aspect ratio)\n  const width = 0.64;\n  const height = 0.4;\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  // Load texture (synchronous, cached)\n  const textureMap = ctx.textureLoader.load(config.imageUrl);\n\n  // TSL material with texture node\n  const colorNode = texture(textureMap, uv());\n  const material = new MeshBasicNodeMaterial({\n    colorNode,\n  });\n\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Render text via fontAtlas\n  if (ctx.fontAtlas && config.textContent) {\n    const textMesh = ctx.fontAtlas.create({\n      text: config.textContent.text || 'Features 3',\n      fontSize: config.textContent.fontSize,\n      font: 'Lora',\n      fontWeight: config.textContent.fontWeight || 400,\n      color: 0x16161d, // ink\n    });\n    if (textMesh) {\n      textMesh.position.z = 0.01;\n      group.add(textMesh);\n    }\n  }\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    textureMap.dispose();\n  };\n\n  return group;\n}\n```"
+}

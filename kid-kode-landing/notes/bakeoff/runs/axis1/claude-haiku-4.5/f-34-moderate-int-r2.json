@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-34-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 77212,
+  "apiMs": 75146,
+  "usage": {
+    "promptTokens": 4057,
+    "completionTokens": 8479,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.047532,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const root = new THREE.Group();\n  \n  // Apply scene transformation\n  root.position.set(...config.scenePosition);\n  root.rotation.set(...config.sceneRotation);\n  root.scale.set(...config.sceneScale);\n\n  // Load the GLB mesh via cached loader\n  const gltf = ctx.glbLoader(config.assets.meshUrl);\n  const meshClone = gltf.scene.clone();\n  root.add(meshClone);\n\n  // Store original transform values for animation reversals\n  const originalY = config.scenePosition[1];\n  const originalScaleX = config.sceneScale[0];\n  const originalScaleY = config.sceneScale[1];\n  const originalScaleZ = config.sceneScale[2];\n\n  // Initialize interaction handlers object\n  root.userData.handlers = {};\n\n  // Hover handler: apply rise-in animation (0.15 scene units up)\n  root.userData.handlers.hover = function() {\n    gsap.to(root.position, {\n      y: originalY + 0.15,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n  };\n\n  // Unhover handler: return to original position\n  root.userData.handlers.unhover = function() {\n    gsap.to(root.position, {\n      y: originalY,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n  };\n\n  // Click handler: press-down effect and navigation event\n  root.userData.handlers.click = function() {\n    // Press down: scale to 0.97 over 120ms with back.out easing\n    const timeline = gsap.timeline();\n    timeline.to(root.scale, {\n      x: originalScaleX * 0.97,\n      y: originalScaleY * 0.97,\n      z: originalScaleZ * 0.97,\n      duration: 0.12,\n      ease: 'back.out'\n    }, 0);\n    // Restore scale\n    timeline.to(root.scale, {\n      x: originalScaleX,\n      y: originalScaleY,\n      z: originalScaleZ,\n      duration: 0.12,\n      ease: 'back.out'\n    });\n\n    // Emit navigation event\n    root.dispatchEvent(new Event('hub-home.select'));\n  };\n\n  // Apply all cinematic primitives from config\n  if (config.cinematicPrimitives && Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach((primitive) => {\n      if (ctx.primitives && typeof ctx.primitives[primitive.name] === 'function') {\n        ctx.primitives[primitive.name](root, primitive.params);\n      }\n    });\n  }\n\n  // Cleanup function: dispose resources and kill animations\n  root.userData.cleanup = function() {\n    // Kill all GSAP tweens on position and scale\n    gsap.killTweensOf(root.position);\n    gsap.killTweensOf(root.scale);\n\n    // Recursively dispose geometries and materials from the cloned mesh\n    meshClone.traverse((child) => {\n      if (child.geometry) {\n        child.geometry.dispose();\n      }\n      if (child.material) {\n        if (Array.isArray(child.material)) {\n          child.material.forEach((mat) => {\n            mat.dispose();\n          });\n        } else {\n          child.material.dispose();\n        }\n      }\n    });\n  };\n\n  return root;\n}\n```"
+}

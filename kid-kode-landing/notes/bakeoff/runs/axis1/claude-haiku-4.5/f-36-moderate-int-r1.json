@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-36-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 118686,
+  "apiMs": 116358,
+  "usage": {
+    "promptTokens": 4013,
+    "completionTokens": 12930,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.069689,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, vec3, texture, mul, add } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const node = new THREE.Group();\n  node.position.set(0, 1.6, 0);\n  node.rotation.set(0, 0, 0);\n  node.scale.set(1, 1, 1);\n\n  // Load ceramic grain texture\n  const grainTexture = ctx.textureLoader.load('/prism-assets/chrome/ceramic-grain.map.png');\n  \n  // Create badge plane geometry (capsule-like)\n  const geometry = new THREE.PlaneGeometry(1.0, 0.35);\n  \n  // Accent red color from design tokens\n  const accentColor = new THREE.Color('#ff2a38');\n  \n  // TSL material with grain texture detail\n  const grainNode = texture(grainTexture);\n  const colorBase = vec3(accentColor.r, accentColor.g, accentColor.b);\n  const colorFinal = mul(colorBase, add(vec3(1.0), mul(grainNode.r, 0.15)));\n  \n  const material = new MeshBasicNodeMaterial({\n    colorNode: colorFinal,\n    transparent: true,\n    side: THREE.DoubleSide,\n  });\n\n  const mesh = new THREE.Mesh(geometry, material);\n  node.add(mesh);\n\n  // Accent edge outline\n  const edgeGeometry = new THREE.EdgesGeometry(geometry);\n  const edgeMaterial = new THREE.LineBasicMaterial({\n    color: accentColor,\n    linewidth: 2,\n  });\n  const edgeLines = new THREE.LineSegments(edgeGeometry, edgeMaterial);\n  edgeLines.position.z = 0.005;\n  node.add(edgeLines);\n\n  // Manage active timelines\n  const timelines = [];\n\n  // Event handlers\n  node.userData.handlers = {\n    hover: () => {\n      timelines.forEach(tl => tl.kill());\n      timelines.length = 0;\n      \n      // Rise-in effect: lift 0.15 scene units\n      const tl = gsap.to(node.position, {\n        y: 1.75,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n      timelines.push(tl);\n    },\n\n    unhover: () => {\n      timelines.forEach(tl => tl.kill());\n      timelines.length = 0;\n      \n      const tl = gsap.to(node.position, {\n        y: 1.6,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n      timelines.push(tl);\n    },\n\n    click: () => {\n      // Press-down effect: scale to 0.97, then back to 1.0\n      const tl = gsap.timeline();\n      tl.to(node.scale, {\n        x: 0.97,\n        y: 0.97,\n        duration: 0.12,\n        ease: 'back.out',\n      }, 0);\n      tl.to(node.scale, {\n        x: 1.0,\n        y: 1.0,\n        duration: 0.15,\n        ease: 'back.out',\n      });\n      timelines.push(tl);\n      \n      // Emit selection event\n      if (config.onSelect) {\n        config.onSelect();\n      }\n    },\n  };\n\n  // Cleanup\n  node.userData.cleanup = () => {\n    timelines.forEach(tl => tl.kill());\n    timelines.length = 0;\n    \n    geometry.dispose();\n    material.dispose();\n    edgeGeometry.dispose();\n    edgeMaterial.dispose();\n    grainTexture.dispose();\n  };\n\n  return node;\n}\n```"
+}

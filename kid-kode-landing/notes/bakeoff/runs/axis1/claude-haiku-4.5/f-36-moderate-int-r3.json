@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-36-moderate-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 67086,
+  "apiMs": 64754,
+  "usage": {
+    "promptTokens": 4013,
+    "completionTokens": 7264,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.041359,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const badge = new THREE.Group();\n  badge.position.fromArray(config.scenePosition);\n  badge.rotation.fromArray(config.sceneRotation);\n  badge.scale.fromArray(config.sceneScale);\n\n  // Load ceramic-grain texture\n  const texture = ctx.textureLoader.load(config.assets.imageUrl);\n  \n  // Main badge plane with texture\n  const geometry = new THREE.PlaneGeometry(0.4, 0.15);\n  const material = new THREE.MeshBasicMaterial({\n    map: texture,\n    color: new THREE.Color(config.colors.paper),\n    transparent: true,\n  });\n  const mesh = new THREE.Mesh(geometry, material);\n  badge.add(mesh);\n\n  // Accent edge plane (behind main plane for depth)\n  const edgeGeometry = new THREE.PlaneGeometry(0.42, 0.17);\n  const edgeMaterial = new THREE.MeshBasicMaterial({\n    color: new THREE.Color(config.colors.accent),\n    transparent: true,\n    opacity: 0.35,\n  });\n  const edgeMesh = new THREE.Mesh(edgeGeometry, edgeMaterial);\n  edgeMesh.position.z = -0.001;\n  badge.add(edgeMesh);\n\n  const timelines = [];\n\n  badge.userData.handlers = {\n    onHover: () => {\n      gsap.killTweensOf(badge.position);\n      timelines.push(gsap.to(badge.position, {\n        y: badge.position.y + 0.15,\n        duration: 0.7,\n        ease: 'power3.out',\n      }));\n    },\n    onHoverEnd: () => {\n      gsap.killTweensOf(badge.position);\n      timelines.push(gsap.to(badge.position, {\n        y: config.scenePosition[1],\n        duration: 0.5,\n        ease: 'power2.out',\n      }));\n    },\n    onClick: () => {\n      gsap.killTweensOf(badge.scale);\n      const tl = gsap.timeline();\n      tl.to(badge.scale, {\n        x: 0.97,\n        y: 0.97,\n        duration: 0.12,\n        ease: 'back.out',\n      }, 0).to(badge.scale, {\n        x: 1,\n        y: 1,\n        duration: 0.1,\n        ease: 'back.out',\n      });\n      timelines.push(tl);\n      \n      const clickBehavior = config.behaviors?.find(b => b.event === 'click');\n      if (clickBehavior) {\n        const eventName = clickBehavior.effect.replace('emit:', '');\n        ctx.emit?.(eventName);\n      }\n    },\n  };\n\n  badge.userData.cleanup = () => {\n    timelines.forEach(tl => tl.kill());\n    geometry.dispose();\n    material.dispose();\n    edgeGeometry.dispose();\n    edgeMaterial.dispose();\n  };\n\n  return badge;\n}\n```"
+}

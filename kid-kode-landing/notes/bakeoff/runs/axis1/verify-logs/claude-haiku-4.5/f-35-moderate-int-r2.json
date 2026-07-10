@@ -1,0 +1,16 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "caseId": "f-35-moderate-int",
+  "run": 2,
+  "rawCompliant": false,
+  "fenced": true,
+  "parsed": true,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "WINDOW_ACCESS",
+      "severity": "error",
+      "message": "window.* access is forbidden except for window.devicePixelRatio"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-22-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 83201,
+  "apiMs": 80762,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 8190,
+    "cacheCreation": 0,
+    "cacheRead": 21563
+  },
+  "costUsd": 0.0440873,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Resource tracking for cleanup\n  const materials = [];\n  const geometries = [];\n  const textures = [];\n  \n  // Load background texture\n  let bgTexture = null;\n  if (config.imageUrl) {\n    bgTexture = ctx.textureLoader.load(config.imageUrl);\n    bgTexture.colorSpace = THREE.SRGBColorSpace;\n    textures.push(bgTexture);\n  }\n  \n  // Create background plane\n  const planeGeom = new THREE.PlaneGeometry(1, 1);\n  geometries.push(planeGeom);\n  \n  const planeMat = new THREE.MeshBasicMaterial({\n    map: bgTexture,\n    side: THREE.DoubleSide,\n  });\n  materials.push(planeMat);\n  \n  const planeMesh = new THREE.Mesh(planeGeom, planeMat);\n  \n  // Apply scale if specified\n  if (config.scenePosition?.scaleXYZ) {\n    planeMesh.scale.set(...config.scenePosition.scaleXYZ);\n  }\n  \n  group.add(planeMesh);\n  \n  // Add text content via fontAtlas\n  if (config.textContent && ctx.fontAtlas) {\n    const textMesh = ctx.fontAtlas.createTextMesh(\n      config.textContent,\n      {\n        fontSize: 0.34,\n        fontFamily: 'Lora',\n        fontWeight: 400,\n        color: new THREE.Color(config.colors?.ink || '#16161d'),\n        align: 'center',\n      }\n    );\n    \n    if (textMesh) {\n      textMesh.position.z = 0.01;\n      group.add(textMesh);\n    }\n  }\n  \n  // Apply position and rotation from scenePosition\n  if (config.scenePosition) {\n    const pos = config.scenePosition;\n    group.position.set(\n      pos.x || 0,\n      pos.y || 0,\n      pos.z || 0\n    );\n    if (pos.rotationXYZ) {\n      group.rotation.set(\n        pos.rotationXYZ[0] || 0,\n        pos.rotationXYZ[1] || 0,\n        pos.rotationXYZ[2] || 0\n      );\n    }\n  }\n  \n  // Cleanup function to dispose resources\n  group.userData.cleanup = () => {\n    materials.forEach(mat => mat.dispose());\n    geometries.forEach(geo => geo.dispose());\n    textures.forEach(tex => tex.dispose());\n  };\n  \n  // Event handlers (empty for static element)\n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

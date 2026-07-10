@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-37-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 13265,
+  "usage": {
+    "promptTokens": 1768,
+    "completionTokens": 1957
+  },
+  "costUsd": 0.00079548,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport { PlaneGeometry, MeshBasicNodeMaterial, Mesh, DoubleSide, Vector3 } from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  // Geometry matching atlas source rect aspect ratio 512:320 = 1.6\n  const width = 1.6;\n  const height = width / (512 / 320); // = 1.0\n  const geometry = new PlaneGeometry(width, height);\n  \n  // Texture loading\n  const map = ctx.textureLoader.load(config.imageUrl);\n  \n  // Material – no lighting, double side for safety\n  const material = new MeshBasicNodeMaterial({\n    map,\n    side: DoubleSide,\n    transparent: true,\n  });\n  \n  const mesh = new Mesh(geometry, material);\n  \n  // Scene placement\n  const pos = config.scenePosition || { x: 1.25, y: 1.6, z: 0 };\n  mesh.position.set(pos.x, pos.y, pos.z);\n  if (config.sceneRotation) {\n    mesh.rotation.set(config.sceneRotation.x, config.sceneRotation.y, config.sceneRotation.z);\n  }\n  if (config.sceneScale) {\n    mesh.scale.set(config.sceneScale.x, config.sceneScale.y, config.sceneScale.z);\n  }\n  \n  // Interactions\n  mesh.userData.handlers = {};\n  \n  // Hover: subtle rise (preset \"rise-in\")\n  let hoverTween = null;\n  let clickTween = null;\n  const originalY = mesh.position.y;\n  \n  mesh.userData.handlers.pointerover = () => {\n    if (hoverTween) hoverTween.kill();\n    hoverTween = gsap.to(mesh.position, {\n      y: originalY + 0.15,\n      duration: 0.3,\n      ease: 'power3.out',\n      overwrite: true,\n    });\n  };\n  \n  mesh.userData.handlers.pointerout = () => {\n    if (hoverTween) hoverTween.kill();\n    hoverTween = gsap.to(mesh.position, {\n      y: originalY,\n      duration: 0.3,\n      ease: 'power3.out',\n      overwrite: true,\n    });\n  };\n  \n  // Click: emit event and press-down effect\n  mesh.userData.handlers.click = () => {\n    if (clickTween) clickTween.kill();\n    clickTween = gsap.to(mesh.scale, {\n      x: 0.97,\n      y: 0.97,\n      z: 0.97,\n      duration: 0.12,\n      ease: 'back.out(1.7)',\n      yoyo: true,\n      repeat: 1,\n      onComplete: () => {\n        clickTween = null;\n      },\n    });\n    // Emit navigation event\n    if (typeof ctx.emit === 'function') {\n      ctx.emit('hub-pricing.select', {});\n    }\n  };\n  \n  // Data bindings – stored for parent consumption\n  if (config.dataBindings) {\n    mesh.userData.dataBindings = config.dataBindings;\n  }\n  \n  // Apply cinematic primitives\n  if (config.cinematicPrimitives) {\n    config.cinematicPrimitives.forEach(prim => {\n      const primitiveFn = ctx.primitives?.[prim.name];\n      if (primitiveFn) {\n        primitiveFn(mesh, prim.params);\n      } else {\n        console.warn(`Primitive \"${prim.name}\" not found in ctx.primitives`);\n      }\n    });\n  }\n  \n  // Cleanup\n  mesh.userData.cleanup = () => {\n    // Kill all GSAP tweens stored on mesh\n    if (hoverTween) {\n      hoverTween.kill();\n      hoverTween = null;\n    }\n    if (clickTween) {\n      clickTween.kill();\n      clickTween = null;\n    }\n    // Dispose geometry and material\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n    // Remove event listeners (handlers are stored as references, no DOM listeners)\n  };\n  \n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

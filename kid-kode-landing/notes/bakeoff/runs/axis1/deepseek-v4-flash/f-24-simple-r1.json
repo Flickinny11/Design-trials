@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-24-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 15240,
+  "usage": {
+    "promptTokens": 1715,
+    "completionTokens": 2336
+  },
+  "costUsd": 0.0008941800000000001,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport { Sprite, SpriteMaterial } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const texture = ctx.textureLoader.load(config.imageUrl, (tex) => {\n    // no-op, texture is cached\n  });\n\n  const material = new SpriteMaterial({\n    map: texture,\n    transparent: true,\n    depthWrite: false,\n    sizeAttenuation: true,\n  });\n\n  const sprite = new Sprite(material);\n  sprite.position.set(0, 1, 0.06);\n  sprite.scale.set(1, 1, 1);\n  sprite.name = 'pricing-card-2-label';\n\n  sprite.userData.cleanup = () => {\n    material.dispose();\n    texture.dispose();\n  };\n\n  // No handlers, no primitives, no text overlay (baked into atlas)\n  sprite.userData.handlers = {};\n\n  return sprite;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

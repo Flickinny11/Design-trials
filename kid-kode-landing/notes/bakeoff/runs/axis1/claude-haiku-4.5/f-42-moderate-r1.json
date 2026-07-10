@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-42-moderate",
+  "run": 1,
+  "ok": true,
+  "wallMs": 70628,
+  "apiMs": 68246,
+  "usage": {
+    "promptTokens": 4002,
+    "completionTokens": 7808,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.044066999999999995,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Load ceramic grain texture\n  const textureMap = ctx.textureLoader.load('/prism-assets/chrome/ceramic-grain.map.png');\n\n  // Badge plane geometry (capsule proportions: 0.8w × 0.3h)\n  const geometry = new THREE.PlaneGeometry(0.8, 0.3);\n\n  // Main material: paper color base with ceramic texture\n  const material = new MeshBasicNodeMaterial({\n    map: textureMap,\n    color: 0xe8ecf2,\n    side: THREE.DoubleSide,\n    transparent: true,\n  });\n\n  const mesh = new THREE.Mesh(geometry, material);\n\n  // Apply scene transform from config\n  const scenePos = config.scenePosition || { x: 1.25, y: 0.7, z: 0 };\n  const sceneRot = config.sceneRotation || { x: 0, y: 0, z: 0 };\n  const sceneScale = config.sceneScale || { x: 1, y: 1, z: 1 };\n\n  mesh.position.set(scenePos.x, scenePos.y, scenePos.z);\n  mesh.rotation.set(sceneRot.x, sceneRot.y, sceneRot.z);\n  mesh.scale.set(sceneScale.x, sceneScale.y, sceneScale.z);\n\n  group.add(mesh);\n\n  // Accent edge (signal red emissive glow, visible on focus)\n  const edgeGeometry = new THREE.PlaneGeometry(0.85, 0.35);\n  const edgeMaterial = new MeshBasicNodeMaterial({\n    color: 0xff2a38,\n    emissive: 0xff2a38,\n    emissiveIntensity: 0.5,\n    side: THREE.DoubleSide,\n    transparent: true,\n  });\n\n  const edgeMesh = new THREE.Mesh(edgeGeometry, edgeMaterial);\n  edgeMesh.position.z = -0.001;\n  mesh.add(edgeMesh);\n  edgeMesh.visible = false;\n\n  // Animation state\n  let hoverTimeline = null;\n\n  // Interaction handlers\n  group.userData.handlers = {\n    pointerenter() {\n      if (hoverTimeline) hoverTimeline.kill();\n      hoverTimeline = gsap.to(mesh.position, {\n        y: scenePos.y + 0.15,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n    },\n    pointerleave() {\n      if (hoverTimeline) hoverTimeline.kill();\n      hoverTimeline = gsap.to(mesh.position, {\n        y: scenePos.y,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n    },\n    click() {\n      ctx.onEvent?.('hub-pricing.select');\n    },\n    focus() {\n      edgeMesh.visible = true;\n    },\n    blur() {\n      edgeMesh.visible = false;\n    },\n  };\n\n  // Resource cleanup\n  group.userData.cleanup = () => {\n    if (hoverTimeline) hoverTimeline.kill();\n    geometry.dispose();\n    edgeGeometry.dispose();\n    material.dispose();\n    edgeMaterial.dispose();\n    textureMap.dispose();\n  };\n\n  return group;\n}\n```"
+}

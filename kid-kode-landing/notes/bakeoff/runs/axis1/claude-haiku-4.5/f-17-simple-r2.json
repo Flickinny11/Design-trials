@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-17-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 99938,
+  "apiMs": 97448,
+  "usage": {
+    "promptTokens": 3954,
+    "completionTokens": 9789,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.053881,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const container = new THREE.Group();\n\n  // Get atlas texture with rendered text\n  const atlasTexture = ctx.fontAtlas.texture;\n\n  // Atlas region: [0, 0, 512, 320]\n  const regionX = 0;\n  const regionY = 0;\n  const regionWidth = 512;\n  const regionHeight = 320;\n  const atlasWidth = 1024;\n  const atlasHeight = 1024;\n\n  // Create plane geometry with proper aspect ratio\n  const planeHeight = 0.5;\n  const planeWidth = planeHeight * (regionWidth / regionHeight);\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  // Adjust UVs to reference the correct atlas region\n  const uvAttribute = geometry.getAttribute('uv');\n  const uMin = regionX / atlasWidth;\n  const vMin = regionY / atlasHeight;\n  const uMax = (regionX + regionWidth) / atlasWidth;\n  const vMax = (regionY + regionHeight) / atlasHeight;\n\n  for (let i = 0; i < uvAttribute.count; i++) {\n    const u = uvAttribute.getX(i);\n    const v = uvAttribute.getY(i);\n    uvAttribute.setXY(\n      i,\n      uMin + u * (uMax - uMin),\n      vMin + v * (vMax - vMin)\n    );\n  }\n  uvAttribute.needsUpdate = true;\n\n  // Create material\n  const material = new MeshBasicNodeMaterial({\n    colorNode: texture(atlasTexture),\n    transparent: true,\n    side: THREE.DoubleSide,\n  });\n\n  // Create and position mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(0, 1, 0.06);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  container.add(mesh);\n\n  // Apply cinematic primitives\n  if (config.cinematicPrimitives && config.cinematicPrimitives.length > 0) {\n    for (const primitive of config.cinematicPrimitives) {\n      const primFn = ctx.primitives[primitive.name];\n      if (primFn) {\n        primFn(container, primitive.params || {});\n      }\n    }\n  }\n\n  // Setup event handlers\n  container.userData.handlers = {};\n\n  // Cleanup\n  container.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    gsap.killTweensOf(mesh);\n    gsap.killTweensOf(container);\n  };\n\n  return container;\n}\n```"
+}

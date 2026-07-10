@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-27-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 12480,
+  "apiMs": 10002,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 962,
+    "cacheCreation": 0,
+    "cacheRead": 5495
+  },
+  "costUsd": 0.027880499999999996,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2, uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-journal-title';\n  group.position.set(0, 3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const atlasIndex = 0;\n  const rect = { x: 0, y: 0, w: 512, h: 320 };\n  const atlasW = 512;\n  const atlasH = 320;\n\n  const aspect = rect.w / rect.h;\n  const height = 0.6;\n  const width = height * aspect;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  const map = ctx.textureLoader.load('/prism-mock/home/nodes/floating-accent.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const uvScale = vec2(rect.w / atlasW, rect.h / atlasH);\n  const uvOffset = vec2(rect.x / atlasW, rect.y / atlasH);\n  const uvNode = uv().mul(uvScale).add(uvOffset);\n\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n  material.colorNode = texture(map, uvNode);\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'sprite-mesh';\n  group.add(mesh);\n\n  // Billboard behavior handled per-frame via userData.update, invoked by scene manager if present\n  group.userData.update = (camera) => {\n    if (camera) {\n      mesh.quaternion.copy(camera.quaternion);\n    }\n  };\n\n  // Text content rendering via font atlas (headline \"Journal\")\n  let textMesh = null;\n  if (ctx.fontAtlas && ctx.fontAtlas.createText) {\n    textMesh = ctx.fontAtlas.createText({\n      text: 'Journal',\n      font: 'Lora',\n      weight: 400,\n      size: 0.34,\n      color: config?.visual?.colors?.paper || '#e8ecf2',\n    });\n    if (textMesh) {\n      textMesh.position.set(0, 0, 0.01);\n      group.add(textMesh);\n    }\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n    if (textMesh) {\n      group.remove(textMesh);\n      if (textMesh.geometry) textMesh.geometry.dispose();\n      if (textMesh.material) textMesh.material.dispose();\n    }\n    group.userData.handlers = {};\n  };\n\n  return group;\n}\n```"
+}

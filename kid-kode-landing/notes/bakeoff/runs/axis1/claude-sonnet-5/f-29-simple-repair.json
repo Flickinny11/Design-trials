@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-29-simple",
+  "run": "repair",
+  "ok": true,
+  "wallMs": 10238,
+  "apiMs": 7754,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 992,
+    "cacheCreation": 4424,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0719855,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, mix, float, uniform } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-journal-card-1-label';\n  group.position.set(-3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 1.6;\n  const height = 1.0;\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  const map = ctx.textureLoader.load('/prism-assets/chrome/brushed-metal.map.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const uvNode = uv();\n  const baseTex = texture(map, uvNode);\n\n  const inkColor = uniform(new THREE.Color('#16161d'));\n  const surfaceColor = uniform(new THREE.Color('#0b0b10'));\n\n  const gradientMix = uvNode.y.clamp(0.0, 1.0);\n  const gradient = mix(vec4(surfaceColor, 1.0), vec4(inkColor, 1.0), gradientMix);\n\n  const combined = mix(gradient, baseTex, float(0.35));\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.colorNode = combined;\n  material.transparent = false;\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'hub-journal-card-1-label-plane';\n  group.add(plane);\n\n  const textMeshes = [];\n  const textContent = Array.isArray(config.textContent) ? config.textContent : [];\n\n  for (const entry of textContent) {\n    const mesh = createTextMesh({\n      text: entry.text,\n      font: entry.role === 'headline' ? 'Lora' : 'JetBrains Mono',\n      weight: entry.weight || 400,\n      size: entry.role === 'headline' ? 0.34 : 0.13,\n      color: '#e8ecf2',\n      atlas: ctx.fontAtlas,\n      align: 'center',\n      anchor: 'center'\n    });\n    mesh.position.set(0, 0, 0.01);\n    mesh.name = `hub-journal-card-1-label-text-${entry.role || 'text'}`;\n    group.add(mesh);\n    textMeshes.push(mesh);\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    for (const mesh of textMeshes) {\n      if (mesh.geometry) mesh.geometry.dispose();\n      if (mesh.material) mesh.material.dispose();\n    }\n  };\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-02-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 11215,
+  "apiMs": 8738,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 837,
+    "cacheCreation": 3361,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.056702499999999996,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, uniform, mix } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'home-subhead';\n  group.position.set(0, 1.85, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const geometry = new THREE.PlaneGeometry(2.4, 1.5);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const map = ctx.textureLoader.load('/prism-mock/home/nodes/cta-hero-isolated.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const grainAmount = uniform(0.03);\n  const uvNode = uv();\n  const texColor = texture(map, uvNode);\n\n  // simple procedural grain via uv-based noise-ish pattern (cheap sine pattern, static)\n  const grain = uvNode.x.mul(37.13).sin().mul(uvNode.y.mul(91.7).sin()).mul(0.5).add(0.5);\n  const grained = texColor.rgb.add(grain.sub(0.5).mul(grainAmount));\n\n  material.colorNode = vec4(grained, texColor.a);\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'home-subhead-plane';\n  group.add(plane);\n\n  let textMesh = null;\n  try {\n    textMesh = createTextMesh({\n      text: 'Atelier Noir — precise · luxury · technical',\n      font: 'Lora',\n      weight: 400,\n      size: 0.2,\n      color: '#e8ecf2',\n      atlas: ctx.fontAtlas,\n      maxWidth: 2.2,\n      align: 'center',\n    });\n    textMesh.position.set(0, 0, 0.01);\n    group.add(textMesh);\n  } catch (e) {\n    // fallback silently if font atlas unavailable\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n    if (textMesh) {\n      textMesh.geometry?.dispose?.();\n      textMesh.material?.dispose?.();\n    }\n  };\n\n  return group;\n}"
+}

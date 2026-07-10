@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-12-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 56890,
+  "apiMs": 54418,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 7318,
+    "cacheCreation": 21572,
+    "cacheRead": 0
+  },
+  "costUsd": 0.080739,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\nimport { texture as tslTexture, uv } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // Load ceramic grain texture\n  const textureUrl = '/prism-assets/chrome/ceramic-grain.map.png';\n  const map = ctx.textureLoader.load(textureUrl);\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  // Create plane geometry matching 512:320 atlas aspect ratio\n  const planeWidth = 0.8;\n  const planeHeight = planeWidth / (512 / 320);\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  // TSL-based material with texture node\n  const colorNode = tslTexture(map, uv());\n  const material = new THREE.MeshBasicNodeMaterial({\n    colorNode: colorNode,\n  });\n\n  const plane = new THREE.Mesh(geometry, material);\n  group.add(plane);\n\n  // Render text content using fontAtlas\n  const textContent = config.textContent || 'Features 3';\n  const textObject = ctx.fontAtlas.render(textContent, {\n    font: 'Lora',\n    size: 0.34, // headline type scale\n    weight: 400,\n    color: '#16161d', // ink color for contrast\n  });\n\n  if (textObject) {\n    textObject.position.z = 0.01; // slight z-offset in front of plane\n    group.add(textObject);\n  }\n\n  // Setup cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    map.dispose();\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

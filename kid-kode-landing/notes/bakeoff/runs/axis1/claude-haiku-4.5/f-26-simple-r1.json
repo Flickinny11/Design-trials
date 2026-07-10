@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-26-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 70646,
+  "apiMs": 68439,
+  "usage": {
+    "promptTokens": 3960,
+    "completionTokens": 7570,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.042798,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Apply scene positioning\n  group.position.copy(config.scenePosition);\n  if (config.sceneRotation) {\n    group.rotation.order = 'XYZ';\n    group.rotation.set(\n      config.sceneRotation.x || 0,\n      config.sceneRotation.y || 0,\n      config.sceneRotation.z || 0\n    );\n  }\n  if (config.sceneScale) {\n    group.scale.copy(config.sceneScale);\n  }\n  \n  // Load texture\n  const tex = ctx.textureLoader.load(config.imageUrl);\n  tex.colorSpace = THREE.SRGBColorSpace;\n  \n  // Apply atlas region if available\n  if (config.atlasRegion && config.atlasSize) {\n    const region = config.atlasRegion;\n    const atlasSize = config.atlasSize;\n    tex.offset.set(\n      region.x / atlasSize.width,\n      region.y / atlasSize.height\n    );\n    tex.repeat.set(\n      region.width / atlasSize.width,\n      region.height / atlasSize.height\n    );\n  }\n  \n  // Create plane with 512:320 aspect ratio\n  const planeHeight = 0.5;\n  const planeWidth = planeHeight * (512 / 320);\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n  \n  // Create material using TSL\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = texture(tex);\n  \n  // Create and add plane mesh\n  const plane = new THREE.Mesh(geometry, material);\n  group.add(plane);\n  \n  // Add text content\n  if (config.textContent && config.textContent.length > 0) {\n    const textConfig = config.textContent[0];\n    const textMesh = ctx.fontAtlas.createText(textConfig.text, {\n      fontSize: textConfig.fontSize || 0.39,\n      fontWeight: textConfig.fontWeight || 400,\n      fontFamily: 'Lora',\n      color: config.colors.ink,\n      align: 'center',\n      baseline: 'middle'\n    });\n    textMesh.position.z = 0.01;\n    group.add(textMesh);\n  }\n  \n  // Setup cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    tex.dispose();\n  };\n  \n  // Setup event handlers\n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

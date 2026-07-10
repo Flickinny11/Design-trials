@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-19-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 11905,
+  "apiMs": 9527,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 965,
+    "cacheCreation": 0,
+    "cacheRead": 5484
+  },
+  "costUsd": 0.027960000000000002,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, mix } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-collection-card-2-label';\n\n  const pos = config.scenePosition?.position ?? [3.2, 1, 0.06];\n  const rot = config.scenePosition?.rotation ?? [0, 0, 0];\n  const scl = config.scenePosition?.scale ?? [1, 1, 1];\n  group.position.set(...pos);\n  group.rotation.set(...rot);\n  group.scale.set(...scl);\n\n  const width = 1.6;\n  const height = width * (320 / 512);\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const imgTex = ctx.textureLoader.load('/prism-mock/home/nodes/feature-card.png');\n  imgTex.colorSpace = THREE.SRGBColorSpace;\n\n  const uvNode = uv();\n  const texNode = texture(imgTex, uvNode);\n\n  const inkColor = vec4(0.086, 0.086, 0.114, 1.0);\n  const gradFactor = uvNode.y;\n  const gradTint = mix(inkColor, vec4(1, 1, 1, 1), gradFactor.mul(0.15).add(0.85));\n\n  material.colorNode = texNode.mul(gradTint);\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'collection-card-2-image';\n  group.add(plane);\n\n  let textMesh = null;\n  try {\n    textMesh = createTextMesh({\n      text: 'Collection 3',\n      font: 'Lora',\n      weight: 400,\n      size: 0.34,\n      color: '#e8ecf2',\n      atlas: ctx.fontAtlas,\n      align: 'center',\n    });\n    textMesh.name = 'collection-card-2-label-text';\n    textMesh.position.set(0, -height / 2 + 0.18, 0.01);\n    group.add(textMesh);\n  } catch (e) {\n    // font atlas unavailable — skip text rendering gracefully\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (imgTex) imgTex.dispose();\n    if (textMesh) {\n      textMesh.geometry?.dispose?.();\n      if (Array.isArray(textMesh.material)) {\n        textMesh.material.forEach((m) => m.dispose());\n      } else {\n        textMesh.material?.dispose?.();\n      }\n    }\n  };\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-02-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 71113,
+  "apiMs": 69257,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 7626,
+    "cacheCreation": 0,
+    "cacheRead": 21556
+  },
+  "costUsd": 0.0412596,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Apply scene position and transforms\n  const { scenePosition } = config;\n  if (scenePosition) {\n    const pos = scenePosition.position || scenePosition;\n    if (pos.x !== undefined) {\n      group.position.set(pos.x, pos.y, pos.z);\n    }\n    \n    if (scenePosition.rotationXYZ) {\n      group.rotation.order = 'XYZ';\n      const [x, y, z] = scenePosition.rotationXYZ;\n      group.rotation.set(x, y, z);\n    }\n    \n    if (scenePosition.scaleXYZ) {\n      const [x, y, z] = scenePosition.scaleXYZ;\n      group.scale.set(x, y, z);\n    }\n  } else {\n    group.position.set(0, 1.85, 0);\n  }\n  \n  // Load image texture\n  const texture = ctx.textureLoader.load(config.imageUrl);\n  texture.colorSpace = THREE.SRGBColorSpace;\n  texture.magFilter = THREE.LinearFilter;\n  texture.minFilter = THREE.LinearMipmapLinearFilter;\n  \n  // Plane geometry from atlas region (512×320 pixels → 1.6:1 aspect)\n  const planeHeight = 1.2;\n  const planeWidth = planeHeight * (512 / 320);\n  \n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n  const material = new THREE.MeshBasicNodeMaterial({\n    map: texture,\n    transparent: true,\n    side: THREE.DoubleSide,\n  });\n  \n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n  \n  // Render text content via fontAtlas (MSDF)\n  if (config.textContent && ctx.fontAtlas) {\n    const textMesh = ctx.fontAtlas.createTextMesh(config.textContent, {\n      fontFamily: 'Lora',\n      fontSize: 0.34,\n      fontWeight: 400,\n      align: 'center',\n    });\n    textMesh.position.set(0, -planeHeight / 2 - 0.3, 0.01);\n    group.add(textMesh);\n  }\n  \n  // Resource cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texture.dispose();\n  };\n  \n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

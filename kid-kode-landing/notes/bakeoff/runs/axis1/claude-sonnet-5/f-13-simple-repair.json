@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-13-simple",
+  "run": "repair",
+  "ok": true,
+  "wallMs": 11840,
+  "apiMs": 9462,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1110,
+    "cacheCreation": 4537,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0761545,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, uniform, mix } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-collection-title';\n  group.position.set(0, 3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 3.2;\n  const height = (320 / 512) * width;\n\n  const geometry = new THREE.PlaneGeometry(width, height, 1, 1);\n\n  const tex = ctx.textureLoader.load('/prism-mock/home/nodes/feature-card.png');\n  tex.colorSpace = THREE.SRGBColorSpace;\n\n  const inkColor = new THREE.Color('#16161d');\n  const surfaceColor = new THREE.Color('#0b0b10');\n\n  const grainStrength = uniform(0.035);\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.transparent = false;\n\n  const baseTex = texture(tex, uv());\n\n  const gradientMix = uv().y;\n  const gradientColor = mix(vec4(surfaceColor, 1.0), vec4(inkColor, 1.0), gradientMix);\n\n  const grainNoise = uv().x.mul(1234.5).sin().mul(uv().y.mul(789.3).cos()).fract().sub(0.5).mul(grainStrength);\n\n  material.colorNode = baseTex.mul(0.82).add(gradientColor.mul(0.18)).add(vec4(grainNoise, grainNoise, grainNoise, 0.0));\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'collection-title-plane';\n  group.add(plane);\n\n  const textMeshes = [];\n\n  const textContent = Array.isArray(config.textContent) ? config.textContent : [];\n  textContent.forEach((entry, index) => {\n    const textMesh = ctx.fontAtlas.createText({\n      text: entry.text,\n      font: entry.role === 'body' || entry.role === 'caption' ? 'JetBrains Mono' : 'Lora',\n      weight: entry.weight || 400,\n      role: entry.role,\n      sizeEm: entry.role === 'headline' ? 0.34 : 0.2,\n      color: '#e8ecf2',\n      atlasRegion: config.atlasRegion,\n    });\n    textMesh.name = `collection-title-text-${index}`;\n    textMesh.position.set(0, 0, 0.02);\n    group.add(textMesh);\n    textMeshes.push(textMesh);\n  });\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (tex && tex.dispose) tex.dispose();\n    textMeshes.forEach((textMesh) => {\n      if (textMesh.userData && typeof textMesh.userData.cleanup === 'function') {\n        textMesh.userData.cleanup();\n      } else {\n        if (textMesh.geometry) textMesh.geometry.dispose();\n        if (textMesh.material) textMesh.material.dispose();\n      }\n    });\n  };\n\n  return group;\n}"
+}

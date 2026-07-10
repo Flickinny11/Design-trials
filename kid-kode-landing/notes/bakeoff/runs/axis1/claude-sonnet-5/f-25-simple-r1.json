@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-25-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 10994,
+  "apiMs": 8438,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 686,
+    "cacheCreation": 3345,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0527385,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import { Mesh, PlaneGeometry, MeshStandardNodeMaterial, Color } from 'three/webgpu';\nimport { texture, uv, vec3, float, mix, uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const width = 1.9;\n  const height = 1.1875; // 512:320 aspect\n\n  const geometry = new PlaneGeometry(width, height, 1, 1);\n  const material = new MeshStandardNodeMaterial({\n    metalness: 0.4,\n    roughness: 0.6,\n  });\n\n  const map = ctx.textureLoader.load('/prism-mock/home/nodes/feature-card.png');\n  map.colorSpace = 'srgb';\n\n  const uvNode = uv();\n  const baseColor = texture(map, uvNode);\n\n  // engineered gradient overlay: subtle vertical gradient from surface to ink\n  const surfaceColor = vec3(\n    float(0x0b / 255),\n    float(0x0b / 255),\n    float(0x10 / 255)\n  );\n  const inkColor = vec3(\n    float(0x16 / 255),\n    float(0x16 / 255),\n    float(0x1d / 255)\n  );\n\n  const gradientAmount = uniform(0.12);\n  const gradient = mix(surfaceColor, inkColor, uvNode.y);\n  const finalColor = mix(baseColor.rgb, gradient, gradientAmount);\n\n  material.colorNode = finalColor;\n  material.opacityNode = baseColor.a;\n  material.transparent = true;\n\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(3.2, -0.3, 0);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  mesh.userData.handlers = {};\n\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n  };\n\n  return mesh;\n}"
+}

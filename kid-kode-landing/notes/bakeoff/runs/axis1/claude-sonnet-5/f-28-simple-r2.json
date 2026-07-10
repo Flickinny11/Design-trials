@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-28-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 10431,
+  "apiMs": 7867,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 747,
+    "cacheCreation": 0,
+    "cacheRead": 5469
+  },
+  "costUsd": 0.0224805,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2, vec4, mix, float, uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'journal-card-1';\n\n  const width = 1.6;\n  const height = 1.0;\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  const map = ctx.textureLoader.load('/prism-mock/home/nodes/orb-decor.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const material = new THREE.MeshBasicNodeMaterial();\n\n  const texNode = texture(map, uv());\n\n  const inkColor = vec4(0x16 / 255, 0x16 / 255, 0x1d / 255, 1.0);\n  const surfaceColor = vec4(0x0b / 255, 0x0b / 255, 0x10 / 255, 1.0);\n  const gradientMix = uniform(0.35);\n\n  const vUv = uv();\n  const gradient = mix(surfaceColor, inkColor, vUv.y);\n\n  const grainSeed = vUv.x.mul(1024.0).add(vUv.y.mul(768.0));\n  const grain = grainSeed.sin().mul(43758.5453).fract().sub(0.5).mul(0.035);\n\n  const engineeredBg = vec4(\n    gradient.r.add(grain),\n    gradient.g.add(grain),\n    gradient.b.add(grain),\n    1.0\n  );\n\n  const finalColor = mix(engineeredBg, texNode, texNode.a);\n\n  material.colorNode = finalColor;\n  material.transparent = false;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(-3.2, -0.3, 0);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  group.add(mesh);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n  };\n\n  return group;\n}\n```"
+}

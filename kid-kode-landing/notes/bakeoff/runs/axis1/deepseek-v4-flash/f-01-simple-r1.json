@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-01-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 19326,
+  "usage": {
+    "promptTokens": 1700,
+    "completionTokens": 2971
+  },
+  "costUsd": 0.00106988,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  Mesh,\n  PlaneGeometry,\n  MeshBasicNodeMaterial,\n  Texture,\n  Vector3,\n} from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nfunction createNode(config, ctx) {\n  const {\n    scenePosition: pos = { x: 0, y: 3, z: 0 },\n    sceneRotation: rot = { x: 0, y: 0, z: 0 },\n    sceneScale: scale = { x: 1, y: 1, z: 1 },\n    imageUrl,\n    textContent,\n  } = config;\n\n  // Parse text content - expected format: { \"body, 31px 400\": \"text string\" }\n  let textStr = '';\n  let fontSize = 0.31; // fallback\n  if (textContent) {\n    const keys = Object.keys(textContent);\n    if (keys.length > 0) {\n      const key = keys[0];\n      textStr = textContent[key];\n      // Extract pixel size from key (e.g. \"body, 31px 400\")\n      const pxMatch = key.match(/(\\d+)px/);\n      if (pxMatch) {\n        const px = parseFloat(pxMatch[1]);\n        // Convert px to scene units (assume 100px = 1 unit)\n        fontSize = px / 100;\n      }\n    }\n  }\n\n  // --- Plane (background) ---\n  // Use aspect ratio from source rect (512x320 => 1.6:1)\n  const planeWidth = 3.2;\n  const planeHeight = 2.0;\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n  const texture = ctx.textureLoader.load(imageUrl);\n  const material = new MeshBasicNodeMaterial({\n    map: texture,\n    side: THREE.DoubleSide, // if needed\n  });\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(pos.x, pos.y, pos.z);\n  mesh.rotation.set(rot.x, rot.y, rot.z);\n  mesh.scale.set(scale.x, scale.y, scale.z);\n\n  // --- Text overlay ---\n  if (textStr && ctx.fontAtlas) {\n    const textOptions = {\n      font: 'JetBrains Mono',\n      fontWeight: 400,\n      fontSize: fontSize,\n      color: '#16161d', // ink\n      align: 'center',\n      baseline: 'center',\n    };\n    const textMesh = ctx.fontAtlas.createText(textStr, textOptions);\n    // Position text slightly in front of plane\n    textMesh.position.set(0, 0, 0.01);\n    textMesh.scale.set(1, 1, 1);\n    mesh.add(textMesh);\n  }\n\n  // Attach handlers (none)\n  mesh.userData.handlers = {};\n\n  // Cleanup\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (texture && texture !== undefined) texture.dispose();\n    // Dispose children (text meshes)\n    mesh.traverse((child) => {\n      if (child.isMesh) {\n        child.geometry?.dispose();\n        if (child.material) {\n          if (Array.isArray(child.material)) {\n            child.material.forEach((m) => m.dispose());\n          } else {\n            child.material.dispose();\n          }\n        }\n      }\n    });\n  };\n\n  return mesh;\n}\n\nexport default createNode;\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

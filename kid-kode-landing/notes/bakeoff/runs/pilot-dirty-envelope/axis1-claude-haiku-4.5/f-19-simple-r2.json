@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-19-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 101732,
+  "apiMs": 99362,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 10211,
+    "cacheCreation": 0,
+    "cacheRead": 21560
+  },
+  "costUsd": 0.054203999999999995,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicMaterial } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(\n  config: NodeConfig,\n  ctx: NodeContext\n): THREE.Object3D {\n  const group = new THREE.Group();\n\n  // Create plane geometry with aspect ratio matching 512x320 image (1.6:1)\n  const planeGeo = new THREE.PlaneGeometry(1, 0.625);\n\n  // Load texture via cached loader\n  const cardTexture = ctx.textureLoader.load(\n    config.assets?.imageUrl || '/prism-mock/home/nodes/feature-card.png'\n  );\n\n  // Create material (no lighting effects needed)\n  const planeMat = new MeshBasicMaterial({\n    map: cardTexture,\n    transparent: true,\n    side: THREE.DoubleSide,\n  });\n\n  // Create plane mesh\n  const planeMesh = new THREE.Mesh(planeGeo, planeMat);\n  group.add(planeMesh);\n\n  // Render text content if provided\n  if (config.textContent && config.textContent.length > 0) {\n    const textItem = config.textContent[0];\n    const textStr = textItem.text || 'Collection 3';\n\n    const textObject = ctx.fontAtlas.createText(textStr, {\n      fontSize: 0.34,\n      color: 0x16161d,\n      weight: 400,\n      font: 'Lora',\n    });\n\n    if (textObject) {\n      textObject.position.z = 0.02;\n      group.add(textObject);\n    }\n  }\n\n  // Apply scene position, rotation, and scale\n  if (config.scenePosition) {\n    const { x, y, z, rotationXYZ, scaleXYZ } = config.scenePosition;\n    group.position.set(x, y, z);\n    if (rotationXYZ) {\n      group.rotation.set(rotationXYZ[0], rotationXYZ[1], rotationXYZ[2]);\n    }\n    if (scaleXYZ) {\n      group.scale.set(scaleXYZ[0], scaleXYZ[1], scaleXYZ[2]);\n    }\n  }\n\n  // Setup cleanup function\n  group.userData.cleanup = () => {\n    planeGeo.dispose();\n    planeMat.dispose();\n    cardTexture.dispose();\n    gsap.killTweensOf(group);\n    gsap.killTweensOf(planeMesh);\n  };\n\n  // Setup event handlers\n  group.userData.handlers = {\n    onPointerOver: undefined,\n    onPointerOut: undefined,\n    onClick: undefined,\n  };\n\n  return group;\n}\n```"
+}

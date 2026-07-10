@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-01-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 122006,
+  "apiMs": 119752,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 13005,
+    "cacheCreation": 21556,
+    "cacheRead": 0
+  },
+  "costUsd": 0.10912599999999999,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import * as THREE from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  const resources = {\n    textures: [],\n    geometries: [],\n    materials: [],\n  };\n\n  // Load and display image texture as textured plane\n  if (config.assets?.imageUrl) {\n    const texture = ctx.textureLoader.load(config.assets.imageUrl);\n    texture.colorSpace = THREE.SRGBColorSpace;\n    resources.textures.push(texture);\n\n    const geometry = new THREE.PlaneGeometry(5.12, 3.2);\n    resources.geometries.push(geometry);\n\n    const material = new THREE.MeshBasicMaterial({\n      map: texture,\n      transparent: true,\n      side: THREE.DoubleSide,\n    });\n    resources.materials.push(material);\n\n    const plane = new THREE.Mesh(geometry, material);\n    group.add(plane);\n  }\n\n  // Render text content using MSDF font atlas\n  if (config.textContent) {\n    const textMesh = ctx.fontAtlas.createTextMesh(\n      config.textContent,\n      {\n        font: 'JetBrains Mono',\n        fontSize: 0.13,\n        fontWeight: 400,\n        color: 0xe8ecf2,\n        align: 'left',\n      }\n    );\n    textMesh.position.set(-2.0, 1.0, 0.05);\n    group.add(textMesh);\n  }\n\n  // Apply scene position with spec defaults\n  const {\n    x = 0,\n    y = 3,\n    z = 0,\n    rotationXYZ = [0, 0, 0],\n    scaleXYZ = [1, 1, 1],\n  } = config.scenePosition || {};\n\n  group.position.set(x, y, z);\n  group.rotation.set(rotationXYZ[0], rotationXYZ[1], rotationXYZ[2]);\n  group.scale.set(scaleXYZ[0], scaleXYZ[1], scaleXYZ[2]);\n\n  // Apply cinematic primitives\n  if (config.cinematicPrimitives?.length > 0) {\n    for (const primitive of config.cinematicPrimitives) {\n      ctx.primitives[primitive.name](group, primitive.params);\n    }\n  }\n\n  // Cleanup function\n  group.userData.cleanup = () => {\n    resources.geometries.forEach(g => g.dispose());\n    resources.materials.forEach(m => m.dispose());\n    resources.textures.forEach(t => t.dispose());\n    gsap.killTweensOf(group);\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}"
+}

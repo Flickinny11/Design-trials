@@ -1,0 +1,16 @@
+{
+  "contestant": "kimi-k2.7-code",
+  "caseId": "f-03-simple",
+  "run": 1,
+  "rawCompliant": true,
+  "fenced": false,
+  "parsed": true,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "MISSING_CLEANUP",
+      "severity": "error",
+      "message": "returned object must define userData.cleanup (§10.C L386)"
+    }
+  ]
+}

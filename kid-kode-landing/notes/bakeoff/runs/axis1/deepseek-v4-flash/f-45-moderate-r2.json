@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-45-moderate",
+  "run": 2,
+  "ok": true,
+  "wallMs": 32475,
+  "usage": {
+    "promptTokens": 1794,
+    "completionTokens": 4508
+  },
+  "costUsd": 0.0015134,
+  "transportAttempts": 2,
+  "billing": "metered",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2, mul, add, normal, positionLocal, ThreeUniformNode } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { position, rotation, scale, colors } = config;\n  const imageTex = ctx.textureLoader.load('/prism-mock/home/nodes/parallax-stack.png');\n  const depthTex = ctx.textureLoader.load('/prism-mock/home/nodes/parallax-stack.depth.png');\n\n  // Determine plane dimensions from texture aspect ratio (512x320)\n  const img = imageTex.image;\n  const aspect = img.width / img.height;\n  const width = 2.5; // scene units\n  const height = width / aspect;\n\n  const geometry = new THREE.PlaneGeometry(width, height, 64, 64);\n\n  // TSL uniform for mouse-driven UV offset\n  const mouseOffset = new ThreeUniformNode(new THREE.Vector2(0, 0));\n\n  // Build displacement and color nodes\n  const uvs = uv(geometry);\n  const offsetUv = uvs.add(vec2(mouseOffset.x, mouseOffset.y));\n  const depthVal = texture(depthTex, offsetUv).r;\n  const displacement = depthVal.mul(0.1);\n  const positionNode = positionLocal.add(normal.mul(displacement));\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.colorNode = texture(imageTex, offsetUv);\n  material.positionNode = positionNode;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(position.x, position.y, position.z);\n  mesh.rotation.set(rotation.x, rotation.y, rotation.z);\n  mesh.scale.set(scale.x, scale.y, scale.z);\n\n  // Interaction handlers (hover rise, click press, parallax pointer move)\n  mesh.userData.handlers = {\n    pointerenter: () => {\n      gsap.to(mesh.position, {\n        y: position.y + 0.15,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n    },\n    pointerleave: () => {\n      gsap.to(mesh.position, {\n        y: position.y,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n    },\n    pointerdown: () => {\n      gsap.to(mesh.scale, {\n        x: 0.97,\n        y: 0.97,\n        z: 0.97,\n        duration: 0.12,\n        ease: 'back.out',\n      });\n    },\n    pointerup: () => {\n      gsap.to(mesh.scale, {\n        x: 1,\n        y: 1,\n        z: 1,\n        duration: 0.12,\n        ease: 'back.out',\n      });\n    },\n    pointermove: (e) => {\n      // Subtle parallax offset based on intersection UV\n      const x = (e.intersection.uv.x * 2 - 1) * 0.02;\n      const y = (e.intersection.uv.y * 2 - 1) * 0.02;\n      mouseOffset.value.set(x, y);\n    },\n    click: () => {\n      mesh.dispatchEvent(new CustomEvent('hub-features.select'));\n    },\n  };\n\n  // Cleanup: dispose resources and kill GSAP tweens\n  mesh.userData.cleanup = () => {\n    gsap.killTweensOf(mesh.position);\n    gsap.killTweensOf(mesh.scale);\n    geometry.dispose();\n    material.dispose();\n    imageTex.dispose();\n    depthTex.dispose();\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

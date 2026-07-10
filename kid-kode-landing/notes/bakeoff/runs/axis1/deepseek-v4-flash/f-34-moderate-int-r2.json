@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-34-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 11994,
+  "usage": {
+    "promptTokens": 1805,
+    "completionTokens": 1751
+  },
+  "costUsd": 0.00074298,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const root = new THREE.Group();\n\n  // Load and clone the gear mesh\n  const gearOriginal = ctx.glbLoader.get(config.meshUrl);\n  const gearClone = gearOriginal.clone(true);\n\n  // Apply scene placement\n  const { position, rotation, scale } = config.scenePlacement;\n  gearClone.position.set(position.x, position.y, position.z);\n  gearClone.rotation.set(rotation.x, rotation.y, rotation.z);\n  gearClone.scale.set(scale.x, scale.y, scale.z);\n  root.add(gearClone);\n\n  // Prepare GSAP timelines for interactions\n  const tlHover = gsap.timeline({ paused: true });\n  tlHover.to(gearClone.position, {\n    y: gearClone.position.y + 0.15,\n    duration: 0.5,\n    ease: 'power3.out',\n    overwrite: 'auto'\n  }, 0);\n\n  const tlPress = gsap.timeline({ paused: true });\n  tlPress.to(gearClone.scale, {\n    x: 0.97,\n    y: 0.97,\n    z: 0.97,\n    duration: 0.12,\n    ease: 'back.out(1.7)',\n    overwrite: 'auto'\n  }, 0);\n  tlPress.to(gearClone.scale, {\n    x: 1,\n    y: 1,\n    z: 1,\n    duration: 0.3,\n    ease: 'power4.out',\n    overwrite: 'auto'\n  }, 0.12);\n\n  // Interaction handlers\n  root.userData.handlers = {\n    pointerover: () => {\n      tlHover.play();\n    },\n    pointerout: () => {\n      tlHover.reverse();\n    },\n    click: () => {\n      tlPress.restart();\n      // Emit navigation event\n      if (config.onEvent) {\n        config.onEvent('hub-home.select', { target: root });\n      }\n    }\n  };\n\n  // Apply cinematic primitives\n  (config.cinematicPrimitives || []).forEach(primitive => {\n    const applyFn = ctx.primitives[primitive.name];\n    if (applyFn) {\n      applyFn(root, primitive.params);\n    }\n  });\n\n  // Cleanup\n  root.userData.cleanup = () => {\n    tlHover.kill();\n    tlPress.kill();\n    // Traverse to dispose materials/geometries if needed (shared via cache)\n    root.traverse(child => {\n      if (child.isMesh) {\n        child.geometry?.dispose();\n        if (Array.isArray(child.material)) {\n          child.material.forEach(m => m.dispose());\n        } else {\n          child.material?.dispose();\n        }\n      }\n    });\n  };\n\n  return root;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

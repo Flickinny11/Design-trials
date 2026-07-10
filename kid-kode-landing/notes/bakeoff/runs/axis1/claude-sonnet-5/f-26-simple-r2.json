@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-26-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 11039,
+  "apiMs": 8519,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 844,
+    "cacheCreation": 3368,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.056926500000000005,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import * as THREE from 'three/webgpu';\nimport { texture, uv, vec4, uniform } from 'three/tsl';\nimport { createTextMesh } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-pricing-card-2-label';\n\n  group.position.set(3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 1.6;\n  const height = 1.0;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const map = ctx.textureLoader.load('/prism-mock/home/nodes/cta-hero-isolated.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const opacityUniform = uniform(1.0);\n  const uvNode = uv();\n  const texNode = texture(map, uvNode);\n  material.colorNode = vec4(texNode.rgb, texNode.a.mul(opacityUniform));\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'pricing-card-2-label-plane';\n  group.add(plane);\n\n  let textMesh = null;\n  try {\n    textMesh = createTextMesh(ctx.fontAtlas, {\n      text: 'Pricing 3',\n      role: 'headline',\n      font: 'Lora',\n      weight: 400,\n      sizePx: 39,\n      color: config?.visualSpec?.colors?.paper || '#e8ecf2',\n      align: 'center',\n      anchor: 'center',\n      maxWidth: width * 0.9,\n    });\n    textMesh.position.set(0, 0, 0.001);\n    group.add(textMesh);\n  } catch (e) {\n    // font atlas unavailable — plane still renders\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n    if (textMesh) {\n      if (textMesh.geometry) textMesh.geometry.dispose();\n      if (textMesh.material) {\n        if (Array.isArray(textMesh.material)) {\n          textMesh.material.forEach((m) => m.dispose());\n        } else {\n          textMesh.material.dispose();\n        }\n      }\n    }\n  };\n\n  return group;\n}"
+}

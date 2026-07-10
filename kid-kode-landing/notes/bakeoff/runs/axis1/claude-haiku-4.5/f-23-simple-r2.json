@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-23-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 44183,
+  "apiMs": 41744,
+  "usage": {
+    "promptTokens": 3941,
+    "completionTokens": 6677,
+    "cacheCreation": 0,
+    "cacheRead": 0
+  },
+  "costUsd": 0.038305,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture as tsTexture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Load texture\n  const imageUrl = config.imageUrl || '/prism-assets/chrome/brushed-metal.map.png';\n  const map = ctx.textureLoader.load(imageUrl);\n  \n  // Configure texture properties\n  map.colorSpace = THREE.SRGBColorSpace;\n  map.minFilter = THREE.LinearFilter;\n  map.magFilter = THREE.LinearFilter;\n  \n  // Create plane geometry with 1.6:1 aspect ratio (512:320 from atlas)\n  const geometry = new THREE.PlaneGeometry(1.6, 1.0);\n  \n  // Create material using TSL\n  const mapNode = tsTexture(map);\n  const material = new THREE.MeshBasicNodeMaterial({\n    colorNode: mapNode,\n  });\n  \n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  \n  // Apply scene placement\n  const pos = config.scenePosition || { x: 0, y: -0.3, z: 0 };\n  const rot = config.sceneRotation || { x: 0, y: 0, z: 0 };\n  const scl = config.sceneScale || { x: 1, y: 1, z: 1 };\n  \n  mesh.position.set(pos.x, pos.y, pos.z);\n  mesh.rotation.order = 'XYZ';\n  mesh.rotation.set(rot.x, rot.y, rot.z);\n  mesh.scale.set(scl.x, scl.y, scl.z);\n  \n  group.add(mesh);\n  \n  // Initialize event handlers\n  group.userData.handlers = {};\n  \n  // Cleanup function\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n  };\n  \n  return group;\n}\n```"
+}

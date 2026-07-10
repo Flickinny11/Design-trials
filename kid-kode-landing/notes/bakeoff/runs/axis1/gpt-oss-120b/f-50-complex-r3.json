@@ -1,0 +1,17 @@
+{
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-50-complex",
+  "run": 3,
+  "ok": true,
+  "wallMs": 14370,
+  "usage": {
+    "promptTokens": 1767,
+    "completionTokens": 2402
+  },
+  "costUsd": 0.00170625,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "import { Object3D } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {any} assets\n * @property {string} meshUrl\n * @property {Array<number>} position\n * @property {Array<number>} rotation\n * @property {Array<number>} scale\n * @property {Array<{name:string,params:any}>} cinematicPrimitives\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {(url:string)=>Object3D} glbLoader\n * @property {{[key:string]:(target:Object3D,params:any)=>void}} primitives\n * @property {(event:string)=>void} [emit]\n */\n\n/**\n * Creates a thumbnail card node for the Features hub.\n *\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {Object3D}\n */\nexport default function createNode(config, ctx) {\n  // Resolve mesh URL (allow asset wrapper)\n  const meshUrl = (config.assets && config.assets.meshUrl) || config.meshUrl;\n\n  // Load GLB (synchronous – cached)\n  const source = ctx.glbLoader(meshUrl);\n  // Clone to avoid mutating cached instance\n  const node = source.clone ? source.clone() : source;\n\n  // Apply transforms\n  if (config.position && config.position.length === 3) {\n    node.position.set(...config.position);\n  }\n  if (config.rotation && config.rotation.length === 3) {\n    node.rotation.set(...config.rotation);\n  }\n  if (config.scale && config.scale.length === 3) {\n    node.scale.set(...config.scale);\n  }\n\n  // Store original Y for hover animation\n  const originalY = node.position.y;\n\n  // Hover animation (rise‑in subtle, 0.15 scene units)\n  const hoverTimeline = gsap.timeline({ paused: true })\n    .to(node.position, {\n      y: originalY + 0.15,\n      duration: 0.2,\n      ease: 'power3.out',\n    })\n    .to(node.position, {\n      y: originalY,\n      duration: 0.2,\n      ease: 'power3.in',\n      onComplete: () => hoverTimeline.pause(),\n    });\n\n  // Event handlers attached to userData\n  node.userData.handlers = {\n    /**\n     * Hover handler.\n     * @param {boolean} enter true on hover enter, false on leave\n     */\n    hover(enter) {\n      if (enter) {\n        hoverTimeline.restart();\n      } else {\n        hoverTimeline.reverse();\n      }\n    },\n    /**\n     * Click handler – emits navigation event.\n     */\n    click() {\n      if (typeof ctx.emit === 'function') {\n        ctx.emit('hub-features.select');\n      }\n    },\n  };\n\n  // Cleanup routine\n  node.userData.cleanup = () => {\n    hoverTimeline.kill();\n    node.traverse((obj) => {\n      if (obj.isMesh) {\n        if (obj.geometry) obj.geometry.dispose();\n        if (obj.material) {\n          if (Array.isArray(obj.material)) {\n            obj.material.forEach((m) => m && m.dispose && m.dispose());\n          } else {\n            obj.material.dispose();\n          }\n        }\n      }\n    });\n  };\n\n  // Apply cinematic primitives defined in the config\n  if (Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach((prim) => {\n      const apply = ctx.primitives[prim.name];\n      if (typeof apply === 'function') {\n        apply(node, prim.params);\n      }\n    });\n  }\n\n  return node;\n}"
+}

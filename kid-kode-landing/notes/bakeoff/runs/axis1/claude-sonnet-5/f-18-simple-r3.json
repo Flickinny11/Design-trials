@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-18-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 12272,
+  "apiMs": 10817,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 825,
+    "cacheCreation": 0,
+    "cacheRead": 5487
+  },
+  "costUsd": 0.0244595,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2, mix, uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const rect = { x: 0, y: 0, w: 512, h: 320 };\n  const atlasW = 512;\n  const atlasH = 320;\n\n  const aspect = rect.w / rect.h;\n  const width = 1.6;\n  const height = width / aspect;\n\n  const geometry = new THREE.PlaneGeometry(width, height, 1, 1);\n\n  const map = ctx.textureLoader.load('/prism-assets/chrome/ceramic-grain.map.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n  map.wrapS = THREE.ClampToEdgeWrapping;\n  map.wrapT = THREE.ClampToEdgeWrapping;\n\n  const offsetX = rect.x / atlasW;\n  const offsetY = 1.0 - (rect.y + rect.h) / atlasH;\n  const scaleX = rect.w / atlasW;\n  const scaleY = rect.h / atlasH;\n\n  const uvOffset = uniform(new THREE.Vector2(offsetX, offsetY));\n  const uvScale = uniform(new THREE.Vector2(scaleX, scaleY));\n\n  const atlasUV = uv().mul(uvScale).add(uvOffset);\n  const mapNode = texture(map, atlasUV);\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.mapNode = mapNode;\n  material.colorNode = mapNode;\n  material.transparent = false;\n  material.toneMapped = false;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'hub-collection-card-0-collection-card-3';\n\n  const node = new THREE.Group();\n  node.add(mesh);\n\n  node.position.set(3.2, -0.3, 0);\n  node.rotation.set(0, 0, 0);\n  node.scale.set(1, 1, 1);\n\n  node.onBeforeRender = (renderer, scene, camera) => {\n    node.quaternion.copy(camera.quaternion);\n  };\n\n  node.userData.handlers = {};\n\n  node.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n  };\n\n  return node;\n}\n```"
+}

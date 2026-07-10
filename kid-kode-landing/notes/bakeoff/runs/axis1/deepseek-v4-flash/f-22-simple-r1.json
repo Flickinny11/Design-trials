@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-22-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 13512,
+  "usage": {
+    "promptTokens": 1703,
+    "completionTokens": 1569
+  },
+  "costUsd": 0.00067774,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport { \n  PlaneGeometry, \n  MeshBasicNodeMaterial, \n  Group, \n  TextureLoader,\n  Color,\n  Vector3\n} from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const {\n    textContent,\n    colors,\n    typography,\n    scenePlacement,\n    imageUrl,\n  } = config;\n\n  // Build the group that will be returned\n  const group = new Group();\n  group.position.set(\n    scenePlacement.position[0],\n    scenePlacement.position[1],\n    scenePlacement.position[2]\n  );\n  group.rotation.set(\n    scenePlacement.rotation[0],\n    scenePlacement.rotation[1],\n    scenePlacement.rotation[2]\n  );\n  group.scale.set(\n    scenePlacement.scale[0],\n    scenePlacement.scale[1],\n    scenePlacement.scale[2]\n  );\n\n  // ---- Plane with image texture ----\n  const planeGeometry = new PlaneGeometry(1.2, 0.4); // size suitable for a label\n  const textureLoader = ctx.textureLoader || new TextureLoader();\n  const texture = textureLoader.load(imageUrl || '/prism-mock/home/nodes/orb-decor.png');\n\n  // Static composition: engineered gradient & subtle grain (simulated via texture)\n  const planeMaterial = new MeshBasicNodeMaterial({\n    map: texture,\n    color: new Color(colors.paper || '#e8ecf2'), // fallback\n    transparent: true,\n  });\n\n  const planeMesh = new Mesh(planeGeometry, planeMaterial);\n  planeMesh.position.set(0, 0, 0); // centered within group\n  group.add(planeMesh);\n\n  // ---- Headline text using MSDF font atlas ----\n  // Use typography.scale: headline -> 0.34 scene units, weight 400\n  const headlineSize = typography?.scale?.headline || 0.34;\n  const textColor = new Color(colors?.ink || '#16161d');\n  const fontFamily = typography?.display?.split(' ')[0] || 'Lora';\n\n  const textMesh = ctx.fontAtlas.createText(textContent[0]?.text || 'Pricing 1', {\n    fontFamily: fontFamily,\n    fontWeight: 400,\n    fontSize: headlineSize,\n    color: textColor,\n    anchorX: 'center',\n    anchorY: 'center',\n  });\n\n  // Position text on top of plane (slightly forward in z)\n  textMesh.position.set(0, 0, 0.001);\n  group.add(textMesh);\n\n  // ---- Cleanup ----\n  group.userData.cleanup = () => {\n    planeGeometry.dispose();\n    planeMaterial.dispose();\n    texture.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    // Kills any GSAP timelines attached to this group\n    const tl = group.userData._timeline;\n    if (tl) tl.kill();\n  };\n\n  // Attach event handler container (none for this static element)\n  group.userData.handlers = {};\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

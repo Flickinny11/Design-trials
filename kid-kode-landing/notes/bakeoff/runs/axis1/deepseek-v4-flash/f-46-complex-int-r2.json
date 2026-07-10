@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-46-complex-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 20892,
+  "usage": {
+    "promptTokens": 1836,
+    "completionTokens": 2278
+  },
+  "costUsd": 0.0008948800000000001,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  // Load GLB mesh (synchronous cache)\n  const meshGroup = ctx.glbLoader.get(config.assets.meshUrl);\n  const meshClone = meshGroup.clone(true);\n\n  // Apply scene placement\n  meshClone.position.set(\n    config.scenePlacement.position.x,\n    config.scenePlacement.position.y,\n    config.scenePlacement.position.z\n  );\n  meshClone.rotation.set(\n    config.scenePlacement.rotation.x,\n    config.scenePlacement.rotation.y,\n    config.scenePlacement.rotation.z\n  );\n  meshClone.scale.set(\n    config.scenePlacement.scale.x,\n    config.scenePlacement.scale.y,\n    config.scenePlacement.scale.z\n  );\n\n  // Root object\n  const root = new THREE.Group();\n  root.add(meshClone);\n  root.userData.handlers = {};\n\n  // Hover timeline (rise-in preset, subtle 0.15 units)\n  const hoverTimeline = gsap.timeline({ paused: true });\n  hoverTimeline.to(meshClone.position, {\n    y: meshClone.position.y + 0.15,\n    duration: 0.7,\n    ease: 'power3.out',\n    overwrite: 'auto'\n  });\n\n  root.userData.handlers.hover = {\n    enter: () => hoverTimeline.play(),\n    leave: () => hoverTimeline.reverse()\n  };\n\n  // Click handler – emit hub-collection.select\n  root.userData.handlers.click = () => {\n    if (ctx.events && ctx.events.emit) {\n      ctx.events.emit('hub-collection.select', { source: config.id });\n    } else {\n      console.warn('No emit function available');\n    }\n  };\n\n  // Apply cinematic primitives\n  if (config.cinematicPrimitives) {\n    config.cinematicPrimitives.forEach(prim => {\n      const applyPrim = ctx.primitives[prim.name];\n      if (applyPrim) {\n        applyPrim(root, prim.params);\n      } else {\n        console.warn(`Primitive \"${prim.name}\" not found in ctx.primitives`);\n      }\n    });\n  }\n\n  // Cleanup\n  root.userData.cleanup = () => {\n    hoverTimeline.kill();\n    // Dispose cloned mesh resources (geometries, materials)\n    meshClone.traverse(child => {\n      if (child.isMesh) {\n        child.geometry.dispose();\n        if (Array.isArray(child.material)) {\n          child.material.forEach(m => m.dispose());\n        } else {\n          child.material.dispose();\n        }\n      }\n    });\n  };\n\n  return root;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

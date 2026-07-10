@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-47-complex-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 57790,
+  "usage": {
+    "promptTokens": 1845,
+    "completionTokens": 4779
+  },
+  "costUsd": 0.00159642,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, positionGeometry, normalGeometry, mul, add } from 'three/tsl';\nimport gsap from 'gsap';\n\nexport default function createNode(config, ctx) {\n  // Load textures (assumed synchronous from cache)\n  const colorMap = ctx.textureLoader(config.assets.imageUrl);\n  const depthMap = ctx.textureLoader(config.assets.depthMapUrl);\n\n  // Tessellated plane geometry with 64x64 segments\n  const geometry = new THREE.PlaneGeometry(1, 1, 64, 64);\n\n  // Build TSL displacement node\n  const depthNode = texture(depthMap).r.mul(0.1); // scale factor\n  const displaceVec = normalGeometry.mul(depthNode);\n  const displacedPos = positionGeometry.add(displaceVec);\n\n  // Material with machined-metal PBR parameters\n  const material = new THREE.MeshNodeMaterial();\n  material.colorNode = texture(colorMap);\n  material.roughness = 0.5;\n  material.metalness = 0.55;\n  material.clearcoat = 0.25;\n  material.envMapIntensity = 1.0;\n  material.positionNode = displacedPos;\n  material.side = THREE.DoubleSide;\n\n  // Assemble mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  const sp = config.scenePlacement;\n  mesh.position.set(sp.position.x, sp.position.y, sp.position.z);\n  mesh.rotation.set(sp.rotation.x, sp.rotation.y, sp.rotation.z);\n  mesh.scale.set(sp.scale.x, sp.scale.y, sp.scale.z);\n\n  // Apply all cinematic primitives\n  (config.cinematicPrimitives || []).forEach(prim => {\n    ctx.primitives[prim.name](mesh, prim.params);\n  });\n\n  // Store original Y for hover animation\n  const originalY = mesh.position.y;\n\n  // Weighted‑settle entrance (overshoot 1.04 → 1.0)\n  const entranceTL = gsap.timeline();\n  mesh.scale.set(0.8, 0.8, 0.8);\n  entranceTL.to(mesh.scale, { x: 1.04, y: 1.04, z: 1.04, duration: 0.6, ease: 'power4.out' })\n           .to(mesh.scale, { x: 1, y: 1, z: 1, duration: 0.3, ease: 'power4.out' });\n\n  // Cleanup handler\n  mesh.userData.cleanup = () => {\n    entranceTL.kill();\n    gsap.killTweensOf(mesh.position);\n    gsap.killTweensOf(mesh.scale);\n    geometry.dispose();\n    material.dispose();\n    colorMap.dispose();\n    depthMap.dispose();\n  };\n\n  // Interaction handlers (hover + click)\n  mesh.userData.handlers = {\n    hover: () => {\n      gsap.to(mesh.position, {\n        y: originalY + 0.15,\n        duration: 0.7,\n        ease: 'power3.out',\n        overwrite: 'auto'\n      });\n    },\n    hoverend: () => {\n      gsap.to(mesh.position, {\n        y: originalY,\n        duration: 0.7,\n        ease: 'power3.out',\n        overwrite: 'auto'\n      });\n    },\n    click: () => {\n      if (ctx.emit) ctx.emit('hub-pricing.select');\n    }\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

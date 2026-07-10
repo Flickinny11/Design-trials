@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-25-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 17923,
+  "usage": {
+    "promptTokens": 1688,
+    "completionTokens": 2618
+  },
+  "costUsd": 0.0009693600000000002,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial, PlaneGeometry, Mesh } from 'three/webgpu'\nimport { texture as textureNode } from 'three/tsl'\n\nexport default function createNode(config, ctx) {\n  // -- geometry sized to the atlas region aspect ratio (512x320 = 1.6:1) --\n  const aspect = 512 / 320\n  const geometry = new PlaneGeometry(aspect, 1)\n\n  // -- load texture and set UV sub‑region from atlas source rect --\n  const texture = ctx.textureLoader.load(config.imageUrl)\n  if (texture.image) {\n    const imgW = texture.image.width\n    const imgH = texture.image.height\n    const srcW = 512\n    const srcH = 320\n    texture.repeat.set(srcW / imgW, srcH / imgH)\n    texture.offset.set(0, 1 - srcH / imgH) // top‑left origin → bottom‑left UV\n  }\n\n  // -- material with the sub‑region texture --\n  const material = new MeshBasicNodeMaterial({\n    map: textureNode(texture),\n    transparent: true,\n    side: 2, // DoubleSide\n  })\n\n  // -- build the mesh --\n  const mesh = new Mesh(geometry, material)\n  mesh.position.set(\n    config.scenePosition.x ?? 0,\n    config.scenePosition.y ?? 0,\n    config.scenePosition.z ?? 0\n  )\n  mesh.rotation.set(\n    config.scenePosition.rotation?.x ?? 0,\n    config.scenePosition.rotation?.y ?? 0,\n    config.scenePosition.rotation?.z ?? 0\n  )\n  if (config.scenePosition.scale) {\n    mesh.scale.set(\n      config.scenePosition.scale.x ?? 1,\n      config.scenePosition.scale.y ?? 1,\n      config.scenePosition.scale.z ?? 1\n    )\n  }\n\n  // -- empty handlers (no interactions) --\n  mesh.userData.handlers = {}\n\n  // -- cleanup --\n  mesh.userData.cleanup = () => {\n    geometry.dispose()\n    material.dispose()\n    // texture is cached by ctx.textureLoader – do not dispose globally\n  }\n\n  return mesh\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

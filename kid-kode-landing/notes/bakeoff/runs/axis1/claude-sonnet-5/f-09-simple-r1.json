@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-09-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 9830,
+  "apiMs": 7296,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 741,
+    "cacheCreation": 3351,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.05418749999999999,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const rect = { x: 0, y: 0, w: 512, h: 320 };\n  const atlasW = 512;\n  const atlasH = 320;\n\n  const aspect = rect.w / rect.h;\n  const height = 1.4;\n  const width = height * aspect;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  const map = ctx.textureLoader.load('/prism-mock/home/nodes/floating-accent.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n  map.wrapS = THREE.ClampToEdgeWrapping;\n  map.wrapT = THREE.ClampToEdgeWrapping;\n\n  const uOffset = rect.x / atlasW;\n  const vOffset = 1.0 - (rect.y + rect.h) / atlasH;\n  const uScale = rect.w / atlasW;\n  const vScale = rect.h / atlasH;\n\n  const uvNode = uv().mul(vec2(uScale, vScale)).add(vec2(uOffset, vOffset));\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.map = texture(map, uvNode);\n  material.transparent = true;\n  material.depthWrite = false;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'features-card-2-accent';\n\n  const node = new THREE.Object3D();\n  node.name = 'hub-features-card-2';\n  node.add(mesh);\n\n  node.position.set(0, -0.3, 0);\n  node.rotation.set(0, 0, 0);\n  node.scale.set(1, 1, 1);\n\n  const camera = ctx.camera;\n  node.userData.handlers = {\n    update: () => {\n      if (camera) {\n        mesh.quaternion.copy(camera.quaternion);\n      }\n    }\n  };\n\n  node.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map) map.dispose();\n  };\n\n  return node;\n}\n```"
+}

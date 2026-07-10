@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-16-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 11294,
+  "apiMs": 8781,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 823,
+    "cacheCreation": 0,
+    "cacheRead": 5466
+  },
+  "costUsd": 0.024387,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec3, vec4, float, mix, uniform, screenUV } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const width = 1.6;\n  const height = 1.0;\n\n  const geometry = new THREE.PlaneGeometry(width, height, 1, 1);\n  const material = new THREE.MeshBasicNodeMaterial({ transparent: true });\n\n  const map = ctx.textureLoader('/prism-mock/home/nodes/orb-decor.png');\n  if (map) {\n    map.colorSpace = THREE.SRGBColorSpace;\n  }\n\n  const inkColor = vec3(0x16 / 255, 0x16 / 255, 0x1d / 255);\n  const surfaceColor = vec3(0x0b / 255, 0x0b / 255, 0x10 / 255);\n\n  const uvNode = uv();\n  const gradientMix = uniform(0.5);\n\n  // engineered gradient surface: linear blend from ink to surface based on vertical uv\n  const gradient = mix(surfaceColor, inkColor, uvNode.y);\n\n  let colorNode;\n  if (map) {\n    const texColor = texture(map, uvNode);\n    colorNode = mix(vec4(gradient, 1.0), texColor, texColor.a);\n  } else {\n    colorNode = vec4(gradient, 1.0);\n  }\n\n  // subtle grain using screen-space uv hashed noise approximation\n  const grainSeed = screenUV.mul(1000.0);\n  const grainNoise = grainSeed.x.sin().mul(grainSeed.y.cos()).fract().sub(0.5).mul(0.03);\n  const grained = colorNode.add(vec4(grainNoise, grainNoise, grainNoise, 0.0));\n\n  material.colorNode = grained;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(0, -0.3, 0);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n  mesh.name = 'hub-collection-card-1-decor';\n\n  mesh.userData.handlers = {};\n\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n  };\n\n  return mesh;\n}\n```"
+}

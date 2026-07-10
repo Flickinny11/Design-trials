@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-30-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 14546,
+  "apiMs": 12265,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1091,
+    "cacheCreation": 3358,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0630025,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2, mix, float, color } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const atlasRect = { x: 0, y: 0, w: 512, h: 320 };\n  const aspect = atlasRect.w / atlasRect.h;\n\n  const width = 1.4;\n  const height = width / aspect;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  const map = ctx.textureLoader.load('/prism-assets/chrome/ceramic-grain.map.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n  map.wrapS = THREE.ClampToEdgeWrapping;\n  map.wrapT = THREE.ClampToEdgeWrapping;\n\n  // Atlas region 0,0,512,320 out of an assumed 512x320 (full) atlas texture\n  // Compute normalized UV offset/repeat\n  const atlasW = 512;\n  const atlasH = 320;\n  const uOffset = atlasRect.x / atlasW;\n  const vOffset = 1.0 - (atlasRect.y + atlasRect.h) / atlasH;\n  const uRepeat = atlasRect.w / atlasW;\n  const vRepeat = atlasRect.h / atlasH;\n\n  const remappedUV = uv().mul(vec2(uRepeat, vRepeat)).add(vec2(uOffset, vOffset));\n\n  const baseColor = texture(map, remappedUV);\n\n  // Engineered gradient overlay: subtle ink -> surface gradient tinted by paper, no soft blur\n  const inkColor = color(new THREE.Color(config?.visual?.colors?.ink ?? '#16161d'));\n  const surfaceColor = color(new THREE.Color(config?.visual?.colors?.surface ?? '#0b0b10'));\n  const gradientFactor = uv().y;\n  const engineeredGradient = mix(surfaceColor, inkColor, gradientFactor);\n\n  const finalColor = mix(baseColor, engineeredGradient, float(0.12));\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.colorNode = finalColor;\n  material.transparent = false;\n  material.toneMapped = false;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'hub-journal-card-1-image';\n\n  const node = new THREE.Object3D();\n  node.name = 'hub-journal-card-1';\n  node.add(mesh);\n\n  node.position.set(0, -0.3, 0);\n  node.rotation.set(0, 0, 0);\n  node.scale.set(1, 1, 1);\n\n  // Billboard toward camera on each frame via onBeforeRender\n  node.onBeforeRender = (renderer, scene, camera) => {\n    node.quaternion.copy(camera.quaternion);\n  };\n\n  node.userData.handlers = {};\n\n  node.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    node.onBeforeRender = null;\n  };\n\n  return node;\n}\n```"
+}

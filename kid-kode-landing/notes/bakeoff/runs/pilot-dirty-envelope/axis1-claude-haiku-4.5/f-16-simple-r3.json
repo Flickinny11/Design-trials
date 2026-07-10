@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "model": "claude-haiku-4-5-20251001",
+  "route": "claude-cli",
+  "caseId": "f-16-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 33249,
+  "apiMs": 30691,
+  "usage": {
+    "promptTokens": 10,
+    "completionTokens": 4654,
+    "cacheCreation": 0,
+    "cacheRead": 21546
+  },
+  "costUsd": 0.0264036,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```typescript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture as tslTexture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  \n  // Apply scene position, rotation, and scale\n  const sp = config.scenePosition || {};\n  group.position.set(sp.x ?? 0, sp.y ?? 0, sp.z ?? 0);\n  if (sp.rotationXYZ) {\n    group.rotation.x = sp.rotationXYZ[0] ?? 0;\n    group.rotation.y = sp.rotationXYZ[1] ?? 0;\n    group.rotation.z = sp.rotationXYZ[2] ?? 0;\n  }\n  if (sp.scaleXYZ) {\n    group.scale.set(sp.scaleXYZ[0] ?? 1, sp.scaleXYZ[1] ?? 1, sp.scaleXYZ[2] ?? 1);\n  }\n  \n  // Create plane geometry\n  const geometry = new THREE.PlaneGeometry(1, 1);\n  \n  // Load texture from image URL\n  const imageTexture = ctx.textureLoader.load(config.imageUrl);\n  \n  // Create material with TSL texture node\n  const colorNode = tslTexture(imageTexture);\n  const material = new MeshBasicNodeMaterial({\n    colorNode,\n  });\n  \n  // Create and add mesh to group\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n  \n  // Cleanup function for disposal\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    imageTexture.dispose();\n  };\n  \n  // Event handlers (none for this static card)\n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

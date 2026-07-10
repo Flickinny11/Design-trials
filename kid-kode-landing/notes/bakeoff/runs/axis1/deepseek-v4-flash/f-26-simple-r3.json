@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-26-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 8277,
+  "usage": {
+    "promptTokens": 1707,
+    "completionTokens": 1242
+  },
+  "costUsd": 0.00058674,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/tsl';\nimport gsap from 'gsap';\n\n/**\n * Creates a pricing card label node – a static plane with image and text.\n * @param {import('@/primitives').NodeConfig} config\n * @param {import('@/primitives').NodeContext} ctx\n * @returns {THREE.Group}\n */\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n\n  // --- Position / Rotation / Scale ---\n  const pos = config.scenePlacement?.position ?? [3.2, 1, 0.06];\n  const rot = config.scenePlacement?.rotation ?? [0, 0, 0];\n  const scl = config.scenePlacement?.scale ?? [1, 1, 1];\n  group.position.set(pos[0], pos[1], pos[2]);\n  group.rotation.set(rot[0], rot[1], rot[2]);\n  group.scale.set(scl[0], scl[1], scl[2]);\n\n  // --- Image plane ---\n  const imageUrl = config.assets?.imageUrl ?? '/prism-mock/home/nodes/cta-hero-isolated.png';\n  const texture = ctx.textureLoader.load(imageUrl);\n  texture.colorSpace = THREE.SRGBColorSpace;\n\n  // Source rect from atlas region: 0,0,512,320 → use full texture\n  // (Assume texture already contains the exact region; if not, we could offset/scale UVs)\n  const imageGeometry = new THREE.PlaneGeometry(1, 0.625); // 512x320 aspect = 1.6 → width 1, height 0.625\n  const imageMaterial = new MeshBasicNodeMaterial({\n    map: texture,\n    transparent: true,\n    depthWrite: false,\n  });\n  const imageMesh = new THREE.Mesh(imageGeometry, imageMaterial);\n  // Place image centered at origin of this group\n  imageMesh.position.set(0, 0, 0);\n  group.add(imageMesh);\n\n  // --- Text label ---\n  const textContent = config.textContent?.headline ?? 'Pricing 3';\n  // Use ctx.fontAtlas (assumed synchronous) to create text mesh\n  // Font: display serif, size 39px → convert to scene units (with DPR scaling)\n  const dpr = window.devicePixelRatio || 1;\n  const fontSize = (39 / dpr) * 0.001; // rough scale factor to scene units; fine‑tune as needed\n  const textMesh = ctx.fontAtlas.createMesh(textContent, {\n    fontFamily: 'Lora',\n    fontWeight: 400,\n    fontSize: fontSize,\n    color: new THREE.Color('#e8ecf2'), // paper\n    align: 'center',\n    baseline: 'middle',\n  });\n  // Position text slightly in front of image plane\n  textMesh.position.set(0, 0, 0.002);\n  group.add(textMesh);\n\n  // --- Handlers (none) ---\n  group.userData.handlers = {};\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    // Kill any GSAP timelines (none in this case)\n    imageMaterial.dispose();\n    imageGeometry.dispose();\n    texture.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    // Remove from parent if still attached\n    if (group.parent) {\n      group.parent.remove(group);\n    }\n  };\n\n  return group;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

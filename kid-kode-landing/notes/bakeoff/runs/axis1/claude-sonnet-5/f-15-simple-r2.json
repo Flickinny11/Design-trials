@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-15-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 12258,
+  "apiMs": 9737,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1055,
+    "cacheCreation": 0,
+    "cacheRead": 5502
+  },
+  "costUsd": 0.030209999999999997,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'collection-card-1-label';\n  group.position.set(-3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const atlasIndex = 0;\n  const rect = { x: 0, y: 0, w: 512, h: 320 };\n  const atlasW = 512;\n  const atlasH = 320;\n\n  const aspect = rect.w / rect.h;\n  const planeHeight = 0.9;\n  const planeWidth = planeHeight * aspect;\n\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  const map = ctx.textureLoader.load(config.assets?.imageUrl || '/prism-mock/home/nodes/floating-accent.png');\n  map.colorSpace = THREE.SRGBColorSpace;\n\n  const uOffset = rect.x / atlasW;\n  const vOffset = 1.0 - (rect.y + rect.h) / atlasH;\n  const uScale = rect.w / atlasW;\n  const vScale = rect.h / atlasH;\n\n  const uvNode = uv().mul(vec2(uScale, vScale)).add(vec2(uOffset, vOffset));\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.map = map;\n  material.colorNode = texture(map, uvNode);\n  material.transparent = true;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'collection-card-1-plane';\n  group.add(mesh);\n\n  // Headline text: \"Collection 1\"\n  const fontAtlas = ctx.fontAtlas;\n  let textMesh = null;\n  if (fontAtlas && fontAtlas.createText) {\n    textMesh = fontAtlas.createText({\n      text: 'Collection 1',\n      font: 'display',\n      weight: 400,\n      size: 0.34,\n      color: config.colors?.paper || '#e8ecf2',\n      anchor: 'center',\n    });\n    textMesh.name = 'collection-card-1-headline';\n    textMesh.position.set(0, -planeHeight / 2 - 0.15, 0.01);\n    group.add(textMesh);\n  }\n\n  // Billboard toward camera each frame via onBeforeRender\n  group.onBeforeRender = (renderer, scene, camera) => {\n    group.quaternion.copy(camera.quaternion);\n  };\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    if (textMesh) {\n      if (textMesh.geometry) textMesh.geometry.dispose();\n      if (textMesh.material) textMesh.material.dispose();\n    }\n    group.onBeforeRender = null;\n  };\n\n  return group;\n}\n```"
+}

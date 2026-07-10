@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-30-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 21295,
+  "usage": {
+    "promptTokens": 1699,
+    "completionTokens": 2798
+  },
+  "costUsd": 0.0010213000000000002,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport { PlaneGeometry, Object3D } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  // Destructure config with defaults\n  const {\n    imageUrl = '/prism-assets/chrome/ceramic-grain.map.png',\n    visual = {},\n    scenePlacement = { position: [0, -0.3, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },\n  } = config;\n\n  // Compute aspect ratio from atlas region (512x320 → 1.6)\n  const atlasWidth = 512;\n  const atlasHeight = 320;\n  const aspect = atlasWidth / atlasHeight;\n\n  // Create geometry sized to aspect ratio (width = aspect, height = 1)\n  const geometry = new PlaneGeometry(aspect, 1);\n\n  // Load texture (assumed synchronous from cache)\n  const mapTexture = ctx.textureLoader(imageUrl);\n\n  // Create material with node-based map\n  const material = new MeshBasicNodeMaterial({\n    colorNode: texture(mapTexture),\n    transparent: true,\n    depthWrite: false,\n  });\n\n  // Build mesh\n  const mesh = new Object3D();\n  mesh.geometry = geometry;\n  mesh.material = material;\n\n  // Apply scene placement\n  const { position, rotation, scale } = scenePlacement;\n  mesh.position.set(position[0], position[1], position[2]);\n  mesh.rotation.set(rotation[0], rotation[1], rotation[2]);\n  mesh.scale.set(scale[0], scale[1], scale[2]);\n\n  // Billboard via onBeforeRender (always face camera)\n  mesh.onBeforeRender = (_renderer, _scene, camera) => {\n    mesh.lookAt(camera.position);\n  };\n\n  // Cleanup\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    mapTexture.dispose();\n    // Remove onBeforeRender to avoid memory leak\n    delete mesh.onBeforeRender;\n  };\n\n  // No text content, no handlers, no primitives\n  mesh.userData.handlers = {};\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}

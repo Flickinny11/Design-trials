@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-12-simple",
+  "run": "repair",
+  "ok": true,
+  "wallMs": 12835,
+  "apiMs": 10425,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 1291,
+    "cacheCreation": 4608,
+    "cacheRead": 2127
+  },
+  "costUsd": 0.0814475,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "```javascript\nimport * as THREE from 'three/webgpu';\nimport { texture, uv, vec2 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = 'hub-features-card-3-label';\n  group.position.set(3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const atlasW = 512;\n  const atlasH = 320;\n  const rect = { x: 0, y: 0, w: 512, h: 320 };\n  const aspect = rect.w / rect.h;\n\n  const planeHeight = 0.34;\n  const planeWidth = planeHeight * aspect;\n\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  const map = ctx.textureLoader('/prism-assets/chrome/ceramic-grain.map.png');\n  if (map) {\n    map.colorSpace = THREE.SRGBColorSpace;\n    map.wrapS = THREE.ClampToEdgeWrapping;\n    map.wrapT = THREE.ClampToEdgeWrapping;\n  }\n\n  const offsetX = rect.x / atlasW;\n  const offsetY = 1.0 - (rect.y + rect.h) / atlasH;\n  const scaleX = rect.w / atlasW;\n  const scaleY = rect.h / atlasH;\n\n  const atlasUv = uv().mul(vec2(scaleX, scaleY)).add(vec2(offsetX, offsetY));\n\n  const material = new THREE.MeshBasicNodeMaterial();\n  material.colorNode = texture(map, atlasUv);\n  material.transparent = true;\n  material.depthWrite = false;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.name = 'ceramic-grain-plane';\n  group.add(mesh);\n\n  const textContent = Array.isArray(config?.textContent) && config.textContent.length\n    ? config.textContent\n    : [{ text: 'Features 3', role: 'headline', size: 39, weight: 400 }];\n\n  const textGroups = [];\n\n  textContent.forEach((entry, i) => {\n    const str = typeof entry === 'string' ? entry : entry.text;\n    if (!str) return;\n    const sizeUnits = entry.role === 'headline' ? 0.14 : 0.09;\n\n    const textGroup = ctx.fontAtlas.createText({\n      text: str,\n      font: 'Lora',\n      weight: entry.weight ?? 400,\n      size: sizeUnits,\n      color: config?.colors?.ink ?? '#16161d',\n      anchor: 'center',\n      maxWidth: planeWidth * 0.9,\n    });\n    textGroup.position.set(0, 0, 0.001 + i * 0.0005);\n    group.add(textGroup);\n    textGroups.push(textGroup);\n  });\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    textGroups.forEach((textGroup) => {\n      if (textGroup?.userData?.cleanup) {\n        textGroup.userData.cleanup();\n      } else if (textGroup) {\n        textGroup.traverse((child) => {\n          if (child.geometry) child.geometry.dispose();\n          if (child.material) {\n            if (Array.isArray(child.material)) {\n              child.material.forEach((m) => m.dispose());\n            } else {\n              child.material.dispose();\n            }\n          }\n        });\n      }\n    });\n  };\n\n  group.userData.billboard = (camera) => {\n    group.quaternion.copy(camera.quaternion);\n  };\n\n  return group;\n}\n```"
+}

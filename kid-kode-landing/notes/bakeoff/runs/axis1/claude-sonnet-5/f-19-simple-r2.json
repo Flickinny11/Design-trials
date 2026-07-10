@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-19-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 10922,
+  "apiMs": 8388,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 852,
+    "cacheCreation": 0,
+    "cacheRead": 5484
+  },
+  "costUsd": 0.025135,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import { MeshBasicNodeMaterial, PlaneGeometry, Mesh, Group, DoubleSide } from 'three/webgpu';\nimport { texture, uv, vec4, mix } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n  group.name = 'hub-collection-card-0-label';\n  group.position.set(3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const width = 1.6;\n  const height = 1.0;\n  const geometry = new PlaneGeometry(width, height);\n\n  const material = new MeshBasicNodeMaterial();\n  material.side = DoubleSide;\n  material.transparent = true;\n\n  let map = null;\n  let disposed = false;\n\n  try {\n    map = ctx.textureLoader('/prism-mock/home/nodes/feature-card.png');\n    if (map) {\n      map.colorSpace = 'srgb';\n      const texNode = texture(map, uv());\n      const tint = vec4(0.086, 0.086, 0.114, 1.0);\n      material.colorNode = mix(texNode, tint, 0.08);\n    } else {\n      material.colorNode = vec4(0.086, 0.086, 0.114, 1.0);\n    }\n  } catch (e) {\n    material.colorNode = vec4(0.086, 0.086, 0.114, 1.0);\n  }\n\n  const mesh = new Mesh(geometry, material);\n  mesh.name = 'collection-card-3-plane';\n  group.add(mesh);\n\n  const textMesh = ctx.fontAtlas.createText({\n    text: 'Collection 3',\n    font: 'display',\n    weight: 400,\n    size: 0.34,\n    color: '#e8ecf2',\n    align: 'center',\n    anchor: 'center',\n    maxWidth: width * 0.9\n  });\n  textMesh.name = 'collection-card-3-label-text';\n  textMesh.position.set(0, 0, 0.01);\n  group.add(textMesh);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    if (disposed) return;\n    disposed = true;\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n    group.userData.handlers = {};\n  };\n\n  return group;\n}"
+}

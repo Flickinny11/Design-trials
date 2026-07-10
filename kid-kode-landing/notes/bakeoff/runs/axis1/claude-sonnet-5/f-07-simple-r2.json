@@ -1,0 +1,20 @@
+{
+  "contestant": "claude-sonnet-5",
+  "model": "claude-sonnet-5",
+  "route": "claude-cli",
+  "caseId": "f-07-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 12097,
+  "apiMs": 9475,
+  "usage": {
+    "promptTokens": 22,
+    "completionTokens": 817,
+    "cacheCreation": 0,
+    "cacheRead": 5463
+  },
+  "costUsd": 0.0242205,
+  "billing": "subscription-equivalent",
+  "envelopeNote": "claude CLI print route: constant ~2K-token harness envelope rides outside L1/L2/L3 (disclosed).",
+  "output": "import { MeshStandardNodeMaterial } from 'three/webgpu';\nimport { texture, uv, vec2, vec4, float, mix, uniform } from 'three/tsl';\nimport { Mesh, PlaneGeometry, DoubleSide } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const width = 1.6;\n  const height = 1.0;\n\n  const geometry = new PlaneGeometry(width, height, 1, 1);\n  const material = new MeshStandardNodeMaterial({\n    side: DoubleSide,\n    metalness: 0.35,\n    roughness: 0.6,\n  });\n\n  const map = ctx.textureLoader.load('/prism-mock/home/nodes/feature-card.png');\n  map.colorSpace = ctx.textureLoader.SRGBColorSpace || map.colorSpace;\n\n  const uvNode = uv();\n  const baseColor = texture(map, uvNode);\n\n  // engineered gradient overlay: subtle vertical tint from ink to surface,\n  // plus a faint grain-like modulation using uv-based pseudo-noise\n  const grainAmount = uniform(0.035);\n  const gradTop = vec4(0.086, 0.086, 0.114, 1.0); // #16161d\n  const gradBottom = vec4(0.043, 0.043, 0.063, 1.0); // #0b0b10\n\n  const gradientMix = mix(gradBottom, gradTop, uvNode.y);\n\n  const pseudoNoise = uvNode.x.mul(12.9898).add(uvNode.y.mul(78.233));\n  const grain = pseudoNoise.sin().mul(43758.5453).fract().sub(0.5).mul(grainAmount.mul(2.0));\n\n  const combined = baseColor.mul(0.88).add(gradientMix.mul(0.12)).add(vec4(grain, grain, grain, 0.0));\n\n  material.colorNode = combined;\n\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(-3.2, -0.3, 0);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  mesh.userData.handlers = {};\n\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (map && map.dispose) map.dispose();\n  };\n\n  return mesh;\n}"
+}

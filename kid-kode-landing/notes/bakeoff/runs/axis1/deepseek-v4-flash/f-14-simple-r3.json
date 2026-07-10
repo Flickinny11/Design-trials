@@ -1,0 +1,18 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "model": "accounts/fireworks/models/deepseek-v4-flash",
+  "route": "fireworks",
+  "caseId": "f-14-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 15542,
+  "usage": {
+    "promptTokens": 1691,
+    "completionTokens": 1599
+  },
+  "costUsd": 0.00068446,
+  "transportAttempts": 1,
+  "billing": "metered",
+  "output": "```javascript\nimport { PlaneGeometry, MeshBasicNodeMaterial, Mesh, Texture } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\n/**\n * Creates a textured plane for the \"Collection card 1\" UI element.\n * Loads the texture via ctx.textureLoader, applies it to a plane geometry,\n * and positions it according to the scene placement spec.\n *\n * @param {Object} config - Node configuration (includes scenePosition, textContent, cinematicPrimitives, etc.)\n * @param {Object} ctx - Node context (textureLoader, fontAtlas, primitives, etc.)\n * @returns {THREE.Object3D} - The created plane mesh with userData.cleanup\n */\nexport default function createNode(config, ctx) {\n  const { textureLoader } = ctx;\n\n  // Default dimensions based on texture aspect ratio (512x320 ≈ 1.6)\n  const width = 2;\n  const height = width * (320 / 512); // ≈1.25\n\n  const geometry = new PlaneGeometry(width, height);\n  let material;\n  let mesh;\n\n  try {\n    const texture = textureLoader('/prism-mock/home/nodes/cta-hero-isolated.png');\n\n    material = new MeshBasicNodeMaterial({\n      map: texture,\n      side: 2, // double side for flat card appearance\n    });\n\n    mesh = new Mesh(geometry, material);\n  } catch (err) {\n    // Fallback: create a plain opaque surface if texture fails to load\n    console.warn('Collection card texture load failed, using fallback color', err);\n    material = new MeshBasicNodeMaterial({ color: '#16161d' });\n    mesh = new Mesh(geometry, material);\n  }\n\n  // Position from scene placement spec\n  const pos = config.scenePosition || { x: -3.2, y: -0.3, z: 0 };\n  mesh.position.set(pos.x, pos.y, pos.z);\n\n  // Rotation and scale from spec (defaults if not provided)\n  const rot = config.sceneRotation || { x: 0, y: 0, z: 0 };\n  mesh.rotation.set(rot.x, rot.y, rot.z);\n  const scale = config.sceneScale || { x: 1, y: 1, z: 1 };\n  mesh.scale.set(scale.x, scale.y, scale.z);\n\n  // Attach empty handlers (no interactions defined)\n  mesh.userData.handlers = {};\n\n  // Cleanup function: dispose geometry, material, and texture if owned\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    if (material.map) material.map.dispose();\n    material.dispose();\n  };\n\n  return mesh;\n}\n```",
+  "rateNote": "recomputed from documented fireworks serverless rates (2026-07-09)"
+}
