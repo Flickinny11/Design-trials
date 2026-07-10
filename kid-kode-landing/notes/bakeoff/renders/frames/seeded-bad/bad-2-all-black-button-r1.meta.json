@@ -1,0 +1,17 @@
+{
+  "bundle": "seeded-bad/bad-2-all-black-button-r1",
+  "capturedAt": "2026-07-10T00:43:20.790Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 2,
+    "nodeMounted": true,
+    "bundleId": "seeded-bad/bad-2-all-black-button-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

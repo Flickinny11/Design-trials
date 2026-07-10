@@ -1,0 +1,17 @@
+{
+  "bundle": "seeded-bad/bad-3-default-blue-r1",
+  "capturedAt": "2026-07-10T00:43:24.244Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 3,
+    "nodeMounted": true,
+    "bundleId": "seeded-bad/bad-3-default-blue-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}
