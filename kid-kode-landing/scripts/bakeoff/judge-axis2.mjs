@@ -21,6 +21,7 @@ import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import path from 'node:path';
 import { ROOT } from './contestants.mjs';
+import { RUBRIC, EXEMPLARS, loadCases, specBrief as rubricSpecBrief, VERDICT_SHAPE } from './rubric.mjs';
 
 const pexecFile = promisify(execFile);
 const FRAMES_DIR = path.join(ROOT, 'notes', 'bakeoff', 'renders', 'frames');
@@ -28,11 +29,6 @@ const BUNDLES_DIR = path.join(ROOT, 'notes', 'bakeoff', 'renders', 'bundles');
 const VISUAL = path.join(ROOT, 'notes', 'bakeoff', 'corpus', 'visual');
 const JUDGE_DIR = path.join(ROOT, 'notes', 'bakeoff', 'judge', 'axis2');
 const LEDGER_PATH = path.join(ROOT, 'notes', 'bakeoff', 'ledger-judge.json');
-
-const EXEMPLARS = [
-  path.join(ROOT, 'design-grammar', 'exemplars', 'oversized-type-editorial-01.webp'),
-  path.join(ROOT, 'design-grammar', 'exemplars', 'cinematic-video-hero-01.webp'),
-];
 
 const args = process.argv.slice(2);
 const includeSeeded = args.includes('--include-seeded');
@@ -46,12 +42,7 @@ function ledgerAdd(entry) {
   writeFileSync(LEDGER_PATH, JSON.stringify(ledger, null, 2));
 }
 
-const cases = new Map(
-  readdirSync(path.join(VISUAL, 'cases')).filter((f) => f.endsWith('.json')).map((f) => {
-    const c = JSON.parse(readFileSync(path.join(VISUAL, 'cases', f), 'utf8'));
-    return [c.caseId, c];
-  }),
-);
+const cases = loadCases();
 
 // Collect frames: frames/<contestant>/<tag>.png with meta.
 function collectFrames() {
@@ -73,38 +64,7 @@ function collectFrames() {
   return out;
 }
 
-const RUBRIC = [
-  'You are the DESIGN JUDGE for the Prism model bakeoff. Score each numbered frame 0-100 against',
-  'the case visualSpec provided and the Prism Design Law. Be a hard grader: 85+ means founder-shippable',
-  'flagship quality; 60-84 competent but flawed; 30-59 clearly deficient; <30 broken or void.',
-  '',
-  'DESIGN LAW (DL1-16, abridged): DL1 dark-first. DL2 RED/BLACK/WHITE palette discipline (ink surfaces,',
-  'paper text, ONE signal red accent; default-blue drift is an automatic MUST-FIX). DL3 typographic',
-  'discipline. DL4 no flat glassmorphism. DL6 motion with weight. DL7 engineered precision over soft blur.',
-  'DL9 AI-slop tells forbidden. DL10/11 rendered materiality (real light response, not flat fills).',
-  'DL12 primary buttons read as physical objects. DL16 rich, never void (a flat empty region is a defect).',
-  '',
-  'MUST-FIX defect vocabulary (enumerate every one you see, with a REGION anchor like "upper-left',
-  'quadrant", "center card", "background field"): FLAT_VOID, ALL_BLACK_ELEMENT, DEFAULT_BLUE_DRIFT,',
-  'DEAD_LIGHTING, BROKEN_COMPOSITION, GARBLED_TEXT, MISSING_SPEC_ELEMENT, OFF_PALETTE, BLANK_RENDER,',
-  'LOW_CONTRAST, SCALE_ERROR.',
-  '',
-  'The FIRST TWO images are CALIBRATION EXEMPLARS from the committed design-grammar corpus — treat them',
-  'as the ~90 quality bar. They are NOT scored. Score only the numbered frames after them.',
-  '',
-  'A black, blank, or near-empty frame is scored as rendered (BLANK_RENDER, score <= 10).',
-].join('\n');
-
-function specBrief(caseId) {
-  const c = cases.get(caseId);
-  if (!c) return '(spec unavailable)';
-  const vs = c.node?.intent?.visualSpec ?? {};
-  return [
-    `${c.title} [${c.category}] — ${c.node?.intent?.caption ?? ''}`,
-    `colors: ${JSON.stringify(vs.colors ?? {}).slice(0, 300)}`,
-    `effects: ${String(typeof vs.effects === 'string' ? vs.effects : JSON.stringify(vs.effects ?? '')).slice(0, 450)}`,
-  ].join('\n');
-}
+const specBrief = (caseId) => rubricSpecBrief(cases, caseId);
 
 async function judgeBatch(batch, label) {
   const lines = [RUBRIC, ''];
@@ -117,7 +77,7 @@ async function judgeBatch(batch, label) {
     lines.push('');
   });
   lines.push('Read ALL images listed above, then reply with STRICT JSON only (no fences):');
-  lines.push('{ "frames": [ { "frame": "F1", "score": <0-100>, "mustFix": [ { "defect": "...", "region": "..." } ], "notes": "<=25 words" } ] }');
+  lines.push(VERDICT_SHAPE);
   const prompt = lines.join('\n');
 
   const t0 = Date.now();

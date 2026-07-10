@@ -1,0 +1,80 @@
+#!/usr/bin/env node
+// W-BAKE D4 — golden-set builder (wave prompt #14): 30 renders spanning the
+// quality range — 24 sampled from the D3-judged contestant renders (evenly
+// across the score distribution, contestant + case diversity enforced) + the
+// 6 seeded known-bad renders. Every golden frame gets a DOWNSCALED copy
+// (800px JPEG, sharp) so ground truth AND every critic candidate judge the
+// IDENTICAL pixels through their differing transports (CLI Read vs base64
+// data URLs) — disclosed in the report.
+//
+// Output: notes/bakeoff/judge/golden/golden-set.json + golden/frames/*.jpg
+
+import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
+import path from 'node:path';
+import { createRequire } from 'node:module';
+import { ROOT } from './contestants.mjs';
+
+const require_ = createRequire(import.meta.url);
+const sharp = require_(path.join(ROOT, 'node_modules', 'sharp'));
+
+const SCORES = path.join(ROOT, 'notes', 'bakeoff', 'judge', 'axis2', 'scores.json');
+const FRAMES_DIR = path.join(ROOT, 'notes', 'bakeoff', 'renders', 'frames');
+const GOLDEN_DIR = path.join(ROOT, 'notes', 'bakeoff', 'judge', 'golden');
+
+const scores = JSON.parse(readFileSync(SCORES, 'utf8')).renders
+  .filter((r) => r.renderable && r.probeStatus !== 'no-frame');
+
+// Even sampling across the sorted score distribution with diversity guards.
+const sorted = [...scores].sort((a, b) => a.score - b.score);
+const target = 24;
+const picked = [];
+const seenCase = new Map();
+const seenContestant = new Map();
+for (let i = 0; i < target && sorted.length > 0; i += 1) {
+  const q = Math.floor((i / target) * sorted.length);
+  // Walk forward from the quantile point to satisfy diversity caps.
+  let pick = null;
+  for (let j = 0; j < sorted.length; j += 1) {
+    const cand = sorted[(q + j) % sorted.length];
+    if (picked.includes(cand)) continue;
+    if ((seenCase.get(cand.caseId) ?? 0) >= 3) continue;
+    if ((seenContestant.get(cand.contestant) ?? 0) >= 6) continue;
+    pick = cand;
+    break;
+  }
+  if (!pick) pick = sorted.find((c) => !picked.includes(c)) ?? null;
+  if (!pick) break;
+  picked.push(pick);
+  seenCase.set(pick.caseId, (seenCase.get(pick.caseId) ?? 0) + 1);
+  seenContestant.set(pick.contestant, (seenContestant.get(pick.contestant) ?? 0) + 1);
+}
+
+const seeded = readdirSync(path.join(FRAMES_DIR, 'seeded-bad'))
+  .filter((f) => f.endsWith('.png'))
+  .map((f) => {
+    const meta = JSON.parse(readFileSync(path.join(FRAMES_DIR, 'seeded-bad', f.replace(/\.png$/, '.meta.json')), 'utf8'));
+    return { bundleId: meta.bundle, contestant: 'seeded-bad', caseId: meta.bundle.split('/')[1].replace(/-r\d+$/, ''), tag: f.replace(/\.png$/, ''), seeded: true };
+  });
+
+mkdirSync(path.join(GOLDEN_DIR, 'frames'), { recursive: true });
+const entries = [];
+let n = 0;
+for (const r of [...picked.map((p) => ({ ...p, seeded: false })), ...seeded]) {
+  n += 1;
+  const gid = `g-${String(n).padStart(2, '0')}`;
+  const src = path.join(FRAMES_DIR, r.contestant, `${r.tag}.png`);
+  const dst = path.join(GOLDEN_DIR, 'frames', `${gid}.jpg`);
+  await sharp(src).resize({ width: 800 }).jpeg({ quality: 82 }).toFile(dst);
+  entries.push({
+    goldenId: gid, bundleId: r.bundleId, contestant: r.contestant, caseId: r.caseId,
+    seeded: r.seeded, seededDefect: r.seeded ? r.tag.replace(/-r\d+$/, '') : null,
+    d3Score: r.seeded ? null : r.score,
+    frame: path.relative(ROOT, dst),
+  });
+}
+writeFileSync(path.join(GOLDEN_DIR, 'golden-set.json'), JSON.stringify({
+  builtAt: new Date().toISOString(),
+  method: '24 D3-judged renders sampled evenly across the score distribution (case cap 3, contestant cap 6) + 6 seeded known-bad; all downscaled to identical 800px JPEGs for every D4 participant',
+  entries,
+}, null, 2));
+console.log(`golden set: ${entries.length} renders (${entries.filter((e) => e.seeded).length} seeded known-bad)`);
