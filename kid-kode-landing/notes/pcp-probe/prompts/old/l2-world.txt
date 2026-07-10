@@ -1,0 +1,42 @@
+NOVA_ATELIER_WORLD
+
+1. DESIGN TOKENS
+- Palette: primary #16161d (ink), secondary #e8ecf2 (paper), accent #ff2a38 (signal red), surface #0b0b10 (near-black surface).
+- Typography: display = Lora (serif, weights 400/600); text = JetBrains Mono (mono, 400/700). Type scale (scene-unit em heights): hero 0.62, headline 0.34, subhead 0.2, body 0.13, caption 0.09.
+- Spacing rhythm: base unit 0.25 scene units; card padding 0.5; hub frame spans x∈[-3.5,3.5], y∈[-3,2.5] at PerspectiveCamera(fov 50, z=10).
+- Effects vocabulary: machined-metal PBR (brushed anisotropy, clearcoat ≤ 0.25, metalness ≤ 0.55, roughness ≥ 0.5), weighted-settle motion, engineered gradients (no soft pastel blur), contrast minimum 4.5:1 for text roles.
+
+2. NAVIGATION MAP
+- App: Nova Atelier — A machined-metal watch atelier landing with catalog, pricing, jo
+- Hub hub-home ("Home", home)
+- Hub hub-features ("Features", section)
+- Hub hub-collection ("Collection", section)
+- Hub hub-pricing ("Pricing", section)
+- Hub hub-journal ("Journal", section)
+- Edge hub-home -> hub-features (navigation, event: navigate)
+- Edge hub-home -> hub-collection (navigation, event: navigate)
+- Edge hub-home -> hub-pricing (navigation, event: navigate)
+- Edge hub-home -> hub-journal (navigation, event: navigate)
+
+3. SHARED CONTRACT TYPES (tRPC route + Zod signature)
+- trpc.catalog.list (query) -> z.object({ items: z.array(z.object({ id: z.string(), title: z.string(), priceUsd: z.number(), imageUrl: z.string() })) })
+- trpc.pricing.tiers (query) -> z.object({ tiers: z.array(z.object({ id: z.string(), name: z.string(), usdMonthly: z.number(), features: z.array(z.string()) })) })
+- trpc.checkout.begin (mutation, input z.object({ itemId: z.string() })) -> z.object({ checkoutUrl: z.string() })
+- trpc.journal.posts (query) -> z.object({ posts: z.array(z.object({ id: z.string(), title: z.string(), excerpt: z.string(), publishedAt: z.string() })) })
+- trpc.contact.submit (mutation, input z.object({ email: z.string(), message: z.string() })) -> z.object({ ok: z.boolean() })
+- trpc.waitlist.join (mutation, input z.object({ email: z.string() })) -> z.object({ position: z.number() })
+- trpc.visits.book (mutation, input z.object({ slotIso: z.string() })) -> z.object({ slot: z.string(), confirmed: z.boolean() })
+- trpc.inventory.status (query, input z.object({ itemId: z.string() })) -> z.object({ inStock: z.boolean(), etaDays: z.number().nullable() })
+
+4. ANIMATION VOCABULARY
+- GSAP presets (named): rise-in (y +0.4 -> 0, power3.out, 0.7s), fade-up (opacity 0->1 + y +0.2, power2.out, 0.5s), stagger-cards (children, 80ms stagger), press-down (scale 0.97, 120ms, back.out), weighted-settle (overshoot 1.04 -> 1.0, power4.out, 0.9s).
+- Cinematic primitives (apply via ctx.primitives[name]): orbit, depth-rotate, dissolve-morph, displacement-transition, parallax-scroll, magnetic-cursor, particle-emerge, fly-through, kinetic-text.
+
+5. INTEGRATION CAPABILITY REFERENCES (references ONLY — never tokens, keys, or secrets)
+- capability:shopify.catalog (product catalog reads)
+- capability:shopify.inventory (stock status reads)
+- capability:stripe.products (pricing tier reads)
+- capability:stripe.checkout (checkout session creation)
+- capability:notion.cms (journal content reads)
+- capability:resend.email (transactional email sends)
+- capability:cal.scheduling (atelier visit booking)

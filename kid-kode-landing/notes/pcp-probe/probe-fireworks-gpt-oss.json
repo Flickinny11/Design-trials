@@ -1,0 +1,1 @@
+{"id":"chatcmpl-93be801d5ea247718d4468004dcb03a6","object":"chat.completion","created":1783725163,"model":"accounts/fireworks/models/gpt-oss-120b","choices":[{"index":0,"message":{"role":"assistant","reasoning_content":"The"},"finish_reason":"length"}],"usage":{"prompt_tokens":75,"total_tokens":79,"completion_tokens":4,"prompt_tokens_details":{"cached_tokens":0}}}
