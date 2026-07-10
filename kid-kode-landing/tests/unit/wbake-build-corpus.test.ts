@@ -359,7 +359,9 @@ describe.skipIf(process.env.WBAKE_BUILD_CORPUS !== '1')('W-BAKE functional corpu
             : 'static composition: engineered gradient surface, subtle grain, no interactivity';
       n.intent.visualSpec = {
         ...n.intent.visualSpec,
-        textContent: text,
+        // Corpus data (frozen JSON), not runtime text objects — the codegen
+        // prompt formatter reads only text/role/typography from these.
+        textContent: text as unknown as typeof n.intent.visualSpec.textContent,
         layers: n.intent.visualSpec?.layers ?? [],
         ...baseVisualSpec(palette, effects),
       };

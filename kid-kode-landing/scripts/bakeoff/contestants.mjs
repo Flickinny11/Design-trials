@@ -72,21 +72,24 @@ export const CONTESTANTS = [
     label: 'DeepSeek V4-Flash',
     route: 'fireworks',
     model: 'accounts/fireworks/models/deepseek-v4-flash',
-    usdPerMTokIn: 0.3, usdPerMTokOut: 1.2,
+    // docs.fireworks.ai/serverless/pricing (fetched 2026-07-09)
+    usdPerMTokIn: 0.14, usdPerMTokOut: 0.28,
   },
   {
     id: 'glm-5.2',
     label: 'GLM-5.2',
     route: 'fireworks',
     model: 'accounts/fireworks/models/glm-5p2',
-    usdPerMTokIn: 0.55, usdPerMTokOut: 2.19,
+    // docs.fireworks.ai/serverless/pricing (fetched 2026-07-09)
+    usdPerMTokIn: 1.4, usdPerMTokOut: 4.4,
   },
   {
     id: 'kimi-k2.7-code',
     label: 'Kimi K2.7 Code',
     route: 'fireworks',
     model: 'accounts/fireworks/models/kimi-k2p7-code',
-    usdPerMTokIn: 0.6, usdPerMTokOut: 2.5,
+    // docs.fireworks.ai/serverless/pricing (fetched 2026-07-09)
+    usdPerMTokIn: 0.95, usdPerMTokOut: 4.0,
   },
   {
     id: 'gpt-oss-120b',
