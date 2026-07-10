@@ -1,7 +1,17 @@
-// Codegen prompts — verbatim per spec §9 of PRISM-RENDERER-MIGRATION-SPEC.md
-// (L248-L355). The shared system prompt is byte-stable across calls so that
-// RadixAttention prefix-cache hits (§9.A L275). Per-node prompts are not
-// cacheable; render-mode sub-prompts are appended only for the matching mode.
+// Codegen prompts — L1 base template per spec §9 of the (archived)
+// PRISM-RENDERER-MIGRATION-SPEC.md (L248-L355), extended by the W-PCP
+// Prism Crash-Course Package (docs/prism/pcp/, authority:
+// docs/prism/RATIFICATION-2026-07-09.md + the W-PCP wave prompt). The shared
+// system prompt is byte-stable across calls so that RadixAttention
+// prefix-cache hits (§9.A L275; OD7 byte-stability requirement). Per-node
+// prompts are not cacheable; render-mode sub-prompts are appended only for
+// the matching mode.
+//
+// L1 v2 composition (W-PCP D5): the original §9.A constraint block +
+// RUNTIME_SURFACE_L1_BLOCK (GENERATED from the runtime source — see
+// scripts/pcp/extract-runtime-surface.mjs, I-P2) + the dependency and design
+// doctrine distillations (pcp-blocks.ts). The pre-PCP L1 is preserved
+// byte-frozen as SHARED_SYSTEM_PROMPT_V1 (probe baseline + traceability).
 //
 // All field references and ordering follow the spec template — do not reorder
 // without updating the spec first; downstream codegen agents rely on this
@@ -14,9 +24,12 @@ import type {
   RenderMode,
   ScenePosition,
 } from '@/lib/prism-graph/types';
+import { RUNTIME_SURFACE_L1_BLOCK } from './runtime-surface.generated';
+import { DESIGN_DOCTRINE_L1_BLOCK, DEPENDENCY_L1_BLOCK } from './pcp-blocks';
 
-/** Spec §9.A L250-L276. RadixAttention-cacheable. Byte-stable. */
-export const SHARED_SYSTEM_PROMPT: string = [
+/** Spec §9.A L250-L276 — the pre-PCP L1, byte-frozen (W-BAKE ran on exactly
+ *  these bytes; the W-PCP probe's "old" arm re-uses them verbatim). */
+export const SHARED_SYSTEM_PROMPT_V1: string = [
   'You are a code generator for Kriptik Prism. Generate a self-contained Three.js v184+',
   'node module for a UI element that will be mounted into a 3D scene.',
   '',
@@ -42,6 +55,94 @@ export const SHARED_SYSTEM_PROMPT: string = [
   '',
   'OUTPUT: Only the JavaScript code. No explanation. No markdown fences.',
 ].join('\n');
+
+const OUTPUT_LINE = 'OUTPUT: Only the JavaScript code. No explanation. No markdown fences.';
+
+/** L1 v2 — the LIVE shared system prompt (W-PCP D5). Composition: the V1
+ *  constraint body (byte-identical head, minus its trailing OUTPUT line) +
+ *  the generated runtime surface + the dependency gate + the design
+ *  doctrine, with the OUTPUT contract restated last. Byte-stable: every
+ *  part is a module constant (OD7). */
+export const SHARED_SYSTEM_PROMPT: string = [
+  SHARED_SYSTEM_PROMPT_V1.replace(/\n\nOUTPUT:[^\n]*$/, ''),
+  '',
+  RUNTIME_SURFACE_L1_BLOCK,
+  '',
+  DEPENDENCY_L1_BLOCK,
+  '',
+  DESIGN_DOCTRINE_L1_BLOCK,
+  '',
+  OUTPUT_LINE,
+].join('\n');
+
+// ---------------------------------------------------------------------------
+// L2 — the WORLD block template (W-PCP D5 item 11).
+//
+// One WORLD block is compiled per BUILD (never per node) and rides between
+// L1 and L3 on every codegen call of that build — byte-identical across all
+// nodes so provider prefix caches hold (OD7; ratified budget 2-3K typical /
+// 5K hard cap). Exactly the five permitted content classes of swarm-dispatch
+// §3.1: design tokens / navigation map / shared contract types / animation
+// vocabulary / capability REFERENCES (never secrets). The shape below
+// reproduces the W-BAKE frozen corpus L2 byte-for-byte given the same input
+// (proven by tests/unit/wpcp-prompt-compiler.test.ts) — the corpus block IS
+// this template instantiated for Nova Atelier.
+//
+// The optional `skillIndex` section (Amendment A E2, "6. SKILL INDEX") is
+// OFF unless the caller passes one — Amendment A is seeded, not yet ratified
+// canon, so the default output keeps the five-class rule intact.
+// ---------------------------------------------------------------------------
+
+export interface WorldBlockInput {
+  appName: string;
+  /** One-line app summary for the navigation map header. */
+  summary: string;
+  /** Design-token lines (section 1), WITHOUT the leading "- ". */
+  designTokens: string[];
+  hubs: Array<{ hubId: string; title: string; role: string }>;
+  edges: Array<{ from: string; to: string; type: string; event?: string }>;
+  /** Shared contract lines (section 3), WITHOUT the leading "- ". */
+  contracts: string[];
+  /** Animation vocabulary lines (section 4), WITHOUT the leading "- ". */
+  animationVocabulary: string[];
+  /** Capability REFERENCES (section 5): ref + short note. Never secrets. */
+  capabilityRefs: Array<{ ref: string; note: string }>;
+  /** Optional Amendment-A skill index block (see skill-registry.ts
+   *  buildSkillIndexBlock). Appended verbatim as its own section. */
+  skillIndex?: string;
+}
+
+/** Compile the per-build L2 WORLD block. Pure string composition —
+ *  deterministic for a given input; hashing (worldHash) happens in the
+ *  server-side callers, not here (this module stays client-safe). */
+export function buildWorldBlock(input: WorldBlockInput): string {
+  const lines: string[] = [
+    `${input.appName.toUpperCase().replace(/\s+/g, '_')}_WORLD`,
+    '',
+    '1. DESIGN TOKENS',
+    ...input.designTokens.map((t) => `- ${t}`),
+    '',
+    '2. NAVIGATION MAP',
+    `- App: ${input.appName} — ${input.summary}`,
+    ...input.hubs.map((h) => `- Hub ${h.hubId} ("${h.title}", ${h.role})`),
+    ...input.edges.map(
+      (e) => `- Edge ${e.from} -> ${e.to} (${e.type}${e.event ? `, event: ${e.event}` : ''})`,
+    ),
+    '',
+    '3. SHARED CONTRACT TYPES (tRPC route + Zod signature)',
+    ...input.contracts.map((c) => `- ${c}`),
+    '',
+    '4. ANIMATION VOCABULARY',
+    ...input.animationVocabulary.map((a) => `- ${a}`),
+    '',
+    '5. INTEGRATION CAPABILITY REFERENCES (references ONLY — never tokens, keys, or secrets)',
+    ...input.capabilityRefs.map((c) => `- ${c.ref} (${c.note})`),
+  ];
+  if (input.skillIndex) {
+    lines.push('', input.skillIndex);
+  }
+  return lines.join('\n');
+}
 
 /** Per-node user prompt template (spec §9.B L278-L322). */
 export interface CodegenNeighbor {

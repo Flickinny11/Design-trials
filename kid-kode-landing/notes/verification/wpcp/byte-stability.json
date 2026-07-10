@@ -1,0 +1,11 @@
+{
+  "calls": 100,
+  "distinctHashes": 1,
+  "sha256L1PlusL2": "a19dc809b7a50c1e8c2b32b1c1dbc3299a19ed8245cdc84f3063f6a393097ea2",
+  "sha256L1": "cf334e010feb993506dc18dc9f4c0ef903c0ca4aec12cb0567e28b5e3143d24e",
+  "sha256L1V1": "957bd0f7fabd8fbfb74763251fb210f48a0823b86faeee91a17eca532b4ac450",
+  "sha256L2": "9c7c5d701a2916dd0e7bdf099e09ce2f9dab68205b3c94648fe0ec508a397332",
+  "bytesL1": 7585,
+  "bytesL1V1": 1359,
+  "bytesL2": 3352
+}
