@@ -120,6 +120,16 @@ async function callOpenAICompat(route, model, user) {
       // across providers via OpenRouter normalization.) Uniform across all
       // OpenRouter contestants (I-BB2).
       if (route === 'openrouter') reqBody.reasoning = { max_tokens: 2048 };
+      // MID-WAVE REROUTE (OpenRouter 402): DeepInfra has no OpenRouter-style
+      // normalized reasoning cap, so bound reasoning per model family with the
+      // closest live-probed analog (probes/deepinfra-reroute-funding.json +
+      // reasoning probes, all 200). Uncapped adaptive thinking was measured at
+      // ~7K tokens/call on sonnet-5 (2-4x cost + lane-cap blowout) before this
+      // landed — the first uncapped rows are disclosed in the report.
+      if (route === 'deepinfra') {
+        if (model.startsWith('anthropic/')) { reqBody.thinking = { type: 'adaptive' }; reqBody.output_config = { effort: 'low' }; }
+        else reqBody.reasoning_effort = 'low';
+      }
       const res = await fetch(r.chatUrl, {
         method: 'POST', headers,
         body: JSON.stringify(reqBody),

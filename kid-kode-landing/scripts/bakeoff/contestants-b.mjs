@@ -71,6 +71,8 @@ export const ROUTES = {
 
 // axes: which axes this row runs. role: 'contestant' | 'ceiling-ref'.
 // laneCapUsd: this lane's share of the $120 hard cap (sized by priority/cost).
+// Rerouted lanes resized 2026-07-10 post-402: deepinfra pricing + the first
+// uncapped-reasoning rows burned before the effort-low control landed.
 // ROUTING NOTE (method improvement over W-BAKE/W-PCP, disclosed): ALL
 // generation rides ONE uniform OpenAI-compatible HTTP harness — Claude models
 // included, via DeepInfra/OpenRouter Anthropic passthrough. This (a) removes
@@ -89,19 +91,19 @@ export const ROUTES = {
 export const CONTESTANTS = [
   // ── functional + design contestants ────────────────────────────────────
   { id: 'claude-haiku-4.5', label: 'Claude Haiku 4.5', route: 'deepinfra', model: 'anthropic/claude-haiku-4-5', usdPerMTokIn: 1.0, usdPerMTokOut: 5.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 3 },
-  { id: 'claude-sonnet-5', label: 'Claude Sonnet 5', route: 'deepinfra', model: 'anthropic/claude-sonnet-5', usdPerMTokIn: 2.0, usdPerMTokOut: 10.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 8 },
+  { id: 'claude-sonnet-5', label: 'Claude Sonnet 5', route: 'deepinfra', model: 'anthropic/claude-sonnet-5', usdPerMTokIn: 2.0, usdPerMTokOut: 10.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 14 },
   { id: 'gpt-oss-120b', label: 'gpt-oss-120b', route: 'fireworks', model: 'accounts/fireworks/models/gpt-oss-120b', usdPerMTokIn: 0.15, usdPerMTokOut: 0.6, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 2 },
   { id: 'deepseek-v4-flash', label: 'DeepSeek V4-Flash', route: 'deepinfra', model: 'deepseek-ai/DeepSeek-V4-Flash', usdPerMTokIn: 0.09, usdPerMTokOut: 0.18, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 2 },
-  { id: 'glm-5.2', label: 'GLM-5.2', route: 'deepinfra', model: 'zai-org/GLM-5.2', usdPerMTokIn: 0.93, usdPerMTokOut: 3.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 3 },
-  { id: 'kimi-k2.7-code', label: 'Kimi K2.7 Code', route: 'deepinfra', model: 'moonshotai/Kimi-K2.7-Code', usdPerMTokIn: 0.74, usdPerMTokOut: 3.5, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 4 },
-  { id: 'gemini-3.5-flash', label: 'Gemini 3.5 Flash', route: 'deepinfra', model: 'google/gemini-3.5-flash', usdPerMTokIn: 1.5, usdPerMTokOut: 9.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 7 },
+  { id: 'glm-5.2', label: 'GLM-5.2', route: 'deepinfra', model: 'zai-org/GLM-5.2', usdPerMTokIn: 0.93, usdPerMTokOut: 3.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 6 },
+  { id: 'kimi-k2.7-code', label: 'Kimi K2.7 Code', route: 'deepinfra', model: 'moonshotai/Kimi-K2.7-Code', usdPerMTokIn: 0.74, usdPerMTokOut: 3.5, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 8 },
+  { id: 'gemini-3.5-flash', label: 'Gemini 3.5 Flash', route: 'deepinfra', model: 'google/gemini-3.5-flash', usdPerMTokIn: 1.5, usdPerMTokOut: 9.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 9 },
   { id: 'mercury-2', label: 'Mercury 2', route: 'inception', model: 'mercury-2', usdPerMTokIn: 0.25, usdPerMTokOut: 0.75, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 2 },
   { id: 'gpt-5.6-luna', label: 'GPT-5.6 Luna', route: 'openrouter', model: 'openai/gpt-5.6-luna', usdPerMTokIn: 1.0, usdPerMTokOut: 6.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 5 },
   { id: 'gpt-5.6-terra', label: 'GPT-5.6 Terra', route: 'openrouter', model: 'openai/gpt-5.6-terra', usdPerMTokIn: 2.5, usdPerMTokOut: 15.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 6 },
   { id: 'gpt-5.6-sol', label: 'GPT-5.6 Sol', route: 'openrouter', model: 'openai/gpt-5.6-sol', usdPerMTokIn: 5.0, usdPerMTokOut: 30.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 6 },
   // ── design-axis ceiling references (NOT tier contestants — I-BB4) ────────
-  { id: 'claude-fable-5', label: 'Claude Fable 5 (ceiling ref)', route: 'deepinfra', model: 'anthropic/claude-fable-5', usdPerMTokIn: 10.0, usdPerMTokOut: 50.0, axes: ['design'], role: 'ceiling-ref', laneCapUsd: 9 },
-  { id: 'claude-opus-4.8', label: 'Claude Opus 4.8 (ceiling ref)', route: 'deepinfra', model: 'anthropic/claude-opus-4-8', usdPerMTokIn: 5.0, usdPerMTokOut: 25.0, axes: ['design'], role: 'ceiling-ref', laneCapUsd: 5 },
+  { id: 'claude-fable-5', label: 'Claude Fable 5 (ceiling ref)', route: 'deepinfra', model: 'anthropic/claude-fable-5', usdPerMTokIn: 10.0, usdPerMTokOut: 50.0, axes: ['design'], role: 'ceiling-ref', laneCapUsd: 16 },
+  { id: 'claude-opus-4.8', label: 'Claude Opus 4.8 (ceiling ref)', route: 'deepinfra', model: 'anthropic/claude-opus-4-8', usdPerMTokIn: 5.0, usdPerMTokOut: 25.0, axes: ['design'], role: 'ceiling-ref', laneCapUsd: 10 },
 ];
 
 // UNREACHABLE — recorded with proof (I-BB5), never extrapolated.
