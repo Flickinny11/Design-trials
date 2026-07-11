@@ -1,0 +1,16 @@
+{
+  "provider": "fireworks",
+  "url": "https://api.fireworks.ai/inference/v1/models",
+  "httpStatus": 200,
+  "latencyMs": 538,
+  "count": 7,
+  "modelIds": [
+    "accounts/fireworks/models/deepseek-v4-pro",
+    "accounts/fireworks/models/flux-1-schnell-fp8",
+    "accounts/fireworks/models/glm-5p1",
+    "accounts/fireworks/models/glm-5p2",
+    "accounts/fireworks/models/gpt-oss-120b",
+    "accounts/fireworks/models/kimi-k2p5",
+    "accounts/fireworks/models/kimi-k2p6"
+  ]
+}

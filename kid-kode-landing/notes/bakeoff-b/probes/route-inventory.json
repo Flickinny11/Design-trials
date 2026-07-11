@@ -1,0 +1,529 @@
+{
+  "probedAt": "2026-07-11T01:17:23.299Z",
+  "results": [
+    {
+      "provider": "fireworks",
+      "keySource": "file:fireworks.key",
+      "probedAt": "2026-07-11T01:16:56.577Z",
+      "models": {
+        "ok": true,
+        "httpStatus": 200,
+        "count": 7,
+        "familyMatches": {
+          "gpt-oss": [
+            "accounts/fireworks/models/gpt-oss-120b"
+          ],
+          "deepseek": [
+            "accounts/fireworks/models/deepseek-v4-pro"
+          ],
+          "glm": [
+            "accounts/fireworks/models/glm-5p1",
+            "accounts/fireworks/models/glm-5p2"
+          ],
+          "kimi": [
+            "accounts/fireworks/models/kimi-k2p5",
+            "accounts/fireworks/models/kimi-k2p6"
+          ]
+        }
+      },
+      "funding": {
+        "ok": true,
+        "httpStatus": 200,
+        "latencyMs": 525,
+        "model": "accounts/fireworks/models/gpt-oss-120b",
+        "usage": {
+          "prompt_tokens": 79,
+          "total_tokens": 87,
+          "completion_tokens": 8,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "error": null
+      }
+    },
+    {
+      "provider": "groq",
+      "keySource": "file:groq.key",
+      "probedAt": "2026-07-11T01:16:57.643Z",
+      "models": {
+        "ok": true,
+        "httpStatus": 200,
+        "count": 17,
+        "familyMatches": {
+          "gpt-oss": [
+            "openai/gpt-oss-120b",
+            "openai/gpt-oss-20b",
+            "openai/gpt-oss-safeguard-20b"
+          ],
+          "qwen": [
+            "qwen/qwen3-32b",
+            "qwen/qwen3.6-27b"
+          ]
+        }
+      },
+      "funding": {
+        "ok": true,
+        "httpStatus": 200,
+        "latencyMs": 377,
+        "model": "openai/gpt-oss-120b",
+        "usage": {
+          "queue_time": 0.170014644,
+          "prompt_tokens": 78,
+          "prompt_time": 0.002865356,
+          "completion_tokens": 8,
+          "completion_time": 0.016532126,
+          "total_tokens": 86,
+          "total_time": 0.019397482,
+          "completion_tokens_details": {
+            "reasoning_tokens": 6
+          }
+        },
+        "contentSample": "",
+        "error": null
+      }
+    },
+    {
+      "provider": "cerebras",
+      "keySource": "file:cerebras.key",
+      "probedAt": "2026-07-11T01:16:58.260Z",
+      "models": {
+        "ok": true,
+        "httpStatus": 200,
+        "count": 3,
+        "familyMatches": {
+          "gpt-oss": [
+            "gpt-oss-120b"
+          ],
+          "glm": [
+            "zai-glm-4.7"
+          ]
+        }
+      },
+      "funding": {
+        "ok": true,
+        "httpStatus": 200,
+        "latencyMs": 289,
+        "model": "gpt-oss-120b",
+        "usage": {
+          "total_tokens": 82,
+          "completion_tokens": 8,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": 0,
+            "rejected_prediction_tokens": 0,
+            "reasoning_tokens": 5
+          },
+          "prompt_tokens": 74,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "error": null
+      }
+    },
+    {
+      "provider": "deepinfra",
+      "keySource": "file:deepinfra.key",
+      "probedAt": "2026-07-11T01:16:58.863Z",
+      "models": {
+        "ok": true,
+        "httpStatus": 200,
+        "count": 169,
+        "familyMatches": {
+          "gemini": [
+            "google/gemini-1.5-flash",
+            "google/gemini-1.5-flash-8b",
+            "google/gemini-2.5-flash",
+            "google/gemini-2.5-pro",
+            "google/gemini-3-pro-image",
+            "google/gemini-3.1-flash-lite",
+            "google/gemini-3.1-pro",
+            "google/gemini-3.5-flash"
+          ],
+          "haiku": [
+            "anthropic/claude-haiku-4-5"
+          ],
+          "sonnet": [
+            "anthropic/claude-sonnet-4-6",
+            "anthropic/claude-sonnet-5"
+          ],
+          "claude": [
+            "anthropic/claude-fable-5",
+            "anthropic/claude-haiku-4-5",
+            "anthropic/claude-opus-4-7",
+            "anthropic/claude-opus-4-8",
+            "anthropic/claude-sonnet-4-6",
+            "anthropic/claude-sonnet-5"
+          ],
+          "gpt-oss": [
+            "openai/gpt-oss-120b",
+            "openai/gpt-oss-120b-Turbo",
+            "openai/gpt-oss-20b"
+          ],
+          "deepseek": [
+            "deepseek-ai/DeepSeek-R1-0528",
+            "deepseek-ai/DeepSeek-V3",
+            "deepseek-ai/DeepSeek-V3-0324",
+            "deepseek-ai/DeepSeek-V3.1",
+            "deepseek-ai/DeepSeek-V3.1-Terminus",
+            "deepseek-ai/DeepSeek-V3.2",
+            "deepseek-ai/DeepSeek-V4-Flash",
+            "deepseek-ai/DeepSeek-V4-Pro"
+          ],
+          "glm": [
+            "zai-org/GLM-4.6",
+            "zai-org/GLM-4.7",
+            "zai-org/GLM-4.7-Flash",
+            "zai-org/GLM-5",
+            "zai-org/GLM-5.1",
+            "zai-org/GLM-5.2"
+          ],
+          "kimi": [
+            "moonshotai/Kimi-K2.5",
+            "moonshotai/Kimi-K2.6",
+            "moonshotai/Kimi-K2.7-Code"
+          ],
+          "qwen": [
+            "Qwen/Qwen-Image-Edit",
+            "Qwen/Qwen-Image-Max",
+            "Qwen/Qwen2.5-72B-Instruct",
+            "Qwen/Qwen3-14B",
+            "Qwen/Qwen3-235B-A22B-Instruct-2507",
+            "Qwen/Qwen3-235B-A22B-Thinking-2507",
+            "Qwen/Qwen3-30B-A3B",
+            "Qwen/Qwen3-32B",
+            "Qwen/Qwen3-Coder-480B-A35B-Instruct-Turbo",
+            "Qwen/Qwen3-Embedding-0.6B",
+            "Qwen/Qwen3-Embedding-4B",
+            "Qwen/Qwen3-Embedding-8B",
+            "Qwen/Qwen3-Max",
+            "Qwen/Qwen3-Max-Thinking",
+            "Qwen/Qwen3-Next-80B-A3B-Instruct",
+            "Qwen/Qwen3-TTS",
+            "Qwen/Qwen3-TTS-VoiceDesign",
+            "Qwen/Qwen3-VL-235B-A22B-Instruct",
+            "Qwen/Qwen3-VL-30B-A3B-Instruct",
+            "Qwen/Qwen3.5-122B-A10B",
+            "Qwen/Qwen3.5-27B",
+            "Qwen/Qwen3.5-35B-A3B",
+            "Qwen/Qwen3.5-397B-A17B",
+            "Qwen/Qwen3.5-9B",
+            "Qwen/Qwen3.6-27B"
+          ]
+        }
+      },
+      "funding": {
+        "ok": true,
+        "httpStatus": 200,
+        "latencyMs": 408,
+        "model": "openai/gpt-oss-120b",
+        "usage": {
+          "prompt_tokens": 61,
+          "total_tokens": 69,
+          "completion_tokens": 8,
+          "estimated_cost": 0.0000036170000000000003,
+          "prompt_tokens_details": null
+        },
+        "contentSample": "",
+        "error": null
+      }
+    },
+    {
+      "provider": "openrouter",
+      "keySource": "env:OPENROUTER_API_KEY",
+      "probedAt": "2026-07-11T01:16:59.953Z",
+      "models": {
+        "ok": true,
+        "httpStatus": 200,
+        "count": 346,
+        "familyMatches": {
+          "gemini": [
+            "google/gemini-2.5-flash",
+            "google/gemini-2.5-flash-image",
+            "google/gemini-2.5-flash-lite",
+            "google/gemini-2.5-pro",
+            "google/gemini-2.5-pro-preview",
+            "google/gemini-2.5-pro-preview-05-06",
+            "google/gemini-3-flash-preview",
+            "google/gemini-3-pro-image",
+            "google/gemini-3-pro-image-preview",
+            "google/gemini-3.1-flash-image",
+            "google/gemini-3.1-flash-image-preview",
+            "google/gemini-3.1-flash-lite",
+            "google/gemini-3.1-flash-lite-image",
+            "google/gemini-3.1-flash-lite-preview",
+            "google/gemini-3.1-pro-preview",
+            "google/gemini-3.1-pro-preview-customtools",
+            "google/gemini-3.5-flash",
+            "~google/gemini-flash-latest",
+            "~google/gemini-pro-latest"
+          ],
+          "haiku": [
+            "anthropic/claude-3-haiku",
+            "anthropic/claude-haiku-4.5",
+            "~anthropic/claude-haiku-latest"
+          ],
+          "sonnet": [
+            "anthropic/claude-sonnet-4",
+            "anthropic/claude-sonnet-4.5",
+            "anthropic/claude-sonnet-4.6",
+            "anthropic/claude-sonnet-5",
+            "~anthropic/claude-sonnet-latest"
+          ],
+          "claude": [
+            "anthropic/claude-3-haiku",
+            "anthropic/claude-fable-5",
+            "anthropic/claude-haiku-4.5",
+            "anthropic/claude-opus-4",
+            "anthropic/claude-opus-4.1",
+            "anthropic/claude-opus-4.5",
+            "anthropic/claude-opus-4.6",
+            "anthropic/claude-opus-4.7",
+            "anthropic/claude-opus-4.7-fast",
+            "anthropic/claude-opus-4.8",
+            "anthropic/claude-opus-4.8-fast",
+            "anthropic/claude-sonnet-4",
+            "anthropic/claude-sonnet-4.5",
+            "anthropic/claude-sonnet-4.6",
+            "anthropic/claude-sonnet-5",
+            "~anthropic/claude-fable-latest",
+            "~anthropic/claude-haiku-latest",
+            "~anthropic/claude-opus-latest",
+            "~anthropic/claude-sonnet-latest"
+          ],
+          "gpt-5": [
+            "openai/gpt-5",
+            "openai/gpt-5-chat",
+            "openai/gpt-5-codex",
+            "openai/gpt-5-image",
+            "openai/gpt-5-image-mini",
+            "openai/gpt-5-mini",
+            "openai/gpt-5-nano",
+            "openai/gpt-5-pro",
+            "openai/gpt-5.1",
+            "openai/gpt-5.1-chat",
+            "openai/gpt-5.1-codex",
+            "openai/gpt-5.1-codex-max",
+            "openai/gpt-5.1-codex-mini",
+            "openai/gpt-5.2",
+            "openai/gpt-5.2-chat",
+            "openai/gpt-5.2-codex",
+            "openai/gpt-5.2-pro",
+            "openai/gpt-5.3-chat",
+            "openai/gpt-5.3-codex",
+            "openai/gpt-5.4",
+            "openai/gpt-5.4-image-2",
+            "openai/gpt-5.4-mini",
+            "openai/gpt-5.4-nano",
+            "openai/gpt-5.4-pro",
+            "openai/gpt-5.5"
+          ],
+          "gpt-oss": [
+            "openai/gpt-oss-120b",
+            "openai/gpt-oss-120b:free",
+            "openai/gpt-oss-20b",
+            "openai/gpt-oss-20b:free",
+            "openai/gpt-oss-safeguard-20b"
+          ],
+          "mercury": [
+            "inception/mercury-2"
+          ],
+          "deepseek": [
+            "deepseek/deepseek-chat",
+            "deepseek/deepseek-chat-v3-0324",
+            "deepseek/deepseek-chat-v3.1",
+            "deepseek/deepseek-r1",
+            "deepseek/deepseek-r1-0528",
+            "deepseek/deepseek-r1-distill-llama-70b",
+            "deepseek/deepseek-v3.1-terminus",
+            "deepseek/deepseek-v3.2",
+            "deepseek/deepseek-v3.2-exp",
+            "deepseek/deepseek-v4-flash",
+            "deepseek/deepseek-v4-pro"
+          ],
+          "glm": [
+            "z-ai/glm-4.5",
+            "z-ai/glm-4.5-air",
+            "z-ai/glm-4.5v",
+            "z-ai/glm-4.6",
+            "z-ai/glm-4.6v",
+            "z-ai/glm-4.7",
+            "z-ai/glm-4.7-flash",
+            "z-ai/glm-5",
+            "z-ai/glm-5-turbo",
+            "z-ai/glm-5.1",
+            "z-ai/glm-5.2",
+            "z-ai/glm-5v-turbo"
+          ],
+          "kimi": [
+            "moonshotai/kimi-k2",
+            "moonshotai/kimi-k2-0905",
+            "moonshotai/kimi-k2-thinking",
+            "moonshotai/kimi-k2.5",
+            "moonshotai/kimi-k2.6",
+            "moonshotai/kimi-k2.7-code",
+            "~moonshotai/kimi-latest"
+          ],
+          "qwen": [
+            "qwen/qwen-2.5-72b-instruct",
+            "qwen/qwen-2.5-7b-instruct",
+            "qwen/qwen-2.5-coder-32b-instruct",
+            "qwen/qwen-plus",
+            "qwen/qwen-plus-2025-07-28",
+            "qwen/qwen-plus-2025-07-28:thinking",
+            "qwen/qwen2.5-vl-72b-instruct",
+            "qwen/qwen3-14b",
+            "qwen/qwen3-235b-a22b",
+            "qwen/qwen3-235b-a22b-2507",
+            "qwen/qwen3-235b-a22b-thinking-2507",
+            "qwen/qwen3-30b-a3b",
+            "qwen/qwen3-30b-a3b-instruct-2507",
+            "qwen/qwen3-30b-a3b-thinking-2507",
+            "qwen/qwen3-32b",
+            "qwen/qwen3-8b",
+            "qwen/qwen3-coder",
+            "qwen/qwen3-coder-30b-a3b-instruct",
+            "qwen/qwen3-coder-flash",
+            "qwen/qwen3-coder-next",
+            "qwen/qwen3-coder-plus",
+            "qwen/qwen3-coder:free",
+            "qwen/qwen3-max",
+            "qwen/qwen3-max-thinking",
+            "qwen/qwen3-next-80b-a3b-instruct"
+          ]
+        }
+      },
+      "funding": {
+        "ok": true,
+        "httpStatus": 200,
+        "latencyMs": 2176,
+        "model": "openai/gpt-oss-120b",
+        "usage": {
+          "prompt_tokens": 74,
+          "completion_tokens": 39,
+          "total_tokens": 113,
+          "cost": 0.00002125,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00002125,
+            "upstream_inference_prompt_cost": 0.0000037,
+            "upstream_inference_completions_cost": 0.00001755
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 38,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "contentSample": "ok",
+        "error": null
+      }
+    },
+    {
+      "provider": "openai",
+      "keySource": "env:OPENAI_API_KEY",
+      "probedAt": "2026-07-11T01:17:02.306Z",
+      "models": {
+        "ok": true,
+        "httpStatus": 200,
+        "count": 125,
+        "familyMatches": {
+          "gpt-5": [
+            "gpt-5",
+            "gpt-5-2025-08-07",
+            "gpt-5-chat-latest",
+            "gpt-5-codex",
+            "gpt-5-mini",
+            "gpt-5-mini-2025-08-07",
+            "gpt-5-nano",
+            "gpt-5-nano-2025-08-07",
+            "gpt-5-pro",
+            "gpt-5-pro-2025-10-06",
+            "gpt-5-search-api",
+            "gpt-5-search-api-2025-10-14",
+            "gpt-5.1",
+            "gpt-5.1-2025-11-13",
+            "gpt-5.1-chat-latest",
+            "gpt-5.1-codex",
+            "gpt-5.1-codex-max",
+            "gpt-5.1-codex-mini",
+            "gpt-5.2",
+            "gpt-5.2-2025-12-11",
+            "gpt-5.2-chat-latest",
+            "gpt-5.2-codex",
+            "gpt-5.2-pro",
+            "gpt-5.2-pro-2025-12-11",
+            "gpt-5.3-chat-latest"
+          ]
+        }
+      },
+      "funding": {
+        "ok": false,
+        "httpStatus": 429,
+        "latencyMs": 1493,
+        "model": "gpt-5-nano",
+        "usage": null,
+        "error": "{\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.\",\"type\":\"insufficient_quota\",\"param\":null,\"code\":\"insufficient_quota\"}"
+      }
+    },
+    {
+      "provider": "inception",
+      "keySource": "env:INCEPTION_API_KEY",
+      "probedAt": "2026-07-11T01:17:04.872Z",
+      "models": {
+        "ok": true,
+        "httpStatus": 200,
+        "count": 1,
+        "familyMatches": {
+          "mercury": [
+            "mercury-2"
+          ]
+        }
+      },
+      "funding": {
+        "ok": false,
+        "httpStatus": 403,
+        "latencyMs": 173,
+        "model": "mercury-coder",
+        "usage": null,
+        "error": "{\"message\":\"Model `mercury-coder` is only available to accounts created before February 24, 2026. Please use Mercury 2 or Mercury Edit models instead.\",\"type\":\"model_access_denied\",\"param\":null,\"code\":\"model_access_denied\"}"
+      }
+    },
+    {
+      "provider": "anthropic-claude-cli",
+      "probedAt": "2026-07-11T01:17:05.176Z",
+      "cliPath": "/Users/loganbaird/.local/bin/claude",
+      "claude-haiku-4-5-20251001": {
+        "ok": true,
+        "latencyMs": 4746,
+        "costUsd": 0.12679,
+        "resultSample": "ok"
+      },
+      "claude-sonnet-5": {
+        "ok": true,
+        "latencyMs": 3519,
+        "costUsd": 0.5594,
+        "resultSample": "ok"
+      },
+      "claude-fable-5": {
+        "ok": true,
+        "latencyMs": 6977,
+        "costUsd": 0.631192,
+        "resultSample": "ok"
+      },
+      "claude-opus-4-8": {
+        "ok": true,
+        "latencyMs": 2863,
+        "costUsd": 0.30991349999999995,
+        "resultSample": "ok"
+      },
+      "ok": true
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "provider": "inception",
+  "url": "https://api.inceptionlabs.ai/v1/models",
+  "httpStatus": 200,
+  "latencyMs": 128,
+  "count": 1,
+  "modelIds": [
+    "mercury-2"
+  ]
+}
