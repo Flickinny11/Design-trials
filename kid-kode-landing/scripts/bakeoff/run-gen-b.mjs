@@ -45,7 +45,12 @@ if (!ct) { console.error(`unknown contestant ${CONTESTANT}`); process.exit(2); }
 if (!ct.axes.includes(AXIS)) { console.error(`${CONTESTANT} does not run on axis ${AXIS}`); process.exit(0); }
 
 const RUNS = Number(argOf('--runs', AXIS === 'functional' ? '3' : '2'));
-const MAX_TOKENS = Number(argOf('--max-tokens', AXIS === 'functional' ? '8192' : '12288'));
+// Reasoning models (sonnet-5, gpt-5.6, glm, kimi) emit reasoning tokens that
+// count toward the completion budget; at 8192 they truncated the CODE (glm 37%,
+// kimi 60%). Cap reasoning to 'low' on OpenRouter (mirrors the claude-CLI
+// --effort low W-BAKE used) AND raise the ceiling so brief reasoning + full
+// code both fit. Identical settings across contestants (I-BB2).
+const MAX_TOKENS = Number(argOf('--max-tokens', '16384'));
 const CONC = Number(argOf('--concurrency', ct.route === 'claude-cli' ? '3' : '5'));
 
 const L1 = readFileSync(path.join(B, 'l1-v2.1-system.txt'), 'utf8');
@@ -108,9 +113,16 @@ async function callOpenAICompat(route, model, user) {
   for (let attempt = 1; attempt <= 4; attempt += 1) {
     const t0 = Date.now();
     try {
+      const reqBody = { model, max_tokens: MAX_TOKENS, messages: [{ role: 'system', content: SYSTEM }, { role: 'user', content: user }] };
+      // HARD-cap reasoning at 2048 tokens so it cannot starve the code output.
+      // (effort:'low' was honored by sonnet/glm but NOT kimi-k2.7-code, which
+      // reasoned the full budget and emitted 0 code; a max_tokens cap binds
+      // across providers via OpenRouter normalization.) Uniform across all
+      // OpenRouter contestants (I-BB2).
+      if (route === 'openrouter') reqBody.reasoning = { max_tokens: 2048 };
       const res = await fetch(r.chatUrl, {
         method: 'POST', headers,
-        body: JSON.stringify({ model, max_tokens: MAX_TOKENS, messages: [{ role: 'system', content: SYSTEM }, { role: 'user', content: user }] }),
+        body: JSON.stringify(reqBody),
         signal: AbortSignal.timeout(300000),
       });
       const wallMs = Date.now() - t0;

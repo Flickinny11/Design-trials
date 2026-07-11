@@ -33,7 +33,7 @@ console.log(`[drive ${AXIS}] ${lanes.length} lanes, max ${MAX_LANES} concurrent:
 
 function runLane(c) {
   return new Promise((resolve) => {
-    const a = ['run-gen-b.mjs', '--contestant', c.id, '--axis', AXIS];
+    const a = [path.join(HERE, 'run-gen-b.mjs'), '--contestant', c.id, '--axis', AXIS];
     if (RUNS) a.push('--runs', RUNS);
     const p = spawn('node', a, { cwd: path.resolve(HERE, '..', '..'), stdio: ['ignore', 'pipe', 'pipe'] });
     let tail = '';

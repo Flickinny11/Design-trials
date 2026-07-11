@@ -111,13 +111,27 @@ export default function BakeoffLabPage() {
           );
         } catch { /* best-effort */ }
 
+        // gsap interop shim (W-BAKE-B, lab-only — disclosed): the app's ESM
+        // default `import gsap from 'gsap'` (line 22) lacks the `.gsap` /
+        // `.default` self-references the npm CJS entry carries, so a bundled
+        // module's NAMED `import { gsap } from 'gsap'` compiles to
+        // `require('gsap').gsap` === undefined and crashes at the first
+        // `gsap.timeline()` — a harness-interop artifact (W-PCP §9.3), NOT a
+        // model error, that otherwise confounds the design axis (gsap animates
+        // nearly every node). Add the self-references so BOTH import forms
+        // resolve to the real gsap object. Idempotent; no effect if already set.
+        const gsapDep = gsap as unknown as Record<string, unknown>;
+        try {
+          if (!gsapDep.gsap) gsapDep.gsap = gsap;
+          if (!gsapDep.default) gsapDep.default = gsap;
+        } catch { /* frozen — fall back to bare (default-form only) */ }
         const DEPS: Record<string, unknown> = {
           'three/webgpu': THREE_WEBGPU,
           'three/tsl': THREE_TSL,
           // 'three' is NOT an allowed source (dep gate records the violation),
           // but the render is still judged — serve the same single instance.
           three: THREE_WEBGPU,
-          gsap,
+          gsap: gsapDep,
           '@/primitives': ctx.primitives,
           // '@/text' is promised by L1 as "MSDF text utilities" but no such
           // module exists in the product — the harness implements the alias
