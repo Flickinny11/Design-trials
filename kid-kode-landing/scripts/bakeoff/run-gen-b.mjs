@@ -133,7 +133,10 @@ async function callOpenAICompat(route, model, user) {
       const res = await fetch(r.chatUrl, {
         method: 'POST', headers,
         body: JSON.stringify(reqBody),
-        signal: AbortSignal.timeout(300000),
+        // Transport-only knob (prompt/L1/L2 bytes untouched — I-BB2 unaffected):
+        // GLM-5.2 + Kimi-K2.7 on the deepinfra reroute run 130-280s/call, so the
+        // fixed 300s clip turned their slow tails into permanent transport failures.
+        signal: AbortSignal.timeout(Number(process.env.WBAKEB_GEN_TIMEOUT_MS ?? 300000)),
       });
       const wallMs = Date.now() - t0;
       const body = await res.text();

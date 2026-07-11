@@ -8,7 +8,7 @@
 // dev-only /bakeoff-lab bundle route serves them unchanged; index at
 // notes/bakeoff-b/bundles-index.json (lane = contestant, no arm).
 
-import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { ROOT } from './contestants-b.mjs';
@@ -44,7 +44,7 @@ const cases = new Map(readdirSync(path.join(VISUAL, 'cases')).filter((f) => f.en
 mkdirSync(BUNDLES_ROOT, { recursive: true });
 const index = [];
 let contestants = [];
-try { contestants = readdirSync(RUNS_DIR); } catch { contestants = []; }
+try { contestants = readdirSync(RUNS_DIR).filter((d) => { try { return statSync(path.join(RUNS_DIR, d)).isDirectory(); } catch { return false; } }); } catch { contestants = []; }
 for (const cid of contestants) {
   const outDir = path.join(BUNDLES_ROOT, cid);
   mkdirSync(outDir, { recursive: true });

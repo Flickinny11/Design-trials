@@ -91,7 +91,11 @@ export const ROUTES = {
 export const CONTESTANTS = [
   // ── functional + design contestants ────────────────────────────────────
   { id: 'claude-haiku-4.5', label: 'Claude Haiku 4.5', route: 'deepinfra', model: 'anthropic/claude-haiku-4-5', usdPerMTokIn: 1.0, usdPerMTokOut: 5.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 3 },
-  { id: 'claude-sonnet-5', label: 'Claude Sonnet 5', route: 'deepinfra', model: 'anthropic/claude-sonnet-5', usdPerMTokIn: 2.0, usdPerMTokOut: 10.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 14 },
+  // sonnet cap 14->19 (2026-07-10 22:45): functional burned $12.36 before the effort-low
+  // reasoning bound landed, leaving <$2 design headroom -> design lane stopped at 16/40.
+  // Global spend $33.70 of $120 at resize; +$5 finishes the 24 remaining design rows at
+  // bounded-reasoning deepinfra rates. Global $120 cap unchanged.
+  { id: 'claude-sonnet-5', label: 'Claude Sonnet 5', route: 'deepinfra', model: 'anthropic/claude-sonnet-5', usdPerMTokIn: 2.0, usdPerMTokOut: 10.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 19 },
   { id: 'gpt-oss-120b', label: 'gpt-oss-120b', route: 'fireworks', model: 'accounts/fireworks/models/gpt-oss-120b', usdPerMTokIn: 0.15, usdPerMTokOut: 0.6, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 2 },
   { id: 'deepseek-v4-flash', label: 'DeepSeek V4-Flash', route: 'deepinfra', model: 'deepseek-ai/DeepSeek-V4-Flash', usdPerMTokIn: 0.09, usdPerMTokOut: 0.18, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 2 },
   { id: 'glm-5.2', label: 'GLM-5.2', route: 'deepinfra', model: 'zai-org/GLM-5.2', usdPerMTokIn: 0.93, usdPerMTokOut: 3.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 6 },
