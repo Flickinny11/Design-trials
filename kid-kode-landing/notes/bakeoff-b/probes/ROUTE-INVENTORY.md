@@ -59,3 +59,40 @@ vision judges (vision Read is CLI-only).
   accounts created before February 24, 2026." Not on OpenRouter (only
   `inception/mercury-2`) or any other keyed catalog. `mercury-2` substitutes as
   the D5 seam executor (disclosed).
+
+## MID-WAVE EVENT (2026-07-10 ~21:55 CDT) — OpenRouter 402 + reroute
+
+OpenRouter went **402 insufficient_credits mid-run** (credits endpoint:
+`total_credits: 74, total_usage: 75.26` — overdrawn; raw 402 bodies preserved
+in the affected lane run dirs as `ok:false` rows). The D0 funding probe at
+20:48 CDT was a true 200 — the account drained DURING the wave (this key also
+carried W-PCP and other prior waves).
+
+**Reroute (evidence: `deepinfra-reroute-funding.json`, all 200 with metered
+usage):** every roster model with a live alternate route moved to DeepInfra —
+
+| Model | New route | DeepInfra model id | $/MTok in/out |
+|---|---|---|---|
+| claude-sonnet-5 | deepinfra | anthropic/claude-sonnet-5 | 2.0 / 10.0 |
+| deepseek-v4-flash | deepinfra | deepseek-ai/DeepSeek-V4-Flash | 0.09 / 0.18 |
+| glm-5.2 | deepinfra | zai-org/GLM-5.2 | 0.93 / 3.0 |
+| kimi-k2.7-code | deepinfra | moonshotai/Kimi-K2.7-Code | 0.74 / 3.5 |
+| gemini-3.5-flash | deepinfra | google/gemini-3.5-flash | 1.5 / 9.0 |
+| claude-fable-5 *(ceiling ref)* | deepinfra | anthropic/claude-fable-5 | 10.0 / 50.0 |
+| claude-opus-4.8 *(ceiling ref)* | deepinfra | anthropic/claude-opus-4-8 | 5.0 / 25.0 |
+
+Lanes partially generated on OpenRouter before the 402 are **mixed-route**:
+each ledger row records the route that call actually rode; `ok:false` 402 rows
+are retried on the new route (run-gen-b resume semantics skip only `ok:true`).
+Same L1 v2.1 + frozen L2 bytes on both routes (I-BB2 unaffected).
+
+**Blocked at the 402 boundary (no alternate keyed route; I-BB5):**
+- `gpt-5.6-terra` functional (0/150 ok) + design (0/40) — OpenRouter-only.
+- `gpt-5.6-sol` functional (0/150 ok) + design (0/40) — OpenRouter-only.
+- `gpt-5.6-luna` **design** (0/40; its functional lane completed 150/150
+  BEFORE the drain) — OpenRouter-only.
+- `qwen3.7-plus` (D4 critic) — not in any alternate keyed catalog.
+
+These run iff OpenRouter credits are restored before the wave closes;
+otherwise reported UNREACHABLE-mid-wave with the 402 evidence, never
+extrapolated.

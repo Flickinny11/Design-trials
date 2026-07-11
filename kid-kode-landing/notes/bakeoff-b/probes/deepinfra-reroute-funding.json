@@ -1,0 +1,93 @@
+{
+  "probedAt": "2026-07-11T02:57:12.777Z",
+  "reason": "openrouter 402 insufficient_credits mid-wave (total_credits 74, total_usage 75.26) — reroute funding probes",
+  "results": [
+    {
+      "model": "anthropic/claude-sonnet-5",
+      "httpStatus": 200,
+      "latencyMs": 1048,
+      "usage": {
+        "prompt_tokens": 16,
+        "total_tokens": 20,
+        "completion_tokens": 4,
+        "estimated_cost": 0.000072,
+        "prompt_tokens_details": null
+      },
+      "error": null
+    },
+    {
+      "model": "zai-org/GLM-5.2",
+      "httpStatus": 200,
+      "latencyMs": 4645,
+      "usage": {
+        "prompt_tokens": 19,
+        "total_tokens": 27,
+        "completion_tokens": 8,
+        "estimated_cost": 0.00004167,
+        "prompt_tokens_details": null,
+        "reasoning_tokens": 0
+      },
+      "error": null
+    },
+    {
+      "model": "moonshotai/Kimi-K2.7-Code",
+      "httpStatus": 200,
+      "latencyMs": 1956,
+      "usage": {
+        "prompt_tokens": 15,
+        "total_tokens": 23,
+        "completion_tokens": 8,
+        "estimated_cost": 0.0000391,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": null
+        }
+      },
+      "error": null
+    },
+    {
+      "model": "google/gemini-3.5-flash",
+      "httpStatus": 200,
+      "latencyMs": 1057,
+      "usage": {
+        "prompt_tokens": 7,
+        "total_tokens": 8,
+        "completion_tokens": 1,
+        "estimated_cost": 0.0000195,
+        "prompt_tokens_details": null,
+        "extra_properties": {
+          "google": {
+            "traffic_type": "ON_DEMAND"
+          }
+        }
+      },
+      "error": null
+    },
+    {
+      "model": "anthropic/claude-fable-5",
+      "httpStatus": 200,
+      "latencyMs": 1473,
+      "usage": {
+        "prompt_tokens": 16,
+        "total_tokens": 24,
+        "completion_tokens": 8,
+        "estimated_cost": 0.0005600000000000001,
+        "prompt_tokens_details": null
+      },
+      "error": null
+    },
+    {
+      "model": "anthropic/claude-opus-4-8",
+      "httpStatus": 200,
+      "latencyMs": 1111,
+      "usage": {
+        "prompt_tokens": 16,
+        "total_tokens": 20,
+        "completion_tokens": 4,
+        "estimated_cost": 0.00018,
+        "prompt_tokens_details": null
+      },
+      "error": null
+    }
+  ]
+}

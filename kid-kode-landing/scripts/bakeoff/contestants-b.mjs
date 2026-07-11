@@ -78,22 +78,30 @@ export const ROUTES = {
 // (b) gives real provider-tokenizer accounting for every contestant, (c) keeps
 // the cap headroom the Fable/Opus VISION JUDGES need (judging still rides the
 // founder CLI — vision Read is CLI-only). "Cheapest live route" per D1.
+// MID-WAVE REROUTE (2026-07-10 ~21:55 CDT): OpenRouter went 402
+// insufficient_credits mid-run (credits endpoint: total_credits 74,
+// total_usage 75.26 — overdrawn). Every model with a live alternate route was
+// rerouted to DeepInfra (funding probes: probes/deepinfra-reroute-funding.json,
+// all 200). Prices updated to DeepInfra's published rates at reroute time;
+// per-call ledger rows record the route each call actually rode (mixed-route
+// lanes are disclosed in the report). GPT-5.6 tiers + qwen3.7-plus have NO
+// alternate keyed route — those lanes stop at the 402 boundary (I-BB5).
 export const CONTESTANTS = [
   // ── functional + design contestants ────────────────────────────────────
   { id: 'claude-haiku-4.5', label: 'Claude Haiku 4.5', route: 'deepinfra', model: 'anthropic/claude-haiku-4-5', usdPerMTokIn: 1.0, usdPerMTokOut: 5.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 3 },
-  { id: 'claude-sonnet-5', label: 'Claude Sonnet 5', route: 'openrouter', model: 'anthropic/claude-sonnet-5', usdPerMTokIn: 2.0, usdPerMTokOut: 10.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 8 },
+  { id: 'claude-sonnet-5', label: 'Claude Sonnet 5', route: 'deepinfra', model: 'anthropic/claude-sonnet-5', usdPerMTokIn: 2.0, usdPerMTokOut: 10.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 8 },
   { id: 'gpt-oss-120b', label: 'gpt-oss-120b', route: 'fireworks', model: 'accounts/fireworks/models/gpt-oss-120b', usdPerMTokIn: 0.15, usdPerMTokOut: 0.6, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 2 },
-  { id: 'deepseek-v4-flash', label: 'DeepSeek V4-Flash', route: 'openrouter', model: 'deepseek/deepseek-v4-flash', usdPerMTokIn: 0.084, usdPerMTokOut: 0.168, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 2 },
-  { id: 'glm-5.2', label: 'GLM-5.2', route: 'openrouter', model: 'z-ai/glm-5.2', usdPerMTokIn: 0.42, usdPerMTokOut: 1.32, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 3 },
-  { id: 'kimi-k2.7-code', label: 'Kimi K2.7 Code', route: 'openrouter', model: 'moonshotai/kimi-k2.7-code', usdPerMTokIn: 0.72, usdPerMTokOut: 3.49, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 4 },
-  { id: 'gemini-3.5-flash', label: 'Gemini 3.5 Flash', route: 'openrouter', model: 'google/gemini-3.5-flash', usdPerMTokIn: 1.5, usdPerMTokOut: 9.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 7 },
+  { id: 'deepseek-v4-flash', label: 'DeepSeek V4-Flash', route: 'deepinfra', model: 'deepseek-ai/DeepSeek-V4-Flash', usdPerMTokIn: 0.09, usdPerMTokOut: 0.18, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 2 },
+  { id: 'glm-5.2', label: 'GLM-5.2', route: 'deepinfra', model: 'zai-org/GLM-5.2', usdPerMTokIn: 0.93, usdPerMTokOut: 3.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 3 },
+  { id: 'kimi-k2.7-code', label: 'Kimi K2.7 Code', route: 'deepinfra', model: 'moonshotai/Kimi-K2.7-Code', usdPerMTokIn: 0.74, usdPerMTokOut: 3.5, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 4 },
+  { id: 'gemini-3.5-flash', label: 'Gemini 3.5 Flash', route: 'deepinfra', model: 'google/gemini-3.5-flash', usdPerMTokIn: 1.5, usdPerMTokOut: 9.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 7 },
   { id: 'mercury-2', label: 'Mercury 2', route: 'inception', model: 'mercury-2', usdPerMTokIn: 0.25, usdPerMTokOut: 0.75, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 2 },
   { id: 'gpt-5.6-luna', label: 'GPT-5.6 Luna', route: 'openrouter', model: 'openai/gpt-5.6-luna', usdPerMTokIn: 1.0, usdPerMTokOut: 6.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 5 },
   { id: 'gpt-5.6-terra', label: 'GPT-5.6 Terra', route: 'openrouter', model: 'openai/gpt-5.6-terra', usdPerMTokIn: 2.5, usdPerMTokOut: 15.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 6 },
   { id: 'gpt-5.6-sol', label: 'GPT-5.6 Sol', route: 'openrouter', model: 'openai/gpt-5.6-sol', usdPerMTokIn: 5.0, usdPerMTokOut: 30.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 6 },
   // ── design-axis ceiling references (NOT tier contestants — I-BB4) ────────
-  { id: 'claude-fable-5', label: 'Claude Fable 5 (ceiling ref)', route: 'openrouter', model: 'anthropic/claude-fable-5', usdPerMTokIn: 10.0, usdPerMTokOut: 50.0, axes: ['design'], role: 'ceiling-ref', laneCapUsd: 9 },
-  { id: 'claude-opus-4.8', label: 'Claude Opus 4.8 (ceiling ref)', route: 'openrouter', model: 'anthropic/claude-opus-4.8', usdPerMTokIn: 5.0, usdPerMTokOut: 25.0, axes: ['design'], role: 'ceiling-ref', laneCapUsd: 5 },
+  { id: 'claude-fable-5', label: 'Claude Fable 5 (ceiling ref)', route: 'deepinfra', model: 'anthropic/claude-fable-5', usdPerMTokIn: 10.0, usdPerMTokOut: 50.0, axes: ['design'], role: 'ceiling-ref', laneCapUsd: 9 },
+  { id: 'claude-opus-4.8', label: 'Claude Opus 4.8 (ceiling ref)', route: 'deepinfra', model: 'anthropic/claude-opus-4-8', usdPerMTokIn: 5.0, usdPerMTokOut: 25.0, axes: ['design'], role: 'ceiling-ref', laneCapUsd: 5 },
 ];
 
 // UNREACHABLE — recorded with proof (I-BB5), never extrapolated.
@@ -102,10 +110,14 @@ export const UNREACHABLE = [
   { id: 'mercury-coder', label: 'Mercury Coder', evidence: 'Inception direct returns 403 model_access_denied: "Model `mercury-coder` is only available to accounts created before February 24, 2026." Not hosted on OpenRouter (only inception/mercury-2) or any other keyed catalog. mercury-2 is the reachable Mercury; used as the D5 seam executor with the substitution disclosed.' },
 ];
 
-// D4 critic candidates (Axis 3). qwen3.7-plus newly reachable via OpenRouter.
+// D4 critic candidates (Axis 3). gemini vision rerouted to DeepInfra after the
+// mid-wave OpenRouter 402 (vision probe required before D4 runs). qwen3.7-plus
+// has NO alternate keyed route (not in the DeepInfra 169-model catalog) — it
+// runs only if OpenRouter credits are restored before D4; else disclosed
+// UNREACHABLE-mid-wave (I-BB5).
 export const CRITICS = [
   { id: 'claude-sonnet-5', label: 'Claude Sonnet 5', route: 'claude-cli', model: 'claude-sonnet-5' },
-  { id: 'gemini-3.5-flash', label: 'Gemini 3.5 Flash', route: 'openrouter', model: 'google/gemini-3.5-flash', usdPerMTokIn: 1.5, usdPerMTokOut: 9.0 },
+  { id: 'gemini-3.5-flash', label: 'Gemini 3.5 Flash', route: 'deepinfra', model: 'google/gemini-3.5-flash', usdPerMTokIn: 1.5, usdPerMTokOut: 9.0 },
   { id: 'qwen3.7-plus', label: 'Qwen3.7 Plus', route: 'openrouter', model: 'qwen/qwen3.7-plus', usdPerMTokIn: 0.32, usdPerMTokOut: 1.28 },
   { id: 'claude-haiku-4.5', label: 'Claude Haiku 4.5', route: 'claude-cli', model: 'claude-haiku-4-5-20251001' },
 ];
