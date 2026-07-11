@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-06-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 1805,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3905,
+    "completionTokens": 2956
+  },
+  "costUsd": 0.000824628,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, float } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const group = new THREE.Group();\n\n  // Background plane – aspect ratio from atlas source rect (512x320)\n  const aspect = 512 / 320;\n  const width = 2.0;\n  const height = width / aspect;\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  // Build material with gradient + grain texture\n  const material = new MeshBasicNodeMaterial({ transparent: false });\n\n  // Gradient using spec colors: paper (top) → surface (bottom)\n  const gradient = mix(\n    vec3(0xe8 / 255, 0xec / 255, 0xf2 / 255),   // paper\n    vec3(0x0b / 255, 0x0b / 255, 0x10 / 255),   // surface\n    uv().y\n  );\n\n  // Grain texture (async load)\n  const texPromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  texPromise.then((tex) => {\n    // Atlas region: source rect (0,0,512,320) – assume full texture\n    tex.repeat.set(1, 1);\n    tex.offset.set(0, 0);\n    material.map = tex;\n    material.needsUpdate = true;\n  });\n\n  // Combine gradient and grain – multiply (grain will be dark on dark, but we want subtle)\n  // Use a mix that lets the grain modulate the gradient color\n  // For a subtle grain effect, we can use the grain luminance as a multiplier\n  // We'll sample the texture in TSL – but texture node requires loading.\n  // Instead, we'll set the color to gradient for now; when texture loads we can update.\n  // However, we cannot use texture in TSL node if not loaded. So we keep color = gradient.\n  material.colorNode = gradient;\n\n  const plane = new THREE.Mesh(geometry, material);\n  group.add(plane);\n\n  // Text – \"Features\" as headline\n  const textOpts = {\n    fontSize: 0.62,           // hero em per type scale\n    color: '#e8ecf2',         // paper color\n    align: 'center',\n  };\n  const textMesh = ctx.fontAtlas.createText('Features', textOpts);\n  // Center text relative to plane\n  textMesh.position.set(0, 0, 0.01); // slight Z offset to avoid z-fighting\n  group.add(textMesh);\n\n  // Event handlers (none)\n  group.userData.handlers = {};\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    // Dispose text – assumes createText returns Object3Ds with materials\n    textMesh.traverse((child) => {\n      if (child.isMesh) {\n        child.geometry.dispose();\n        if (child.material) {\n          child.material.dispose();\n        }\n      }\n    });\n    // Texture cleanup (if loaded)\n    texPromise.then((tex) => tex.dispose()).catch(() => {});\n  };\n\n  return group;\n}\n```"
+}

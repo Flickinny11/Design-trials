@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-16-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 289,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3691,
+    "completionTokens": 6152
+  },
+  "costUsd": 0.024128,
+  "billing": "metered",
+  "output": " import { MeshBasicNodeMaterial, PlaneGeometry, DoubleSide } from 'three/webgpu';\nimport {\n  uv,\n  vec2,\n  texture,\n  color,\n  mix,\n  smoothstep,\n  length,\n  mul,\n  fract,\n  sin,\n  dot\n} from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new ctx.THREE.Group();\n\n  const colors = config.intent?.visualSpec?.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n\n  const src = config.atlasRegion?.sourceRect;\n  const aspect = src && src[2] > 0 && src[3] > 0 ? src[2] / src[3] : 512 / 320;\n  const height = 1.6;\n  const width = height * aspect;\n\n  const u = uv();\n\n  const surfaceCol = color(colors.surface);\n  const inkCol = color(colors.ink);\n  const paperCol = color(colors.paper);\n  const accentCol = color(colors.accent);\n\n  const gradT = smoothstep(0.0, 1.0, u.y);\n  const gradient = mix(surfaceCol, inkCol, gradT);\n\n  const noise = fract(sin(dot(u, vec2(12.9898, 78.233))).mul(43758.5453));\n  const grain = mix(gradient, paperCol, noise.mul(0.04));\n\n  const cornerDist = length(vec2(1, 1).sub(u));\n  const accentMask = smoothstep(0.65, 0.0, cornerDist);\n  const baseColor = mix(grain, accentCol, accentMask.mul(0.08));\n\n  const geometry = new PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    side: DoubleSide,\n    depthWrite: false\n  });\n\n  material.colorNode = baseColor;\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      tex.colorSpace = ctx.THREE.SRGBColorSpace;\n      const samp = texture(tex);\n      material.colorNode = mix(baseColor, samp.rgb, samp.a);\n      material.needsUpdate = true;\n    });\n  }\n\n  const plane = new ctx.THREE.Mesh(geometry, material);\n  group.add(plane);\n\n  group.userData.handlers = {};\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n  };\n\n  return group;\n}"
+}

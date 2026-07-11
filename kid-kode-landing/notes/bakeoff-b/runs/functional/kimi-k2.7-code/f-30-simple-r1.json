@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/Kimi-K2.7-Code",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-30-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 188869,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3709,
+    "completionTokens": 5172
+  },
+  "costUsd": 0.02084666,
+  "billing": "metered",
+  "output": " import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const THREE = ctx.THREE;\n\n  const { Group, Mesh, PlaneGeometry, RepeatWrapping, ClampToEdgeWrapping, SRGBColorSpace, DoubleSide, LinearFilter } = THREE;\n\n  const colors = config.intent?.visualSpec?.colors ?? config.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n\n  const group = new Group();\n\n  const atlas = config.atlasRegion ?? { atlas: 0, sourceRect: [0, 0, 512, 320] };\n  const [sx, sy, sw, sh] = atlas.sourceRect ?? [0, 0, 512, 320];\n  const aspect = sw / sh || 1.6;\n\n  const height = 2.0;\n  const width = height * aspect;\n\n  const geometry = new PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial({\n    side: DoubleSide,\n    transparent: true,\n    color: colors.paper\n  });\n\n  const mesh = new Mesh(geometry, material);\n  mesh.name = 'journal-card-2-sprite';\n  group.add(mesh);\n\n  mesh.onBeforeRender = function(_renderer, _scene, camera) {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  group.userData.handlers = {};\n\n  const timelines = [];\n\n  if (config.cinematicPrimitives) {\n    for (const primitive of config.cinematicPrimitives) {\n      if (!ctx.primitives || !ctx.primitives[primitive.name]) continue;\n      const result = ctx.primitives[primitive.name](group, primitive.params);\n      if (result && result.timeline) timelines.push(result.timeline);\n    }\n  }\n\n  const texUrl = config.imageUrl;\n  if (texUrl) {\n    ctx.textureLoader.loadTexture(texUrl).then((tex) => {\n      tex.colorSpace = SRGBColorSpace;\n      tex.wrapS = ClampToEdgeWrapping;\n      tex.wrapT = ClampToEdgeWrapping;\n      tex.minFilter = LinearFilter;\n      tex.magFilter = LinearFilter;\n\n      const imgW = tex.image ? tex.image.width : sw;\n      const imgH = tex.image ? tex.image.height : sh;\n\n      tex.repeat.set(sw / Math.max(imgW, 1), sh / Math.max(imgH, 1));\n      tex.offset.set(sx / Math.max(imgW, 1), sy / Math.max(imgH, 1));\n\n      material.map = texture(tex);\n      material.needsUpdate = true;\n    });\n  }\n\n  group.userData.cleanup = function() {\n    timelines.forEach((tl) => {\n      if (tl && typeof tl.kill === 'function') tl.kill();\n    });\n    geometry.dispose();\n    material.dispose();\n    if (material.map && material.map.value && material.map.value.dispose) {\n      material.map.value.dispose();\n    }\n  };\n\n  return group;\n}"
+}

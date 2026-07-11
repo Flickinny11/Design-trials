@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-sonnet-5",
+  "model": "anthropic/claude-sonnet-5",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-09-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 2788,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 6165,
+    "completionTokens": 5111
+  },
+  "costUsd": 0.06344,
+  "billing": "metered",
+  "output": "import {\n  PlaneGeometry,\n  Mesh,\n  Group,\n  DoubleSide,\n  MeshBasicNodeMaterial,\n} from 'three/webgpu';\nimport {\n  texture,\n  uv,\n  vec2,\n  vec3,\n  vec4,\n  sin,\n  dot,\n  fract,\n  float,\n} from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const colors = config.intent?.visualSpec?.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10',\n  };\n\n  const group = new Group();\n  group.name = 'features-card-2-floating-accent';\n\n  // atlas region 0,0,512,320 -> aspect 1.6\n  const rectW = 512;\n  const rectH = 320;\n  const aspect = rectW / rectH;\n\n  const planeWidth = 1.4;\n  const planeHeight = planeWidth / aspect;\n\n  const geometry = new PlaneGeometry(planeWidth, planeHeight, 1, 1);\n\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    side: DoubleSide,\n    depthWrite: false,\n  });\n\n  // Subtle engineered grain overlay via TSL — applied once map is ready.\n  const buildColorNode = (mapTex) => {\n    const uvNode = uv();\n    const texNode = texture(mapTex, uvNode);\n\n    // deterministic pseudo-random grain (no time dependency -> stays static)\n    const grainSeed = uvNode.mul(4096.0);\n    const rand = fract(\n      sin(dot(grainSeed, vec2(12.9898, 78.233))).mul(43758.5453)\n    );\n    const grain = rand.sub(0.5).mul(0.035);\n\n    const rgb = texNode.rgb.add(vec3(grain, grain, grain));\n    return vec4(rgb, texNode.a);\n  };\n\n  const mesh = new Mesh(geometry, material);\n  mesh.name = 'floating-accent-plane';\n  mesh.renderOrder = 5;\n  group.add(mesh);\n\n  // Billboard toward camera every frame (sprite behavior for a plane geometry).\n  mesh.onBeforeRender = (renderer, scene, camera) => {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  let loadedTexture = null;\n\n  const texturePromise = ctx.textureLoader\n    .loadTexture(config.imageUrl)\n    .then((tex) => {\n      loadedTexture = tex;\n      material.colorNode = buildColorNode(tex);\n      material.needsUpdate = true;\n    })\n    .catch(() => {\n      // fall back to a quiet ink-toned card if the asset fails to load\n      material.colorNode = vec4(\n        float(0.086),\n        float(0.086),\n        float(0.114),\n        float(1.0)\n      );\n      material.needsUpdate = true;\n    });\n\n  // Weighted entrance — respects \"static composition\" post-settle.\n  group.scale.setScalar(0.001);\n  material.opacity = 0;\n  mesh.position.y = -0.16;\n\n  const timeline = gsap.timeline({ delay: 0.05 });\n  timeline\n    .to(group.scale, {\n      x: 1,\n      y: 1,\n      z: 1,\n      duration: 0.7,\n      ease: 'power3.out',\n    })\n    .to(\n      mesh.position,\n      {\n        y: 0,\n        duration: 0.7,\n        ease: 'power3.out',\n      },\n      0\n    )\n    .to(\n      material,\n      {\n        opacity: 1,\n        duration: 0.6,\n        ease: 'power2.out',\n        onUpdate: () => {\n          material.needsUpdate = true;\n        },\n      },\n      0.05\n    )\n    .to(group.scale, {\n      x: 1.04,\n      y: 1.04,\n      z: 1.04,\n      duration: 0.0001,\n    })\n    .to(group.scale, {\n      x: 1,\n      y: 1,\n      z: 1,\n      duration: 0.9,\n      ease: 'power4.out',\n    });\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    timeline.kill();\n    gsap.killTweensOf(group.scale);\n    gsap.killTweensOf(mesh.position);\n    gsap.killTweensOf(material);\n\n    geometry.dispose();\n    material.dispose();\n\n    if (loadedTexture && typeof loadedTexture.dispose === 'function') {\n      loadedTexture.dispose();\n    }\n\n    mesh.onBeforeRender = () => {};\n  };\n\n  return group;\n}"
+}

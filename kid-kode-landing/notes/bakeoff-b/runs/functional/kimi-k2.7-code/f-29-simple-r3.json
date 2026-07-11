@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/Kimi-K2.7-Code",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-29-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 246381,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3708,
+    "completionTokens": 10907
+  },
+  "costUsd": 0.04091842,
+  "billing": "metered",
+  "output": " import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, texture, color, mix } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  const root = new Group();\n  root.name = config.name ?? 'journal-card-1-label';\n\n  const visual = config.intent?.visualSpec ?? {};\n  const colors = visual.colors ?? config.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10',\n  };\n\n  const width = 1.6;\n  const height = 1.0;\n\n  const geometry = new PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = color(colors.surface);\n\n  const plane = new Mesh(geometry, material);\n  plane.name = 'label-plane';\n  root.add(plane);\n\n  let loadedTexture = null;\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      loadedTexture = tex;\n      tex.colorSpace = ctx.THREE.SRGBColorSpace;\n\n      const gradient = mix(color(colors.ink), color(colors.surface), uv().y);\n      const surface = mix(texture(tex, uv()), gradient, 0.42);\n\n      material.colorNode = surface;\n      material.needsUpdate = true;\n    });\n  }\n\n  const textContent = config.textContent ?? visual.textContent ?? [];\n  for (const item of textContent) {\n    if (!item.text) continue;\n\n    const label = ctx.fontAtlas.createText(String(item.text), {\n      fontSize: 0.34,\n      color: colors.paper,\n      align: 'left',\n    });\n\n    label.position.set(-width * 0.42, -0.05, 0.03);\n    label.name = `label-text-${item.role ?? 'text'}`;\n    root.add(label);\n  }\n\n  const primitiveCleanups = [];\n  if (config.cinematicPrimitives) {\n    for (const p of config.cinematicPrimitives) {\n      if (ctx.primitives?.[p.name]) {\n        const instance = ctx.primitives[p.name](root, p.params ?? {});\n        if (instance?.cleanup) primitiveCleanups.push(instance.cleanup);\n      }\n    }\n  }\n\n  root.userData.handlers = {};\n  root.userData.cleanup = () => {\n    primitiveCleanups.forEach((c) => {\n      try {\n        c();\n      } catch (e) {}\n    });\n\n    geometry.dispose();\n    material.dispose();\n    if (loadedTexture) loadedTexture.dispose();\n  };\n\n  return root;\n}"
+}

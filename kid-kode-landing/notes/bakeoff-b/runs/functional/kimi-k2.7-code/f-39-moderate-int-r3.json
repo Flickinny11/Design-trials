@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/Kimi-K2.7-Code",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-39-moderate-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 63655,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3791,
+    "completionTokens": 4386
+  },
+  "costUsd": 0.01815634,
+  "billing": "metered",
+  "output": " import { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new ctx.THREE.Group();\n  const timelines = [];\n  const primitiveControls = [];\n\n  let meshRoot = null;\n\n  if (config.meshUrl) {\n    ctx.glbLoader.loadGLB(config.meshUrl).then((gltf) => {\n      if (gltf && gltf.scene) {\n        meshRoot = gltf.scene;\n        meshRoot.traverse((child) => {\n          if (child.isMesh) {\n            child.castShadow = true;\n            child.receiveShadow = true;\n          }\n        });\n        group.add(meshRoot);\n      }\n    });\n  }\n\n  const primitives = config.cinematicPrimitives || [];\n  for (const primitive of primitives) {\n    if (ctx.primitives && ctx.primitives[primitive.name]) {\n      const ctrl = ctx.primitives[primitive.name](group, primitive.params);\n      if (ctrl) primitiveControls.push(ctrl);\n    }\n  }\n\n  const baseY = config.position?.y ?? 0.7000000000000001;\n  const hoverY = baseY + 0.15;\n\n  group.userData.handlers = {\n    hover: () => {\n      const tl = gsap.to(group.position, {\n        y: hoverY,\n        duration: 0.7,\n        ease: 'power3.out',\n        overwrite: true,\n      });\n      timelines.push(tl);\n    },\n    hoverOut: () => {\n      const tl = gsap.to(group.position, {\n        y: baseY,\n        duration: 0.7,\n        ease: 'power3.out',\n        overwrite: true,\n      });\n      timelines.push(tl);\n    },\n    click: () => {\n      const tl = gsap.timeline()\n        .to(group.scale, {\n          x: 0.97,\n          y: 0.97,\n          z: 0.97,\n          duration: 0.12,\n          ease: 'back.out(1.7)',\n        })\n        .to(group.scale, {\n          x: 1,\n          y: 1,\n          z: 1,\n          duration: 0.12,\n          ease: 'back.out(1.7)',\n        });\n      timelines.push(tl);\n      ctx.emit('hub-home.select', {});\n    },\n    focus: () => {\n      const tl = gsap.to(group.scale, {\n        x: 1.02,\n        y: 1.02,\n        z: 1.02,\n        duration: 0.3,\n        ease: 'power2.out',\n        yoyo: true,\n        repeat: 1,\n      });\n      timelines.push(tl);\n    },\n    'trpc.visits.book.slot': (payload) => {\n      group.userData.lastSlot = payload;\n    },\n  };\n\n  group.userData.cleanup = () => {\n    timelines.forEach((tl) => {\n      if (tl && typeof tl.kill === 'function') tl.kill();\n    });\n    primitiveControls.forEach((ctrl) => {\n      if (ctrl && typeof ctrl.cleanup === 'function') ctrl.cleanup();\n    });\n    group.traverse((obj) => {\n      if (obj.geometry) obj.geometry.dispose();\n      if (obj.material) {\n        if (Array.isArray(obj.material)) {\n          obj.material.forEach((m) => m?.dispose && m.dispose());\n        } else if (obj.material.dispose) {\n          obj.material.dispose();\n        }\n      }\n    });\n  };\n\n  return group;\n}"
+}

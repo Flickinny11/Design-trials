@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "glm-5.2",
+  "model": "z-ai/glm-5.2",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-04-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 390,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3661,
+    "completionTokens": 5146
+  },
+  "costUsd": 0.00833034,
+  "billing": "metered",
+  "output": "```js\nimport { MeshBasicNodeMaterial, PlaneGeometry, Mesh } from 'three/webgpu';\nimport { uv, hash, texture, uniform, vec2, vec3, smoothstep } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const THREE = ctx.THREE;\n  const group = new THREE.Group();\n\n  const colors =\n    config.intent?.visualSpec?.colors ??\n    { ink: '#16161d', paper: '#e8ecf2', accent: '#ff2a38', surface: '#0b0b10' };\n\n  // Engineered gradient scrim behind the orb plane (prevents flat void, sets the stage tone).\n  const scrimGeo = new THREE.PlaneGeometry(7.2, 6.0);\n  const scrimMat = new MeshBasicNodeMaterial({ transparent: true, depthWrite: false });\n  const c0 = new THREE.Color(colors.surface);\n  const c1 = new THREE.Color(colors.ink);\n  const gradY = uv().y;\n  scrimMat.colorNode = mix(vec3(c0), vec3(c1), smoothstep(0.0, 1.0, gradY));\n  scrimMat.opacityNode = uniform(0.55);\n  const scrim = new Mesh(scrimGeo, scrimMat);\n  scrim.position.set(0, 0, -0.15);\n  group.add(scrim);\n\n  // Decorative orb plane (512x320 -> 1.6:1 aspect).\n  const w = 3.2, h = 2.0;\n  const planeGeo = new THREE.PlaneGeometry(w, h);\n  const mat = new MeshBasicNodeMaterial({ transparent: true, depthWrite: false });\n  const plane = new THREE.Mesh(planeGeo, mat);\n  plane.position.set(0, 0, 0);\n  group.add(plane);\n\n  const fade = uniform(0.0);\n  let loadedTex = null;\n\n  ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    tex.colorSpace = THREE.SRGBColorSpace;\n    tex.minFilter = THREE.LinearFilter;\n    tex.magFilter = THREE.LinearFilter;\n    loadedTex = tex;\n\n    const t = texture(tex);\n    // Subtle engineered grain.\n    const grain = hash(uv().mul(vec2(900.0, 560.0))).sub(0.5).mul(0.025);\n    // Soft vignette to seat the orb into the dark stage.\n    const d = uv().sub(0.5).length();\n    const vig = smoothstep(0.42, 0.9, d).mul(0.28);\n\n    mat.colorNode = t.rgb.add(vec3(grain)).sub(vec3(vig));\n    mat.opacityNode = t.a.mul(fade);\n    mat.needsUpdate = true;\n\n    // Gentle weighted-settle entrance.\n    gsap.to(fade, { value: 1.0, duration: 0.7, ease: 'power2.out' });\n    gsap.fromTo(\n      plane.scale,\n      { x: 1.04, y: 1.04, z: 1.04 },\n      { x: 1.0, y: 1.0, z: 1.0, duration: 0.9, ease: 'power4.out' }\n    );\n  });\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    gsap.killTweensOf(fade);\n    gsap.killTweensOf(plane.scale);\n    planeGeo.dispose();\n    scrimGeo.dispose();\n    mat.dispose();\n    scrimMat.dispose();\n    if (loadedTex) loadedTex.dispose();\n  };\n\n  return group;\n}\n```"
+}

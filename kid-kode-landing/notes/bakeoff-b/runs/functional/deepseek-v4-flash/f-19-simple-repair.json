@@ -1,0 +1,16 @@
+{
+  "axis": "repair",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "route": "deepinfra",
+  "caseId": "f-19-simple",
+  "run": "repair",
+  "ok": true,
+  "usage": {
+    "promptTokens": 4678,
+    "completionTokens": 538
+  },
+  "costUsd": 0.00051786,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\n/**\n * Creates a static card label node for \"Collection 3\".\n * Applies a textured plane with a headline text overlay.\n */\nexport default function createNode(config, ctx) {\n  const { textureLoader, fontAtlas, THREE } = ctx;\n\n  // --- Container group ---\n  const group = new THREE.Group();\n\n  // --- Plane geometry (size derived from texture aspect ratio) ---\n  const BASE_WIDTH = 1.8;\n  const planeGeom = new THREE.PlaneGeometry(BASE_WIDTH, BASE_WIDTH * (320 / 512));\n  const material = new MeshBasicNodeMaterial({\n    color: '#0b0b10',\n    transparent: true,\n  });\n  const planeMesh = new THREE.Mesh(planeGeom, material);\n  group.add(planeMesh);\n\n  // --- Load texture ---\n  textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    tex.colorSpace = 'srgb';\n    const aspect = tex.image.width / tex.image.height;\n    const height = BASE_WIDTH / aspect;\n    planeGeom.dispose();\n    const newGeom = new THREE.PlaneGeometry(BASE_WIDTH, height);\n    planeMesh.geometry = newGeom;\n    group.userData._planeGeom = newGeom;\n    material.map = tex;\n    material.needsUpdate = true;\n  }).catch(() => {\n    // fallback: keep placeholder\n  });\n\n  // --- Text content from config ---\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    const textObj = fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize || 39,\n      color: '#e8ecf2',\n      align: 'center',\n      maxWidthPx: 300,\n    });\n    textObj.position.set(0, -0.55, 0.01);\n    textObj.scale.setScalar(0.008);\n    group.add(textObj);\n  }\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    planeGeom.dispose();\n    if (group.userData._planeGeom) group.userData._planeGeom.dispose();\n    material.dispose();\n    if (material.map) material.map.dispose();\n  };\n\n  group.userData._planeGeom = planeGeom;\n\n  return group;\n}\n```"
+}

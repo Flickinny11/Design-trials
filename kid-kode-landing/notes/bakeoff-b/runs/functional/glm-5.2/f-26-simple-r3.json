@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "glm-5.2",
+  "model": "zai-org/GLM-5.2",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-26-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 212723,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3685,
+    "completionTokens": 7289
+  },
+  "costUsd": 0.02529405,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, mix, vec3, smoothstep } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const THREE = ctx.THREE;\n  const { Group, Mesh, PlaneGeometry, Color } = THREE;\n\n  const group = new Group();\n  group.name = 'pricing-card-3-label';\n\n  const paperHex = '#e8ecf2';\n  const accentHex = '#ff2a38';\n\n  // --- Engineered gradient backdrop panel ---\n  const panelGeo = new PlaneGeometry(1.4, 0.4);\n  const panelMat = new MeshBasicNodeMaterial({\n    transparent: true,\n    opacity: 0.93,\n  });\n\n  panelMat.colorNode = mix(\n    vec3(0.043, 0.043, 0.063),\n    vec3(0.086, 0.086, 0.114),\n    smoothstep(0.0, 1.0, uv().y)\n  );\n\n  const panel = new Mesh(panelGeo, panelMat);\n  panel.position.z = -0.001;\n  group.add(panel);\n\n  // --- Accent underline ---\n  const lineGeo = new PlaneGeometry(1.4, 0.012);\n  const lineMat = new MeshBasicNodeMaterial({\n    transparent: true,\n    opacity: 0.65,\n  });\n  lineMat.color = new Color(accentHex);\n  const line = new Mesh(lineGeo, lineMat);\n  line.position.y = -0.158;\n  line.position.z = 0.001;\n  group.add(line);\n\n  // --- Text headline ---\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const headlineItem =\n    items.find((i) => i.role === 'headline') ||\n    (items.length > 0 ? items[0] : null);\n\n  let textMeshRef = null;\n  if (headlineItem) {\n    const fontSize = headlineItem.typography?.fontSize || 39;\n    const contentStr =\n      typeof headlineItem.text === 'string'\n        ? headlineItem.text\n        : String(headlineItem.text ?? '');\n    textMeshRef = ctx.fontAtlas.createText(contentStr, {\n      fontSize,\n      color: paperHex,\n      align: 'center',\n    });\n    textMeshRef.position.z = 0.012;\n    group.add(textMeshRef);\n  }\n\n  // --- Optional subtle image overlay ---\n  let overlayMesh = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      if (THREE.SRGBColorSpace) {\n        try {\n          tex.colorSpace = THREE.SRGBColorSpace;\n        } catch (e) {}\n      }\n      const overlayGeo = new PlaneGeometry(1.4, 0.4);\n      const overlayMat = new MeshBasicNodeMaterial({\n        transparent: true,\n        opacity: 0.1,\n      });\n      overlayMat.map = tex;\n      overlayMat.needsUpdate = true;\n      overlayMesh = new Mesh(overlayGeo, overlayMat);\n      overlayMesh.position.z = 0.004;\n      group.add(overlayMesh);\n    });\n  }\n\n  // --- Handlers: non-interactive label ---\n  group.userData.handlers = {};\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    panelGeo.dispose();\n    panelMat.dispose();\n    lineGeo.dispose();\n    lineMat.dispose();\n    if (overlayMesh) {\n      overlayMesh.geometry.dispose();\n      overlayMesh.material.dispose();\n    }\n    if (textMeshRef) {\n      textMeshRef.traverse((child) => {\n        if (child.geometry && child.geometry.dispose) {\n          child.geometry.dispose();\n        }\n        if (child.material && child.material.dispose) {\n          child.material.dispose();\n        }\n      });\n    }\n  };\n\n  return group;\n}\n```"
+}

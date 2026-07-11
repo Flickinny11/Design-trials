@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/Kimi-K2.7-Code",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-30-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 207675,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3709,
+    "completionTokens": 5689
+  },
+  "costUsd": 0.02265616,
+  "billing": "metered",
+  "output": " import { Group, Mesh, PlaneGeometry, MeshBasicNodeMaterial, SRGBColorSpace, LinearFilter, DoubleSide } from 'three/webgpu';\nimport { uv, texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const colors = config.intent?.visualSpec?.colors ?? {};\n\n  const group = new Group();\n\n  const atlasW = 512;\n  const atlasH = 320;\n  const aspect = atlasW / atlasH;\n\n  const cardHeight = 1.6;\n  const cardWidth = cardHeight * aspect;\n\n  const geometry = new PlaneGeometry(cardWidth, cardHeight, 1, 1);\n  const material = new MeshBasicNodeMaterial({ side: DoubleSide });\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  let loadedTexture = null;\n\n  mesh.onBeforeRender = function (_renderer, _scene, camera) {\n    group.lookAt(camera.position);\n  };\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      tex.colorSpace = SRGBColorSpace;\n      tex.generateMipmaps = false;\n      tex.minFilter = LinearFilter;\n      tex.magFilter = LinearFilter;\n\n      loadedTexture = tex;\n\n      material.map = texture(tex, uv());\n      material.needsUpdate = true;\n    }).catch(() => {});\n  } else {\n    material.color.set(colors.surface ?? '#0b0b10');\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (loadedTexture) loadedTexture.dispose();\n  };\n\n  return group;\n}"
+}

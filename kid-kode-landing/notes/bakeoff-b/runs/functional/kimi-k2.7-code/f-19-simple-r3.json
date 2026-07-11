@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-19-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 175,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3705,
+    "completionTokens": 8552
+  },
+  "costUsd": 0.03251408,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, ClampToEdgeWrapping } = ctx.THREE;\n\n  const group = new Group();\n  group.position.set(3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const atlasRect = config.intent?.visualSpec?.atlasRegion ?? { x: 0, y: 0, w: 512, h: 320 };\n  const rectW = atlasRect.w ?? 512;\n  const rectH = atlasRect.h ?? 320;\n  const aspect = rectW / rectH;\n\n  const height = 0.5;\n  const width = height * aspect;\n\n  const geometry = new PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial({ color: 0xffffff });\n  const plane = new Mesh(geometry, material);\n  group.add(plane);\n\n  const imageUrl = config.imageUrl ?? '/prism-mock/home/nodes/feature-card.png';\n  ctx.textureLoader.loadTexture(imageUrl).then((texture) => {\n    texture.colorSpace = 'srgb';\n    texture.wrapS = ClampToEdgeWrapping;\n    texture.wrapT = ClampToEdgeWrapping;\n    texture.anisotropy = ctx.tier === 'T0' ? 1 : Math.min(4, 4);\n\n    const imgW = texture.image?.width ?? rectW;\n    const imgH = texture.image?.height ?? rectH;\n    texture.offset.set(atlasRect.x / imgW, atlasRect.y / imgH);\n    texture.repeat.set(rectW / imgW, rectH / imgH);\n\n    material.map = texture;\n    material.needsUpdate = true;\n  });\n\n  const colors = config.intent?.visualSpec?.colors ?? config.colors ?? {};\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n\n  for (const item of items) {\n    if (!item || typeof item.text !== 'string' || item.text.length === 0) continue;\n    const text = ctx.fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize ?? 39,\n      color: colors.paper ?? '#e8ecf2',\n      align: 'center'\n    });\n    text.position.set(0, 0, 0.02);\n    group.add(text);\n  }\n\n  const timelines = [];\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    for (const t of timelines) {\n      if (t && typeof t.kill === 'function') t.kill();\n    }\n    geometry.dispose();\n    material.dispose();\n    if (material.map) material.map.dispose();\n  };\n\n  return group;\n}"
+}

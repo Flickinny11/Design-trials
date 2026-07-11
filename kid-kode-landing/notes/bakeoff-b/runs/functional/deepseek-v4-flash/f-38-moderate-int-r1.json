@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-38-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 880,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3958,
+    "completionTokens": 2134
+  },
+  "costUsd": 0.0006909840000000001,
+  "billing": "metered",
+  "output": "```javascript\nimport { Group, Mesh, PlaneGeometry, MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\n/**\n * Creates a journal thumbnail card with image texture, interactive hover lift, press-down click, and accent edge.\n * @param {Object} config - The PrismNode configuration.\n * @param {Object} ctx - Runtime context.\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  const group = new Group();\n  \n  // --- Card dimensions (derived from atlas source rect aspect 512/320 = 1.6) ---\n  const cardWidth = 2.0;\n  const cardHeight = cardWidth * (320 / 512); // ≈1.25\n  \n  // --- Geometry & Material ---\n  const geometry = new PlaneGeometry(cardWidth, cardHeight);\n  const material = new MeshBasicNodeMaterial({\n    color: '#ffffff', // placeholder until texture loads\n    transparent: true,\n  });\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n  \n  // --- Accent edge (thin rim) — optional, for focus visual ---\n  const edgeGeo = new PlaneGeometry(cardWidth + 0.04, cardHeight + 0.04);\n  const edgeMat = new MeshBasicNodeMaterial({\n    color: config.intent?.visualSpec?.colors?.accent || '#ff2a38',\n    transparent: true,\n    opacity: 0, // hidden by default\n    depthWrite: false,\n    side: 1, // FrontSide\n  });\n  const edgeMesh = new Mesh(edgeGeo, edgeMat);\n  edgeMesh.position.z = -0.001; // slightly behind the card (so visible as border)\n  group.add(edgeMesh);\n  \n  // --- Load texture (async) ---\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n      material.map = texture;\n      material.needsUpdate = true;\n    }).catch(() => {\n      // fallback: keep placeholder color\n    });\n  }\n  \n  // --- Interaction Handlers ---\n  // Hover lift (rise-in): translate y upward\n  const hoverTimeline = gsap.timeline({ paused: true });\n  hoverTimeline.to(mesh.position, {\n    y: 0.15,\n    duration: 0.5,\n    ease: 'power3.out',\n  }, 0);\n  hoverTimeline.to(mesh.position, {\n    z: 0.05, // slight forward lift\n    duration: 0.5,\n    ease: 'power3.out',\n  }, 0);\n  \n  // Press-down scale\n  const pressTimeline = gsap.timeline({ paused: true });\n  pressTimeline.to(mesh.scale, {\n    x: 0.97,\n    y: 0.97,\n    z: 0.97,\n    duration: 0.12,\n    ease: 'back.out(1.7)',\n  }, 0);\n  \n  // Accent edge on focus: fade edge in on pointerenter, out on pointerleave\n  const edgeTimeline = gsap.timeline({ paused: true });\n  edgeTimeline.to(edgeMat, {\n    opacity: 0.7,\n    duration: 0.3,\n    ease: 'power2.out',\n  }, 0);\n  \n  // Attach handlers to userData.handlers\n  group.userData.handlers = {\n    pointerenter: () => {\n      hoverTimeline.play();\n      edgeTimeline.play();\n    },\n    pointerleave: () => {\n      hoverTimeline.reverse();\n      edgeTimeline.reverse();\n    },\n    pointerdown: () => {\n      pressTimeline.play();\n    },\n    pointerup: () => {\n      pressTimeline.reverse();\n    },\n    click: () => {\n      ctx.emit('hub-journal.select');\n    },\n  };\n  \n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    hoverTimeline.kill();\n    pressTimeline.kill();\n    edgeTimeline.kill();\n    geometry.dispose();\n    material.dispose();\n    edgeGeo.dispose();\n    edgeMat.dispose();\n    if (material.map) material.map.dispose();\n  };\n  \n  return group;\n}\n```"
+}

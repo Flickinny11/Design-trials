@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-23-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 222,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3693,
+    "completionTokens": 12684
+  },
+  "costUsd": 0.04692612,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec2, vec3, mix, smoothstep, texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { Mesh, PlaneGeometry, Group, SRGBColorSpace, ClampToEdgeWrapping, LinearFilter } = ctx.THREE;\n\n  const group = new Group();\n\n  // Preserve the 512x320 atlas source-rect aspect ratio (1.6:1)\n  const srcW = 512;\n  const srcH = 320;\n  const aspect = srcW / srcH;\n  const height = 1.6;\n  const width = height * aspect;\n\n  const geometry = new PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial();\n\n  // Surface fallback while the metal map loads\n  material.colorNode = vec3(0.043, 0.043, 0.063);\n\n  const card = new Mesh(geometry, material);\n  group.add(card);\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl)\n      .then((tex) => {\n        tex.colorSpace = SRGBColorSpace;\n        tex.wrapS = ClampToEdgeWrapping;\n        tex.wrapT = ClampToEdgeWrapping;\n        tex.minFilter = LinearFilter;\n        tex.magFilter = LinearFilter;\n\n        const u = uv();\n        const metal = texture(tex, u);\n\n        // Engineered vertical gradient: ink at top, surface at bottom\n        const gradient = mix(\n          vec3(0.086, 0.086, 0.115),\n          vec3(0.043, 0.043, 0.063),\n          smoothstep(0.0, 1.0, u.y)\n        );\n\n        // Subtle vignette to keep the center as the brightest plane\n        const centered = u.sub(vec2(0.5, 0.5));\n        const vignette = smoothstep(0.85, 0.35, centered.length());\n\n        material.colorNode = metal.mul(gradient).mul(vignette.mul(0.25).add(0.85));\n        material.needsUpdate = true;\n      })\n      .catch(() => {\n        // Texture failed; surface fallback remains visible\n      });\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n  };\n\n  return group;\n}"
+}

@@ -1,0 +1,10 @@
+{
+  "axis": "design",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/Kimi-K2.7-Code",
+  "route": "deepinfra",
+  "caseId": "v-13-brand-wall",
+  "run": 2,
+  "ok": false,
+  "transportError": "transport failure after retries: HTTP 402: {\"detail\":{\"error\":\"You need positive balance to do inference. Please add balance manually or setup top-up\"}}"
+}

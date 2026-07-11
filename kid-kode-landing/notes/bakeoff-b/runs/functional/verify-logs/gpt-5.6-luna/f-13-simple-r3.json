@@ -1,0 +1,10 @@
+{
+  "contestant": "gpt-5.6-luna",
+  "caseId": "f-13-simple",
+  "run": 3,
+  "rawCompliant": true,
+  "fenced": false,
+  "parsed": true,
+  "verified": true,
+  "violations": []
+}

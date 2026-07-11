@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-08-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 723,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3708,
+    "completionTokens": 6828
+  },
+  "costUsd": 0.02649948,
+  "billing": "metered",
+  "output": " import { MeshBasicNodeMaterial } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  const group = new Group();\n  group.userData.handlers = {};\n\n  const cardWidth = 1.28;\n  const cardHeight = 0.8;\n\n  const geometry = new PlaneGeometry(cardWidth, cardHeight);\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    opacity: 1\n  });\n\n  const plane = new Mesh(geometry, material);\n  group.add(plane);\n\n  let disposed = false;\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      if (disposed) {\n        tex.dispose();\n        return;\n      }\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of textItems) {\n    if (!item.text) continue;\n    if (item.role === 'headline' || item.role === 'title') {\n      const label = ctx.fontAtlas.createText(item.text, {\n        fontSize: item.typography?.fontSize ?? 39,\n        color: '#e8ecf2',\n        align: 'center',\n        letterSpacingPx: 2\n      });\n      label.position.set(0, 0.05, 0.01);\n      label.scale.setScalar(0.0045);\n      group.add(label);\n    }\n  }\n\n  group.userData.cleanup = () => {\n    disposed = true;\n    if (material.map) {\n      material.map.dispose();\n      material.map = null;\n    }\n    geometry.dispose();\n    material.dispose();\n  };\n\n  return group;\n}"
+}

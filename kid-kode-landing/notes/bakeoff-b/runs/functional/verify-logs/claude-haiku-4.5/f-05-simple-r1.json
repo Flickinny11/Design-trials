@@ -1,0 +1,21 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "caseId": "f-05-simple",
+  "run": 1,
+  "rawCompliant": false,
+  "fenced": true,
+  "parsed": true,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "ASYNC_CREATE_NODE",
+      "severity": "error",
+      "message": "createNode MUST be synchronous (spec §8 / §9.A L260)"
+    },
+    {
+      "rule": "MISSING_TEXT_CONTENT",
+      "severity": "error",
+      "message": "nodes with non-empty textContent must iterate config.textContent and call ctx.fontAtlas (§10.C L385)"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "axis": "repair",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-17-simple",
+  "run": "repair",
+  "ok": true,
+  "usage": {
+    "promptTokens": 4363,
+    "completionTokens": 1198
+  },
+  "costUsd": 0.00137325,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Color } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Plane geometry and material\n  const geometry = new PlaneGeometry(1, 1);\n  const material = new MeshBasicNodeMaterial();\n  material.color = new Color(0xffffff);\n  material.transparent = true;\n\n  const plane = new Mesh(geometry, material);\n  // Local transforms (adapter applies scenePosition)\n  plane.position.set(0, 0, 0);\n  plane.rotation.set(0, 0, 0);\n  plane.scale.set(1, 1, 1);\n  root.add(plane);\n\n  // Load texture\n  let texture = null;\n  ctx.textureLoader\n    .loadTexture(config.imageUrl)\n    .then((tex) => {\n      texture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    })\n    .catch(() => {\n      // ignore load errors\n    });\n\n  // Text content\n  const items = config.textContent ??\n    config.intent?.visualSpec?.textContent ??\n    [];\n  for (const item of items) {\n    const fontSize = item.typography?.fontSize ?? 39;\n    const textObj = ctx.fontAtlas.createText(item.text ?? '', {\n      fontSize,\n      color: config.visualSpec?.colors?.paper ?? '#e8ecf2',\n      align: 'center',\n    });\n    textObj.position.set(0, 0, 0.01);\n    root.add(textObj);\n  }\n\n  // Apply cinematic primitives (if any)\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      if (ctx.primitives[prim.name]) {\n        const result = ctx.primitives[prim.name](root, prim.params);\n        // store for cleanup\n        if (!root.userData._primitiveResults) root.userData._primitiveResults = [];\n        root.userData._primitiveResults.push(result);\n      }\n    }\n  }\n\n  // User data and cleanup\n  root.userData = {\n    handlers: {},\n    cleanup() {\n      // Dispose primitives\n      if (root.userData._primitiveResults) {\n        for (const r of root.userData._primitiveResults) {\n          if (r && typeof r.cleanup === 'function') r.cleanup();\n        }\n        root.userData._primitiveResults = null;\n      }\n      // Dispose material and geometry\n      if (material) material.dispose();\n      if (geometry) geometry.dispose();\n      // Dispose texture\n      if (texture) texture.dispose();\n      // Kill GSAP timelines\n      gsap.globalTimeline.clear();\n      // Remove children\n      root.traverse((obj) => {\n        if (obj !== root && obj.parent) {\n          obj.parent.remove(obj);\n        }\n      });\n    },\n  };\n\n  return root;\n}"
+}

@@ -1,0 +1,16 @@
+{
+  "axis": "repair",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/Kimi-K2.7-Code",
+  "route": "deepinfra",
+  "caseId": "f-24-simple",
+  "run": "repair",
+  "ok": true,
+  "usage": {
+    "promptTokens": 4403,
+    "completionTokens": 3668
+  },
+  "costUsd": 0.016096219999999998,
+  "billing": "metered",
+  "output": " import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture, uv } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nconst PIXELS_PER_UNIT = 320;\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const { Group, Mesh, PlaneGeometry, Quaternion, Vector3 } = THREE;\n\n  const colors = config.intent?.visualSpec?.colors ?? config.colors ?? {};\n  const region = config.intent?.visualSpec?.atlasRegion ?? config.atlasRegion ?? { x: 0, y: 0, w: 512, h: 320 };\n\n  const width = (region.w ?? 512) / PIXELS_PER_UNIT;\n  const height = (region.h ?? 320) / PIXELS_PER_UNIT;\n\n  const group = new Group();\n  group.userData.handlers = {};\n\n  const geometry = new PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial({ transparent: true });\n  material.color.set(colors.paper ?? '#e8ecf2');\n\n  const mesh = new Mesh(geometry, material);\n\n  const _parentQ = new Quaternion();\n  const _parentP = new Vector3();\n  const _parentS = new Vector3();\n  const _targetQ = new Quaternion();\n\n  mesh.onBeforeRender = (renderer, scene, camera) => {\n    _targetQ.copy(camera.quaternion);\n    if (mesh.parent) {\n      mesh.parent.updateWorldMatrix(false, false);\n      mesh.parent.matrixWorld.decompose(_parentP, _parentQ, _parentS);\n      _targetQ.premultiply(_parentQ.invert());\n    }\n    mesh.quaternion.copy(_targetQ);\n  };\n\n  group.add(mesh);\n\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n\n  for (const item of textItems) {\n    const text = ctx.fontAtlas.createText(String(item.text ?? ''), {\n      fontSize: (item.typography?.fontSize ?? 39) / PIXELS_PER_UNIT,\n      color: colors.accent ?? '#ff2a38',\n      align: 'center'\n    });\n    text.position.set(0, 0, 0.01);\n    mesh.add(text);\n  }\n\n  const timelines = [];\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      const atlasW = tex.image?.width ?? region.w;\n      const atlasH = tex.image?.height ?? region.h;\n\n      const ux = (region.x ?? 0) / atlasW;\n      const uy = (region.y ?? 0) / atlasH;\n      const uSize = (region.w ?? 512) / atlasW;\n      const vSize = (region.h ?? 320) / atlasH;\n\n      tex.repeat.set(uSize, vSize);\n      tex.offset.set(ux, 1 - uy - vSize);\n      tex.needsUpdate = true;\n\n      material.colorNode = texture(tex, uv());\n      material.needsUpdate = true;\n\n      group.visible = true;\n    });\n  }\n\n  group.userData.cleanup = () => {\n    timelines.forEach((t) => t?.kill());\n    geometry.dispose();\n    material.dispose();\n    mesh.onBeforeRender = null;\n  };\n\n  return group;\n}"
+}

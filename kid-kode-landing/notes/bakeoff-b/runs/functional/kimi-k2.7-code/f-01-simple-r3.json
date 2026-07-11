@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-01-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 1643,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3705,
+    "completionTokens": 8092
+  },
+  "costUsd": 0.03090868,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture as textureSampler, uv as uvSampler } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const THREE = ctx.THREE;\n  const group = new THREE.Group();\n\n  const spec = config.intent?.visualSpec ?? {};\n  const colors = spec.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10',\n  };\n\n  const items = config.textContent ?? spec.textContent ?? [];\n\n  const width = 3.84;\n  const height = 2.4;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial({\n    color: colors.surface,\n    side: THREE.FrontSide,\n  });\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'heroHeadlineSurface';\n  group.add(plane);\n\n  const textGroup = new THREE.Group();\n  textGroup.position.z = 0.02;\n\n  for (const item of items) {\n    const role = item.role ?? 'body';\n    const fontSize = item.typography?.fontSize ?? (role === 'body' ? 31 : 68);\n    const align = item.align ?? 'left';\n\n    const text = ctx.fontAtlas.createText(String(item.text ?? ''), {\n      fontSize,\n      color: colors.paper,\n      align,\n    });\n\n    text.position.set(-width / 2 + 0.2, height / 2 - 0.35, 0);\n    textGroup.add(text);\n  }\n\n  group.add(textGroup);\n\n  let loadedTexture = null;\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      if (!tex) return;\n      loadedTexture = tex;\n      tex.colorSpace = THREE.SRGBColorSpace;\n\n      material.colorNode = textureSampler(tex, uvSampler());\n      material.needsUpdate = true;\n    });\n  }\n\n  const timelines = [];\n\n  group.userData.handlers = {};\n  group.userData.cleanup = () => {\n    timelines.forEach((tl) => {\n      try {\n        tl?.kill();\n      } catch (e) {}\n    });\n\n    textGroup.traverse((child) => {\n      if (child.geometry) child.geometry.dispose();\n      if (child.material) {\n        if (Array.isArray(child.material)) {\n          child.material.forEach((m) => m.dispose());\n        } else {\n          child.material.dispose();\n        }\n      }\n    });\n\n    if (loadedTexture) {\n      loadedTexture.dispose();\n      loadedTexture = null;\n    }\n\n    material.dispose();\n    geometry.dispose();\n    group.clear();\n  };\n\n  return group;\n}"
+}

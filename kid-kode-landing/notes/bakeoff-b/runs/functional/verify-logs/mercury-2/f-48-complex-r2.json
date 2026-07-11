@@ -1,0 +1,10 @@
+{
+  "contestant": "mercury-2",
+  "caseId": "f-48-complex",
+  "run": 2,
+  "rawCompliant": true,
+  "fenced": false,
+  "parsed": true,
+  "verified": true,
+  "violations": []
+}

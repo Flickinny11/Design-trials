@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-46-complex-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 120503,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4033,
+    "completionTokens": 2101
+  },
+  "costUsd": 0.00074115,
+  "billing": "metered",
+  "output": "```javascript\nimport { Group, Mesh, MeshStandardNodeMaterial, DirectionalLight, PlaneGeometry, MeshBasicNodeMaterial, Color } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // Load the GLB mesh\n  const glbPromise = ctx.glbLoader.loadGLB(config.meshUrl);\n  glbPromise.then((gltf) => {\n    const scene = gltf.scene;\n    // Ensure materials are set for machined-metal PBR (the GLB should have correct materials)\n    // Optionally adjust roughness/metalness if needed, but spec says mesh has correct textures.\n    group.add(scene);\n  });\n\n  // Apply cinematic primitives\n  const primitivesCleanups = [];\n  if (config.cinematicPrimitives) {\n    for (const prim of config.cinematicPrimitives) {\n      const result = ctx.primitives[prim.name](group, prim.params);\n      if (result && result.cleanup) {\n        primitivesCleanups.push(result.cleanup);\n      }\n    }\n  }\n\n  // Weighted-settle entrance animation (scale overshoot)\n  const entranceTimeline = gsap.timeline();\n  entranceTimeline.fromTo(group.scale, { x: 1.04, y: 1.04, z: 1.04 }, {\n    x: 1, y: 1, z: 1,\n    duration: 0.9,\n    ease: 'power4.out'\n  });\n\n  // Hover effect: rise-in subtle 0.15 units\n  const hoverTimeline = gsap.timeline({ paused: true });\n  hoverTimeline.to(group.position, { y: 0.15, duration: 0.3, ease: 'power2.out' });\n\n  // Attach event handlers\n  group.userData.handlers = {\n    pointerenter: () => {\n      hoverTimeline.play();\n    },\n    pointerleave: () => {\n      hoverTimeline.reverse();\n    },\n    click: () => {\n      ctx.emit('hub-collection.select', {});\n    }\n  };\n\n  // Load GLB\n  if (config.meshUrl) {\n    ctx.glbLoader.loadGLB(config.meshUrl).then((gltf) => {\n      const scene = gltf.scene;\n      group.add(scene);\n    });\n  }\n\n  // Apply cinematic primitives\n  const primitivesCleanups = [];\n  if (config.cinematicPrimitives) {\n    for (const prim of config.cinematicPrimitives) {\n      const result = ctx.primitives[prim.name](group, prim.params);\n      if (result && result.cleanup) {\n        primitivesCleanups.push(result.cleanup);\n      }\n    }\n  }\n\n  // Add accent rim light (behind, from top-right)\n  const rimLight = new DirectionalLight(0xff2a38, 0.8);\n  rimLight.position.set(2, 1, -3);\n  group.add(rimLight);\n\n  // Cleanup function\n  group.userData.cleanup = () => {\n    entranceTimeline.kill();\n    hoverTimeline.kill();\n    primitivesCleanups.forEach(fn => fn());\n    // Dispose any added meshes? The GLB scene will be disposed by the loader? We'll assume it's managed.\n    // But we can traverse and dispose geometries/materials if needed.\n    group.traverse((child) => {\n      if (child.isMesh) {\n        child.geometry.dispose();\n        if (Array.isArray(child.material)) {\n          child.material.forEach(m => m.dispose());\n        } else {\n          child.material.dispose();\n        }\n      }\n    });\n  };\n\n  return group;\n}\n```"
+}

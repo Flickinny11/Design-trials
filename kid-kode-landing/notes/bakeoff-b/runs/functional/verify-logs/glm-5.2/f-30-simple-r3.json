@@ -1,0 +1,10 @@
+{
+  "contestant": "glm-5.2",
+  "caseId": "f-30-simple",
+  "run": 3,
+  "rawCompliant": false,
+  "fenced": true,
+  "parsed": true,
+  "verified": true,
+  "violations": []
+}

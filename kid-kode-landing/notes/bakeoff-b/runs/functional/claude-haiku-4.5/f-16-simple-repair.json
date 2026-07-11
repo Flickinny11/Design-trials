@@ -1,0 +1,16 @@
+{
+  "axis": "repair",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "caseId": "f-16-simple",
+  "run": "repair",
+  "ok": true,
+  "usage": {
+    "promptTokens": 5152,
+    "completionTokens": 884
+  },
+  "costUsd": 0.009572,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { Mesh, PlaneGeometry, Group } = ctx.THREE;\n\n  const group = new Group();\n  group.position.set(0, -0.3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Geometry: 512px / 320px ≈ 1.6:1 aspect\n  const aspect = 512 / 320;\n  const height = 2.0;\n  const width = height * aspect;\n  const geometry = new PlaneGeometry(width, height, 1, 1);\n\n  // Load the image asynchronously\n  const imageUrl = config.imageUrl || '/prism-mock/home/nodes/orb-decor.png';\n  let imageTex = null;\n  let material = null;\n  let mesh = null;\n\n  const initMaterial = (tex) => {\n    imageTex = tex;\n    if (imageTex) {\n      imageTex.colorSpace = 'srgb';\n    }\n\n    // TSL material with engineered grain overlay\n    const uvNode = uv();\n\n    // Grain pattern (subtle procedural noise simulation via sin/cos modulation)\n    const grainAmount = 0.03;\n    const grain = mix(\n      vec3(1.0),\n      vec3(\n        Math.sin(uvNode.x * 50.0 + uvNode.y * 30.0) * 0.5 + 0.5,\n        Math.cos(uvNode.x * 40.0 + uvNode.y * 40.0) * 0.5 + 0.5,\n        Math.sin((uvNode.x + uvNode.y) * 35.0) * 0.5 + 0.5\n      ),\n      grainAmount\n    );\n\n    let colorNode = imageTex ? texture(imageTex, uvNode) : vec3(0.1, 0.1, 0.1);\n    colorNode = mix(colorNode, grain, grainAmount);\n\n    material = new MeshBasicNodeMaterial({\n      colorNode,\n      transparent: true,\n      side: 2, // DoubleSide\n    });\n\n    mesh = new Mesh(geometry, material);\n    group.clear();\n    group.add(mesh);\n  };\n\n  // Fallback material while loading\n  const fallbackMaterial = new MeshBasicNodeMaterial({\n    color: 0x0b0b10,\n    transparent: true,\n    side: 2,\n  });\n  const fallbackMesh = new Mesh(geometry, fallbackMaterial);\n  group.add(fallbackMesh);\n\n  // Async load\n  ctx.textureLoader\n    .loadTexture(imageUrl)\n    .then((tex) => {\n      initMaterial(tex);\n    })\n    .catch((err) => {\n      console.warn('Failed to load image texture:', err);\n      // Keep fallback material\n    });\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    fallbackMaterial.dispose();\n    if (material) {\n      material.dispose();\n    }\n    if (imageTex) {\n      imageTex.dispose();\n    }\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

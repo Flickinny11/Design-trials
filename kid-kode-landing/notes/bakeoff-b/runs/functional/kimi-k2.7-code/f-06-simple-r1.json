@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-06-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 280,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3714,
+    "completionTokens": 13960
+  },
+  "costUsd": 0.051394480000000006,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec4, mix, smoothstep, texture, uniform, color } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new ctx.THREE.Group();\n  const handlers = {};\n  const timelines = [];\n  const disposables = [];\n\n  const colors = config.intent?.visualSpec?.colors ?? config.colors ?? {};\n  const ink = new ctx.THREE.Color(colors.ink ?? '#16161d');\n  const paper = new ctx.THREE.Color(colors.paper ?? '#e8ecf2');\n  const surface = new ctx.THREE.Color(colors.surface ?? '#0b0b10');\n\n  const atlasRect = config.atlasRegion ?? { x: 0, y: 0, w: 512, h: 320 };\n  const aspect = atlasRect.w / atlasRect.h;\n  const width = 3.2;\n  const height = width / aspect;\n\n  const geometry = new ctx.THREE.PlaneGeometry(width, height);\n\n  const dummyData = new Uint8Array([255, 255, 255, 255]);\n  const dummyTexture = new ctx.THREE.DataTexture(dummyData, 1, 1, ctx.THREE.RGBAFormat);\n  dummyTexture.needsUpdate = true;\n  disposables.push(dummyTexture);\n\n  const uGrainTexture = uniform(dummyTexture);\n  const uGrainIntensity = uniform(0.12);\n\n  const uvNode = uv();\n  const gradient = mix(color(surface), color(ink), smoothstep(0.0, 1.0, uvNode.y));\n  const grainColor = texture(uGrainTexture, uvNode).rgb;\n  const finalColor = mix(gradient, grainColor, uGrainIntensity);\n\n  const material = new MeshBasicNodeMaterial({\n    colorNode: vec4(finalColor, 1.0)\n  });\n\n  const plane = new ctx.THREE.Mesh(geometry, material);\n  group.add(plane);\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      tex.colorSpace = ctx.THREE.SRGBColorSpace;\n      uGrainTexture.value = tex;\n      material.needsUpdate = true;\n    }).catch(() => {});\n  }\n\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    const text = String(item.text ?? '');\n    if (!text) continue;\n    const px = item.typography?.fontSize;\n    const fontSizeUnit = px > 10 ? px / 150 : 0.34;\n\n    const textObj = ctx.fontAtlas.createText(text, {\n      fontSize: fontSizeUnit,\n      color: colors.paper ?? '#e8ecf2',\n      align: 'center'\n    });\n    textObj.position.z = 0.05;\n    group.add(textObj);\n  }\n\n  const primitives = config.cinematicPrimitives ?? [];\n  for (const primitive of primitives) {\n    if (ctx.primitives[primitive.name]) {\n      const result = ctx.primitives[primitive.name](group, primitive.params ?? {});\n      if (result?.timeline) timelines.push(result.timeline);\n    }\n  }\n\n  group.scale.set(0.98, 0.98, 0.98);\n  group.position.y = 0.15;\n  const tl = gsap.timeline();\n  tl.to(group.position, { y: 0, duration: 0.7, ease: 'power3.out' });\n  tl.to(group.scale, { x: 1, y: 1, z: 1, duration: 0.9, ease: 'power4.out' }, '-=0.6');\n  timelines.push(tl);\n\n  group.onBeforeRender = function(renderer, scene, camera) {\n    group.lookAt(camera.position);\n  };\n\n  group.userData.handlers = handlers;\n  group.userData.cleanup = () => {\n    timelines.forEach(t => { try { t.kill(); } catch (e) {} });\n    timelines.length = 0;\n    group.onBeforeRender = null;\n    group.traverse((obj) => {\n      if (obj.geometry) { try { obj.geometry.dispose(); } catch (e) {} }\n      if (obj.material) {\n        if (Array.isArray(obj.material)) {\n          obj.material.forEach(m => { try { m.dispose(); } catch (e) {} });\n        } else {\n          try { obj.material.dispose(); } catch (e) {}\n        }\n      }\n    });\n    disposables.forEach(d => { try { d.dispose(); } catch (e) {} });\n  };\n\n  return group;\n}"
+}

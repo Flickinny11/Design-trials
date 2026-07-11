@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "glm-5.2",
+  "model": "z-ai/glm-5.2",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-17-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 588,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3675,
+    "completionTokens": 1481
+  },
+  "costUsd": 0.00349842,
+  "billing": "metered",
+  "output": "```javascript\nimport { Group, Mesh, PlaneGeometry, MeshBasicNodeMaterial, Color, Vector3 } from 'three/webgpu';\nimport { uv, mix, vec3, smoothstep, vec2, float } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Color } = ctx.THREE;\n  const group = new Group();\n\n  const colors = config.intent?.visualSpec?.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10',\n  };\n  const ink = new Color(colors.ink);\n  const paper = new Color(colors.paper);\n  const accent = new Color(colors.accent);\n  const surface = new Color(colors.surface);\n\n  // Panel plane dimensions — a label card\n  const panelW = 2.6;\n  const panelH = 0.7;\n  const panelGeo = new PlaneGeometry(panelW, panelH, 1, 1);\n\n  // Brushed metal texture\n  const metalUrl = config.imageUrl ?? '/prism-assets/chrome/brushed-metal.map.png';\n  let metalTex = null;\n  const mat = new MeshBasicNodeMaterial({ transparent: true });\n  mat.colorNode = mix(vec3(surface), vec3(ink), smoothstep(float(0.0), float(1.0), uv().y));\n  mat.opacityNode = float(1.0);\n\n  ctx.textureLoader.loadTexture(metalUrl).then((tex) => {\n    metalTex = tex;\n    tex.colorSpace = ctx.THREE.SRGBColorSpace;\n    tex.wrapS = ctx.THREE.RepeatWrapping;\n    tex.wrapT = ctx.THREE.RepeatWrapping;\n    tex.repeat.set(2.2, 0.7);\n    mat.map = tex;\n    // Compose: metal texture tinted by gradient\n    const metalSample = vec3(metalTex);\n    const grad = mix(vec3(surface), vec3(ink), smoothstep(float(0.0), float(1.0), uv().y));\n    mat.colorNode = mix(grad, metalSample.mul(vec3(0.55)), float(0.6));\n    mat.needsUpdate = true;\n  });\n\n  const panel = new Mesh(panelGeo, mat);\n  panel.position.set(0, 0, 0);\n  group.add(panel);\n\n  // Accent edge bar — thin red line at bottom of label\n  const barGeo = new PlaneGeometry(panelW * 0.92, 0.018);\n  const barMat = new MeshBasicNodeMaterial({ transparent: true });\n  barMat.colorNode = vec3(accent);\n  barMat.opacityNode = float(0.9);\n  const bar = new Mesh(barGeo, barMat);\n  bar.position.set(0, -panelH * 0.5 + 0.06, 0.001);\n  group.add(bar);\n\n  // Text — \"Collection 2\"\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const headlineItem = items.find((it) => it.role === 'headline') || items[0] || { text: 'Collection 2' };\n  const fontSize = headlineItem.typography?.fontSize ?? 39;\n\n  const label = ctx.fontAtlas.createText(String(headlineItem.text), {\n    fontSize: fontSize,\n    color: '#e8ecf2',\n    align: 'center',\n    letterSpacingPx: 2,\n  });\n  // Position text in front of panel; estimate width to center\n  label.position.set(0, 0.015, 0.005);\n  group.add(label);\n\n  // Subtle entrance — fade-up (no interactivity per spec, but entrance allowed)\n  group.userData.handlers = {};\n\n  const tl = gsap.timeline();\n  tl.from(group.position, { y: 0.18, duration: 0.6, ease: 'power3.out' }, 0);\n  tl.from(group.scale, { x: 0.98, y: 0.98, duration: 0.7, ease: 'power3.out' }, 0);\n\n  // Settle overshoot\n  gsap.fromTo(group.scale,\n    { x: 1.0, y: 1.0 },\n    { x: 1.04, y: 1.04, duration: 0.45, ease: 'power2.out', yoyo: true, repeat: 1, delay: 0.6 });\n\n  userData_cleanup();\n\n  function userData_cleanup() {\n    group.userData.cleanup = () => {\n      tl.kill();\n      gsap.killTweensOf(group.position);\n      gsap.killTweensOf(group.scale);\n      panelGeo.dispose();\n      barGeo.dispose();\n      mat.dispose();\n      barMat.dispose();\n      if (metalTex) metalTex.dispose();\n    };\n  }\n\n  return group;\n}\n```"
+}

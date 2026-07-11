@@ -1,0 +1,20 @@
+{
+  "axis": "design",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/Kimi-K2.7-Code",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "v-07-filmstrip-carousel",
+  "run": 1,
+  "ok": true,
+  "wallMs": 290935,
+  "finishReason": "length",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4331,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.06054894,
+  "billing": "metered",
+  "output": ""
+}

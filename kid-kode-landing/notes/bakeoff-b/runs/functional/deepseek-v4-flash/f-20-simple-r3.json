@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-20-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 2437,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3914,
+    "completionTokens": 2843
+  },
+  "costUsd": 0.0008064000000000001,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { Group, PlaneGeometry, Mesh } from 'three/webgpu'; // or 'three'? but allowed import from 'three/webgpu' for classes\n// Actually THREE classes can be imported from 'three/webgpu' as per constraint. We'll use that.\n// For clarity: import { Group, PlaneGeometry, Mesh } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const { Group, PlaneGeometry, Mesh, Vector3, Color } = THREE;\n\n  const group = new Group();\n\n  // Parse text content\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const titleItem = items.find(item => item.text === 'Pricing' || item.role === 'headline');\n  const displayText = titleItem?.text || 'Pricing';\n  // Use the given fontSize from config if available, else fallback to scale\n  const fontSize = titleItem?.typography?.fontSize != null ? titleItem.typography.fontSize : 0.34; // headline scale\n\n  // Create background plane (will be textured)\n  const planeWidth = 5.0;\n  const planeHeight = 1.2;\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n  const material = new MeshBasicNodeMaterial({\n    color: '#0b0b10', // surface placeholder\n    side: THREE.DoubleSide, // might be needed\n  });\n  const plane = new Mesh(geometry, material);\n  group.add(plane);\n\n  // Load background texture\n  let texture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      texture = tex;\n      material.map = texture;\n      material.needsUpdate = true;\n    }).catch((err) => {\n      console.warn('Pricing title texture load failed:', err);\n    });\n  }\n\n  // Create title text\n  const textColor = '#e8ecf2'; // paper\n  const textMesh = ctx.fontAtlas.createText(displayText, {\n    fontSize: fontSize,\n    color: textColor,\n    align: 'center',\n  });\n  // Position text in front of plane (z slight forward)\n  textMesh.position.set(0, 0, 0.05);\n  group.add(textMesh);\n\n  // User data: handlers (none) and cleanup\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (texture) texture.dispose();\n\n    // Dispose all children recursively\n    group.traverse((child) => {\n      if (child.isMesh) {\n        child.geometry?.dispose();\n        if (Array.isArray(child.material)) {\n          child.material.forEach(m => m.dispose());\n        } else if (child.material) {\n          child.material.dispose();\n        }\n      }\n    });\n\n    // Kill any GSAP timelines attached to this node (none here)\n  };\n\n  return group;\n}\n```"
+}

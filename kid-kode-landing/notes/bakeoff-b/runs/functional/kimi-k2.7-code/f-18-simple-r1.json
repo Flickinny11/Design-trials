@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-18-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 1412,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3706,
+    "completionTokens": 13012
+  },
+  "costUsd": 0.048080200000000003,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec2, texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const THREE = ctx.THREE;\n\n  const group = new THREE.Group();\n\n  const atlasRegion = config.atlasRegion ?? config.intent?.visualSpec?.atlasRegion ?? {};\n  const rect = atlasRegion.sourceRect ?? atlasRegion.rect ?? atlasRegion;\n  const rx = rect.x ?? rect.left ?? 0;\n  const ry = rect.y ?? rect.top ?? 0;\n  const rw = rect.w ?? rect.width ?? 512;\n  const rh = rect.h ?? rect.height ?? 320;\n  const atlasW = atlasRegion.atlasWidth ?? atlasRegion.width ?? rw;\n  const atlasH = atlasRegion.atlasHeight ?? atlasRegion.height ?? rh;\n\n  const unitScale = 0.002;\n  const planeW = rw * unitScale;\n  const planeH = rh * unitScale;\n\n  const geometry = new THREE.PlaneGeometry(planeW, planeH, 1, 1);\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    alphaTest: 0.01,\n    side: THREE.DoubleSide,\n    depthWrite: false,\n  });\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.onBeforeRender = (renderer, scene, camera) => {\n    mesh.lookAt(camera.position);\n  };\n  group.add(mesh);\n\n  let loadedTex = null;\n  let disposed = false;\n\n  const imageUrl = config.imageUrl ?? config.intent?.visualSpec?.imageUrl;\n  if (imageUrl) {\n    ctx.textureLoader.loadTexture(imageUrl).then((tex) => {\n      if (disposed || !tex) return;\n      loadedTex = tex;\n      tex.colorSpace = THREE.SRGBColorSpace;\n      tex.needsUpdate = true;\n\n      const u = uv();\n      const atlasUV = u.mul(vec2(rw / atlasW, rh / atlasH)).add(vec2(rx / atlasW, ry / atlasH));\n      material.colorNode = texture(tex, atlasUV);\n      material.needsUpdate = true;\n    }).catch(() => {});\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    disposed = true;\n    mesh.onBeforeRender = null;\n    material.dispose();\n    geometry.dispose();\n    if (loadedTex) {\n      loadedTex.dispose();\n      loadedTex = null;\n    }\n  };\n\n  return group;\n}"
+}

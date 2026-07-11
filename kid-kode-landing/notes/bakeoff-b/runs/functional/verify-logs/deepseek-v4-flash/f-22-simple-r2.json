@@ -1,0 +1,10 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "caseId": "f-22-simple",
+  "run": 2,
+  "rawCompliant": false,
+  "fenced": true,
+  "parsed": true,
+  "verified": true,
+  "violations": []
+}

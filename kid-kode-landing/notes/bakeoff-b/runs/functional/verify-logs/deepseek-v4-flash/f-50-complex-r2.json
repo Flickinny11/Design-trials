@@ -1,0 +1,10 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "caseId": "f-50-complex",
+  "run": 2,
+  "rawCompliant": false,
+  "fenced": true,
+  "parsed": true,
+  "verified": true,
+  "violations": []
+}

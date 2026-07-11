@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "glm-5.2",
+  "model": "z-ai/glm-5.2",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-15-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 6409,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3691,
+    "completionTokens": 2396
+  },
+  "costUsd": 0.0047129400000000005,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial, PlaneGeometry, Mesh, Group } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const THREE = ctx.THREE;\n  const group = new Group();\n  group.name = 'hub-collection-card-1-label';\n\n  // Atlas region\n  const region = config.atlasRegion ?? { x: 0, y: 0, w: 512, h: 320 };\n  const aspect = region.w / region.h;\n  const height = 0.5;\n  const width = height * aspect;\n\n  const geo = new PlaneGeometry(width, height);\n  const mat = new MeshBasicNodeMaterial({\n    transparent: true,\n    opacity: 0,\n    depthWrite: false,\n    toneMapped: false,\n  });\n\n  const plane = new Mesh(geo, mat);\n  plane.position.set(0, 0, 0);\n  group.add(plane);\n\n  // Load atlas texture and map UVs to the region\n  const texUrl = config.imageUrl;\n  let cleanupTex = () => {};\n  if (texUrl && ctx.textureLoader?.loadTexture) {\n    ctx.textureLoader.loadTexture(texUrl).then((tex) => {\n      tex.colorSpace = THREE.SRGBColorSpace;\n      const imgW = tex.image?.width || region.w;\n      const imgH = tex.image?.height || region.h;\n      // Assume flipY default (true): v=0 at bottom of image\n      const repeatX = region.w / imgW;\n      const repeatY = region.h / imgH;\n      const offsetX = region.x / imgW;\n      const offsetY = 1 - (region.y + region.h) / imgH;\n      tex.wrapS = THREE.ClampToEdgeWrapping;\n      tex.wrapT = THREE.ClampToEdgeWrapping;\n      tex.repeat.set(repeatX, repeatY);\n      tex.offset.set(offsetX, offsetY);\n      tex.needsUpdate = true;\n      mat.map = tex;\n      mat.opacity = 1;\n      mat.needsUpdate = true;\n      cleanupTex = () => { tex.dispose?.(); };\n    }).catch(() => {});\n  } else {\n    mat.opacity = 1;\n  }\n\n  // Sprite-style billboard: plane already faces +z toward camera at z=10\n  // Apply scene placement\n  const pos = config.scenePosition ?? [-3.2, 1, 0.06];\n  group.position.set(pos[0], pos[1], pos[2]);\n  const rot = config.sceneRotation ?? [0, 0, 0];\n  group.rotation.set(rot[0], rot[1], rot[2]);\n  const scl = config.sceneScale ?? [1, 1, 1];\n  group.scale.set(scl[0], scl[1], scl[2]);\n\n  // Entrance: fade-up\n  const tl = gsap.timeline();\n  tl.fromTo(group.position, { y: pos[1] + 0.2 }, { y: pos[1], duration: 0.6, ease: 'power3.out' }, 0);\n  tl.fromTo(mat, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: 'power2.out' }, 0);\n\n  group.userData.handlers = {};\n  group.userData.cleanup = () => {\n    tl.kill();\n    geo.dispose();\n    mat.dispose();\n    cleanupTex();\n  };\n\n  return group;\n}"
+}

@@ -1,0 +1,16 @@
+{
+  "axis": "repair",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "caseId": "f-24-simple",
+  "run": "repair",
+  "ok": true,
+  "usage": {
+    "promptTokens": 4034,
+    "completionTokens": 433
+  },
+  "costUsd": 0.00133325,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root group\n  const root = new Group();\n\n  // Geometry sized to atlas region aspect ratio (512:320 = 1.6)\n  const width = 1.6;\n  const height = 1.0;\n  const geometry = new PlaneGeometry(width, height);\n\n  // Texture node and material\n  const texNode = texture();\n  const material = new MeshBasicNodeMaterial();\n  material.map = texNode;\n\n  // Mesh\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Load texture if provided\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      texNode.value = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Text content handling\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    const txt = ctx.fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize ?? 39,\n      color: (config.intent?.visualSpec?.colors?.paper) ?? '#e8ecf2',\n      align: 'center',\n    });\n    // Position text slightly in front of the plane\n    txt.position.set(0, 0, 0.01);\n    root.add(txt);\n  }\n\n  // Billboard handler: face camera each frame\n  root.userData.handlers = {\n    render: (renderer, scene, camera) => {\n      mesh.lookAt(camera.position);\n    },\n  };\n\n  // Cleanup\n  root.userData.cleanup = () => {\n    // No GSAP timelines used, but kill any if added later\n    // Dispose three\n    material.dispose();\n    geometry.dispose();\n    // Text objects will be disposed by Three.js when group is removed\n  };\n\n  return root;\n}"
+}

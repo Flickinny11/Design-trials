@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-47-complex-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 112185,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4042,
+    "completionTokens": 2501
+  },
+  "costUsd": 0.0008139600000000001,
+  "billing": "metered",
+  "output": "```javascript\nimport { PlaneGeometry, Mesh, MeshStandardNodeMaterial, DoubleSide, Group, Vector2 } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { parallaxScroll, depthRotate } from '@/primitives';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // Load textures\n  const imagePromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  const depthPromise = ctx.textureLoader.loadTexture(config.depthMapUrl);\n\n  // Create geometry with enough segments for displacement\n  const geometry = new PlaneGeometry(3.5, 2.5, 64, 64);\n\n  // Create material\n  const material = new MeshStandardNodeMaterial({\n    side: DoubleSide,\n    roughness: 0.6,\n    metalness: 0.3,\n    clearcoat: 0.15,\n    color: 0xffffff,\n    displacementScale: 0.12,\n    displacementBias: 0,\n  });\n\n  // Apply textures when loaded\n  Promise.all([imagePromise, depthPromise]).then(([imageTex, depthTex]) => {\n    material.map = imageTex;\n    material.displacementMap = depthTex;\n    material.needsUpdate = true;\n  });\n\n  const mesh = new Mesh(geometry, material);\n  mesh.position.z = 0;\n  group.add(mesh);\n\n  // Weighted-settle entrance\n  const entranceTimeline = gsap.timeline();\n  entranceTimeline.fromTo(mesh.scale, { x: 0.96, y: 0.96, z: 0.96 }, { x: 1, y: 1, z: 1, duration: 0.9, ease: 'power4.out', overwrite: 'auto' });\n  entranceTimeline.fromTo(mesh.position, { y: 0.4 }, { y: 0, duration: 0.7, ease: 'power3.out' }, 0);\n\n  // Apply cinematic primitives\n  const primitivesCleanups = [];\n  const primitivesToApply = config.cinematicPrimitives || [];\n  for (const p of primitivesToApply) {\n    const result = ctx.primitives[p.name](group, p.params);\n    if (result && result.cleanup) primitivesCleanups.push(result.cleanup);\n  }\n\n  // Hover handler: rise-in subtle\n  const hoverIn = () => {\n    gsap.to(mesh.position, { y: 0.15, duration: 0.3, ease: 'power2.out' });\n  };\n  const hoverOut = () => {\n    gsap.to(mesh.position, { y: 0, duration: 0.3, ease: 'power2.out' });\n  };\n\n  // Click handler: emit event\n  const clickHandler = () => {\n    ctx.emit('navigate', { to: 'hub-pricing.select' });\n  };\n\n  // Attach handlers\n  group.userData.handlers = {\n    pointerover: hoverIn,\n    pointerout: hoverOut,\n    click: clickHandler,\n  };\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    entranceTimeline.kill();\n    primitivesCleanups.forEach(fn => fn());\n    geometry.dispose();\n    material.dispose();\n    // Textures are cached, no need to dispose\n  };\n\n  return group;\n}\n```"
+}

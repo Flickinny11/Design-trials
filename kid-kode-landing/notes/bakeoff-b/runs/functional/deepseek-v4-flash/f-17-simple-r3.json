@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-17-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 674,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3897,
+    "completionTokens": 2687
+  },
+  "costUsd": 0.0007787640000000001,
+  "billing": "metered",
+  "output": "```javascript\nimport { Group, Mesh, PlaneGeometry, MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, float } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // Dimensions matching atlas region ratio (512x320) scaled to scene\n  const width = 1.6;\n  const height = 1.0;\n  const geometry = new PlaneGeometry(width, height);\n\n  // Gradient colors: surface (#0b0b10) to paper (#e8ecf2)\n  const colorInk = vec3(0.043, 0.043, 0.063);   // surface\n  const colorPaper = vec3(0.91, 0.925, 0.95);   // paper\n  const gradientNode = mix(colorInk, colorPaper, uv().y);\n\n  // Temporary material without texture\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = gradientNode;\n\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  // Load brushed metal texture\n  const texturePromise = ctx.textureLoader.loadTexture(\n    config.imageUrl || '/prism-assets/chrome/brushed-metal.map.png'\n  );\n\n  texturePromise.then((texture) => {\n    material.map = texture;\n    material.colorNode = mix(\n      vec3(1, 1, 1), // preserve texture fully at bottom\n      gradientNode,\n      float(0.35)    // subtle gradient tint\n    );\n    material.needsUpdate = true;\n  });\n\n  // Text label \"Collection 2\" – headline size from design tokens (0.34 scene units)\n  const text = ctx.fontAtlas.createText('Collection 2', {\n    fontSize: 0.34,\n    color: '#e8ecf2',            // paper\n    align: 'center',\n    maxWidthPx: 320,\n  });\n\n  text.position.set(0, 0, 0.01); // slightly in front of plane\n  text.scale.set(1, 1, 1);\n  group.add(text);\n\n  // Handlers (none per spec)\n  group.userData.handlers = {};\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    // Kill any GSAP timelines (none here)\n    geometry.dispose();\n    material.dispose();\n\n    // Dispose texture once loaded\n    texturePromise.then((tex) => tex.dispose()).catch(() => {});\n\n    // Remove text (its atlas resources are managed externally)\n    group.remove(text);\n  };\n\n  return group;\n}\n```"
+}

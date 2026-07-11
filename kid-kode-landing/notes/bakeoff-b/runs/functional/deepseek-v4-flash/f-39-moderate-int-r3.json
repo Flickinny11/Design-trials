@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-39-moderate-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 742,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3986,
+    "completionTokens": 2501
+  },
+  "costUsd": 0.000754992,
+  "billing": "metered",
+  "output": "```javascript\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new ctx.THREE.Group();\n\n  // Load the GLB model (machined rule with jewel)\n  ctx.glbLoader.loadGLB(config.meshUrl).then((gltf) => {\n    group.add(gltf.scene);\n  });\n\n  // Interaction handlers\n  const handlers = {\n    pointerover: (event) => {\n      // Kill any previous hover tween\n      if (group.userData._hoverTween) {\n        group.userData._hoverTween.kill();\n      }\n      // Subtle rise-in: translate y by +0.15 scene units\n      group.userData._hoverTween = gsap.to(group.position, {\n        y: 0.15,\n        duration: 0.3,\n        ease: 'power3.out',\n        overwrite: false,\n      });\n    },\n    pointerout: (event) => {\n      // Return to original position\n      if (group.userData._hoverTween) {\n        group.userData._hoverTween.kill();\n      }\n      group.userData._hoverTween = gsap.to(group.position, {\n        y: 0,\n        duration: 0.3,\n        ease: 'power3.out',\n      });\n    },\n    click: (event) => {\n      ctx.emit('hub-home.select', {});\n    },\n  };\n\n  // Attach handlers and cleanup\n  group.userData.handlers = handlers;\n  group.userData.cleanup = () => {\n    if (group.userData._hoverTween) {\n      group.userData._hoverTween.kill();\n    }\n    // No additional resources to dispose (GLB is cached internally)\n  };\n\n  return group;\n}\n```"
+}

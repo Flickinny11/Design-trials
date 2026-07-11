@@ -1,0 +1,20 @@
+{
+  "axis": "design",
+  "contestant": "claude-sonnet-5",
+  "model": "anthropic/claude-sonnet-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "v-16-feature-triptych",
+  "run": 1,
+  "ok": true,
+  "wallMs": 182574,
+  "finishReason": null,
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 7049,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.177938,
+  "billing": "metered",
+  "output": ""
+}

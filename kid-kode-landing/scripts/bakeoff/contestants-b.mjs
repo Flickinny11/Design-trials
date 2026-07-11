@@ -106,7 +106,15 @@ export const CONTESTANTS = [
   { id: 'gpt-5.6-terra', label: 'GPT-5.6 Terra', route: 'openrouter', model: 'openai/gpt-5.6-terra', usdPerMTokIn: 2.5, usdPerMTokOut: 15.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 6 },
   { id: 'gpt-5.6-sol', label: 'GPT-5.6 Sol', route: 'openrouter', model: 'openai/gpt-5.6-sol', usdPerMTokIn: 5.0, usdPerMTokOut: 30.0, axes: ['functional', 'design'], role: 'contestant', laneCapUsd: 6 },
   // ── design-axis ceiling references (NOT tier contestants — I-BB4) ────────
-  { id: 'claude-fable-5', label: 'Claude Fable 5 (ceiling ref)', route: 'deepinfra', model: 'anthropic/claude-fable-5', usdPerMTokIn: 10.0, usdPerMTokOut: 50.0, axes: ['design'], role: 'ceiling-ref', laneCapUsd: 16 },
+  // fable cap 16->20 (2026-07-10 23:05): lane stopped at cap 39/40 ($18.54 incl. margin
+  // headroom check — adaptive thinking bills as output on the deepinfra route even at
+  // effort=low). +$4 finishes the single remaining row. Global $61.60 of $120 at resize.
+  // NOTE (2026-07-10 23:15): DeepInfra went 402 mid-wave with exactly ONE fable row
+  // left; that single row (of 40) rode the founder claude-cli lane (route +
+  // envelopeNote recorded in the row JSON; subscription-equivalent billing) — same
+  // L1 v2.1 + L2 bytes, ~2K CLI envelope disclosed in the report. Route here is the
+  // metered route the other 39 rows rode.
+  { id: 'claude-fable-5', label: 'Claude Fable 5 (ceiling ref)', route: 'deepinfra', model: 'anthropic/claude-fable-5', usdPerMTokIn: 10.0, usdPerMTokOut: 50.0, axes: ['design'], role: 'ceiling-ref', laneCapUsd: 20 },
   { id: 'claude-opus-4.8', label: 'Claude Opus 4.8 (ceiling ref)', route: 'deepinfra', model: 'anthropic/claude-opus-4-8', usdPerMTokIn: 5.0, usdPerMTokOut: 25.0, axes: ['design'], role: 'ceiling-ref', laneCapUsd: 10 },
 ];
 

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-22-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 748,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3900,
+    "completionTokens": 5492
+  },
+  "costUsd": 0.0012502560000000002,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  Group,\n  PlaneGeometry,\n  MeshBasicNodeMaterial,\n  Mesh,\n  Texture,\n  Color,\n} from 'three/webgpu';\nimport {\n  uv,\n  mix,\n  vec4,\n  vec3,\n  uniform,\n  mul,\n  add,\n  rand,\n  texture,\n  Fn,\n} from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  // ----- extract text content -----\n  const items =\n    config.textContent ??\n    config.intent?.visualSpec?.textContent ??\n    [];\n  const headline = items.find((t) => t.role === 'headline');\n  const labelText = headline?.text ?? 'Pricing 1';\n  // use typography.fontSize if present, otherwise fallback to design scale\n  const fontSize = headline?.typography?.fontSize ?? 0.34; // scene units (headline scale)\n\n  // ----- colors (normalized) -----\n  const paperCol = new Color('#e8ecf2');\n  const surfaceCol = new Color('#0b0b10');\n  const paperVec = vec3(paperCol.r, paperCol.g, paperCol.b);\n  const surfaceVec = vec3(surfaceCol.r, surfaceCol.g, surfaceCol.b);\n\n  // ----- group -----\n  const group = new Group();\n\n  // ----- plane geometry -----\n  const geometry = new PlaneGeometry(2.5, 1.6); // prose from 512x320 aspect\n\n  // ----- texture uniform (placeholder) -----\n  const textureUniform = uniform(new Texture());\n\n  // ----- custom fragment node (gradient + texture blend + grain) -----\n  const fragmentNode = Fn(() => {\n    const texColor = texture(textureUniform, uv());\n    const gradY = uv().y;\n    const gradColor = mix(surfaceVec, paperVec, gradY);\n    const blended = mix(texColor.rgb, gradColor, 0.6);\n    const grain = mul(rand(mul(uv(), 1000.0)), 0.04);\n    const finalColor = blended.add(vec3(grain));\n    return vec4(finalColor, 1.0);\n  })();\n\n  // ----- material -----\n  const material = new MeshBasicNodeMaterial();\n  material.fragmentNode = fragmentNode;\n  material.needsUpdate = true;\n\n  const mesh = new Mesh(geometry, material);\n  mesh.position.z = 0;\n  group.add(mesh);\n\n  // ----- load texture async -----\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      textureUniform.value = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // ----- text label -----\n  const textObj = ctx.fontAtlas.createText(labelText, {\n    fontSize: fontSize,\n    color: '#e8ecf2',\n    align: 'center',\n    maxWidthPx: 250, // keep within plane width\n  });\n  textObj.position.z = 0.02;\n  // scale text to fit within plane: adjust if needed\n  group.add(textObj);\n\n  // ----- no primitives (static) -----\n\n  // ----- cleanup -----\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (textureUniform.value) textureUniform.value.dispose();\n    // dispose text children\n    textObj.traverse((child) => {\n      if (child.isMesh) {\n        child.geometry.dispose();\n        if (child.material) child.material.dispose();\n      }\n    });\n  };\n\n  // ----- handlers (none) -----\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-01-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 2938,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3897,
+    "completionTokens": 2301
+  },
+  "costUsd": 0.0007139160000000001,
+  "billing": "metered",
+  "output": "```javascript\nimport { Group, PlaneGeometry, Mesh, MeshBasicNodeMaterial, Color } from 'three/webgpu';\nimport { uv, vec3, mix, smoothstep, sin, dot, vec2, uniform } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // --- Colors from visual spec ---\n  const paper = new Color('#e8ecf2');\n  const surface = new Color('#0b0b10');\n  const ink = new Color('#16161d');\n  const accent = new Color('#ff2a38');\n\n  // --- Plane dimensions (based on atlas region 512x320, aspect 1.6) ---\n  const width = 3.2;\n  const height = 2.0;\n  const geometry = new PlaneGeometry(width, height);\n\n  // --- Procedural gradient with subtle grain ---\n  const vUv = uv();\n  // Vertical gradient from paper (top) to surface (bottom) with slight ink at top edge\n  const gradientT = smoothstep(0.0, 1.0, vUv.y);\n  const colorA = vec3(paper.r, paper.g, paper.b);\n  const colorB = vec3(ink.r, ink.g, ink.b).mul(0.3); // dark tint\n  const colorC = vec3(surface.r, surface.g, surface.b);\n  // Mix: top = mix(colorA, colorB, 0.2), bottom = colorC\n  const top = mix(colorA, colorB, uniform(0.2));\n  const bottom = colorC;\n  const base = mix(top, bottom, gradientT);\n\n  // Subtle grain using sin-based pseudorandom\n  const grainSeed = vUv.mul(vec2(12.9898, 78.233));\n  const grain = sin(dot(grainSeed, vec2(127.1, 311.7))).mul(0.02);\n  const finalColor = base.add(grain);\n\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = finalColor;\n\n  const plane = new Mesh(geometry, material);\n  plane.position.set(0, 0, 0);\n  group.add(plane);\n\n  // --- Text content ---\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const bodyText = textItems.find(item => item.role === 'body');\n  const content = bodyText?.text ?? 'A machined-metal watch atelier landing with catalog, pricing, jo';\n  const fontSize = 0.13; // body scene-unit height per design tokens\n\n  const text = ctx.fontAtlas.createText(content, {\n    fontSize: fontSize,\n    color: paper.getHexString(), // '#e8ecf2'\n    align: 'center',\n    maxWidthPx: width * 200, // approximate; text should wrap within plane width\n    letterSpacingPx: 0.01 * fontSize // small spacing\n  });\n  // Position text at center of plane\n  text.position.set(0, 0.05, 0.01); // slightly in front\n  group.add(text);\n\n  // --- No interaction handlers ---\n  group.userData.handlers = {};\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    // Dispose text children (font atlas content)\n    text.traverse((child) => {\n      if (child.isMesh) {\n        child.geometry.dispose();\n        if (child.material) child.material.dispose();\n      }\n    });\n    // Kill any GSAP timelines (none)\n  };\n\n  return group;\n}\n```"
+}

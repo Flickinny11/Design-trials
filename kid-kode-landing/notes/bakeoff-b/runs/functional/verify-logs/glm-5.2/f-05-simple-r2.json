@@ -1,0 +1,16 @@
+{
+  "contestant": "glm-5.2",
+  "caseId": "f-05-simple",
+  "run": 2,
+  "rawCompliant": false,
+  "fenced": false,
+  "parsed": false,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "PARSE_FAILURE",
+      "severity": "error",
+      "message": "no extractable module (missing export default or empty output)"
+    }
+  ]
+}

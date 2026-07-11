@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-50-complex",
+  "run": 3,
+  "ok": true,
+  "wallMs": 277173,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4007,
+    "completionTokens": 3574
+  },
+  "costUsd": 0.00100395,
+  "billing": "metered",
+  "output": "```javascript\nimport { Group, Mesh, PlaneGeometry, MeshBasicNodeMaterial, DirectionalLight, Color } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // --- Backdrop plane (card background) ---\n  const backdropGeo = new PlaneGeometry(1.6, 1.6);\n  const backdropMat = new MeshBasicNodeMaterial({\n    color: new Color('#0b0b10'),\n    side: 2, // DoubleSide\n  });\n  const backdrop = new Mesh(backdropGeo, backdropMat);\n  backdrop.position.z = -0.1;\n  group.add(backdrop);\n\n  // --- Load GLB mesh ---\n  let glbScene = null;\n  ctx.glbLoader.loadGLB(config.meshUrl).then((gltf) => {\n    glbScene = gltf.scene;\n    group.add(glbScene);\n    // Ensure the mesh is centered and scaled appropriately\n    glbScene.position.set(0, 0, 0);\n    // The GLB may have its own materials; we don't override\n  });\n\n  // --- Accent rim light ---\n  const rimLight = new DirectionalLight(new Color('#ff2a38'), 0.8);\n  rimLight.position.set(1, 0.5, -2);\n  group.add(rimLight);\n\n  // --- Weighted-settle entrance ---\n  const entranceTimeline = gsap.timeline({ paused: true });\n  entranceTimeline.fromTo(group.scale, { x: 1.04, y: 1.04, z: 1.04 }, {\n    x: 1, y: 1, z: 1,\n    duration: 0.9,\n    ease: 'power4.out',\n  });\n  entranceTimeline.play();\n\n  // --- Hover rise-in animation ---\n  const hoverTimeline = gsap.timeline({ paused: true });\n  hoverTimeline.to(group.position, {\n    y: 0.15,\n    duration: 0.3,\n    ease: 'power3.out',\n  });\n\n  // --- Cinematic primitives ---\n  const primitiveCleanups = [];\n  if (config.cinematicPrimitives) {\n    for (const prim of config.cinematicPrimitives) {\n      const result = ctx.primitives[prim.name](group, prim.params);\n      if (result && result.cleanup) {\n        primitiveCleanups.push(result.cleanup);\n      }\n    }\n  }\n\n  // --- Event handlers ---\n  group.userData.handlers = {\n    pointerover: () => {\n      hoverTimeline.play();\n    },\n    pointerout: () => {\n      hoverTimeline.reverse();\n    },\n    pointerdown: (event) => {\n      // Simple click detection: store pointerdown time and position\n      group.userData._pointerDown = { time: performance.now(), x: event.clientX, y: event.clientY };\n    },\n    pointerup: (event) => {\n      const down = group.userData._pointerDown;\n      if (down) {\n        const dt = performance.now() - down.time;\n        const dx = event.clientX - down.x;\n        const dy = event.clientY - down.y;\n        if (dt < 300 && Math.abs(dx) < 10 && Math.abs(dy) < 10) {\n          ctx.emit('hub-features.select', {});\n        }\n        delete group.userData._pointerDown;\n      }\n    },\n  };\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    entranceTimeline.kill();\n    hoverTimeline.kill();\n    primitiveCleanups.forEach(fn => fn());\n    // Dispose geometry and material\n    backdropGeo.dispose();\n    backdropMat.dispose();\n    // If GLB scene is loaded, dispose its resources\n    if (glbScene) {\n      glbScene.traverse((child) => {\n        if (child.isMesh) {\n          child.geometry.dispose();\n          if (Array.isArray(child.material)) {\n            child.material.forEach(m => m.dispose());\n          } else {\n            child.material.dispose();\n          }\n        }\n      });\n    }\n  };\n\n  return group;\n}\n```"
+}

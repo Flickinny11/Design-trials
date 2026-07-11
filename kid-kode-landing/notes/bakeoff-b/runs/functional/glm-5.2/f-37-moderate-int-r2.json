@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "glm-5.2",
+  "model": "zai-org/GLM-5.2",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-37-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 51273,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3741,
+    "completionTokens": 2261
+  },
+  "costUsd": 0.010262130000000001,
+  "billing": "metered",
+  "output": "```js\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Color } = ctx.THREE;\n\n  const root = new Group();\n\n  // Inner lift container so hover/press motion doesn't fight adapter-set scenePosition\n  const lift = new Group();\n  root.add(lift);\n\n  // Atlas ratio 512x320 -> aspect 1.6; size the card to nest within pricing hub\n  const cardW = 2.4;\n  const cardH = cardW * (320 / 512); // 1.5\n  const cardGeo = new PlaneGeometry(cardW, cardH);\n  const cardMat = new MeshBasicNodeMaterial({ color: 0xffffff, transparent: true, opacity: 1 });\n\n  ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    tex.colorSpace = ctx.THREE.SRGBColorSpace;\n    cardMat.map = tex;\n    cardMat.needsUpdate = true;\n  });\n\n  const card = new Mesh(cardGeo, cardMat);\n  lift.add(card);\n\n  // Accent focus edge — thin signal-red strip along the bottom of the panel\n  const accentColor = new Color(config.intent?.visualSpec?.colors?.accent ?? '#ff2a38');\n  const edgeGeo = new PlaneGeometry(cardW, 0.035);\n  const edgeMat = new MeshBasicNodeMaterial({ color: accentColor, transparent: true, opacity: 0.85 });\n  const edge = new Mesh(edgeGeo, edgeMat);\n  edge.position.set(0, -cardH / 2 + 0.0175, 0.002);\n  lift.add(edge);\n\n  // Soft inner border to read card edge against dark stage\n  const borderGeo = new PlaneGeometry(cardW + 0.02, cardH + 0.02);\n  const borderMat = new MeshBasicNodeMaterial({ color: new Color('#16161d'), transparent: true, opacity: 0.0 });\n  const border = new Mesh(borderGeo, borderMat);\n  border.position.z = -0.002;\n  lift.add(border);\n\n  // ---- Handlers ----\n  let hoverActive = false;\n  const baseY = 0;\n  const liftY = 0.15;\n\n  root.userData.handlers = {};\n\n  root.userData.handlers.onHover = (hovering) => {\n    hoverActive = hovering;\n    gsap.killTweensOf(lift.position);\n    gsap.to(lift.position, {\n      y: hovering ? baseY + liftY : baseY,\n      duration: hovering ? 0.6 : 0.5,\n      ease: 'power3.out'\n    });\n    gsap.to(edgeMat, {\n      opacity: hovering ? 1.0 : 0.85,\n      duration: 0.3,\n      ease: 'power2.out'\n    });\n  };\n\n  let pressTl = null;\n  root.userData.handlers.onClick = () => {\n    ctx.emit('hub-pricing.select', { source: 'hub-pricing-quote' });\n    if (pressTl) pressTl.kill();\n    pressTl = gsap.timeline()\n      .to(lift.scale, { x: 0.97, y: 0.97, duration: 0.12, ease: 'back.out(2)' })\n      .to(lift.scale, { x: 1.0, y: 1.0, duration: 0.3, ease: 'power4.out' });\n  };\n\n  // entrance — weighted-settle fallback if no entrance primitive runs\n  lift.position.y = 0.4;\n  lift.scale.set(1.04, 1.04, 1);\n  gsap.to(lift.position, { y: baseY, duration: 0.7, ease: 'power3.out', delay: 0.05 });\n  gsap.to(lift.scale, { x: 1.0, y: 1.0, z: 1.0, duration: 0.9, ease: 'power4.out', delay: 0.05 });\n\n  // ---- Cinematic primitives ----\n  const primitiveCleanups = [];\n  const primitives = config.cinematicPrimitives ?? [];\n  for (const p of primitives) {\n    try {\n      const r = ctx.primitives[p.name](lift, p.params ?? {});\n      if (r && typeof r.cleanup === 'function') primitiveCleanups.push(r.cleanup);\n    } catch (e) {\n      // primitive optional; never crash the node\n    }\n  }\n\n  // ---- Cleanup ----\n  root.userData.cleanup = () => {\n    gsap.killTweensOf(lift.position);\n    gsap.killTweensOf(lift.scale);\n    if (pressTl) pressTl.kill();\n    primitiveCleanups.forEach((fn) => { try { fn(); } catch (_) {} });\n    cardGeo.dispose();\n    cardMat.dispose();\n    edgeGeo.dispose();\n    edgeMat.dispose();\n    borderGeo.dispose();\n    borderMat.dispose();\n  };\n\n  return root;\n}\n```"
+}

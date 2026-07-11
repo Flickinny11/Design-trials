@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-17-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 245,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3703,
+    "completionTokens": 9155
+  },
+  "costUsd": 0.03461711,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec2, vec3, mix, smoothstep, texture, fract, sin } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  const colors = config.intent?.visualSpec?.colors ?? config.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10',\n  };\n\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const headline = textItems.find((i) => i.role === 'headline') ?? textItems[0] ?? { text: 'Collection 2' };\n\n  const width = 512 / 320;\n  const height = 1.0;\n\n  const hexNode = (hex) => {\n    const n = parseInt((hex || '#000000').replace('#', ''), 16);\n    if (Number.isNaN(n)) return vec3(0, 0, 0);\n    return vec3(((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255);\n  };\n\n  const ink = hexNode(colors.ink);\n  const surface = hexNode(colors.surface);\n  const paper = hexNode(colors.paper);\n  const accent = hexNode(colors.accent);\n\n  const grain = (u) => {\n    const p = u.mul(vec2(512.0, 320.0));\n    const h = fract(sin(p.dot(vec2(12.9898, 78.233))).mul(43758.5453));\n    return h.sub(0.5).mul(0.035);\n  };\n\n  const gradient = mix(surface, ink, smoothstep(0.0, 1.0, uv().y));\n  const topAccent = mix(gradient, accent, smoothstep(0.85, 1.0, uv().y).mul(0.06));\n  const fallbackColor = topAccent.add(grain(uv())).add(paper.mul(0.03));\n\n  const material = new MeshBasicNodeMaterial({ transparent: true, opacity: 0 });\n  material.colorNode = fallbackColor;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const plane = new THREE.Mesh(geometry, material);\n  plane.name = 'collection-card-2-label-plane';\n\n  const group = new THREE.Group();\n  group.name = config.id || 'collection-card-2-label';\n  group.add(plane);\n\n  const textObj = ctx.fontAtlas.createText(String(headline.text || 'Collection 2'), {\n    fontSize: headline.typography?.fontSize ?? 39,\n    color: colors.paper,\n    align: 'left',\n    maxWidthPx: 320,\n  });\n  textObj.position.set(-width * 0.45, 0.0, 0.01);\n  textObj.name = 'collection-card-2-label-headline';\n  group.add(textObj);\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      tex.colorSpace = THREE.SRGBColorSpace;\n      tex.flipY = false;\n      const texColor = texture(tex, uv());\n      const base = mix(texColor.rgb, gradient, 0.35);\n      const lit = base.add(grain(uv())).add(paper.mul(0.03));\n      const surfaceColor = mix(lit, accent, smoothstep(0.85, 1.0, uv().y).mul(0.06));\n      material.colorNode = surfaceColor;\n      material.needsUpdate = true;\n    });\n  }\n\n  const timelines = [];\n  const tl = gsap.timeline();\n  tl.to(material, { opacity: 1, duration: 0.7, ease: 'power2.out' }, 0);\n  tl.from(group.scale, { x: 0.97, y: 0.97, duration: 0.9, ease: 'power4.out' }, 0);\n  tl.from(textObj.position, { y: '-=0.12', duration: 0.6, ease: 'power2.out' }, 0);\n  timelines.push(tl);\n\n  group.userData.handlers = {};\n  group.userData.cleanup = () => {\n    timelines.forEach((t) => { try { t.kill(); } catch (e) {} });\n    group.remove(plane);\n    group.remove(textObj);\n    geometry.dispose();\n    material.dispose();\n  };\n\n  return group;\n}"
+}

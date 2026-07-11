@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-27-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 731,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3717,
+    "completionTokens": 6908
+  },
+  "costUsd": 0.026785160000000002,
+  "billing": "metered",
+  "output": " import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const { Group, PlaneGeometry, ClampToEdgeWrapping, SRGBColorSpace } = THREE;\n\n  const group = new Group();\n  group.userData.handlers = {};\n  group.renderOrder = 10;\n\n  const colors = config.intent?.visualSpec?.colors ?? config.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10',\n  };\n\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const labelItem =\n    items.find((i) => i.role === 'headline' && i.text) || items[0] || {\n      text: 'Journal',\n      typography: { fontSize: 96 },\n    };\n\n  const region = { x: 0, y: 0, w: 512, h: 320 };\n  const aspect = region.w / region.h;\n  const spriteHeight = 2.0;\n  const spriteWidth = spriteHeight * aspect;\n\n  const geometry = new PlaneGeometry(spriteWidth, spriteHeight);\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    side: THREE.FrontSide,\n    depthTest: true,\n    depthWrite: true,\n  });\n\n  const plane = new THREE.Mesh(geometry, material);\n  group.add(plane);\n\n  const label = ctx.fontAtlas.createText(labelItem.text, {\n    fontSize: labelItem.typography?.fontSize ?? 96,\n    color: colors.paper,\n    align: 'center',\n  });\n  label.position.z = 0.05;\n  group.add(label);\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n      if (!plane.parent) return;\n\n      const map = texture.clone();\n      map.colorSpace = SRGBColorSpace;\n      map.wrapS = ClampToEdgeWrapping;\n      map.wrapT = ClampToEdgeWrapping;\n      map.offset.set(region.x / texture.image.width, region.y / texture.image.height);\n      map.repeat.set(region.w / texture.image.width, region.h / texture.image.height);\n      map.needsUpdate = true;\n\n      material.map = map;\n      plane.userData.atlasMap = map;\n    });\n  }\n\n  group.onBeforeRender = (renderer, scene, camera) => {\n    group.lookAt(camera.position);\n  };\n\n  const timelines = [];\n  group.userData.cleanup = () => {\n    group.onBeforeRender = null;\n\n    timelines.forEach((t) => t && t.kill && t.kill());\n    timelines.length = 0;\n\n    if (plane.userData.atlasMap) {\n      plane.userData.atlasMap.dispose();\n      plane.userData.atlasMap = null;\n    }\n\n    group.traverse((obj) => {\n      if (obj.geometry) obj.geometry.dispose();\n      if (obj.material && obj !== plane) {\n        obj.material.dispose();\n      }\n    });\n\n    plane.material.dispose();\n    plane.geometry.dispose();\n\n    if (group.parent) group.parent.remove(group);\n  };\n\n  return group;\n}"
+}

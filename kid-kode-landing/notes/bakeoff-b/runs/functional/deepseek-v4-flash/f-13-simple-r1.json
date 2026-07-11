@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-13-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 1739,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3891,
+    "completionTokens": 2225
+  },
+  "costUsd": 0.000700644,
+  "billing": "metered",
+  "output": "```javascript\nimport { PlaneGeometry, MeshBasicNodeMaterial, Group, Mesh } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n  group.userData.cleanup = () => {};\n  group.userData.handlers = {};\n\n  // --- Image plane ---\n  const aspect = 512 / 320; // from source rect\n  const width = 4.0;\n  const height = width / aspect;\n  const geometry = new PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial({\n    color: 0x0b0b10, // surface fallback\n    transparent: false,\n    side: ctx.THREE.DoubleSide,\n  });\n  const plane = new Mesh(geometry, material);\n  plane.position.z = -0.01; // slight offset behind text\n  group.add(plane);\n\n  // Load texture (async)\n  const loadTex = ctx.textureLoader.loadTexture(config.imageUrl);\n  loadTex.then((tex) => {\n    material.map = tex;\n    material.needsUpdate = true;\n  });\n\n  // --- Text \"Collection\" ---\n  const textOpts = {\n    fontSize: 96,\n    color: '#e8ecf2', // paper\n    align: 'center',\n    maxWidthPx: width * 100, // approx scene-unit to pixel scale\n  };\n  const textObj = ctx.fontAtlas.createText('Collection', textOpts);\n  textObj.position.set(0, 0, 0.01);\n  group.add(textObj);\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    loadTex.then((tex) => tex.dispose()).catch(() => {});\n    group.remove(textObj);\n    // No GSAP timelines to kill\n  };\n\n  return group;\n}\n```"
+}

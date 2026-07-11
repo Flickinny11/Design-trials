@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-45-moderate",
+  "run": 3,
+  "ok": true,
+  "wallMs": 840,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3991,
+    "completionTokens": 6012
+  },
+  "costUsd": 0.0013452600000000002,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshStandardNodeMaterial, PlaneGeometry, Mesh, Group, Vector2 } from 'three/webgpu';\nimport { texture, uv, uniform, mul, add } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // ----- geometry -----\n  const width = 1;\n  const height = 0.625; // 320/512 aspect ratio\n  const segments = 64;\n  const geo = new PlaneGeometry(width, height, segments, segments);\n\n  // ----- node material with displacement and parallax -----\n  const colorMap = uniform(null);\n  const displacementMap = uniform(null);\n  const parallaxOffset = uniform(new Vector2(0, 0));\n\n  const offsetUv = add(uv(), parallaxOffset);\n  const dispNode = mul(texture(displacementMap, offsetUv).r, uniform(0.05)); // 0.05 scene units\n\n  const material = new MeshStandardNodeMaterial();\n  material.colorNode = texture(colorMap, uv());\n  material.displacementNode = dispNode;\n  material.side = 2; // DoubleSide\n  material.metalness = 0.55;\n  material.roughness = 0.5;\n\n  // ----- mesh -----\n  const mesh = new Mesh(geo, material);\n  mesh.position.set(0, 0, 0);\n  mesh.name = 'ornamental-divider';\n  group.add(mesh);\n\n  // store original Y for rise-in effect\n  const originalY = mesh.position.y;\n  const originalScale = mesh.scale.clone();\n\n  // ----- load textures -----\n  ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    colorMap.value = tex;\n    material.needsUpdate = true;\n  });\n  ctx.textureLoader.loadTexture(config.depthMapUrl).then((tex) => {\n    displacementMap.value = tex;\n    material.needsUpdate = true;\n  });\n\n  // ----- interactions (hover lift, click press-down, emit) -----\n  group.userData.handlers = {\n    onPointerEnter: () => {\n      gsap.to(mesh.position, {\n        y: originalY + 0.15,\n        duration: 0.5,\n        ease: 'power3.out'\n      });\n    },\n    onPointerLeave: () => {\n      gsap.to(mesh.position, {\n        y: originalY,\n        duration: 0.5,\n        ease: 'power3.out'\n      });\n    },\n    onPointerDown: () => {\n      gsap.to(mesh.scale, {\n        x: 0.97,\n        y: 0.97,\n        z: 0.97,\n        duration: 0.12,\n        ease: 'back.out'\n      });\n    },\n    onPointerUp: () => {\n      gsap.to(mesh.scale, {\n        x: 1,\n        y: 1,\n        z: 1,\n        duration: 0.12,\n        ease: 'back.out'\n      });\n    },\n    onClick: () => {\n      ctx.emit('hub-features.select', {});\n    },\n    onPointerMove: (event) => {\n      // subtle parallax – map mouse position to UV offset\n      const dx = ((event.clientX / window.innerWidth) - 0.5) * 0.02;\n      const dy = ((event.clientY / window.innerHeight) - 0.5) * 0.02;\n      parallaxOffset.value.set(dx, dy);\n    }\n  };\n\n  // ----- cleanup -----\n  group.userData.cleanup = () => {\n    gsap.killTweensOf(mesh.position);\n    gsap.killTweensOf(mesh.scale);\n\n    if (material) {\n      colorMap.value?.dispose();\n      displacementMap.value?.dispose();\n      material.dispose();\n    }\n    geo.dispose();\n  };\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-12-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 1529,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3720,
+    "completionTokens": 9574
+  },
+  "costUsd": 0.036091660000000005,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, texture, color } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const THREE = ctx.THREE;\n  const { Group, PlaneGeometry, Mesh, DoubleSide, SRGBColorSpace, ClampToEdgeWrapping } = THREE;\n\n  const group = new Group();\n  group.name = config.id || 'features-card-3-label';\n\n  const specColors = config.intent?.visualSpec?.colors || config.colors || {};\n  const ink = specColors.ink || '#16161d';\n  const paper = specColors.paper || '#e8ecf2';\n\n  const atlasX = 0;\n  const atlasY = 0;\n  const atlasW = 512;\n  const atlasH = 320;\n  const aspect = atlasW / atlasH;\n\n  const height = 0.45;\n  const width = height * aspect;\n\n  const geometry = new PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    opacity: 1,\n    side: DoubleSide\n  });\n  material.colorNode = color(ink);\n\n  const sprite = new Mesh(geometry, material);\n  sprite.userData.isSprite = true;\n  group.add(sprite);\n\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const item = textItems.find(t => t.role === 'headline') || textItems[0] || { text: 'Features 3', typography: { fontSize: 39 } };\n  const labelText = ctx.fontAtlas.createText(String(item.text ?? 'Features 3'), {\n    fontSize: item.typography?.fontSize ?? 39,\n    color: paper,\n    align: 'center'\n  });\n  labelText.position.z = 0.02;\n  group.add(labelText);\n\n  group.onBeforeRender = (renderer, scene, camera) => {\n    group.quaternion.copy(camera.quaternion);\n  };\n\n  let loadedTexture = null;\n  const imageUrl = config.imageUrl;\n  if (imageUrl) {\n    ctx.textureLoader.loadTexture(imageUrl).then((tex) => {\n      if (!group.parent) return;\n      loadedTexture = tex;\n      tex.colorSpace = SRGBColorSpace;\n      tex.wrapS = ClampToEdgeWrapping;\n      tex.wrapT = ClampToEdgeWrapping;\n\n      const fullW = tex.image?.width || atlasW;\n      const fullH = tex.image?.height || atlasH;\n      tex.repeat.set(atlasW / fullW, atlasH / fullH);\n      tex.offset.set(atlasX / fullW, 1 - (atlasY + atlasH) / fullH);\n\n      material.map = texture(tex, uv());\n      material.colorNode = null;\n      material.needsUpdate = true;\n    }).catch(() => {});\n  }\n\n  group.scale.set(0.96, 0.96, 0.96);\n  const entranceTl = gsap.timeline();\n  entranceTl.to(group.scale, { x: 1, y: 1, z: 1, duration: 0.6, ease: 'power2.out' }, 0);\n  entranceTl.fromTo(material, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: 'power2.out' }, 0);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    entranceTl.kill();\n    geometry.dispose();\n    material.dispose();\n    if (loadedTexture) loadedTexture.dispose();\n    group.traverse((child) => {\n      if (child.geometry) child.geometry.dispose();\n      if (child.material) {\n        if (Array.isArray(child.material)) {\n          child.material.forEach((m) => m.dispose());\n        } else {\n          child.material.dispose();\n        }\n      }\n    });\n  };\n\n  return group;\n}"
+}

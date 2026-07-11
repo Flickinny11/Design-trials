@@ -1,0 +1,20 @@
+{
+  "axis": "design",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/Kimi-K2.7-Code",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "v-05-pedestal-material-study",
+  "run": 2,
+  "ok": true,
+  "wallMs": 273767,
+  "finishReason": "length",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4261,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.06049714,
+  "billing": "metered",
+  "output": ""
+}

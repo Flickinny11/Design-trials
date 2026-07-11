@@ -1,0 +1,16 @@
+{
+  "contestant": "gemini-3.5-flash",
+  "caseId": "f-35-moderate-int",
+  "run": 1,
+  "rawCompliant": false,
+  "fenced": true,
+  "parsed": true,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "WINDOW_ACCESS",
+      "severity": "error",
+      "message": "window.* access is forbidden except for window.devicePixelRatio"
+    }
+  ]
+}

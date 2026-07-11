@@ -1,0 +1,10 @@
+{
+  "contestant": "kimi-k2.7-code",
+  "caseId": "f-26-simple",
+  "run": "repair",
+  "rawCompliant": false,
+  "fenced": true,
+  "parsed": true,
+  "verified": true,
+  "violations": []
+}

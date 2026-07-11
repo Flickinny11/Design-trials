@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "glm-5.2",
+  "model": "zai-org/GLM-5.2",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-29-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 118644,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3680,
+    "completionTokens": 2420
+  },
+  "costUsd": 0.0106824,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, smoothstep, time, uniform, vec2, fract, sin, float } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const group = new THREE.Group();\n  group.name = 'hub-journal-card-1-label';\n  group.position.set(-3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const colors = config.intent?.visualSpec?.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10',\n  };\n\n  // Atlas region: 512x320 => aspect 1.6\n  const planeW = 1.6;\n  const planeH = 1.0;\n  const geo = new THREE.PlaneGeometry(planeW, planeH, 1, 1);\n\n  const inkCol = uniform(new THREE.Color(colors.ink));\n  const surfCol = uniform(new THREE.Color(colors.surface));\n  const accentCol = uniform(new THREE.Color(colors.accent));\n\n  const vUv = uv();\n\n  // Engineered vertical gradient: surface (bottom) -> ink (top)\n  const gradY = smoothstep(float(0.0), float(1.0), vUv.y);\n  const baseGrad = mix(surfCol, inkCol, gradY);\n\n  // Subtle accent edge band near top — contained, <=10% of frame\n  const accentBand = smoothstep(float(0.86), float(0.92), vUv.y).mul(\n    smoothstep(float(1.0), float(0.94), vUv.y)\n  );\n  const withAccent = mix(baseGrad, accentCol, accentBand.mul(float(0.45)));\n\n  // Subtle grain (static — time gated to 0)\n  const g = fract(sin(vUv.mul(vec2(420.0, 420.0))).mul(float(43758.5453)));\n  const grainAmt = float(0.02);\n  const grained = withAccent.add(vec3(g.sub(float(0.5)).mul(grainAmt)));\n\n  const mat = new MeshBasicNodeMaterial();\n  mat.colorNode = grained;\n  mat.transparent = true;\n\n  // Overlay brushed-metal streaks from the texture (subtle darkening)\n  ctx.textureLoader.loadTexture('/prism-assets/chrome/brushed-metal.map.png')\n    .then((t) => {\n      const streak = t.tex.r.sub(float(0.5)).mul(float(0.12));\n      mat.colorNode = grained.add(vec3(streak));\n      mat.needsUpdate = true;\n    })\n    .catch(() => {});\n\n  const plane = new THREE.Mesh(geo, mat);\n  plane.position.set(0, 0, 0);\n  group.add(plane);\n\n  // MSDF text — \"Journal 1\" headline 39px on paper color\n  for (const item of items) {\n    if (!item || !item.text) continue;\n    const fs = item.typography?.fontSize ?? 39;\n    const txt = ctx.fontAtlas.createText(String(item.text), {\n      fontSize: fs,\n      color: colors.paper,\n      align: 'center',\n      maxWidthPx: 480,\n      letterSpacingPx: 0.6,\n    });\n    txt.position.set(0, 0, 0.012);\n    txt.rotation.set(0, 0, 0);\n    group.add(txt);\n  }\n\n  // Weighted-settle entrance: rise + 1.04 -> 1.0 over 0.9s power4.out\n  const tl = gsap.timeline();\n  tl.from(group.position, { y: '+=0.2', duration: 0.7, ease: 'power3.out' }, 0);\n  tl.from(group.scale, { x: 1.04, y: 1.04, z: 1.04, duration: 0.9, ease: 'power4.out' }, 0);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    tl.kill();\n    geo.dispose();\n    mat.dispose();\n  };\n\n  return group;\n}\n```"
+}

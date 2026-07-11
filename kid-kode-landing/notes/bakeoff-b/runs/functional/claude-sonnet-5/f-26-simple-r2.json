@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-sonnet-5",
+  "model": "anthropic/claude-sonnet-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-26-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 42122,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 6182,
+    "completionTokens": 4105
+  },
+  "costUsd": 0.053414,
+  "billing": "metered",
+  "output": "import { MeshStandardNodeMaterial } from 'three/webgpu';\nimport {\n  uv,\n  mix,\n  smoothstep,\n  color,\n  vec3,\n  float,\n  uniform,\n  step,\n  oneMinus,\n  sin,\n  fract,\n  dot,\n  vec2,\n} from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const { Group, PlaneGeometry, DoubleSide } = THREE;\n\n  const group = new Group();\n  group.name = 'hub-pricing-card-0-label';\n\n  // ---- palette tokens ----\n  const INK = '#16161d';\n  const SURFACE = '#0b0b10';\n  const PAPER = '#e8ecf2';\n  const ACCENT = '#ff2a38';\n\n  const items =\n    config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const headlineItem = items.find((i) => i.role === 'headline') ?? {\n    text: 'Pricing 3',\n    typography: { fontSize: 39 },\n  };\n  const labelText = headlineItem.text ?? 'Pricing 3';\n  const fontSize = headlineItem.typography?.fontSize ?? 39;\n\n  // ---- background chip geometry ----\n  const width = 1.4;\n  const height = 0.5;\n  const geometry = new PlaneGeometry(width, height, 1, 1);\n\n  const material = new MeshStandardNodeMaterial({\n    side: DoubleSide,\n    roughness: 0.55,\n    metalness: 0.3,\n    transparent: true,\n  });\n\n  const uvNode = uv();\n\n  // engineered vertical gradient: ink -> surface\n  const gradient = mix(color(INK), color(SURFACE), uvNode.y);\n\n  // thin accent underline band near the bottom of the chip\n  const bandLow = smoothstep(0.06, 0.09, uvNode.y);\n  const bandHigh = oneMinus(smoothstep(0.1, 0.13, uvNode.y));\n  const accentBand = bandLow.mul(bandHigh);\n\n  // static, subtle grain (no time dependency -> stays static composition)\n  const grainSeed = dot(uvNode, vec2(12.9898, 78.233));\n  const grain = fract(sin(grainSeed).mul(43758.5453)).sub(0.5).mul(0.035);\n\n  const baseColor = mix(gradient, color(ACCENT), accentBand.mul(0.9));\n  const finalColor = baseColor.add(vec3(grain, grain, grain));\n\n  const opacityUniform = uniform(0);\n\n  material.colorNode = finalColor;\n  material.emissiveNode = mix(vec3(0.0, 0.0, 0.0), color(ACCENT), accentBand.mul(0.35));\n  material.opacityNode = opacityUniform;\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(0, 0, 0);\n  group.add(mesh);\n\n  // ---- label text (rendered via MSDF atlas, verbatim spec copy) ----\n  const textNode = ctx.fontAtlas.createText(labelText, {\n    fontSize,\n    color: PAPER,\n    align: 'center',\n  });\n  textNode.position.set(0, 0.03, 0.01);\n  group.add(textNode);\n\n  // static composition => single, restrained entrance motion only (weighted-settle)\n  group.scale.set(0.96, 0.96, 0.96);\n\n  const tl = gsap.timeline();\n  tl.to(opacityUniform, { value: 1, duration: 0.5, ease: 'power2.out' }, 0);\n  tl.to(\n    group.scale,\n    { x: 1.04, y: 1.04, z: 1.04, duration: 0.5, ease: 'power3.out' },\n    0\n  ).to(group.scale, { x: 1, y: 1, z: 1, duration: 0.4, ease: 'power4.out' });\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    tl.kill();\n    geometry.dispose();\n    material.dispose();\n    if (textNode.geometry) textNode.geometry.dispose();\n    if (textNode.material) {\n      if (Array.isArray(textNode.material)) {\n        textNode.material.forEach((m) => m.dispose());\n      } else {\n        textNode.material.dispose();\n      }\n    }\n  };\n\n  return group;\n}"
+}

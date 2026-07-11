@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-19-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 4792,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3898,
+    "completionTokens": 1969
+  },
+  "costUsd": 0.000658224,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\n/**\n * Creates a static card label node for \"Collection 3\".\n * Applies a textured plane with a headline text overlay.\n */\nexport default function createNode(config, ctx) {\n  const { textureLoader, fontAtlas, THREE } = ctx;\n\n  // --- Container group ---\n  const group = new THREE.Group();\n\n  // --- Plane geometry (size derived from texture aspect ratio) ---\n  // Base width in scene units; height will be set from texture ratio later if possible.\n  const BASE_WIDTH = 1.8;\n  const planeGeom = new THREE.PlaneGeometry(BASE_WIDTH, BASE_WIDTH * (320 / 512)); // placeholder ratio\n  const material = new MeshBasicNodeMaterial({\n    color: '#0b0b10', // surface color as placeholder\n    transparent: true,\n  });\n  const planeMesh = new THREE.Mesh(planeGeom, material);\n  group.add(planeMesh);\n\n  // --- Load texture ---\n  textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    tex.colorSpace = 'srgb';\n    // Update geometry aspect to match texture\n    const aspect = tex.image.width / tex.image.height;\n    const height = BASE_WIDTH / aspect;\n    planeGeom.dispose();\n    const newGeom = new THREE.PlaneGeometry(BASE_WIDTH, height);\n    planeMesh.geometry = newGeom;\n    // Store in cleanup\n    group.userData._planeGeom = newGeom;\n\n    material.map = tex;\n    material.needsUpdate = true;\n  }).catch(() => {\n    // fallback: keep placeholder\n  });\n\n  // --- Text: \"Collection 3\" ---\n  const textObj = fontAtlas.createText('Collection 3', {\n    fontSize: 39,\n    color: '#e8ecf2',\n    align: 'center',\n    maxWidthPx: 300, // prevent overflow\n  });\n  // Position at bottom-center of card, with small padding\n  textObj.position.set(0, -0.55, 0.01); // slightly in front of plane\n  textObj.scale.set(0.001, 0.001, 0.001); // adjust scale if needed (atlas text can be large)\n  group.add(textObj);\n\n  // --- Fallback scale for text (if fontAtlas size is huge) ---\n  // Typically createText returns 1px = 1 scene unit, so we scale down.\n  // We'll apply a uniform scale of 0.008 to bring it to ~0.3 scene units (based on 39px at default camera distance)\n  textObj.scale.setScalar(0.008);\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    planeGeom.dispose();\n    if (group.userData._planeGeom) group.userData._planeGeom.dispose();\n    material.dispose();\n    if (material.map) material.map.dispose();\n    // No timelines to kill\n  };\n\n  // Store planeGeom reference for disposal\n  group.userData._planeGeom = planeGeom;\n\n  return group;\n}\n```"
+}

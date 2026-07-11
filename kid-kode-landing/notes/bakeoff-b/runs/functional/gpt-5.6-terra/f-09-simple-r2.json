@@ -1,0 +1,10 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-5.6-terra",
+  "model": "openai/gpt-5.6-terra",
+  "route": "openrouter",
+  "caseId": "f-09-simple",
+  "run": 2,
+  "ok": false,
+  "transportError": "transport failure after retries: HTTP 402: {\"message\":\"Insufficient credits. Add more using https://openrouter.ai/settings/credits\",\"code\":402}"
+}

@@ -1,0 +1,16 @@
+{
+  "axis": "repair",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "caseId": "f-02-simple",
+  "run": "repair",
+  "ok": true,
+  "usage": {
+    "promptTokens": 5406,
+    "completionTokens": 970
+  },
+  "costUsd": 0.010256,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  \n  // Build the group to hold the plane and text\n  const group = new THREE.Group();\n  group.position.set(0, 1.85, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Create backdrop plane (~7x6 units at z=-2.5) with gradient\n  const backdropGeo = new THREE.PlaneGeometry(7, 6);\n  const gradientCanvas = document.createElement('canvas');\n  gradientCanvas.width = 1;\n  gradientCanvas.height = 256;\n  const ctx2d = gradientCanvas.getContext('2d');\n  \n  // Gradient from surface (#0b0b10) to ink (#16161d)\n  const grad = ctx2d.createLinearGradient(0, 0, 0, 256);\n  grad.addColorStop(0, '#0b0b10');\n  grad.addColorStop(1, '#16161d');\n  ctx2d.fillStyle = grad;\n  ctx2d.fillRect(0, 0, 1, 256);\n  \n  const gradTex = new THREE.CanvasTexture(gradientCanvas);\n  gradTex.magFilter = THREE.LinearFilter;\n  gradTex.minFilter = THREE.LinearFilter;\n  \n  const backdropMat = new THREE.MeshBasicMaterial({ map: gradTex });\n  const backdrop = new THREE.Mesh(backdropGeo, backdropMat);\n  backdrop.position.z = -2.5;\n  group.add(backdrop);\n\n  // Create the hero plane with the provided image\n  const planeGeo = new THREE.PlaneGeometry(3.5, 2.2);\n  const planeMat = new THREE.MeshBasicMaterial({\n    color: 0xffffff,\n    transparent: true,\n    opacity: 1.0\n  });\n\n  const plane = new THREE.Mesh(planeGeo, planeMat);\n  plane.position.z = 0;\n  group.add(plane);\n\n  // Load the image texture\n  ctx.textureLoader.loadTexture(config.imageUrl).then((imgTex) => {\n    imgTex.colorSpace = THREE.SRGBColorSpace;\n    imgTex.magFilter = THREE.LinearFilter;\n    imgTex.minFilter = THREE.LinearFilter;\n    planeMat.map = imgTex;\n    planeMat.needsUpdate = true;\n  });\n\n  // Iterate config.textContent and render all text items\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    const fontSize = item.typography?.fontSize ?? 42;\n    const textColor = item.color ?? '#e8ecf2';\n    const textAlign = item.align ?? 'center';\n    \n    const textMesh = ctx.fontAtlas.createText(item.text, {\n      fontSize,\n      color: textColor,\n      align: textAlign,\n      letterSpacingPx: 0\n    });\n    \n    textMesh.position.set(0, -1.4, 0.1);\n    group.add(textMesh);\n  }\n\n  // Setup cleanup\n  group.userData.cleanup = () => {\n    backdropGeo.dispose();\n    planeGeo.dispose();\n    backdropMat.dispose();\n    planeMat.dispose();\n    if (planeMat.map) planeMat.map.dispose();\n    gradTex.dispose();\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-23-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 755,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3884,
+    "completionTokens": 2642
+  },
+  "costUsd": 0.0007701120000000001,
+  "billing": "metered",
+  "output": "```javascript\nimport { Mesh, PlaneGeometry, MeshBasicNodeMaterial } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  // Geometry matching the texture aspect ratio (512:320 = 1.6:1)\n  const width = 1.6;\n  const height = 1;\n  const geometry = new PlaneGeometry(width, height);\n\n  // Material – no lighting required for a static plane\n  const material = new MeshBasicNodeMaterial({ color: '#ffffff' });\n\n  const mesh = new Mesh(geometry, material);\n  mesh.name = 'pricing-card-2';\n\n  // Load the brushed-metal map texture\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      tex.needsUpdate = true;\n      material.map = tex;\n      material.needsUpdate = true;\n      // Store reference for cleanup\n      mesh.userData._texture = tex;\n    }).catch(() => {\n      // Fallback: use a flat surface color from the palette\n      material.color.setHex(0x0b0b10);\n    });\n  } else {\n    // No image provided – use surface color\n    material.color.setHex(0x0b0b10);\n  }\n\n  // Event handlers (none for this node)\n  mesh.userData.handlers = {};\n\n  // Cleanup: dispose geometry, material, and loaded texture\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (mesh.userData._texture) {\n      mesh.userData._texture.dispose();\n    }\n    // No GSAP timelines to kill\n  };\n\n  return mesh;\n}\n```"
+}

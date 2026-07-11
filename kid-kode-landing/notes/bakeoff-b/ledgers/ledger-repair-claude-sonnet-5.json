@@ -1,0 +1,36 @@
+{
+  "wave": "wbakeb",
+  "axis": "repair",
+  "contestant": "claude-sonnet-5",
+  "calls": [
+    {
+      "axis": "repair",
+      "contestant": "claude-sonnet-5",
+      "caseId": "f-39-moderate-int",
+      "costUsd": 0.04758,
+      "billing": "metered",
+      "at": "2026-07-11T03:28:59.424Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "claude-sonnet-5",
+      "caseId": "f-34-moderate-int",
+      "costUsd": 0.055316,
+      "billing": "metered",
+      "at": "2026-07-11T03:29:05.506Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "claude-sonnet-5",
+      "caseId": "f-44-moderate",
+      "costUsd": 0.059852,
+      "billing": "metered",
+      "at": "2026-07-11T03:29:07.305Z"
+    }
+  ],
+  "totals": {
+    "meteredUsd": 0.162748,
+    "subscriptionEquivalentUsd": 0,
+    "totalUsd": 0.162748
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "design",
+  "contestant": "glm-5.2",
+  "model": "z-ai/glm-5.2",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "v-04-kinetic-type-headline",
+  "run": 1,
+  "ok": true,
+  "wallMs": 1163,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4279,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.02342406,
+  "billing": "metered",
+  "output": ""
+}

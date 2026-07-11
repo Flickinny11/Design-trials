@@ -1,0 +1,52 @@
+{
+  "wave": "wbakeb",
+  "axis": "repair",
+  "contestant": "kimi-k2.7-code",
+  "calls": [
+    {
+      "axis": "repair",
+      "contestant": "kimi-k2.7-code",
+      "caseId": "f-12-simple",
+      "costUsd": 0.01471048,
+      "billing": "metered",
+      "at": "2026-07-11T03:35:20.703Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "kimi-k2.7-code",
+      "caseId": "f-24-simple",
+      "costUsd": 0.016096219999999998,
+      "billing": "metered",
+      "at": "2026-07-11T03:35:30.019Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "kimi-k2.7-code",
+      "caseId": "f-19-simple",
+      "costUsd": 0.020307779999999998,
+      "billing": "metered",
+      "at": "2026-07-11T03:35:57.972Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "kimi-k2.7-code",
+      "caseId": "f-26-simple",
+      "costUsd": 0.021734959999999998,
+      "billing": "metered",
+      "at": "2026-07-11T03:36:11.803Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "kimi-k2.7-code",
+      "caseId": "f-37-moderate-int",
+      "costUsd": 0.0156783,
+      "billing": "metered",
+      "at": "2026-07-11T03:36:41.411Z"
+    }
+  ],
+  "totals": {
+    "meteredUsd": 0.08852774,
+    "subscriptionEquivalentUsd": 0,
+    "totalUsd": 0.08852774
+  }
+}

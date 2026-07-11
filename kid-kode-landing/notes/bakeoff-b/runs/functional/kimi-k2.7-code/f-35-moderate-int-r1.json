@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/Kimi-K2.7-Code",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-35-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 207139,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3806,
+    "completionTokens": 10975
+  },
+  "costUsd": 0.041228940000000006,
+  "billing": "metered",
+  "output": " import { MeshPhysicalNodeMaterial } from 'three/webgpu';\nimport { texture, uv, vec3, float, positionLocal, add, mul } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const { Group, Mesh, PlaneGeometry, BoxGeometry, Color } = THREE;\n\n  const group = new Group();\n  group.name = config.id || 'features-list-row';\n\n  const colors = config.intent?.visualSpec?.colors || {};\n  const palette = {\n    ink: new Color(colors.ink ?? '#16161d'),\n    paper: new Color(colors.paper ?? '#e8ecf2'),\n    accent: new Color(colors.accent ?? '#ff2a38'),\n    surface: new Color(colors.surface ?? '#0b0b10'),\n  };\n\n  const width = 2.4;\n  const height = 1.5;\n  const cardDepth = 0.08;\n\n  const frameGeo = new BoxGeometry(width + 0.12, height + 0.12, cardDepth);\n  const frameMat = new MeshPhysicalNodeMaterial({\n    color: palette.surface,\n    roughness: 0.7,\n    metalness: 0.3,\n    clearcoat: 0.12,\n    emissive: palette.accent,\n    emissiveIntensity: 0,\n  });\n  const frame = new Mesh(frameGeo, frameMat);\n  frame.position.z = -0.05;\n  group.add(frame);\n\n  const planeGeo = new PlaneGeometry(width, height, 64, 64);\n  const planeMat = new MeshPhysicalNodeMaterial({\n    color: 0xffffff,\n    roughness: 0.6,\n    metalness: 0.1,\n    clearcoat: 0.05,\n  });\n  const plane = new Mesh(planeGeo, planeMat);\n  group.add(plane);\n\n  let imageTex = null;\n  let depthTex = null;\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      imageTex = tex;\n      imageTex.colorSpace = THREE.SRGBColorSpace;\n      planeMat.map = imageTex;\n      planeMat.needsUpdate = true;\n    });\n  }\n\n  if (config.depthMapUrl) {\n    ctx.textureLoader.loadTexture(config.depthMapUrl).then((tex) => {\n      depthTex = tex;\n      depthTex.colorSpace = THREE.NoColorSpace;\n      const displacement = mul(texture(depthTex, uv()).r, float(0.25));\n      planeMat.positionNode = add(positionLocal, vec3(0.0, 0.0, displacement));\n      planeMat.needsUpdate = true;\n    });\n  }\n\n  const parallax = ctx.primitives['parallax-scroll'](group, { strength: 0.05, damping: 0.08 });\n\n  group.userData.handlers = {\n    hover: (e) => {\n      const over = !(e && e.isHovered === false);\n      gsap.killTweensOf(group.position);\n      gsap.killTweensOf(group.scale);\n      gsap.killTweensOf(frameMat);\n      if (over) {\n        gsap.to(group.position, { z: '+=0.15', duration: 0.35, ease: 'power2.out' });\n        gsap.to(group.scale, { x: 1.02, y: 1.02, z: 1.02, duration: 0.35, ease: 'power2.out' });\n        gsap.to(frameMat, { emissiveIntensity: 0.55, duration: 0.35, ease: 'power2.out' });\n      } else {\n        gsap.to(group.position, { z: '-=0.15', duration: 0.45, ease: 'power2.out' });\n        gsap.to(group.scale, { x: 1, y: 1, z: 1, duration: 0.45, ease: 'power2.out' });\n        gsap.to(frameMat, { emissiveIntensity: 0, duration: 0.45, ease: 'power2.out' });\n      }\n    },\n    click: () => {\n      gsap.to(group.scale, {\n        x: 0.97,\n        y: 0.97,\n        z: 0.97,\n        duration: 0.12,\n        ease: 'back.out(1.7)',\n        yoyo: true,\n        repeat: 1,\n      });\n      ctx.emit('hub-features.select', {});\n    },\n  };\n\n  group.userData.cleanup = () => {\n    parallax?.cleanup?.();\n    gsap.killTweensOf(group.position);\n    gsap.killTweensOf(group.scale);\n    gsap.killTweensOf(frameMat);\n    frameGeo.dispose();\n    planeGeo.dispose();\n    frameMat.dispose();\n    planeMat.dispose();\n    if (imageTex) imageTex.dispose();\n    if (depthTex) depthTex.dispose();\n  };\n\n  return group;\n}"
+}

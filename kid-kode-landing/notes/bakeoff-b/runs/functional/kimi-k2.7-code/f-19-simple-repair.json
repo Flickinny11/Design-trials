@@ -1,0 +1,16 @@
+{
+  "axis": "repair",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/Kimi-K2.7-Code",
+  "route": "deepinfra",
+  "caseId": "f-19-simple",
+  "run": "repair",
+  "ok": true,
+  "usage": {
+    "promptTokens": 4447,
+    "completionTokens": 4862
+  },
+  "costUsd": 0.020307779999999998,
+  "billing": "metered",
+  "output": " import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, color, mix, smoothstep, fract, sin, dot, texture } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE, textureLoader, fontAtlas } = ctx;\n  const { Group, PlaneGeometry, Mesh } = THREE;\n\n  const colors = config.intent?.visualSpec?.colors ?? config.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n\n  const root = new Group();\n\n  const atlasW = 512;\n  const atlasH = 320;\n  const cardWidth = 1.6;\n  const cardHeight = cardWidth * (atlasH / atlasW);\n\n  const geometry = new PlaneGeometry(cardWidth, cardHeight);\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    side: THREE.FrontSide,\n    depthWrite: false\n  });\n\n  const vUV = uv();\n  const baseGradient = mix(\n    color(colors.ink),\n    color(colors.surface),\n    smoothstep(0.0, 1.0, vUV.y)\n  );\n\n  const noise = fract(sin(dot(vUV, vec2(12.9898, 78.233))).mul(43758.5453));\n  const grain = baseGradient.add(vec3(noise.sub(0.5).mul(0.05)));\n  material.colorNode = grain;\n\n  const card = new Mesh(geometry, material);\n  root.add(card);\n\n  const textItems = config.textContent ?? [];\n  for (const item of textItems) {\n    const copy = typeof item?.text === 'string' ? item.text : String(item?.text ?? '');\n    if (!copy) continue;\n    const label = fontAtlas.createText(copy, {\n      fontSize: item?.typography?.fontSize ?? 39,\n      color: colors.paper,\n      align: 'center'\n    });\n    label.position.set(0, 0, 0.02);\n    root.add(label);\n  }\n\n  let loadedTexture = null;\n  const timelines = [];\n\n  if (config.imageUrl) {\n    textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      loadedTexture = tex;\n      if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;\n\n      const texNode = texture(tex, vUV);\n      material.colorNode = mix(texNode, grain, 0.08);\n    }).catch(() => {});\n  }\n\n  root.userData.handlers = {};\n  root.userData.cleanup = () => {\n    timelines.forEach((t) => { try { t.kill(); } catch {} });\n    if (loadedTexture) loadedTexture.dispose();\n    geometry.dispose();\n    material.dispose();\n  };\n\n  return root;\n}"
+}

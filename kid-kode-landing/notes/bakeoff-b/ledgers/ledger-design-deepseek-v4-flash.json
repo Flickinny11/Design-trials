@@ -499,11 +499,24 @@
       "billing": "metered",
       "rateNote": "estimate from published per-MTok rates",
       "at": "2026-07-11T02:45:58.014Z"
+    },
+    {
+      "axis": "design",
+      "contestant": "deepseek-v4-flash",
+      "provider": "deepinfra",
+      "caseId": "v-20-footer-colophon",
+      "run": 1,
+      "promptTokens": 4576,
+      "completionTokens": 2091,
+      "costUsd": 0.0007882200000000001,
+      "billing": "metered",
+      "rateNote": "estimate from published per-MTok rates",
+      "at": "2026-07-11T03:00:10.140Z"
     }
   ],
   "totals": {
-    "meteredUsd": 0.06447697200000001,
+    "meteredUsd": 0.06526519200000001,
     "subscriptionEquivalentUsd": 0,
-    "totalUsd": 0.06447697200000001
+    "totalUsd": 0.06526519200000001
   }
 }

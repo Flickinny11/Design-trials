@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-sonnet-5",
+  "model": "anthropic/claude-sonnet-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-30-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 59753,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 6172,
+    "completionTokens": 5800
+  },
+  "costUsd": 0.070344,
+  "billing": "metered",
+  "output": "import { Group, Mesh, PlaneGeometry, MeshBasicNodeMaterial, SRGBColorSpace } from 'three/webgpu';\nimport { uv, vec3, mix, smoothstep, texture } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const Group_ = THREE?.Group ?? Group;\n  const Mesh_ = THREE?.Mesh ?? Mesh;\n  const PlaneGeometry_ = THREE?.PlaneGeometry ?? PlaneGeometry;\n\n  const group = new Group_();\n  group.name = 'journal-card-2';\n\n  // Atlas region 512x320 -> aspect 1.6\n  const rect = { w: 512, h: 320 };\n  const aspect = rect.w / rect.h;\n  const height = 1.8;\n  const width = height * aspect;\n\n  const geometry = new PlaneGeometry_(width, height, 1, 1);\n\n  // ---- engineered gradient + accent edge color node (built once, extended with grain when texture arrives)\n  function buildColorNode(grainTexNode) {\n    const uvNode = uv();\n    const topColor = vec3(0x16 / 255, 0x16 / 255, 0x1d / 255); // ink\n    const bottomColor = vec3(0x0b / 255, 0x0b / 255, 0x10 / 255); // surface\n    const gradient = mix(bottomColor, topColor, uvNode.y);\n\n    const accentColor = vec3(1.0, 0x2a / 255, 0x38 / 255); // signal red accent\n    const edgeMask = smoothstep(0.02, 0.0, uvNode.x); // thin spine on left edge, <10% of frame\n\n    let base = mix(gradient, accentColor, edgeMask.mul(0.85));\n\n    if (grainTexNode) {\n      const grain = grainTexNode.r.mul(0.28).add(0.86); // subtle grain modulation 0.86-1.14\n      base = base.mul(grain);\n    }\n    return base;\n  }\n\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    opacity: 1,\n  });\n  material.colorNode = buildColorNode(null);\n\n  const mesh = new Mesh_(geometry, material);\n  mesh.position.set(0, 0, 0);\n  group.add(mesh);\n\n  let loadedTexture = null;\n\n  const imageUrl = config.imageUrl;\n  if (imageUrl && ctx.textureLoader?.loadTexture) {\n    ctx.textureLoader\n      .loadTexture(imageUrl)\n      .then((tex) => {\n        if (!tex) return;\n        if (SRGBColorSpace) tex.colorSpace = SRGBColorSpace;\n        loadedTexture = tex;\n        material.colorNode = buildColorNode(texture(tex));\n        material.needsUpdate = true;\n      })\n      .catch(() => {\n        // silently keep gradient-only surface on load failure\n      });\n  }\n\n  // ---- weighted-settle entrance (static composition thereafter, per spec)\n  gsap.set(mesh.position, { y: -0.15 });\n  gsap.set(mesh.scale, { x: 0.98, y: 0.98, z: 1 });\n  material.opacity = 0;\n\n  const timeline = gsap.timeline();\n  timeline.to(mesh.position, { y: 0, duration: 0.7, ease: 'power3.out' }, 0);\n  timeline.to(\n    mesh.scale,\n    { x: 1, y: 1, z: 1, duration: 0.9, ease: 'power4.out' },\n    0\n  );\n  timeline.to(material, { opacity: 1, duration: 0.6, ease: 'power2.out' }, 0);\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    timeline.kill();\n    geometry.dispose();\n    material.dispose();\n    if (loadedTexture) {\n      loadedTexture.dispose();\n    }\n  };\n\n  return group;\n}"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-22-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 1051,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3710,
+    "completionTokens": 6377
+  },
+  "costUsd": 0.02492693,
+  "billing": "metered",
+  "output": " import { gsap } from 'gsap';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec2, mix, color, fract, sin, dot, smoothstep } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const THREE = ctx.THREE;\n  const { Group, PlaneGeometry, Mesh } = THREE;\n\n  const group = new Group();\n\n  const colors = config.intent?.visualSpec?.colors ?? config.colors ?? {};\n  const ink = colors.ink ?? '#16161d';\n  const paper = colors.paper ?? '#e8ecf2';\n  const accent = colors.accent ?? '#ff2a38';\n  const surface = colors.surface ?? '#0b0b10';\n\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const textItem = items.find((i) => i.role === 'headline') ?? items[0];\n\n  const cardW = 1.6;\n  const cardH = 1.0;\n\n  const cardGeometry = new PlaneGeometry(cardW, cardH);\n\n  // engineered gradient surface with subtle grain\n  const t = uv().y;\n  const surfaceNode = color(surface);\n  const inkNode = color(ink);\n  const gradient = mix(surfaceNode, inkNode, smoothstep(0.0, 1.0, t));\n\n  const noise = ctx.tier === 'T0'\n    ? gradient\n    : gradient.add(\n        fract(sin(dot(uv(), vec2(12.9898, 78.233))).mul(43758.5453))\n          .mul(0.05)\n          .sub(0.025)\n      );\n\n  const backdropMaterial = new MeshBasicNodeMaterial({ colorNode: noise });\n  const backdrop = new Mesh(cardGeometry, backdropMaterial);\n  backdrop.position.z = -0.01;\n  group.add(backdrop);\n\n  // textured decorative plane\n  const imageMaterial = new MeshBasicNodeMaterial({ transparent: true });\n  const imageMesh = new Mesh(cardGeometry, imageMaterial);\n  group.add(imageMesh);\n\n  const imageUrl = config.imageUrl;\n  if (imageUrl) {\n    ctx.textureLoader.loadTexture(imageUrl).then((tex) => {\n      if (!imageMesh.parent) return;\n      tex.colorSpace = THREE.SRGBColorSpace;\n      imageMaterial.map = tex;\n      imageMaterial.needsUpdate = true;\n    });\n  }\n\n  // small accent marker\n  const accentGeometry = new PlaneGeometry(0.32, 0.04);\n  const accentMaterial = new MeshBasicNodeMaterial({ colorNode: color(accent) });\n  const accentLine = new Mesh(accentGeometry, accentMaterial);\n  accentLine.position.set(-cardW * 0.5 + 0.2, -cardH * 0.38, 0.02);\n  group.add(accentLine);\n\n  // headline text\n  if (textItem) {\n    const label = ctx.fontAtlas.createText(textItem.text ?? textItem.content ?? 'Pricing 1', {\n      fontSize: textItem.typography?.fontSize ?? 39,\n      color: paper,\n      align: 'left',\n    });\n    label.position.set(-cardW * 0.45, cardH * 0.18, 0.03);\n    label.scale.setScalar(0.003);\n    group.add(label);\n  }\n\n  // weighted entrance\n  const entrance = gsap.timeline({ defaults: { ease: 'power3.out' } });\n  entrance.from(group.scale, { x: 0, y: 0, z: 0, duration: 0.6, ease: 'power3.out' });\n  entrance.to(group.scale, { x: 1.04, y: 1.04, z: 1.04, duration: 0.4, ease: 'power2.out' }, '>');\n  entrance.to(group.scale, { x: 1, y: 1, z: 1, duration: 0.5, ease: 'power4.out' }, '>');\n\n  group.userData.handlers = {};\n  group.userData.cleanup = () => {\n    entrance.kill();\n    cardGeometry.dispose();\n    backdropMaterial.dispose();\n    imageMaterial.dispose();\n    accentGeometry.dispose();\n    accentMaterial.dispose();\n    if (imageMaterial.map) imageMaterial.map.dispose();\n    group.traverse((child) => {\n      if (child.geometry) child.geometry.dispose();\n      if (child.material) {\n        if (Array.isArray(child.material)) {\n          child.material.forEach((m) => m.dispose());\n        } else {\n          child.material.dispose();\n        }\n      }\n    });\n  };\n\n  return group;\n}"
+}

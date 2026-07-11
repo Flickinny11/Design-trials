@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-05-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 1532,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3889,
+    "completionTokens": 2581
+  },
+  "costUsd": 0.0007602840000000001,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial, PlaneGeometry, Mesh, Group } from 'three/webgpu';\nimport { gsap } from 'gsap';\n// Note: no need to import from three/tsl since we use MeshBasicNodeMaterial (non-TSL)\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // Shared cleanup array\n  const cleanupFns = [];\n\n  // --- 1. Parse text content ---\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  // Expect one item: \"Get started\"\n  const textItem = items.find(item => item.role === 'headline') || items[0];\n  const label = textItem?.text || 'Get started';\n  const fontSize = textItem?.typography?.fontSize !== undefined\n    ? textItem.typography.fontSize\n    : 42; // fallback from spec\n  const color = textItem?.color || '#e8ecf2'; // paper\n\n  // --- 2. Create text object ---\n  // Use ctx.fontAtlas.createText (sync)\n  const textObject = ctx.fontAtlas.createText(label, {\n    fontSize,\n    color,\n    align: 'center',\n    // Add slight letter spacing for all-caps feel (though label is not all-caps)\n    letterSpacingPx: 0.5\n  });\n  // Center text locally (it will be added to group)\n  textObject.position.set(0, 0, 0.01); // slightly in front of plane\n  group.add(textObject);\n\n  // --- 3. Create background plane ---\n  // Dimensions estimated to fit text: 2 x 0.5 units (generous padding)\n  const planeWidth = 2.0;\n  const planeHeight = 0.55;\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n  const material = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    transparent: false,\n    side: 2 // DoubleSide for visibility from any angle (but plane is flat)\n  });\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(0, 0, 0);\n  group.add(mesh);\n\n  // --- 4. Load brushed metal texture ---\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n      material.map = texture;\n      material.needsUpdate = true;\n    }).catch(() => {\n      // Fallback: solid surface color (not critical)\n      material.color.setHex(0x2a2a2a);\n    });\n  } else {\n    // No image fallback\n    material.color.setHex(0x2a2a2a);\n  }\n\n  // --- 5. No cinematic primitives ---\n\n  // --- 6. UserData ---\n  group.userData.handlers = {}; // no events\n\n  group.userData.cleanup = () => {\n    cleanupFns.forEach(fn => fn());\n    // Dispose material and geometry\n    if (material.map) material.map.dispose();\n    material.dispose();\n    geometry.dispose();\n    // Remove children (though caller should handle)\n    while (group.children.length) {\n      const child = group.children[0];\n      if (child.geometry) child.geometry.dispose();\n      if (child.material) {\n        if (child.material.map) child.material.map.dispose();\n        child.material.dispose();\n      }\n      group.remove(child);\n    }\n  };\n\n  return group;\n}\n```"
+}

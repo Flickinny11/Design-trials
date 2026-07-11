@@ -1,0 +1,16 @@
+{
+  "axis": "repair",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-28-simple",
+  "run": "repair",
+  "ok": true,
+  "usage": {
+    "promptTokens": 4214,
+    "completionTokens": 819
+  },
+  "costUsd": 0.0011235,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport {} from '@/primitives';\nimport {} from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  const root = new Group();\n\n  // Plane dimensions based on typical aspect ratio (512 / 320 = 1.6)\n  const PLANE_WIDTH = 1.6;\n  const PLANE_HEIGHT = 1.0;\n\n  const geometry = new PlaneGeometry(PLANE_WIDTH, PLANE_HEIGHT);\n  const material = new MeshBasicNodeMaterial();\n\n  const plane = new Mesh(geometry, material);\n  root.add(plane);\n\n  let texture = null;\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      texture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // No cinematic primitives for this node\n  const primitiveInstances = [];\n\n  const cleanup = () => {\n    // Dispose material, geometry, and texture\n    if (material) material.dispose();\n    if (geometry) geometry.dispose();\n    if (texture) texture.dispose();\n\n    // Cleanup any primitive resources\n    primitiveInstances.forEach((inst) => {\n      if (inst && typeof inst.cleanup === 'function') {\n        inst.cleanup();\n      }\n    });\n\n    // Kill any GSAP timelines that might have been created\n    gsap.globalTimeline.clear();\n  };\n\n  root.userData = {\n    handlers: {},\n    cleanup,\n  };\n\n  return root;\n}"
+}

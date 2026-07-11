@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-41-moderate",
+  "run": 3,
+  "ok": true,
+  "wallMs": 2348,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3946,
+    "completionTokens": 2250
+  },
+  "costUsd": 0.0007094639999999999,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const { Group, PlaneGeometry, Mesh } = THREE;\n\n  const group = new Group();\n\n  // Dimensions for a horizontal list row\n  const width = 3.0;\n  const height = 0.4;\n  const geo = new PlaneGeometry(width, height);\n  const mat = new MeshBasicNodeMaterial({ color: '#e8ecf2' }); // paper color fallback\n  const mesh = new Mesh(geo, mat);\n  group.add(mesh);\n\n  // Load texture if provided\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      mat.map = tex;\n      mat.needsUpdate = true;\n    });\n  }\n\n  // Hover and click handlers (compatible with Prism event system)\n  let hoverTimeline = null;\n  let pressTimeline = null;\n\n  const handlers = {\n    hover: (event) => {\n      if (event.type === 'pointerover' || event.type === 'pointerenter') {\n        if (hoverTimeline) hoverTimeline.kill();\n        hoverTimeline = gsap.timeline({ paused: true });\n        hoverTimeline.to(mesh.position, { y: 0.075, duration: 0.3, ease: 'power2.out' });\n        hoverTimeline.play();\n      } else if (event.type === 'pointerout' || event.type === 'pointerleave') {\n        if (hoverTimeline) hoverTimeline.kill();\n        hoverTimeline = gsap.timeline({ paused: true });\n        hoverTimeline.to(mesh.position, { y: 0, duration: 0.3, ease: 'power2.out' });\n        hoverTimeline.play();\n      }\n    },\n    click: () => {\n      if (pressTimeline) pressTimeline.kill();\n      pressTimeline = gsap.timeline({ paused: true });\n      pressTimeline.to(mesh.scale, { x: 0.97, y: 0.97, duration: 0.12, ease: 'back.out(1.2)' });\n      pressTimeline.to(mesh.scale, { x: 1, y: 1, duration: 0.2, ease: 'power2.out' }, '+=0.08');\n      pressTimeline.play();\n      ctx.emit('hub-collection.select', {});\n    }\n  };\n\n  group.userData.handlers = handlers;\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    if (hoverTimeline) hoverTimeline.kill();\n    if (pressTimeline) pressTimeline.kill();\n    geo.dispose();\n    mat.dispose();\n    if (mat.map) mat.map.dispose();\n    mesh.removeFromParent();\n  };\n\n  return group;\n}\n```"
+}

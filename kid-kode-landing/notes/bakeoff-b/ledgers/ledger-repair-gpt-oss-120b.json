@@ -1,0 +1,68 @@
+{
+  "wave": "wbakeb",
+  "axis": "repair",
+  "contestant": "gpt-oss-120b",
+  "calls": [
+    {
+      "axis": "repair",
+      "contestant": "gpt-oss-120b",
+      "caseId": "f-12-simple",
+      "costUsd": 0.00144,
+      "billing": "metered",
+      "at": "2026-07-11T03:34:00.573Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gpt-oss-120b",
+      "caseId": "f-17-simple",
+      "costUsd": 0.00137325,
+      "billing": "metered",
+      "at": "2026-07-11T03:34:02.208Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gpt-oss-120b",
+      "caseId": "f-08-simple",
+      "costUsd": 0.0014601,
+      "billing": "metered",
+      "at": "2026-07-11T03:34:03.130Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gpt-oss-120b",
+      "caseId": "f-21-simple",
+      "costUsd": 0.0015703499999999999,
+      "billing": "metered",
+      "at": "2026-07-11T03:34:04.272Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gpt-oss-120b",
+      "caseId": "f-28-simple",
+      "costUsd": 0.0011235,
+      "billing": "metered",
+      "at": "2026-07-11T03:34:04.902Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gpt-oss-120b",
+      "caseId": "f-33-moderate-int",
+      "costUsd": 0.001338,
+      "billing": "metered",
+      "at": "2026-07-11T03:34:07.290Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gpt-oss-120b",
+      "caseId": "f-37-moderate-int",
+      "costUsd": 0.0016173,
+      "billing": "metered",
+      "at": "2026-07-11T03:34:11.327Z"
+    }
+  ],
+  "totals": {
+    "meteredUsd": 0.0099225,
+    "subscriptionEquivalentUsd": 0,
+    "totalUsd": 0.0099225
+  }
+}

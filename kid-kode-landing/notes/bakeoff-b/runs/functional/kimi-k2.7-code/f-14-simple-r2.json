@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-14-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 1892,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3695,
+    "completionTokens": 10342
+  },
+  "costUsd": 0.03875398,
+  "billing": "metered",
+  "output": " import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec2, mix, smoothstep, sin, fract, color } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const THREE = ctx.THREE;\n  const { Group, PlaneGeometry, Mesh, DoubleSide } = THREE;\n\n  const root = new Group();\n\n  const specColors = config.intent?.visualSpec?.colors ?? config.colors ?? {};\n  const colors = {\n    ink: new THREE.Color(specColors.ink ?? '#16161d'),\n    paper: new THREE.Color(specColors.paper ?? '#e8ecf2'),\n    accent: new THREE.Color(specColors.accent ?? '#ff2a38'),\n    surface: new THREE.Color(specColors.surface ?? '#0b0b10'),\n  };\n\n  // Backdrop: engineered gradient surface + subtle grain\n  const backdropGeo = new PlaneGeometry(7.2, 6.0);\n  const uvNode = uv();\n  const gradientT = smoothstep(0.2, 0.9, uvNode.y);\n  const gradient = mix(color(colors.surface), color(colors.ink), gradientT);\n  const grainInput = uvNode.mul(420.0);\n  const grain = fract(sin(grainInput.dot(vec2(12.9898, 78.233))).mul(43758.5453));\n  const grainTinted = mix(gradient, color(colors.paper), grain.mul(0.04));\n  const backdropMat = new MeshBasicNodeMaterial({ colorNode: grainTinted });\n  const backdrop = new Mesh(backdropGeo, backdropMat);\n  backdrop.position.z = -2.5;\n  root.add(backdrop);\n\n  // Textured card plane\n  const cardAspect = 512 / 320;\n  const cardWidth = 2.0;\n  const cardHeight = cardWidth / cardAspect;\n  const cardGeo = new PlaneGeometry(cardWidth, cardHeight);\n  const cardMat = new MeshBasicNodeMaterial({ transparent: true, side: DoubleSide });\n  cardMat.opacity = 0;\n  const card = new Mesh(cardGeo, cardMat);\n  card.position.z = 0.05;\n  root.add(card);\n\n  let texResource = null;\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      texResource = tex;\n      cardMat.map = tex;\n      cardMat.needsUpdate = true;\n    });\n  }\n\n  const timelines = [];\n\n  // Apply any cinematic primitives listed in config\n  const primitives = config.cinematicPrimitives ?? [];\n  for (const p of primitives) {\n    if (ctx.primitives[p.name]) {\n      const result = ctx.primitives[p.name](root, p.params);\n      if (result?.timeline) timelines.push(result.timeline);\n      if (result?.cleanup) {\n        const existing = root.userData.cleanup;\n        root.userData.cleanup = () => {\n          if (typeof existing === 'function') existing();\n          result.cleanup();\n        };\n      }\n    }\n  }\n\n  // Subtle entrance: static composition, no idle or interaction motion\n  const entranceTl = gsap.timeline({ delay: 0.1 });\n  entranceTl\n    .from(card.position, { y: -0.35, duration: 0.75, ease: 'power3.out' }, 0)\n    .from(card.scale, { x: 0.92, y: 0.92, duration: 0.75, ease: 'power3.out' }, 0)\n    .from(cardMat, { opacity: 0, duration: 0.6, ease: 'power2.out' }, 0);\n  timelines.push(entranceTl);\n\n  root.userData.handlers = {};\n  root.userData.cleanup = () => {\n    timelines.forEach((t) => t.kill());\n    backdropGeo.dispose();\n    backdropMat.dispose();\n    cardGeo.dispose();\n    cardMat.dispose();\n    if (texResource) texResource.dispose();\n  };\n\n  return root;\n}"
+}

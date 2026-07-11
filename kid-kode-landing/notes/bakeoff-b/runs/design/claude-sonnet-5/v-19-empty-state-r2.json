@@ -1,0 +1,20 @@
+{
+  "axis": "design",
+  "contestant": "claude-sonnet-5",
+  "model": "anthropic/claude-sonnet-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "v-19-empty-state",
+  "run": 2,
+  "ok": true,
+  "wallMs": 188961,
+  "finishReason": null,
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 6928,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.177696,
+  "billing": "metered",
+  "output": ""
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/Kimi-K2.7-Code",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-31-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 254113,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3774,
+    "completionTokens": 8907
+  },
+  "costUsd": 0.03396726,
+  "billing": "metered",
+  "output": " ```javascript\nimport { MeshBasicNodeMaterial, PlaneGeometry, Group, Mesh, Vector3, SRGBColorSpace } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const textItem = items.find((i) => i?.text) ?? { text: 'Journal 2', role: 'headline', typography: { fontSize: 39 } };\n  const label = String(textItem.text);\n\n  const colors = config.intent?.visualSpec?.colors ?? config.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n\n  const width = 1.6;\n  const height = 1.0;\n\n  const group = new Group();\n  group.name = config.id || 'journal-card-2-label';\n\n  const geometry = new PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial({ transparent: true, opacity: 1 });\n  const card = new Mesh(geometry, material);\n  group.add(card);\n\n  const edgeGeometry = new PlaneGeometry(width * 1.06, height * 1.06);\n  const edgeMaterial = new MeshBasicNodeMaterial({\n    color: colors.accent,\n    transparent: true,\n    opacity: 0,\n    depthWrite: false\n  });\n  const edge = new Mesh(edgeGeometry, edgeMaterial);\n  edge.position.z = -0.005;\n  edge.renderOrder = -1;\n  group.add(edge);\n\n  const fontSize = (textItem.typography?.fontSize ?? 39) / 300;\n  const textObj = ctx.fontAtlas.createText(label, {\n    fontSize,\n    color: colors.paper,\n    align: 'center'\n  });\n  textObj.position.set(0, 0, 0.01);\n  group.add(textObj);\n\n  const sp = config.scenePosition ?? { x: 0, y: 1, z: 0.06 };\n  const basePos = new Vector3(sp.x, sp.y, sp.z);\n\n  const effects = [];\n  for (const primitive of config.cinematicPrimitives ?? []) {\n    const handler = ctx.primitives[primitive.name];\n    if (typeof handler === 'function') {\n      effects.push(handler(group, primitive.params ?? {}));\n    }\n  }\n\n  let hovered = false;\n\n  function setHover(active) {\n    hovered = active;\n    gsap.to(group.position, {\n      z: active ? basePos.z + 0.15 : basePos.z,\n      duration: 0.35,\n      ease: 'power2.out',\n      overwrite: true\n    });\n    gsap.to(edgeMaterial, {\n      opacity: active ? 0.85 : 0,\n      duration: 0.25,\n      ease: 'power2.out',\n      overwrite: true\n    });\n  }\n\n  function pointerEnter() {\n    setHover(true);\n  }\n\n  function pointerLeave() {\n    setHover(false);\n  }\n\n  function click() {\n    ctx.emit('hub-journal.select', { id: config.id, source: 'journal-card-2-label' });\n    gsap.to(group.scale, {\n      x: 0.97,\n      y: 0.97,\n      z: 0.97,\n      duration: 0.12,\n      ease: 'back.out(1.7)',\n      yoyo: true,\n      repeat: 1,\n      overwrite: true\n    });\n  }\n\n  group.userData.handlers = {\n    hover: pointerEnter,\n    hoverOut: pointerLeave,\n    click\n  };\n\n  group.userData.cleanup = () => {\n    effects.forEach((e) => {\n      if (e && typeof e.cleanup === 'function') e.cleanup();\n      if (e && e.timeline) e.timeline.kill();\n    });\n    gsap.killTweensOf(group.position);\n    gsap.killTweensOf(group.scale);\n    gsap.killTweensOf(edgeMaterial);\n    if (material.map) material.map.dispose();\n    material.dispose();\n    edgeMaterial.dispose();\n    geometry.dispose();\n    edgeGeometry.dispose();\n    group.remove(textObj);\n  };\n\n  ctx.textureLoader.loadTexture(config.imageUrl ?? '/prism-mock/home/nodes/feature-card.png')\n    .then((tex) => {\n      if (!tex) return;\n      tex.colorSpace = SRGBColorSpace;\n      material.map = tex;\n      material.needsUpdate = true;\n    })\n    .catch(() => {\n      material.color = new (ctx.THREE.Color)(colors.surface);\n    });\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-27-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 544,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3904,
+    "completionTokens": 3842
+  },
+  "costUsd": 0.000973392,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial, PlaneGeometry } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const group = new THREE.Group();\n\n  // --- Plane with sprite texture ---\n  const sourceRect = config.intent?.visualSpec?.atlasRegion?.sourceRect || { x: 0, y: 0, w: 512, h: 320 };\n  const aspect = sourceRect.w / sourceRect.h;\n  const planeW = 2;\n  const planeH = planeW / aspect;\n  const geometry = new PlaneGeometry(planeW, planeH);\n  const material = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    transparent: true,\n    side: THREE.DoubleSide,\n  });\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Load the sprite atlas (texture)\n  ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    // If the texture is an atlas wider/taller than source rect, set offset & repeat\n    // For simplicity assume the image is exactly the source rect\n    material.map = tex;\n    material.needsUpdate = true;\n  });\n\n  // --- Text \"Journal\" ---\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const journalItem = textItems.find((t) => t.text === 'Journal');\n  if (journalItem) {\n    const textOpts = {\n      fontSize: journalItem.typography?.fontSize ?? 96,\n      color: '#e8ecf2',           // paper\n      align: 'center',\n    };\n    const textObj = ctx.fontAtlas.createText('Journal', textOpts);\n    textObj.position.z = 0.02;   // lift off plane to avoid z-fighting\n    // Scale the text to fit the plane width (approximate)\n    const textScale = planeW / 6;  // heuristic: 6 units width for 96px text\n    textObj.scale.set(textScale, textScale, textScale);\n    group.add(textObj);\n  }\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (material.map) material.map.dispose();\n    // Recursively dispose text child geometries & materials\n    group.traverse((child) => {\n      if (child.isMesh) {\n        child.geometry.dispose();\n        if (Array.isArray(child.material)) {\n          child.material.forEach((m) => m.dispose());\n        } else {\n          child.material.dispose();\n        }\n      }\n    });\n    // Kill any GSAP timelines (none here)\n  };\n\n  return group;\n}\n```"
+}

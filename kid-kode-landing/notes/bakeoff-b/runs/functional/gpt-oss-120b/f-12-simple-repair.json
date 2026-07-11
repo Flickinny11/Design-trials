@@ -1,0 +1,16 @@
+{
+  "axis": "repair",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-12-simple",
+  "run": "repair",
+  "ok": true,
+  "usage": {
+    "promptTokens": 4468,
+    "completionTokens": 1283
+  },
+  "costUsd": 0.00144,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture, uv, mul, vec2, add } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport {} from '@/primitives';\nimport {} from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const { Group, Mesh, PlaneGeometry, Color } = THREE;\n\n  const root = new Group();\n\n  if (config.position) root.position.set(...config.position);\n  if (config.rotation) root.rotation.set(...config.rotation);\n  if (config.scale) root.scale.set(...config.scale);\n\n  // Atlas region (hard‑coded for this spec)\n  const region = { x: 0, y: 0, width: 512, height: 320 };\n  const aspect = region.width / region.height; // 1.6\n\n  const geometry = new PlaneGeometry(aspect, 1, 1, 1);\n\n  const material = new MeshBasicNodeMaterial();\n  material.color = new Color(0xffffff);\n\n  // UV transform for atlas region (normalized)\n  const uvScale = vec2(region.width / region.width, region.height / region.height);\n  const uvOffset = vec2(region.x / region.width, region.y / region.height);\n  const transformedUV = add(mul(uv(), uvScale), uvOffset);\n\n  // Placeholder texture node; will be replaced when texture loads\n  let texNode = texture(null, transformedUV);\n  material.mapNode = texNode;\n\n  // Load texture\n  const texturePromise = ctx.textureLoader\n    .loadTexture(config.imageUrl)\n    .then((tex) => {\n      texNode.value = tex;\n      material.needsUpdate = true;\n    })\n    .catch(() => {\n      // keep white placeholder on failure\n    });\n\n  const mesh = new Mesh(geometry, material);\n  // Simple billboard: align plane to camera each frame\n  mesh.onBeforeRender = (renderer, scene, camera) => {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n  root.add(mesh);\n\n  // ----- Text Content -----\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const textObjects = [];\n\n  for (const item of items) {\n    const txt = ctx.fontAtlas.createText(item.text ?? '', {\n      fontSize: item.typography?.fontSize ?? 39,\n      color: item.role === 'headline' ? (config.visual?.colors?.paper ?? '#e8ecf2') : (config.visual?.colors?.ink ?? '#16161d'),\n      align: 'center',\n    });\n    // Slightly offset forward so it renders over the plane\n    txt.position.set(0, 0, 0.01);\n    root.add(txt);\n    textObjects.push(txt);\n  }\n\n  // Event handlers placeholder\n  root.userData.handlers = {};\n\n  // Cleanup\n  root.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n\n    if (texNode?.value && texNode.value.dispose) {\n      texNode.value.dispose();\n    }\n\n    // Dispose any text objects if they expose dispose\n    for (const txt of textObjects) {\n      if (txt.parent) txt.parent.remove(txt);\n      if (txt.dispose) txt.dispose();\n    }\n\n    gsap.globalTimeline.clear();\n  };\n\n  return root;\n}"
+}

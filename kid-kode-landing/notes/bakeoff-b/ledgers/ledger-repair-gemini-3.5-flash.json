@@ -1,0 +1,276 @@
+{
+  "wave": "wbakeb",
+  "axis": "repair",
+  "contestant": "gemini-3.5-flash",
+  "calls": [
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-03-simple",
+      "costUsd": 0.0169845,
+      "billing": "metered",
+      "at": "2026-07-11T03:30:23.313Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-02-simple",
+      "costUsd": 0.0210855,
+      "billing": "metered",
+      "at": "2026-07-11T03:30:27.953Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-04-simple",
+      "costUsd": 0.0249795,
+      "billing": "metered",
+      "at": "2026-07-11T03:30:30.933Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-01-simple",
+      "costUsd": 0.020304,
+      "billing": "metered",
+      "at": "2026-07-11T03:30:31.377Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-06-simple",
+      "costUsd": 0.0189165,
+      "billing": "metered",
+      "at": "2026-07-11T03:30:42.656Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-09-simple",
+      "costUsd": 0.015408,
+      "billing": "metered",
+      "at": "2026-07-11T03:30:48.971Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-07-simple",
+      "costUsd": 0.0206025,
+      "billing": "metered",
+      "at": "2026-07-11T03:30:53.485Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-08-simple",
+      "costUsd": 0.018786,
+      "billing": "metered",
+      "at": "2026-07-11T03:30:54.146Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-10-simple",
+      "costUsd": 0.0212055,
+      "billing": "metered",
+      "at": "2026-07-11T03:31:01.730Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-12-simple",
+      "costUsd": 0.0159405,
+      "billing": "metered",
+      "at": "2026-07-11T03:31:15.905Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-13-simple",
+      "costUsd": 0.019266,
+      "billing": "metered",
+      "at": "2026-07-11T03:31:19.596Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-11-simple",
+      "costUsd": 0.0212595,
+      "billing": "metered",
+      "at": "2026-07-11T03:31:19.693Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-14-simple",
+      "costUsd": 0.016317,
+      "billing": "metered",
+      "at": "2026-07-11T03:31:25.780Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-16-simple",
+      "costUsd": 0.015612,
+      "billing": "metered",
+      "at": "2026-07-11T03:31:38.541Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-15-simple",
+      "costUsd": 0.0190185,
+      "billing": "metered",
+      "at": "2026-07-11T03:31:39.747Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-18-simple",
+      "costUsd": 0.0211665,
+      "billing": "metered",
+      "at": "2026-07-11T03:31:49.805Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-19-simple",
+      "costUsd": 0.017295,
+      "billing": "metered",
+      "at": "2026-07-11T03:31:50.746Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-20-simple",
+      "costUsd": 0.017739,
+      "billing": "metered",
+      "at": "2026-07-11T03:31:55.023Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-21-simple",
+      "costUsd": 0.0162765,
+      "billing": "metered",
+      "at": "2026-07-11T03:32:01.224Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-22-simple",
+      "costUsd": 0.0234885,
+      "billing": "metered",
+      "at": "2026-07-11T03:32:11.203Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-24-simple",
+      "costUsd": 0.0184305,
+      "billing": "metered",
+      "at": "2026-07-11T03:32:16.426Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-25-simple",
+      "costUsd": 0.0181755,
+      "billing": "metered",
+      "at": "2026-07-11T03:32:22.582Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-23-simple",
+      "costUsd": 0.025629,
+      "billing": "metered",
+      "at": "2026-07-11T03:32:23.146Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-26-simple",
+      "costUsd": 0.0181905,
+      "billing": "metered",
+      "at": "2026-07-11T03:32:29.578Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-27-simple",
+      "costUsd": 0.0198045,
+      "billing": "metered",
+      "at": "2026-07-11T03:32:41.316Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-33-moderate-int",
+      "costUsd": 0.024426,
+      "billing": "metered",
+      "at": "2026-07-11T03:32:43.870Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-30-simple",
+      "costUsd": 0.015585,
+      "billing": "metered",
+      "at": "2026-07-11T03:32:48.273Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-35-moderate-int",
+      "costUsd": 0.0298845,
+      "billing": "metered",
+      "at": "2026-07-11T03:32:54.833Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-38-moderate-int",
+      "costUsd": 0.0317505,
+      "billing": "metered",
+      "at": "2026-07-11T03:33:15.885Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-36-moderate-int",
+      "costUsd": 0.0262815,
+      "billing": "metered",
+      "at": "2026-07-11T03:33:18.613Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-47-complex-int",
+      "costUsd": 0.0250035,
+      "billing": "metered",
+      "at": "2026-07-11T03:33:21.991Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-48-complex",
+      "costUsd": 0.029052,
+      "billing": "metered",
+      "at": "2026-07-11T03:33:23.704Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "f-49-complex",
+      "costUsd": 0.0279735,
+      "billing": "metered",
+      "at": "2026-07-11T03:33:54.373Z"
+    }
+  ],
+  "totals": {
+    "meteredUsd": 0.6918374999999999,
+    "subscriptionEquivalentUsd": 0,
+    "totalUsd": 0.6918374999999999
+  }
+}

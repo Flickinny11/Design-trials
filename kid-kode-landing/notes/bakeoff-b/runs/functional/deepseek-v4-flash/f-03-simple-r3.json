@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-03-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 2768,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3892,
+    "completionTokens": 2400
+  },
+  "costUsd": 0.000730128,
+  "billing": "metered",
+  "output": "```javascript\nimport { Group, Mesh, PlaneGeometry, MeshBasicNodeMaterial } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // Aspect ratio from atlas region\n  const regW = 512;\n  const regH = 320;\n  const aspect = regW / regH;\n\n  // Geometry sized to unit height, width = aspect\n  const geometry = new PlaneGeometry(aspect, 1);\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    depthWrite: false,\n  });\n\n  const mesh = new Mesh(geometry, material);\n  mesh.onBeforeRender = (renderer, scene, camera) => {\n    mesh.lookAt(camera.position);\n  };\n\n  group.add(mesh);\n\n  // Load texture and apply atlas UV offset\n  const texturePromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  texturePromise.then((texture) => {\n    // Determine image dimensions from texture source\n    const img = texture.image;\n    const imgW = img ? img.width : 1;\n    const imgH = img ? img.height : 1;\n\n    // Calculate UV repeat and offset to select the source rect\n    // Source rect is top-left origin (0,0) in pixel coords\n    // Three.js texture UV origin is bottom-left (0,0)\n    // So offset.y = (imgH - regH) / imgH to shift to top-left\n    const repeatX = regW / imgW;\n    const repeatY = regH / imgH;\n    const offsetX = 0;\n    const offsetY = (imgH - regH) / imgH;\n\n    texture.repeat.set(repeatX, repeatY);\n    texture.offset.set(offsetX, offsetY);\n    texture.needsUpdate = true;\n\n    material.map = texture;\n    material.needsUpdate = true;\n  }).catch((err) => {\n    console.warn('Texture load failed:', err);\n  });\n\n  // Apply position/rotation/scale from config\n  if (config.scenePosition) {\n    group.position.copy(config.scenePosition);\n  } else if (config.position) {\n    group.position.copy(config.position);\n  }\n  if (config.rotation) {\n    group.rotation.set(config.rotation.x, config.rotation.y, config.rotation.z);\n  }\n  if (config.scale) {\n    group.scale.set(config.scale.x, config.scale.y, config.scale.z);\n  }\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    // Dispose texture if loaded\n    if (material.map) {\n      material.map.dispose();\n    }\n  };\n\n  // Event handlers (none required, but maintain structure)\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

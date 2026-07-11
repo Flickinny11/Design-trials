@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-11-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 1212,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3885,
+    "completionTokens": 2857
+  },
+  "costUsd": 0.0008063160000000001,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture, uv, vec3, mix, float } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Texture } = ctx.THREE;\n\n  // Aspect ratio from atlas region: 512x320\n  const width = 1.6;\n  const height = 1.0;\n\n  const geometry = new PlaneGeometry(width, height);\n\n  // Gradient colors from spec: surface (#0b0b10) at bottom, ink (#16161d) at top\n  const bottomColor = vec3(0.0431, 0.0431, 0.0627); // #0b0b10\n  const topColor = vec3(0.0863, 0.0863, 0.1137);    // #16161d\n\n  // Initial material without texture (gradient only)\n  const gradientNode = mix(bottomColor, topColor, uv().y);\n  const material = new MeshBasicNodeMaterial({\n    colorNode: gradientNode,\n    side: 2 // DoubleSide\n  });\n\n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(0, 0, 0); // position applied by adapter via config.scenePosition\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  const group = new Group();\n  group.add(mesh);\n\n  // Load brushed metal texture and update material\n  const texturePromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  texturePromise.then((tex) => {\n    // Create a texture node from the loaded texture\n    const texNode = texture(tex);\n    // Blend texture with gradient (80% texture, 20% gradient for subtle effect)\n    const blended = mix(gradientNode, texNode, 0.8);\n    material.colorNode = blended;\n    material.needsUpdate = true;\n  });\n\n  // No event handlers\n  group.userData.handlers = {};\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    // Kill GSAP timelines (none)\n    // Dispose geometry and material\n    geometry.dispose();\n    material.dispose();\n    // The texture will be disposed by the global cache; we don't call dispose here\n    // because it might be reused\n  };\n\n  return group;\n}\n```"
+}

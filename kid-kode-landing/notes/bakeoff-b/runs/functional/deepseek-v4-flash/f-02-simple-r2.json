@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-02-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 1844,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3900,
+    "completionTokens": 2177
+  },
+  "costUsd": 0.000693336,
+  "billing": "metered",
+  "output": "```javascript\nimport { PlaneGeometry, Group, Mesh, MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // --- Plane background ---\n  // Use source rect aspect (512x320 ≈ 1.6) to size the plane.\n  const width = 3.0;\n  const height = width / (512 / 320); // ≈ 1.875\n  const geometry = new PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    transparent: false,\n    depthWrite: true,\n  });\n  const mesh = new Mesh(geometry, material);\n  mesh.position.z = -0.01; // behind text\n  group.add(mesh);\n\n  // Load texture asynchronously\n  ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    material.map = tex;\n    material.needsUpdate = true;\n  });\n\n  // --- Text overlay ---\n  const textContent = 'Atelier Noir — precise · luxury · technical';\n  const textObj = ctx.fontAtlas.createText(textContent, {\n    fontSize: 42,\n    color: '#e8ecf2',    // paper\n    align: 'center',\n    maxWidthPx: 600\n  });\n  // Center text vertically on the plane\n  textObj.position.set(0, -0.02, 0.01);\n  group.add(textObj);\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    // Kill any gsap timelines (none in this node, but good practice)\n    gsap.killTweensOf(group);\n    gsap.killTweensOf(textObj);\n\n    // Dispose plane\n    geometry.dispose();\n    if (material.map) material.map.dispose();\n    material.dispose();\n\n    // Remove and dispose text children (font atlas creates meshes)\n    textObj.children.forEach((child) => {\n      if (child.isMesh) {\n        child.geometry.dispose();\n        if (child.material) child.material.dispose();\n      }\n    });\n    group.remove(textObj);\n    group.remove(mesh);\n  };\n\n  // Event handlers (none)\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-03-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 2181,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3892,
+    "completionTokens": 4468
+  },
+  "costUsd": 0.001077552,
+  "billing": "metered",
+  "output": "```javascript\nexport default function createNode(config, ctx) {\n  const group = new ctx.THREE.Group();\n\n  // Create sprite with placeholder material; will assign texture after load\n  const material = new ctx.THREE.SpriteMaterial({\n    transparent: true,\n    depthWrite: false, // typical for sprites\n  });\n  const sprite = new ctx.THREE.Sprite(material);\n  group.add(sprite);\n\n  // Load texture asynchronously\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      // Atlas region: left=0, top=0, width=512, height=320 (from config)\n      const srcX = 0;\n      const srcY = 0;\n      const srcW = 512;\n      const srcH = 320;\n\n      const texW = tex.image.width;\n      const texH = tex.image.height;\n\n      // UV repeat to isolate the region\n      tex.repeat.set(srcW / texW, srcH / texH);\n      // UV offset (Three.js uses bottom-left origin for UVs)\n      tex.offset.set(srcX / texW, (texH - srcY - srcH) / texH);\n\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Scale sprite to match aspect ratio of atlas region (512/320 ≈ 1.6)\n  // The group's scale is left at (1,1,1) – adapter will position as specified.\n  sprite.scale.set(1.6, 1, 1);\n\n  // Cleanup resources\n  group.userData.cleanup = () => {\n    material.dispose();\n    if (material.map) material.map.dispose();\n    // Sprite has no geometry to dispose, but clean up any child if needed\n    if (sprite.geometry) sprite.geometry.dispose();\n  };\n\n  // No interactions or text content – node is static.\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

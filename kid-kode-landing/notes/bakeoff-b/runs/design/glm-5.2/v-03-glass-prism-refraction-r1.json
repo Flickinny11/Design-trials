@@ -1,0 +1,20 @@
+{
+  "axis": "design",
+  "contestant": "glm-5.2",
+  "model": "z-ai/glm-5.2",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "v-03-glass-prism-refraction",
+  "run": 1,
+  "ok": true,
+  "wallMs": 986,
+  "finishReason": "length",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4288,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.023427840000000002,
+  "billing": "metered",
+  "output": ""
+}

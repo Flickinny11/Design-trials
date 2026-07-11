@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-40-moderate",
+  "run": 3,
+  "ok": true,
+  "wallMs": 2007,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4007,
+    "completionTokens": 3373
+  },
+  "costUsd": 0.000903252,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshStandardNodeMaterial, PlaneGeometry, Mesh, Group, Color } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n  group.userData.cleanupList = [];\n\n  // Colors from visual spec\n  const SURFACE = new Color('#0b0b10');\n  const ACCENT = new Color('#ff2a38');\n\n  // Tessellated plane geometry for displacement\n  const geom = new PlaneGeometry(2, 1.25, 64, 64);\n  const mat = new MeshStandardNodeMaterial({\n    color: SURFACE,\n    roughness: 0.6,\n    metalness: 0.5,\n    emissive: ACCENT,\n    emissiveIntensity: 0\n  });\n  const mesh = new Mesh(geom, mat);\n  group.add(mesh);\n\n  // Load textures (asynchronous, cached)\n  const loadTextures = Promise.all([\n    ctx.textureLoader.loadTexture(config.imageUrl),\n    ctx.textureLoader.loadTexture(config.depthMapUrl)\n  ]);\n\n  loadTextures.then(([baseTex, depthTex]) => {\n    mat.map = baseTex;\n    mat.displacementMap = depthTex;\n    mat.displacementScale = 0.04;\n    mat.needsUpdate = true;\n\n    // Apply all cinematic primitives from config\n    for (const prim of (config.cinematicPrimitives || [])) {\n      const result = ctx.primitives[prim.name](mesh, prim.params || {});\n      if (result && result.cleanup) {\n        group.userData.cleanupList.push(result.cleanup);\n      }\n    }\n  });\n\n  // Hover: subtle rise-in effect\n  mesh.userData.handlers = {\n    mouseenter: () => {\n      gsap.to(mesh.position, {\n        y: 0.15,\n        duration: 0.3,\n        ease: 'power2.out'\n      });\n    },\n    mouseleave: () => {\n      gsap.to(mesh.position, {\n        y: 0,\n        duration: 0.3,\n        ease: 'power2.out'\n      });\n    },\n    click: () => {\n      // Press-down scale animation\n      gsap.to(mesh.scale, {\n        x: 0.97,\n        y: 0.97,\n        z: 0.97,\n        duration: 0.12,\n        ease: 'back.out',\n        yoyo: true,\n        repeat: 1\n      });\n      // Emit navigation event\n      ctx.emit('hub-features.select', {});\n    }\n  };\n\n  // Cleanup function\n  group.userData.cleanup = () => {\n    gsap.killTweensOf(mesh.position);\n    gsap.killTweensOf(mesh.scale);\n    (group.userData.cleanupList || []).forEach(fn => fn());\n    geom.dispose();\n    mat.dispose();\n    // Note: textures are cached by ctx, dispose handled externally\n  };\n\n  return group;\n}\n```"
+}

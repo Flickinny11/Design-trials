@@ -1,0 +1,16 @@
+{
+  "contestant": "mercury-2",
+  "caseId": "f-14-simple",
+  "run": 3,
+  "rawCompliant": true,
+  "fenced": false,
+  "parsed": true,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "MISSING_CLEANUP",
+      "severity": "error",
+      "message": "returned object must define userData.cleanup (§10.C L386)"
+    }
+  ]
+}

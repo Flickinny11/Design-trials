@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "glm-5.2",
+  "model": "zai-org/GLM-5.2",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-28-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 130948,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3669,
+    "completionTokens": 3381
+  },
+  "costUsd": 0.01355517,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, mix, vec3, noise, uniform, smoothstep, texture } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const THREE = ctx.THREE;\n  const { Group, Mesh, PlaneGeometry, Color, DoubleSide, SRGBColorSpace } = THREE;\n\n  const group = new Group();\n\n  const colors = config.intent?.visualSpec?.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n\n  const cSurface = new Color(colors.surface);\n  const cInk = new Color(colors.ink);\n  const cAccent = new Color(colors.accent);\n\n  // Atlas region 0, 0, 512, 320 -> aspect ratio 8:5\n  const cardW = 1.6;\n  const cardH = 1.0;\n\n  // ── Card backdrop: engineered gradient + subtle grain ──\n  const bgGeo = new PlaneGeometry(cardW, cardH);\n  const bgMat = new MeshBasicNodeMaterial({ transparent: true, side: DoubleSide });\n\n  const sCol = vec3(cSurface.r, cSurface.g, cSurface.b);\n  const iCol = vec3(cInk.r, cInk.g, cInk.b);\n\n  const gradY = smoothstep(0.0, 1.0, uv().y);\n  const gradient = mix(sCol, iCol, gradY);\n\n  // engineered gradient: subtle diagonal shift\n  const gradX = smoothstep(-0.3, 1.3, uv().x.oneMinus());\n  const gradientDiag = mix(sCol.mul(1.15), gradient, gradX);\n\n  // subtle grain\n  const grain = noise(uv().mul(350.0)).mul(0.025);\n\n  // faint accent vignette at bottom edge\n  const accentTint = vec3(cAccent.r, cAccent.g, cAccent.b)\n    .mul(smoothstep(0.85, 0.0, uv().y).mul(0.08));\n\n  bgMat.colorNode = gradientDiag.add(grain).add(accentTint);\n\n  const bg = new Mesh(bgGeo, bgMat);\n  bg.position.z = 0.0;\n  group.add(bg);\n\n  // ── Decorative orb texture overlay ──\n  const orbGeo = new PlaneGeometry(cardW, cardH);\n  const orbMat = new MeshBasicNodeMaterial({ transparent: true, side: DoubleSide });\n\n  // texture uniform so colorNode can reference it once loaded\n  const texUniform = uniform(null);\n\n  ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    tex.colorSpace = SRGBColorSpace;\n    texUniform.value = tex;\n    orbMat.needsUpdate = true;\n  });\n\n  // when texture is null, output transparent; once loaded, composite over subtle gradient\n  const orbBase = texture(texUniform, uv());\n  orbMat.colorNode = orbBase;\n\n  const orb = new Mesh(orbGeo, orbMat);\n  orb.position.z = 0.001;\n  group.add(orb);\n\n  // ── Entrance: rise-in (y +0.4 -> 0, power3.out, 0.7s) ──\n  group.position.y += 0.4;\n  group.visible = true;\n  const tl = gsap.timeline();\n  tl.to(group.position, {\n    y: group.position.y - 0.4,\n    duration: 0.7,\n    ease: 'power3.out'\n  });\n  tl.from(bg.material, { opacity: 0, duration: 0.5, ease: 'power2.out' }, 0);\n  tl.from(orb.material, { opacity: 0, duration: 0.5, ease: 'power2.out' }, 0.1);\n\n  // ── Cleanup ──\n  group.userData.cleanup = () => {\n    tl.kill();\n    bgGeo.dispose();\n    bgMat.dispose();\n    orbGeo.dispose();\n    orbMat.dispose();\n    if (texUniform.value) texUniform.value.dispose();\n  };\n\n  return group;\n}\n```"
+}

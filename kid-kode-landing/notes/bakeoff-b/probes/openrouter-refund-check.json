@@ -1,0 +1,17 @@
+{
+  "probedAt": "2026-07-11T03:16:55.654Z",
+  "purpose": "I-BB5 re-probe of the 402 boundary before final report (blocked lanes: gpt-5.6-sol/terra functional, gpt-5.6-luna design, qwen3.7-plus critic)",
+  "credits": {
+    "status": 200,
+    "body": {
+      "data": {
+        "total_credits": 74,
+        "total_usage": 75.261773122
+      }
+    }
+  },
+  "oneTokProbe": {
+    "status": 402,
+    "body": "{\"error\":{\"message\":\"Insufficient credits. Add more using https://openrouter.ai/settings/credits\",\"code\":402}}"
+  }
+}

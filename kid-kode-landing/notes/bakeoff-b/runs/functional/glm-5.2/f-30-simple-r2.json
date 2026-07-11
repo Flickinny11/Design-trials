@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "glm-5.2",
+  "model": "zai-org/GLM-5.2",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-30-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 148967,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3681,
+    "completionTokens": 5525
+  },
+  "costUsd": 0.01999833,
+  "billing": "metered",
+  "output": "```js\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { vec3, uv, mix, smoothstep, sub, float, mul, add, texture } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const THREE = ctx.THREE;\n  const { Group, Mesh, PlaneGeometry, Color, DoubleSide, SRGBColorSpace } = THREE;\n\n  const group = new Group();\n  group.name = 'hub-journal-card-2';\n\n  // Atlas region aspect (512 x 320) -> 1.6:1\n  const aspect = 512 / 320;\n  const w = 2.4;\n  const h = w / aspect; // 1.5\n\n  // Spec palette\n  const surfCol = new Color('#0b0b10');\n  const inkCol = new Color('#16161d');\n  const paperCol = new Color('#e8ecf2');\n  const accentCol = new Color('#ff2a38');\n\n  // Geometry + node material\n  const geo = new PlaneGeometry(w, h);\n  const mat = new MeshBasicNodeMaterial();\n  mat.side = DoubleSide;\n  mat.toneMapped = false;\n  mat.transparent = true;\n  mat.opacity = 0;\n\n  const uY = uv().y;\n  const uX = uv().x;\n\n  // Engineered vertical gradient: surface (bottom) -> ink (top), never flat-black\n  let base = mix(vec3(surfCol), vec3(inkCol), smoothstep(float(0.0), float(0.92), uY));\n\n  // Subtle paper highlight band at very top\n  const topGloss = smoothstep(float(0.86), float(1.0), uY);\n  base = mix(base, vec3(paperCol).mul(float(0.20)), topGloss);\n\n  // Accent rule line near bottom edge (signal red)\n  const accentLine = smoothstep(float(0.05), float(0.0), uY);\n  base = mix(base, vec3(accentCol).mul(float(0.85)), accentLine);\n\n  // Engineered accent corner notch, top-right\n  const corner = smoothstep(float(0.94), float(1.0), uX).mul(\n    smoothstep(float(0.94), float(1.0), uY)\n  );\n  base = mix(base, vec3(accentCol).mul(float(0.7)), corner);\n\n  // Vignette for weight at the edges\n  const dx = sub(uX, float(0.5));\n  const dy = sub(uY, float(0.5));\n  const vig = smoothstep(float(0.95), float(0.35), dx.mul(dx).add(dy.mul(dy)).sqrt());\n  base = base.mul(vig.mul(float(0.75)).add(float(0.25)));\n\n  mat.colorNode = base;\n\n  // Grain texture overlay (engineered surface) loaded via ctx loader\n  let loadedTex = null;\n  let texReady = false;\n  if (config.imageUrl) {\n    ctx\n      .textureLoader\n      .loadTexture(config.imageUrl)\n      .then((t) => {\n        loadedTex = t;\n        t.colorSpace = SRGBColorSpace;\n        const grain = texture(t);\n        // grain as a subtle mid-gray modulation (0.7 .. 1.15)\n        const mod = grain.rgb.mul(float(0.45)).add(float(0.7));\n        mat.colorNode = base.mul(mod);\n        mat.needsUpdate = true;\n        texReady = true;\n      })\n      .catch(() => {});\n  }\n\n  const mesh = new Mesh(geo, mat);\n  mesh.renderOrder = 1;\n  group.add(mesh);\n\n  // Entrance: fade-up + weighted-settle scale (power3.out -> power4.out)\n  mesh.scale.set(0.92, 0.92, 1.0);\n  mesh.position.set(0, 0.4, 0);\n\n  const tl = gsap.timeline({\n    defaults: { ease: 'power3.out' },\n  });\n  tl.to(mat, { opacity: 1, duration: 0.55, ease: 'power2.out' }, 0)\n    .to(mesh.position, { y: 0.0, duration: 0.65, ease: 'power2.out' }, 0)\n    .to(mesh.scale, { x: 1.04, y: 1.04, duration: 0.5, ease: 'power3.out' }, 0)\n    .to(mesh.scale, { x: 1.0, y: 1.0, duration: 0.4, ease: 'power4.out' }, '>-0.05');\n\n  // No interactivity — handlers empty object for adapter compatibility\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    if (tl) tl.kill();\n    geo.dispose();\n    mat.dispose();\n    // Texture is cached by ctx.textureLoader; do not dispose shared asset.\n    loadedTex = null;\n  };\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-27-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 543,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3717,
+    "completionTokens": 2739
+  },
+  "costUsd": 0.01223535,
+  "billing": "metered",
+  "output": " import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const { Group, Mesh, PlaneGeometry, SRGBColorSpace, ClampToEdgeWrapping } = THREE;\n\n  const group = new Group();\n  const timelines = [];\n\n  const atlasRect = { x: 0, y: 0, w: 512, h: 320 };\n  const aspect = atlasRect.w / atlasRect.h;\n  const height = 1.2;\n  const width = height * aspect;\n\n  const geometry = new PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    depthWrite: false,\n    side: THREE.DoubleSide,\n  });\n\n  const mesh = new Mesh(geometry, material);\n  mesh.rotation.set(0, 0, 0);\n  group.add(mesh);\n\n  mesh.onBeforeRender = (renderer, scene, camera) => {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  const url = config.imageUrl;\n  if (url) {\n    ctx.textureLoader.loadTexture(url).then((tex) => {\n      if (!tex || !tex.isTexture) return;\n\n      tex.colorSpace = SRGBColorSpace;\n      tex.wrapS = ClampToEdgeWrapping;\n      tex.wrapT = ClampToEdgeWrapping;\n\n      const imgW = tex.image.width || atlasRect.w;\n      const imgH = tex.image.height || atlasRect.h;\n\n      const repeatX = atlasRect.w / imgW;\n      const repeatY = atlasRect.h / imgH;\n      const offsetX = atlasRect.x / imgW;\n      const offsetY = 1 - (atlasRect.y + atlasRect.h) / imgH;\n\n      tex.repeat.set(repeatX, repeatY);\n      tex.offset.set(offsetX, offsetY);\n      tex.updateMatrix();\n\n      material.map = texture(tex);\n      material.needsUpdate = true;\n    }).catch(() => {});\n  }\n\n  group.userData = {\n    handlers: {},\n    cleanup: () => {\n      mesh.onBeforeRender = null;\n      timelines.forEach((tl) => tl.kill());\n      geometry.dispose();\n      material.dispose();\n    },\n  };\n\n  return group;\n}"
+}

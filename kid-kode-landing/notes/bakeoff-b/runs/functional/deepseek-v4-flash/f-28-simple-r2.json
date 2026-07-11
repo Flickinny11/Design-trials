@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-28-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 1308,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3885,
+    "completionTokens": 1668
+  },
+  "costUsd": 0.0006065640000000001,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const { Group, PlaneGeometry, Mesh, TextureLoader } = ctx.THREE;\n\n  const group = new Group();\n\n  // Geometry matching atlas region aspect ratio (512/320 = 1.6)\n  const width = 1.6;\n  const height = 1.0;\n  const geometry = new PlaneGeometry(width, height);\n\n  // Temporary material while texture loads\n  const material = new MeshBasicNodeMaterial({\n    color: 0x0b0b10, // surface color as fallback\n    transparent: false\n  });\n\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  // Position / rotation / scale from config (already applied by adapter, but apply again for safety)\n  if (config.scenePosition) {\n    group.position.copy(config.scenePosition);\n    group.rotation.set(config.scenePosition.x, config.scenePosition.y, config.scenePosition.z);\n    if (config.sceneScale) group.scale.copy(config.sceneScale);\n  } else {\n    group.position.set(-3.2, -0.3, 0);\n  }\n\n  // Load texture\n  const imageUrl = config.imageUrl || '/prism-mock/home/nodes/orb-decor.png';\n  let texture = null;\n  ctx.textureLoader.loadTexture(imageUrl).then(tex => {\n    texture = tex;\n    // If atlas source rect dimensions differ from full texture, set offset/repeat\n    // Assume the loaded image is exactly 512x320, so no adjustment needed.\n    material.map = tex;\n    material.needsUpdate = true;\n  }).catch(() => {\n    // fallback: keep surface color\n  });\n\n  // User data for cleanup and events\n  group.userData.handlers = {};\n  group.userData.cleanup = () => {\n    if (texture) texture.dispose();\n    material.dispose();\n    geometry.dispose();\n  };\n\n  return group;\n}\n```"
+}

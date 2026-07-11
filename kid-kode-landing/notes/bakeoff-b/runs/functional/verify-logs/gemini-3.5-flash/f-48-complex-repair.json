@@ -1,0 +1,10 @@
+{
+  "contestant": "gemini-3.5-flash",
+  "caseId": "f-48-complex",
+  "run": "repair",
+  "rawCompliant": true,
+  "fenced": false,
+  "parsed": true,
+  "verified": true,
+  "violations": []
+}

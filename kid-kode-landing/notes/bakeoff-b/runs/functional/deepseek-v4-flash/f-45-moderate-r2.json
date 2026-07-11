@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-45-moderate",
+  "run": 2,
+  "ok": true,
+  "wallMs": 5447,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4008,
+    "completionTokens": 5765
+  },
+  "costUsd": 0.001305192,
+  "billing": "metered",
+  "output": "```js\nimport { Group, Mesh, PlaneGeometry, MeshBasicNodeMaterial, Vector2, Color } from 'three/webgpu';\nimport { uv, texture, position, normal, uniform, add, mul, vec3 } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // Geometry dimensions (thin rule aspect)\n  const width = 2.0;\n  const height = 0.4;\n  const geometry = new PlaneGeometry(width, height, 64, 64);\n\n  // Placeholder textures (1x1 black)\n  const placeholderColorTex = new ctx.THREE.Texture();\n  const placeholderDepthTex = new ctx.THREE.Texture();\n\n  // TSL uniforms for dynamic texture updates\n  const colorUniform = uniform(placeholderColorTex);\n  const depthUniform = uniform(placeholderDepthTex);\n  const displacementScale = uniform(0.05);\n\n  // Displacement node: offset vertices along normal using depth map\n  const depthSample = texture(depthUniform, uv()).r;\n  const displacement = depthSample.mul(displacementScale);\n  const displacedPosition = position.add(normal.mul(displacement));\n\n  // Color node from texture\n  const colorNode = texture(colorUniform, uv());\n\n  // Material\n  const material = new MeshBasicNodeMaterial({\n    colorNode,\n    positionNode: displacedPosition,\n    side: ctx.THREE.DoubleSide,\n  });\n\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  // Asynchronous texture loaders\n  ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    tex.wrapS = tex.wrapT = ctx.THREE.ClampToEdgeWrapping;\n    colorUniform.value = tex;\n    material.needsUpdate = true;\n  }).catch(() => {});\n\n  if (config.depthMapUrl) {\n    ctx.textureLoader.loadTexture(config.depthMapUrl).then((tex) => {\n      tex.wrapS = tex.wrapT = ctx.THREE.ClampToEdgeWrapping;\n      depthUniform.value = tex;\n      material.needsUpdate = true;\n    }).catch(() => {});\n  }\n\n  // --- Interaction handlers ---\n\n  // Hover lift (preset: rise-in)\n  const hoverTimeline = gsap.timeline({ paused: true });\n  hoverTimeline.to(group.position, {\n    y: 0.15,\n    duration: 0.5,\n    ease: 'power3.out',\n  }, 0);\n\n  const handleMouseEnter = () => {\n    hoverTimeline.play();\n  };\n  const handleMouseLeave = () => {\n    hoverTimeline.reverse();\n  };\n  const handleClick = () => {\n    ctx.emit('hub-features.select');\n  };\n\n  // Attach to userData\n  group.userData.handlers = {\n    mouseenter: handleMouseEnter,\n    mouseleave: handleMouseLeave,\n    click: handleClick,\n  };\n\n  // --- Cinematic primitive: magnetic-cursor for parallax ---\n  let primitiveCleanup = () => {};\n  if (ctx.primitives && ctx.primitives['magnetic-cursor']) {\n    try {\n      const result = ctx.primitives['magnetic-cursor'](mesh, {\n        strength: 0.02,\n        influenceRadius: 10,\n        trigger: 'hover', // reacts to cursor proximity\n      });\n      primitiveCleanup = result?.cleanup || (() => {});\n    } catch (e) {\n      console.warn('magnetic-cursor primitive failed:', e);\n    }\n  }\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    hoverTimeline.kill();\n    primitiveCleanup();\n    geometry.dispose();\n    material.dispose();\n\n    // Dispose loaded textures if any\n    if (colorUniform.value && colorUniform.value !== placeholderColorTex) {\n      colorUniform.value.dispose();\n    }\n    if (depthUniform.value && depthUniform.value !== placeholderDepthTex) {\n      depthUniform.value.dispose();\n    }\n    placeholderColorTex.dispose();\n    placeholderDepthTex.dispose();\n  };\n\n  return group;\n}\n```"
+}

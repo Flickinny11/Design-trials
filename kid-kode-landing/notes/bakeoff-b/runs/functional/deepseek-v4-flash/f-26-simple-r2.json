@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-26-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 685,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3904,
+    "completionTokens": 2230
+  },
+  "costUsd": 0.000702576,
+  "billing": "metered",
+  "output": "```javascript\nimport { Group, PlaneGeometry, MeshBasicNodeMaterial, Mesh } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\n/**\n * Pricing card 3 label – a static plane with image texture and overlay text.\n * No cinematic primitives applied.\n */\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // ── Plane (backdrop for texture) ──────────────────────────────\n  // Based on atlas region 512×320 → aspect 1.6:1\n  const width = 1.6;\n  const height = 1.0;\n  const geometry = new PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial({\n    color: 0x0b0b10, // fallback surface colour\n    transparent: false,\n  });\n  const plane = new Mesh(geometry, material);\n  plane.position.z = -0.001; // behind text\n  group.add(plane);\n\n  // ── Asynchronously load the texture ──────────────────────────\n  let texture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      texture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // ── Text overlay ─────────────────────────────────────────────\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const headline = textItems.find((item) => item.role === 'headline');\n  const textContent = headline?.text ?? 'Pricing 3';\n\n  const text = ctx.fontAtlas.createText(textContent, {\n    fontSize: 39,\n    color: '#e8ecf2', // paper\n    align: 'center',\n  });\n  text.position.z = 0.001; // slightly in front\n  plane.add(text);\n\n  // ── Attach event handlers (none) ─────────────────────────────\n  group.userData.handlers = {};\n\n  // ── Cleanup ──────────────────────────────────────────────────\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (texture) texture.dispose();\n\n    // Dispose text resources (meshes, materials, geometries)\n    text.traverse((child) => {\n      if (child.isMesh) {\n        child.geometry.dispose();\n        if (child.material) child.material.dispose();\n      }\n    });\n  };\n\n  return group;\n}\n```"
+}

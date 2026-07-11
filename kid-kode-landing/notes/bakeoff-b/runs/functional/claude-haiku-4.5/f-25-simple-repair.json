@@ -1,0 +1,16 @@
+{
+  "axis": "repair",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "caseId": "f-25-simple",
+  "run": "repair",
+  "ok": true,
+  "usage": {
+    "promptTokens": 4985,
+    "completionTokens": 523
+  },
+  "costUsd": 0.0076,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // Create plane geometry\n  const geometry = new THREE.PlaneGeometry(1.6, 1, 1, 1);\n\n  // Create material with TSL nodes\n  const material = new MeshBasicNodeMaterial();\n\n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n\n  // Apply scene position\n  if (config.scenePosition) {\n    mesh.position.set(\n      config.scenePosition.x,\n      config.scenePosition.y,\n      config.scenePosition.z\n    );\n  }\n\n  // Apply rotation\n  if (config.scenePosition?.rotation) {\n    mesh.rotation.order = 'XYZ';\n    mesh.rotation.x = config.scenePosition.rotation.x || 0;\n    mesh.rotation.y = config.scenePosition.rotation.y || 0;\n    mesh.rotation.z = config.scenePosition.rotation.z || 0;\n  }\n\n  // Apply scale\n  if (config.scenePosition?.scale) {\n    mesh.scale.set(\n      config.scenePosition.scale.x || 1,\n      config.scenePosition.scale.y || 1,\n      config.scenePosition.scale.z || 1\n    );\n  }\n\n  // Load texture asynchronously and update material\n  let texObj = null;\n  ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    tex.colorSpace = 'srgb';\n    texObj = tex;\n    material.colorNode = texture(tex);\n    material.needsUpdate = true;\n  });\n\n  // Setup userData for cleanup\n  mesh.userData.handlers = {};\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (texObj) {\n      texObj.dispose();\n    }\n  };\n\n  return mesh;\n}\n```"
+}

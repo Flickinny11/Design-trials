@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "glm-5.2",
+  "model": "z-ai/glm-5.2",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-04-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 955,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3661,
+    "completionTokens": 3958
+  },
+  "costUsd": 0.0067621800000000004,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, smoothstep, noise, texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const Three = ctx.THREE;\n  const Group = Three.Group;\n  const Mesh = Three.Mesh;\n  const PlaneGeometry = Three.PlaneGeometry;\n  const Color = Three.Color;\n\n  const group = new Group();\n\n  const colors = config.intent?.visualSpec?.colors ?? {};\n  const surface = new Color(colors.surface ?? '#0b0b10');\n  const ink = new Color(colors.ink ?? '#16161d');\n  const accent = new Color(colors.accent ?? '#ff2a38');\n  const paper = new Color(colors.paper ?? '#e8ecf2');\n\n  // Engineered gradient surface + subtle grain backdrop for the decor plane.\n  const planeGeo = new PlaneGeometry(2.6, 1.6);\n  const planeMat = new MeshBasicNodeMaterial({ transparent: true });\n\n  const vUv = uv();\n  const gradT = smoothstep(0.0, 1.0, vUv.y);\n  const gradColor = mix(\n    vec3(surface.r, surface.g, surface.b),\n    vec3(ink.r, ink.g, ink.b),\n    gradT\n  );\n  const grain = noise(vUv.mul(520.0)).mul(0.018);\n  const baseColor = gradColor.add(vec3(grain, grain, grain));\n\n  // Subtle accent edge glow along the lower band to imply CTA energy without interaction.\n  const edgeBand = smoothstep(0.82, 1.0, vUv.y);\n  const accentTint = vec3(accent.r, accent.g, accent.b).mul(edgeBand.mul(0.18));\n  planeMat.colorNode = baseColor.add(accentTint);\n\n  const plane = new Mesh(planeGeo, planeMat);\n  group.add(plane);\n\n  // Thin paper-tone hairline frame around the plane (machined atelier edge).\n  const frameGeo = new PlaneGeometry(2.62, 1.62);\n  const frameMat = new MeshBasicNodeMaterial({ transparent: true, opacity: 0.5 });\n  frameMat.colorNode = vec3(paper.r * 0.5, paper.g * 0.5, paper.b * 0.5);\n  const frame = new Mesh(frameGeo, frameMat);\n  frame.position.z = -0.001;\n  group.add(frame);\n\n  let loadedTex = null;\n  ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    loadedTex = tex;\n    tex.colorSpace = Three.SRGBColorSpace;\n    const texColor = texture(tex);\n    // Composite the orb asset over the engineered gradient: keep texture character\n    // but tint toward the spec palette so it sits on the dark stage.\n    const composed = mix(texColor.rgb, baseColor.add(accentTint), 0.14);\n    planeMat.colorNode = composed;\n    planeMat.alphaNode = texColor.a;\n    planeMat.needsUpdate = true;\n  });\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    planeGeo.dispose();\n    planeMat.dispose();\n    frameGeo.dispose();\n    frameMat.dispose();\n    if (loadedTex) loadedTex.dispose();\n  };\n\n  return group;\n}"
+}

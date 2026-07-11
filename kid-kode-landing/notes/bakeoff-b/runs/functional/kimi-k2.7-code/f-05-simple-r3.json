@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-05-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 248,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3700,
+    "completionTokens": 4729
+  },
+  "costUsd": 0.01916821,
+  "billing": "metered",
+  "output": " import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec2, vec3, color, texture, mix, smoothstep, fract, sin, dot } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, DoubleSide } = ctx.THREE;\n\n  const colors = config.intent?.visualSpec?.colors ?? config.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n\n  const group = new Group();\n  const planeW = 2.56;\n  const planeH = 1.6;\n\n  const geometry = new PlaneGeometry(planeW, planeH);\n  const material = new MeshBasicNodeMaterial({ side: DoubleSide, transparent: true });\n\n  let loadedTexture = null;\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      loadedTexture = tex;\n      tex.colorSpace = ctx.THREE.SRGBColorSpace;\n      tex.anisotropy = 16;\n\n      const u = uv();\n\n      const mapColor = texture(tex).rgb;\n\n      const surface = color(colors.surface);\n      const ink = color(colors.ink);\n      const gradientT = smoothstep(0.0, 1.0, u.y);\n      const baseGrad = mix(surface, ink, gradientT);\n\n      const noise = fract(\n        sin(dot(u, vec2(12.9898, 78.233))).mul(43758.5453)\n      ).mul(0.035);\n\n      const shaded = mix(baseGrad, mapColor, 0.65).add(vec3(noise));\n\n      material.colorNode = shaded;\n      material.needsUpdate = true;\n    });\n  }\n\n  const plane = new Mesh(geometry, material);\n  group.add(plane);\n\n  const accentBar = new Mesh(\n    new PlaneGeometry(planeW * 0.18, 0.05),\n    new MeshBasicNodeMaterial({ colorNode: color(colors.accent), transparent: true })\n  );\n  accentBar.position.set(0, -planeH * 0.36, 0.015);\n  group.add(accentBar);\n\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    if (!item?.text) continue;\n    const text = String(item.text);\n    const fontSize = item.typography?.fontSize ?? 42;\n    const textObj = ctx.fontAtlas.createText(text, {\n      fontSize,\n      color: colors.ink,\n      align: 'center'\n    });\n    textObj.position.z = 0.02;\n    group.add(textObj);\n  }\n\n  const localTimelines = [];\n\n  group.userData.handlers = {};\n  group.userData.cleanup = () => {\n    localTimelines.forEach((tl) => tl?.kill());\n    geometry.dispose();\n    material.dispose();\n    accentBar.geometry.dispose();\n    accentBar.material.dispose();\n    if (loadedTexture && loadedTexture.isTexture) loadedTexture.dispose();\n  };\n\n  return group;\n}"
+}

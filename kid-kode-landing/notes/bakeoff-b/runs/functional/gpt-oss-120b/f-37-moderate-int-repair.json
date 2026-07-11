@@ -1,0 +1,16 @@
+{
+  "axis": "repair",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-37-moderate-int",
+  "run": "repair",
+  "ok": true,
+  "usage": {
+    "promptTokens": 4446,
+    "completionTokens": 1584
+  },
+  "costUsd": 0.0016173,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Container\n  const container = new Group();\n\n  // Geometry & Material\n  const aspect = 512 / 320; // from atlas source rect\n  const width = 1.6; // arbitrary scene units preserving aspect\n  const height = width / aspect;\n\n  const geometry = new PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial({ color: 0xffffff });\n  const mesh = new Mesh(geometry, material);\n  container.add(mesh);\n\n  // Load texture\n  let loadedTex = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n      loadedTex = tex;\n    });\n  }\n\n  // Hover rise‑in animation\n  const hoverTL = gsap.timeline({ paused: true });\n  hoverTL.to(mesh.position, { y: '+=0.15', duration: 0.2, ease: 'power3.out' });\n\n  // Click press‑down animation\n  const pressTL = gsap.timeline({ paused: true });\n  pressTL.to(mesh.scale, {\n    x: 0.97,\n    y: 0.97,\n    z: 0.97,\n    duration: 0.12,\n    ease: 'back.out(1.7)',\n  });\n\n  // Handlers\n  const handlers = {\n    hover(state) {\n      if (state === 'enter') hoverTL.play();\n      else if (state === 'leave') hoverTL.reverse();\n    },\n    click() {\n      pressTL.restart();\n      ctx.emit('hub-pricing.select', {});\n    },\n  };\n\n  // Apply cinematic primitives\n  const primitiveRefs = [];\n  const primitives = config.cinematicPrimitives ?? [];\n  for (const prim of primitives) {\n    const instance = ctx.primitives[prim.name](container, prim.params ?? {});\n    if (instance) primitiveRefs.push(instance);\n  }\n\n  // Cleanup\n  const cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (loadedTex) loadedTex.dispose();\n    hoverTL.kill();\n    pressTL.kill();\n    for (const inst of primitiveRefs) {\n      if (typeof inst.cleanup === 'function') inst.cleanup();\n    }\n  };\n\n  // Attach userData\n  container.userData = {\n    handlers,\n    cleanup,\n  };\n\n  return container;\n}"
+}

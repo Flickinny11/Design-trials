@@ -1,0 +1,8 @@
+{
+  "probedAt": "2026-07-11T04:06:29.871Z",
+  "purpose": "I-BB5 evidence: DeepInfra 402 SECOND funding boundary mid-wave (~23:05 CDT) — blocked remaining rows: glm-5.2 functional 10 + design 7, kimi-k2.7-code functional 18 + design 23, glm repair pass, gemini-3.5-flash D4 vision critic",
+  "oneTokProbe": {
+    "status": 402,
+    "body": "{\"detail\":{\"error\":\"You need positive balance to do inference. Please add balance manually or setup top-up\"}}"
+  }
+}

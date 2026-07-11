@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-09-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 668,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3704,
+    "completionTokens": 8841
+  },
+  "costUsd": 0.03352197,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture, vec3 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  const root = new THREE.Group();\n\n  const visual = config.intent?.visualSpec ?? {};\n  const colors = visual.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10',\n  };\n\n  const atlas = { x: 0, y: 0, w: 512, h: 320 };\n  const aspect = atlas.w / atlas.h;\n  const height = 2.0;\n  const width = height * aspect;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  const material = new THREE.MeshBasicNodeMaterial({\n    transparent: true,\n    side: THREE.DoubleSide,\n    depthWrite: false,\n  });\n\n  const surfaceColor = new THREE.Color(colors.surface);\n  material.color = surfaceColor;\n  material.colorNode = vec3(surfaceColor);\n\n  let loadedTex = null;\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      loadedTex = tex;\n      tex.colorSpace = THREE.SRGBColorSpace;\n\n      const imgW = tex.image?.width || atlas.w;\n      const imgH = tex.image?.height || atlas.h;\n      tex.repeat.set(atlas.w / imgW, atlas.h / imgH);\n      tex.offset.set(atlas.x / imgW, atlas.y / imgH);\n\n      const texNode = texture(tex);\n      material.colorNode = texNode.rgb;\n      material.opacityNode = texNode.a;\n      material.needsUpdate = true;\n    });\n  }\n\n  const mesh = new THREE.Mesh(geometry, material);\n  root.add(mesh);\n\n  root.userData.handlers = {\n    update: (_time, camera) => {\n      root.lookAt(camera.position);\n    },\n  };\n\n  root.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (loadedTex) loadedTex.dispose();\n  };\n\n  return root;\n}"
+}

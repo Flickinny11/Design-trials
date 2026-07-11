@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-10-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 927,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3897,
+    "completionTokens": 1165
+  },
+  "costUsd": 0.000523068,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial, PlaneGeometry, Mesh, Group } from 'three/webgpu';\nimport { color, texture as tslTexture, uv, mix, vec2 } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // --- Textured Plane ---\n  const geometry = new PlaneGeometry(1.6, 1); // auto aspect from 512x320\n  const material = new MeshBasicNodeMaterial({ transparent: true });\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  // Load texture\n  let textureDispose = () => {};\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n      textureDispose = () => {\n        tex.dispose();\n      };\n    });\n  }\n\n  // --- Text ---\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of textItems) {\n    if (item.text && item.role === 'headline') {\n      const textOpts = {\n        fontSize: item.typography?.fontSize || 39,\n        color: '#e8ecf2',\n        align: 'center',\n      };\n      const textMesh = ctx.fontAtlas.createText(item.text, textOpts);\n      // Position in front of plane\n      textMesh.position.set(0, 0, 0.01);\n      group.add(textMesh);\n    }\n  }\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    textureDispose();\n    // Dispose any text meshes (if ctx.fontAtlas provides cleanup, but assume automatic)\n    group.children.forEach(child => {\n      if (child.isMesh && child.material === material) { /* already disposed */ }\n      if (child.isGroup && child.userData.cleanup) {\n        child.userData.cleanup();\n      }\n    });\n    // Kill GSAP timelines on this node\n    gsap.killTweensOf(group);\n  };\n\n  return group;\n}\n```"
+}

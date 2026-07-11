@@ -1,0 +1,16 @@
+{
+  "axis": "repair",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "route": "deepinfra",
+  "caseId": "f-12-simple",
+  "run": "repair",
+  "ok": true,
+  "usage": {
+    "promptTokens": 4660,
+    "completionTokens": 566
+  },
+  "costUsd": 0.0005212799999999999,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  Group,\n  Mesh,\n  PlaneGeometry,\n  MeshBasicNodeMaterial,\n} from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // --- Plane (sprite) with texture from atlas region ---\n  const srcRect = { x: 0, y: 0, w: 512, h: 320 };\n  const aspect = srcRect.w / srcRect.h;\n  const geometry = new PlaneGeometry(1.6, 1);\n\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    side: ctx.THREE.DoubleSide,\n  });\n\n  const plane = new Mesh(geometry, material);\n  group.add(plane);\n\n  // Load texture and apply atlas offset/repeat\n  const texturePromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  texturePromise.then((tex) => {\n    const img = tex.image;\n    if (img) {\n      const tw = img.width;\n      const th = img.height;\n      const repeatU = srcRect.w / tw;\n      const repeatV = srcRect.h / th;\n      tex.repeat.set(repeatU, repeatV);\n      tex.offset.set(srcRect.x / tw, srcRect.y / th);\n    } else {\n      tex.repeat.set(1, 1);\n      tex.offset.set(0, 0);\n    }\n    tex.needsUpdate = true;\n    material.map = tex;\n    material.needsUpdate = true;\n  });\n\n  // --- Text content from config ---\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    const textMesh = ctx.fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize || 39,\n      color: '#e8ecf2',\n      align: 'center',\n      maxWidthPx: 190,\n    });\n    if (textMesh) {\n      textMesh.position.set(0, 0, 0.005);\n      group.add(textMesh);\n    }\n  }\n\n  // --- Scene placement ---\n  group.position.set(3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // --- Cleanup ---\n  const geometryRef = geometry;\n  const materialRef = material;\n  group.userData.cleanup = () => {\n    geometryRef.dispose();\n    materialRef.dispose();\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-28-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 836,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3697,
+    "completionTokens": 7595
+  },
+  "costUsd": 0.029168390000000002,
+  "billing": "metered",
+  "output": " import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec2, vec3, mix, smoothstep, fract, sin, dot, add, mul, oneMinus, texture } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const THREE = ctx.THREE;\n  const root = new THREE.Group();\n\n  root.userData.handlers = {};\n  const timelines = [];\n  const primitiveCleanups = [];\n  let disposed = false;\n\n  const width = 1.6;\n  const height = 1.0;\n  const geometry = new THREE.PlaneGeometry(width, height, 1, 1);\n\n  const surface = vec3(11 / 255, 11 / 255, 16 / 255);\n  const ink = vec3(22 / 255, 22 / 255, 29 / 255);\n  const accent = vec3(1.0, 42 / 255, 56 / 255);\n\n  const uvy = uv().y;\n  const gradient = mix(surface, ink, smoothstep(0.0, 1.0, uvy));\n\n  const noiseUV = uv().mul(vec2(900.0, 700.0));\n  const noiseVal = fract(mul(sin(dot(noiseUV, vec2(12.9898, 78.233))), 43758.5453));\n  const grain = noiseVal.mul(0.04);\n\n  const accentHaze = smoothstep(0.08, 0.0, uvy).mul(0.18);\n  const baseColor = add(mul(gradient, oneMinus(grain)), mul(accent, accentHaze));\n\n  const cardMat = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    side: THREE.DoubleSide\n  });\n  cardMat.colorNode = baseColor;\n\n  const card = new THREE.Mesh(geometry, cardMat);\n  root.add(card);\n\n  let loadedTex = null;\n  const imageUrl = config.imageUrl ?? config.intent?.visualSpec?.imageUrl;\n\n  if (imageUrl) {\n    ctx.textureLoader.loadTexture(imageUrl).then((tex) => {\n      if (disposed) {\n        tex.dispose();\n        return;\n      }\n\n      loadedTex = tex;\n      tex.colorSpace = THREE.SRGBColorSpace;\n\n      const t = texture(tex, uv());\n      const composite = mix(baseColor, t.rgb, t.a);\n      cardMat.colorNode = composite;\n      cardMat.needsUpdate = true;\n    });\n  }\n\n  const primitives = config.cinematicPrimitives ?? [];\n  for (const p of primitives) {\n    if (!ctx.primitives[p.name]) continue;\n\n    const result = ctx.primitives[p.name](root, p.params ?? {});\n    if (result?.timeline) timelines.push(result.timeline);\n    if (result?.cleanup) primitiveCleanups.push(result.cleanup);\n  }\n\n  root.userData.cleanup = () => {\n    disposed = true;\n\n    timelines.forEach((t) => t?.kill());\n    primitiveCleanups.forEach((c) => c?.());\n\n    if (loadedTex) loadedTex.dispose();\n\n    geometry.dispose();\n    cardMat.dispose();\n  };\n\n  return root;\n}"
+}

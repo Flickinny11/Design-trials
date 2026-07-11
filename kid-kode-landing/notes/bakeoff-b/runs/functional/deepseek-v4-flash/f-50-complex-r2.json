@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-50-complex",
+  "run": 2,
+  "ok": true,
+  "wallMs": 162110,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4007,
+    "completionTokens": 2630
+  },
+  "costUsd": 0.0008340299999999999,
+  "billing": "metered",
+  "output": "```javascript\nimport { Group, Mesh, CircleGeometry, MeshBasicNodeMaterial, DirectionalLight, PointLight } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n  group.position.set(-1.25, -1.1, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Load the GLB mesh\n  const glbPromise = ctx.glbLoader.loadGLB(config.meshUrl);\n  glbPromise.then((gltf) => {\n    const mesh = gltf.scene;\n    // Ensure the mesh has PBR materials (as generated)\n    group.add(mesh);\n  });\n\n  // Add a contact shadow plane (radial circle)\n  const shadowGeo = new CircleGeometry(1.2, 32);\n  const shadowMat = new MeshBasicNodeMaterial({\n    color: 0x000000,\n    transparent: true,\n    opacity: 0.5,\n    depthWrite: false,\n  });\n  const shadow = new Mesh(shadowGeo, shadowMat);\n  shadow.rotation.x = -Math.PI / 2;\n  shadow.position.y = -0.05; // slightly below gear\n  group.add(shadow);\n\n  // Add accent rim light (directional from behind-right)\n  const rimLight = new DirectionalLight(0xff2a38, 0.8); // accent color, intensity 0.8 (rim <=0.8 per white-subject key ceiling)\n  rimLight.position.set(2, 1, -2);\n  group.add(rimLight);\n\n  // Add a subtle key fill from front-left to complement scene key\n  const fillLight = new DirectionalLight(0xe8ecf2, 0.3);\n  fillLight.position.set(-1, 0.5, 2);\n  group.add(fillLight);\n\n  // Contact shadow plane (already added above, but we need to ensure it's after mesh load? It's fine)\n\n  // Weighted-settle entrance animation\n  const entranceTimeline = gsap.timeline();\n  entranceTimeline.fromTo(group.scale, { x: 1.04, y: 1.04, z: 1.04 }, { x: 1, y: 1, z: 1, duration: 0.9, ease: 'power4.out' });\n\n  // Hover interaction: rise-in subtle (0.15 scene units)\n  const hoverTimeline = gsap.timeline({ paused: true });\n  hoverTimeline.to(group.position, { y: 0.15, duration: 0.3, ease: 'power2.out' });\n\n  // Click handler\n  const clickHandler = () => {\n    ctx.emit('hub-features.select', {});\n  };\n\n  // Attach handlers\n  group.userData.handlers = {\n    hover: {\n      enter: () => {\n        hoverTimeline.play();\n      },\n      leave: () => {\n        hoverTimeline.reverse();\n      }\n    },\n    click: clickHandler\n  };\n\n  // Apply cinematic primitives\n  const primitiveCleanups = [];\n  if (config.cinematicPrimitives) {\n    config.cinematicPrimitives.forEach((prim) => {\n      const result = ctx.primitives[prim.name](group, prim.params);\n      if (result && result.cleanup) {\n        primitiveCleanups.push(result.cleanup);\n      }\n    });\n  }\n\n  // Cleanup function\n  group.userData.cleanup = () => {\n    entranceTimeline.kill();\n    hoverTimeline.kill();\n    primitiveCleanups.forEach(fn => fn());\n    // Dispose shadow geometry and material\n    shadowGeo.dispose();\n    shadowMat.dispose();\n    // Note: GLB mesh disposal is handled by the loader cache; we don't need to dispose it here.\n  };\n\n  return group;\n}\n```"
+}

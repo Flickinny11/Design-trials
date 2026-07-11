@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/Kimi-K2.7-Code",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-43-moderate",
+  "run": 3,
+  "ok": true,
+  "wallMs": 128139,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3759,
+    "completionTokens": 5335
+  },
+  "costUsd": 0.02145416,
+  "billing": "metered",
+  "output": " import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Color, DoubleSide } = ctx.THREE;\n\n  const root = new Group();\n  root.name = config.id || 'journal-quote-panel';\n\n  const width = 2.4;\n  const height = 1.5;\n\n  const geometry = new PlaneGeometry(width, height, 1, 1);\n\n  const cardMaterial = new MeshBasicNodeMaterial({\n    transparent: true,\n    side: DoubleSide\n  });\n\n  const imageUrl = config.imageUrl ?? config.intent?.visualSpec?.imageUrl;\n  if (imageUrl) {\n    ctx.textureLoader.loadTexture(imageUrl).then((tex) => {\n      tex.colorSpace = ctx.THREE.SRGBColorSpace;\n      cardMaterial.map = tex;\n      cardMaterial.needsUpdate = true;\n    });\n  }\n\n  const card = new Mesh(geometry, cardMaterial);\n  card.name = 'quote-card';\n  root.add(card);\n\n  const edgeGeo = new PlaneGeometry(width + 0.05, height + 0.05, 1, 1);\n  const edgeMaterial = new MeshBasicNodeMaterial({\n    color: new Color('#ff2a38'),\n    transparent: true,\n    opacity: 0,\n    depthWrite: false,\n    side: DoubleSide\n  });\n  const edge = new Mesh(edgeGeo, edgeMaterial);\n  edge.position.z = -0.005;\n  edge.name = 'accent-edge';\n  root.add(edge);\n\n  const timelines = [];\n\n  const primitiveRefs = [];\n  const cpx = config.cinematicPrimitives ?? [];\n  for (const primitive of cpx) {\n    if (ctx.primitives[primitive.name]) {\n      const ref = ctx.primitives[primitive.name](root, primitive.params ?? {});\n      if (ref) primitiveRefs.push(ref);\n    }\n  }\n\n  const clearTimelines = () => {\n    for (const tl of timelines) {\n      if (tl && typeof tl.kill === 'function') tl.kill();\n    }\n    timelines.length = 0;\n  };\n\n  const killTweensOnTargets = () => {\n    gsap.killTweensOf(root.position);\n    gsap.killTweensOf(root.scale);\n    gsap.killTweensOf(edgeMaterial);\n  };\n\n  const setActive = (active) => {\n    clearTimelines();\n    killTweensOnTargets();\n\n    const hoverTl = gsap.timeline();\n    hoverTl.to(\n      root.position,\n      {\n        y: active ? 0.15 : 0,\n        duration: active ? 0.35 : 0.25,\n        ease: active ? 'power2.out' : 'power2.inOut'\n      },\n      0\n    );\n    hoverTl.to(\n      edgeMaterial,\n      {\n        opacity: active ? 0.55 : 0,\n        duration: active ? 0.3 : 0.25,\n        ease: 'power2.out'\n      },\n      0\n    );\n    timelines.push(hoverTl);\n  };\n\n  root.userData.handlers = {\n    pointerover: (e) => {\n      setActive(true);\n    },\n    pointerout: (e) => {\n      setActive(false);\n    },\n    pointerdown: (e) => {\n      const pressTl = gsap.timeline();\n      pressTl.to(root.scale, {\n        x: 0.97,\n        y: 0.97,\n        z: 0.97,\n        duration: 0.12,\n        ease: 'back.out(1.7)'\n      });\n      timelines.push(pressTl);\n    },\n    pointerup: (e) => {\n      const releaseTl = gsap.timeline();\n      releaseTl.to(root.scale, {\n        x: 1,\n        y: 1,\n        z: 1,\n        duration: 0.2,\n        ease: 'power2.out'\n      });\n      timelines.push(releaseTl);\n    },\n    click: (e) => {\n      ctx.emit('hub-journal.select', { id: config.id });\n    }\n  };\n\n  root.userData.cleanup = () => {\n    clearTimelines();\n    killTweensOnTargets();\n\n    for (const ref of primitiveRefs) {\n      if (ref && typeof ref.cleanup === 'function') ref.cleanup();\n    }\n\n    geometry.dispose();\n    cardMaterial.dispose();\n    edgeGeo.dispose();\n    edgeMaterial.dispose();\n\n    if (cardMaterial.map && cardMaterial.map.dispose) {\n      cardMaterial.map.dispose();\n    }\n\n    root.clear();\n  };\n\n  return root;\n}"
+}

@@ -1,0 +1,10 @@
+{
+  "contestant": "glm-5.2",
+  "caseId": "f-46-complex-int",
+  "run": 1,
+  "rawCompliant": false,
+  "fenced": true,
+  "parsed": true,
+  "verified": true,
+  "violations": []
+}

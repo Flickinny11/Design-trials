@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-16-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 617,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3883,
+    "completionTokens": 2969
+  },
+  "costUsd": 0.0008249640000000001,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial, PlaneGeometry, Group, Mesh } from 'three/webgpu';\nimport { uv, vec3, mix, uniform, texture, fract, sin, dot } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  const position = config.scenePlacement?.position || [0, -0.3, 0];\n  const rotation = config.scenePlacement?.rotation || [0, 0, 0];\n  const scale = config.scenePlacement?.scale || [1, 1, 1];\n\n  group.position.set(position[0], position[1], position[2]);\n  group.rotation.set(rotation[0], rotation[1], rotation[2]);\n  group.scale.set(scale[0], scale[1], scale[2]);\n\n  // Card geometry (aspect ratio from atlas source 512×320 → 1.6:1)\n  const geometry = new PlaneGeometry(2.0, 1.25);\n  const material = new MeshBasicNodeMaterial();\n\n  // Colors from spec\n  const surfaceColor = vec3(0.043, 0.043, 0.063);      // #0b0b10\n  const paperColor   = vec3(0.910, 0.925, 0.949);      // #e8ecf2\n  const accentColor  = vec3(1.0, 0.165, 0.22);         // #ff2a38 (unused, but available)\n\n  // Texture uniform for the orb-decor image\n  const texUniform = uniform();\n\n  // Load texture asynchronously\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      texUniform.value = tex;\n    });\n  }\n\n  // UV coordinates\n  const u = uv();\n\n  // Vertical gradient from surface (bottom) to paper (top)\n  const gradient = mix(surfaceColor, paperColor, u.y);\n\n  // Texture sample (when loaded)\n  const texColor = texture(texUniform, u);\n\n  // Subtle grain noise (procedural)\n  const noiseValue = fract(sin(dot(u * 40.0, vec3(12.9898, 78.233, 45.164))) * 43758.5453);\n  const grain = (noiseValue - 0.5) * 0.08; // 8% intensity\n\n  // Combine: texture + gradient overlay + grain\n  const finalColor = mix(gradient, texColor, 0.85) + grain;\n\n  material.outputNode = vec4(finalColor, 1.0);\n\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (texUniform.value) texUniform.value.dispose();\n    // No GSAP timelines to kill\n  };\n\n  // No handlers (static)\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

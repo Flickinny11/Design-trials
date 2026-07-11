@@ -1,0 +1,52 @@
+{
+  "wave": "wbakeb",
+  "axis": "repair",
+  "contestant": "deepseek-v4-flash",
+  "calls": [
+    {
+      "axis": "repair",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "f-09-simple",
+      "costUsd": 0.00043983,
+      "billing": "metered",
+      "at": "2026-07-11T03:29:21.735Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "f-13-simple",
+      "costUsd": 0.00046826999999999996,
+      "billing": "metered",
+      "at": "2026-07-11T03:29:27.717Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "f-12-simple",
+      "costUsd": 0.0005212799999999999,
+      "billing": "metered",
+      "at": "2026-07-11T03:29:34.532Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "f-19-simple",
+      "costUsd": 0.00051786,
+      "billing": "metered",
+      "at": "2026-07-11T03:29:37.610Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "f-20-simple",
+      "costUsd": 0.00052443,
+      "billing": "metered",
+      "at": "2026-07-11T03:30:01.078Z"
+    }
+  ],
+  "totals": {
+    "meteredUsd": 0.00247167,
+    "subscriptionEquivalentUsd": 0,
+    "totalUsd": 0.00247167
+  }
+}

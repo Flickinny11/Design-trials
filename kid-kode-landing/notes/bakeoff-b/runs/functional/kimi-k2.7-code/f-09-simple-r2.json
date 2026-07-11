@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-09-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 251,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3704,
+    "completionTokens": 12292
+  },
+  "costUsd": 0.04556596,
+  "billing": "metered",
+  "output": " import * as THREE from 'three/webgpu';\nimport { uv, vec3, mix, smoothstep, uniform, sin, fract } from 'three/tsl';\n\nconst ATLAS_X = 0;\nconst ATLAS_Y = 0;\nconst ATLAS_W = 512;\nconst ATLAS_H = 320;\n\nexport default function createNode(config, ctx) {\n  const group = new THREE.Group();\n  group.name = config.id ?? 'features-card-2';\n\n  const colors = config.intent?.visualSpec?.colors ?? config.visualSpec?.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n\n  // --- engineered gradient surface panel ---\n  const ink = new THREE.Color(colors.ink);\n  const surface = new THREE.Color(colors.surface);\n  const uInk = uniform(ink);\n  const uSurf = uniform(surface);\n\n  const vUv = uv();\n  const grain = fract(\n    sin(vUv.x.mul(12.9898).add(vUv.y.mul(78.233))).mul(43758.5453)\n  ).mul(0.045);\n  const grad = mix(uSurf, uInk, smoothstep(0, 1, vUv.y));\n  const panelColorNode = grad.add(vec3(grain));\n\n  const aspect = ATLAS_W / ATLAS_H;\n  const cardHeight = 1.0;\n  const cardWidth = cardHeight * aspect;\n  const padding = 0.08;\n\n  const panelGeo = new THREE.PlaneGeometry(cardWidth + padding * 2, cardHeight + padding * 2);\n  const panelMat = new THREE.MeshBasicNodeMaterial({ side: THREE.DoubleSide });\n  panelMat.colorNode = panelColorNode;\n\n  const panel = new THREE.Mesh(panelGeo, panelMat);\n  panel.position.z = -0.005;\n  group.add(panel);\n\n  // --- textured atlas sprite ---\n  const spriteGeo = new THREE.PlaneGeometry(cardWidth, cardHeight);\n  const spriteMat = new THREE.MeshBasicNodeMaterial({\n    side: THREE.DoubleSide,\n    transparent: true,\n    depthWrite: false,\n    alphaTest: 0.01\n  });\n  const sprite = new THREE.Mesh(spriteGeo, spriteMat);\n  sprite.position.z = 0.005;\n  group.add(sprite);\n\n  let texRef = null;\n  let disposed = false;\n\n  const imageUrl = config.imageUrl || '/prism-mock/home/nodes/floating-accent.png';\n  ctx.textureLoader.loadTexture(imageUrl).then((tex) => {\n    if (disposed) {\n      tex.dispose();\n      return;\n    }\n    texRef = tex;\n    tex.colorSpace = THREE.SRGBColorSpace ?? 'srgb';\n    tex.minFilter = THREE.LinearFilter;\n    tex.magFilter = THREE.LinearFilter;\n\n    const tw = tex.image?.width || ATLAS_W;\n    const th = tex.image?.height || ATLAS_H;\n    tex.repeat.set(ATLAS_W / tw, ATLAS_H / th);\n    tex.offset.set(ATLAS_X / tw, 1 - (ATLAS_Y + ATLAS_H) / th);\n    tex.updateMatrix();\n\n    spriteMat.map = tex;\n    spriteMat.needsUpdate = true;\n  }).catch(() => {});\n\n  // --- billboard toward camera ---\n  const camPos = new THREE.Vector3();\n  const faceCamera = (renderer, scene, camera) => {\n    camera.getWorldPosition(camPos);\n    group.lookAt(camPos);\n  };\n  panel.onBeforeRender = faceCamera;\n  sprite.onBeforeRender = faceCamera;\n\n  // --- cleanup & handlers ---\n  const timelines = [];\n  group.userData.handlers = {};\n  group.userData.timelines = timelines;\n  group.userData.cleanup = () => {\n    disposed = true;\n    panelMat.dispose();\n    spriteMat.dispose();\n    panelGeo.dispose();\n    spriteGeo.dispose();\n    if (texRef) texRef.dispose();\n    timelines.forEach((t) => t.kill?.());\n    panel.onBeforeRender = null;\n    sprite.onBeforeRender = null;\n  };\n\n  return group;\n}"
+}

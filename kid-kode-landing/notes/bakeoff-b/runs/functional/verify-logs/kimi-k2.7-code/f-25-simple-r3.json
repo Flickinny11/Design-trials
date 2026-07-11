@@ -1,0 +1,16 @@
+{
+  "contestant": "kimi-k2.7-code",
+  "caseId": "f-25-simple",
+  "run": 3,
+  "rawCompliant": false,
+  "fenced": false,
+  "parsed": false,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "PARSE_FAILURE",
+      "severity": "error",
+      "message": "no extractable module (missing export default or empty output)"
+    }
+  ]
+}

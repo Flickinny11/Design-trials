@@ -1,0 +1,16 @@
+{
+  "contestant": "gemini-3.5-flash",
+  "caseId": "f-44-moderate",
+  "run": 3,
+  "rawCompliant": false,
+  "fenced": false,
+  "parsed": false,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "PARSE_FAILURE",
+      "severity": "error",
+      "message": "no extractable module (missing export default or empty output)"
+    }
+  ]
+}

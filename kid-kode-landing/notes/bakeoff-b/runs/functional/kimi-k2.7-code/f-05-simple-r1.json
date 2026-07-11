@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-05-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 249,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3700,
+    "completionTokens": 5445
+  },
+  "costUsd": 0.021667050000000004,
+  "billing": "metered",
+  "output": " import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport {\n  uv,\n  vec2,\n  vec4,\n  color,\n  mix,\n  smoothstep,\n  fract,\n  sin,\n  dot,\n  mul,\n  texture,\n  float,\n} from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { Group, PlaneGeometry, Mesh, SRGBColorSpace } = ctx.THREE;\n\n  const root = new Group();\n  root.userData.handlers = {};\n  root.userData.timelines = [];\n\n  const palette = {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10',\n  };\n\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const textItem = items.find((i) => i.role === 'headline') ?? items[0] ?? { text: 'Get started' };\n  const fontSize = textItem.typography?.fontSize ?? 42;\n\n  const planeW = 2.0;\n  const planeH = 0.62;\n  const geometry = new PlaneGeometry(planeW, planeH);\n\n  const u = uv();\n  const grad = mix(color(palette.ink), color(palette.surface), smoothstep(float(0), float(1), u.y));\n  const noise = fract(mul(sin(dot(u, vec2(12.9898, 78.233))), 43758.5453));\n  const grain = mix(grad, color(palette.paper), mul(noise, 0.045));\n\n  const surfaceMaterial = new MeshBasicNodeMaterial({ transparent: true });\n  surfaceMaterial.colorNode = vec4(grain, 1);\n\n  const surfaceMesh = new Mesh(geometry, surfaceMaterial);\n  root.add(surfaceMesh);\n\n  const accentGeo = new PlaneGeometry(0.7, 0.03);\n  const accentMat = new MeshBasicNodeMaterial({ transparent: true });\n  accentMat.colorNode = vec4(color(palette.accent), 1);\n  const accentBar = new Mesh(accentGeo, accentMat);\n  accentBar.position.set(0, -0.12, 0.015);\n  root.add(accentBar);\n\n  const label = ctx.fontAtlas.createText(String(textItem.text || 'Get started'), {\n    fontSize,\n    color: palette.paper,\n    align: 'center',\n  });\n  label.position.z = 0.02;\n  root.add(label);\n\n  let mapTex = null;\n\n  if (config.imageUrl) {\n    ctx.textureLoader\n      .loadTexture(config.imageUrl)\n      .then((tex) => {\n        tex.colorSpace = SRGBColorSpace;\n        mapTex = tex;\n\n        const texNode = texture(tex, u).rgb;\n        const mapped = mix(texNode, grad, 0.55);\n        const mappedGrain = mix(mapped, color(palette.paper), mul(noise, 0.05));\n\n        surfaceMaterial.colorNode = vec4(mappedGrain, 1);\n        surfaceMaterial.needsUpdate = true;\n      })\n      .catch(() => {});\n  }\n\n  root.userData.cleanup = () => {\n    root.userData.timelines.forEach((t) => {\n      if (t && typeof t.kill === 'function') t.kill();\n    });\n    root.userData.timelines.length = 0;\n\n    geometry.dispose();\n    surfaceMaterial.dispose();\n    accentGeo.dispose();\n    accentMat.dispose();\n\n    if (mapTex) {\n      mapTex.dispose();\n      mapTex = null;\n    }\n\n    root.traverse((obj) => {\n      if (obj.geometry && obj.geometry !== geometry && obj.geometry !== accentGeo) {\n        obj.geometry.dispose();\n      }\n      if (obj.material && obj.material !== surfaceMaterial && obj.material !== accentMat) {\n        if (Array.isArray(obj.material)) {\n          obj.material.forEach((m) => m.dispose());\n        } else {\n          obj.material.dispose();\n        }\n      }\n    });\n  };\n\n  return root;\n}"
+}

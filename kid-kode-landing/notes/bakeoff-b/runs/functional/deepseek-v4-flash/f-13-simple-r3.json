@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-13-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 917,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3891,
+    "completionTokens": 3381
+  },
+  "costUsd": 0.0008948520000000001,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  Group,\n  PlaneGeometry,\n  MeshBasicNodeMaterial,\n  Mesh,\n} from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // ── Text content extraction ──────────────────────────────────────────────\n  const items =\n    config.textContent ??\n    config.intent?.visualSpec?.textContent ??\n    [];\n  const headlineItem = items.find((item) => item.role === 'headline');\n  const textContent = headlineItem ? headlineItem.text : 'Collection';\n  const fontSize = headlineItem?.typography?.fontSize ?? 96;\n\n  // ── Background plane ─────────────────────────────────────────────────────\n  const planeWidth = 3.6;\n  const planeHeight = 0.9;\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n  const material = new MeshBasicNodeMaterial({\n    color: 0x0b0b10, // surface fallback\n    transparent: true,\n  });\n  const plane = new Mesh(geometry, material);\n  group.add(plane);\n\n  // Load texture once available\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // ── Text overlay ─────────────────────────────────────────────────────────\n  const textObj = ctx.fontAtlas.createText(textContent, {\n    fontSize: fontSize,\n    color: '#e8ecf2',\n    align: 'center',\n  });\n  textObj.position.z = 0.01; // avoid z-fighting\n  group.add(textObj);\n\n  // ── Event handlers (none) ────────────────────────────────────────────────\n  group.userData.handlers = {};\n\n  // ── Cleanup ──────────────────────────────────────────────────────────────\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (material.map) material.map.dispose();\n\n    textObj.traverse((child) => {\n      if (child.isMesh) {\n        child.geometry.dispose();\n        const mat = child.material;\n        if (Array.isArray(mat)) {\n          mat.forEach((m) => m.dispose());\n        } else {\n          mat.dispose();\n        }\n      }\n    });\n  };\n\n  return group;\n}\n```"
+}

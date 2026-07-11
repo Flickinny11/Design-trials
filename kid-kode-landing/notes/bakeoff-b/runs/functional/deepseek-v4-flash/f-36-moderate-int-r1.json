@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-36-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 704,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3956,
+    "completionTokens": 4555
+  },
+  "costUsd": 0.001097544,
+  "billing": "metered",
+  "output": "```javascript\nimport { gsap } from 'gsap';\nimport {\n  MeshBasicNodeMaterial,\n  PlaneGeometry,\n  DoubleSide,\n  Group,\n  Mesh,\n  Color,\n} from 'three/webgpu';\nimport {\n  uv,\n  vec2,\n  vec3,\n  float,\n  mix,\n  smoothstep,\n  max,\n  abs,\n  length,\n} from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // Position, rotation, scale\n  const pos = config.scenePosition || { x: 0, y: 1.6, z: 0 };\n  const rot = config.sceneRotation || { x: 0, y: 0, z: 0 };\n  const scale = config.sceneScale || { x: 1, y: 1, z: 1 };\n  group.position.set(pos.x, pos.y, pos.z);\n  group.rotation.set(rot.x, rot.y, rot.z);\n  group.scale.set(scale.x, scale.y, scale.z);\n\n  // Geometry – capsule size\n  const width = 0.8;\n  const height = 0.3;\n  const geometry = new PlaneGeometry(width, height);\n\n  // Colors from spec\n  const inkColor = new Color('#16161d');\n  const accentColor = new Color('#ff2a38');\n\n  // ── TSL shader for rounded capsule with accent edge glow ──\n  const uvNode = uv();\n  const halfW = float(width * 0.5);\n  const halfH = float(height * 0.5);\n  const cornerR = float(0.2); // relative to UV space\n\n  const center = vec2(0.5, 0.5);\n  const halfSize = vec2(0.5, 0.5);\n  const q = abs(uvNode - center) - halfSize + vec2(cornerR);\n  const dist = length(max(q, vec2(0.0))) - cornerR;\n  const mask = smoothstep(0.005, 0.0, dist);\n\n  // Accent edge light – brightest at top\n  const topGlow = smoothstep(0.85, 1.0, uvNode.y());\n  const baseColor = vec3(inkColor.r, inkColor.g, inkColor.b);\n  const accentVec = vec3(accentColor.r, accentColor.g, accentColor.b);\n  const glowed = mix(baseColor, accentVec, topGlow * 0.6);\n\n  const finalColor = vec3(mask) * glowed;\n\n  const material = new MeshBasicNodeMaterial({\n    colorNode: finalColor,\n    side: DoubleSide,\n    transparent: true,\n  });\n\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  // ── Hover / Click / Press-down behavior ──\n  const baseY = group.position.y;\n  let hoverTween = null;\n\n  group.userData.handlers = {\n    mouseenter: () => {\n      if (hoverTween) hoverTween.kill();\n      hoverTween = gsap.to(group.position, {\n        y: baseY + 0.15,\n        duration: 0.3,\n        ease: 'power2.out',\n        overwrite: true,\n      });\n    },\n    mouseleave: () => {\n      if (hoverTween) hoverTween.kill();\n      hoverTween = gsap.to(group.position, {\n        y: baseY,\n        duration: 0.3,\n        ease: 'power2.out',\n        overwrite: true,\n      });\n    },\n    click: () => {\n      ctx.emit('hub-collection.select', {});\n    },\n    mousedown: () => {\n      if (hoverTween) hoverTween.kill();\n      hoverTween = gsap.to(group.scale, {\n        x: 0.97,\n        y: 0.97,\n        z: 0.97,\n        duration: 0.12,\n        ease: 'back.out',\n        overwrite: true,\n      });\n    },\n    mouseup: () => {\n      if (hoverTween) hoverTween.kill();\n      hoverTween = gsap.to(group.scale, {\n        x: 1,\n        y: 1,\n        z: 1,\n        duration: 0.12,\n        ease: 'back.out',\n        overwrite: true,\n      });\n    },\n  };\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    if (hoverTween) hoverTween.kill();\n    geometry.dispose();\n    material.dispose();\n  };\n\n  return group;\n}\n```"
+}

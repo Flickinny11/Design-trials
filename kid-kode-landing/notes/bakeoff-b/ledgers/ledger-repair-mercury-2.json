@@ -1,0 +1,20 @@
+{
+  "wave": "wbakeb",
+  "axis": "repair",
+  "contestant": "mercury-2",
+  "calls": [
+    {
+      "axis": "repair",
+      "contestant": "mercury-2",
+      "caseId": "f-24-simple",
+      "costUsd": 0.00133325,
+      "billing": "metered",
+      "at": "2026-07-11T03:34:14.497Z"
+    }
+  ],
+  "totals": {
+    "meteredUsd": 0.00133325,
+    "subscriptionEquivalentUsd": 0,
+    "totalUsd": 0.00133325
+  }
+}

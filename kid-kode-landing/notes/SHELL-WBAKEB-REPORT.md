@@ -62,7 +62,48 @@ The credential surface expanded materially since W-BAKE (which had NO OpenRouter
 
 ## 2. D2 — Axis 1: functional first-pass (spec §11, unchanged protocol)
 
-*(FILLING — lanes in flight. 50 frozen nodes × 3 runs per model, rule-based verify via the shipped `verifyNodeModule`, no repair; separate single repair-allowed pass on failures.)*
+Same frozen 50-node functional corpus as W-BAKE (concat-hash unchanged since freeze `359d1eca`, I-BB2), identical PCP prompts (L1 v2.1 + frozen L2), **3 runs per node per model**, rule-based verify via the shipped `src/lib/prism/codegen/verifier.ts::verifyNodeModule`, **no repair in the primary pass**. Grader: `tests/unit/wbakeb-verify-axis1.test.ts` (env-gated); metrics artifact: `notes/bakeoff-b/runs/functional/verify-metrics.json`; per-row verdicts: `runs/functional/verify-logs/<model>/`. Transport-failed rows (mid-wave 402 boundaries, §8) are **excluded from rates and counted separately** — never scored, never extrapolated (I-BB5).
+
+### 2.1 First-pass table (primary: first-pass verification rate)
+
+| Model | First-pass | By-run r1/r2/r3 | Parse raw→destripped | Int-bearing | simple/moderate/complex | p50 wall | p95 wall | Cost/node | Transport gaps |
+|---|---|---|---|---|---|---|---|---|---|
+| gpt-5.6-luna | **100.0%** | 100% / 100% / 100% | 100.0%→100.0% | 100.0% (n=33) | 100.0% / 100.0% / 100.0% | 317ms | 751ms | $0.0200 | 0 |
+| mercury-2 | **97.3%** | 98% / 98% / 96% | 100.0%→100.0% | 100.0% (n=33) | 95.6% / 100.0% / 100.0% | 3.4s | 5.5s | $0.0013 | 0 |
+| claude-sonnet-5 | **96.7%** | 94% / 98% / 98% | 100.0%→100.0% | 87.9% (n=33) | 100.0% / 88.9% / 100.0% | 5.2s | 94.0s | $0.0822 | 0 |
+| gpt-oss-120b | **93.3%** | 86% / 98% / 96% | 100.0%→100.0% | 93.9% (n=33) | 91.1% / 95.6% / 100.0% | 11.4s | 18.3s | $0.0017 | 0 |
+| glm-5.2 | **90.7%** | 91% / 93% / 87% | 33.6%→93.6% | 97.0% (n=33) | 86.7% / 97.7% / 100.0% | 51.3s | 237.1s | $0.0140 | 10 |
+| kimi-k2.7-code | **87.9%** | 89% / 91% / 84% | 91.7%→95.5% | 92.6% (n=27) | 85.6% / 92.9% / — | 1.1s | 263.2s | $0.0327 | 18 |
+| deepseek-v4-flash | **84.0%** | 90% / 82% / 80% | 0.0%→97.3% | 87.9% (n=33) | 83.3% / 84.4% / 86.7% | 1.8s | 120.5s | $0.0008 | 0 |
+| claude-haiku-4.5 | **81.3%** | 84% / 80% / 80% | 2.7%→100.0% | 93.9% (n=33) | 73.3% / 95.6% / 86.7% | 7.2s | 11.9s | $0.0093 | 0 |
+| gemini-3.5-flash | **33.3%** | 34% / 30% / 36% | 68.0%→69.3% | 63.6% (n=33) | 17.8% / 60.0% / 46.7% | 1.5s | 1.8s | $0.0276 | 0 |
+| gpt-5.6-terra | — (0/65 attempts reached the model) | — | — | — | — | — | — | — | 65 |
+| gpt-5.6-sol | — (0/25 attempts reached the model) | — | — | — | — | — | — | — | 25 |
+
+Coverage disclosures (I-BB5, all with committed 402 evidence — §8): **glm-5.2 140/150** verified-gradeable rows (10 transport-dead: 9 complex + 1 moderate), **kimi-k2.7-code 132/150** (18 transport-dead: **all 15 complex-tier rows** + 3 moderate). The dead rows cluster in the complex tier because complex nodes have the longest generations — they were the timeout/402 victims on the slow DeepInfra reroute. **Read the headline rates accordingly: kimi's 87.9% covers ZERO complex-tier rows; glm's 90.7% covers 6 of 15.** Their true full-corpus rates are unknowable this wave and are NOT extrapolated. **gpt-5.6-sol/terra: zero generations** — OpenRouter-only lanes; every attempt returned 402 (`probes/openrouter-refund-check.json`). Wall-time note: glm/kimi/deepseek/sonnet lanes are **mixed-route** (OpenRouter → DeepInfra mid-wave, §8) and their p95s embed the DeepInfra queue's 130–280s tail; per-call route + wall are in each row JSON.
+
+Signal readings:
+- **gpt-5.6-luna one-shots the corpus**: 150/150 first-pass, sub-second p50 (317ms), $0.02/node, 100% raw-compliant output (zero fences). No other model touches this profile.
+- **mercury-2** (diffusion) is the value standout: 97.3% at $0.0013/node with tight tails (5.5s p95).
+- **claude-sonnet-5** 96.7% but its cost/node ($0.0822) carries the pre-bound adaptive-thinking burn (§8) — 4–6× the observed post-bound rate.
+- **gemini-3.5-flash collapses on this corpus (33.3%)**: 53× MISSING_CLEANUP + 46× PARSE_FAILURE, worst on the *simple* tier (17.8%) — it omits `userData.cleanup` on trivial nodes and emits non-extractable prose/fence wrappers that survive fence-stripping. This is a systematic-habit failure, not capability noise (by-run spread only 34/30/36%).
+- Parse-vs-verify split: deepseek (0% raw → 97.3% destripped) and haiku (2.7% → 100%) are pure fence habits — cheap to normalize in harness; gemini's 68→69.3% is NOT a fence habit — its output is structurally non-extractable.
+
+### 2.2 Single repair-allowed pass (separate; frozen repair prompt, exact verifier violations fed back)
+
+`scripts/bakeoff/run-repair-b.mjs` — one repair attempt per run-1 failure, same L1 v2.1 + L2, previous output + enumerated violations appended. Repair rows graded by the same verifier (`run='repair'` in the metrics artifact).
+
+| Model | Run-1 failures repaired | Fixed at depth 1 | Repair success |
+|---|---|---|---|
+| claude-haiku-4.5 | 8 | 8 | **100.0%** |
+| claude-sonnet-5 | 3 | 3 | **100.0%** |
+| mercury-2 | 1 | 1 | **100.0%** |
+| deepseek-v4-flash | 5 | 3 | 60.0% |
+| kimi-k2.7-code | 5 | 2 | 40.0% |
+| gemini-3.5-flash | 33 | 9 | **27.3%** |
+| gpt-oss-120b | 7 | 1 | 14.3% |
+
+gpt-5.6-luna had **zero** run-1 failures (nothing to repair). **glm-5.2's repair pass is 402-blocked** (its only live route died before its lane completed — §8); kimi's repair covers the 5 run-1 failures that existed at the pre-drain verify snapshot. Readings: **haiku is perfectly feedback-steerable** (8/8 — consistent with the W-PCP finding that haiku's failures are habit, not capability), while **gemini's failures resist its own repair** (27.3% — the cleanup omission recurs even when the violation is quoted back verbatim), and gpt-oss fixes almost nothing at depth 1 (14.3%, consistent with W-PCP's import-discipline residual).
 
 ## 3. D3 — Axis 2: design quality under the playbook
 

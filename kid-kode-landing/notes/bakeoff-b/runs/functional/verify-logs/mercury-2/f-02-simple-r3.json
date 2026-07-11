@@ -1,0 +1,16 @@
+{
+  "contestant": "mercury-2",
+  "caseId": "f-02-simple",
+  "run": 3,
+  "rawCompliant": true,
+  "fenced": false,
+  "parsed": true,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "MISSING_TEXT_CONTENT",
+      "severity": "error",
+      "message": "nodes with non-empty textContent must iterate config.textContent and call ctx.fontAtlas (§10.C L385)"
+    }
+  ]
+}

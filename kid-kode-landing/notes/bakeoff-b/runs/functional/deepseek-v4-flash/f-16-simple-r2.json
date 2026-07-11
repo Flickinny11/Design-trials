@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-16-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 2372,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3883,
+    "completionTokens": 3364
+  },
+  "costUsd": 0.0008913240000000001,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  PlaneGeometry,\n  Mesh,\n  MeshBasicNodeMaterial,\n} from 'three/webgpu';\nimport {\n  uv,\n  vec3,\n  mix,\n  sin,\n  texture,\n  uniform,\n} from 'three/tsl';\n\n/**\n * Creates a static card plane with gradient overlay and subtle grain.\n * The texture is loaded async and composited via TSL node material.\n */\nexport default function createNode(config, ctx) {\n  // Aspect ratio from atlas region: 512x320 -> 1.6\n  const aspect = 512 / 320;\n  const geometry = new PlaneGeometry(aspect, 1);\n  const material = new MeshBasicNodeMaterial();\n\n  // TSL nodes for gradient and grain\n  const baseGradient = mix(\n    vec3(0.043, 0.043, 0.062), // surface #0b0b10\n    vec3(0.91, 0.93, 0.95),   // paper #e8ecf2\n    uv().y\n  );\n  // Static grain using high-frequency sin\n  const grain = sin(uv().x * 100.0 + uv().y * 100.0).mul(0.03);\n\n  // Prepare texture uniform (will be set after async load)\n  const texUniform = uniform(null);\n  const sampledTexture = texture(texUniform, uv());\n\n  // Composite: texture base blended with gradient, plus grain\n  const blended = mix(sampledTexture, baseGradient, 0.4).add(grain);\n  material.colorNode = blended;\n\n  // Start texture loading\n  const texturePromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  let loadedTexture = null;\n  texturePromise.then((tex) => {\n    loadedTexture = tex;\n    texUniform.value = tex;\n    tex.wrapS = tex.wrapT = ctx.THREE.RepeatWrapping; // optional\n    material.needsUpdate = true;\n  });\n\n  const mesh = new Mesh(geometry, material);\n\n  // No handlers, no primitives – static node\n  mesh.userData.handlers = {};\n\n  // Cleanup: dispose geometry, material, and texture\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (loadedTexture) {\n      loadedTexture.dispose();\n    }\n    // No GSAP timelines to kill\n  };\n\n  return mesh;\n}\n```"
+}

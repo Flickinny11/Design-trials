@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-06-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 3862,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3714,
+    "completionTokens": 9168
+  },
+  "costUsd": 0.034670400000000004,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec2, texture } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const { Group, PlaneGeometry, Mesh, Vector3, DoubleSide } = THREE;\n\n  const group = new Group();\n\n  const atlasRect = { x: 0, y: 0, w: 512, h: 320 };\n  const aspect = atlasRect.w / atlasRect.h;\n  const planeHeight = 1.4;\n  const planeWidth = planeHeight * aspect;\n\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    side: DoubleSide,\n    depthWrite: false,\n  });\n\n  const mesh = new Mesh(geometry, material);\n  const camPos = new Vector3();\n  mesh.onBeforeRender = (renderer, scene, camera) => {\n    camera.getWorldPosition(camPos);\n    mesh.lookAt(camPos);\n  };\n  group.add(mesh);\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      tex.colorSpace = THREE.SRGBColorSpace;\n      tex.needsUpdate = true;\n\n      const imgW = tex.image.width || atlasRect.w;\n      const imgH = tex.image.height || atlasRect.h;\n\n      const uMin = atlasRect.x / imgW;\n      const vMin = 1 - (atlasRect.y + atlasRect.h) / imgH;\n      const uMax = (atlasRect.x + atlasRect.w) / imgW;\n      const vMax = 1 - atlasRect.y / imgH;\n\n      const atlasUV = uv()\n        .mul(vec2(uMax - uMin, vMax - vMin))\n        .add(vec2(uMin, vMin));\n\n      material.colorNode = texture(tex, atlasUV);\n      material.needsUpdate = true;\n    });\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n  };\n\n  return group;\n}"
+}

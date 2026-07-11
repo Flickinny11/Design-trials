@@ -1,0 +1,16 @@
+{
+  "contestant": "gemini-3.5-flash",
+  "caseId": "f-36-moderate-int",
+  "run": "repair",
+  "rawCompliant": true,
+  "fenced": false,
+  "parsed": true,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "TEXT_GEOMETRY",
+      "severity": "error",
+      "message": "TextGeometry is forbidden — use ctx.fontAtlas (MSDF) for text"
+    }
+  ]
+}

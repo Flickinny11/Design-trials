@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-12-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 2118,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3912,
+    "completionTokens": 2716
+  },
+  "costUsd": 0.000784896,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  Group,\n  Mesh,\n  PlaneGeometry,\n  MeshBasicNodeMaterial,\n  Vector2,\n} from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // --- Plane (sprite) with texture from atlas region ---\n  const srcRect = { x: 0, y: 0, w: 512, h: 320 };\n  const aspect = srcRect.w / srcRect.h; // ~1.6\n  const geometry = new PlaneGeometry(1.6, 1); // width = 1.6, height = 1 (maintains aspect)\n\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    side: ctx.THREE.DoubleSide,\n  });\n\n  const plane = new Mesh(geometry, material);\n  group.add(plane);\n\n  // Load texture and apply atlas offset/repeat\n  const texturePromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  texturePromise.then((tex) => {\n    const img = tex.image;\n    if (img) {\n      const tw = img.width;\n      const th = img.height;\n      // Compute repeat to isolate the atlas region\n      const repeatU = srcRect.w / tw;\n      const repeatV = srcRect.h / th;\n      tex.repeat.set(repeatU, repeatV);\n      tex.offset.set(srcRect.x / tw, srcRect.y / th);\n    } else {\n      // Fallback: assume texture is exactly the region\n      tex.repeat.set(1, 1);\n      tex.offset.set(0, 0);\n    }\n    tex.needsUpdate = true;\n    material.map = tex;\n    material.needsUpdate = true;\n  });\n\n  // --- Text: \"Features 3\" ---\n  const textMesh = ctx.fontAtlas.createText('Features 3', {\n    fontSize: 39,\n    color: '#e8ecf2', // paper\n    align: 'center',\n    maxWidthPx: 190, // roughly fits width of card\n  });\n  // Position text slightly in front of plane\n  if (textMesh) {\n    textMesh.position.set(0, 0, 0.005);\n    // Scale if needed (text is in screen pixels, convert to scene units using fontAtlas default scaling)\n    // Typical: fontSize in pixels translates to scene units ~ fontSize/72? We'll keep default.\n    group.add(textMesh);\n  }\n\n  // --- Scene placement ---\n  group.position.set(3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // --- Cleanup ---\n  const geometryRef = geometry;\n  const materialRef = material;\n  group.userData.cleanup = () => {\n    geometryRef.dispose();\n    materialRef.dispose();\n    // Clean up timeline if any (none here)\n  };\n\n  // No event handlers needed\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

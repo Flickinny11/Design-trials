@@ -1,0 +1,10 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "caseId": "f-05-simple",
+  "run": 3,
+  "rawCompliant": false,
+  "fenced": true,
+  "parsed": true,
+  "verified": true,
+  "violations": []
+}

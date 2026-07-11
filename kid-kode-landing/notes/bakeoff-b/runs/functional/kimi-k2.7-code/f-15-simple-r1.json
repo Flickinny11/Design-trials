@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-15-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 665,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3719,
+    "completionTokens": 5955
+  },
+  "costUsd": 0.02346063,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture, uv, vec2 } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const THREE = ctx.THREE;\n  const group = new THREE.Group();\n  group.name = config.id || 'collection-card-1-label';\n\n  const colors = config.intent?.visualSpec?.colors ?? config.colors ?? {};\n  const paper = colors.paper ?? '#e8ecf2';\n  const surface = colors.surface ?? '#0b0b10';\n\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const headlineItem = items.find((i) => i.role === 'headline') || items[0] || {};\n  const headlineText = headlineItem.text ?? 'Collection 1';\n  const fontSize = headlineItem.typography?.fontSize ?? 39;\n\n  const atlas = config.atlasRegion ?? config.intent?.visualSpec?.atlasRegion ?? {};\n  const rect = atlas.rect ?? atlas.sourceRect ?? { x: 0, y: 0, w: 512, h: 320 };\n  const atlasW = atlas.size?.width ?? rect.x + rect.w;\n  const atlasH = atlas.size?.height ?? rect.y + rect.h;\n  const aspect = rect.w / rect.h;\n  const uvScaleX = rect.w / atlasW;\n  const uvScaleY = rect.h / atlasH;\n  const uvOffsetX = rect.x / atlasW;\n  const uvOffsetY = rect.y / atlasH;\n\n  const geometry = new THREE.PlaneGeometry(aspect, 1);\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    side: THREE.DoubleSide,\n    depthWrite: false,\n    opacity: 0,\n  });\n\n  const spriteMesh = new THREE.Mesh(geometry, material);\n  spriteMesh.name = 'sprite';\n  group.add(spriteMesh);\n\n  const textObj = ctx.fontAtlas.createText(headlineText, {\n    fontSize,\n    color: paper,\n    align: 'center',\n  });\n  textObj.position.set(0, -0.72, 0.02);\n  group.add(textObj);\n\n  let tex = null;\n  let disposed = false;\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((loadedTex) => {\n      if (disposed) {\n        loadedTex.dispose();\n        return;\n      }\n      tex = loadedTex;\n      tex.colorSpace = ctx.THREE.SRGBColorSpace;\n\n      const mapNode = texture(tex).uv(\n        uv().mul(vec2(uvScaleX, uvScaleY)).add(vec2(uvOffsetX, uvOffsetY))\n      );\n      material.map = mapNode;\n      material.opacity = 1;\n      material.needsUpdate = true;\n    }).catch(() => {\n      material.color.set(surface);\n      material.opacity = 1;\n    });\n  } else {\n    material.color.set(surface);\n    material.opacity = 1;\n  }\n\n  group.scale.set(0.95, 0.95, 0.95);\n  const tl = gsap.timeline();\n  tl.to(group.scale, { x: 1, y: 1, z: 1, duration: 0.7, ease: 'power4.out' });\n\n  group.userData.update = (camera) => {\n    if (camera && spriteMesh) {\n      spriteMesh.lookAt(camera.position);\n    }\n  };\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    disposed = true;\n    tl.kill();\n    gsap.killTweensOf(group.scale);\n    if (tex) tex.dispose();\n    geometry.dispose();\n    material.dispose();\n    textObj.traverse((o) => {\n      if (o.geometry) o.geometry.dispose();\n      if (o.material) {\n        if (Array.isArray(o.material)) {\n          o.material.forEach((m) => m.dispose());\n        } else {\n          o.material.dispose();\n        }\n      }\n    });\n  };\n\n  return group;\n}"
+}

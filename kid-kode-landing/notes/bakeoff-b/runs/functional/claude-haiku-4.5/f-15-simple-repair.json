@@ -1,0 +1,16 @@
+{
+  "axis": "repair",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "caseId": "f-15-simple",
+  "run": "repair",
+  "ok": true,
+  "usage": {
+    "promptTokens": 5206,
+    "completionTokens": 742
+  },
+  "costUsd": 0.008916,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // Create a plane geometry sized to atlas region aspect ratio (512×320 = 1.6:1)\n  const geometry = new THREE.PlaneGeometry(1.6, 1.0);\n\n  // Create material with map node\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    depthTest: true,\n    depthWrite: true,\n  });\n\n  // Load the sprite texture\n  ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n    // Atlas region: source (0,0,512,320) in a full atlas\n    // Assuming full atlas is 512×512, region is top-left corner\n    const uvOffset = new THREE.Vector2(0, 0.375); // y offset for 320px from 512 height\n    const uvScale = new THREE.Vector2(1.0, 0.625); // scale for 320/512 height\n    \n    texture.offset.copy(uvOffset);\n    texture.repeat.copy(uvScale);\n    texture.flipY = false;\n\n    material.map = texture;\n    material.needsUpdate = true;\n  });\n\n  // Create the mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(0, 0, 0);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  // Billboard toward camera (look at camera z-axis)\n  mesh.lookAt(0, 0, 10);\n\n  // Create the return group\n  const group = new THREE.Group();\n  group.add(mesh);\n\n  // Iterate through config.textContent and render text labels\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  \n  for (let i = 0; i < items.length; i++) {\n    const item = items[i];\n    const text = item.text || '';\n    const fontSize = item.typography?.fontSize ?? 39;\n    const color = item.color ?? '#e8ecf2';\n    \n    const textLabel = ctx.fontAtlas.createText(text, {\n      fontSize: fontSize,\n      color: color,\n      align: 'center',\n    });\n    \n    // Position text labels in a staggered pattern above the sprite\n    textLabel.position.set(0, 0.65 + i * 0.35, 0.01);\n    group.add(textLabel);\n  }\n\n  // Setup cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (material.map) {\n      material.map.dispose();\n    }\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

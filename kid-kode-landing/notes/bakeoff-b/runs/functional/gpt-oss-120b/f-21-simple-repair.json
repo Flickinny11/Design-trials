@@ -1,0 +1,16 @@
+{
+  "axis": "repair",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-21-simple",
+  "run": "repair",
+  "ok": true,
+  "usage": {
+    "promptTokens": 4501,
+    "completionTokens": 1492
+  },
+  "costUsd": 0.0015703499999999999,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture, uv, mul, add, vec2 } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport { createNode as dummyPrimitive } from '@/primitives';\nimport { createText as dummyText } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Container group\n  const container = new Group();\n\n  // Determine aspect ratio from atlas region (512 / 320 = 1.6)\n  const geometry = new PlaneGeometry(1.6, 1);\n\n  // Basic node material (transparent to allow alpha)\n  const material = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    transparent: true,\n  });\n\n  const plane = new Mesh(geometry, material);\n  container.add(plane);\n\n  // Track loaded texture for cleanup\n  let loadedTexture = null;\n\n  // Load image texture and apply atlas UV transform\n  const imageUrl = config.imageUrl ?? config.intent?.visualSpec?.imageUrl;\n  if (imageUrl) {\n    ctx.textureLoader.loadTexture(imageUrl).then((tex) => {\n      loadedTexture = tex;\n\n      const region = {\n        x: 0,\n        y: 0,\n        width: 512,\n        height: 320,\n      };\n\n      const fullW = tex.image?.width || region.width;\n      const fullH = tex.image?.height || region.height;\n\n      const repeatX = region.width / fullW;\n      const repeatY = region.height / fullH;\n      const offsetX = region.x / fullW;\n      const offsetY = region.y / fullH;\n\n      const uvNode = uv();\n      const transformedUV = add(mul(uvNode, vec2(repeatX, repeatY)), vec2(offsetX, offsetY));\n\n      material.map = texture(tex, transformedUV);\n      material.needsUpdate = true;\n    });\n  }\n\n  // Store primitive instances for cleanup\n  const primitiveInstances = [];\n\n  // Apply any cinematic primitives defined in config (none expected now)\n  if (Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach((primitive) => {\n      const fn = ctx.primitives[primitive.name];\n      if (fn) {\n        const instance = fn(container, primitive.params);\n        primitiveInstances.push(instance);\n      }\n    });\n  }\n\n  // Billboard behaviour: always face the camera\n  plane.onBeforeRender = (renderer, scene, camera) => {\n    plane.quaternion.copy(camera.quaternion);\n  };\n\n  // UserData with empty handlers and cleanup\n  container.userData = {\n    handlers: {},\n    cleanup: () => {\n      // Dispose geometry and material\n      geometry.dispose();\n      material.dispose();\n\n      // Dispose loaded texture if any\n      if (loadedTexture && typeof loadedTexture.dispose === 'function') {\n        loadedTexture.dispose();\n      }\n\n      // Cleanup primitives\n      primitiveInstances.forEach((inst) => {\n        if (inst && typeof inst.cleanup === 'function') {\n          inst.cleanup();\n        }\n      });\n\n      // Kill any GSAP tweens attached to this container\n      gsap.killTweensOf(container);\n    },\n  };\n\n  return container;\n}"
+}

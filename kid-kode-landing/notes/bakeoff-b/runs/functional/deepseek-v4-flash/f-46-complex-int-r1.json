@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-46-complex-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 2215,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4050,
+    "completionTokens": 5049
+  },
+  "costUsd": 0.0011884320000000003,
+  "billing": "metered",
+  "output": "```javascript\nimport {\n  MeshBasicNodeMaterial,\n  DirectionalLight,\n  AmbientLight\n} from 'three/webgpu';\nimport { uv, vec3, mix, uniform } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new ctx.THREE.Group();\n\n  // Backdrop plane with vertical gradient (surface/ink)\n  const bGeo = new ctx.THREE.PlaneGeometry(7, 6);\n  const color1 = uniform(vec3(0.043, 0.043, 0.063)); // #0b0b10\n  const color2 = uniform(vec3(0.086, 0.086, 0.098)); // #16161d\n  const bMat = new MeshBasicNodeMaterial({\n    colorNode: mix(color1, color2, uv().y)\n  });\n  const backdrop = new ctx.THREE.Mesh(bGeo, bMat);\n  backdrop.position.z = -2.5;\n  group.add(backdrop);\n\n  // Load GLB model (gear-a)\n  const glbPromise = ctx.glbLoader.loadGLB(config.meshUrl);\n\n  // Storage for primitive cleanup results\n  const primCleanups = [];\n  // Apply cinematic primitives\n  if (Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach(p => {\n      const result = ctx.primitives[p.name](group, p.params);\n      if (result && typeof result.cleanup === 'function') {\n        primCleanups.push(result.cleanup);\n      }\n    });\n  }\n\n  // Entrance and lighting setup after model loads\n  glbPromise.then(gltf => {\n    const mesh = gltf.scene;\n    // Scale to fit the card tile context\n    mesh.scale.set(0.5, 0.5, 0.5);\n    group.add(mesh);\n\n    // Accent rim light\n    const rim = new DirectionalLight(0xff2a38, 0.8);\n    rim.position.set(-1, 2, 1);\n    group.add(rim);\n\n    // Subtle ambient fill\n    const fill = new AmbientLight(0x404060, 0.3);\n    group.add(fill);\n\n    // Weighted-settle entrance\n    gsap.fromTo(\n      group.scale,\n      { x: 1.04, y: 1.04, z: 1.04 },\n      { x: 1, y: 1, z: 1, duration: 0.9, ease: 'power4.out' }\n    );\n    gsap.fromTo(\n      group.position,\n      { y: 0.4 },\n      { y: 0, duration: 0.7, ease: 'power3.out' }\n    );\n  }).catch(err => {\n    console.warn('GLB load failed', err);\n  });\n\n  // Event handlers\n  group.userData.handlers = {\n    hover: {\n      enter() {\n        gsap.to(group.position, {\n          y: group.position.y + 0.15,\n          duration: 0.3,\n          ease: 'power2.out'\n        });\n      },\n      leave() {\n        gsap.to(group.position, {\n          y: group.position.y - 0.15,\n          duration: 0.3,\n          ease: 'power2.out'\n        });\n      }\n    },\n    click() {\n      ctx.emit('navigate', { to: 'hub-collection.select' });\n    }\n  };\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    gsap.killTweensOf(group.position);\n    gsap.killTweensOf(group.scale);\n\n    // Dispose GLB assets\n    glbPromise.then(gltf => {\n      gltf.scene.traverse(child => {\n        if (child.isMesh) {\n          child.geometry.dispose();\n          if (child.material) {\n            if (Array.isArray(child.material)) {\n              child.material.forEach(m => m.dispose());\n            } else {\n              child.material.dispose();\n            }\n          }\n        }\n      });\n    }).catch(() => {});\n\n    // Cleanup primitives\n    primCleanups.forEach(fn => fn());\n\n    // Dispose backdrop\n    bGeo.dispose();\n    bMat.dispose();\n  };\n\n  return group;\n}\n```"
+}

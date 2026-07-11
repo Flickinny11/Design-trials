@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-40-moderate",
+  "run": 1,
+  "ok": true,
+  "wallMs": 764,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4007,
+    "completionTokens": 10679
+  },
+  "costUsd": 0.0021306600000000004,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshPhysicalNodeMaterial } from 'three/webgpu';\nimport { float, texture, positionLocal, normalLocal, uv, uniform, vec3, mix, clamp, mul, add, sub } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, PlaneGeometry, Mesh, Color, EdgesGeometry, LineSegments, LineBasicMaterial } = ctx.THREE;\n\n  const group = new Group();\n\n  /* ── card geometry ── */\n  const W = 1.75;\n  const H = 1.0;\n  const SEG = 64;\n  const geo = new PlaneGeometry(W, H, SEG, SEG);\n  const edgeGeo = new EdgesGeometry(geo);\n\n  /* ── machined PBR surface ── */\n  const mat = new MeshPhysicalNodeMaterial({\n    metalness: 0.5,\n    roughness: 0.55,\n    clearcoat: 0.15,\n    clearcoatRoughness: 0.3,\n    envMapIntensity: 0.8,\n    color: new Color('#e8ecf2'),\n  });\n\n  const card = new Mesh(geo, mat);\n  card.userData.isInteractive = true;\n  card.position.y = 0.4; // entrance offset\n  group.add(card);\n\n  /* ── load textures ── */\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      mat.map = tex;\n      mat.needsUpdate = true;\n    });\n  }\n\n  if (config.depthMapUrl) {\n    ctx.textureLoader.loadTexture(config.depthMapUrl).then((depthTex) => {\n      const dVal = texture(depthTex).sample(uv()).r;\n      const disp = dVal.mul(0.04);\n      mat.positionNode = positionLocal.add(normalLocal.mul(disp));\n    });\n  }\n\n  /* ── accent edge (signal red on focus) ── */\n  const edgeMat = new LineBasicMaterial({\n    color: new Color('#ff2a38'),\n    transparent: true,\n    opacity: 0,\n  });\n  const edgeLine = new LineSegments(edgeGeo, edgeMat);\n  edgeLine.position.z = 0.005;\n  group.add(edgeLine);\n\n  /* ── entrance animation ── */\n  gsap.to(card.position, {\n    y: 0,\n    duration: 0.7,\n    ease: 'power3.out',\n    delay: 0.1,\n  });\n\n  /* ── interaction handlers ── */\n  group.userData.handlers = {\n    hover: {\n      enter: () => {\n        gsap.to(card.position, { y: 0.15, duration: 0.3, ease: 'power2.out' });\n        gsap.to(edgeMat, { opacity: 1, duration: 0.3, ease: 'power2.out' });\n      },\n      leave: () => {\n        gsap.to(card.position, { y: 0, duration: 0.3, ease: 'power2.out' });\n        gsap.to(edgeMat, { opacity: 0, duration: 0.3, ease: 'power2.out' });\n      },\n    },\n    click: {\n      trigger: () => {\n        const tl = gsap.timeline({\n          onComplete: () => ctx.emit('navigate', { to: 'hub-features.select' }),\n        });\n        tl.to(card.scale, { x: 0.97, y: 0.97, duration: 0.12, ease: 'back.out(2)' })\n          .to(card.scale, { x: 1, y: 1, duration: 0.3, ease: 'power2.out' });\n      },\n    },\n  };\n\n  /* ── cinematic primitives ── */\n  const primCleanups = [];\n  if (config.cinematicPrimitives) {\n    for (const p of config.cinematicPrimitives) {\n      const r = ctx.primitives[p.name](group, p.params);\n      if (r) primCleanups.push(r);\n    }\n  }\n\n  /* ── cleanup ── */\n  group.userData.cleanup = () => {\n    primCleanups.forEach((c) => {\n      if (c.cleanup) c.cleanup();\n      if (c.timeline) c.timeline.kill();\n    });\n    geo.dispose();\n    edgeGeo.dispose();\n    mat.dispose();\n    edgeMat.dispose();\n  };\n\n  return group;\n}\n```"
+}

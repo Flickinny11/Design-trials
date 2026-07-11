@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-24-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 1989,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3912,
+    "completionTokens": 4507
+  },
+  "costUsd": 0.001085784,
+  "billing": "metered",
+  "output": "```javascript\nimport { PlaneGeometry, Group, Vector3 } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\n/**\n * Creates a billboard sprite for the \"Pricing card 2 label\" element.\n * Produces a textured plane with a MeshBasicNodeMaterial, using the provided\n * ceramic grain texture and applying atlas UV offsets. The text \"Pricing 2\"\n * is rendered via the font atlas system and placed in front of the plane.\n *\n * @param {Object} config - PrismNode configuration\n * @param {NodeContext} ctx - Runtime context with loaders and primitives\n * @returns {THREE.Group} The assembled node with cleanup and event handlers\n */\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // --- Configuration ---\n  const atlasRegion = {\n    x: 0,\n    y: 0,\n    width: 512,\n    height: 320,\n  };\n  const aspect = atlasRegion.width / atlasRegion.height; // ~1.6\n  const planeWidth = 1.6;\n  const planeHeight = 1.0;\n\n  // --- Geometry ---\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n\n  // --- Material (MeshBasicNodeMaterial) ---\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    depthWrite: false,\n  });\n\n  // --- Texture loading ---\n  let texture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      texture = tex;\n      // Apply atlas UV offsets relative to the full texture size\n      const imgW = tex.image ? tex.image.width : 1;\n      const imgH = tex.image ? tex.image.height : 1;\n      tex.repeat.set(atlasRegion.width / imgW, atlasRegion.height / imgH);\n      tex.offset.set(atlasRegion.x / imgW, 1.0 - (atlasRegion.y + atlasRegion.height) / imgH); // flip Y for WebGL\n      tex.needsUpdate = true;\n\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // --- Mesh ---\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.rotation.y = Math.PI; // flip so that +Z faces the camera after group.lookAt\n  group.add(mesh);\n\n  // --- Billboard: orient the group to face the camera ---\n  // Assume camera is at (0, 0, 10) per the hub frame specification\n  const cameraPosition = new Vector3(0, 0, 10);\n  group.lookAt(cameraPosition);\n\n  // --- Text content ---\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const headlineItem = textItems.find((t) => t.role === 'headline');\n  if (headlineItem) {\n    const fontSize = headlineItem.typography?.fontSize ?? 39;\n    const textMesh = ctx.fontAtlas.createText('Pricing 2', {\n      fontSize,\n      color: '#e8ecf2',\n      align: 'center',\n    });\n    textMesh.position.set(0, 0, 0.01); // slightly in front of the plane\n    group.add(textMesh);\n  }\n\n  // --- Event handlers (none) ---\n  group.userData.handlers = {};\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (texture) texture.dispose();\n    // No GSAP timelines to kill\n  };\n\n  // Position the node (the adapter will also apply config.scenePosition)\n  if (config.scenePosition) {\n    group.position.copy(config.scenePosition);\n  }\n\n  return group;\n}\n```"
+}

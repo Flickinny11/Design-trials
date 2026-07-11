@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-23-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 216,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3693,
+    "completionTokens": 8250
+  },
+  "costUsd": 0.03145146,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial, PlaneGeometry } from 'three/webgpu';\nimport { uv, vec2, vec3, vec4, texture, mix, smoothstep, color, mul, dot, fract } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh } = ctx.THREE;\n\n  const group = new Group();\n\n  const colors = {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n\n  const atlasW = 512;\n  const atlasH = 320;\n  const aspect = atlasW / atlasH;\n\n  const height = 1.5;\n  const width = height * aspect;\n\n  const geometry = new PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial();\n  material.side = ctx.THREE.FrontSide;\n\n  const gradient = mix(\n    color(colors.ink),\n    color(colors.surface),\n    smoothstep(0.0, 1.0, uv().y)\n  );\n\n  material.colorNode = vec4(gradient, 1.0);\n\n  let loadedTexture = null;\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      loadedTexture = tex;\n      tex.colorSpace = ctx.THREE.SRGBColorSpace;\n      tex.wrapS = ctx.THREE.ClampToEdgeWrapping;\n      tex.wrapT = ctx.THREE.ClampToEdgeWrapping;\n\n      const texNode = texture(tex, uv());\n      const base = mix(texNode.rgb, gradient, 0.28);\n\n      const accentMask = smoothstep(0.94, 0.96, uv().y);\n      const withAccent = mix(base, color(colors.accent), mul(accentMask, 0.85));\n\n      const grainUV = mul(uv(), vec2(600.0, 400.0));\n      const grain = fract(mul(dot(grainUV, vec2(12.9898, 78.233)), 43758.5453));\n      const grainMix = mul(grain, 0.04);\n      const finalColor = mix(withAccent, color(colors.paper), grainMix);\n\n      material.colorNode = vec4(finalColor, 1.0);\n      material.needsUpdate = true;\n    });\n  }\n\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  group.userData.handlers = {};\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (loadedTexture) loadedTexture.dispose();\n  };\n\n  return group;\n}"
+}

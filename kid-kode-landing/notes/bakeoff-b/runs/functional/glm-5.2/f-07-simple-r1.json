@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "glm-5.2",
+  "model": "z-ai/glm-5.2",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-07-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 731,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3668,
+    "completionTokens": 1801
+  },
+  "costUsd": 0.00391788,
+  "billing": "metered",
+  "output": "```js\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture, uv, time, Fn, vec2, vec3, fract, sin, dot, add, mul, sub } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, SRGBColorSpace } = ctx.THREE;\n\n  const group = new Group();\n  group.name = 'hub-features-card-1';\n\n  // Atlas source rect 512x320 -> aspect 1.6:1\n  const planeW = 2.0;\n  const planeH = planeW / 1.6;\n\n  const geometry = new PlaneGeometry(planeW, planeH, 1, 1);\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    side: ctx.THREE.DoubleSide,\n  });\n\n  const plane = new Mesh(geometry, material);\n  plane.renderOrder = 1;\n  group.add(plane);\n\n  // Subtle film grain via TSL hash noise (static composition, no interactivity)\n  const grain = Fn(() => {\n    const p = uv().mul(vec2(900.0, 562.5)).add(time.mul(7.0));\n    const h = fract(sin(dot(p, vec2(12.9898, 78.233))).mul(43758.5453));\n    return h.sub(0.5);\n  });\n\n  const imageUrl = config.imageUrl;\n  let loadedTexture = null;\n\n  ctx.textureLoader.loadTexture(imageUrl).then((tex) => {\n    loadedTexture = tex;\n    tex.colorSpace = SRGBColorSpace;\n    tex.anisotropy = 8;\n    tex.minFilter = ctx.THREE.LinearMipmapLinearFilter;\n    tex.magFilter = ctx.THREE.LinearFilter;\n    tex.generateMipmaps = true;\n    tex.needsUpdate = true;\n\n    const baseColor = texture(tex, uv());\n    // Apply very subtle grain (<=0.03 luma) over the engineered-gradient surface\n    const g = grain().mul(0.03);\n    material.colorNode = add(baseColor, vec3(g, g, g));\n    material.needsUpdate = true;\n  });\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (loadedTexture) loadedTexture.dispose();\n  };\n\n  return group;\n}\n```"
+}

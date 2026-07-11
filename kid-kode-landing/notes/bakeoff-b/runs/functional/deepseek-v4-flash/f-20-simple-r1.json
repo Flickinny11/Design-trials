@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-20-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 1787,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3897,
+    "completionTokens": 4302
+  },
+  "costUsd": 0.001050084,
+  "billing": "metered",
+  "output": "```javascript\nimport { Group, PlaneGeometry, Mesh, Vector3 } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, texture, vec3, random } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // Load the image texture\n  const imageUrl = config.imageUrl || '/prism-mock/home/nodes/cta-hero-isolated.png';\n  const texturePromise = ctx.textureLoader.loadTexture(imageUrl);\n  let loadedTexture = null;\n\n  // Plane geometry (width, height – tuned to contain text + padding)\n  const planeGeometry = new PlaneGeometry(4, 1.2);\n  const material = new MeshBasicNodeMaterial();\n  material.color.set('#0b0b10'); // surface fallback while texture loads\n  const planeMesh = new Mesh(planeGeometry, material);\n  planeMesh.position.z = -0.1; // behind text\n  group.add(planeMesh);\n\n  // When texture arrives, attach it with a subtle grain overlay\n  texturePromise.then(tex => {\n    loadedTexture = tex;\n    const texNode = texture(tex, uv());\n    const grain = random(uv().fract()).mul(0.02);\n    material.colorNode = texNode.add(grain);\n    material.needsUpdate = true;\n  });\n\n  // Create the \"Pricing\" text headline\n  const textObj = ctx.fontAtlas.createText('Pricing', {\n    fontSize: 96,\n    color: '#e8ecf2', // paper\n    align: 'center',\n  });\n\n  // Scale to hero height ~0.62 scene units (96px → 0.62 via assumed factor)\n  const textScale = 0.0065;\n  textObj.scale.set(textScale, textScale, textScale);\n  textObj.position.z = 0.01;\n  group.add(textObj);\n\n  // No event handlers (static)\n  group.userData.handlers = {};\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    planeGeometry.dispose();\n    material.colorNode = null;\n    material.map = null;\n    material.dispose();\n\n    if (loadedTexture) loadedTexture.dispose();\n\n    textObj.traverse(child => {\n      if (child.isMesh) {\n        if (child.geometry) child.geometry.dispose();\n        if (child.material) {\n          if (Array.isArray(child.material)) {\n            child.material.forEach(m => m.dispose());\n          } else {\n            child.material.dispose();\n          }\n        }\n      }\n    });\n\n    // Kill any GSAP timelines (none present)\n  };\n\n  return group;\n}\n```"
+}

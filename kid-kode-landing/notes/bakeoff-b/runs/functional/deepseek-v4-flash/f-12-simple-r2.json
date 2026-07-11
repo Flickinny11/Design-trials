@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-12-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 898,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3912,
+    "completionTokens": 2512
+  },
+  "costUsd": 0.000750624,
+  "billing": "metered",
+  "output": "```javascript\nimport { \n  PlaneGeometry, \n  Group, \n  Mesh, \n  Vector2 \n} from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n  const { imageUrl, scenePosition, sceneRotation, sceneScale, textContent, atlasRegion } = config;\n  \n  // Atlas region: source rect x, y, width, height (default from config or spec)\n  const region = atlasRegion || { x: 0, y: 0, width: 512, height: 320 };\n  \n  // Create a plane with aspect ratio matching the atlas region\n  const aspect = region.width / region.height;\n  const geometry = new PlaneGeometry(aspect, 1);\n  \n  // Material: basic with placeholder color (will be replaced by texture)\n  const material = new MeshBasicNodeMaterial({\n    color: config.colors?.surface || '#0b0b10' // fallback\n  });\n  \n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n  \n  // Load texture\n  if (imageUrl) {\n    ctx.textureLoader.loadTexture(imageUrl).then((tex) => {\n      // Assume texture is the atlas sheet; compute UV repeat and offset\n      if (tex) {\n        const img = tex.image;\n        const texW = img?.width || region.width;\n        const texH = img?.height || region.height;\n        const repeat = new Vector2(region.width / texW, region.height / texH);\n        const offset = new Vector2(region.x / texW, region.y / texH);\n        tex.repeat.set(repeat.x, repeat.y);\n        tex.offset.set(offset.x, offset.y);\n        tex.needsUpdate = true;\n        material.map = tex;\n        material.needsUpdate = true;\n      }\n    });\n  }\n  \n  // Text content: \"Features 3\" as headline\n  const texts = config.textContent || config.intent?.visualSpec?.textContent || [];\n  const headlineItem = texts.find(t => t.role === 'headline') || texts[0];\n  if (headlineItem) {\n    const textMesh = ctx.fontAtlas.createText(headlineItem.text || 'Features 3', {\n      fontSize: 39, // px as spec\n      color: config.colors?.paper || '#e8ecf2',\n      align: 'center',\n      maxWidthPx: 400, // approximate\n      letterSpacingPx: 0\n    });\n    // Position text on the plane surface (z = 0.001 to avoid z-fighting)\n    textMesh.position.set(0, 0, 0.001);\n    textMesh.scale.set(0.01, 0.01, 0.01); // adjust scale – fontSize 39px is large; scale down for scene units\n    group.add(textMesh);\n  }\n  \n  // No cinematic primitives, no event handlers\n  // Cleanup\n  const userData = {\n    cleanup: () => {\n      geometry.dispose();\n      material.dispose();\n      // Text mesh disposal – fontAtlas may handle internally, but we can remove children\n      group.children.forEach(child => {\n        if (child.geometry) child.geometry.dispose();\n        if (child.material) child.material.dispose();\n      });\n    }\n  };\n  \n  group.userData = { ...group.userData, ...userData };\n  \n  return group;\n}\n```"
+}

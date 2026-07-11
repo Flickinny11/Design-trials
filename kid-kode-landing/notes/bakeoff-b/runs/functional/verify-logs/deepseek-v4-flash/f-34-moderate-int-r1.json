@@ -1,0 +1,10 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "caseId": "f-34-moderate-int",
+  "run": 1,
+  "rawCompliant": false,
+  "fenced": true,
+  "parsed": true,
+  "verified": true,
+  "violations": []
+}

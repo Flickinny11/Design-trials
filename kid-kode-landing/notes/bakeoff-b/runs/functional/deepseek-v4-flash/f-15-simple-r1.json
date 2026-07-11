@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-15-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 788,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3910,
+    "completionTokens": 4352
+  },
+  "costUsd": 0.001059576,
+  "billing": "metered",
+  "output": "```javascript\nimport { Sprite, SpriteMaterial, Group } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // Position from config (if provided, otherwise default)\n  if (config.position) {\n    group.position.set(config.position.x, config.position.y, config.position.z);\n  } else {\n    group.position.set(-3.2, 1, 0.06);\n  }\n  if (config.rotation) {\n    group.rotation.set(config.rotation.x, config.rotation.y, config.rotation.z);\n  }\n  if (config.scale) {\n    group.scale.set(config.scale.x, config.scale.y, config.scale.z);\n  }\n\n  // --- Text content ---\n  const items = config.textContent ?? [];\n  const headline = items.find(i => i.role && i.role.includes('headline')) || \n                   items[0] || \n                   { text: 'Collection 1', typography: { fontSize: 39 } };\n\n  const text = ctx.fontAtlas.createText(headline.text, {\n    fontSize: headline.typography?.fontSize || 39,\n    color: '#e8ecf2',\n    align: 'center',\n  });\n  text.position.z = 0.02; // slightly forward to avoid z-fighting once sprite is added\n  group.add(text);\n\n  // --- Sprite plane (billboarded) ---\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      const mat = new SpriteMaterial({\n        map: tex,\n        transparent: true,\n        depthTest: true,\n      });\n      const sprite = new Sprite(mat);\n\n      // Set size to match texture’s aspect ratio (source rect: 512×320 → 1.6:1)\n      const aspect = tex.image ? (tex.image.width / tex.image.height) : 1.6;\n      sprite.scale.set(aspect, 1, 1);\n      group.add(sprite);\n    }).catch(err => console.warn(`[CollectionCard1] Texture load failed: ${err}`));\n  }\n\n  // --- No cinematic primitives ---\n\n  // --- Event handlers ---\n  group.userData.handlers = {};\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    // Dispose all materials, textures, geometries owned by this node\n    group.traverse((child) => {\n      if (child.isSprite && child.material) {\n        child.material.map?.dispose();\n        child.material.dispose();\n      }\n      if (child.isMesh && child.material) {\n        // text mesh (uses font atlas – we only dispose the geometry, not the shared font texture)\n        child.geometry?.dispose();\n        if (Array.isArray(child.material)) {\n          child.material.forEach(m => m.dispose());\n        } else {\n          child.material.dispose();\n        }\n      }\n    });\n    // Kill any GSAP timelines (none in this node)\n    // (no timelines to kill)\n  };\n\n  return group;\n}\n```"
+}

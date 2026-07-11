@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-48-complex",
+  "run": 3,
+  "ok": true,
+  "wallMs": 125113,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4012,
+    "completionTokens": 2497
+  },
+  "costUsd": 0.00081054,
+  "billing": "metered",
+  "output": "```javascript\nimport { Group, DirectionalLight, AmbientLight } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // --- Load GLB mesh ---\n  const meshUrl = config.meshUrl || '/prism-mock/orrery/meshes/gear-a.glb';\n  ctx.glbLoader.loadGLB(meshUrl).then((gltf) => {\n    const mesh = gltf.scene;\n    // Ensure materials are PBR (GLB should have them)\n    mesh.traverse((child) => {\n      if (child.isMesh) {\n        // Optionally tweak material properties for machined-metal look\n        // but spec says \"Texture and PBR materials come from the GLB itself\"\n        // so we leave as is.\n      }\n    });\n    group.add(mesh);\n\n    // Weighted-settle entrance animation\n    group.scale.set(1.04, 1.04, 1.04);\n    gsap.to(group.scale, {\n      x: 1, y: 1, z: 1,\n      duration: 0.9,\n      ease: \"power4.out\",\n      overwrite: \"auto\"\n    });\n  });\n\n  // --- Accent rim light ---\n  const rimLight = new DirectionalLight(0xff2a38, 0.8);\n  rimLight.position.set(-1, 1, -2); // behind and to the left\n  group.add(rimLight);\n\n  // --- Ambient fill (already provided by scene, but add a small local fill) ---\n  const fillLight = new AmbientLight(0x404060, 0.3);\n  group.add(fillLight);\n\n  // --- Weighted-settle entrance (initial scale set in load callback, but we also set here for immediate) ---\n  group.scale.set(1.04, 1.04, 1.04);\n  // The GSAP animation will be triggered when mesh loads, but we can also start immediately? It will target group.scale.\n  // We'll start a timeline that will be overwritten when mesh loads.\n  const entranceTl = gsap.timeline({ paused: true });\n  entranceTl.to(group.scale, {\n    x: 1, y: 1, z: 1,\n    duration: 0.9,\n    ease: \"power4.out\"\n  });\n  // Start after a short delay to allow mesh to load? Actually we can start immediately; the scale will animate from 1.04 to 1.0.\n  // But if mesh loads later, the scale animation will still run. That's fine.\n  entranceTl.play();\n\n  // --- Interactions ---\n  group.userData.handlers = {\n    pointerenter: () => {\n      gsap.to(group.position, {\n        y: group.position.y + 0.15,\n        duration: 0.3,\n        ease: \"power2.out\"\n      });\n    },\n    pointerleave: () => {\n      gsap.to(group.position, {\n        y: group.position.y - 0.15,\n        duration: 0.3,\n        ease: \"power2.out\"\n      });\n    },\n    click: () => {\n      ctx.emit('hub-journal.select', {});\n    }\n  };\n\n  // --- Cinematic primitives ---\n  const primitiveCleanups = [];\n  if (config.cinematicPrimitives) {\n    config.cinematicPrimitives.forEach((prim) => {\n      const result = ctx.primitives[prim.name](group, prim.params);\n      if (result && result.cleanup) {\n        primitiveCleanups.push(result.cleanup);\n      }\n    });\n  }\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    // Kill GSAP timelines\n    gsap.killTweensOf(group.scale);\n    gsap.killTweensOf(group.position);\n    // Cleanup primitives\n    primitiveCleanups.forEach(fn => fn());\n    // Dispose mesh resources if needed (GLB scene will be disposed by parent)\n    // We could traverse and dispose geometries/materials, but the GLB loader caches.\n    // For safety, we can dispose children.\n    group.traverse((child) => {\n      if (child.isMesh) {\n        child.geometry?.dispose();\n        if (Array.isArray(child.material)) {\n          child.material.forEach(m => m.dispose());\n        } else if (child.material) {\n          child.material.dispose();\n        }\n      }\n    });\n  };\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "design",
+  "contestant": "glm-5.2",
+  "model": "z-ai/glm-5.2",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "v-11-gradient-cta",
+  "run": 1,
+  "ok": true,
+  "wallMs": 721,
+  "finishReason": "length",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4106,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.0233514,
+  "billing": "metered",
+  "output": ""
+}

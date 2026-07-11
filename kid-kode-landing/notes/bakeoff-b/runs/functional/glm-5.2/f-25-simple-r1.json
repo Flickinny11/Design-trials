@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "glm-5.2",
+  "model": "zai-org/GLM-5.2",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-25-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 201464,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3669,
+    "completionTokens": 4274
+  },
+  "costUsd": 0.01623417,
+  "billing": "metered",
+  "output": "```js\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture, uniform, uv, vec2, vec3, float, mix, Fn } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const {\n    Group, Mesh, PlaneGeometry, DataTexture, RGBAFormat,\n    SRGBColorSpace, DoubleSide\n  } = ctx.THREE;\n\n  const group = new Group();\n  group.name = 'hub-pricing-card-2';\n\n  // --- Atlas region: rect 0,0,512,320 (single-region atlas -> full texture).\n  const texUniform = uniform(null);\n\n  // Placeholder ink-tinted 1px until the real cached asset resolves.\n  const placeholder = new DataTexture(\n    new Uint8Array([11, 11, 16, 255]),\n    1, 1, RGBAFormat\n  );\n  placeholder.needsUpdate = true;\n  texUniform.value = placeholder;\n\n  // Subtle engineered grain — no soft pastel blur, no plain flat fill.\n  const grain = Fn(() => {\n    const g = uv().add(vec2(float(0.137), float(0.291)));\n    const n = g.x.mul(12.9898).add(g.y.mul(78.233)).sin().fract();\n    return n.sub(float(0.5)).mul(float(0.035));\n  })();\n\n  const baseColorNode = mix(\n    vec3(float(0.043), float(0.043), float(0.063)),\n    texture(texUniform).rgb,\n    float(1.0).sub(grain)\n  );\n\n  const mat = new MeshBasicNodeMaterial({\n    transparent: true,\n    side: DoubleSide,\n    toneMapped: false\n  });\n  mat.colorNode = baseColorNode;\n\n  // Aspect 512:320 = 1.6 — sized to sit on the right edge of the hub frame.\n  const W = 1.4;\n  const H = W * (320 / 512);\n  const geo = new PlaneGeometry(W, H, 1, 1);\n  const mesh = new Mesh(geo, mat);\n  mesh.renderOrder = 2;\n  group.add(mesh);\n\n  // Thin accent spine on the leading edge (signal red, <=10% of frame).\n  const accentMat = new MeshBasicNodeMaterial({ transparent: true, toneMapped: false });\n  accentMat.colorNode = vec3(float(1.0), float(0.165), float(0.22));\n  const accentGeo = new PlaneGeometry(0.022, H * 0.78, 1, 1);\n  const accent = new Mesh(accentGeo, accentMat);\n  accent.position.set(-W * 0.5 + 0.014, 0.0, 0.002);\n  accent.renderOrder = 3;\n  group.add(accent);\n\n  // --- Resolve the cached texture and swap the uniform.\n  const imageUrl = config.imageUrl;\n  if (imageUrl) {\n    ctx.textureLoader.loadTexture(imageUrl).then((tex) => {\n      try { tex.colorSpace = SRGBColorSpace; } catch (e) {}\n      if (texUniform.value && texUniform.value !== placeholder && texUniform.value.dispose) {\n        // real texture will be owned by the loader cache; do not dispose here.\n      }\n      texUniform.value = tex;\n      mat.needsUpdate = true;\n    });\n  }\n\n  // --- Entrance: fade-up + weighted settle, no linear easing on hero motion.\n  group.scale.set(0.94, 0.94, 0.94);\n  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });\n  tl.to(group.scale, { x: 1, y: 1, z: 1, duration: 0.9, ease: 'power4.out' }, 0);\n  tl.fromTo(mat, { opacity: 0 }, { opacity: 1, duration: 0.7 }, 0);\n  tl.fromTo(accentMat, { opacity: 0 }, { opacity: 1, duration: 0.6 }, 0.18);\n  tl.fromTo(\n    group.position,\n    { y: group.position.y + 0.18 },\n    { y: group.position.y, duration: 0.7, ease: 'power3.out' },\n    0\n  );\n\n  // --- Event surface (no DOM listeners; parent coordinates nav via ctx.emit).\n  group.userData.handlers = {\n    onPointerOver: () => {},\n    onPointerOut: () => {},\n    onClick: () => {\n      ctx.emit('navigate', { to: 'hub-pricing' });\n    }\n  };\n\n  // --- Cleanup: dispose GPU resources + kill GSAP timeline.\n  group.userData.cleanup = () => {\n    tl.kill();\n    geo.dispose();\n    accentGeo.dispose();\n    mat.dispose();\n    accentMat.dispose();\n    if (placeholder && placeholder.dispose) placeholder.dispose();\n  };\n\n  return group;\n}\n```"
+}

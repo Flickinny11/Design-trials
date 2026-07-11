@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-25-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 283,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3695,
+    "completionTokens": 4749
+  },
+  "costUsd": 0.019234410000000004,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const { Group, PlaneGeometry, Mesh, SRGBColorSpace } = ctx.THREE;\n\n  const group = new Group();\n  group.userData.handlers = {};\n\n  const geometry = new PlaneGeometry(1.28, 0.8);\n  const material = new MeshBasicNodeMaterial({ transparent: true });\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  let loadedTexture = null;\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl)\n      .then((texture) => {\n        loadedTexture = texture;\n        texture.colorSpace = SRGBColorSpace;\n        material.map = texture;\n        material.needsUpdate = true;\n      })\n      .catch(() => {});\n  }\n\n  group.userData.cleanup = () => {\n    if (loadedTexture) {\n      loadedTexture.dispose();\n      loadedTexture = null;\n    }\n    material.dispose();\n    geometry.dispose();\n  };\n\n  return group;\n}"
+}

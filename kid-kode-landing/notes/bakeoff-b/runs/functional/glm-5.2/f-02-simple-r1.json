@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "glm-5.2",
+  "model": "z-ai/glm-5.2",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-02-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 1714,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3678,
+    "completionTokens": 10112
+  },
+  "costUsd": 0.0148926,
+  "billing": "metered",
+  "output": "```js\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, mix, smoothstep, vec3 } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Color, DoubleSide } = ctx.THREE;\n\n  const root = new Group();\n  const content = new Group();\n  root.add(content);\n  root.userData.handlers = {};\n  const cleanups = [];\n\n  const colors = config.intent?.visualSpec?.colors ?? {};\n  const cInk = new Color(colors.ink ?? '#16161d');\n  const cPaper = new Color(colors.paper ?? '#e8ecf2');\n  const cAccent = new Color(colors.accent ?? '#ff2a38');\n  const cSurface = new Color(colors.surface ?? '#0b0b10');\n\n  const surfV = vec3(cSurface.r, cSurface.g, cSurface.b);\n  const inkV = vec3(cInk.r, cInk.g, cInk.b);\n  const accentV = vec3(cAccent.r, cAccent.g, cAccent.b);\n\n  // Engineered gradient plate behind the tagline (no flat void)\n  const plateMat = new MeshBasicNodeMaterial({ transparent: true, depthWrite: false });\n  const yy = uv().y;\n  const grad = mix(surfV, inkV, smoothstep(0.0, 1.0, yy));\n  const edge = smoothstep(0.05, 0.0, yy);\n  plateMat.colorNode = mix(grad, accentV, edge.mul(0.5));\n  plateMat.side = DoubleSide;\n  const plate = new Mesh(new PlaneGeometry(2.9, 0.72), plateMat);\n  plate.position.z = -0.2;\n  content.add(plate);\n  cleanups.push(() => { plateMat.dispose(); plate.geometry.dispose(); });\n\n  // Isolated hero asset as a small machined emblem to the left of the wordmark\n  const imgMat = new MeshBasicNodeMaterial({ transparent: true, depthWrite: false });\n  const img = new Mesh(new PlaneGeometry(0.5, 0.3125), imgMat); // 1.6:1 (512x320)\n  img.position.set(-1.0, 0.0, 0.0);\n  content.add(img);\n  cleanups.push(() => { imgMat.dispose(); img.geometry.dispose(); });\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      imgMat.map = tex;\n      imgMat.needsUpdate = true;\n    });\n  }\n\n  // Text via MSDF atlas (ASCII only)\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const raw = items.map((i) => i.text).join(' ').trim();\n  const safe = raw\n    .replace(/[\\u2014\\u2013]/g, '-')\n    .replace(/\\u00B7/g, '-')\n    .replace(/[^\\x20-\\x7E]/g, '')\n    .replace(/\\s{2,}/g, ' ')\n    .trim();\n  const fontSize = items[0]?.typography?.fontSize ?? 42;\n  const text = ctx.fontAtlas.createText(safe || 'Atelier Noir', {\n    fontSize: fontSize,\n    color: '#e8ecf2',\n    align: 'center',\n  });\n  text.position.set(0.35, 0.0, 0.06);\n  content.add(text);\n\n  // Accent underline (signal red, <=10% of frame)\n  const lineMat = new MeshBasicNodeMaterial({ transparent: true, depthWrite: false });\n  lineMat.colorNode = accentV.mul(0.85);\n  const line = new Mesh(new PlaneGeometry(0.22, 0.014), lineMat);\n  line.position.set(-0.85, -0.025, 0.02);\n  content.add(line);\n  cleanups.push(() => { lineMat.dispose(); line.geometry.dispose(); });\n\n  // Entrance: rise-in + weighted settle, fade plate/emblem\n  content.position.y = 0.4;\n  const tl = gsap.timeline({ delay: 0.2 });\n  tl.to(content.position, { y: 0, duration: 0.7, ease: 'power3.out' });\n  tl.from(content.scale, { x: 0.97, y: 0.97, z: 0.97, duration: 0.9, ease: 'power4.out' }, 0);\n  tl.fromTo(plateMat, { opacity: 0.0 }, { opacity: 0.92, duration: 0.6, ease: 'power2.out' }, 0);\n  tl.fromTo(imgMat, { opacity: 0.0 }, { opacity: 1.0, duration: 0.6, ease: 'power2.out' }, 0.05);\n\n  root.userData.cleanup = () => {\n    tl.kill();\n    cleanups.forEach((fn) => fn());\n  };\n\n  return root;\n}\n```"
+}

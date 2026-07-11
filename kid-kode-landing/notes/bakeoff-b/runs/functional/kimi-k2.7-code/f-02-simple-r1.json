@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-02-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 2052,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3709,
+    "completionTokens": 12718
+  },
+  "costUsd": 0.0470563,
+  "billing": "metered",
+  "output": " import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport {\n  uv,\n  vec3,\n  color,\n  mix,\n  smoothstep,\n  add,\n  sub,\n  mul,\n  div,\n  fract,\n  sin,\n  texture,\n} from 'three/tsl';\nimport { gsap } from 'gsap';\n\nconst sanitizeForAtlas = (str = '') =>\n  str\n    .replace(/—/g, '--')\n    .replace(/–/g, '-')\n    .replace(/·/g, ' | ');\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, SRGBColorSpace } = ctx.THREE;\n\n  const root = new Group();\n  root.userData.handlers = {};\n\n  const items =\n    config.textContent ??\n    config.intent?.visualSpec?.textContent ??\n    [];\n\n  const palette = {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10',\n  };\n\n  const vUv = uv();\n  const gradient = mix(\n    color(palette.surface),\n    color(palette.ink),\n    smoothstep(0.25, 0.75, vUv.y)\n  );\n\n  const grain = sub(\n    mul(\n      fract(\n        mul(\n          sin(add(mul(vUv.x, 12.9898), mul(vUv.y, 78.233))),\n          43758.5453\n        )\n      ),\n      0.03\n    ),\n    0.015\n  );\n\n  const surfaceColor = add(gradient, vec3(grain));\n\n  const mat = new MeshBasicNodeMaterial({\n    transparent: true,\n    side: ctx.THREE.DoubleSide,\n  });\n  mat.colorNode = surfaceColor;\n\n  const plane = new Mesh(new PlaneGeometry(1, 1), mat);\n  plane.name = 'hero-subhead-surface';\n  root.add(plane);\n\n  let textObj;\n\n  for (const item of items) {\n    if (item.role === 'headline' || typeof item.text === 'string') {\n      const copy = sanitizeForAtlas(item.text);\n      textObj = ctx.fontAtlas.createText(copy, {\n        fontSize: item.typography?.fontSize ? item.typography.fontSize / 210 : 0.2,\n        color: palette.paper,\n        align: 'center',\n      });\n      textObj.position.z = 0.04;\n      textObj.name = 'hero-subhead-text';\n      root.add(textObj);\n      break;\n    }\n  }\n\n  if (config.imageUrl) {\n    ctx.textureLoader\n      .loadTexture(config.imageUrl)\n      .then((tex) => {\n        tex.colorSpace = SRGBColorSpace;\n        tex.needsUpdate = true;\n\n        const map = texture(tex, vUv);\n        const blended = mix(surfaceColor, map.rgb, map.a);\n        mat.colorNode = blended;\n        mat.needsUpdate = true;\n\n        const imgW = tex.image?.width || 512;\n        const imgH = tex.image?.height || 320;\n        const aspect = imgW / imgH || 1.6;\n        const targetH = 0.55;\n        plane.scale.set(targetH * aspect, targetH, 1);\n      })\n      .catch(() => {});\n  }\n\n  const tl = gsap.timeline();\n  root.scale.set(1.04, 1.04, 1.04);\n\n  tl.to(root.scale, {\n    x: 1,\n    y: 1,\n    z: 1,\n    duration: 0.9,\n    ease: 'power4.out',\n  });\n\n  if (textObj) {\n    const startY = textObj.position.y + 0.08;\n    textObj.position.y = startY;\n    tl.to(\n      textObj.position,\n      {\n        y: startY - 0.08,\n        duration: 0.7,\n        ease: 'power3.out',\n      },\n      0\n    );\n  }\n\n  root.userData.cleanup = () => {\n    tl.kill();\n    gsap.killTweensOf(root.scale);\n    if (textObj) gsap.killTweensOf(textObj.position);\n\n    plane.geometry.dispose();\n    if (plane.material) {\n      if (plane.material.map) plane.material.map.dispose();\n      plane.material.dispose();\n    }\n  };\n\n  return root;\n}"
+}

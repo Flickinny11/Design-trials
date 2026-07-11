@@ -1,0 +1,20 @@
+{
+  "axis": "design",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/Kimi-K2.7-Code",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "v-04-kinetic-type-headline",
+  "run": 1,
+  "ok": true,
+  "wallMs": 276123,
+  "finishReason": "length",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4307,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.06053118,
+  "billing": "metered",
+  "output": ""
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-08-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 1598,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3707,
+    "completionTokens": 11034
+  },
+  "costUsd": 0.041177700000000005,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, smoothstep, color, texture, sin, fract, add, mul, sub } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, PlaneGeometry, Mesh, SRGBColorSpace } = ctx.THREE;\n\n  const root = new Group();\n  root.userData.handlers = {};\n\n  const timelines = [];\n  const disposables = [];\n\n  const colors = config.intent?.visualSpec?.colors ?? config.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const headlineItem = items.find(i => i.role === 'headline') || items[0];\n  const headlineText = headlineItem?.text ?? '';\n  const fontSize = headlineItem?.typography?.fontSize ?? 39;\n\n  const atlasW = 512;\n  const atlasH = 320;\n  const cardW = 2.0;\n  const cardH = cardW * (atlasH / atlasW);\n\n  const cardGeo = new PlaneGeometry(cardW, cardH);\n  disposables.push(cardGeo);\n\n  const vUv = uv();\n  const gradient = mix(color(colors.surface), color(colors.ink), smoothstep(0.0, 1.0, vUv.y));\n  const seed = add(mul(vUv.x, 1234.0), mul(vUv.y, 5678.0));\n  const noiseVal = sub(fract(mul(sin(seed), 43758.5453)), 0.5).mul(0.05);\n  const cardMat = new MeshBasicNodeMaterial();\n  cardMat.colorNode = gradient.add(vec3(noiseVal));\n  disposables.push(cardMat);\n\n  const cardPlane = new Mesh(cardGeo, cardMat);\n  root.add(cardPlane);\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      tex.colorSpace = SRGBColorSpace;\n      tex.needsUpdate = true;\n\n      const imgGeo = new PlaneGeometry(cardW, cardH);\n      const imgMat = new MeshBasicNodeMaterial();\n      imgMat.transparent = true;\n      const texSample = texture(tex, uv());\n      imgMat.colorNode = texSample;\n      imgMat.opacityNode = texSample.a;\n      disposables.push(imgGeo, imgMat, tex);\n\n      const imgPlane = new Mesh(imgGeo, imgMat);\n      imgPlane.position.z = 0.01;\n      root.add(imgPlane);\n    }).catch(() => {});\n  }\n\n  if (headlineText) {\n    const textObj = ctx.fontAtlas.createText(headlineText, {\n      fontSize,\n      color: colors.paper,\n      align: 'left'\n    });\n    textObj.position.set(-cardW * 0.42, -cardH * 0.35, 0.02);\n    root.add(textObj);\n  }\n\n  const accentW = 0.12;\n  const accentH = 0.012;\n  const accentGeo = new PlaneGeometry(accentW, accentH);\n  const accentMat = new MeshBasicNodeMaterial();\n  accentMat.colorNode = color(colors.accent);\n  disposables.push(accentGeo, accentMat);\n  const accentMesh = new Mesh(accentGeo, accentMat);\n  accentMesh.position.set(-cardW * 0.42 + accentW * 0.5, -cardH * 0.42, 0.02);\n  root.add(accentMesh);\n\n  const primitives = config.cinematicPrimitives ?? [];\n  for (const p of primitives) {\n    if (ctx.primitives?.[p.name]) {\n      const result = ctx.primitives[p.name](root, p.params ?? {});\n      if (result?.timeline) timelines.push(result.timeline);\n    }\n  }\n\n  root.userData.cleanup = () => {\n    timelines.forEach(t => { try { t.kill(); } catch (e) {} });\n    disposables.forEach(d => { try { d.dispose(); } catch (e) {} });\n  };\n\n  return root;\n}"
+}

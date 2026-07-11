@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-23-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 3280,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3884,
+    "completionTokens": 1593
+  },
+  "costUsd": 0.0005938800000000001,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  const group = new Group();\n\n  // Plane geometry sized to match atlas region aspect ratio (512×320 ≈ 1.6:1)\n  const geometry = new PlaneGeometry(2, 1.25);\n  const material = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    side: ctx.THREE.DoubleSide, // allow faint back-lighting if needed\n  });\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  // Load brushed-metal texture (synchronous function defers mapping)\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // No cinematic primitives – node ships static\n  // No event handlers – no interactions\n\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (material.map) material.map.dispose();\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

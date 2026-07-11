@@ -1,0 +1,16 @@
+{
+  "contestant": "deepseek-v4-flash",
+  "caseId": "f-40-moderate",
+  "run": 2,
+  "rawCompliant": false,
+  "fenced": true,
+  "parsed": true,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "WINDOW_ACCESS",
+      "severity": "error",
+      "message": "window.* access is forbidden except for window.devicePixelRatio"
+    }
+  ]
+}

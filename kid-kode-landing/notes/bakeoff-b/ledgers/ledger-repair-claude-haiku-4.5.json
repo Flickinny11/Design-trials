@@ -1,0 +1,76 @@
+{
+  "wave": "wbakeb",
+  "axis": "repair",
+  "contestant": "claude-haiku-4.5",
+  "calls": [
+    {
+      "axis": "repair",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "f-15-simple",
+      "costUsd": 0.008916,
+      "billing": "metered",
+      "at": "2026-07-11T03:28:28.991Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "f-16-simple",
+      "costUsd": 0.009572,
+      "billing": "metered",
+      "at": "2026-07-11T03:28:29.363Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "f-02-simple",
+      "costUsd": 0.010256,
+      "billing": "metered",
+      "at": "2026-07-11T03:28:29.566Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "f-25-simple",
+      "costUsd": 0.0076,
+      "billing": "metered",
+      "at": "2026-07-11T03:28:32.229Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "f-26-simple",
+      "costUsd": 0.00885,
+      "billing": "metered",
+      "at": "2026-07-11T03:28:33.403Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "f-24-simple",
+      "costUsd": 0.008822,
+      "billing": "metered",
+      "at": "2026-07-11T03:28:33.406Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "f-05-simple",
+      "costUsd": 0.016177,
+      "billing": "metered",
+      "at": "2026-07-11T03:28:37.192Z"
+    },
+    {
+      "axis": "repair",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "f-48-complex",
+      "costUsd": 0.011962,
+      "billing": "metered",
+      "at": "2026-07-11T03:28:38.846Z"
+    }
+  ],
+  "totals": {
+    "meteredUsd": 0.08215499999999999,
+    "subscriptionEquivalentUsd": 0,
+    "totalUsd": 0.08215499999999999
+  }
+}

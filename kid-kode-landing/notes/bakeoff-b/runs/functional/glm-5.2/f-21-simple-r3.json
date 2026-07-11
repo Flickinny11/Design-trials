@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "glm-5.2",
+  "model": "z-ai/glm-5.2",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-21-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 2303,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3684,
+    "completionTokens": 4113
+  },
+  "costUsd": 0.0069764399999999996,
+  "billing": "metered",
+  "output": "```js\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const THREE = ctx.THREE;\n  const { Group, Mesh, PlaneGeometry, Vector3 } = THREE;\n\n  const group = new Group();\n\n  // Atlas source rect\n  const srcX = 0;\n  const srcY = 0;\n  const srcW = 512;\n  const srcH = 320;\n  const aspect = srcW / srcH;\n\n  // Size the plane to the atlas region aspect ratio\n  const planeWidth = 1.6;\n  const planeHeight = planeWidth / aspect;\n\n  const geo = new PlaneGeometry(planeWidth, planeHeight);\n\n  const mat = new MeshBasicNodeMaterial({\n    transparent: true,\n    side: THREE.DoubleSide,\n    depthWrite: false,\n    toneMapped: true,\n  });\n\n  const mesh = new Mesh(geo, mat);\n  mesh.renderOrder = 5;\n  group.add(mesh);\n\n  // --- Billboard toward camera every frame ---\n  const camPos = new Vector3();\n  mesh.onBeforeRender = (_renderer, _scene, camera) => {\n    camera.getWorldPosition(camPos);\n    mesh.lookAt(camPos);\n  };\n\n  // --- Load texture and apply atlas UV offset ---\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      tex.minFilter = THREE.LinearFilter;\n      tex.magFilter = THREE.LinearFilter;\n      tex.colorSpace = THREE.SRGBColorSpace;\n      tex.generateMipmaps = false;\n\n      const atlasW = tex.image?.width || srcW;\n      const atlasH = tex.image?.height || srcH;\n\n      // Source rect is in top-left image coords; Three.js flipY=true by default\n      tex.offset.set(\n        srcX / atlasW,\n        1 - (srcY + srcH) / atlasH\n      );\n      tex.repeat.set(\n        srcW / atlasW,\n        srcH / atlasH\n      );\n\n      mat.map = tex;\n      mat.needsUpdate = true;\n    });\n  }\n\n  // --- Subtle idle floating (breathing <=2%, sine drift) ---\n  const floatTL = gsap.timeline({ repeat: -1, yoyo: true });\n  floatTL.to(mesh.position, {\n    y: 0.05,\n    duration: 2.8,\n    ease: 'sine.inOut',\n  });\n  floatTL.to(mesh.position, {\n    y: -0.04,\n    duration: 2.2,\n    ease: 'sine.inOut',\n  }, 0);\n\n  // --- Handlers (none — static composition, no interactivity) ---\n  group.userData.handlers = {};\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    floatTL.kill();\n    geo.dispose();\n    if (mat.map) mat.map.dispose();\n    mat.dispose();\n    mesh.onBeforeRender = null;\n  };\n\n  return group;\n}\n```"
+}

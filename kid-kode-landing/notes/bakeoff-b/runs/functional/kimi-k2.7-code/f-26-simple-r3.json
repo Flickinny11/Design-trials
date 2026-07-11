@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-26-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 509,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3713,
+    "completionTokens": 11488
+  },
+  "costUsd": 0.04276648,
+  "billing": "metered",
+  "output": " import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, texture, mix, smoothstep, color, vec3, fract, sin } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const { Group, PlaneGeometry, Mesh } = THREE;\n\n  const group = new Group();\n\n  // Stage: engineered gradient surface with subtle grain\n  const bgGeo = new PlaneGeometry(7, 6);\n  const u = uv();\n\n  const cInk = color('#16161d');\n  const cSurface = color('#0b0b10');\n  const gradT = smoothstep(0.25, 0.75, u.y);\n  const grad = mix(cSurface, cInk, gradT);\n\n  const grainHash = fract(sin(u.x.mul(12.9898).add(u.y.mul(78.233))).mul(43758.5453));\n  const grainMix = mix(grad, grad.mul(vec3(1.06)), grainHash.mul(0.08));\n\n  const bgMat = new MeshBasicNodeMaterial({ colorNode: grainMix });\n  const bg = new Mesh(bgGeo, bgMat);\n  bg.position.z = -2.5;\n  group.add(bg);\n\n  // Textured card plane (512 x 320 source rect)\n  const cardWidth = 0.5;\n  const cardHeight = cardWidth * (320 / 512);\n  const cardGeo = new PlaneGeometry(cardWidth, cardHeight);\n  const cardMat = new MeshBasicNodeMaterial({\n    colorNode: color('#0b0b10'),\n    transparent: true\n  });\n  cardMat.alphaTest = 0.05;\n\n  const card = new Mesh(cardGeo, cardMat);\n  card.position.z = 0;\n  group.add(card);\n\n  const imageUrl = config.imageUrl;\n  if (imageUrl) {\n    ctx.textureLoader.loadTexture(imageUrl).then((tex) => {\n      tex.colorSpace = THREE.SRGBColorSpace;\n      cardMat.colorNode = texture(tex, uv());\n      cardMat.needsUpdate = true;\n    });\n  }\n\n  // Accent indicator\n  const accentGeo = new PlaneGeometry(0.18, 0.012);\n  const accentMat = new MeshBasicNodeMaterial({ colorNode: color('#ff2a38') });\n  const accent = new Mesh(accentGeo, accentMat);\n  accent.position.set(-cardWidth * 0.5 + 0.09, -cardHeight * 0.5 - 0.06, 0.011);\n  group.add(accent);\n\n  // Text label\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    const text = String(item.text ?? '');\n    if (!text) continue;\n\n    const fontSize = item.typography?.fontSize ?? 39;\n    const textObj = ctx.fontAtlas.createText(text, {\n      fontSize,\n      color: '#e8ecf2',\n      align: 'left'\n    });\n\n    textObj.position.set(-cardWidth * 0.5, -cardHeight * 0.5 - 0.1, 0.011);\n    group.add(textObj);\n  }\n\n  // No interactions configured\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    bgGeo.dispose();\n    bgMat.dispose();\n    cardGeo.dispose();\n    cardMat.dispose();\n    accentGeo.dispose();\n    accentMat.dispose();\n  };\n\n  return group;\n}"
+}

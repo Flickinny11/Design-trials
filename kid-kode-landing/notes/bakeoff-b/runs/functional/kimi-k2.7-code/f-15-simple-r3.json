@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-15-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 957,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3719,
+    "completionTokens": 8454
+  },
+  "costUsd": 0.032182140000000005,
+  "billing": "metered",
+  "output": " import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture, uv, vec2 } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nfunction createNode(config, ctx) {\n  const { THREE } = ctx;\n  const group = new THREE.Group();\n  group.userData.handlers = {};\n\n  const timelines = [];\n  const disposables = [];\n\n  const colorsSrc = config.intent?.visualSpec?.colors ?? config.colors ?? {};\n  const colors = {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10',\n    ...colorsSrc,\n  };\n\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n\n  const atlasRegion = config.atlasRegion ?? { x: 0, y: 0, w: 512, h: 320 };\n  const aspect = atlasRegion.w / atlasRegion.h;\n  const height = 1.0;\n  const width = height * aspect;\n\n  const geometry = new THREE.PlaneGeometry(width, height);\n  disposables.push(geometry);\n\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    side: THREE.DoubleSide,\n    depthWrite: false,\n  });\n  disposables.push(material);\n\n  const plane = new THREE.Mesh(geometry, material);\n  group.add(plane);\n\n  if (config.imageUrl) {\n    ctx.textureLoader\n      .loadTexture(config.imageUrl)\n      .then((tex) => {\n        const fullW = tex.image?.width || atlasRegion.w;\n        const fullH = tex.image?.height || atlasRegion.h;\n\n        const repeatX = atlasRegion.w / fullW;\n        const repeatY = atlasRegion.h / fullH;\n        const offsetX = atlasRegion.x / fullW;\n        const offsetY = 1 - (atlasRegion.y + atlasRegion.h) / fullH;\n\n        const atlasUV = uv()\n          .mul(vec2(repeatX, repeatY))\n          .add(vec2(offsetX, offsetY));\n\n        material.colorNode = texture(tex, atlasUV);\n        material.needsUpdate = true;\n      })\n      .catch(() => {});\n  }\n\n  for (const item of textItems) {\n    if (!item || !item.text) continue;\n\n    const fontSize = item.typography?.fontSize ?? 39;\n    const textRole = item.role ?? 'headline';\n    const textColor = textRole === 'caption' ? colors.ink : colors.paper;\n\n    const textMesh = ctx.fontAtlas.createText(String(item.text), {\n      fontSize,\n      color: textColor,\n      align: 'left',\n    });\n\n    textMesh.position.set(-width * 0.42, -0.05, 0.02);\n    group.add(textMesh);\n  }\n\n  plane.onBeforeRender = (renderer, scene, camera) => {\n    if (camera) {\n      group.quaternion.copy(camera.quaternion);\n    }\n  };\n\n  for (const primitive of config.cinematicPrimitives ?? []) {\n    if (ctx.primitives[primitive.name]) {\n      const result = ctx.primitives[primitive.name](group, primitive.params);\n      if (result?.timeline) timelines.push(result.timeline);\n      if (result?.cleanup) disposables.push(result.cleanup);\n    }\n  }\n\n  group.userData.cleanup = () => {\n    plane.onBeforeRender = null;\n\n    timelines.forEach((t) => {\n      try {\n        t.kill();\n      } catch (_e) {}\n    });\n\n    disposables.forEach((d) => {\n      try {\n        if (typeof d === 'function') d();\n        else d.dispose();\n      } catch (_e) {}\n    });\n  };\n\n  return group;\n}\n\nexport default createNode;"
+}

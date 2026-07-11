@@ -1,0 +1,16 @@
+{
+  "axis": "repair",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "f-08-simple",
+  "run": "repair",
+  "ok": true,
+  "usage": {
+    "promptTokens": 4450,
+    "completionTokens": 1321
+  },
+  "costUsd": 0.0014601,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Geometry – maintain source aspect (512x320)\n  const aspect = 512 / 320;\n  const geometry = new PlaneGeometry(aspect, 1, 1, 1);\n\n  // Material\n  const material = new MeshBasicNodeMaterial({ opacity: 1.0 });\n\n  // Load texture if provided\n  let loadedTexture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      loadedTexture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Text handling\n  const items =\n    config.textContent ??\n    (config.intent && config.intent.visualSpec && config.intent.visualSpec.textContent) ??\n    [];\n\n  const textObjects = [];\n\n  for (const item of items) {\n    const txt = ctx.fontAtlas.createText(item.text ?? '', {\n      fontSize: (item.typography && item.typography.fontSize) || 39,\n      color: (config.colors && config.colors.paper) || '#e8ecf2',\n      align: 'left',\n    });\n    txt.position.set(0, 0, 0.01);\n    root.add(txt);\n    textObjects.push(txt);\n  }\n\n  // Apply cinematic primitives (if any)\n  const primitiveInstances = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      if (prim && typeof prim.name === 'string' && ctx.primitives[prim.name]) {\n        const instance = ctx.primitives[prim.name](root, prim.params || {});\n        primitiveInstances.push(instance);\n      }\n    }\n  }\n\n  // User data with cleanup\n  root.userData = {\n    handlers: {},\n    cleanup() {\n      // Dispose geometry and material\n      geometry.dispose();\n      material.dispose();\n\n      // Dispose texture if loaded\n      if (loadedTexture && typeof loadedTexture.dispose === 'function') {\n        loadedTexture.dispose();\n      }\n\n      // Cleanup primitives\n      for (const inst of primitiveInstances) {\n        if (inst && typeof inst.cleanup === 'function') {\n          inst.cleanup();\n        }\n      }\n\n      // Clear any GSAP timelines\n      gsap.globalTimeline.clear();\n\n      // Remove text objects\n      for (const txt of textObjects) {\n        if (txt.parent) {\n          txt.parent.remove(txt);\n        }\n      }\n    },\n  };\n\n  return root;\n}"
+}

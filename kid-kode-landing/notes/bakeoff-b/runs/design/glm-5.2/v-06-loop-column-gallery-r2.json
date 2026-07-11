@@ -1,0 +1,20 @@
+{
+  "axis": "design",
+  "contestant": "glm-5.2",
+  "model": "z-ai/glm-5.2",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "v-06-loop-column-gallery",
+  "run": 2,
+  "ok": true,
+  "wallMs": 3063,
+  "finishReason": "length",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4267,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.02341902,
+  "billing": "metered",
+  "output": ""
+}

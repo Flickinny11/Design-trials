@@ -1,0 +1,16 @@
+{
+  "contestant": "claude-haiku-4.5",
+  "caseId": "f-09-simple",
+  "run": 3,
+  "rawCompliant": false,
+  "fenced": true,
+  "parsed": true,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "ASYNC_CREATE_NODE",
+      "severity": "error",
+      "message": "createNode MUST be synchronous (spec §8 / §9.A L260)"
+    }
+  ]
+}

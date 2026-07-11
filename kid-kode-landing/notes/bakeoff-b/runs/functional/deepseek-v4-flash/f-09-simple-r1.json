@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-09-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 5450,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3895,
+    "completionTokens": 3067
+  },
+  "costUsd": 0.0008424360000000001,
+  "billing": "metered",
+  "output": "```javascript\nimport { PlaneGeometry, Group, Mesh } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  // Geometry sized to atlas region aspect ratio (512:320 = 1.6)\n  const aspectRatio = 512 / 320;\n  const width = 2.0;\n  const height = width / aspectRatio;\n  const geometry = new PlaneGeometry(width, height);\n\n  // Material – white placeholder until texture loads\n  const material = new MeshBasicNodeMaterial({\n    color: '#ffffff',\n    transparent: true,\n    side: ctx.THREE.DoubleSide, // visible from both sides (billboard‑like)\n  });\n\n  const mesh = new Mesh(geometry, material);\n\n  // Load texture asynchronously\n  const texturePromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  texturePromise.then((tex) => {\n    tex.wrapS = ctx.THREE.ClampToEdgeWrapping;\n    tex.wrapT = ctx.THREE.ClampToEdgeWrapping;\n    tex.repeat.set(1, 1);\n    tex.offset.set(0, 0);\n    material.map = tex;\n    material.needsUpdate = true;\n  });\n\n  const group = new Group();\n  group.add(mesh);\n  group.userData = {\n    handlers: {}, // no interactions\n    cleanup: () => {\n      geometry.dispose();\n      material.dispose();\n      if (material.map) material.map.dispose();\n    },\n  };\n\n  return group;\n}\n```"
+}

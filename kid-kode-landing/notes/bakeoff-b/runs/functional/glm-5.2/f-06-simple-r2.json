@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "glm-5.2",
+  "model": "z-ai/glm-5.2",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-06-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 1799,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3689,
+    "completionTokens": 7362
+  },
+  "costUsd": 0.01126722,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, texture, uniform, float } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, BoxGeometry, DataTexture, RGBAFormat } = ctx.THREE;\n\n  const group = new Group();\n  const inner = new Group();\n  group.add(inner);\n\n  const timelines = [];\n  const disposables = [];\n\n  // ---- Backdrop plane (atlas region 512x320 -> 1.6 aspect) ----\n  const W = 2.2;\n  const H = W / 1.6;\n  const planeGeo = new PlaneGeometry(W, H);\n  disposables.push(planeGeo);\n\n  // placeholder 1x1 grain texture so the TSL texture node never reads null\n  const phData = new Uint8Array([128, 128, 128, 255]);\n  const placeholder = new DataTexture(phData, 1, 1, RGBAFormat);\n  placeholder.needsUpdate = true;\n  disposables.push(placeholder);\n\n  const grainUniform = uniform(placeholder);\n\n  // Engineered vertical gradient: surface (#0b0b10) bottom -> ink (#16161d) top\n  const topC = vec3(0.0863, 0.0863, 0.1137);\n  const botC = vec3(0.0431, 0.0431, 0.0627);\n  const grad = mix(botC, topC, uv().y);\n\n  // Subtle ceramic grain overlay (linear data map)\n  const grain = texture(grainUniform);\n  const colorNode = grad.add(grain.r.sub(float(0.5)).mul(float(0.07)));\n\n  const planeMat = new MeshBasicNodeMaterial();\n  planeMat.colorNode = colorNode;\n  planeMat.transparent = true;\n  disposables.push(planeMat);\n\n  const plane = new Mesh(planeGeo, planeMat);\n  plane.position.z = -0.05;\n  inner.add(plane);\n\n  // Load grain texture async, swap into uniform\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      tex.needsUpdate = true;\n      grainUniform.value = tex;\n    });\n  }\n\n  // ---- Headline text via fontAtlas ----\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    if (item.role === 'headline') {\n      const textObj = ctx.fontAtlas.createText(String(item.text), {\n        fontSize: 96,\n        color: '#e8ecf2',\n        align: 'center',\n        letterSpacingPx: 1\n      });\n      textObj.scale.setScalar(0.0045);\n      textObj.position.y = 0.06;\n      textObj.position.z = 0.02;\n      inner.add(textObj);\n    }\n  }\n\n  // ---- Accent underline (signal red, <=10% of frame) ----\n  const lineGeo = new BoxGeometry(0.5, 0.022, 0.02);\n  disposables.push(lineGeo);\n  const lineMat = new MeshBasicNodeMaterial();\n  lineMat.colorNode = vec3(1.0, 0.165, 0.22);\n  lineMat.transparent = true;\n  disposables.push(lineMat);\n  const line = new Mesh(lineGeo, lineMat);\n  line.position.set(0, -0.4, 0.01);\n  inner.add(line);\n\n  // ---- Weighted-settle entrance (one-time, no perpetual motion) ----\n  inner.position.y = 0.28;\n  inner.scale.setScalar(0.965);\n\n  const tl = gsap.timeline();\n  tl.to(inner.position, { y: 0, duration: 0.7, ease: 'power3.out' }, 0);\n  tl.to(inner.scale, {\n    x: 1.0, y: 1.0, z: 1.0,\n    duration: 0.9, ease: 'power4.out',\n    onComplete: () => {\n      // tiny overshoot settle\n      gsap.fromTo(inner.scale,\n        { x: 1.0, y: 1.0, z: 1.0 },\n        { x: 1.0, y: 1.0, z: 1.0, duration: 0.0 }\n      );\n    }\n  }, 0);\n  // accent line draws in\n  line.scale.x = 0.0;\n  tl.to(line.scale, { x: 1.0, duration: 0.6, ease: 'power3.out' }, 0.15);\n  timelines.push(tl);\n\n  group.userData.handlers = {};\n  group.userData.cleanup = () => {\n    timelines.forEach((t) => t.kill());\n    disposables.forEach((d) => {\n      if (d && typeof d.dispose === 'function') d.dispose();\n    });\n  };\n\n  return group;\n}"
+}

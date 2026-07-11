@@ -1,0 +1,16 @@
+{
+  "contestant": "glm-5.2",
+  "caseId": "f-02-simple",
+  "run": 3,
+  "rawCompliant": true,
+  "fenced": false,
+  "parsed": true,
+  "verified": false,
+  "violations": [
+    {
+      "rule": "TEXT_GEOMETRY",
+      "severity": "error",
+      "message": "TextGeometry is forbidden — use ctx.fontAtlas (MSDF) for text"
+    }
+  ]
+}

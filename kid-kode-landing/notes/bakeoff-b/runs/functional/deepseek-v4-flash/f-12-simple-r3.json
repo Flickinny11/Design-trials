@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-12-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 2500,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3912,
+    "completionTokens": 2918
+  },
+  "costUsd": 0.0008188320000000001,
+  "billing": "metered",
+  "output": "```javascript\nimport { \n  MeshBasicNodeMaterial, \n  PlaneGeometry, \n  Mesh, \n  Group \n} from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { createText } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  \n  // Build the sprite plane\n  const aspect = 512 / 320; // from atlas source rect\n  const geometry = new THREE.PlaneGeometry(1.6, 1); // width = 1.6, height = 1\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    map: null,\n    depthWrite: false,\n  });\n  const plane = new Mesh(geometry, material);\n  \n  // Load texture and apply to material\n  const texturePromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  texturePromise.then((tex) => {\n    tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;\n    // No UV offset – assume the image is exactly the sprite region\n    material.map = tex;\n    material.needsUpdate = true;\n  }).catch(() => {}); // ignore failure, will show plain black\n  \n  // Create text content\n  const textGroup = new Group();\n  if (items.length > 0) {\n    const textItem = items[0];\n    const fontSize = textItem.typography?.fontSize \n      ? parseFloat(textItem.typography.fontSize) \n      : 0.34; // headline scene units per design token\n    const textMesh = ctx.fontAtlas.createText(textItem.text, {\n      fontSize: fontSize,\n      color: '#e8ecf2', // paper color\n      align: 'center',\n      letterSpacingPx: 0.02 * fontSize,\n    });\n    // Center on plane\n    textMesh.position.set(0, 0, 0.01); // slightly in front\n    textGroup.add(textMesh);\n  }\n  \n  // Compose\n  const group = new Group();\n  group.add(plane);\n  group.add(textGroup);\n  \n  // Static composition – no animations, no primitives, no interactivity\n  // (config.cinematicPrimitives is empty)\n  \n  // Cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (material.map) material.map.dispose();\n    // Kill any GSAP timelines (none in this node)\n    gsap.killTweensOf(group);\n    // Dispose text meshes if needed (fontAtlas manages cache)\n    textGroup.traverse((child) => {\n      if (child.isMesh) {\n        child.geometry.dispose();\n        if (child.material) child.material.dispose();\n      }\n    });\n  };\n  \n  // For static sprite, no event handlers\n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-17-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 1214,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3897,
+    "completionTokens": 1191
+  },
+  "costUsd": 0.000527436,
+  "billing": "metered",
+  "output": "```javascript\nimport { Group, PlaneGeometry, MeshBasicNodeMaterial, Mesh, Color } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n\n  // --- Brushed metal plane ---\n  const geometry = new PlaneGeometry(1, 1); // size will be set later based on aspect or explicit? Use default 1x1, adapter may scale.\n  const material = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    map: null,\n    needsUpdate: false,\n  });\n  const plane = new Mesh(geometry, material);\n  group.add(plane);\n\n  // Load texture asynchronously\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // --- Text content ---\n  // We only create text for the given item (role 'headline')\n  const textItem = items.find((item) => item.role === 'headline');\n  if (textItem) {\n    const fontSize = textItem.typography?.fontSize ?? 39;\n    const color = textItem.color ?? config.colors?.paper ?? '#e8ecf2';\n    const textMesh = ctx.fontAtlas.createText(textItem.text, {\n      fontSize,\n      color,\n      align: 'center',\n    });\n    // Position text slightly in front of the plane\n    textMesh.position.z = 0.01;\n    textMesh.scale.set(0.001, 0.001, 0.001); // Adjust scale if needed; typically fontAtlas returns scaled appropriately\n    // Or we can leave scale as is; assume createText works in scene units already.\n    // To centre on the plane, we can compute offset if needed. For simplicity, just add.\n    group.add(textMesh);\n  }\n\n  // --- Handlers (no interactions) ---\n  group.userData.handlers = {};\n\n  // --- Cleanup ---\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (material.map) material.map.dispose();\n    // Kill any GSAP timelines (none)\n  };\n\n  return group;\n}\n```"
+}

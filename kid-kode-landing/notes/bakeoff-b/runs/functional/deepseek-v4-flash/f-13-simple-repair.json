@@ -1,0 +1,16 @@
+{
+  "axis": "repair",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "route": "deepinfra",
+  "caseId": "f-13-simple",
+  "run": "repair",
+  "ok": true,
+  "usage": {
+    "promptTokens": 4395,
+    "completionTokens": 404
+  },
+  "costUsd": 0.00046826999999999996,
+  "billing": "metered",
+  "output": "```javascript\nimport { PlaneGeometry, MeshBasicNodeMaterial, Group, Mesh } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n  group.userData.cleanup = () => {};\n  group.userData.handlers = {};\n\n  // --- Resolve text content from config ---\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n\n  // --- Image plane ---\n  const aspect = 512 / 320;\n  const width = 4.0;\n  const height = width / aspect;\n  const geometry = new PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial({\n    color: 0x0b0b10,\n    transparent: false,\n    side: ctx.THREE.DoubleSide,\n  });\n  const plane = new Mesh(geometry, material);\n  plane.position.z = -0.01;\n  group.add(plane);\n\n  // Load texture\n  const loadTex = ctx.textureLoader.loadTexture(config.imageUrl);\n  loadTex.then((tex) => {\n    material.map = tex;\n    material.needsUpdate = true;\n  });\n\n  // --- Text content from config ---\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of textItems) {\n    const fontSize = item.typography?.fontSize ?? 96;\n    const textOpts = {\n      fontSize,\n      color: '#e8ecf2',\n      align: 'center',\n      maxWidthPx: width * 100,\n    };\n    const textObj = ctx.fontAtlas.createText(item.text, textOpts);\n    textObj.position.set(0, 0, 0.01);\n    group.add(textObj);\n  }\n\n  return group;\n}\n```"
+}

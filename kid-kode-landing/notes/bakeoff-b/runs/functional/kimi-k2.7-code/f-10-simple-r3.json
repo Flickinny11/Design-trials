@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-10-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 606,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3705,
+    "completionTokens": 15181
+  },
+  "costUsd": 0.055649290000000004,
+  "billing": "metered",
+  "output": " import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, smoothstep, color, texture, fract, sin } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const { Group, Mesh, PlaneGeometry, Color } = THREE;\n\n  const group = new Group();\n  group.name = config.name || 'features-card-2-label';\n\n  const visualSpec = config.intent?.visualSpec ?? {};\n  const visualColors = visualSpec.colors ?? config.colors ?? {};\n\n  const ink = new Color(visualColors.ink ?? '#16161d');\n  const surface = new Color(visualColors.surface ?? '#0b0b10');\n  const paper = new Color(visualColors.paper ?? '#e8ecf2');\n  const accent = new Color(visualColors.accent ?? '#ff2a38');\n\n  const aspect = 512 / 320;\n  const height = 0.72;\n  const width = height * aspect;\n  const geometry = new PlaneGeometry(width, height);\n\n  const u = uv();\n\n  const gradient = mix(\n    color(ink.getHex()),\n    color(surface.getHex()),\n    smoothstep(0.0, 1.0, u.y)\n  );\n\n  const accentBand = smoothstep(0.0, 0.08, u.y).mul(0.65);\n  const gradientWithAccent = mix(gradient, color(accent.getHex()), accentBand);\n\n  const grain = fract(\n    sin(u.x.mul(1234.5).add(u.y.mul(7890.6))).mul(43758.5453)\n  )\n    .sub(0.5)\n    .mul(0.03);\n\n  const baseColor = gradientWithAccent.add(vec3(grain));\n\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = baseColor;\n\n  const plane = new Mesh(geometry, material);\n  plane.position.z = -0.02;\n  group.add(plane);\n\n  const textItems = config.textContent ?? visualSpec.textContent ?? [];\n  for (const item of textItems) {\n    if (item.text) {\n      const label = ctx.fontAtlas.createText(item.text, {\n        fontSize: item.typography?.fontSize ?? 39,\n        color: '#' + paper.getHexString(),\n        align: 'center'\n      });\n      label.position.z = 0.02;\n      group.add(label);\n    }\n  }\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      tex.colorSpace = THREE.SRGBColorSpace;\n      const texNode = texture(tex, uv());\n      material.colorNode = mix(baseColor, texNode.rgb, texNode.a.mul(0.35));\n      material.needsUpdate = true;\n    }).catch(() => {});\n  }\n\n  group.userData.handlers = {};\n  group.userData.timelines = [];\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n  };\n\n  return group;\n}"
+}

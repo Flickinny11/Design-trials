@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-04-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 1671,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3878,
+    "completionTokens": 939
+  },
+  "costUsd": 0.000483504,
+  "billing": "metered",
+  "output": "```javascript\nimport { PlaneGeometry, MeshBasicNodeMaterial, Mesh, Object3D, Color, Texture } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const group = new Object3D();\n  \n  // Build textured plane for primary CTA\n  const geometry = new PlaneGeometry(4.5, 1.8);\n  \n  const material = new MeshBasicNodeMaterial({\n    color: new Color('#0b0b10'),\n    transparent: true,\n    opacity: 0.92,\n  });\n  \n  const mesh = new Mesh(geometry, material);\n  mesh.position.set(0, 0, 0);\n  mesh.userData.elementType = 'primary-cta';\n  \n  // Load texture from config\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n      texture.colorSpace = 'srgb';\n      material.map = texture;\n      material.needsUpdate = true;\n      \n      // Entrance animation - fade up with weighted settle\n      mesh.material.opacity = 0;\n      mesh.position.y = 0.4;\n      \n      const tl = gsap.timeline({ delay: 0.3 });\n      tl.to(mesh.position, {\n        y: 0,\n        duration: 0.7,\n        ease: 'power3.out'\n      });\n      tl.to(mesh.material, {\n        opacity: 0.92,\n        duration: 0.5,\n        ease: 'power2.out'\n      }, '<');\n      tl.to(mesh.scale, {\n        x: 1,\n        y: 1,\n        duration: 0.9,\n        ease: 'power4.out',\n        onComplete: () => {\n          // Small settle overshoot\n          gsap.to(mesh.scale, {\n            x: 1,\n            y: 1,\n            duration: 0.3,\n            ease: 'power4.out'\n          });\n        }\n      }, '-=0.4');\n    });\n  }\n  \n  // Engineered gradient surface - vertical gradient from surface to paper\n  // Create a subtle gradient plane behind the CTA for depth\n  const gradientGeo = new PlaneGeometry(5.2, 2.4);\n  const gradientMat = new MeshBasicNodeMaterial({\n    color: new Color('#16161d'),\n    transparent: true,\n    opacity: 0.15,\n  });\n  const gradientMesh = new Mesh(gradientGeo, gradientMat);\n  gradientMesh.position.z = -0.05;\n  mesh.add(gradientMesh);\n  \n  // Add subtle grain overlay\n  const grainGeo = new PlaneGeometry(4.5, 1.8);\n  const grainMat = new MeshBasicNodeMaterial({\n    color: new Color('#e8ecf2'),\n    transparent: true,\n    opacity: 0.02,\n  });\n  const grainMesh = new Mesh(grainGeo, grainMat);\n  grainMesh.position.z = 0.01;\n  mesh.add(grainMesh);\n  \n  group.add(mesh);\n  \n  // Apply scene position\n  group.position.set(0, -2.85, 0.2);\n  \n  // Event handlers\n  group.userData.handlers = {\n    click: () => {\n      ctx.emit('navigate', { to: 'hub-pricing' });\n    },\n    hover: () => {\n      gsap.to(mesh.scale, {\n        x: 1.02,\n        y: 1.02,\n        duration: 0.3,\n        ease: 'power2.out'\n      });\n    },\n    hoverEnd: () => {\n      gsap.to(mesh.scale, {\n        x: 1,\n        y: 1,\n        duration: 0.3,\n        ease: 'power2.out'\n      });\n    }\n  };\n  \n  // Cleanup\n  group.userData.cleanup = () => {\n    gsap.killTweensOf(mesh.position);\n    gsap.killTweensOf(mesh.scale);\n    gsap.killTweensOf(mesh.material);\n    geometry.dispose();\n    material.dispose();\n    gradientGeo.dispose();\n    gradientMat.dispose();\n    grainGeo.dispose();\n    grainMat.dispose();\n  };\n  \n  return group;\n}\n```"
+}

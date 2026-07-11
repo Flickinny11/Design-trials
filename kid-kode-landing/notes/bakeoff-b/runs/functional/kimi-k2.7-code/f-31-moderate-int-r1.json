@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/Kimi-K2.7-Code",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-31-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 237304,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3774,
+    "completionTokens": 9488
+  },
+  "costUsd": 0.03600076,
+  "billing": "metered",
+  "output": " import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, texture, vec4, uniform } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const THREE = ctx.THREE;\n\n  const root = new THREE.Group();\n  const card = new THREE.Group();\n  root.add(card);\n\n  const width = 2.0;\n  const height = 1.25;\n\n  const planeGeo = new THREE.PlaneGeometry(width, height);\n  const planeMat = new MeshBasicNodeMaterial({ toneMapped: false });\n  planeMat.colorNode = vec4(0.043, 0.043, 0.063, 1.0);\n\n  const cardPlane = new THREE.Mesh(planeGeo, planeMat);\n  card.add(cardPlane);\n\n  const edgeGeo = new THREE.PlaneGeometry(width + 0.06, height + 0.06);\n  const edgeMat = new MeshBasicNodeMaterial({ transparent: true, toneMapped: false });\n  const edgeAlphaProxy = { value: 0.0 };\n  const edgeAlphaUniform = uniform(0.0);\n  edgeMat.colorNode = vec4(1.0, 0.165, 0.22, edgeAlphaUniform);\n  const edgePlane = new THREE.Mesh(edgeGeo, edgeMat);\n  edgePlane.position.z = -0.005;\n  card.add(edgePlane);\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      tex.colorSpace = THREE.SRGBColorSpace;\n      planeMat.colorNode = texture(tex).sample(uv());\n      planeMat.needsUpdate = true;\n    });\n  }\n\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const headline = items.find((item) => item.role === 'headline') || items[0];\n\n  const label = ctx.fontAtlas.createText(headline?.text || 'Journal 2', {\n    fontSize: headline?.typography?.fontSize || 39,\n    color: '#e8ecf2',\n    align: 'center',\n  });\n  label.position.set(0, 0, 0.012);\n  card.add(label);\n\n  const primitiveState = [];\n  const primitives = config.cinematicPrimitives || [];\n  for (const primitive of primitives) {\n    if (ctx.primitives[primitive.name]) {\n      const result = ctx.primitives[primitive.name](root, primitive.params || {});\n      if (result) primitiveState.push(result);\n    }\n  }\n\n  root.userData.handlers = {\n    hover: (isHovering) => {\n      gsap.to(card.position, {\n        y: isHovering ? 0.15 : 0,\n        duration: 0.3,\n        ease: 'power2.out',\n        overwrite: 'auto',\n      });\n      gsap.to(edgeAlphaProxy, {\n        value: isHovering ? 1.0 : 0.0,\n        duration: 0.2,\n        overwrite: 'auto',\n        onUpdate: () => {\n          edgeAlphaUniform.value = edgeAlphaProxy.value;\n        },\n      });\n    },\n    click: () => {\n      gsap.to(card.scale, {\n        x: 0.97,\n        y: 0.97,\n        z: 0.97,\n        duration: 0.12,\n        yoyo: true,\n        repeat: 1,\n        ease: 'back.out(2)',\n        overwrite: 'auto',\n        onComplete: () => {\n          card.scale.set(1, 1, 1);\n        },\n      });\n      ctx.emit('hub-journal.select', { card: 2, node: config.nodeId });\n    },\n  };\n\n  root.userData.cleanup = () => {\n    for (const result of primitiveState) {\n      if (typeof result.cleanup === 'function') result.cleanup();\n    }\n    gsap.killTweensOf(card.position);\n    gsap.killTweensOf(card.scale);\n    gsap.killTweensOf(edgeAlphaProxy);\n    planeMat.map?.dispose();\n    planeMat.dispose();\n    edgeMat.dispose();\n    planeGeo.dispose();\n    edgeGeo.dispose();\n    card.remove(label);\n    root.remove(card);\n  };\n\n  return root;\n}"
+}
