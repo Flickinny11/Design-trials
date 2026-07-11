@@ -51,7 +51,7 @@
 | **L1 v2 (live)** | **7,625** | **~1,906** | pcp-arm full prompt mean **3,926 tokens** (n=40) → **L1 v2 costs +1,706 tokens over V1** |
 | L2 WORLD (Nova) | 3,366 | ~842 | within the ratified 2–3K typical / 5K hard cap |
 
-L1 v2 lands at **~2.0K provider tokens — 17% of the ≤12K target**; nothing was trimmed to fit.
+L1 v2 lands at **~2.0K provider tokens — 17% of the ≤12K target**; nothing was trimmed to fit. (Byte basis: the table reports UTF-8 bytes; `byte-stability.json` records JS string lengths — the ~0.5% gap is multi-byte glyphs (∈, →, ≤). Both are committed.)
 
 ## 5. D6 — Before/after probe: method + deltas
 
@@ -82,7 +82,7 @@ All 160 generations completed with **zero transport errors** and all 160 bundles
 | gpt-oss-120b | **+2.0** (7.3→9.3) | **−15 pts** (100%→85%) | 0 | 9.8→13.7 | 5.6→6.4 |
 
 **Reading it honestly:**
-- **The crash-cluster kill is real and total where it was aimed.** The W-BAKE §6 cluster (~57% of crashes = ctx API-surface guesses) is **eliminated in the PCP arm for both models**: wrong loader spellings 11→0, `createTextMesh` hallucinations 25→0 across both models (scan table below). Haiku's crash rate drops 80%→30% — survival past `createNode` went from 8 renders to 28.
+- **The crash-cluster kill is real and total where it was aimed.** The W-BAKE §6 cluster (~57% of crashes = ctx API-surface guesses) is **eliminated in the PCP arm for both models**: wrong loader spellings 16→0, `createTextMesh` hallucinations 25→0, summed across both models (scan table below). Haiku's crash rate drops 80%→30% — survival past `createNode` went from 8 renders to 28.
 - **Design moves but does not one-shot.** MUST-FIX stays 100% (as it did for every W-BAKE contestant, including sonnet). The gain is composition-shaped: PCP frames build stages, plinths, contact shadows, and depth planes where old frames were tiny-subject-in-void; haiku's 2D-layout subset jumps 75% relative. **5 of the probe's 6 best renders are PCP-arm.** New failure modes surfaced by survival: exposure control (blown-white key lights), BROKEN_COMPOSITION from more ambitious scenes — the doctrine's next iteration targets.
 - **gpt-oss is instruction-limited, not information-limited.** Its PCP arm uses every documented call correctly (39/40 `createText`, 0 hallucinations) yet still crashes 85%: the residual clusters are gsap default-import interop under the lab shim (14) and NodeMaterial-import confusion the L1 explicitly warns against (12) — it reads the surface but ignores the import discipline. The PCP lifts what instruction can lift; the OD11 vision micro-loop + repair remains load-bearing for this model class (consistent with W-BAKE's conclusion).
 - Old-arm gpt-oss crashed 40/40 here vs W-BAKE's 71%: W-BAKE's Groq lane truncated 8/35 generations into unrenderable artifacts (scored ≤4 without executing) and its 9 unrenderables never reached `createNode`; on Fireworks@12288 every module parses, executes, and crashes honestly. Same model, instrument with fewer masks.
@@ -130,13 +130,29 @@ D2 exemplar and doc authoring used zero metered spend (all sources committed). T
 
 ## 8. Judge verdicts (verbatim)
 
-<!-- WPCP-JUDGES -->
+Both judges ran fresh-context after the probe completed. Verdict lines verbatim; full transcripts summarized faithfully (recount table + evidence lists as delivered).
+
+### criteria-reviewer — VERDICT: PASS · MUST-FIX: (none)
+
+> "I have completed all 7 mandated verification tasks. Every headline number in the report reconciles against the raw artifacts, the byte-stability and regeneration proofs are independently reproduced, I-P1/I-P3/I-P4 hold, and the marker state is correct for review time. My independent recount matches the report on every lane. The only finding is one NIT (the '11→0' loader-spelling figure is haiku-only while labeled 'across both models'; the true both-models figure is 16→0, and the scan table is correct and complete)."
+
+Its recount table matched the report on all 20 rows (crash rates, means ± sd, subsets, survivor cut, ledger $24.06, token ground truth, API scan). Evidence it independently reproduced: `extract-runtime-surface.mjs --check` OK + regenerated twice byte-identical (sha `2a3535ee…`/`28038a29…`); 11/11 wpcp tests green incl. the real `.toBe(frozen)` L2 reproduction; I-P1 diff — only 5 src files (3 new, 2 declared deliverables), `src/server/inference/` untouched, frozen corpus unmodified; I-P3 — old-arm L1 byte-identical to the frozen corpus L1, both arms' L2 identical, all judge transcripts reference only anonymous `blind/…/F*.jpg` paths, zero arm/contestant leakage; I-P4 — 881 wave files scanned, 0 key-shaped matches. **All 3 NITS addressed in this final revision:** the 16→0 figure corrected in §5, the UTF-8-vs-JS-length byte-basis note added in §4, and the marker + this section appended.
+
+### user-advocate (founder proxy) — GATE: PASS · FOUNDER PROXY: PLEASED · MUST-FIX: (none)
+
+> "**(a) Could I build a node that RUNS and looks PREMIUM from this alone? RUNS: yes — decisively.** L1 v2's RUNTIME SURFACE block enumerates the *complete* callable ctx API with exact spellings and worked one-liners … and the API-usage scan I cross-checked shows the crash spellings going 15→0 and 25→0 — the frames prove it: haiku survival past `createNode` tripled (`old v-01` is a 3%-of-frame gold speck in void; `pcp v-08` is seven rendered gears on a lit stage with a red emissive accent and cast shadows). **LOOKS PREMIUM: yes for composition, not yet for finish.** … but it does NOT yet hit ship-grade, and I confirmed every failure the report claims: `v-19`'s headline is clipped off the right edge (BROKEN_COMPOSITION), `v-05`'s subject is a blown-white silhouette, and `v-14` is still a bare fallback plane. **(b) Is the doctrine CONCRETE or adjectives? Overwhelmingly concrete.** Nearly every rule in L1 §DESIGN DOCTRINE and playbook §3 carries a *number plus a WHY plus the MUST-FIX trigger it fires* … This is doctrine, not vibes. **The report's own framing — 'design moves but does not one-shot, MUST-FIX stays 100%, nobody one-shots ship-grade, the gain is a lower bound' — is honest, not spin; I verified it against pixels, and the wave earns the PASS precisely because it does not overclaim the win.**"
+
+It read the exact probed L1 v2 bytes cold, the `tsl-layer-renderers` guide, and eight frames including three blind picks the report never names. Its 4 observations (no MUST-FIX): (1) blown-white key lights are the biggest remaining tell — a doctrine gap (no numeric key-light exposure ceiling yet), now recorded as the third §9 L1 v2.1 refinement; (2) the ~30% residual haiku crash floor is visible and not hidden (`v-14` fallback plane in both arms); (3) the +5.3 mean is a conservative lower bound given the gsap-interop harness share of pcp "crashes" — and the no-post-probe-patch discipline was the right call; (4) frame provenance verified trustworthy via the capture metas.
 
 ## 9. What W-BAKE-B inherits from this wave
 
 - **The instrument, aligned.** W-BAKE-B contestants generate under L1 v2 on the live compiler — the ~57% ctx-API crash cluster is no longer part of what the bakeoff measures, so axis-2 scores measure DESIGN, not API-spelling luck. The widened `MISSING_GLB_LOADER` verifier rule scores the real surface.
 - **A drift-proof surface.** Any runtime-surface change regenerates into L1 automatically (`extract-runtime-surface.mjs --check` in the test suite) — W-BAKE-B never re-litigates "what does ctx expose".
 - **Judge blinding.** The pre-blinded anonymous-path + uniform-JPEG discipline (probe-judge.mjs) replaces the path-leaking pattern for any future comparative judging.
-- **Two measured L1 v2.1 refinements, ready to land as the first W-BAKE-B commit** (kept out of this wave so the probed bytes stay canonical): pin `import { gsap } from 'gsap'` (named form), and mark `ctx.THREE` as NodeMaterial-free (import NodeMaterials from `'three/webgpu'`). Both are one-liners in `pcp-blocks.ts`/the generator templates; both carry committed crash evidence.
+- **Three measured L1 v2.1 refinements, ready to land as the first W-BAKE-B commit** (kept out of this wave so the probed bytes stay canonical): pin `import { gsap } from 'gsap'` (named form); mark `ctx.THREE` as NodeMaterial-free (import NodeMaterials from `'three/webgpu'`); and add a numeric key-light exposure ceiling for white/high-albedo PBR subjects (the doctrine caps emissive at 2.3 but nothing bounds a key/rim PointLight from clipping a white subject — the advocate's observation 1, visible in `pcp v-05`). All are one-liners in `pcp-blocks.ts`/the generator templates; all carry committed evidence.
 - **The per-model reading for §6.2.** haiku-4.5 under PCP: 30% crash / 15.9 design mean — instruction-responsive, the moderate-tier pick strengthens. gpt-oss under PCP: correct API usage but 85% crash on import discipline — cheap-tier routing MUST assume the OD11 micro-loop + repair, and W-BAKE-B's simple-tier evaluation should weight repairability over first-pass polish.
 - **The skill registry seam.** When Amendment A ratifies, `buildSkillIndexBlock` drops into the L2 template's optional section and `hydrateSkillBodies` rides L3 — no new wiring needed.
+
+---
+
+PRISM-WPCP: RUN COMPLETE
