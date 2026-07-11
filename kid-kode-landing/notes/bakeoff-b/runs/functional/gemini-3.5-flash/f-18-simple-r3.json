@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gemini-3.5-flash",
+  "model": "google/gemini-3.5-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-18-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 1580,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4037,
+    "completionTokens": 2223
+  },
+  "costUsd": 0.0260625,
+  "billing": "metered",
+  "output": "import { PlaneGeometry, Mesh, Group, Color } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture, uv } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { Group: ThreeGroup, Mesh: ThreeMesh } = ctx.THREE;\n  const mainGroup = new ThreeGroup();\n\n  // 1. DIMENSIONS & GEOMETRY\n  // Aspect ratio matching atlas region: 512 x 320 => 1.6\n  const width = 2.4;\n  const height = 1.5;\n  const geometry = new PlaneGeometry(width, height);\n\n  // 2. MATERIAL WITH PBR BACKING & STATIC GRADIENT\n  // Premium dark-first color palette integration\n  const inkColor = new Color(config?.intent?.visualSpec?.colors?.ink || '#16161d');\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    opacity: 0.95,\n  });\n\n  const mesh = new ThreeMesh(geometry, material);\n  mainGroup.add(mesh);\n\n  // Subtle accent border backplate to give visual structure and depth\n  const borderGeom = new PlaneGeometry(width + 0.04, height + 0.04);\n  const borderMat = new MeshBasicNodeMaterial({\n    color: config?.intent?.visualSpec?.colors?.accent || '#ff2a38',\n    transparent: true,\n    opacity: 0.3,\n  });\n  const borderMesh = new ThreeMesh(borderGeom, borderMat);\n  borderMesh.position.z = -0.01;\n  mainGroup.add(borderMesh);\n\n  // 3. TEXTURE ATLAS MAP\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      // Atlas source rect: 0, 0, 512, 320\n      // Safely calculate aspect settings once image resolves\n      const imgWidth = tex.image ? tex.image.width : 512;\n      const imgHeight = tex.image ? tex.image.height : 512;\n\n      tex.repeat.set(512 / imgWidth, 320 / imgHeight);\n      tex.offset.set(0, 1 - 320 / imgHeight);\n      \n      material.map = tex;\n      material.needsUpdate = true;\n    }).catch((err) => {\n      console.warn('Failed to load sprite texture for Collection Card 3:', err);\n    });\n  }\n\n  // 4. CLEANUP DESTRUCTOR\n  mainGroup.userData.cleanup = () => {\n    geometry.dispose();\n    borderGeom.dispose();\n    material.dispose();\n    borderMat.dispose();\n  };\n\n  return mainGroup;\n}"
+}

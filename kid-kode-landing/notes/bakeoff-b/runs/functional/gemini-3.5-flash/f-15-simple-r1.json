@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gemini-3.5-flash",
+  "model": "google/gemini-3.5-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-15-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 1570,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4052,
+    "completionTokens": 3156
+  },
+  "costUsd": 0.034482,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, vec4, mix } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Vector3 } = ctx.THREE;\n\n  const container = new Group();\n  const timeline = gsap.timeline();\n\n  // Create subtle backdrop as per W-PCP design doctrine (preventing FLAT_VOID)\n  const backdropGeo = new PlaneGeometry(8, 6.5);\n  const backdropMat = new MeshBasicNodeMaterial();\n  \n  // Create beautiful rich gradient from #16161d (ink) to #0b0b10 (surface) with an accent hint\n  const vUv = uv();\n  const inkColor = vec3(0.086, 0.086, 0.114);    // #16161d\n  const surfaceColor = vec3(0.043, 0.043, 0.063); // #0b0b10\n  const accentColor = vec3(1.0, 0.165, 0.22);     // #ff2a38\n\n  // Gentle radial glow contribution from the red accent in bottom left corner\n  const radialGlow = vUv.distance(vec3(0.0, 0.0, 0.0)).oneMinus().smoothstep(0.4, 1.0).mul(0.12);\n  const finalGradient = mix(inkColor, surfaceColor, vUv.y).add(accentColor.mul(radialGlow));\n  backdropMat.colorNode = vec4(finalGradient, 1.0);\n\n  const backdrop = new Mesh(backdropGeo, backdropMat);\n  backdrop.position.set(0, 0, -2.5);\n  container.add(backdrop);\n\n  // Setup main interactive billboard sprite card\n  const cardGroup = new Group();\n  container.add(cardGroup);\n\n  // Aspect ratio calculated from atlas region 512x320 = 1.6\n  const cardWidth = 1.6 * 1.3;\n  const cardHeight = 1.3;\n  const cardGeo = new PlaneGeometry(cardWidth, cardHeight);\n  const cardMat = new MeshBasicNodeMaterial({ transparent: true });\n\n  const cardMesh = new Mesh(cardGeo, cardMat);\n  cardGroup.add(cardMesh);\n\n  // Load accent illustration if provided\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n      cardMat.colorNode = texture;\n      cardMat.needsUpdate = true;\n    }).catch(err => console.warn('Texture failed to load:', err));\n  } else {\n    // Elegant fallback translucent plate\n    cardMat.colorNode = vec4(surfaceColor, 0.85);\n  }\n\n  // Create typography\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const headlineCopy = textItems.find(t => t.role === 'headline' || t.role === 'title')?.text ?? \"Collection 1\";\n\n  // Create clean serif layout (Lora 400/600 visual equivalent)\n  const textObj = ctx.fontAtlas.createText(headlineCopy, {\n    fontSize: 0.16,\n    color: '#e8ecf2', // paper\n    align: 'center'\n  });\n  // Position text overlaying slightly in front of the textured plate\n  textObj.position.set(0, -0.15, 0.08);\n  cardGroup.add(textObj);\n\n  // Gentle floating animation to deliver dimensional weight\n  timeline.to(cardGroup.position, {\n    y: '+=0.04',\n    duration: 3.2,\n    ease: 'sine.inOut',\n    repeat: -1,\n    yoyo: true\n  });\n\n  // Entrance settle animation\n  gsap.fromTo(cardGroup.scale, \n    { x: 0.88, y: 0.88, z: 0.88 },\n    { x: 1.0, y: 1.0, z: 1.0, duration: 1.4, ease: 'power4.out' }\n  );\n\n  // Cleanup cycle\n  container.userData = {\n    handlers: {},\n    cleanup: () => {\n      timeline.kill();\n      gsap.killTweensOf(cardGroup.position);\n      gsap.killTweensOf(cardGroup.scale);\n      cardGeo.dispose();\n      cardMat.dispose();\n      backdropGeo.dispose();\n      backdropMat.dispose();\n    }\n  };\n\n  return container;\n}"
+}

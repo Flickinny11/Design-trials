@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gemini-3.5-flash",
+  "model": "google/gemini-3.5-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-19-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 1772,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4040,
+    "completionTokens": 1388
+  },
+  "costUsd": 0.018552,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { vec3, mix, uv, positionLocal } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Color } = ctx.THREE;\n\n  const group = new Group();\n  const cleanupFns = [];\n\n  // Colors\n  const colors = config.intent?.visualSpec?.colors ?? config.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n\n  const colInk = new Color(colors.ink);\n  const colPaper = new Color(colors.paper);\n  const colAccent = new Color(colors.accent);\n  const colSurface = new Color(colors.surface);\n\n  // Card Size Setup (Label Dimensions)\n  const width = 2.0;\n  const height = 0.8;\n  const geom = new PlaneGeometry(width, height);\n\n  // Gradient Material using TSL\n  const mat = new MeshBasicNodeMaterial({\n    transparent: true,\n    depthWrite: false\n  });\n\n  // TSL Color Shading\n  const localUv = uv();\n  const grad = localUv.y; // Vertical gradient\n  // Smoothly interpolate between surface and ink, accent border accentuation\n  const baseColor = mix(vec3(colSurface.r, colSurface.g, colSurface.b), vec3(colInk.r, colInk.g, colInk.b), grad);\n  \n  // Highlight border line at bottom\n  const borderMask = localUv.y.lessThan(0.05).select(1.0, 0.0);\n  const finalColor = mix(baseColor, vec3(colAccent.r, colAccent.g, colAccent.b), borderMask);\n\n  mat.colorNode = finalColor;\n\n  const bgMesh = new Mesh(geom, mat);\n  group.add(bgMesh);\n\n  // Texture overlay if provided\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      // Create overlay texture\n      const overlayMat = new MeshBasicNodeMaterial({\n        map: tex,\n        transparent: true,\n        opacity: 0.15,\n        depthWrite: false\n      });\n      const overlayMesh = new Mesh(geom, overlayMat);\n      overlayMesh.position.z = 0.01;\n      group.add(overlayMesh);\n    }).catch(err => {\n      console.warn('Failed to load card label texture:', err);\n    });\n  }\n\n  // Text Content\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const textStr = textItems[0]?.text ?? 'Collection 3';\n\n  // Render Label text\n  const labelText = ctx.fontAtlas.createText(textStr, {\n    fontSize: 34,\n    color: colors.paper,\n    align: 'center'\n  });\n  labelText.position.set(0, -0.05, 0.02);\n  group.add(labelText);\n\n  // Clean-up handler\n  group.userData = {\n    cleanup: () => {\n      geom.dispose();\n      mat.dispose();\n      cleanupFns.forEach((fn) => fn());\n    }\n  };\n\n  return group;\n}"
+}

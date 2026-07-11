@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gemini-3.5-flash",
+  "model": "google/gemini-3.5-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-07-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 1726,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4023,
+    "completionTokens": 2841
+  },
+  "costUsd": 0.0316035,
+  "billing": "metered",
+  "output": "import { MeshStandardNodeMaterial, MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, DirectionalLight, AmbientLight } = ctx.THREE;\n\n  // Main container\n  const group = new Group();\n\n  // Create local timelines to clean up\n  const timelines = [];\n\n  // --- 1. STAGE BACKDROP (z = -2.5) ---\n  const backdropGeo = new PlaneGeometry(8, 7);\n  const backdropMat = new MeshBasicNodeMaterial();\n  \n  // High-fidelity gradient with spec colors\n  const colorInk = vec3(0.086, 0.086, 0.114);      // #16161d\n  const colorSurface = vec3(0.043, 0.043, 0.063);  // #0b0b10\n  const colorAccent = vec3(1.0, 0.165, 0.22);       // #ff2a38\n\n  // V-Gradient blended with a tiny touch of the accent at the top edge\n  const vUv = uv();\n  const baseGrad = mix(colorSurface, colorInk, vUv.y);\n  const finalGrad = mix(baseGrad, colorAccent, vUv.y.pow(4.0).mul(0.12));\n  \n  backdropMat.colorNode = finalGrad;\n  \n  const backdropMesh = new Mesh(backdropGeo, backdropMat);\n  backdropMesh.position.set(0, 0, -2.5);\n  group.add(backdropMesh);\n\n  // --- 2. LOCAL LIGHTING ENHANCEMENT ---\n  // Ambient fill\n  const localFill = new AmbientLight('#e8ecf2', 0.2);\n  group.add(localFill);\n\n  // Rim/Accent light to brush the machined edges\n  const rimLight = new DirectionalLight('#ff2a38', 1.2);\n  rimLight.position.set(-3, 3, -1);\n  group.add(rimLight);\n\n  // --- 3. MACHINED METAL FRAME & CARD (z = 0) ---\n  // Aspect ratio based on source rect 512, 320 -> 1.6\n  const width = 3.2;\n  const height = 2.0;\n\n  // Outer metal bevel backing\n  const frameGeo = new PlaneGeometry(width + 0.08, height + 0.08);\n  const frameMat = new MeshStandardNodeMaterial({\n    color: '#e8ecf2',\n    metalness: 0.55,\n    roughness: 0.5,\n    clearcoat: 0.25,\n  });\n  const frameMesh = new Mesh(frameGeo, frameMat);\n  frameMesh.position.set(0, 0, -0.01);\n  group.add(frameMesh);\n\n  // Inner deep card face\n  const cardGeo = new PlaneGeometry(width, height);\n  const cardMat = new MeshStandardNodeMaterial({\n    color: '#0b0b10',\n    metalness: 0.1,\n    roughness: 0.6,\n  });\n  const cardMesh = new Mesh(cardGeo, cardMat);\n  group.add(cardMesh);\n\n  // Load and apply the image texture if available\n  const imageUrl = config.imageUrl ?? '/prism-mock/home/nodes/feature-card.png';\n  ctx.textureLoader.loadTexture(imageUrl).then((texture) => {\n    cardMat.map = texture;\n    cardMat.needsUpdate = true;\n  }).catch((err) => {\n    console.warn('Failed to load card texture, falling back to clean look', err);\n  });\n\n  // --- 4. ENTRANCE ANIMATION ---\n  // Subtle elegant weighted-settle rise-in\n  cardMesh.position.y = -0.15;\n  frameMesh.position.y = -0.15;\n  cardMesh.scale.set(0.98, 0.98, 1);\n  frameMesh.scale.set(0.98, 0.98, 1);\n\n  const introTimeline = gsap.timeline();\n  introTimeline.to([cardMesh.position, frameMesh.position], {\n    y: 0,\n    duration: 1.1,\n    ease: 'power4.out',\n  });\n  introTimeline.to([cardMesh.scale, frameMesh.scale], {\n    x: 1,\n    y: 1,\n    duration: 1.1,\n    ease: 'back.out(1.04)',\n  }, 0);\n\n  timelines.push(introTimeline);\n\n  // --- 5. CLEANUP HANDLER ---\n  group.userData.cleanup = function () {\n    // Kill GSAP animations\n    timelines.forEach((tl) => tl.kill());\n    \n    // Dispose geometry\n    backdropGeo.dispose();\n    frameGeo.dispose();\n    cardGeo.dispose();\n\n    // Dispose materials\n    backdropMat.dispose();\n    frameMat.dispose();\n    cardMat.dispose();\n  };\n\n  return group;\n}\n"
+}

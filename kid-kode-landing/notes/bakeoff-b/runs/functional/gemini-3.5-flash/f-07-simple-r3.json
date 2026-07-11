@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gemini-3.5-flash",
+  "model": "google/gemini-3.5-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-07-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 810,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4023,
+    "completionTokens": 1098
+  },
+  "costUsd": 0.0159165,
+  "billing": "metered",
+  "output": "import { \n  MeshBasicNodeMaterial \n} from 'three/webgpu';\nimport { \n  uv, \n  vec2, \n  mix \n} from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Vector4, Color } = ctx.THREE;\n  const container = new Group();\n\n  // 1. COLORS & VISUAL TOKENS\n  const colors = {\n    ink: new Color(config.colors?.ink ?? '#16161d'),\n    paper: new Color(config.colors?.paper ?? '#e8ecf2'),\n    accent: new Color(config.colors?.accent ?? '#ff2a38'),\n    surface: new Color(config.colors?.surface ?? '#0b0b10')\n  };\n\n  // 2. BACKDROP / STAGE PLANE (Avoiding void, complying with W-PCP §9 STAGE rule)\n  // We construct an engineered gradient backdrop stage matching Nova Atelier theme\n  const backdropGeo = new PlaneGeometry(7.2, 5.8);\n  const backdropMat = new MeshBasicNodeMaterial({ depthWrite: false });\n  \n  // Custom TSL gradient (vertical ink to near-black surface transition with subtle red accent leakage)\n  const vUv = uv();\n  const gradColor = mix(\n    colors.surface,\n    colors.ink,\n    vUv.y\n  );\n  backdropMat.colorNode = gradColor;\n\n  const backdrop = new Mesh(backdropGeo, backdropMat);\n  backdrop.position.set(0, 0, -0.1);\n  container.add(backdrop);\n\n  // 3. MAIN HERO PLANE (Plane Render Mode)\n  // Feature Card size 5.2 x 3.2 to optimally fill the hub frame\n  const cardGeo = new PlaneGeometry(5.2, 3.2);\n  const cardMat = new MeshBasicNodeMaterial({\n    transparent: true,\n    opacity: 0.0 // starts hidden for entrance transition\n  });\n\n  // Handle Texture Atlased mapping or full load\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n      texture.colorSpace = ctx.THREE.SRGBColorSpace;\n      // Atlas source rect handling\n      // Region: 0, 0, 512, 320\n      texture.repeat.set(1.0, 1.0);\n      texture.offset.set(0.0, 0.0);\n      cardMat.map = texture;\n      cardMat.needsUpdate = true;\n    }).catch((err) => {\n      console.warn(\"Failed loading feature image:\", err);\n    });\n  }\n\n  const cardMesh = new Mesh(cardGeo, cardMat);\n  container.add(cardMesh);\n\n  // 4. DESIGN ELEMENT: MACHINED RED ACCENT LINE (PCP §9 Palette accent <= 10%)\n  const accentLineGeo = new PlaneGeometry(5.2, 0.04);\n  const accentLineMat = new MeshBasicNodeMaterial({ color: colors.accent });\n  const accentLine = new Mesh(accentLineGeo, accentLineMat);\n  accentLine.position.set(0, -1.58, 0.01);\n  container.add(accentLine);\n\n  // 5. MOTION WITH WEIGHT (GSAP Entrance Animation)\n  // Settle overshoot / weighted-settle transition\n  const tl = gsap.timeline();\n  tl.fromTo(\n    cardMesh.position,\n    { y: -0.4, z: -0.2 },\n    { y: 0.0, z: 0.0, duration: 1.1, ease: 'power4.out' }\n  );\n  tl.fromTo(\n    cardMat,\n    { opacity: 0.0 },\n    { opacity: 1.0, duration: 0.8, ease: 'power2.out' },\n    '<'\n  );\n  tl.fromTo(\n    accentLine.scale,\n    { x: 0 },\n    { x: 1, duration: 1.2, ease: 'power3.out' },\n    '-=0.6'\n  );\n\n  // Clean-up requirement implementation\n  container.userData = {\n    handlers: {},\n    cleanup: () => {\n      if (tl) tl.kill();\n      cardGeo.dispose();\n      cardMat.dispose();\n      backdropGeo.dispose();\n      backdropMat.dispose();\n      accentLineGeo.dispose();\n      accentLineMat.dispose();\n    }\n  };\n\n  return container;\n}\n_\n"
+}

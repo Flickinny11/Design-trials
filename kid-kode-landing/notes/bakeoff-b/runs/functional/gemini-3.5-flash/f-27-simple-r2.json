@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gemini-3.5-flash",
+  "model": "google/gemini-3.5-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-27-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 1492,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4046,
+    "completionTokens": 3133
+  },
+  "costUsd": 0.034266,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, vec2, mix } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Vector3 } = ctx.THREE;\n\n  // Root container\n  const group = new Group();\n\n  const colors = config.intent?.visualSpec?.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n\n  // 1. STAGE BACKDROP (Engineered Gradient Surface - Prevent Flat Void)\n  const backdropGeo = new PlaneGeometry(8, 6);\n  const backdropMat = new MeshBasicNodeMaterial({ depthWrite: false });\n  \n  // Create beautiful vertical gradient using TSL\n  const color1 = vec3(0.086, 0.086, 0.114); // #16161d (ink)\n  const color2 = vec3(0.043, 0.043, 0.063); // #0b0b10 (surface)\n  backdropMat.colorNode = mix(color2, color1, uv().y);\n  \n  const backdrop = new Mesh(backdropGeo, backdropMat);\n  backdrop.position.set(0, -0.5, -0.5);\n  group.add(backdrop);\n\n  // 2. SPRITE PLANE (Billboarding image accent)\n  const aspect = 512 / 320; // 1.6\n  const spriteGeo = new PlaneGeometry(2.4 * aspect, 2.4);\n  const spriteMat = new MeshBasicNodeMaterial({\n    transparent: true,\n    depthWrite: false\n  });\n\n  // Load the floating accent texture\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      spriteMat.map = tex;\n      // Map atlas coordinates (0, 0, 512, 320) from possible 512x512 texture\n      spriteMat.uvNode = uv().mul(vec2(1.0, 0.625)).add(vec2(0.0, 0.375));\n      spriteMat.needsUpdate = true;\n    });\n  }\n\n  const spriteMesh = new Mesh(spriteGeo, spriteMat);\n  spriteMesh.position.set(0, 0, 0.05);\n  group.add(spriteMesh);\n\n  // Billboarding effect\n  const activeCameraPosition = new Vector3();\n  spriteMesh.onBeforeRender = (renderer, scene, camera) => {\n    activeCameraPosition.setFromMatrixPosition(camera.matrixWorld);\n    spriteMesh.lookAt(activeCameraPosition);\n  };\n\n  // 3. TYPOGRAPHY - \"Journal\"\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const headlineText = items.find(item => item.role === 'headline')?.text ?? 'Journal';\n\n  const textNode = ctx.fontAtlas.createText(headlineText, {\n    fontSize: 0.62, // Display size\n    color: colors.paper,\n    align: 'center'\n  });\n  \n  textNode.position.set(0, -0.8, 0.1);\n  group.add(textNode);\n\n  // Simple static entry animation\n  gsap.fromTo(\n    textNode.position,\n    { y: -1.2, z: -0.2 },\n    { y: -0.8, z: 0.1, duration: 1.2, ease: 'power4.out' }\n  );\n\n  gsap.fromTo(\n    spriteMesh.position,\n    { y: 0.4 },\n    { y: 0, duration: 1.4, ease: 'power3.out' }\n  );\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    backdropGeo.dispose();\n    backdropMat.dispose();\n    spriteGeo.dispose();\n    spriteMat.dispose();\n    gsap.killTweensOf(textNode.position);\n    gsap.killTweensOf(spriteMesh.position);\n  };\n\n  return group;\n}"
+}

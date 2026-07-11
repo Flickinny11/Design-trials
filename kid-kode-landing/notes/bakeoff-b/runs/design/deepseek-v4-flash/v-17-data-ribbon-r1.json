@@ -1,0 +1,20 @@
+{
+  "axis": "design",
+  "contestant": "deepseek-v4-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "v-17-data-ribbon",
+  "run": 1,
+  "ok": true,
+  "wallMs": 2790,
+  "finishReason": "length",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4383,
+    "completionTokens": 16385
+  },
+  "costUsd": 0.0031208520000000003,
+  "billing": "metered",
+  "output": ""
+}

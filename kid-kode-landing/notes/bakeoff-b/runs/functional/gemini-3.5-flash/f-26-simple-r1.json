@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gemini-3.5-flash",
+  "model": "google/gemini-3.5-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-26-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 1697,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4042,
+    "completionTokens": 2416
+  },
+  "costUsd": 0.027807,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial, PlaneGeometry } from 'three/webgpu';\nimport { vec3, mix, uv } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, Color } = ctx.THREE;\n  const mainGroup = new Group();\n\n  const colors = config.colors ?? config.intent?.visualSpec?.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n\n  // 1. BACKDROP: Engineered vertical gradient plane\n  const width = 2.4;\n  const height = 0.8;\n  const backdropGeom = new PlaneGeometry(width, height);\n\n  const cTop = new Color(colors.ink);\n  const cBottom = new Color(colors.surface);\n\n  const gradientNode = mix(\n    vec3(cBottom.r, cBottom.g, cBottom.b),\n    vec3(cTop.r, cTop.g, cTop.b),\n    uv().y\n  );\n\n  const backdropMat = new MeshBasicNodeMaterial({\n    transparent: true,\n    opacity: 0.95\n  });\n  backdropMat.colorNode = gradientNode;\n\n  const backdropMesh = new Mesh(backdropGeom, backdropMat);\n  mainGroup.add(backdropMesh);\n\n  // Accent Edge Line (Signal Red accent at the left border representing engineered precision)\n  const accentGeom = new PlaneGeometry(0.04, height);\n  const accentMat = new MeshBasicNodeMaterial({\n    color: new Color(colors.accent)\n  });\n  const accentMesh = new Mesh(accentGeom, accentMat);\n  accentMesh.position.set(-width / 2 + 0.02, 0, 0.01);\n  mainGroup.add(accentMesh);\n\n  // 2. TEXT CONTENT\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  let displayText = \"Pricing 3\";\n  if (items.length > 0) {\n    displayText = items[0].text || displayText;\n  }\n\n  // Create text via MSDF Font Atlas\n  const textObj = ctx.fontAtlas.createText(displayText, {\n    fontSize: 0.14,\n    color: colors.paper,\n    align: 'left'\n  });\n  // Align text relative to the red signal line\n  textObj.position.set(-width / 2 + 0.16, -0.05, 0.02);\n  mainGroup.add(textObj);\n\n  // 3. IMAGE ASSET LOAD (Decorative Sub-plane)\n  let imageMesh = null;\n  const imageUrl = config.imageUrl || (config.intent?.visualSpec?.assets && config.intent.visualSpec.assets[0]?.url);\n  if (imageUrl) {\n    const imgGeom = new PlaneGeometry(0.5, 0.5);\n    const imgMat = new MeshBasicNodeMaterial({\n      transparent: true,\n      opacity: 0.8,\n      depthWrite: false\n    });\n    imageMesh = new Mesh(imgGeom, imgMat);\n    imageMesh.position.set(width / 2 - 0.4, 0, 0.02);\n    mainGroup.add(imageMesh);\n\n    ctx.textureLoader.loadTexture(imageUrl).then((tex) => {\n      if (tex) {\n        imgMat.map = tex;\n        imgMat.needsUpdate = true;\n      }\n    }).catch((err) => {\n      console.warn(\"Failed loading decorative asset:\", err);\n    });\n  }\n\n  // 4. MOTION ENTRANCE (Slight slide and fade equivalent scale-step)\n  mainGroup.scale.set(0.01, 0.01, 0.01);\n  const enterTl = gsap.timeline();\n  enterTl.to(mainGroup.scale, {\n    x: 1,\n    y: 1,\n    z: 1,\n    duration: 0.8,\n    ease: \"power4.out\"\n  });\n\n  // 5. CLEANUP\n  mainGroup.userData = {\n    cleanup() {\n      if (enterTl) enterTl.kill();\n      backdropGeom.dispose();\n      backdropMat.dispose();\n      accentGeom.dispose();\n      accentMat.dispose();\n      if (imageMesh) {\n        imageMesh.geometry.dispose();\n        imageMesh.material.dispose();\n      }\n    }\n  };\n\n  return mainGroup;\n}"
+}

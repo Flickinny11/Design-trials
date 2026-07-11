@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gemini-3.5-flash",
+  "model": "google/gemini-3.5-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-18-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 1490,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4037,
+    "completionTokens": 2944
+  },
+  "costUsd": 0.0325515,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, mix, color, texture, uniform } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Vector3 } = ctx.THREE;\n\n  const group = new Group();\n\n  // Colors from specification\n  const colors = {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n\n  // Dimensions based on atlas region: 512x320 (aspect ratio 1.6)\n  const width = 1.6;\n  const height = 1.0;\n  const geometry = new PlaneGeometry(width, height);\n\n  // Setup basic material with structural Node-based shader\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    opacity: 0.98\n  });\n\n  // Base procedural coloring: Vertical gradient with deep luxury watch aesthetics\n  const uvNode = uv();\n  const topColor = color(colors.ink);\n  const bottomColor = color(colors.surface);\n  \n  // Create beautiful engineered accent border on the left edge (signal red)\n  const leftEdge = uvNode.x.step(0.015);\n  const baseGradient = mix(bottomColor, topColor, uvNode.y);\n  const colorWithAccent = mix(color(colors.accent), baseGradient, leftEdge);\n\n  material.colorNode = colorWithAccent;\n\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  // Asynchronously load texture map image with fallback\n  const imageUrl = config.imageUrl || '/prism-assets/chrome/ceramic-grain.map.png';\n  ctx.textureLoader.loadTexture(imageUrl).then((tex) => {\n    tex.colorSpace = ctx.THREE.SRGBColorSpace;\n    \n    // Mix loaded ceramic grain texture with our luxury colors\n    const texNode = texture(tex, uvNode);\n    material.colorNode = mix(\n      colorWithAccent,\n      texNode.rgb,\n      uniform(0.18) // Subtle 18% texture blending for high-end feel\n    );\n    material.needsUpdate = true;\n  });\n\n  // Sophisticated subtle contact shadow\n  const shadowGeo = new PlaneGeometry(width * 1.2, 0.15);\n  const shadowMat = new MeshBasicNodeMaterial({\n    transparent: true,\n    opacity: 0.35,\n    color: 0x000000\n  });\n  const shadowMesh = new Mesh(shadowGeo, shadowMat);\n  shadowMesh.position.set(0, -(height / 2) - 0.05, -0.02);\n  shadowMesh.rotation.x = -Math.PI * 0.4;\n  group.add(shadowMesh);\n\n  // Subtle natural billboarding/floating behavior\n  const clock = new ctx.THREE.Clock();\n  let animationFrameId;\n\n  function animate() {\n    animationFrameId = requestAnimationFrame(animate);\n    const time = clock.getElapsedTime();\n    // Gentle premium floating motion\n    mesh.position.y = Math.sin(time * 1.5) * 0.02;\n    mesh.rotation.y = Math.cos(time * 0.8) * 0.015;\n  }\n  animate();\n\n  // Entrance animation: GSAP scale-up and rise-in\n  const tl = gsap.timeline();\n  group.position.y += 0.25;\n  group.scale.set(0.9, 0.9, 0.9);\n  \n  tl.to(group.position, {\n    y: '-=0.25',\n    duration: 0.8,\n    ease: 'power3.out'\n  });\n  tl.to(group.scale, {\n    x: 1,\n    y: 1,\n    z: 1,\n    duration: 0.8,\n    ease: 'power4.out'\n  }, '<');\n\n  // Clean up all hooks and animations\n  group.userData = {\n    cleanup() {\n      if (animationFrameId) {\n        cancelAnimationFrame(animationFrameId);\n      }\n      tl.kill();\n      geometry.dispose();\n      material.dispose();\n      shadowGeo.dispose();\n      shadowMat.dispose();\n    }\n  };\n\n  return group;\n}"
+}

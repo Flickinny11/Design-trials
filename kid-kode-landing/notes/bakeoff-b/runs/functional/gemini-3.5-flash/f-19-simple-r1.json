@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gemini-3.5-flash",
+  "model": "google/gemini-3.5-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-19-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 1571,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4040,
+    "completionTokens": 3366
+  },
+  "costUsd": 0.036354,
+  "billing": "metered",
+  "output": "import { MeshStandardNodeMaterial, MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, texture } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, DirectionalLight, AmbientLight } = ctx.THREE;\n\n  const cardGroup = new Group();\n\n  // Create highly engineered metal card panel backing (PBR + machined look)\n  const backGeom = new PlaneGeometry(2.2, 1.8);\n  const backMat = new MeshStandardNodeMaterial({\n    metalness: 0.55,\n    roughness: 0.5,\n    transparent: false\n  });\n\n  // Vertical gradient shader using TSL nodes for the premium Nova Atelier feel\n  const uvNode = uv();\n  const baseColor = vec3(0.043, 0.043, 0.063); // Surface/Ink dark mix (#0b0b10)\n  const topColor = vec3(0.086, 0.086, 0.114);  // Ink (#16161d)\n  backMat.colorNode = mix(baseColor, topColor, uvNode.y);\n\n  const backMesh = new Mesh(backGeom, backMat);\n  cardGroup.add(backMesh);\n\n  // Textured image cover for the high-end feature depiction\n  const imagePlaneGeom = new PlaneGeometry(2.0, 1.1);\n  const imageMat = new MeshBasicNodeMaterial({ transparent: true, opacity: 0.95 });\n  const imageMesh = new Mesh(imagePlaneGeom, imageMat);\n  imageMesh.position.set(0, 0.22, 0.01);\n  cardGroup.add(imageMesh);\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      imageMat.colorNode = texture(tex);\n      imageMat.needsUpdate = true;\n    });\n  }\n\n  // Pure signal red (#ff2a38) highlight accent line representing the atelier heritage\n  const accentGeom = new PlaneGeometry(2.2, 0.03);\n  const accentMat = new MeshBasicNodeMaterial({ color: 0xff2a38 });\n  const accentMesh = new Mesh(accentGeom, accentMat);\n  accentMesh.position.set(0, -0.88, 0.02);\n  cardGroup.add(accentMesh);\n\n  // Local lights to cast brilliant metallic reflections on the anodized body\n  const rimLight = new DirectionalLight(0xe8ecf2, 1.2);\n  rimLight.position.set(1.5, 2.0, 1.5);\n  cardGroup.add(rimLight);\n\n  const fillLight = new AmbientLight(0x16161d, 0.6);\n  cardGroup.add(fillLight);\n\n  // Render Display Typeface using MSDF loader\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const textString = items.find(item => item.role === 'headline')?.text ?? 'Collection 3';\n\n  const labelText = ctx.fontAtlas.createText(textString, {\n    fontSize: 34,\n    color: '#e8ecf2',\n    align: 'center'\n  });\n  \n  // Clean offset placement & appropriate scale mapping\n  labelText.position.set(0, -0.55, 0.03);\n  labelText.scale.setScalar(0.007);\n  cardGroup.add(labelText);\n\n  // Subtle breathing idle animation to make the card feel alive\n  const idleTimeline = gsap.timeline({ repeat: -1, yoyo: true });\n  idleTimeline.to(cardGroup.rotation, {\n    y: 0.04,\n    x: 0.02,\n    duration: 3.5,\n    ease: 'power1.inOut'\n  });\n\n  // Strict local resource cleanup\n  cardGroup.userData = {\n    cleanup: () => {\n      idleTimeline.kill();\n      backGeom.dispose();\n      backMat.dispose();\n      imagePlaneGeom.dispose();\n      imageMat.dispose();\n      accentGeom.dispose();\n      accentMat.dispose();\n    }\n  };\n\n  return cardGroup;\n}"
+}

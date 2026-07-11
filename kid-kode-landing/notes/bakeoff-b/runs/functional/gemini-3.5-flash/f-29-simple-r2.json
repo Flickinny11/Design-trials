@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gemini-3.5-flash",
+  "model": "google/gemini-3.5-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-29-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 1557,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4039,
+    "completionTokens": 2801
+  },
+  "costUsd": 0.0312675,
+  "billing": "metered",
+  "output": "import { MeshStandardNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, PlaneGeometry, Mesh, PointLight } = ctx.THREE;\n  const group = new Group();\n\n  const colors = config.intent?.visualSpec?.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n\n  // Build Card Panel (512x320 aspect ratio -> 1.6 x 1.0 unit plane)\n  const width = 1.6;\n  const height = 1.0;\n  const cardGeo = new PlaneGeometry(width, height);\n\n  // Gradient Material with TSL\n  const cardMat = new MeshStandardNodeMaterial({\n    roughness: 0.6,\n    metalness: 0.5,\n    transparent: true,\n    opacity: 0.95\n  });\n\n  // Engineered gradient color from surface (#0b0b10) to ink (#16161d)\n  const colorBottom = vec3(0.043, 0.043, 0.063); // #0b0b10\n  const colorTop = vec3(0.086, 0.086, 0.114);    // #16161d\n  cardMat.colorNode = mix(colorBottom, colorTop, uv().y);\n\n  const cardMesh = new Mesh(cardGeo, cardMat);\n  group.add(cardMesh);\n\n  // Load brushed-metal texture mapping if available\n  const imageUrl = config.imageUrl ?? '/prism-assets/chrome/brushed-metal.map.png';\n  ctx.textureLoader.loadTexture(imageUrl).then((tex) => {\n    if (tex) {\n      tex.colorSpace = 'srgb';\n      cardMat.roughnessMap = tex;\n      cardMat.metalnessMap = tex;\n      cardMat.needsUpdate = true;\n    }\n  }).catch(() => {});\n\n  // Red accent indicator strip (signal red, ≤10% of frame)\n  const accentGeo = new PlaneGeometry(0.03, 0.6);\n  const accentMat = new MeshStandardNodeMaterial({\n    color: colors.accent,\n    emissive: colors.accent,\n    emissiveIntensity: 0.8\n  });\n  const accentStrip = new Mesh(accentGeo, accentMat);\n  accentStrip.position.set(-0.65, 0, 0.005);\n  group.add(accentStrip);\n\n  // Dynamic subtle local rim light to make the brushed metal texture pop\n  const localLight = new PointLight(colors.accent, 0.8, 3.0);\n  localLight.position.set(-1.0, 1.0, 0.5);\n  group.add(localLight);\n\n  // Text Content (Journal 1)\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const textVal = items[0]?.text ?? \"Journal 1\";\n\n  const titleText = ctx.fontAtlas.createText(textVal, {\n    fontSize: 39,\n    color: colors.paper,\n    align: 'left'\n  });\n  // Adjust position and scale within scene bounds\n  titleText.position.set(-0.5, -0.05, 0.01);\n  titleText.scale.setScalar(0.0035);\n  group.add(titleText);\n\n  // Unifying subtle floating animation\n  const tl = gsap.timeline({ repeat: -1, yoyo: true });\n  tl.to(group.position, {\n    y: '+=0.02',\n    duration: 3,\n    ease: 'power1.inOut'\n  });\n\n  // Cleanup handler\n  group.userData = {\n    cleanup() {\n      tl.kill();\n      cardGeo.dispose();\n      cardMat.dispose();\n      accentGeo.dispose();\n      accentMat.dispose();\n    }\n  };\n\n  return group;\n}"
+}

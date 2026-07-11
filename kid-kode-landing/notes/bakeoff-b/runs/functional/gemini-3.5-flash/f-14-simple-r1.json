@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gemini-3.5-flash",
+  "model": "google/gemini-3.5-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-14-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 755,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4025,
+    "completionTokens": 1106
+  },
+  "costUsd": 0.0159915,
+  "billing": "metered",
+  "output": "import {\n  MeshBasicNodeMaterial,\n  PlaneGeometry,\n  Mesh,\n  Group,\n  Color\n} from 'three/webgpu';\nimport { uv, vec3, mix, smoothstep, time } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport function createNode(config, ctx) {\n  const { Group: ThreeGroup, Mesh: ThreeMesh, PlaneGeometry: ThreeGeometry } = ctx.THREE;\n\n  const group = new ThreeGroup();\n\n  // Colors\n  const inkColor = new Color('#16161d');\n  const paperColor = new Color('#e8ecf2');\n  const accentColor = new Color('#ff2a38');\n  const surfaceColor = new Color('#0b0b10');\n\n  // Materials & Geometry\n  // Hub frame bounds: x in [-3.5, 3.5], y in [-3, 2.5]\n  // Backdrop plane representing the \"engineered gradient surface\"\n  const backdropGeo = new ThreeGeometry(7.0, 5.5);\n  \n  // Custom TSL Material for Engineered Gradient & Subtle Grain\n  const backdropMat = new MeshBasicNodeMaterial();\n  \n  // Create procedural vertical gradient with subtle noise grain simulating a premium look\n  const uvs = uv();\n  const gradFactor = uvs.y; // bottom-to-top gradient\n  \n  // Pseudo-random noise function for the subtle grain\n  const noise = fract(sin(uvs.x.mul(12345.0).add(uvs.y.mul(67890.0))).mul(43758.5453));\n  const grain = noise.mul(0.04); // subtle amplitude\n  \n  // Mix background surface (darker near-black) with the primary ink color (dark blue-grey)\n  const baseColorNode = mix(vec3(surfaceColor.r, surfaceColor.g, surfaceColor.b), \n                            vec3(inkColor.r, inkColor.g, inkColor.b), \n                            gradFactor);\n  \n  // Add grain and a soft hint of the red accent at the center-right to feel premium\n  const distFromCenter = smoothstep(0.1, 0.9, uvs.x);\n  const tintedColorNode = mix(baseColorNode, vec3(accentColor.r, accentColor.g, accentColor.b), distFromCenter.mul(0.02));\n  \n  // Final composite color node with noise\n  backdropMat.colorNode = tintedColorNode.add(vec3(grain));\n\n  const backdropMesh = new ThreeMesh(backdropGeo, backdropMat);\n  backdropMesh.position.set(0, -0.25, -0.1); // slightly offset back\n  group.add(backdropMesh);\n\n  // Foreground card image\n  const cardGeo = new ThreeGeometry(4.0, 2.5);\n  const cardMat = new MeshBasicNodeMaterial({ transparent: true });\n\n  const cardMesh = new ThreeMesh(cardGeo, cardMat);\n  // Position within the hub frame\n  cardMesh.position.set(0, 0, 0.05);\n  group.add(cardMesh);\n\n  // Load physical image asset if available\n  const imageUrl = config.imageUrl ?? (config.intent?.visualSpec?.imageUrl);\n  if (imageUrl) {\n    ctx.textureLoader.loadTexture(imageUrl).then((texture) => {\n      cardMat.map = texture;\n      cardMat.needsUpdate = true;\n    });\n  }\n\n  // Animation timeline - Gentle idle breathing to prevent a dead render\n  const tl = gsap.timeline({ repeat: -1, yoyo: true });\n  tl.to(cardMesh.position, {\n    y: 0.04,\n    duration: 3.5,\n    ease: 'power1.inOut'\n  });\n\n  // Apply primitives\n  const activePrimitives = [];\n  const primitivesList = config.cinematicPrimitives ?? [];\n  for (const prim of primitivesList) {\n    if (ctx.primitives[prim.name]) {\n      const res = ctx.primitives[prim.name](group, prim.params);\n      activePrimitives.push(res);\n    }\n  }\n\n  // Setup cleanup handler\n  group.userData = {\n    cleanup() {\n      tl.kill();\n      backdropGeo.dispose();\n      backdropMat.dispose();\n      cardGeo.dispose();\n      cardMat.dispose();\n      activePrimitives.forEach(p => {\n        if (typeof p.cleanup === 'function') p.cleanup();\n      });\n    }\n  };\n\n  return group;\n}\n\n// Simple Helper TSL fract node\nfunction fract(value) {\n  return value.sub(value.floor());\n}\n"
+}

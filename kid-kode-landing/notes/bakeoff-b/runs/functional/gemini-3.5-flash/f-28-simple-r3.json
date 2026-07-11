@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gemini-3.5-flash",
+  "model": "google/gemini-3.5-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-28-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 1473,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4023,
+    "completionTokens": 2570
+  },
+  "costUsd": 0.0291645,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, vec4, mix, texture, uniform, mul, add, sin, time, fract } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, PlaneGeometry, Mesh, Color } = ctx.THREE;\n\n  const group = new Group();\n  const timelines = [];\n\n  // Card dimensions (aspect ratio ~1.6 matching 512x320)\n  const width = 2.4;\n  const height = 1.5;\n\n  // Colors from visual spec\n  const inkColor = new Color('#16161d');\n  const paperColor = new Color('#e8ecf2');\n  const accentColor = new Color('#ff2a38');\n  const surfaceColor = new Color('#0b0b10');\n\n  // Geometry\n  const geometry = new PlaneGeometry(width, height);\n\n  // Fallback map uniform & material setup\n  const textureUniform = uniform(null);\n  const hasTexture = uniform(0);\n\n  // TSL Shader logic for engineered gradient, subtle grain, and texture overlay\n  const uvVal = uv();\n  \n  // Custom pseudo-random grain\n  const grainSeed = mul(uvVal.x, uvVal.y).add(time.mul(0.05));\n  const grain = fract(sin(grainSeed).mul(43758.5453)).mul(0.04);\n\n  // Base background gradient: near-black surface (#0b0b10) to deep ink (#16161d)\n  const baseGrad = mix(\n    vec3(surfaceColor.r, surfaceColor.g, surfaceColor.b),\n    vec3(inkColor.r, inkColor.g, inkColor.b),\n    uvVal.y\n  );\n\n  // Accent pin-stripe at the top edge of the card\n  const topEdge = uvVal.y.gt(0.97);\n  const finalBackground = mix(\n    baseGrad.add(grain),\n    vec3(accentColor.r, accentColor.g, accentColor.b),\n    topEdge.select(1.0, 0.0)\n  );\n\n  // Optional Texture overlay blending logic\n  const texColor = texture(textureUniform, uvVal);\n  const colorNode = mix(\n    finalBackground,\n    texColor.rgb,\n    hasTexture.mul(texColor.a)\n  );\n\n  const material = new MeshBasicNodeMaterial({\n    colorNode: vec4(colorNode, 1)\n  });\n\n  const cardMesh = new Mesh(geometry, material);\n  group.add(cardMesh);\n\n  // Load Image Asset via context loader\n  const imageUrl = config.imageUrl ?? '/prism-mock/home/nodes/orb-decor.png';\n  if (imageUrl) {\n    ctx.textureLoader\n      .loadTexture(imageUrl)\n      .then((tex) => {\n        textureUniform.value = tex;\n        hasTexture.value = 1.0;\n        material.needsUpdate = true;\n      })\n      .catch((err) => {\n        console.warn('Failed loading image asset for journal card:', err);\n      });\n  }\n\n  // Visual frame outline to ground the element (Machined metal look, paper/silver outline)\n  const outlineGeo = new PlaneGeometry(width + 0.02, height + 0.02);\n  const outlineMat = new MeshBasicNodeMaterial({\n    colorNode: vec4(paperColor.r * 0.15, paperColor.g * 0.15, paperColor.b * 0.15, 1.0)\n  });\n  const outlineMesh = new Mesh(outlineGeo, outlineMat);\n  outlineMesh.position.z = -0.005;\n  group.add(outlineMesh);\n\n  // Subtle entry animation\n  group.scale.set(0.9, 0.9, 0.9);\n  group.position.y -= 0.1;\n\n  const tl = gsap.timeline({ defaults: { ease: 'power3.out', duration: 1.2 } });\n  tl.to(group.scale, { x: 1, y: 1, z: 1 });\n  tl.to(group.position, { y: 0 }, '<');\n  timelines.push(tl);\n\n  // Cleanup handler\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    outlineGeo.dispose();\n    material.dispose();\n    outlineMat.dispose();\n    timelines.forEach((t) => t.kill());\n  };\n\n  return group;\n}"
+}

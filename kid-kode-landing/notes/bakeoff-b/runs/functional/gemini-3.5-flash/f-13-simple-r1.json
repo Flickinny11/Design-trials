@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gemini-3.5-flash",
+  "model": "google/gemini-3.5-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-13-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 1626,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4032,
+    "completionTokens": 1873
+  },
+  "costUsd": 0.022905,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial, PlaneGeometry, Mesh, Group } from 'three/webgpu';\nimport { uv, vec3, mix, smoothstep, time } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config: any, ctx: any): any {\n  const { THREE } = ctx;\n  const group = new Group();\n\n  const colors = {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n\n  // 1. Stage / Backdrop Plane for the Title\n  // Size: 4.5 x 1.2 units\n  const backdropGeo = new PlaneGeometry(4.5, 1.2);\n  const backdropMat = new MeshBasicNodeMaterial();\n\n  // Engineered gradient + subtle animated grain in TSL\n  const uvNode = uv();\n  const grad = smoothstep(0.0, 1.0, uvNode.y);\n  const baseColor = vec3(\n    parseFloat(`0x${colors.surface.slice(1, 3)}`) / 255,\n    parseFloat(`0x${colors.surface.slice(3, 5)}`) / 255,\n    parseFloat(`0x${colors.surface.slice(5, 7)}`) / 255\n  );\n  const inkColor = vec3(\n    parseFloat(`0x${colors.ink.slice(1, 3)}`) / 255,\n    parseFloat(`0x${colors.ink.slice(3, 5)}`) / 255,\n    parseFloat(`0x${colors.ink.slice(5, 7)}`) / 255\n  );\n  \n  // Mixed background gradient\n  const finalColor = mix(inkColor, baseColor, grad);\n  \n  backdropMat.colorNode = finalColor;\n  const backdropMesh = new Mesh(backdropGeo, backdropMat);\n  group.add(backdropMesh);\n\n  // Load the feature card image if available, blend it in\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex: any) => {\n      tex.colorSpace = THREE.SRGBColorSpace;\n      backdropMat.colorNode = mix(\n        finalColor, \n        vec3(0.1, 0.1, 0.1), // slightly subdued card presence\n        0.4\n      );\n      backdropMat.needsUpdate = true;\n    });\n  }\n\n  // 2. Red Accent Bar (the signature signal red #ff2a38 decoration)\n  const accentGeo = new PlaneGeometry(0.15, 0.4);\n  const accentMat = new MeshBasicNodeMaterial({ color: colors.accent });\n  const accentMesh = new Mesh(accentGeo, accentMat);\n  accentMesh.position.set(-1.8, 0, 0.01);\n  group.add(accentMesh);\n\n  // 3. Render Title Text\n  // Get text content from config or fallback to spec\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const titleString = textItems.find((t: any) => t.role === 'headline')?.text ?? 'Collection';\n\n  // 96px display size maps to roughly 0.45 scene units here\n  const textObj = ctx.fontAtlas.createText(titleString, {\n    fontSize: 0.45,\n    color: colors.paper,\n    align: 'left'\n  });\n  \n  // Position the text nicely to the right of the red accent bar\n  textObj.position.set(-1.5, -0.15, 0.02);\n  group.add(textObj);\n\n  // 4. Subtle Intro Transition\n  const tl = gsap.timeline();\n  tl.fromTo(textObj.position, \n    { x: -1.8 },\n    { x: -1.5, duration: 0.9, ease: 'power4.out' }\n  );\n  tl.fromTo(accentMesh.scale,\n    { y: 0.001 },\n    { y: 1, duration: 0.7, ease: 'power3.out' },\n    '<'\n  );\n\n  // 5. Cleanup\n  group.userData = {\n    handlers: {},\n    cleanup: () => {\n      tl.kill();\n      backdropGeo.dispose();\n      backdropMat.dispose();\n      accentGeo.dispose();\n      accentMat.dispose();\n    }\n  };\n\n  return group;\n}"
+}

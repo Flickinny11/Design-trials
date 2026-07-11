@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gemini-3.5-flash",
+  "model": "google/gemini-3.5-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-26-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 1513,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4042,
+    "completionTokens": 3228
+  },
+  "costUsd": 0.035115,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, vec4, mix, smoothstep } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // 1. Stage / Card Backing (Engineered Gradient Panel)\n  // Standard aspect ratio for the card mapping to 512x320 source rect (1.6:1)\n  const cardW = 2.4;\n  const cardH = 1.5;\n  const geom = new PlaneGeometry(cardW, cardH);\n\n  const mat = new MeshBasicNodeMaterial({\n    transparent: true,\n    depthWrite: false\n  });\n\n  // Engineered gradient surface: Transition from near-black surface to deep ink\n  // with a subtle precision accent border highlight\n  const uVS = uv();\n  const cSurface = vec3(0.043, 0.043, 0.062); // #0b0b10\n  const cInk = vec3(0.086, 0.086, 0.114);     // #16161d\n  const cAccent = vec3(1.0, 0.165, 0.22);      // #ff2a38\n\n  // Base vertical gradient\n  const baseGrad = mix(cSurface, cInk, uVS.y);\n\n  // Precision border math\n  const borderX = smoothstep(0.0, 0.015, uVS.x).mul(smoothstep(0.0, 0.015, uVS.x.oneMinus()));\n  const borderY = smoothstep(0.0, 0.024, uVS.y).mul(smoothstep(0.0, 0.024, uVS.y.oneMinus()));\n  const borderMask = borderX.mul(borderY).oneMinus();\n\n  // Final composite color\n  const finalColor = mix(baseGrad, cAccent, borderMask.mul(0.35));\n  mat.colorNode = vec4(finalColor, 0.95);\n\n  const panel = new Mesh(geom, mat);\n  root.add(panel);\n\n  // 2. Texture Layer (Isolated Hero Overlay)\n  const imgGeom = new PlaneGeometry(cardW * 0.9, cardH * 0.9);\n  const imgMat = new MeshBasicNodeMaterial({\n    transparent: true,\n    depthWrite: false,\n    opacity: 0.05 // Soft industrial watermark layout\n  });\n  const imgMesh = new Mesh(imgGeom, imgMat);\n  imgMesh.position.set(0, 0, 0.002);\n  root.add(imgMesh);\n\n  const targetImg = config.imageUrl || '/prism-mock/home/nodes/cta-hero-isolated.png';\n  ctx.textureLoader.loadTexture(targetImg).then((texture) => {\n    imgMat.colorNode = texture;\n    imgMat.opacity = 0.55; // Fade-in texture weight beautifully once loaded\n    imgMat.needsUpdate = true;\n  }).catch(() => {});\n\n  // 3. Typographic Header Hierarchy\n  // \"Pricing 3\" Headline\n  const textStr = \"Pricing 3\";\n  const titleText = ctx.fontAtlas.createText(textStr, {\n    fontSize: 39,\n    color: '#e8ecf2', // Crisp paper white\n    align: 'center'\n  });\n  // Center-aligned offset positioning inside the card frame\n  titleText.position.set(0, -0.05, 0.01);\n  root.add(titleText);\n\n  // Intro Transition (rise-in with GSAP)\n  const tl = gsap.timeline();\n  tl.fromTo(root.position, \n    { y: '-=0.2', x: '+=0' }, \n    { y: '+=0.2', duration: 0.8, ease: 'power3.out' }\n  );\n  tl.fromTo(root.scale,\n    { x: 0.96, y: 0.96, z: 0.96 },\n    { x: 1, y: 1, z: 1, duration: 0.9, ease: 'power4.out' },\n    '-=0.8'\n  );\n\n  // Clean-up Interface\n  root.userData = {\n    handlers: {},\n    cleanup() {\n      if (tl) tl.kill();\n      geom.dispose();\n      imgGeom.dispose();\n      mat.dispose();\n      imgMat.dispose();\n    }\n  };\n\n  return root;\n}\n"
+}

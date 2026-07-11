@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gemini-3.5-flash",
+  "model": "google/gemini-3.5-flash",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-01-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 1844,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 4033,
+    "completionTokens": 2612
+  },
+  "costUsd": 0.0295575,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial, PlaneGeometry } from 'three/webgpu';\nimport { vec3, mix, uv } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, Color, Vector3 } = ctx.THREE;\n  const group = new Group();\n\n  const colors = {\n    ink: new Color('#16161d'),\n    paper: new Color('#e8ecf2'),\n    accent: new Color('#ff2a38'),\n    surface: new Color('#0b0b10')\n  };\n\n  // 1. STAGE: Build backdrop plane to prevent flat void\n  const backdropGeo = new PlaneGeometry(8, 6);\n  const backdropMat = new MeshBasicNodeMaterial({ depthWrite: false });\n  \n  // Clean gradient using TSL\n  const topColorObj = colors.ink;\n  const bottomColorObj = colors.surface;\n  const topColor = vec3(topColorObj.r, topColorObj.g, topColorObj.b);\n  const bottomColor = vec3(bottomColorObj.r, bottomColorObj.g, bottomColorObj.b);\n  backdropMat.colorNode = mix(bottomColor, topColor, uv().y);\n\n  const backdrop = new Mesh(backdropGeo, backdropMat);\n  backdrop.position.z = -1.5;\n  group.add(backdrop);\n\n  // 2. HERO CARD (Plane carrying the image)\n  const cardGeo = new PlaneGeometry(3.6, 2.25); // 1.6:1 ratio match to 512x320\n  const cardMat = new MeshBasicNodeMaterial({\n    transparent: true,\n    opacity: 0.0 // Start at 0 for GSAP fade-in\n  });\n\n  const cardMesh = new Mesh(cardGeo, cardMat);\n  cardMesh.position.set(0, 0.3, 0);\n  group.add(cardMesh);\n\n  // Load Image Asset via Loader\n  const imageUrl = config.imageUrl ?? '/prism-mock/home/nodes/feature-card.png';\n  ctx.textureLoader.loadTexture(imageUrl).then((texture) => {\n    cardMat.colorNode = texture;\n    cardMat.needsUpdate = true;\n    gsap.to(cardMat, { opacity: 1.0, duration: 0.6, ease: 'power2.out' });\n  }).catch((err) => {\n    // Fallback if texture fails: clean engineered metal style\n    cardMat.colorNode = mix(vec3(0.09, 0.09, 0.12), vec3(0.15, 0.15, 0.2), uv().y);\n    gsap.to(cardMat, { opacity: 1.0, duration: 0.4 });\n  });\n\n  // 3. TEXT CONTENT (Rendered using font atlas)\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const textGroup = new Group();\n  textGroup.position.set(0, -1.1, 0.1);\n  group.add(textGroup);\n\n  let textStr = \"A machined-metal watch atelier landing with catalog, pricing, jo\";\n  if (items.length > 0) {\n    textStr = items[0].text;\n  }\n\n  // Mono style for the tagline per-spec\n  const labelText = ctx.fontAtlas.createText(textStr, {\n    fontSize: 0.14,\n    color: '#e8ecf2', // Paper color\n    align: 'center',\n    maxWidthPx: 800\n  });\n  textGroup.add(labelText);\n\n  // 4. ANIMATION: Simple weighted rise-in entrance on load\n  group.position.y += 0.3;\n  const tl = gsap.timeline();\n  tl.to(group.position, {\n    y: 0,\n    duration: 0.9,\n    ease: 'power4.out'\n  });\n\n  // 5. CLEANUP\n  group.userData = {\n    handlers: {},\n    cleanup: () => {\n      tl.kill();\n      backdropGeo.dispose();\n      backdropMat.dispose();\n      cardGeo.dispose();\n      cardMat.dispose();\n    }\n  };\n\n  return group;\n}\n"
+}
