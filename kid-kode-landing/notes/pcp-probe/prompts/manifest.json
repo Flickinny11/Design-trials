@@ -3,13 +3,13 @@
   "invariant": "I-P3 — arms differ ONLY in L1; L2 byte-copied to both arms; L3 = frozen corpus case strings",
   "sha256": {
     "old/l1-system.txt": "957bd0f7fabd8fbfb74763251fb210f48a0823b86faeee91a17eca532b4ac450",
-    "pcp/l1-system.txt": "cf334e010feb993506dc18dc9f4c0ef903c0ca4aec12cb0567e28b5e3143d24e",
+    "pcp/l1-system.txt": "7d1e28bdba1a2c5c888cc489ef7e468488928f10f015c32b2c4f526ca9430cbf",
     "old/l2-world.txt": "9c7c5d701a2916dd0e7bdf099e09ce2f9dab68205b3c94648fe0ec508a397332",
     "pcp/l2-world.txt": "9c7c5d701a2916dd0e7bdf099e09ce2f9dab68205b3c94648fe0ec508a397332"
   },
   "bytes": {
     "old/l1-system.txt": 1367,
-    "pcp/l1-system.txt": 7625,
+    "pcp/l1-system.txt": 9089,
     "l2-world.txt": 3366
   },
   "v1MatchesFrozenCorpusL1": true
