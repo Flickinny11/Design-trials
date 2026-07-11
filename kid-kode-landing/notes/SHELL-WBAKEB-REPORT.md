@@ -15,7 +15,7 @@ The three measured W-PCP §9 refinements land **additively** on L1 v2 (V1 byte-f
 2. **IMPORT DISCIPLINE block** on the dependency gate: the gsap NAMED-import rule + the ctx.THREE-is-NodeMaterial-free rule + the canonical resolvable-import header — the dominant residual crash class the W-PCP probe surfaced (gpt-oss 85% residual crashes were import discipline, not API knowledge).
 3. The canonical loader-spelling + fontAtlas surface refinements carried in the regenerated runtime-surface block.
 
-L1 v2 7,585B → **v2.1 9,039B** (+364 tok, well under the 12K cap). **Byte-stability re-proven: 100 calls → 1 hash** (sha256 L1 `7d1e28bd`, `notes/verification/wpcp/byte-stability.json`). Runtime surface `--check` OK (drift-free vs live compiler). The exact bytes every lane reads: `notes/bakeoff-b/l1-v2.1-system.txt` + `notes/bakeoff-b/l2-world-frozen.txt` (I-BB2 manifest: `notes/bakeoff-b/ibb2-hashes.json`).
+L1 v2 7,585B → **v2.1 9,039B** (+364 tok, well under the 12K cap). **Byte-stability re-proven: 100 calls → 1 hash** (sha256 L1 `7d1e28bd`, `notes/verification/wpcp/byte-stability.json`). Runtime surface `--check` OK (drift-free vs live compiler). The exact bytes every lane reads: `notes/bakeoff-b/l1-v2.1-system.txt` + `notes/bakeoff-b/l2-world-frozen.txt` (I-BB2 manifest: `notes/bakeoff-b/ibb2-hashes.json`). *Founder-awareness note (criteria-reviewer NIT): the v2.1 blocks live in the production prompt-content file `src/lib/prism/codegen/pcp-blocks.ts` — an additive-only edit (+21 lines, 0 deletions), byte-hash-frozen above; routing/cascade/verifier untouched (I-BB1 verified by the reviewer over the full wave diff).*
 
 ### 1.2 Live route inventory (D0.2, commit `409e339a`; probes in `notes/bakeoff-b/probes/`)
 
@@ -130,7 +130,7 @@ Coverage disclosures (I-BB5): **kimi n=17 of 40** (402-truncated) — its 21.6 m
 ### 3.2 Readings
 
 - **The ceiling-gap is real and it is mostly CRASH + composition, not taste.** Both ceiling references ran **zero crashes in 80 renders** while every contestant crashed 22–75% of the time. The best contestant full-coverage mean (deepseek 19.8) sits **11.1 points under Fable** and 3.7 under Opus.
-- **Nobody one-shots ship-grade — including the ceiling.** 368 of 369 renders carry ≥1 MUST-FIX; the single 0-MUST-FIX render in the entire wave is Fable's `v-18-nav-dock` r1 (scored 84, the wave's top frame). The OD11 micro-loop stays load-bearing at every tier.
+- **Nobody one-shots ship-grade — including the ceiling.** 368 of 369 renders carry ≥1 MUST-FIX; the single 0-MUST-FIX render in the entire wave is Fable's `v-18-nav-dock` **r2** (scored 84, the wave's top frame; its r1 sibling scored 12 — same model, same spec, one run apart, which is itself a one-shot-variance datapoint). *(Run suffix corrected r1→r2 per the user-advocate's raw-scores check.)* The OD11 micro-loop stays load-bearing at every tier.
 - **Defect profile (all renders):** MISSING_SPEC_ELEMENT ×297, FLAT_VOID ×225, BROKEN_COMPOSITION ×197, DEAD_LIGHTING ×165, OFF_PALETTE ×130 — spec-compliance and composition dominate; palette discipline (DL2) is mid-list, i.e. the PCP's numeric doctrine is holding the color line better than W-BAKE's freeform arm did.
 - **Fable's edge is 2D-editorial** (37.0 on the 2D subset vs Opus 22.5), while **Opus leads the 3D subset** (25.3 vs 21.9) — the two references are not interchangeable; they anchor different halves of the corpus.
 - **Sonnet + haiku are the reliability contestants** (22.5% crash, the contestant floor), consistent with their Axis-1 profile; deepseek buys 1.2 more design points than sonnet at +8pp crash.
@@ -233,8 +233,37 @@ Every inference call this wave is ledgered per-call with provider, model, route,
 
 ## 9. Judge verdicts (verbatim)
 
-*(PENDING — criteria-reviewer + user-advocate, both required, 0 MUST-FIX.)*
+Both judges ran fresh-context on 2026-07-11 against the committed artifacts (milestone-4 state, commit `04fe1d45`). Full transcripts summarized; verdict lines and MUST-FIX lists verbatim.
+
+### 9.1 criteria-reviewer
+
+Independently recounted **6 models on Axis 1** from raw `verify-logs/` rows and **7 models on Axis 2** from raw `judge/scores.json` — every figure reproduces §2.1/§3.1 to the digit ("Zero divergences"). Re-ran the shipped verifier on a 13-generation sample (10 headline + 3 violation-bearing): **13/13 reproduce the logged verdicts**. I-BB2: live-recomputed sha256 of L1 v2.1 (`7d1e28bd…`), frozen L2 (`9c7c5d70…`), and both corpus concat-hashes — all match `ibb2-hashes.json`. I-BB3: leak-scanned all 41 judge-visible batch inputs — **0 contestant-name leaks**; blind mappings in separate files, committed after judging. I-BB1: diffed the full wave range (`7ea64a32..HEAD`) — `src/server/inference/**`, `verifier.ts`, `prompts.ts` all **UNTOUCHED**; the only production-codegen edit is the disclosed additive L1 v2.1 block in `pcp-blocks.ts` (+21/-0). Route probes verified from committed artifacts (declined a live paid re-probe as temporally inconsistent with the wave snapshot — reasoning stated). D4 Spearman independently recomputed (sonnet **0.8270**, haiku **0.8090**); D5 mount-gate proof confirmed (`s-20-r1.meta.json` → `nodeMounted: false`). Cost ledger re-summed: **1,987 calls, metered $62.03 / sub-equiv $73.32** — matches §7; metered under cap confirmed.
+
+One NIT (not blocking, addressed in §1.1): make the `pcp-blocks.ts` production-file edit explicit for the founder.
+
+> ## MUST-FIX
+> (none)
+>
+> **CRITERIA-REVIEWER: PASS (0 MUST-FIX)**
+
+### 9.2 user-advocate (founder proxy)
+
+Read the report + raw metrics artifacts and **eye-checked 8 real frames** against their scores (Fable nav-dock r2=84 "genuinely clean"; its r1=12 "IS a void"; gemini nav-dock black void; glm formless grey blob at 4; Opus orrery 66 legible-but-flat; deepseek footer 72 readable-but-overflowing; the D5 s-01 before/after pair; mercury s-20's empty ink frame behind the voided false positive). Per-tier stakes: simple **CONDITIONAL-YES** (mercury-2 numbers hold; sign only with the gpt-oss fallback retained, as proposed), moderate+integration/complex **CONDITIONAL-YES** (luna 150/150 real and complete; "I would not route production volume through [OpenRouter] until a funded direct key or top-up discipline exists — the report says exactly this"), repair same-model **YES**, design ceiling+micro-loop **YES**, critic UNFILLED **YES** ("correct per the rule… handled honestly"). Ceiling-gap: "honestly stated — the frames match the numbers… I counted exactly **1** zero-MUST-FIX render in `scores.json`." Anomalies: "honest conduct — I would not feel deceived… the deterministic mount gate catching this is exactly the integrity mechanism I exist to demand." One FLAG (corrected in §3.2): top-frame citation said r1, raw scores say r2.
+
+> ### MUST-FIX list
+> (empty)
+>
+> **PLEASED.** The proposal is evidence-backed at every tier, the ceiling-gap and coverage holes are stated more conservatively than the raw data would allow, the anomalies are disclosed with committed proof, and the one defect I found is a cosmetic citation slip (r1↔r2) that leaves every number and conclusion intact. This is the honest measurement wave the §6.2 signature call needs.
+>
+> **Would you sign the §6.2 proposal as scoped (with its caveats): YES**
 
 ## 10. Founder sign-off gate
 
 This table is a PROPOSAL. Nothing routes until Logan signs.
+
+The signature call, stated once more in one line each:
+- **Sign-ready as scoped:** simple → mercury-2 (+gpt-oss fallback), repair → same-model, design → ceiling + OD11 micro-loop, critic → UNFILLED.
+- **Sign conditional on one operational fix:** luna's moderate/integration/complex seats need a funded non-aggregator route (or top-up discipline) before production volume rides them — and luna owes a design-lane run next funded wave.
+- **Do not route anything on kimi/glm numbers this wave** (coverage holes sit on the hardest rows).
+
+PRISM-WBAKEB: RUN COMPLETE
