@@ -1,0 +1,30 @@
+{
+  "bundle": "pcp-probe/pcp--claude-haiku-4.5/v-19-empty-state-r2",
+  "arm": "pcp",
+  "contestant": "claude-haiku-4.5",
+  "capturedAt": "2026-07-10T23:47:43.706Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 9,
+    "nodeMounted": true,
+    "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-19-empty-state-r2"
+  },
+  "consoleErrors": [
+    "THREE.Renderer: Objects of type THREE.LineLoop are not supported. Please use THREE.Line or THREE.LineSegments.",
+    "THREE.Renderer: Objects of type THREE.LineLoop are not supported. Please use THREE.Line or THREE.LineSegments.",
+    "THREE.Renderer: Objects of type THREE.LineLoop are not supported. Please use THREE.Line or THREE.LineSegments.",
+    "THREE.Renderer: Objects of type THREE.LineLoop are not supported. Please use THREE.Line or THREE.LineSegments.",
+    "THREE.Renderer: Objects of type THREE.LineLoop are not supported. Please use THREE.Line or THREE.LineSegments.",
+    "THREE.Renderer: Objects of type THREE.LineLoop are not supported. Please use THREE.Line or THREE.LineSegments.",
+    "THREE.Renderer: Objects of type THREE.LineLoop are not supported. Please use THREE.Line or THREE.LineSegments.",
+    "THREE.Renderer: Objects of type THREE.LineLoop are not supported. Please use THREE.Line or THREE.LineSegments.",
+    "THREE.Renderer: Objects of type THREE.LineLoop are not supported. Please use THREE.Line or THREE.LineSegments.",
+    "THREE.Renderer: Objects of type THREE.LineLoop are not supported. Please use THREE.Line or THREE.LineSegments."
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

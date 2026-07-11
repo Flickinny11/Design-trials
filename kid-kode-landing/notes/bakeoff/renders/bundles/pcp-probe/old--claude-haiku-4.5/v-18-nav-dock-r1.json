@@ -1,0 +1,194 @@
+{
+  "id": "pcp-probe/old--claude-haiku-4.5/v-18-nav-dock-r1",
+  "arm": "old",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-18-nav-dock",
+  "run": 1,
+  "node": {
+    "nodeId": "v-18-nav-dock",
+    "subtype": "nav-dock",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Navigation dock — A floating navigation dock of five entries with active state, machined rail, and press-down affordance.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "HOME",
+            "role": "nav-active",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "FEATURES",
+            "role": "nav-item",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "COLLECTION",
+            "role": "nav-item",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "PRICING",
+            "role": "nav-item",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "JOURNAL",
+            "role": "nav-item",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#1b1b23"
+            },
+            {
+              "at": 1,
+              "hex": "#101015"
+            }
+          ]
+        },
+        "typography": {
+          "nav-active": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 700,
+            "letterSpacing": 0.08,
+            "lineHeight": 1
+          },
+          "nav-item": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1
+          }
+        },
+        "effects": "Floating rail 3.6w x 0.5h scene units, corner radius 0.1, brushed-metal PBR with vertical albedo ramp #1b1b23 (at 0.0) -> #101015 (at 1.0), anisotropy 0.6 along x, roughness 0.55, metalness 0.5, clearcoat 0.2, chamfered edge 0.02 catching a continuous specular line from the key light; rail floats translateZ +0.15 above a contact-shadow plane at 35 percent opacity, shadow offset 0.06 down; five entries laid out on centers 0.68 apart with 0.25-unit (1x base) horizontal padding inside each hit cell 0.6w x 0.34h; active entry Home in paper 700 with an underline bar 0.28w x 0.025h in #ff2a38 emissive intensity 1.8 seated 0.06 below its baseline; inactive entries #a6adba 400; hover inactive color #a6adba -> #e8ecf2 over 160ms cubic-bezier(0.25,0.46,0.45,0.94); press per entry scale 1.0 -> 0.97 over 120ms cubic-bezier(0.175,0.885,0.32,1.275) with the cell dipping translateZ -0.03 into the rail; on active change the underline bar translates x to the new entry over 260ms cubic-bezier(0.165,0.84,0.44,1) with a weighted 1.04 overshoot; mount rise-in y +0.4 -> 0 over 700ms cubic-bezier(0.215,0.61,0.355,1)."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0.05,
+        3
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 45
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.35
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1.15,
+        "position": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.5,
+        "position": [
+          -1.5,
+          -0.6,
+          -1
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#8a93a3",
+        "intensity": 0.3,
+        "position": [
+          -2.5,
+          1,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Rail rises in once; the red active underline slides between entries with a weighted overshoot; pressed entries compress and dip into the rail.",
+    "contrastMinimum": "4.5:1 inactive entries on rail; active underline 4.6:1 against rail"
+  },
+  "parsed": true,
+  "fenced": true,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __create = Object.create;\nvar __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __getProtoOf = Object.getPrototypeOf;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(\n  // If the importer is in node compatibility mode or this is not an ESM\n  // file that has been converted to a CommonJS file using a Babel-\n  // compatible transform (i.e. \"__esModule\" has not been set), then set\n  // \"default\" to the CommonJS \"module.exports\" for node compatibility.\n  isNodeMode || !mod || !mod.__esModule ? __defProp(target, \"default\", { value: mod, enumerable: true }) : target,\n  mod\n));\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar THREE = __toESM(require(\"three/webgpu\"));\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const group = new THREE.Group();\n  const RAIL_W = 3.6, RAIL_H = 0.5, RAIL_D = 0.05, CORNER_R = 0.1;\n  const RAIL_Z = 0.15;\n  const canvas = document.createElement(\"canvas\");\n  canvas.width = 1;\n  canvas.height = 256;\n  const c2d = canvas.getContext(\"2d\");\n  const grad = c2d.createLinearGradient(0, 0, 0, 256);\n  grad.addColorStop(0, \"#1b1b23\");\n  grad.addColorStop(1, \"#101015\");\n  c2d.fillStyle = grad;\n  c2d.fillRect(0, 0, 1, 256);\n  const albedo = new THREE.CanvasTexture(canvas);\n  albedo.colorSpace = THREE.SRGBColorSpace;\n  const railGeom = new THREE.RoundedBoxGeometry(\n    RAIL_W,\n    RAIL_H,\n    RAIL_D,\n    16,\n    8,\n    8,\n    CORNER_R\n  );\n  const railMat = new THREE.MeshStandardMaterial({\n    map: albedo,\n    metalness: 0.5,\n    roughness: 0.55,\n    anisotropy: 0.6,\n    anisotropyRotation: 0,\n    clearcoat: 0.2\n  });\n  const rail = new THREE.Mesh(railGeom, railMat);\n  rail.position.z = RAIL_Z;\n  group.add(rail);\n  const shadowGeom = new THREE.PlaneGeometry(RAIL_W + 0.2, RAIL_H + 0.2);\n  const shadowMat = new THREE.MeshBasicMaterial({\n    color: 0,\n    transparent: true,\n    opacity: 0.35\n  });\n  const shadow = new THREE.Mesh(shadowGeom, shadowMat);\n  shadow.position.set(0, -0.06, 0);\n  group.add(shadow);\n  const items = [\n    { label: \"HOME\", active: true },\n    { label: \"FEATURES\", active: false },\n    { label: \"COLLECTION\", active: false },\n    { label: \"PRICING\", active: false },\n    { label: \"JOURNAL\", active: false }\n  ];\n  const ENTRY_SPACE = 0.68, ENTRY_W = 0.6, ENTRY_H = 0.34;\n  const START_X = -(ENTRY_SPACE * 2);\n  let activeIdx = 0;\n  const texts = [];\n  const hits = [];\n  items.forEach((item, i) => {\n    const x = START_X + i * ENTRY_SPACE;\n    const text = ctx.fontAtlas.create(item.label, {\n      fontSize: 13,\n      fontWeight: item.active ? 700 : 400,\n      fontFamily: \"JetBrains Mono\",\n      letterSpacing: 0.08,\n      color: item.active ? 15265010 : 10923450\n    });\n    text.position.set(x, 0, RAIL_Z + 0.01);\n    text.userData.navIndex = i;\n    group.add(text);\n    texts.push(text);\n    const hitGeom = new THREE.PlaneGeometry(ENTRY_W, ENTRY_H);\n    const hitMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 });\n    const hit = new THREE.Mesh(hitGeom, hitMat);\n    hit.position.set(x, 0, RAIL_Z + 0.05);\n    hit.userData.navIndex = i;\n    group.add(hit);\n    hits.push(hit);\n  });\n  const barGeom = new THREE.PlaneGeometry(0.28, 0.025);\n  const barMat = new THREE.MeshBasicMaterial({\n    color: 16722488,\n    emissive: 16722488,\n    emissiveIntensity: 1.8\n  });\n  const bar = new THREE.Mesh(barGeom, barMat);\n  bar.position.set(START_X, -0.06, RAIL_Z + 0.01);\n  group.add(bar);\n  group.userData.handlers = {\n    click: (e) => {\n      const intersections = e.intersections || [];\n      for (const hit of intersections) {\n        if (!hits.includes(hit.object)) continue;\n        const i = hit.object.userData.navIndex;\n        if (i !== activeIdx) {\n          activeIdx = i;\n          const tx = START_X + i * ENTRY_SPACE;\n          import_gsap.gsap.to(bar.position, {\n            x: tx,\n            duration: 0.26,\n            ease: \"cubic-bezier(0.165, 0.84, 0.44, 1)\"\n          });\n          texts.forEach((t, ti) => {\n            const col = ti === i ? 15265010 : 10923450;\n            const r = col >> 16 & 255, g = col >> 8 & 255, b = col & 255;\n            import_gsap.gsap.to(t.material.color, {\n              r: r / 255,\n              g: g / 255,\n              b: b / 255,\n              duration: 0.26\n            });\n          });\n        }\n        import_gsap.gsap.to(hit.object.position, {\n          z: \"-=0.03\",\n          duration: 0.12,\n          ease: \"cubic-bezier(0.175, 0.885, 0.32, 1.275)\",\n          yoyo: true,\n          repeat: 1\n        });\n        import_gsap.gsap.to(hit.object.scale, {\n          x: 0.97,\n          y: 0.97,\n          duration: 0.12,\n          ease: \"cubic-bezier(0.175, 0.885, 0.32, 1.275)\",\n          yoyo: true,\n          repeat: 1\n        });\n      }\n    },\n    mousemove: (e) => {\n      const hovered = new Set(\n        (e.intersections || []).filter((h) => hits.includes(h.object)).map((h) => h.object.userData.navIndex)\n      );\n      texts.forEach((t, i) => {\n        const col = i === activeIdx || hovered.has(i) ? 15265010 : 10923450;\n        const r = col >> 16 & 255, g = col >> 8 & 255, b = col & 255;\n        import_gsap.gsap.to(t.material.color, {\n          r: r / 255,\n          g: g / 255,\n          b: b / 255,\n          duration: 0.16,\n          ease: \"cubic-bezier(0.25, 0.46, 0.45, 0.94)\",\n          overwrite: \"auto\"\n        });\n      });\n    }\n  };\n  group.position.y = 0.4;\n  import_gsap.gsap.to(group.position, {\n    y: 0,\n    duration: 0.7,\n    ease: \"cubic-bezier(0.215, 0.61, 0.355, 1)\"\n  });\n  group.userData.cleanup = () => {\n    import_gsap.gsap.killTweensOf([\n      group.position,\n      bar.position,\n      ...texts.map((t) => t.material.color),\n      ...hits.flatMap((h) => [h.position, h.scale])\n    ]);\n    railGeom.dispose();\n    railMat.dispose();\n    albedo.dispose();\n    shadowGeom.dispose();\n    shadowMat.dispose();\n    barGeom.dispose();\n    barMat.dispose();\n    texts.forEach((t) => {\n      t.geometry?.dispose();\n      t.material?.dispose();\n    });\n    hits.forEach((h) => {\n      h.geometry.dispose();\n      h.material.dispose();\n    });\n  };\n  return group;\n}\n",
+  "transformError": null
+}

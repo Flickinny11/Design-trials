@@ -1,0 +1,75 @@
+{
+  "label": "batch-v-13-brand-wall",
+  "judgedAt": "2026-07-10T23:53:54.220Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-13-brand-wall/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-13-brand-wall/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-13-brand-wall/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-13-brand-wall/F4.jpg"
+    },
+    {
+      "label": "F5",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-13-brand-wall/F5.jpg"
+    },
+    {
+      "label": "F6",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-13-brand-wall/F6.jpg"
+    },
+    {
+      "label": "F7",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-13-brand-wall/F7.jpg"
+    },
+    {
+      "label": "F8",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-13-brand-wall/F8.jpg"
+    }
+  ],
+  "mappingFile": "notes/pcp-probe/judge/blind/batch-v-13-brand-wall/mapping.json",
+  "costUsd": 0.6582729999999999,
+  "durationApiMs": 40100,
+  "wallMs": 42997,
+  "usage": {
+    "input_tokens": 3391,
+    "cache_creation_input_tokens": 18849,
+    "cache_read_input_tokens": 84012,
+    "output_tokens": 3184,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18849,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 151,
+        "output_tokens": 2005,
+        "cache_read_input_tokens": 45809,
+        "cache_creation_input_tokens": 11243,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 11243
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center square\" } ], \"notes\": \"Single flat white square on black void; no tile grid, wordmarks, kicker, or materiality. Effectively unrendered.\" }, { \"frame\": \"F2\", \"score\": 9, \"mustFix\": [ { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"entire frame\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"entire frame\" }, { \"defect\": \"GARBLED_TEXT\", \"region\": \"upper half\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"lower-left quadrant\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"gray shapes\" } ], \"notes\": \"Blurred, cropped-in abstract letterform fragments; no 3x2 grid, no legible marks, no metal materiality. Incoherent.\" }, { \"frame\": \"F3\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center square\" } ], \"notes\": \"Identical white square on black void; spec entirely absent.\" }, { \"frame\": \"F4\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center square\" } ], \"notes\": \"Same near-empty frame: lone flat white square, no tiles, wordmarks, or lighting.\" }, { \"frame\": \"F5\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center square\" } ], \"notes\": \"Near-empty duplicate; white square on void, zero spec compliance.\" }, { \"frame\": \"F6\", \"score\": 9, \"mustFix\": [ { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"entire frame\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"entire frame\" }, { \"defect\": \"GARBLED_TEXT\", \"region\": \"upper half\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"bottom third\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"gray shapes\" } ], \"notes\": \"Same blurred abstract fragments as F2; grid and wordmarks absent, flat fills, black void below.\" }, { \"frame\": \"F7\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center square\" } ], \"notes\": \"Near-empty duplicate; single flat white square, nothing from spec rendered.\" }, { \"frame\": \"F8\", \"score\": 2, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame\" } ], \"notes\": \"Completely black frame; nothing rendered at all.\" } ] }"
+}

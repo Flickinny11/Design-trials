@@ -1,0 +1,75 @@
+{
+  "label": "batch-v-01-orbit-product-hero",
+  "judgedAt": "2026-07-10T23:25:53.201Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-01-orbit-product-hero/F1.png"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-01-orbit-product-hero/F2.png"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-01-orbit-product-hero/F3.png"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-01-orbit-product-hero/F4.png"
+    },
+    {
+      "label": "F5",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-01-orbit-product-hero/F5.png"
+    },
+    {
+      "label": "F6",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-01-orbit-product-hero/F6.png"
+    },
+    {
+      "label": "F7",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-01-orbit-product-hero/F7.png"
+    },
+    {
+      "label": "F8",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-01-orbit-product-hero/F8.png"
+    }
+  ],
+  "mappingFile": "notes/pcp-probe/judge/blind/batch-v-01-orbit-product-hero/mapping.json",
+  "costUsd": 1.5676390000000002,
+  "durationApiMs": 59626,
+  "wallMs": 62382,
+  "usage": {
+    "input_tokens": 3391,
+    "cache_creation_input_tokens": 62720,
+    "cache_read_input_tokens": 45857,
+    "output_tokens": 4585,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 62720,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 151,
+        "output_tokens": 3410,
+        "cache_read_input_tokens": 45857,
+        "cache_creation_input_tokens": 16863,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 16863
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 32, \"mustFix\": [ { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"center — watch floats well above plinth instead of resting on it\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"upper-left quadrant — flat white wedge reads as unlit geometry, not a light cone\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"right background field\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"left third — blown flat white mass\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"scene — no #ff2a38 accent signal light\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — watch far too small versus plinth\" } ], \"notes\": \"Watch material renders with real gold PBR detail, but levitation, blown white slabs, and voided right field kill the composition.\" }, { \"frame\": \"F2\", \"score\": 12, \"mustFix\": [ { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center — watch fully blown to untextured white, no material response\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"entire left half\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"right edge — giant stray white J-shaped geometry\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"full frame — white-dominant, no ink surfaces or accent\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — brushed-metal PBR and signal light absent\" } ], \"notes\": \"Severely broken render: emissive-white clay watch, half-frame void, stray garbage geometry. Nothing of the spec survives.\" }, { \"frame\": \"F3\", \"score\": 18, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"lower half — plinth absent\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"upper-center — watch occupies tiny fraction of frame\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"scene — no key, rim, or accent light; flat ambient only\" } ], \"notes\": \"Watch shows real gold material and dial hints, but it drifts tiny in a featureless black void with no plinth or lighting rig.\" }, { \"frame\": \"F4\", \"score\": 17, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"lower half — plinth absent\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"upper-center — watch far too small\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"scene — no key/rim/accent lighting\" } ], \"notes\": \"Near-duplicate void frame: edge-on watch adrift in black, no plinth, no lighting design, no gradient background.\" }, { \"frame\": \"F5\", \"score\": 17, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"lower half — plinth absent\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"upper-center — watch far too small\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"scene — flat ambient, no key or rim light\" } ], \"notes\": \"Same void failure: tiny edge-on watch, faint red sliver only palette compliance, everything else empty black.\" }, { \"frame\": \"F6\", \"score\": 17, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"lower half — plinth absent\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"upper-center — watch far too small\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"scene — no engineered lighting; flat fills\" } ], \"notes\": \"Void frame repeats: watch material readable but scene has no plinth, no light rig, no composition — DL16 violated wholesale.\" }, { \"frame\": \"F7\", \"score\": 17, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"lower half — plinth absent\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"upper-center — watch far too small\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"scene — flat ambient only, no key/rim/accent\" } ], \"notes\": \"Identical void failure to F4-F6: orbit shows only a minuscule edge-on watch floating in undifferentiated black.\" }, { \"frame\": \"F8\", \"score\": 20, \"mustFix\": [ { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center — watch blown to flat untextured white, materials missing\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"left third — flat white band\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"right edge — stray white J-shaped geometry\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center — white clay object, no accent red\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — brushed-metal PBR and signal light absent\" } ], \"notes\": \"Watch sits on plinth at plausible scale, but clay-white material blowout, left void, and garbage right geometry remain disqualifying.\" } ] }"
+}

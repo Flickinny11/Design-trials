@@ -1,0 +1,75 @@
+{
+  "label": "batch-v-09-editorial-oversized-type",
+  "judgedAt": "2026-07-10T23:50:31.667Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-09-editorial-oversized-type/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-09-editorial-oversized-type/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-09-editorial-oversized-type/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-09-editorial-oversized-type/F4.jpg"
+    },
+    {
+      "label": "F5",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-09-editorial-oversized-type/F5.jpg"
+    },
+    {
+      "label": "F6",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-09-editorial-oversized-type/F6.jpg"
+    },
+    {
+      "label": "F7",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-09-editorial-oversized-type/F7.jpg"
+    },
+    {
+      "label": "F8",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-09-editorial-oversized-type/F8.jpg"
+    }
+  ],
+  "mappingFile": "notes/pcp-probe/judge/blind/batch-v-09-editorial-oversized-type/mapping.json",
+  "costUsd": 0.6342559999999999,
+  "durationApiMs": 34980,
+  "wallMs": 37211,
+  "usage": {
+    "input_tokens": 3391,
+    "cache_creation_input_tokens": 18809,
+    "cache_read_input_tokens": 83948,
+    "output_tokens": 2722,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18809,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 151,
+        "output_tokens": 1519,
+        "cache_read_input_tokens": 45745,
+        "cache_creation_input_tokens": 11267,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 11267
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"left column (kicker, hero lines, accent rule all absent)\" } ], \"notes\": \"Near-empty black field with lone white square; no typography, gradient, or grain rendered. Effectively a failed render.\" }, { \"frame\": \"F2\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"left column (kicker, hero lines, accent rule all absent)\" } ], \"notes\": \"Identical void: flat black plate, centered white square placeholder, zero spec elements present.\" }, { \"frame\": \"F3\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"left column (kicker, hero lines, accent rule all absent)\" } ], \"notes\": \"Same void render; no editorial type, no accent red, no engineered gradient or grain.\" }, { \"frame\": \"F4\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"left column (kicker, hero lines, accent rule all absent)\" } ], \"notes\": \"Void frame with untextured white square at center; entire visualSpec unrendered.\" }, { \"frame\": \"F5\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"left column (kicker, hero lines, accent rule all absent)\" } ], \"notes\": \"Blank black plate, single white square; no type stack, no accent underline, no gradient.\" }, { \"frame\": \"F6\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"left column (kicker, hero lines, accent rule all absent)\" } ], \"notes\": \"Identical failed render; nothing from the editorial spec appears.\" }, { \"frame\": \"F7\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"left column (kicker, hero lines, accent rule all absent)\" } ], \"notes\": \"Void frame, white square placeholder only; DL16 violated, spec entirely missing.\" }, { \"frame\": \"F8\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"left column (kicker, hero lines, accent rule all absent)\" } ], \"notes\": \"Same near-empty render as all prior frames; batch appears to have failed uniformly.\" } ] }"
+}

@@ -1,0 +1,20 @@
+{
+  "bundle": "pcp-probe/old--gpt-oss-120b/v-09-editorial-oversized-type-r1",
+  "arm": "old",
+  "contestant": "gpt-oss-120b",
+  "capturedAt": "2026-07-10T23:21:16.925Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "pcp-probe/old--gpt-oss-120b/v-09-editorial-oversized-type-r1",
+    "moduleRuntimeError": "TypeError: (0 , import_text.createMsdfMesh) is not a function"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

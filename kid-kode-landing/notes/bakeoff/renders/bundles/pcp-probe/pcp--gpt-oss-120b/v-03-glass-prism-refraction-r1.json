@@ -1,0 +1,184 @@
+{
+  "id": "pcp-probe/pcp--gpt-oss-120b/v-03-glass-prism-refraction-r1",
+  "arm": "pcp",
+  "contestant": "gpt-oss-120b",
+  "caseId": "v-03-glass-prism-refraction",
+  "run": 1,
+  "node": {
+    "nodeId": "v-03-glass-prism-refraction",
+    "subtype": "glass-prism",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Glass prism refraction — A dispersive glass prism over a dark scene: iridescence, back rim light, emissive core — never flat glassmorphism.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "Light, machined.",
+            "role": "headline",
+            "typography": {
+              "fontSize": 68,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "SAPPHIRE OVER DIAL / ZERO DISTORTION",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#101017",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 0.6,
+              "hex": "#12121a"
+            },
+            {
+              "at": 1,
+              "hex": "#16161d"
+            }
+          ]
+        },
+        "typography": {
+          "headline": {
+            "family": "Lora",
+            "fontSize": 68,
+            "fontWeight": 600,
+            "letterSpacing": -0.005,
+            "lineHeight": 1.1
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Triangular prism: equilateral cross-section 1.2 units per side, length 1.8 units, axis horizontal, rotated 12 deg on z and 20 deg on y, centered at origin. Material: MeshPhysicalMaterial transmission 1.0, thickness 0.9, ior 1.55, TSL dispersion pass splitting refraction by 0.18 across RGB, iridescence 1.0, iridescenceIOR 1.3, iridescenceThicknessRange [120,480] nm, roughness 0.08, clearcoat 0.25, clearcoatRoughness 0.1, attenuationColor #e8ecf2 attenuationDistance 2.5. Emissive core: 0.35-unit octahedron inside the prism, color #ff2a38, emissive #ff2a38 intensity 2.2 (kept under the 2.5 AgX red-clip ceiling). Back rim: strong cool directional from behind-left so both long edges carry a bright rim line. Caustic streak: 2.4 x 0.5-unit plane on the floor at y=-1.1 with an engineered linear gradient of dispersed stops (#ff2a38 at 0.2, #e8ecf2 at 0.5, #9fb0c4 at 0.8) at opacity 0.35, elongating 8 percent when the prism tilts. Hover depth-rotate: up to 10 deg toward cursor over 350ms cubic-bezier(0.215,0.61,0.355,1); release weighted-settle 1.04 to 1.0 over 900ms cubic-bezier(0.165,0.84,0.44,1). Headline baseline 1.75 units (7x base) below center, caption 0.5 units below it. Never flat glassmorphism: no frosted planes, no uniform white borders."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "mesh",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "depth-rotate",
+        "trigger": "hover",
+        "params": {
+          "maxDeg": 10
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0.4,
+        0.3,
+        4.6
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 45
+    },
+    "lights": [
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 2,
+        "position": [
+          -2,
+          3,
+          -4
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#cdd6e4",
+        "intensity": 0.9,
+        "position": [
+          2.5,
+          2,
+          3
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 1.4,
+        "position": [
+          0,
+          0,
+          0.2
+        ]
+      },
+      {
+        "type": "ambient",
+        "color": "#2a2e38",
+        "intensity": 0.25
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Prism tilts up to 10 deg toward the cursor on hover and settles with weighted overshoot; the dispersed caustic streak on the floor elongates as it tilts."
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap",
+      "@/primitives",
+      "@/text"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_primitives = require(\"@/primitives\");\nvar import_text = require(\"@/text\");\nfunction createNode(config, ctx) {\n  const toRGB = (hex) => {\n    const c = new import_webgpu.Color(hex);\n    return [c.r, c.g, c.b];\n  };\n  const root = new import_webgpu.Group();\n  root.name = \"prism-node\";\n  const backdropGeometry = new import_webgpu.PlaneGeometry(7, 6);\n  const backdropMaterial = new import_tsl.MeshBasicNodeMaterial({\n    colorNode: (0, import_tsl.mix)(\n      (0, import_tsl.vec3)(...toRGB(\"#0b0b10\")),\n      (0, import_tsl.vec3)(...toRGB(\"#16161d\")),\n      (0, import_tsl.uv)().y\n    )\n  });\n  const backdrop = new import_webgpu.Mesh(backdropGeometry, backdropMaterial);\n  backdrop.position.set(0, 0, -2.5);\n  root.add(backdrop);\n  const ambient = new import_webgpu.AmbientLight(16777215, 0.6);\n  root.add(ambient);\n  const rimLight = new import_webgpu.DirectionalLight(10080255, 0.9);\n  rimLight.position.set(-2, 1, -2);\n  root.add(rimLight);\n  const keyLight = new import_webgpu.DirectionalLight(16777215, 1);\n  keyLight.position.set(2, 4, 3);\n  root.add(keyLight);\n  const side = 1.2;\n  const length = 1.8;\n  const height = Math.sqrt(3) / 2 * side;\n  const verts = [\n    // Front face (z = +length/2)\n    -side / 2,\n    -height / 3,\n    length / 2,\n    side / 2,\n    -height / 3,\n    length / 2,\n    0,\n    2 * height / 3,\n    length / 2,\n    // Back face (z = -length/2)\n    -side / 2,\n    -height / 3,\n    -length / 2,\n    side / 2,\n    -height / 3,\n    -length / 2,\n    0,\n    2 * height / 3,\n    -length / 2\n  ];\n  const indices = [\n    // front triangle\n    0,\n    1,\n    2,\n    // back triangle\n    5,\n    4,\n    3,\n    // sides\n    0,\n    2,\n    5,\n    0,\n    5,\n    3,\n    2,\n    1,\n    4,\n    2,\n    4,\n    5,\n    1,\n    0,\n    3,\n    1,\n    3,\n    4\n  ];\n  const prismGeometry = new import_webgpu.BufferGeometry();\n  prismGeometry.setAttribute(\"position\", new import_webgpu.Float32BufferAttribute(verts, 3));\n  prismGeometry.setIndex(indices);\n  prismGeometry.computeVertexNormals();\n  const prismMaterial = new import_tsl.MeshPhysicalNodeMaterial({\n    transmission: 1,\n    thickness: 0.9,\n    ior: 1.55,\n    roughness: 0.08,\n    clearcoat: 0.25,\n    clearcoatRoughness: 0.1,\n    attenuationColor: new import_webgpu.Color(\"#e8ecf2\"),\n    attenuationDistance: 2.5,\n    iridescence: 1,\n    iridescenceIOR: 1.3,\n    iridescenceThicknessRange: [120, 480],\n    // Approximate dispersion (strength)\n    dispersion: 0.18,\n    // node material field (if unsupported will be ignored)\n    color: new import_webgpu.Color(\"#ffffff\")\n  });\n  const prismMesh = new import_webgpu.Mesh(prismGeometry, prismMaterial);\n  prismMesh.rotation.z = THREE.MathUtils.degToRad(12);\n  prismMesh.rotation.y = THREE.MathUtils.degToRad(20);\n  root.add(prismMesh);\n  const coreGeometry = new import_webgpu.OctahedronGeometry(0.35);\n  const coreMaterial = new import_tsl.MeshPhysicalNodeMaterial({\n    color: new import_webgpu.Color(\"#ff2a38\"),\n    emissive: new import_webgpu.Color(\"#ff2a38\"),\n    emissiveIntensity: 2.2,\n    roughness: 0.5,\n    metalness: 0\n  });\n  const coreMesh = new import_webgpu.Mesh(coreGeometry, coreMaterial);\n  coreMesh.position.set(0, 0, 0);\n  root.add(coreMesh);\n  const streakGeometry = new import_webgpu.PlaneGeometry(2.4, 0.5);\n  const causticMaterial = new import_tsl.MeshBasicNodeMaterial({\n    colorNode: (0, import_tsl.mix)(\n      (0, import_tsl.mix)(\n        (0, import_tsl.vec3)(...toRGB(\"#ff2a38\")),\n        (0, import_tsl.vec3)(...toRGB(\"#e8ecf2\")),\n        smoothstep(0.2, 0.5, (0, import_tsl.uv)().x)\n      ),\n      (0, import_tsl.vec3)(...toRGB(\"#9fb0c4\")),\n      smoothstep(0.5, 0.8, (0, import_tsl.uv)().x)\n    ),\n    transparent: true,\n    opacity: 0.35\n  });\n  const streak = new import_webgpu.Mesh(streakGeometry, causticMaterial);\n  streak.rotation.x = -Math.PI / 2;\n  streak.position.set(0, -1.1, 0);\n  root.add(streak);\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of textItems) {\n    const opts = {\n      fontSize: item.typography?.fontSize ?? (item.role === \"headline\" ? 68 : 18),\n      color: \"#e8ecf2\",\n      align: \"center\",\n      letterSpacingPx: item.typography?.letterSpacing ? item.typography.letterSpacing * item.typography.fontSize : 0\n    };\n    const textObj = ctx.fontAtlas.createText(item.text, opts);\n    const isHeadline = item.role === \"headline\" || /headline/i.test(item.text);\n    if (isHeadline) {\n      textObj.position.set(0, -1.75, 0.1);\n    } else {\n      textObj.position.set(0, -2.25, 0.1);\n    }\n    root.add(textObj);\n  }\n  const primitiveHandles = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      if (prim.name === \"depth-rotate\" && prim.trigger === \"hover\") {\n        const handle = ctx.primitives[\"depth-rotate\"](root, prim.params ?? { maxDeg: 10 });\n        primitiveHandles.push(handle);\n      }\n    }\n  }\n  const timelines = [];\n  root.userData.handlers = {};\n  root.userData.cleanup = () => {\n    backdropGeometry.dispose();\n    backdropMaterial.dispose();\n    prismGeometry.dispose();\n    prismMaterial.dispose();\n    coreGeometry.dispose();\n    coreMaterial.dispose();\n    streakGeometry.dispose();\n    causticMaterial.dispose();\n    ambient.dispose();\n    rimLight.dispose();\n    keyLight.dispose();\n    for (const h of primitiveHandles) {\n      if (h && typeof h.cleanup === \"function\") h.cleanup();\n    }\n    for (const tl of timelines) {\n      if (tl && tl.isActive && tl.kill) tl.kill();\n    }\n  };\n  return root;\n}\n",
+  "transformError": null
+}

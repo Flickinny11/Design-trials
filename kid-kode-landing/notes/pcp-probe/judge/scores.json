@@ -1,0 +1,5161 @@
+{
+  "judgedBy": "claude-fable-5 (PRE-BLINDED anonymous frame paths, comparative per-case batches incl. both arms, 2 calibration exemplars, W-BAKE pass-2 rubric)",
+  "renders": [
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-01-orbit-product-hero-r1",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-01-orbit-product-hero",
+      "tag": "v-01-orbit-product-hero-r1",
+      "score": 24,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "left half — blown-out white field violates dark-first spec"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "full frame — watch tiny, adrift upper-center, white blob upper-right"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center plinth — flat gray fill, no key+rim response or engineered gradient"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — no #ff2a38 accent signal light; watch floats instead of resting on plinth"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — watch far under 2.2-unit presence relative to plinth"
+        }
+      ],
+      "notes": "Only frame with real material color, but composition, palette, and lighting all fail spec.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-01-orbit-product-hero-r1",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-01-orbit-product-hero",
+      "tag": "v-01-orbit-product-hero-r1",
+      "score": 11,
+      "mustFix": [
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center watch — fully blown white, zero PBR shading or brushed-metal read"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "left half — flat white void against dark-first palette"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "left half — featureless white region"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "right edge — garbled white curve artifact on black"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — no accent light, no metal material, no background gradient"
+        }
+      ],
+      "notes": "Unshaded white clay blob; materials and lighting entirely absent.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-01-orbit-product-hero-r2",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-01-orbit-product-hero",
+      "tag": "v-01-orbit-product-hero-r2",
+      "score": 13,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field — uniform black, no gradient stops or surface"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "lower half — plinth absent; no accent light, no rim light"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper-center — watch a small floating sliver"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center watch — dim flat fill, no key+rim modeling"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.glbLoader is not a function"
+        }
+      ],
+      "notes": "Tiny watch floating in an empty black void; plinth and lighting rig missing.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.glbLoader is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-01-orbit-product-hero-r1",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-01-orbit-product-hero",
+      "tag": "v-01-orbit-product-hero-r1",
+      "score": 13,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field — uniform black, no engineered gradient"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "lower half — no plinth, no accent signal light"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper-center — watch far too small in frame"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center watch — flat, unlit material"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.glbLoader is not a function"
+        }
+      ],
+      "notes": "Near-duplicate void frame; object present but scene unbuilt.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.glbLoader is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-01-orbit-product-hero-r2",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-01-orbit-product-hero",
+      "tag": "v-01-orbit-product-hero-r2",
+      "score": 13,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field — uniform black"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "lower half — plinth and accent light absent"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper-center — undersized floating watch"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center watch — no key or rim response"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.glbLoader is not a function"
+        }
+      ],
+      "notes": "Same void composition as F4; no plinth, lighting, or palette execution.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.glbLoader is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-01-orbit-product-hero-r2",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-01-orbit-product-hero",
+      "tag": "v-01-orbit-product-hero-r2",
+      "score": 13,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field — uniform black"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "lower half — plinth and #ff2a38 accent missing"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper-center — watch a small sliver"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center watch — flat dim shading"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: MeshBasicNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Identical void framing; spec scene essentially not rendered around the mesh.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: MeshBasicNodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-01-orbit-product-hero-r1",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-01-orbit-product-hero",
+      "tag": "v-01-orbit-product-hero-r1",
+      "score": 13,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field — uniform black"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "lower half — no plinth, no accent light, no gradient"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper-center — undersized floating watch"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center watch — no modeled light"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.glbLoader.load is not a function"
+        }
+      ],
+      "notes": "Fifth near-identical void frame; only the bare mesh renders.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.glbLoader.load is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-01-orbit-product-hero-r2",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-01-orbit-product-hero",
+      "tag": "v-01-orbit-product-hero-r2",
+      "score": 15,
+      "mustFix": [
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center watch — fully blown white, no brushed-metal PBR or shading"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "left column — white void against dark-first spec"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "left column — featureless white band"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "right edge — stray white curve artifact; watch tilted off plinth axis"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — no #ff2a38 accent light, no background gradient"
+        }
+      ],
+      "notes": "Plinth present and watch large, but material is blown white clay; lighting and palette fail.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-02-particle-constellation-r1",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-02-particle-constellation",
+      "tag": "v-02-particle-constellation-r1",
+      "score": 14,
+      "mustFix": [
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — entire particle system compressed into a tiny square patch (~8% of frame)"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field — ~90% of frame is empty flat near-black"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center core — no #ff2a38 accent core or emissive glow visible"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center cluster — no depth falloff, fog gradation, or glow; flat white pips"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'to')"
+        }
+      ],
+      "notes": "Starfield renders as a distant square speckle patch; no immersive ellipsoid, no red core, frame is mostly void.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'to')"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-02-particle-constellation-r1",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-02-particle-constellation",
+      "tag": "v-02-particle-constellation-r1",
+      "score": 16,
+      "mustFix": [
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — constellation confined to small square block"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field — vast empty black surround"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center core — accent #ff2a38 core absent"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center cluster — uniform dot brightness, no additive glow or fog depth"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Densest of the speckle-patch variants but same failure: tiny monochrome square cluster, no red core, DL16 void everywhere else.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-02-particle-constellation-r2",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-02-particle-constellation",
+      "tag": "v-02-particle-constellation-r2",
+      "score": 12,
+      "mustFix": [
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — sparse square particle patch far too small in frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field — empty flat black"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center core — no red accent core"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center cluster — no glow, falloff, or material response"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.THREE.MeshBasicNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Sparser, dimmer version of the same broken framing; reads as a debug render, not a hero.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.THREE.MeshBasicNodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-02-particle-constellation-r2",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-02-particle-constellation",
+      "tag": "v-02-particle-constellation-r2",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "left half and bottom band — enormous blurred white slab shapes crash through frame"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "full frame — geometry rendered orders of magnitude too large / camera inside object"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "white slab surfaces — flat featureless fill, no material light response"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no accent core, no legible constellation"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "dominant white mass — frame reads white-on-black, inverting the ink/paper hierarchy"
+        }
+      ],
+      "notes": "Catastrophic: giant blurred white slabs obliterate the scene; starfield reduced to stray pixels. Effectively a failed render.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-02-particle-constellation-r2",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-02-particle-constellation",
+      "tag": "v-02-particle-constellation-r2",
+      "score": 15,
+      "mustFix": [
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — particle field collapsed to small square patch"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field — ~90% empty black"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center core — #ff2a38 emissive core absent"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center cluster — no fog depth or additive glow discipline"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.fontAtlas.createTextMesh is not a function"
+        }
+      ],
+      "notes": "Dense square speckle patch, monochrome, no red core; identical structural failure to F1/F2.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.fontAtlas.createTextMesh is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-02-particle-constellation-r1",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-02-particle-constellation",
+      "tag": "v-02-particle-constellation-r1",
+      "score": 15,
+      "mustFix": [
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — tiny square constellation patch"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field — flat empty surround"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center core — no red accent core"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center cluster — flat uniform dots, no depth falloff"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.fontAtlas.render is not a function"
+        }
+      ],
+      "notes": "Same speckle-square failure mode; square silhouette suggests box distribution, not the specified ellipsoidal shell.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.fontAtlas.render is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-02-particle-constellation-r1",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-02-particle-constellation",
+      "tag": "v-02-particle-constellation-r1",
+      "score": 16,
+      "mustFix": [
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — particle system framed as a small distant square"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field — dominant empty black"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center core — accent core and emissive glow missing"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center cluster — no glow bloom or fog gradation"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: (0 , import_tsl.positionWorld) is not a function"
+        }
+      ],
+      "notes": "Slightly denser cluster with faint brightness variation, but still monochrome square patch in a void; nowhere near spec.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: (0 , import_tsl.positionWorld) is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-02-particle-constellation-r2",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-02-particle-constellation",
+      "tag": "v-02-particle-constellation-r2",
+      "score": 15,
+      "mustFix": [
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — constellation compressed into small square patch"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field — ~90% flat empty black"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center core — no #ff2a38 core visible"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center cluster — flat pips, no additive glow or depth"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: import_tsl.NodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Same defect family as F1/F5/F6: tiny monochrome square starfield, red core absent, frame overwhelmingly void.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: import_tsl.NodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-03-glass-prism-refraction-r1",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-03-glass-prism-refraction",
+      "tag": "v-03-glass-prism-refraction-r1",
+      "score": 40,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "background field — white/light gray instead of spec #0b0b10 dark scene"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "corners and right edge — smeared amorphous black blobs"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "background field — no dark scene, back rim light, or emissive core"
+        }
+      ],
+      "notes": "Glass shows some dispersion and specular life, but scene is inverted to white with smeared blobs; dark-first violated.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-03-glass-prism-refraction-r2",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-03-glass-prism-refraction",
+      "tag": "v-03-glass-prism-refraction-r2",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame — uniform near-black, no content"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: import_tsl.UVNode is not a constructor"
+        }
+      ],
+      "notes": "Nothing rendered; solid dark field only.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: import_tsl.UVNode is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-03-glass-prism-refraction-r1",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-03-glass-prism-refraction",
+      "tag": "v-03-glass-prism-refraction-r1",
+      "score": 30,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "background field — pale gray instead of dark scene"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center object — no transmission or dispersion; reads as opaque pink jelly"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-left quadrant — smeared black blob"
+        }
+      ],
+      "notes": "Truncated triangle with glossy blob; no glass behavior, light background breaks DL1.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-03-glass-prism-refraction-r2",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-03-glass-prism-refraction",
+      "tag": "v-03-glass-prism-refraction-r2",
+      "score": 55,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center object — no transmission/refraction; prism reads as opaque glossy candy"
+        }
+      ],
+      "notes": "Only dark-first frame; iridescent facets, red accent, caustic stripe — but material lacks transmissive glass read.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-03-glass-prism-refraction-r1",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-03-glass-prism-refraction",
+      "tag": "v-03-glass-prism-refraction-r1",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame — uniform near-black, no content"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.fontAtlas.createTextMesh is not a function"
+        }
+      ],
+      "notes": "Nothing rendered; solid dark field only.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.fontAtlas.createTextMesh is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-03-glass-prism-refraction-r2",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-03-glass-prism-refraction",
+      "tag": "v-03-glass-prism-refraction-r2",
+      "score": 12,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "center object — solid flat white pentagon, no material response"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center object — zero shading, highlights, or refraction"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "background field — white sweep instead of dark scene"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "left and lower-right — smeared black blobs"
+        },
+        {
+          "defect": "DEP_GATE_VIOLATION",
+          "region": "disallowed source three"
+        }
+      ],
+      "notes": "Flat cutout shapes only; no glass, no lighting, palette inverted.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-03-glass-prism-refraction-r1",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-03-glass-prism-refraction",
+      "tag": "v-03-glass-prism-refraction-r1",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame — uniform near-black, no content"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: import_tsl.MeshBasicNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Nothing rendered; solid dark field only.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: import_tsl.MeshBasicNodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-03-glass-prism-refraction-r2",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-03-glass-prism-refraction",
+      "tag": "v-03-glass-prism-refraction-r2",
+      "score": 45,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "background field — light gray instead of dark scene"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "corners — smeared black blobs"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center object — reads metallic/opaque; no transmission, back rim, or emissive core"
+        }
+      ],
+      "notes": "Best material response of batch — iridescence and specular streaks — but opaque read and inverted palette.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-04-kinetic-type-headline-r2",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-04-kinetic-type-headline",
+      "tag": "v-04-kinetic-type-headline-r2",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no MSDF headline glyphs"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: import_tsl.NodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Near-empty frame: lone white square on flat black. No type, no accent, no gradient. Failed render.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: import_tsl.NodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-04-kinetic-type-headline-r1",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-04-kinetic-type-headline",
+      "tag": "v-04-kinetic-type-headline-r1",
+      "score": 10,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "entire frame — blurred white plane fills view"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — camera inside/against geometry"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no legible headline or accent underline"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "upper field — featureless white fill"
+        }
+      ],
+      "notes": "Camera appears clipped inside a glyph plane; giant blurred white mass, zero legible type or accent.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-04-kinetic-type-headline-r1",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-04-kinetic-type-headline",
+      "tag": "v-04-kinetic-type-headline-r1",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no MSDF headline glyphs"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: (0 , import_tsl.tslFn) is not a function"
+        }
+      ],
+      "notes": "Identical failed output: single white square on black void. No headline, no kinetic type evidence.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: (0 , import_tsl.tslFn) is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-04-kinetic-type-headline-r2",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-04-kinetic-type-headline",
+      "tag": "v-04-kinetic-type-headline-r2",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no MSDF headline glyphs"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'setHex')"
+        }
+      ],
+      "notes": "Same placeholder white square on flat black. Spec entirely unrendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'setHex')"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-04-kinetic-type-headline-r2",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-04-kinetic-type-headline",
+      "tag": "v-04-kinetic-type-headline-r2",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no MSDF headline glyphs"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "White square placeholder only; no type, accent, or gradient stops present.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-04-kinetic-type-headline-r1",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-04-kinetic-type-headline",
+      "tag": "v-04-kinetic-type-headline-r1",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no MSDF headline glyphs"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.fontAtlas.createTextMeshes is not a function"
+        }
+      ],
+      "notes": "Same failed frame: lone white quad on void black. Nothing from spec renders.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.fontAtlas.createTextMeshes is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-04-kinetic-type-headline-r1",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-04-kinetic-type-headline",
+      "tag": "v-04-kinetic-type-headline-r1",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no MSDF headline glyphs"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Duplicate failed render; white square on black, no headline or accent underline.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-04-kinetic-type-headline-r2",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-04-kinetic-type-headline",
+      "tag": "v-04-kinetic-type-headline-r2",
+      "score": 10,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper two-thirds — blurred white mass"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — geometry clipping camera"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no legible glyphs or accent"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "upper field — flat white fill"
+        }
+      ],
+      "notes": "Blown-out blurred plane against black; suggests glyph geometry at wrong scale. No readable type anywhere.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-05-pedestal-material-study-r1",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r1",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.textureLoader.load is not a function"
+        }
+      ],
+      "notes": "Solid near-black frame; nothing rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.textureLoader.load is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-05-pedestal-material-study-r2",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r2",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.textureLoader is not a function"
+        }
+      ],
+      "notes": "Solid near-black frame; nothing rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.textureLoader is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-05-pedestal-material-study-r1",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r1",
+      "score": 34,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center knot"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "background field"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-left and right quadrants"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "pedestal base"
+        }
+      ],
+      "notes": "Knot reads as matte white plastic, not brushed metal; no contact shadow, no red accent; broken white background blobs.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-05-pedestal-material-study-r2",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r2",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.textureLoader.load is not a function"
+        }
+      ],
+      "notes": "Solid near-black frame; nothing rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.textureLoader.load is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-05-pedestal-material-study-r1",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r1",
+      "score": 46,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center knot"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "whole frame"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "upper-right edge"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "center knot highlights"
+        }
+      ],
+      "notes": "Dramatic spotlight and floor plane help, but knot is blown-out emissive white, not brushed metal; artifact streaks right edge.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-05-pedestal-material-study-r2",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r2",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: THREE.MeshPhysicalNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Solid near-black frame; nothing rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: THREE.MeshPhysicalNodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-05-pedestal-material-study-r2",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r2",
+      "score": 14,
+      "mustFix": [
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "center knot and pedestal"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center subject"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "left half white field"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "whole frame"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "upper-right edge"
+        }
+      ],
+      "notes": "Subject is an unlit black silhouette against a blown white void; no material, shadow, or palette present.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-05-pedestal-material-study-r1",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r1",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.textureLoader is not a function"
+        }
+      ],
+      "notes": "Solid near-black frame; nothing rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.textureLoader is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-06-loop-column-gallery-r2",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-06-loop-column-gallery",
+      "tag": "v-06-loop-column-gallery-r2",
+      "score": 24,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire left half"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "column — only 2 of 6 plates, no red frame accent"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "plate textures upper-right"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "plates — glow-card placeholder instead of distinct photographs"
+        }
+      ],
+      "notes": "Two beveled plates with real light falloff, but half the frame is void and textures are blue placeholder glows, not photos.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-06-loop-column-gallery-r2",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-06-loop-column-gallery",
+      "tag": "v-06-loop-column-gallery-r2",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame — near-empty black field"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — single tiny plate"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "column — 1 plate instead of 6, no red framing"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center plate"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'imageUrl')"
+        }
+      ],
+      "notes": "One tiny blue glowing square in a black void; spec column absent.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'imageUrl')"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-06-loop-column-gallery-r1",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-06-loop-column-gallery",
+      "tag": "v-06-loop-column-gallery-r1",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame — near-empty black field"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — single tiny plate"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "column — 1 plate instead of 6, no red framing"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center plate"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Identical near-empty render: tiny blue square centered, everything else void.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-06-loop-column-gallery-r2",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-06-loop-column-gallery",
+      "tag": "v-06-loop-column-gallery-r2",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame — near-empty black field"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — single tiny plate"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "column — 1 plate instead of 6, no red framing"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center plate"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: MeshBasicNodeMaterial2 is not a constructor"
+        }
+      ],
+      "notes": "Same near-empty frame; no column, no photographs, no motion evidence.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: MeshBasicNodeMaterial2 is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-06-loop-column-gallery-r1",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-06-loop-column-gallery",
+      "tag": "v-06-loop-column-gallery-r1",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame — near-empty black field"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — single tiny plate"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "column — 1 plate instead of 6, no red framing"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center plate"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.textureLoader.load is not a function"
+        }
+      ],
+      "notes": "Near-empty duplicate frame; single miniature blue plate in void.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.textureLoader.load is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-06-loop-column-gallery-r1",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-06-loop-column-gallery",
+      "tag": "v-06-loop-column-gallery-r1",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame — near-empty black field"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — single tiny plate"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "column — 1 plate instead of 6, no red framing"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center plate"
+        },
+        {
+          "defect": "DEP_GATE_VIOLATION",
+          "region": "disallowed source three"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.textureLoader.load is not a function"
+        }
+      ],
+      "notes": "Near-empty duplicate frame; loop column entirely unrealized.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.textureLoader.load is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-06-loop-column-gallery-r1",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-06-loop-column-gallery",
+      "tag": "v-06-loop-column-gallery-r1",
+      "score": 14,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center plates — textures failed, pure white fills, no photographs or red framing"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire left half"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-right quadrant — giant blurred white mass"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center plates — blown flat white, no material response"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "plate interiors — zero detail"
+        }
+      ],
+      "notes": "Plates render as blown white slabs against a void; textures missing, composition collapsed.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-06-loop-column-gallery-r2",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-06-loop-column-gallery",
+      "tag": "v-06-loop-column-gallery-r2",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame — near-empty black field"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — single tiny plate"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "column — 1 plate instead of 6, no red framing"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center plate"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.textureLoader is not a function"
+        }
+      ],
+      "notes": "Same near-empty render as F2-F6; batch shows frozen single-plate state, not a cycling gallery.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.textureLoader is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-07-filmstrip-carousel-r2",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-07-filmstrip-carousel",
+      "tag": "v-07-filmstrip-carousel-r2",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center card"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — no 5-card filmstrip, no -18deg perspective, no bevels"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center card"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: MeshStandardNodeMaterial2 is not a constructor"
+        }
+      ],
+      "notes": "Single tiny flat blue placeholder icon in a black void; no carousel, no materials, no accent red.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: MeshStandardNodeMaterial2 is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-07-filmstrip-carousel-r1",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-07-filmstrip-carousel",
+      "tag": "v-07-filmstrip-carousel-r1",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center card"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — no filmstrip, no distinct plates, no recession"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center card"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: MeshStandardNodeMaterial2 is not a constructor"
+        }
+      ],
+      "notes": "Identical near-empty render: one small flat blue sprite, none of the spec present.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: MeshStandardNodeMaterial2 is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-07-filmstrip-carousel-r1",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-07-filmstrip-carousel",
+      "tag": "v-07-filmstrip-carousel-r1",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center card"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — 5-card strip, textures, bevel frame all absent"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center card"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center card"
+        },
+        {
+          "defect": "DEP_GATE_VIOLATION",
+          "region": "disallowed source three"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.textureLoader is not a function"
+        }
+      ],
+      "notes": "Same void frame with lone flat blue icon; zero spec compliance, palette violated.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.textureLoader is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-07-filmstrip-carousel-r1",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-07-filmstrip-carousel",
+      "tag": "v-07-filmstrip-carousel-r1",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center card"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — no carousel geometry or distinct photographs"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center card"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.textureLoader.load is not a function"
+        }
+      ],
+      "notes": "Duplicate near-blank render: tiny blue placeholder, no filmstrip, no red accent, dead void.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.textureLoader.load is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-07-filmstrip-carousel-r2",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-07-filmstrip-carousel",
+      "tag": "v-07-filmstrip-carousel-r2",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center card"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — spec carousel entirely unbuilt"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center card"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.fontAtlas.createTextMesh is not a function"
+        }
+      ],
+      "notes": "Same failed frame as F1-F4: single flat blue sprite in black emptiness.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.fontAtlas.createTextMesh is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-07-filmstrip-carousel-r2",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-07-filmstrip-carousel",
+      "tag": "v-07-filmstrip-carousel-r2",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center card"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — no 5 plates, no perspective, no clearcoat material"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center card"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'x')"
+        }
+      ],
+      "notes": "Identical void render; one tiny flat blue icon, nothing from spec realized.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'x')"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-07-filmstrip-carousel-r2",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-07-filmstrip-carousel",
+      "tag": "v-07-filmstrip-carousel-r2",
+      "score": 16,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper and lower halves — huge blurred white blobs occlude the strip"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "all cards — photograph textures absent, blank white plates"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "full frame — white-dominant, violates dark-first ink surfaces"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "card plates — blown flat white, no light response"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "left and right card clusters"
+        }
+      ],
+      "notes": "Card row and recession faintly attempted with red accent, but textures failed and white blobs wreck it.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-07-filmstrip-carousel-r1",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-07-filmstrip-carousel",
+      "tag": "v-07-filmstrip-carousel-r1",
+      "score": 12,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — one plate instead of five-card filmstrip"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center plate — blown white right half, flat gray left"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center — soft-blur smear, no bevel, no focused-card hierarchy"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field left/right of plate"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center plate fills frame"
+        }
+      ],
+      "notes": "Single blurry untextured plate with a stray red streak; no carousel, no materiality, mostly void.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-08-orrery-mechanism-r2",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-08-orrery-mechanism",
+      "tag": "v-08-orrery-mechanism-r2",
+      "score": 20,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "right of center — no secondary gear"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "gear pivot — no jewel accent"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center gear"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center gear — brass, not machined steel"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper-center — gear undersized, floating"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: MeshStandardNodeMaterial2 is not a constructor"
+        }
+      ],
+      "notes": "Single dim brass gear adrift in a black void; no meshing pair, no jewel, no gradient, no material story.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: MeshStandardNodeMaterial2 is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-08-orrery-mechanism-r2",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-08-orrery-mechanism",
+      "tag": "v-08-orrery-mechanism-r2",
+      "score": 47,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "background field — flat gray-lavender panel, not spec dark gradient"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "right edge — blown white streak and detached black axle rods"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "both gears — soft flat fill, no machined highlights"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "both gears — brass, spec calls machined steel"
+        }
+      ],
+      "notes": "Most spec-complete: two meshed gears plus red jewel pivot, but gray backdrop, blown right edge, and flat lighting kill it.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-08-orrery-mechanism-r1",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-08-orrery-mechanism",
+      "tag": "v-08-orrery-mechanism-r1",
+      "score": 20,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "right of center — no secondary gear"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "gear pivot — no jewel accent"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center gear"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center gear — brass, not machined steel"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.glbLoader is not a function"
+        }
+      ],
+      "notes": "Near-duplicate of F1: lone brass gear on void, missing secondary gear, jewel, and gradient.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.glbLoader is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-08-orrery-mechanism-r1",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-08-orrery-mechanism",
+      "tag": "v-08-orrery-mechanism-r1",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire frame"
+        }
+      ],
+      "notes": "Frame is empty near-black; nothing from the spec rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-08-orrery-mechanism-r1",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-08-orrery-mechanism",
+      "tag": "v-08-orrery-mechanism-r1",
+      "score": 20,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "right of center — no secondary gear"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "gear pivot — no jewel accent"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center gear"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center gear — brass, not machined steel"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'meshUrl')"
+        }
+      ],
+      "notes": "Same lone-gear-on-void framing as F1/F3; spec mechanism and accent absent.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'meshUrl')"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-08-orrery-mechanism-r2",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-08-orrery-mechanism",
+      "tag": "v-08-orrery-mechanism-r2",
+      "score": 20,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "right of center — no secondary gear"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "gear pivot — no jewel accent"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center gear"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center gear — brass, not machined steel"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.glbLoader is not a function"
+        }
+      ],
+      "notes": "Indistinguishable from F1/F3/F5; single flat-lit gear, no pair, no jewel, void background.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.glbLoader is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-08-orrery-mechanism-r2",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-08-orrery-mechanism",
+      "tag": "v-08-orrery-mechanism-r2",
+      "score": 18,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "frame-wide — no secondary gear"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "gear pivot — no jewel accent"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-left-center — edge-on angle hides gear face and teeth"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center gear"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.glbLoader.load is not a function"
+        }
+      ],
+      "notes": "Gear rotated nearly edge-on so the mechanism is unreadable; otherwise same void and missing elements.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.glbLoader.load is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-08-orrery-mechanism-r1",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-08-orrery-mechanism",
+      "tag": "v-08-orrery-mechanism-r1",
+      "score": 15,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "frame-wide — gear cropped at top edge, camera inside the scene"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "right half — blown flat white field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "frame-wide — no meshing secondary gear visible"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "right half — white field violates dark-first spec background"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "left half — unlit black region against gear"
+        }
+      ],
+      "notes": "Camera crashed into the mechanism: cropped edge-on gear, half the frame blown white; jewel present but composition is wrecked.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-09-editorial-oversized-type-r1",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-09-editorial-oversized-type",
+      "tag": "v-09-editorial-oversized-type-r1",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "left column (kicker, hero lines, accent rule all absent)"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: (0 , import_text.createMsdfMesh) is not a function"
+        }
+      ],
+      "notes": "Near-empty black field with lone white square; no typography, gradient, or grain rendered. Effectively a failed render.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: (0 , import_text.createMsdfMesh) is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-09-editorial-oversized-type-r2",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-09-editorial-oversized-type",
+      "tag": "v-09-editorial-oversized-type-r2",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "left column (kicker, hero lines, accent rule all absent)"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: import_tsl.MeshBasicNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Identical void: flat black plate, centered white square placeholder, zero spec elements present.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: import_tsl.MeshBasicNodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-09-editorial-oversized-type-r2",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-09-editorial-oversized-type",
+      "tag": "v-09-editorial-oversized-type-r2",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "left column (kicker, hero lines, accent rule all absent)"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Same void render; no editorial type, no accent red, no engineered gradient or grain.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-09-editorial-oversized-type-r1",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-09-editorial-oversized-type",
+      "tag": "v-09-editorial-oversized-type-r1",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "left column (kicker, hero lines, accent rule all absent)"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'background')"
+        }
+      ],
+      "notes": "Void frame with untextured white square at center; entire visualSpec unrendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'background')"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-09-editorial-oversized-type-r2",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-09-editorial-oversized-type",
+      "tag": "v-09-editorial-oversized-type-r2",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "left column (kicker, hero lines, accent rule all absent)"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Blank black plate, single white square; no type stack, no accent underline, no gradient.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-09-editorial-oversized-type-r1",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-09-editorial-oversized-type",
+      "tag": "v-09-editorial-oversized-type-r1",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "left column (kicker, hero lines, accent rule all absent)"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: THREE.MeshBasicNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Identical failed render; nothing from the editorial spec appears.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: THREE.MeshBasicNodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-09-editorial-oversized-type-r2",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-09-editorial-oversized-type",
+      "tag": "v-09-editorial-oversized-type-r2",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "left column (kicker, hero lines, accent rule all absent)"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Void frame, white square placeholder only; DL16 violated, spec entirely missing.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-09-editorial-oversized-type-r1",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-09-editorial-oversized-type",
+      "tag": "v-09-editorial-oversized-type-r1",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "left column (kicker, hero lines, accent rule all absent)"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: (0 , import_tsl.noise) is not a function"
+        }
+      ],
+      "notes": "Same near-empty render as all prior frames; batch appears to have failed uniformly.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: (0 , import_tsl.noise) is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-10-bento-metrics-r2",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-10-bento-metrics",
+      "tag": "v-10-bento-metrics-r2",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no bento grid, cells, or metrics"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "ReferenceError: ctx is not defined"
+        }
+      ],
+      "notes": "Near-black void with one small white square center; nothing of the spec rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "ReferenceError: ctx is not defined"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-10-bento-metrics-r2",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-10-bento-metrics",
+      "tag": "v-10-bento-metrics-r2",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no grid, gradients, or accent"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'ATELIER METRICS / Q2 2026')"
+        }
+      ],
+      "notes": "Identical void frame: flat black field, lone white square, zero spec content.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'ATELIER METRICS / Q2 2026')"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-10-bento-metrics-r1",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-10-bento-metrics",
+      "tag": "v-10-bento-metrics-r1",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no bento cells or metrics"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: MeshStandardNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Blank render; no grid, no accent red, no typography. Void frame.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: MeshStandardNodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-10-bento-metrics-r1",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-10-bento-metrics",
+      "tag": "v-10-bento-metrics-r1",
+      "score": 34,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-right quadrant — huge blurred white blob occludes top secondary cell"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "all cells — no stat numerals, labels, or metric content"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower-left and bottom background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "left dominant cell — soft diffuse wash, no machined sheen band or edge highlights"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "upper-right quadrant — unspecified white organic shape"
+        }
+      ],
+      "notes": "Grid proportions roughly per spec, palette-correct red ticks, but empty tiles, foggy surfaces, intrusive white blob.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-10-bento-metrics-r2",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-10-bento-metrics",
+      "tag": "v-10-bento-metrics-r2",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no bento grid or metrics"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Void frame: flat black with centered white square placeholder only.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-10-bento-metrics-r2",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-10-bento-metrics",
+      "tag": "v-10-bento-metrics-r2",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no cells, gradients, or accent"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.fontAtlas.render is not a function"
+        }
+      ],
+      "notes": "Blank render, indistinguishable from other void frames; nothing scored above placeholder.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.fontAtlas.render is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-10-bento-metrics-r1",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-10-bento-metrics",
+      "tag": "v-10-bento-metrics-r1",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — spec entirely absent"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: import_tsl.MeshStandardNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Void frame; single white square on flat black, no design content.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: import_tsl.MeshStandardNodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-10-bento-metrics-r1",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-10-bento-metrics",
+      "tag": "v-10-bento-metrics-r1",
+      "score": 38,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center and upper-right — blurred white arc sweeps across grid, occluding cells"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "all cells — no stat numerals or labels; tiles empty"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "top-right cell — washed near-white by overlapping blob, surface value lost"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower and left background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "dominant left cell — soft gradient only, no hard-stop machined sheen band"
+        }
+      ],
+      "notes": "Fullest grid of batch: correct layout, red accents, engineered gradients; ruined by occluding white arc and empty tiles.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-11-gradient-cta-r1",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-11-gradient-cta",
+      "tag": "v-11-gradient-cta-r1",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.fontAtlas.createTextMesh is not a function"
+        }
+      ],
+      "notes": "Flat white square on void black. No CTA, gradient, bevel, seam, or emissive channel. Effectively unrendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.fontAtlas.createTextMesh is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-11-gradient-cta-r2",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-11-gradient-cta",
+      "tag": "v-11-gradient-cta-r2",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Identical flat white square placeholder. Zero spec content; no red, no materiality.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-11-gradient-cta-r2",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-11-gradient-cta",
+      "tag": "v-11-gradient-cta-r2",
+      "score": 18,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center button face"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center button face"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center button perimeter"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "right edge column"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        }
+      ],
+      "notes": "Attempts a CTA slab but blown-out pink/white wash, soft blur, no seam, bevel, or emissive channel; stray blurred white column.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-11-gradient-cta-r1",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-11-gradient-cta",
+      "tag": "v-11-gradient-cta-r1",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'to')"
+        }
+      ],
+      "notes": "Same flat white square on black. No gradient CTA object rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'to')"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-11-gradient-cta-r2",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-11-gradient-cta",
+      "tag": "v-11-gradient-cta-r2",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: (0 , import_tsl.multiply) is not a function"
+        }
+      ],
+      "notes": "Placeholder white square only; no spec elements present.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: (0 , import_tsl.multiply) is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-11-gradient-cta-r1",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-11-gradient-cta",
+      "tag": "v-11-gradient-cta-r1",
+      "score": 14,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-left and upper-right quadrants"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center horizontal band"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center band"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "right half serrated details"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "button perimeter and seam"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        }
+      ],
+      "notes": "Garbled multi-block layout, washed pink instead of red ramp, blurred white slabs, faint serrations; no bevel, seam, or emissive channel.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-11-gradient-cta-r1",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-11-gradient-cta",
+      "tag": "v-11-gradient-cta-r1",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: import_tsl.MeshStandardNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Flat white square placeholder again; nothing from spec rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: import_tsl.MeshStandardNodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-11-gradient-cta-r2",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-11-gradient-cta",
+      "tag": "v-11-gradient-cta-r2",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Flat white square on void black; no CTA, gradient, or lighting.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-12-photo-hero-composite-r2",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-12-photo-hero-composite",
+      "tag": "v-12-photo-hero-composite-r2",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "whole frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center placeholder icon"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "photo plate, caption block, red accent"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.textureLoader.load is not a function"
+        }
+      ],
+      "notes": "Near-empty black frame with a blue broken-image placeholder; no photo plate, grade, or caption rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.textureLoader.load is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-12-photo-hero-composite-r1",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-12-photo-hero-composite",
+      "tag": "v-12-photo-hero-composite-r1",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "whole frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center placeholder icon"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "photo plate, caption block, red accent"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.textureLoader.load is not a function"
+        }
+      ],
+      "notes": "Identical failed-asset placeholder on flat black; spec content entirely absent.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.textureLoader.load is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-12-photo-hero-composite-r1",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-12-photo-hero-composite",
+      "tag": "v-12-photo-hero-composite-r1",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "whole frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center placeholder icon"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "photo plate, caption block, red accent"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: MeshStandardNodeMaterial2 is not a constructor"
+        }
+      ],
+      "notes": "Same blue placeholder glyph centered in a void; nothing from the visualSpec rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: MeshStandardNodeMaterial2 is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-12-photo-hero-composite-r2",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-12-photo-hero-composite",
+      "tag": "v-12-photo-hero-composite-r2",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "whole frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center placeholder icon"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "photo plate, caption block, red accent"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Failed image load placeholder on empty black field; no hero composite present.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-12-photo-hero-composite-r2",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-12-photo-hero-composite",
+      "tag": "v-12-photo-hero-composite-r2",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "whole frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center placeholder icon"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "photo plate, caption block, red accent"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.textureLoader.load is not a function"
+        }
+      ],
+      "notes": "Same near-empty placeholder frame; photo plate and caption never rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.textureLoader.load is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-12-photo-hero-composite-r2",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-12-photo-hero-composite",
+      "tag": "v-12-photo-hero-composite-r2",
+      "score": 3,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "whole frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "whole frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "whole frame"
+        }
+      ],
+      "notes": "Completely black frame; nothing rendered at all.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-12-photo-hero-composite-r1",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-12-photo-hero-composite",
+      "tag": "v-12-photo-hero-composite-r1",
+      "score": 16,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "whole frame"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "right two-thirds, giant cropped white letterform"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "upper-left quadrant"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "photo plate, subject, caption block"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "lower gray band"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "red accent tick, lower-left"
+        }
+      ],
+      "notes": "Renders shapes but composition is broken: cropped oversized letterform, flat gray band, no photographic plate or caption.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-12-photo-hero-composite-r1",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-12-photo-hero-composite",
+      "tag": "v-12-photo-hero-composite-r1",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "whole frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center placeholder icon"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "photo plate, caption block, red accent"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: import_tsl.MeshStandardNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Same blue placeholder on empty black; hero composite absent entirely.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: import_tsl.MeshStandardNodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-13-brand-wall-r1",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-13-brand-wall",
+      "tag": "v-13-brand-wall-r1",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center square"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.fontAtlas.getTexture is not a function"
+        }
+      ],
+      "notes": "Single flat white square on black void; no tile grid, wordmarks, kicker, or materiality. Effectively unrendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.fontAtlas.getTexture is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-13-brand-wall-r2",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-13-brand-wall",
+      "tag": "v-13-brand-wall-r2",
+      "score": 9,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "entire frame"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "entire frame"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "upper half"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower-left quadrant"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "gray shapes"
+        }
+      ],
+      "notes": "Blurred, cropped-in abstract letterform fragments; no 3x2 grid, no legible marks, no metal materiality. Incoherent.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-13-brand-wall-r1",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-13-brand-wall",
+      "tag": "v-13-brand-wall-r1",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center square"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Identical white square on black void; spec entirely absent.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-13-brand-wall-r1",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-13-brand-wall",
+      "tag": "v-13-brand-wall-r1",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center square"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: import_tsl.MeshStandardNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Same near-empty frame: lone flat white square, no tiles, wordmarks, or lighting.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: import_tsl.MeshStandardNodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-13-brand-wall-r2",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-13-brand-wall",
+      "tag": "v-13-brand-wall-r2",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center square"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'gradientStops')"
+        }
+      ],
+      "notes": "Near-empty duplicate; white square on void, zero spec compliance.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'gradientStops')"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-13-brand-wall-r1",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-13-brand-wall",
+      "tag": "v-13-brand-wall-r1",
+      "score": 9,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "entire frame"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "entire frame"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "upper half"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "bottom third"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "gray shapes"
+        }
+      ],
+      "notes": "Same blurred abstract fragments as F2; grid and wordmarks absent, flat fills, black void below.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-13-brand-wall-r2",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-13-brand-wall",
+      "tag": "v-13-brand-wall-r2",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center square"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: MeshStandardNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Near-empty duplicate; single flat white square, nothing from spec rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: MeshStandardNodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-13-brand-wall-r2",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-13-brand-wall",
+      "tag": "v-13-brand-wall-r2",
+      "score": 2,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame"
+        }
+      ],
+      "notes": "Completely black frame; nothing rendered at all.",
+      "renderable": true,
+      "probeStatus": "error",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-14-pricing-card-r1",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-14-pricing-card",
+      "tag": "v-14-pricing-card-r1",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'to')"
+        }
+      ],
+      "notes": "Only a small white square on a void; no card, type, header strip, features, or CTA rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'to')"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-14-pricing-card-r1",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-14-pricing-card",
+      "tag": "v-14-pricing-card-r1",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: MeshStandardNodeMaterial2 is not a constructor"
+        }
+      ],
+      "notes": "Identical void frame; lone white square, zero spec content, no materiality or lighting.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: MeshStandardNodeMaterial2 is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-14-pricing-card-r2",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-14-pricing-card",
+      "tag": "v-14-pricing-card-r2",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Blank render; white square placeholder only, wrong aspect for 2.4x3.2 card, nothing else present.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-14-pricing-card-r2",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-14-pricing-card",
+      "tag": "v-14-pricing-card-r2",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.fontAtlas.createGeometry is not a function"
+        }
+      ],
+      "notes": "Blank render; no pricing card, text, accent red, or header strip — dead flat void.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.fontAtlas.createGeometry is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-14-pricing-card-r2",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-14-pricing-card",
+      "tag": "v-14-pricing-card-r2",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: THREE.MeshBasicNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Blank render identical to prior frames; only an unstyled white square on empty black.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: THREE.MeshBasicNodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-14-pricing-card-r1",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-14-pricing-card",
+      "tag": "v-14-pricing-card-r1",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'to')"
+        }
+      ],
+      "notes": "Blank render; no spec elements, no lighting response, no palette usage beyond void.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'to')"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-14-pricing-card-r2",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-14-pricing-card",
+      "tag": "v-14-pricing-card-r2",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'gradientStops')"
+        }
+      ],
+      "notes": "Blank render; lone flat white square, all pricing-card content absent.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'gradientStops')"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-14-pricing-card-r1",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-14-pricing-card",
+      "tag": "v-14-pricing-card-r1",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'position')"
+        }
+      ],
+      "notes": "Blank render; entire batch failed identically — white square placeholder, nothing from spec rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'position')"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-15-testimonial-panel-r1",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-15-testimonial-panel",
+      "tag": "v-15-testimonial-panel-r1",
+      "score": 24,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "upper-right quadrant (quote glyph is pale white, spec requires #ff2a38)"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper-right quadrant (glyph vastly oversized, bleeding off frame)"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card (no quote text or attribution line)"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "whole frame (glyph seated top-right, spec says top-left with padding)"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "quote glyph (soft blur, no extrusion or key-light edge)"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "left third of background field"
+        }
+      ],
+      "notes": "Panel gradient and hairline hinted, but glyph is white, blurred, misplaced, gigantic; all typography absent. Far below bar.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-15-testimonial-panel-r2",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-15-testimonial-panel",
+      "tag": "v-15-testimonial-panel-r2",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "whole frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "whole frame (no panel, glyph, quote, or attribution)"
+        },
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Near-empty black frame with one flat white square; nothing from the spec rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-15-testimonial-panel-r1",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-15-testimonial-panel",
+      "tag": "v-15-testimonial-panel-r1",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "whole frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "whole frame (no panel, glyph, quote, or attribution)"
+        },
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: import_tsl.MeshStandardNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Identical near-void: flat white square on black, zero spec content, zero materiality.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: import_tsl.MeshStandardNodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-15-testimonial-panel-r1",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-15-testimonial-panel",
+      "tag": "v-15-testimonial-panel-r1",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "whole frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "whole frame (no panel, glyph, quote, or attribution)"
+        },
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Near-void frame; flat white square only. No testimonial panel elements exist.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-15-testimonial-panel-r2",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-15-testimonial-panel",
+      "tag": "v-15-testimonial-panel-r2",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "whole frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "whole frame (no panel, glyph, quote, or attribution)"
+        },
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Same broken output: black void plus unlit white square, no spec elements rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-15-testimonial-panel-r2",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-15-testimonial-panel",
+      "tag": "v-15-testimonial-panel-r2",
+      "score": 14,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "whole frame (no panel surface, quote text, or attribution)"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field (right two-thirds entirely empty black)"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-left quadrant (isolated glyph-blob and stray red dash, no layout)"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper-left quadrant (red form reads as a vase, not a quotation mark)"
+        },
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "background field"
+        }
+      ],
+      "notes": "Only the red accent survived, shaded but malformed; panel and all typography missing, frame mostly void.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-15-testimonial-panel-r2",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-15-testimonial-panel",
+      "tag": "v-15-testimonial-panel-r2",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "whole frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "whole frame (no panel, glyph, quote, or attribution)"
+        },
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: import_tsl.MeshStandardNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Near-void duplicate: flat white square on black, no spec content or light response.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: import_tsl.MeshStandardNodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-15-testimonial-panel-r1",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-15-testimonial-panel",
+      "tag": "v-15-testimonial-panel-r1",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "whole frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "whole frame (no panel, glyph, quote, or attribution)"
+        },
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.fontAtlas.render is not a function"
+        }
+      ],
+      "notes": "Near-void duplicate: unlit white square on black void, nothing from the testimonial spec.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.fontAtlas.render is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-16-feature-triptych-r2",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-16-feature-triptych",
+      "tag": "v-16-feature-triptych-r2",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "entire frame"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper-left and upper-right red masses"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center (no three cards, no titles/body, no icon seats)"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower black band"
+        },
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "lower-center rectangle"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "entire frame"
+        }
+      ],
+      "notes": "Incoherent zoomed blobs; three gray dots are the only trace of icon seats. No cards, no typography, no material response.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-16-feature-triptych-r2",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-16-feature-triptych",
+      "tag": "v-16-feature-triptych-r2",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame near-empty"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "tiny center thumbnail"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center (no triptych, no text)"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center thumbnail"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center thumbnail"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: MeshBasicNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Near-void black frame with one tiny blue glass slab; wrong subject, wrong palette, no triptych content.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: MeshBasicNodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-16-feature-triptych-r1",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-16-feature-triptych",
+      "tag": "v-16-feature-triptych-r1",
+      "score": 9,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "entire frame"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper-right red disc and white mass"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center (no card faces, titles, or icon glyphs)"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower black band"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "entire frame"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "center dash marks"
+        }
+      ],
+      "notes": "Blurred macro blobs; three dashes and faint gray slabs hint at cards but nothing legible or material.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-16-feature-triptych-r2",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-16-feature-triptych",
+      "tag": "v-16-feature-triptych-r2",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame near-empty"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "tiny center thumbnail"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center (no triptych, no text)"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center thumbnail"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center thumbnail"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'imageUrl')"
+        }
+      ],
+      "notes": "Identical near-void: ~95% black with a tiny blue glass slab; no cards, seats, or typography.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'imageUrl')"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-16-feature-triptych-r1",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-16-feature-triptych",
+      "tag": "v-16-feature-triptych-r1",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame near-empty"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "tiny center thumbnail"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center (no triptych, no text)"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center thumbnail"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center thumbnail"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Same near-void render as F4; single miniature blue slab, spec entirely unfulfilled.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-16-feature-triptych-r1",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-16-feature-triptych",
+      "tag": "v-16-feature-triptych-r1",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame near-empty"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "tiny center thumbnail"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center (no triptych, no text)"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center thumbnail"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center thumbnail"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.textureLoader.load is not a function"
+        }
+      ],
+      "notes": "Duplicate near-void frame; blue drift accent, no triptych elements rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.textureLoader.load is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-16-feature-triptych-r1",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-16-feature-triptych",
+      "tag": "v-16-feature-triptych-r1",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame near-empty"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "tiny center thumbnail"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center (no triptych, no text)"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center thumbnail"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center thumbnail"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Duplicate near-void frame; tiny blue glass slab only, zero spec compliance.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-16-feature-triptych-r2",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-16-feature-triptych",
+      "tag": "v-16-feature-triptych-r2",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame near-empty"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "tiny center thumbnail"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center (no triptych, no text)"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center thumbnail"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center thumbnail"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Duplicate near-void frame; no cards, icon seats, or typography anywhere.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-17-data-ribbon-r2",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-17-data-ribbon",
+      "tag": "v-17-data-ribbon-r2",
+      "score": 24,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "ribbon band center — no mono figures rendered on baseline"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-right quadrant — large blurred white arc intruding off-spec"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower half background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "ribbon plane — no material response, flat fill"
+        }
+      ],
+      "notes": "Ribbon plane and two red ticks exist, but zero ticker text; stray blurred white arc wrecks the frame.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-17-data-ribbon-r1",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-17-data-ribbon",
+      "tag": "v-17-data-ribbon-r1",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame — lone white square on black, no ribbon, text, or ticks"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Near-empty failed render; only a placeholder white square, nothing from spec.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-17-data-ribbon-r2",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-17-data-ribbon",
+      "tag": "v-17-data-ribbon-r2",
+      "score": 12,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper half — amorphous white field with garbled dark fragments"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no legible ribbon, mono figures, or hairlines"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower half black field"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "upper half — dominant white mass violates ink-surface discipline"
+        }
+      ],
+      "notes": "Corrupted composition; faint red speck at boundary is the only spec trace.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-17-data-ribbon-r1",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-17-data-ribbon",
+      "tag": "v-17-data-ribbon-r1",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame — white square on black only"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: THREE.ColorNode is not a constructor"
+        }
+      ],
+      "notes": "Near-empty; no ribbon, ticks, or text rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: THREE.ColorNode is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-17-data-ribbon-r1",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-17-data-ribbon",
+      "tag": "v-17-data-ribbon-r1",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame — white square on black only"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: THREE.MeshStandardNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Near-empty; identical placeholder square, zero spec elements.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: THREE.MeshStandardNodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-17-data-ribbon-r2",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-17-data-ribbon",
+      "tag": "v-17-data-ribbon-r2",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame — white square on black only"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.fontAtlas.createTextMesh is not a function"
+        }
+      ],
+      "notes": "Near-empty; identical placeholder square, zero spec elements.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.fontAtlas.createTextMesh is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-17-data-ribbon-r2",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-17-data-ribbon",
+      "tag": "v-17-data-ribbon-r2",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame — white square on black only"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: import_tsl.MeshStandardNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Near-empty; identical placeholder square, zero spec elements.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: import_tsl.MeshStandardNodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-17-data-ribbon-r1",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-17-data-ribbon",
+      "tag": "v-17-data-ribbon-r1",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame — white square on black only"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Near-empty; identical placeholder square, zero spec elements.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-18-nav-dock-r1",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-18-nav-dock",
+      "tag": "v-18-nav-dock-r1",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no rail, entries, or active state"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center white square"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: import_tsl.MeshStandardNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Near-empty: lone flat white square on black. No dock geometry, entries, materiality, or accent.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: import_tsl.MeshStandardNodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-18-nav-dock-r2",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-18-nav-dock",
+      "tag": "v-18-nav-dock-r2",
+      "score": 18,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center rail — no five entries, no active state, no accent"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "upper half light-gray field violates #0b0b10 dark background"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center slab — flat gradient, no chamfer specular or anisotropy"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower third black field"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-left/upper-right blurred blobs"
+        }
+      ],
+      "notes": "A rail-like slab exists but empty, flat, wrong background; no entries, shadow plane, or red accent.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-18-nav-dock-r1",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-18-nav-dock",
+      "tag": "v-18-nav-dock-r1",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no rail or entries"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center white square"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Identical near-empty output: flat white square on black void, zero spec compliance.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-18-nav-dock-r1",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-18-nav-dock",
+      "tag": "v-18-nav-dock-r1",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no rail or entries"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center white square"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: THREE.RoundedBoxGeometry is not a constructor"
+        }
+      ],
+      "notes": "Same near-empty white-square-on-black render; nothing from the dock spec present.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: THREE.RoundedBoxGeometry is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-18-nav-dock-r2",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-18-nav-dock",
+      "tag": "v-18-nav-dock-r2",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no rail or entries"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center white square"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'from')"
+        }
+      ],
+      "notes": "Near-empty duplicate frame; flat white square, black void, no dock elements.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'from')"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-18-nav-dock-r2",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-18-nav-dock",
+      "tag": "v-18-nav-dock-r2",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no rail or entries"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center white square"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.fontAtlas.create is not a function"
+        }
+      ],
+      "notes": "Near-empty duplicate frame; flat white square on black, zero materiality or spec elements.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.fontAtlas.create is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-18-nav-dock-r2",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-18-nav-dock",
+      "tag": "v-18-nav-dock-r2",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no rail or entries"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center white square"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: import_tsl.MeshStandardNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Near-empty duplicate frame; flat white square on black void, no dock geometry.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: import_tsl.MeshStandardNodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-18-nav-dock-r1",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-18-nav-dock",
+      "tag": "v-18-nav-dock-r1",
+      "score": 14,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — rail barely legible, no five entries or press affordance"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "upper two-thirds light-gray field; accent rendered desaturated pink"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower half solid black"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center rail region — no specular line or metal response"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-right dark wedge intruding over rail"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "center rail against black field"
+        }
+      ],
+      "notes": "Faint rail edge and tiny pink accent stroke, but composition collapsed; mostly void and off-palette.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-19-empty-state-r2",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-19-empty-state",
+      "tag": "v-19-empty-state-r2",
+      "score": 38,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center-right (no guidance copy or button label anywhere)"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center-left ghost card (no ghost dial inside wireframe)"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-right corner (huge stray white blob intruding)"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "left edge (unexplained gray band crossing panel)"
+        }
+      ],
+      "notes": "Grid, gradient, ghost outline and red accent exist, but zero text and stray white/gray intrusions wreck it.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-19-empty-state-r2",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-19-empty-state",
+      "tag": "v-19-empty-state-r2",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame (no panel, grid, copy, ghost, or accent)"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: normalizedPos.mul is not a function"
+        }
+      ],
+      "notes": "Near-empty black field with one flat white square; nothing from spec rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: normalizedPos.mul is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-19-empty-state-r1",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-19-empty-state",
+      "tag": "v-19-empty-state-r1",
+      "score": 52,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-right (headline and subcopy clipped at frame edge)"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center button (label overflows button bounds, leading letter cut)"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "background grid (faint green gridlines outside red/black/white)"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center button (flat fill, no physical light response)"
+        }
+      ],
+      "notes": "All spec elements present—copy, ghost card with dial, grid, accent CTA—but clipping, overflow, and flat button undercut it.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-19-empty-state-r1",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-19-empty-state",
+      "tag": "v-19-empty-state-r1",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame (no panel, grid, copy, ghost, or accent)"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'x')"
+        }
+      ],
+      "notes": "Near-empty black field with one flat white square; nothing from spec rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'x')"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-19-empty-state-r1",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-19-empty-state",
+      "tag": "v-19-empty-state-r1",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame (no panel, grid, copy, ghost, or accent)"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Identical void frame: black field, centered flat white square, no spec content.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-19-empty-state-r2",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-19-empty-state",
+      "tag": "v-19-empty-state-r2",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame (no panel, grid, copy, ghost, or accent)"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "ReferenceError: float is not defined"
+        }
+      ],
+      "notes": "Identical void frame: black field, centered flat white square, no spec content.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "ReferenceError: float is not defined"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-19-empty-state-r2",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-19-empty-state",
+      "tag": "v-19-empty-state-r2",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame (no panel, grid, copy, ghost, or accent)"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'to')"
+        }
+      ],
+      "notes": "Identical void frame: black field, centered flat white square, no spec content.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'to')"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-19-empty-state-r1",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-19-empty-state",
+      "tag": "v-19-empty-state-r1",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame (no panel, grid, copy, ghost, or accent)"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.fontAtlas.layout is not a function"
+        }
+      ],
+      "notes": "Identical void frame: black field, centered flat white square, no spec content.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.fontAtlas.layout is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-20-footer-colophon-r1",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-20-footer-colophon",
+      "tag": "v-20-footer-colophon-r1",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — no wordmark, columns, legal line, or rules"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Near-empty black field with lone white square; no footer content rendered at all.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-20-footer-colophon-r2",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-20-footer-colophon",
+      "tag": "v-20-footer-colophon-r2",
+      "score": 14,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center band — no wordmark, link columns, or legal line"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center band — light gray-lavender, not #121218→#0b0b10 ink ramp"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "background field — unrelated black/white swirl instead of #0b0b10"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "center band interior — vast typeless expanse"
+        }
+      ],
+      "notes": "Band and red accent dash exist, but zero typography and washed-out off-palette surface; not a colophon.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-20-footer-colophon-r2",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-20-footer-colophon",
+      "tag": "v-20-footer-colophon-r2",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — no footer elements"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: import_tsl.MeshBasicNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Black void with centered white square; spec entirely absent.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: import_tsl.MeshBasicNodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-20-footer-colophon-r2",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-20-footer-colophon",
+      "tag": "v-20-footer-colophon-r2",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — no footer elements"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+        }
+      ],
+      "notes": "Identical black void with white square; nothing from the spec rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-20-footer-colophon-r2",
+      "arm": "pcp",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-20-footer-colophon",
+      "tag": "v-20-footer-colophon-r2",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — no footer elements"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.THREE.MeshStandardNodeMaterial is not a constructor"
+        }
+      ],
+      "notes": "Black void with white square; no wordmark, columns, rules, or text.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.THREE.MeshStandardNodeMaterial is not a constructor"
+    },
+    {
+      "bundleId": "pcp-probe/old--gpt-oss-120b/v-20-footer-colophon-r1",
+      "arm": "old",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-20-footer-colophon",
+      "tag": "v-20-footer-colophon-r1",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — no footer elements"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.textureLoader.load is not a function"
+        }
+      ],
+      "notes": "Same near-empty black frame with white square; unusable.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: ctx.textureLoader.load is not a function"
+    },
+    {
+      "bundleId": "pcp-probe/old--claude-haiku-4.5/v-20-footer-colophon-r1",
+      "arm": "old",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-20-footer-colophon",
+      "tag": "v-20-footer-colophon-r1",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — no footer elements"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading 'to')"
+        }
+      ],
+      "notes": "Black void with centered white square; spec entirely absent.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'to')"
+    },
+    {
+      "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-20-footer-colophon-r1",
+      "arm": "pcp",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-20-footer-colophon",
+      "tag": "v-20-footer-colophon-r1",
+      "score": 22,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center band — no wordmark, link columns, or legal line; only accent bar present"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "background field — black/white swirl replaces #0b0b10 ground"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "center band interior — large typeless dark expanse"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center band — near-flat fill, minimal ramp or material response"
+        }
+      ],
+      "notes": "Closest palette match: dark ink band, red accent dash, faint hairline — but no typography whatsoever.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null
+    }
+  ]
+}

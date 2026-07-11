@@ -1,0 +1,20 @@
+{
+  "bundle": "pcp-probe/old--gpt-oss-120b/v-05-pedestal-material-study-r2",
+  "arm": "old",
+  "contestant": "gpt-oss-120b",
+  "capturedAt": "2026-07-10T23:20:42.500Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 0,
+    "nodeMounted": true,
+    "bundleId": "pcp-probe/old--gpt-oss-120b/v-05-pedestal-material-study-r2",
+    "moduleRuntimeError": "TypeError: ctx.textureLoader is not a function"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

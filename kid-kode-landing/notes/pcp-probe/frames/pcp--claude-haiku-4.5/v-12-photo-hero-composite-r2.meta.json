@@ -1,0 +1,21 @@
+{
+  "bundle": "pcp-probe/pcp--claude-haiku-4.5/v-12-photo-hero-composite-r2",
+  "arm": "pcp",
+  "contestant": "claude-haiku-4.5",
+  "capturedAt": "2026-07-10T23:46:46.831Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 0,
+    "nodeMounted": true,
+    "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-12-photo-hero-composite-r2"
+  },
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

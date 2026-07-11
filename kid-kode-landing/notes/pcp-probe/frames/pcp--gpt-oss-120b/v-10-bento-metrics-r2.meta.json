@@ -1,0 +1,20 @@
+{
+  "bundle": "pcp-probe/pcp--gpt-oss-120b/v-10-bento-metrics-r2",
+  "arm": "pcp",
+  "contestant": "gpt-oss-120b",
+  "capturedAt": "2026-07-10T23:24:56.401Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-10-bento-metrics-r2",
+    "moduleRuntimeError": "ReferenceError: ctx is not defined"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

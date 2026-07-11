@@ -1,0 +1,20 @@
+{
+  "bundle": "pcp-probe/old--gpt-oss-120b/v-19-empty-state-r2",
+  "arm": "old",
+  "contestant": "gpt-oss-120b",
+  "capturedAt": "2026-07-10T23:22:55.522Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "pcp-probe/old--gpt-oss-120b/v-19-empty-state-r2",
+    "moduleRuntimeError": "ReferenceError: float is not defined"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

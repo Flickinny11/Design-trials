@@ -1,0 +1,75 @@
+{
+  "label": "batch-v-02-particle-constellation",
+  "judgedAt": "2026-07-10T23:32:50.110Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-02-particle-constellation/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-02-particle-constellation/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-02-particle-constellation/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-02-particle-constellation/F4.jpg"
+    },
+    {
+      "label": "F5",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-02-particle-constellation/F5.jpg"
+    },
+    {
+      "label": "F6",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-02-particle-constellation/F6.jpg"
+    },
+    {
+      "label": "F7",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-02-particle-constellation/F7.jpg"
+    },
+    {
+      "label": "F8",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-02-particle-constellation/F8.jpg"
+    }
+  ],
+  "mappingFile": "notes/pcp-probe/judge/blind/batch-v-02-particle-constellation/mapping.json",
+  "costUsd": 0.7048350000000001,
+  "durationApiMs": 57320,
+  "wallMs": 59960,
+  "usage": {
+    "input_tokens": 3391,
+    "cache_creation_input_tokens": 18650,
+    "cache_read_input_tokens": 83812,
+    "output_tokens": 4202,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18650,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 151,
+        "output_tokens": 3022,
+        "cache_read_input_tokens": 45609,
+        "cache_creation_input_tokens": 11244,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 11244
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 14, \"mustFix\": [ { \"defect\": \"SCALE_ERROR\", \"region\": \"center — entire particle system compressed into a tiny square patch (~8% of frame)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field — ~90% of frame is empty flat near-black\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center core — no #ff2a38 accent core or emissive glow visible\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center cluster — no depth falloff, fog gradation, or glow; flat white pips\" } ], \"notes\": \"Starfield renders as a distant square speckle patch; no immersive ellipsoid, no red core, frame is mostly void.\" }, { \"frame\": \"F2\", \"score\": 16, \"mustFix\": [ { \"defect\": \"SCALE_ERROR\", \"region\": \"center — constellation confined to small square block\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field — vast empty black surround\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center core — accent #ff2a38 core absent\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center cluster — uniform dot brightness, no additive glow or fog depth\" } ], \"notes\": \"Densest of the speckle-patch variants but same failure: tiny monochrome square cluster, no red core, DL16 void everywhere else.\" }, { \"frame\": \"F3\", \"score\": 12, \"mustFix\": [ { \"defect\": \"SCALE_ERROR\", \"region\": \"center — sparse square particle patch far too small in frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field — empty flat black\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center core — no red accent core\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center cluster — no glow, falloff, or material response\" } ], \"notes\": \"Sparser, dimmer version of the same broken framing; reads as a debug render, not a hero.\" }, { \"frame\": \"F4\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"left half and bottom band — enormous blurred white slab shapes crash through frame\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"full frame — geometry rendered orders of magnitude too large / camera inside object\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"white slab surfaces — flat featureless fill, no material light response\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no accent core, no legible constellation\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"dominant white mass — frame reads white-on-black, inverting the ink/paper hierarchy\" } ], \"notes\": \"Catastrophic: giant blurred white slabs obliterate the scene; starfield reduced to stray pixels. Effectively a failed render.\" }, { \"frame\": \"F5\", \"score\": 15, \"mustFix\": [ { \"defect\": \"SCALE_ERROR\", \"region\": \"center — particle field collapsed to small square patch\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field — ~90% empty black\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center core — #ff2a38 emissive core absent\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center cluster — no fog depth or additive glow discipline\" } ], \"notes\": \"Dense square speckle patch, monochrome, no red core; identical structural failure to F1/F2.\" }, { \"frame\": \"F6\", \"score\": 15, \"mustFix\": [ { \"defect\": \"SCALE_ERROR\", \"region\": \"center — tiny square constellation patch\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field — flat empty surround\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center core — no red accent core\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center cluster — flat uniform dots, no depth falloff\" } ], \"notes\": \"Same speckle-square failure mode; square silhouette suggests box distribution, not the specified ellipsoidal shell.\" }, { \"frame\": \"F7\", \"score\": 16, \"mustFix\": [ { \"defect\": \"SCALE_ERROR\", \"region\": \"center — particle system framed as a small distant square\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field — dominant empty black\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center core — accent core and emissive glow missing\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center cluster — no glow bloom or fog gradation\" } ], \"notes\": \"Slightly denser cluster with faint brightness variation, but still monochrome square patch in a void; nowhere near spec.\" }, { \"frame\": \"F8\", \"score\": 15, \"mustFix\": [ { \"defect\": \"SCALE_ERROR\", \"region\": \"center — constellation compressed into small square patch\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field — ~90% flat empty black\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center core — no #ff2a38 core visible\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center cluster — flat pips, no additive glow or depth\" } ], \"notes\": \"Same defect family as F1/F5/F6: tiny monochrome square starfield, red core absent, frame overwhelmingly void.\" } ] }"
+}

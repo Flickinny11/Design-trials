@@ -1,0 +1,75 @@
+{
+  "label": "batch-v-18-nav-dock",
+  "judgedAt": "2026-07-10T23:57:53.754Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-18-nav-dock/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-18-nav-dock/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-18-nav-dock/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-18-nav-dock/F4.jpg"
+    },
+    {
+      "label": "F5",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-18-nav-dock/F5.jpg"
+    },
+    {
+      "label": "F6",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-18-nav-dock/F6.jpg"
+    },
+    {
+      "label": "F7",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-18-nav-dock/F7.jpg"
+    },
+    {
+      "label": "F8",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-18-nav-dock/F8.jpg"
+    }
+  ],
+  "mappingFile": "notes/pcp-probe/judge/blind/batch-v-18-nav-dock/mapping.json",
+  "costUsd": 0.6708339999999999,
+  "durationApiMs": 46073,
+  "wallMs": 48967,
+  "usage": {
+    "input_tokens": 3391,
+    "cache_creation_input_tokens": 18589,
+    "cache_read_input_tokens": 83756,
+    "output_tokens": 3548,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18589,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 151,
+        "output_tokens": 2373,
+        "cache_read_input_tokens": 45553,
+        "cache_creation_input_tokens": 11239,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 11239
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":8,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no rail, entries, or active state\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center white square\"}],\"notes\":\"Near-empty: lone flat white square on black. No dock geometry, entries, materiality, or accent.\"},{\"frame\":\"F2\",\"score\":18,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center rail — no five entries, no active state, no accent\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"upper half light-gray field violates #0b0b10 dark background\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center slab — flat gradient, no chamfer specular or anisotropy\"},{\"defect\":\"FLAT_VOID\",\"region\":\"lower third black field\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper-left/upper-right blurred blobs\"}],\"notes\":\"A rail-like slab exists but empty, flat, wrong background; no entries, shadow plane, or red accent.\"},{\"frame\":\"F3\",\"score\":8,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no rail or entries\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center white square\"}],\"notes\":\"Identical near-empty output: flat white square on black void, zero spec compliance.\"},{\"frame\":\"F4\",\"score\":8,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no rail or entries\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center white square\"}],\"notes\":\"Same near-empty white-square-on-black render; nothing from the dock spec present.\"},{\"frame\":\"F5\",\"score\":8,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no rail or entries\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center white square\"}],\"notes\":\"Near-empty duplicate frame; flat white square, black void, no dock elements.\"},{\"frame\":\"F6\",\"score\":8,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no rail or entries\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center white square\"}],\"notes\":\"Near-empty duplicate frame; flat white square on black, zero materiality or spec elements.\"},{\"frame\":\"F7\",\"score\":8,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no rail or entries\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center white square\"}],\"notes\":\"Near-empty duplicate frame; flat white square on black void, no dock geometry.\"},{\"frame\":\"F8\",\"score\":14,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — rail barely legible, no five entries or press affordance\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"upper two-thirds light-gray field; accent rendered desaturated pink\"},{\"defect\":\"FLAT_VOID\",\"region\":\"lower half solid black\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center rail region — no specular line or metal response\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper-right dark wedge intruding over rail\"},{\"defect\":\"LOW_CONTRAST\",\"region\":\"center rail against black field\"}],\"notes\":\"Faint rail edge and tiny pink accent stroke, but composition collapsed; mostly void and off-palette.\"}]}"
+}

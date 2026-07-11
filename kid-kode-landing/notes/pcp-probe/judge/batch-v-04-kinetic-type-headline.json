@@ -1,0 +1,75 @@
+{
+  "label": "batch-v-04-kinetic-type-headline",
+  "judgedAt": "2026-07-10T23:34:44.606Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-04-kinetic-type-headline/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-04-kinetic-type-headline/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-04-kinetic-type-headline/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-04-kinetic-type-headline/F4.jpg"
+    },
+    {
+      "label": "F5",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-04-kinetic-type-headline/F5.jpg"
+    },
+    {
+      "label": "F6",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-04-kinetic-type-headline/F6.jpg"
+    },
+    {
+      "label": "F7",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-04-kinetic-type-headline/F7.jpg"
+    },
+    {
+      "label": "F8",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-04-kinetic-type-headline/F8.jpg"
+    }
+  ],
+  "mappingFile": "notes/pcp-probe/judge/blind/batch-v-04-kinetic-type-headline/mapping.json",
+  "costUsd": 0.669302,
+  "durationApiMs": 49214,
+  "wallMs": 51961,
+  "usage": {
+    "input_tokens": 3391,
+    "cache_creation_input_tokens": 18886,
+    "cache_read_input_tokens": 84020,
+    "output_tokens": 3387,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18886,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 151,
+        "output_tokens": 2179,
+        "cache_read_input_tokens": 45817,
+        "cache_creation_input_tokens": 11272,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 11272
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no MSDF headline glyphs\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Near-empty frame: lone white square on flat black. No type, no accent, no gradient. Failed render.\" }, { \"frame\": \"F2\", \"score\": 10, \"mustFix\": [ { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"entire frame — blurred white plane fills view\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — camera inside/against geometry\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no legible headline or accent underline\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"upper field — featureless white fill\" } ], \"notes\": \"Camera appears clipped inside a glyph plane; giant blurred white mass, zero legible type or accent.\" }, { \"frame\": \"F3\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no MSDF headline glyphs\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Identical failed output: single white square on black void. No headline, no kinetic type evidence.\" }, { \"frame\": \"F4\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no MSDF headline glyphs\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Same placeholder white square on flat black. Spec entirely unrendered.\" }, { \"frame\": \"F5\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no MSDF headline glyphs\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"White square placeholder only; no type, accent, or gradient stops present.\" }, { \"frame\": \"F6\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no MSDF headline glyphs\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Same failed frame: lone white quad on void black. Nothing from spec renders.\" }, { \"frame\": \"F7\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no MSDF headline glyphs\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Duplicate failed render; white square on black, no headline or accent underline.\" }, { \"frame\": \"F8\", \"score\": 10, \"mustFix\": [ { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"upper two-thirds — blurred white mass\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — geometry clipping camera\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame — no legible glyphs or accent\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"upper field — flat white fill\" } ], \"notes\": \"Blown-out blurred plane against black; suggests glyph geometry at wrong scale. No readable type anywhere.\" } ] }"
+}

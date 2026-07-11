@@ -1,0 +1,75 @@
+{
+  "label": "batch-v-03-glass-prism-refraction",
+  "judgedAt": "2026-07-10T23:33:52.602Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-03-glass-prism-refraction/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-03-glass-prism-refraction/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-03-glass-prism-refraction/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-03-glass-prism-refraction/F4.jpg"
+    },
+    {
+      "label": "F5",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-03-glass-prism-refraction/F5.jpg"
+    },
+    {
+      "label": "F6",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-03-glass-prism-refraction/F6.jpg"
+    },
+    {
+      "label": "F7",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-03-glass-prism-refraction/F7.jpg"
+    },
+    {
+      "label": "F8",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-03-glass-prism-refraction/F8.jpg"
+    }
+  ],
+  "mappingFile": "notes/pcp-probe/judge/blind/batch-v-03-glass-prism-refraction/mapping.json",
+  "costUsd": 0.7158899999999999,
+  "durationApiMs": 59624,
+  "wallMs": 62440,
+  "usage": {
+    "input_tokens": 3391,
+    "cache_creation_input_tokens": 18994,
+    "cache_read_input_tokens": 84132,
+    "output_tokens": 4274,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18994,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 151,
+        "output_tokens": 3070,
+        "cache_read_input_tokens": 45929,
+        "cache_creation_input_tokens": 11268,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 11268
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":40,\"mustFix\":[{\"defect\":\"OFF_PALETTE\",\"region\":\"background field — white/light gray instead of spec #0b0b10 dark scene\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"corners and right edge — smeared amorphous black blobs\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"background field — no dark scene, back rim light, or emissive core\"}],\"notes\":\"Glass shows some dispersion and specular life, but scene is inverted to white with smeared blobs; dark-first violated.\"},{\"frame\":\"F2\",\"score\":5,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"full frame — uniform near-black, no content\"}],\"notes\":\"Nothing rendered; solid dark field only.\"},{\"frame\":\"F3\",\"score\":30,\"mustFix\":[{\"defect\":\"OFF_PALETTE\",\"region\":\"background field — pale gray instead of dark scene\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center object — no transmission or dispersion; reads as opaque pink jelly\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper-left quadrant — smeared black blob\"}],\"notes\":\"Truncated triangle with glossy blob; no glass behavior, light background breaks DL1.\"},{\"frame\":\"F4\",\"score\":55,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center object — no transmission/refraction; prism reads as opaque glossy candy\"}],\"notes\":\"Only dark-first frame; iridescent facets, red accent, caustic stripe — but material lacks transmissive glass read.\"},{\"frame\":\"F5\",\"score\":5,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"full frame — uniform near-black, no content\"}],\"notes\":\"Nothing rendered; solid dark field only.\"},{\"frame\":\"F6\",\"score\":12,\"mustFix\":[{\"defect\":\"FLAT_VOID\",\"region\":\"center object — solid flat white pentagon, no material response\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center object — zero shading, highlights, or refraction\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"background field — white sweep instead of dark scene\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"left and lower-right — smeared black blobs\"}],\"notes\":\"Flat cutout shapes only; no glass, no lighting, palette inverted.\"},{\"frame\":\"F7\",\"score\":5,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"full frame — uniform near-black, no content\"}],\"notes\":\"Nothing rendered; solid dark field only.\"},{\"frame\":\"F8\",\"score\":45,\"mustFix\":[{\"defect\":\"OFF_PALETTE\",\"region\":\"background field — light gray instead of dark scene\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"corners — smeared black blobs\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center object — reads metallic/opaque; no transmission, back rim, or emissive core\"}],\"notes\":\"Best material response of batch — iridescence and specular streaks — but opaque read and inverted palette.\"}]}"
+}

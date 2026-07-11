@@ -1,0 +1,22 @@
+{
+  "bundle": "pcp-probe/pcp--claude-haiku-4.5/v-12-photo-hero-composite-r1",
+  "arm": "pcp",
+  "contestant": "claude-haiku-4.5",
+  "capturedAt": "2026-07-10T23:46:43.417Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 7,
+    "nodeMounted": true,
+    "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-12-photo-hero-composite-r1"
+  },
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Texture load error: Error: [object Event]\n    at eval (webpack-internal:///(app-pages-browser)/./src/lib/prism/runtime/shared/loaders.ts:58:74)\n    at HTMLImageElement.onImageError (webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js:31799:26)"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

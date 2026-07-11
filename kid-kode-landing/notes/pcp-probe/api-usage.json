@@ -1,0 +1,96 @@
+{
+  "old--claude-haiku-4.5": {
+    "generations": 40,
+    "counts": {
+      "ctx.textureLoader.loadTexture(": 0,
+      "ctx.textureLoader.load(": 8,
+      "ctx.glbLoader.loadGLB(": 0,
+      "ctx.glbLoader.load(": 3,
+      "ctx.fontAtlas.createText(": 15,
+      "createTextMesh": 9,
+      "config.textContent": 4,
+      "from 'three/addons": 0
+    }
+  },
+  "old--gpt-oss-120b": {
+    "generations": 40,
+    "counts": {
+      "ctx.textureLoader.loadTexture(": 0,
+      "ctx.textureLoader.load(": 5,
+      "ctx.glbLoader.loadGLB(": 0,
+      "ctx.glbLoader.load(": 0,
+      "ctx.fontAtlas.createText(": 10,
+      "createTextMesh": 16,
+      "config.textContent": 13,
+      "from 'three/addons": 0
+    }
+  },
+  "pcp--claude-haiku-4.5": {
+    "generations": 40,
+    "counts": {
+      "ctx.textureLoader.loadTexture(": 7,
+      "ctx.textureLoader.load(": 0,
+      "ctx.glbLoader.loadGLB(": 3,
+      "ctx.glbLoader.load(": 0,
+      "ctx.fontAtlas.createText(": 36,
+      "createTextMesh": 0,
+      "config.textContent": 4,
+      "from 'three/addons": 0
+    }
+  },
+  "pcp--gpt-oss-120b": {
+    "generations": 40,
+    "counts": {
+      "ctx.textureLoader.loadTexture(": 7,
+      "ctx.textureLoader.load(": 0,
+      "ctx.glbLoader.loadGLB(": 4,
+      "ctx.glbLoader.load(": 0,
+      "ctx.fontAtlas.createText(": 39,
+      "createTextMesh": 0,
+      "config.textContent": 25,
+      "from 'three/addons": 0
+    }
+  },
+  "_markers": [
+    {
+      "marker": "ctx.textureLoader.loadTexture(",
+      "meaning": "real texture loader",
+      "polarity": "real"
+    },
+    {
+      "marker": "ctx.textureLoader.load(",
+      "meaning": "crash-prone .load( guess",
+      "polarity": "crash"
+    },
+    {
+      "marker": "ctx.glbLoader.loadGLB(",
+      "meaning": "real GLB loader",
+      "polarity": "real"
+    },
+    {
+      "marker": "ctx.glbLoader.load(",
+      "meaning": "crash-prone .load( guess",
+      "polarity": "crash"
+    },
+    {
+      "marker": "ctx.fontAtlas.createText(",
+      "meaning": "real MSDF text call",
+      "polarity": "real"
+    },
+    {
+      "marker": "createTextMesh",
+      "meaning": "hallucinated createTextMesh",
+      "polarity": "crash"
+    },
+    {
+      "marker": "config.textContent",
+      "meaning": "data-driven copy reference",
+      "polarity": "real"
+    },
+    {
+      "marker": "from 'three/addons",
+      "meaning": "disallowed addons import",
+      "polarity": "crash"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "bundle": "pcp-probe/pcp--gpt-oss-120b/v-06-loop-column-gallery-r1",
+  "arm": "pcp",
+  "contestant": "gpt-oss-120b",
+  "capturedAt": "2026-07-10T23:24:12.778Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-06-loop-column-gallery-r1",
+    "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading 'timeline')"
+  },
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

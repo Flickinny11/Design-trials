@@ -1,0 +1,75 @@
+{
+  "label": "batch-v-17-data-ribbon",
+  "judgedAt": "2026-07-10T23:57:04.744Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-17-data-ribbon/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-17-data-ribbon/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-17-data-ribbon/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-17-data-ribbon/F4.jpg"
+    },
+    {
+      "label": "F5",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-17-data-ribbon/F5.jpg"
+    },
+    {
+      "label": "F6",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-17-data-ribbon/F6.jpg"
+    },
+    {
+      "label": "F7",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-17-data-ribbon/F7.jpg"
+    },
+    {
+      "label": "F8",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-17-data-ribbon/F8.jpg"
+    }
+  ],
+  "mappingFile": "notes/pcp-probe/judge/blind/batch-v-17-data-ribbon/mapping.json",
+  "costUsd": 0.650711,
+  "durationApiMs": 40167,
+  "wallMs": 42992,
+  "usage": {
+    "input_tokens": 3391,
+    "cache_creation_input_tokens": 18916,
+    "cache_read_input_tokens": 84092,
+    "output_tokens": 3006,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18916,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 151,
+        "output_tokens": 1840,
+        "cache_read_input_tokens": 45889,
+        "cache_creation_input_tokens": 11230,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 11230
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 24, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"ribbon band center — no mono figures rendered on baseline\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"upper-right quadrant — large blurred white arc intruding off-spec\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"lower half background field\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"ribbon plane — no material response, flat fill\" } ], \"notes\": \"Ribbon plane and two red ticks exist, but zero ticker text; stray blurred white arc wrecks the frame.\" }, { \"frame\": \"F2\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame — lone white square on black, no ribbon, text, or ticks\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Near-empty failed render; only a placeholder white square, nothing from spec.\" }, { \"frame\": \"F3\", \"score\": 12, \"mustFix\": [ { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"upper half — amorphous white field with garbled dark fragments\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no legible ribbon, mono figures, or hairlines\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"lower half black field\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"upper half — dominant white mass violates ink-surface discipline\" } ], \"notes\": \"Corrupted composition; faint red speck at boundary is the only spec trace.\" }, { \"frame\": \"F4\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame — white square on black only\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Near-empty; no ribbon, ticks, or text rendered.\" }, { \"frame\": \"F5\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame — white square on black only\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Near-empty; identical placeholder square, zero spec elements.\" }, { \"frame\": \"F6\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame — white square on black only\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Near-empty; identical placeholder square, zero spec elements.\" }, { \"frame\": \"F7\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame — white square on black only\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Near-empty; identical placeholder square, zero spec elements.\" }, { \"frame\": \"F8\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame — white square on black only\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Near-empty; identical placeholder square, zero spec elements.\" } ] }"
+}

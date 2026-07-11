@@ -1,0 +1,202 @@
+{
+  "id": "pcp-probe/pcp--claude-haiku-4.5/v-17-data-ribbon-r1",
+  "arm": "pcp",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-17-data-ribbon",
+  "run": 1,
+  "node": {
+    "nodeId": "v-17-data-ribbon",
+    "subtype": "ticker",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Data ticker ribbon — A horizontal data ribbon of mono figures scrolling with constant velocity and edge fades.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "CAL NA-01 BEAT 28800 VPH",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "POWER RESERVE 72H",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "CASE 40.5 MM 904L",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "REF 5811 IN STOCK",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "WAITLIST 1204",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "NEXT FITTING JUL 18",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#111117",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10ff"
+            },
+            {
+              "at": 0.09,
+              "hex": "#0b0b1000"
+            },
+            {
+              "at": 0.91,
+              "hex": "#0b0b1000"
+            },
+            {
+              "at": 1,
+              "hex": "#0b0b10ff"
+            }
+          ]
+        },
+        "typography": {
+          "ticker-figure": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 700,
+            "letterSpacing": 0.06,
+            "lineHeight": 1
+          }
+        },
+        "effects": "Ribbon plane 7.0w x 0.35h scene units centered at origin, albedo #111117, top and bottom 0.006-unit hairlines #23232b, roughness 0.6, metalness 0.2; ticker entries set in mono 700 paper on a single baseline, separated by vertical accent tick marks 0.02w x 0.14h in #ff2a38 emissive intensity 1.5 with 0.5-unit gaps (2x base unit) on both sides of each tick, never punctuation glyphs; content strip duplicated for a seamless loop and translated x at constant velocity 0.4 scene units per second leftward (fly-through primitive, speed 0.4, depthUnits 0), linear timing cubic-bezier(0,0,1,1), loop period equal to strip length divided by 0.4 with zero visible seam; edge fade masks 0.6 units wide at both ends using the stop ramp #0b0b10ff (at 0.0) -> #0b0b1000 (at 0.09) and mirrored at the right so figures dissolve into the stage rather than clipping; figures float translateZ +0.02 above the rail so the key light gives the mono digits a crisp top edge; no vertical motion, no easing changes, the ribbon reads as instrumentation."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "fly-through",
+        "trigger": "time",
+        "params": {
+          "depthUnits": 0,
+          "speed": 0.4
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 55
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.45
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1,
+        "position": [
+          0,
+          3,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.4,
+        "position": [
+          0,
+          -1,
+          -1
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "The figure strip translates left at a constant 0.4 scene units per second in a seamless loop; entries dissolve through 0.6-unit edge fades.",
+    "contrastMinimum": "4.5:1 figures on ribbon surface at full opacity zone"
+  },
+  "parsed": true,
+  "fenced": true,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const { THREE } = ctx;\n  const group = new THREE.Group();\n  const ribbonWidth = 7;\n  const ribbonHeight = 0.35;\n  const fadeWidth = 0.6;\n  const tickMarkWidth = 0.02;\n  const tickMarkHeight = 0.14;\n  const gapSize = 0.5;\n  const colors = {\n    bg: 1118487,\n    hairline: 2302763,\n    accent: 16722488,\n    stage: 723728,\n    paper: 15265010\n  };\n  const tickerItems = [\n    \"CAL NA-01 BEAT 28800 VPH\",\n    \"POWER RESERVE 72H\",\n    \"CASE 40.5 MM 904L\",\n    \"REF 5811 IN STOCK\",\n    \"WAITLIST 1204\",\n    \"NEXT FITTING JUL 18\"\n  ];\n  const geos = [];\n  const mats = [];\n  const ribbonGeo = new THREE.PlaneGeometry(ribbonWidth, ribbonHeight);\n  const ribbonMat = new THREE.MeshStandardNodeMaterial();\n  ribbonMat.color.setHex(colors.bg);\n  ribbonMat.roughness = 0.6;\n  ribbonMat.metalness = 0.2;\n  geos.push(ribbonGeo);\n  mats.push(ribbonMat);\n  const ribbon = new THREE.Mesh(ribbonGeo, ribbonMat);\n  ribbon.position.z = -0.01;\n  group.add(ribbon);\n  const hairlineGeo = new THREE.PlaneGeometry(ribbonWidth, 6e-3);\n  geos.push(hairlineGeo);\n  const hairlineMat = new THREE.MeshStandardNodeMaterial();\n  hairlineMat.color.setHex(colors.hairline);\n  hairlineMat.roughness = 0.6;\n  hairlineMat.metalness = 0.2;\n  mats.push(hairlineMat);\n  const topHairline = new THREE.Mesh(hairlineGeo, hairlineMat);\n  topHairline.position.y = ribbonHeight / 2 - 3e-3;\n  topHairline.position.z = 1e-3;\n  group.add(topHairline);\n  const bottomHairline = new THREE.Mesh(hairlineGeo, hairlineMat.clone());\n  bottomHairline.position.y = -ribbonHeight / 2 + 3e-3;\n  bottomHairline.position.z = 1e-3;\n  group.add(bottomHairline);\n  mats.push(bottomHairline.material);\n  const contentGroup = new THREE.Group();\n  contentGroup.position.z = 0.02;\n  let xPos = 0.25;\n  for (let i = 0; i < tickerItems.length; i++) {\n    const textMesh = ctx.fontAtlas.createText(tickerItems[i], {\n      fontSize: 13,\n      color: \"#e8ecf2\",\n      align: \"left\"\n    });\n    const textWidth = tickerItems[i].length * 0.09;\n    textMesh.position.x = xPos;\n    textMesh.position.y = 0;\n    contentGroup.add(textMesh);\n    xPos += textWidth + gapSize;\n    if (i < tickerItems.length - 1) {\n      const tickGeo = new THREE.PlaneGeometry(tickMarkWidth, tickMarkHeight);\n      const tickMat = new THREE.MeshBasicNodeMaterial();\n      tickMat.color.setHex(colors.accent);\n      tickMat.emissive.setHex(colors.accent);\n      tickMat.emissiveIntensity = 1.5;\n      geos.push(tickGeo);\n      mats.push(tickMat);\n      const tick = new THREE.Mesh(tickGeo, tickMat);\n      tick.position.x = xPos + tickMarkWidth / 2;\n      tick.position.y = 0;\n      tick.position.z = 1e-3;\n      contentGroup.add(tick);\n      xPos += tickMarkWidth + gapSize;\n    }\n  }\n  xPos += 0.25;\n  const stripWidth = xPos;\n  const loopedContent = new THREE.Group();\n  loopedContent.add(contentGroup);\n  const content2 = contentGroup.clone();\n  content2.position.x = stripWidth;\n  loopedContent.add(content2);\n  group.add(loopedContent);\n  let flyResult = null;\n  if (ctx.primitives && ctx.primitives[\"fly-through\"]) {\n    flyResult = ctx.primitives[\"fly-through\"](loopedContent, {\n      speed: 0.4,\n      depthUnits: 0\n    });\n  }\n  const fadeMat = new THREE.MeshBasicNodeMaterial();\n  fadeMat.color.setHex(colors.stage);\n  mats.push(fadeMat);\n  const fadePlaneGeo = new THREE.PlaneGeometry(fadeWidth, ribbonHeight);\n  geos.push(fadePlaneGeo);\n  const leftFade = new THREE.Mesh(fadePlaneGeo, fadeMat.clone());\n  leftFade.position.x = -ribbonWidth / 2 + fadeWidth / 2;\n  leftFade.position.z = 0.03;\n  group.add(leftFade);\n  mats.push(leftFade.material);\n  const rightFade = new THREE.Mesh(fadePlaneGeo, fadeMat.clone());\n  rightFade.position.x = ribbonWidth / 2 - fadeWidth / 2;\n  rightFade.position.z = 0.03;\n  group.add(rightFade);\n  mats.push(rightFade.material);\n  group.userData.cleanup = () => {\n    geos.forEach((g) => g.dispose());\n    mats.forEach((m) => m.dispose());\n    group.traverse((node) => {\n      if (node.geometry && !geos.includes(node.geometry)) {\n        node.geometry.dispose();\n      }\n      if (node.material) {\n        const matList = Array.isArray(node.material) ? node.material : [node.material];\n        matList.forEach((m) => {\n          if (!mats.includes(m)) m.dispose();\n        });\n      }\n      if (node.userData?.cleanup && typeof node.userData.cleanup === \"function\") {\n        node.userData.cleanup();\n      }\n    });\n    if (flyResult?.cleanup) flyResult.cleanup();\n    import_gsap.gsap.killTweensOf(group);\n  };\n  return group;\n}\n",
+  "transformError": null
+}

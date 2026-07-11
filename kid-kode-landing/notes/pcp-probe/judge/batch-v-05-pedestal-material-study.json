@@ -1,0 +1,75 @@
+{
+  "label": "batch-v-05-pedestal-material-study",
+  "judgedAt": "2026-07-10T23:35:23.857Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-05-pedestal-material-study/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-05-pedestal-material-study/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-05-pedestal-material-study/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-05-pedestal-material-study/F4.jpg"
+    },
+    {
+      "label": "F5",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-05-pedestal-material-study/F5.jpg"
+    },
+    {
+      "label": "F6",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-05-pedestal-material-study/F6.jpg"
+    },
+    {
+      "label": "F7",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-05-pedestal-material-study/F7.jpg"
+    },
+    {
+      "label": "F8",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-05-pedestal-material-study/F8.jpg"
+    }
+  ],
+  "mappingFile": "notes/pcp-probe/judge/blind/batch-v-05-pedestal-material-study/mapping.json",
+  "costUsd": 0.6553070000000001,
+  "durationApiMs": 36272,
+  "wallMs": 39205,
+  "usage": {
+    "input_tokens": 3391,
+    "cache_creation_input_tokens": 19001,
+    "cache_read_input_tokens": 84140,
+    "output_tokens": 3058,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 19001,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 151,
+        "output_tokens": 1855,
+        "cache_read_input_tokens": 45937,
+        "cache_creation_input_tokens": 11267,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 11267
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" } ], \"notes\": \"Solid near-black frame; nothing rendered.\" }, { \"frame\": \"F2\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" } ], \"notes\": \"Solid near-black frame; nothing rendered.\" }, { \"frame\": \"F3\", \"score\": 34, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center knot\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"background field\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"upper-left and right quadrants\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"pedestal base\" } ], \"notes\": \"Knot reads as matte white plastic, not brushed metal; no contact shadow, no red accent; broken white background blobs.\" }, { \"frame\": \"F4\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" } ], \"notes\": \"Solid near-black frame; nothing rendered.\" }, { \"frame\": \"F5\", \"score\": 46, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center knot\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"whole frame\" }, { \"defect\": \"GARBLED_TEXT\", \"region\": \"upper-right edge\" }, { \"defect\": \"LOW_CONTRAST\", \"region\": \"center knot highlights\" } ], \"notes\": \"Dramatic spotlight and floor plane help, but knot is blown-out emissive white, not brushed metal; artifact streaks right edge.\" }, { \"frame\": \"F6\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" } ], \"notes\": \"Solid near-black frame; nothing rendered.\" }, { \"frame\": \"F7\", \"score\": 14, \"mustFix\": [ { \"defect\": \"ALL_BLACK_ELEMENT\", \"region\": \"center knot and pedestal\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center subject\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"left half white field\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"whole frame\" }, { \"defect\": \"GARBLED_TEXT\", \"region\": \"upper-right edge\" } ], \"notes\": \"Subject is an unlit black silhouette against a blown white void; no material, shadow, or palette present.\" }, { \"frame\": \"F8\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" } ], \"notes\": \"Solid near-black frame; nothing rendered.\" } ] }"
+}

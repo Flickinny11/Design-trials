@@ -1,0 +1,20 @@
+{
+  "bundle": "pcp-probe/pcp--gpt-oss-120b/v-07-filmstrip-carousel-r1",
+  "arm": "pcp",
+  "contestant": "gpt-oss-120b",
+  "capturedAt": "2026-07-10T23:24:21.756Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-07-filmstrip-carousel-r1",
+    "moduleRuntimeError": "TypeError: MeshStandardNodeMaterial2 is not a constructor"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

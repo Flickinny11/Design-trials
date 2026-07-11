@@ -1,0 +1,19 @@
+{
+  "bundle": "pcp-probe/pcp--claude-haiku-4.5/v-03-glass-prism-refraction-r1",
+  "arm": "pcp",
+  "contestant": "claude-haiku-4.5",
+  "capturedAt": "2026-07-10T23:29:32.993Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 6,
+    "nodeMounted": true,
+    "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-03-glass-prism-refraction-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

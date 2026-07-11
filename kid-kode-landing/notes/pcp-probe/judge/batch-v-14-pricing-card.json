@@ -1,0 +1,75 @@
+{
+  "label": "batch-v-14-pricing-card",
+  "judgedAt": "2026-07-10T23:54:33.313Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-14-pricing-card/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-14-pricing-card/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-14-pricing-card/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-14-pricing-card/F4.jpg"
+    },
+    {
+      "label": "F5",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-14-pricing-card/F5.jpg"
+    },
+    {
+      "label": "F6",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-14-pricing-card/F6.jpg"
+    },
+    {
+      "label": "F7",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-14-pricing-card/F7.jpg"
+    },
+    {
+      "label": "F8",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-14-pricing-card/F8.jpg"
+    }
+  ],
+  "mappingFile": "notes/pcp-probe/judge/blind/batch-v-14-pricing-card/mapping.json",
+  "costUsd": 0.6159209999999999,
+  "durationApiMs": 36120,
+  "wallMs": 39054,
+  "usage": {
+    "input_tokens": 3391,
+    "cache_creation_input_tokens": 18578,
+    "cache_read_input_tokens": 83748,
+    "output_tokens": 2454,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18578,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 151,
+        "output_tokens": 1282,
+        "cache_read_input_tokens": 45545,
+        "cache_creation_input_tokens": 11236,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 11236
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":4,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card\"}],\"notes\":\"Only a small white square on a void; no card, type, header strip, features, or CTA rendered.\"},{\"frame\":\"F2\",\"score\":4,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card\"}],\"notes\":\"Identical void frame; lone white square, zero spec content, no materiality or lighting.\"},{\"frame\":\"F3\",\"score\":4,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card\"}],\"notes\":\"Blank render; white square placeholder only, wrong aspect for 2.4x3.2 card, nothing else present.\"},{\"frame\":\"F4\",\"score\":4,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card\"}],\"notes\":\"Blank render; no pricing card, text, accent red, or header strip — dead flat void.\"},{\"frame\":\"F5\",\"score\":4,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card\"}],\"notes\":\"Blank render identical to prior frames; only an unstyled white square on empty black.\"},{\"frame\":\"F6\",\"score\":4,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card\"}],\"notes\":\"Blank render; no spec elements, no lighting response, no palette usage beyond void.\"},{\"frame\":\"F7\",\"score\":4,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card\"}],\"notes\":\"Blank render; lone flat white square, all pricing-card content absent.\"},{\"frame\":\"F8\",\"score\":4,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card\"}],\"notes\":\"Blank render; entire batch failed identically — white square placeholder, nothing from spec rendered.\"}]}"
+}

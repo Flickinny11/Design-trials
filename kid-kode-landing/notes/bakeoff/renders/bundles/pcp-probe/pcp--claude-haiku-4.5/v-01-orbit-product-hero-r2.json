@@ -1,0 +1,205 @@
+{
+  "id": "pcp-probe/pcp--claude-haiku-4.5/v-01-orbit-product-hero-r2",
+  "arm": "pcp",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-01-orbit-product-hero",
+  "run": 2,
+  "node": {
+    "nodeId": "v-01-orbit-product-hero",
+    "subtype": "product-hero",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Orbit product hero — A machined-metal product body on a low plinth, slow orbital presentation, key+rim lighting, accent signal light.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "Calibre NA-01",
+            "role": "headline",
+            "typography": {
+              "fontSize": 68,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Machined in-house. 41 mm. Grade 5 titanium.",
+            "role": "body",
+            "typography": {
+              "fontSize": 26,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "FROM 4200 USD / SHIPS IN 21 DAYS",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 0.55,
+              "hex": "#101017"
+            },
+            {
+              "at": 1,
+              "hex": "#16161d"
+            }
+          ]
+        },
+        "typography": {
+          "headline": {
+            "family": "Lora",
+            "fontSize": 68,
+            "fontWeight": 600,
+            "letterSpacing": -0.005,
+            "lineHeight": 1.1
+          },
+          "body": {
+            "family": "JetBrains Mono",
+            "fontSize": 26,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.5
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Watch mesh (/prism-mock/orrery/meshes/watch.glb) normalized to 2.2 scene units tall, centered at origin, resting on a low cylindrical plinth radius 1.4, height 0.25 units, top face at y=-1.1. Watch material: brushed-metal PBR roughness 0.52, metalness 0.55, clearcoat 0.2, clearcoatRoughness 0.4, anisotropy 0.8 aligned to case tangent. Plinth: roughness 0.7, metalness 0.3, near-black #14141a with engineered vertical gradient stops 0.0 #0b0b10 to 1.0 #16161d on the backdrop plane (7x6 units at z=-2.5). Contact shadow: radial-gradient plane radius 1.6 units under plinth, opacity 0.55. Orbit primitive on load: group rotates about y at 0.15 rad/s, camera-relative radius 0.6. Hover depth-rotate: tilt up to 6 deg toward cursor over 300ms cubic-bezier(0.215,0.61,0.355,1), release settles with weighted overshoot scale 1.04 to 1.0 over 900ms cubic-bezier(0.165,0.84,0.44,1). Headline baseline sits 1.5 units (6x base 0.25) below scene center; caption 0.5 units (2x base) below headline. Accent rim light grazes the left case flank so the bezel edge carries a #ff2a38 highlight; no bloom, glow discipline capped at emissive intensity 1.6."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "mesh",
+    "depthMapUrl": null,
+    "meshUrl": "/prism-mock/orrery/meshes/watch.glb",
+    "cinematicPrimitives": [
+      {
+        "name": "orbit",
+        "trigger": "load",
+        "params": {
+          "speed": 0.15,
+          "radius": 0.6
+        }
+      },
+      {
+        "name": "depth-rotate",
+        "trigger": "hover",
+        "params": {
+          "maxDeg": 6
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0.9,
+        0.5,
+        5
+      ],
+      "lookAt": [
+        0,
+        -0.1,
+        0
+      ],
+      "fov": 45
+    },
+    "lights": [
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 1.4,
+        "position": [
+          3,
+          4,
+          2.5
+        ]
+      },
+      {
+        "type": "ambient",
+        "color": "#b8c0cc",
+        "intensity": 0.35
+      },
+      {
+        "type": "directional",
+        "color": "#9fb0c4",
+        "intensity": 0.8,
+        "position": [
+          -1,
+          2,
+          -3
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 1.6,
+        "position": [
+          -2.2,
+          0.4,
+          -1.5
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Watch body orbits slowly about its y-axis (0.15 rad/s); on hover the whole group tilts up to 6 deg toward the cursor and settles with weighted 1.04 overshoot."
+  },
+  "parsed": true,
+  "fenced": true,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_webgpu2 = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nfunction createNode(config, ctx) {\n  const group = new ctx.THREE.Group();\n  const timelines = [];\n  const materials = [];\n  const geometries = [];\n  let primitiveResults = [];\n  group.userData.handlers = {};\n  group.userData.cleanup = () => {\n    timelines.forEach((tl) => tl.kill());\n    materials.forEach((mat) => mat.dispose());\n    geometries.forEach((geo) => geo.dispose());\n    primitiveResults.forEach((r) => r?.cleanup?.());\n  };\n  const backdropGeo = new import_webgpu.PlaneGeometry(7, 6);\n  const backdropMat = new import_webgpu2.MeshStandardNodeMaterial({\n    roughness: 1,\n    metalness: 0,\n    side: ctx.THREE.BackSide\n  });\n  const c0b0b10 = (0, import_tsl.vec3)(11 / 255, 11 / 255, 16 / 255);\n  const c16161d = (0, import_tsl.vec3)(22 / 255, 22 / 255, 29 / 255);\n  backdropMat.colorNode = (0, import_tsl.mix)(c16161d, c0b0b10, (0, import_tsl.uv)().y);\n  const backdropPlane = new import_webgpu.Mesh(backdropGeo, backdropMat);\n  backdropPlane.position.z = -2.5;\n  group.add(backdropPlane);\n  materials.push(backdropMat);\n  geometries.push(backdropGeo);\n  const plinthGeo = new import_webgpu.CylinderGeometry(1.4, 1.4, 0.25, 32);\n  const plinthMat = new import_webgpu2.MeshStandardNodeMaterial({\n    color: 1315866,\n    roughness: 0.7,\n    metalness: 0.3\n  });\n  const plinth = new import_webgpu.Mesh(plinthGeo, plinthMat);\n  plinth.position.y = -1.225;\n  group.add(plinth);\n  materials.push(plinthMat);\n  geometries.push(plinthGeo);\n  const shadowGeo = new import_webgpu.PlaneGeometry(3.2, 3.2);\n  const shadowMat = new import_webgpu2.MeshStandardNodeMaterial({\n    color: 0,\n    transparent: true,\n    depthWrite: false\n  });\n  const shadowUV = (0, import_tsl.uv)().sub(0.5).mul(2);\n  const shadowDist = (0, import_tsl.length)(shadowUV);\n  const shadowAlpha = (0, import_tsl.smoothstep)(1.5, 0, shadowDist).mul(0.55);\n  shadowMat.opacityNode = shadowAlpha;\n  const shadowPlane = new import_webgpu.Mesh(shadowGeo, shadowMat);\n  shadowPlane.position.y = -1.225;\n  shadowPlane.rotation.x = -Math.PI / 2;\n  group.add(shadowPlane);\n  materials.push(shadowMat);\n  geometries.push(shadowGeo);\n  ctx.glbLoader.loadGLB(config.meshUrl).then((gltf) => {\n    const scene = gltf.scene;\n    const bbox = new ctx.THREE.Box3().setFromObject(scene);\n    const size = bbox.getSize(new import_webgpu.Vector3());\n    const scale = 2.2 / size.y;\n    scene.scale.multiplyScalar(scale);\n    const centerBbox = new ctx.THREE.Box3().setFromObject(scene);\n    const center = centerBbox.getCenter(new import_webgpu.Vector3());\n    scene.position.sub(center);\n    scene.traverse((node) => {\n      if (node.isMesh) {\n        const baseColor = node.material?.color?.getHex?.() || 10066329;\n        const watchMat = new import_webgpu2.MeshStandardNodeMaterial({\n          color: baseColor,\n          roughness: 0.52,\n          metalness: 0.55,\n          clearcoat: 0.2,\n          clearcoatRoughness: 0.4\n        });\n        node.material = watchMat;\n        materials.push(watchMat);\n      }\n    });\n    group.add(scene);\n  });\n  const headline = ctx.fontAtlas.createText(\"Calibre NA-01\", {\n    fontSize: 68,\n    color: \"#e8ecf2\",\n    align: \"center\"\n  });\n  headline.position.y = -1.5;\n  group.add(headline);\n  const bodyText = ctx.fontAtlas.createText(\"Machined in-house. 41 mm. Grade 5 titanium.\", {\n    fontSize: 26,\n    color: \"#e8ecf2\",\n    align: \"center\"\n  });\n  bodyText.position.y = -2;\n  group.add(bodyText);\n  const caption = ctx.fontAtlas.createText(\"FROM 4200 USD / SHIPS IN 21 DAYS\", {\n    fontSize: 18,\n    color: \"#e8ecf2\",\n    align: \"center\",\n    letterSpacingPx: 1.44\n  });\n  caption.position.y = -2.5;\n  group.add(caption);\n  const rimLight = new import_webgpu.PointLight(16722488, 0.9);\n  rimLight.position.set(-3, 1, 2);\n  group.add(rimLight);\n  if (config.cinematicPrimitives && Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach((prim) => {\n      if (prim.trigger === \"load\") {\n        const result = ctx.primitives[prim.name](group, prim.params);\n        if (result?.cleanup) {\n          primitiveResults.push(result);\n        }\n      } else if (prim.trigger === \"hover\") {\n        group.userData.hoverPrim = prim;\n      }\n    });\n    if (group.userData.hoverPrim) {\n      group.userData.handlers.onMouseEnter = () => {\n        const { name, params } = group.userData.hoverPrim;\n        const result = ctx.primitives[name](group, params);\n        if (result?.cleanup) {\n          primitiveResults.push(result);\n        }\n      };\n    }\n  }\n  return group;\n}\n",
+  "transformError": null
+}

@@ -1,0 +1,213 @@
+{
+  "id": "pcp-probe/pcp--gpt-oss-120b/v-13-brand-wall-r2",
+  "arm": "pcp",
+  "contestant": "gpt-oss-120b",
+  "caseId": "v-13-brand-wall",
+  "run": 2,
+  "node": {
+    "nodeId": "v-13-brand-wall",
+    "subtype": "brand-wall",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Brand mark wall — A 3x2 wall of monochrome brand-mark tiles rendered premium on machined tiles — no icon-pack styling.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "AS FEATURED IN",
+            "role": "kicker",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "HODINKEE",
+            "role": "brand-mark",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "MONOCLE",
+            "role": "brand-mark",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "WALLPAPER",
+            "role": "brand-mark",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "ESQUIRE",
+            "role": "brand-mark",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "WIRED",
+            "role": "brand-mark",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "FINANCIAL TIMES",
+            "role": "brand-mark",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#16161d",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#1a1a22"
+            },
+            {
+              "at": 1,
+              "hex": "#121218"
+            }
+          ]
+        },
+        "typography": {
+          "kicker": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.2
+          },
+          "brand-mark": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 700,
+            "letterSpacing": 0.08,
+            "lineHeight": 1
+          }
+        },
+        "effects": "Six machined tiles 1.0w x 0.62h scene units in a 3x2 grid, gap 0.25 (1x base unit), grid total 3.5w x 1.49h centered at origin with the kicker 0.3 units above; each tile brushed-metal PBR, anisotropy strength 0.6 aligned to x, roughness 0.55, metalness 0.5, clearcoat 0.2, albedo vertical ramp #1a1a22 (at 0.0) -> #121218 (at 1.0), chamfered edges 0.02 units; brand wordmarks rendered flat monochrome #e8ecf2 at 78 percent opacity, no drop shadows, no strokes, no icon-pack styling; hover per tile wordmark opacity 0.78 -> 1.0 and tile translateZ 0 -> 0.05 over 160ms cubic-bezier(0.25,0.46,0.45,0.94); mount stagger-cards with each tile fade-up opacity 0 -> 1 and y +0.2 -> 0 over 500ms cubic-bezier(0.25,0.46,0.45,0.94) at 80ms stagger, top row left-to-right first; key light rakes at 35deg elevation so the brushed anisotropic highlight sweeps across each tile as it settles, giving the wall visible material motion without color noise."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0.1,
+        4
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 45
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.4
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1.1,
+        "position": [
+          3,
+          2.5,
+          3.5
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#7f8896",
+        "intensity": 0.35,
+        "position": [
+          -3,
+          1,
+          2
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.4,
+        "position": [
+          0,
+          -1.6,
+          -1
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Tiles fade-up in an 80ms left-to-right stagger while the brushed specular band sweeps each tile; hover lifts a tile 0.05 units.",
+    "contrastMinimum": "4.5:1 wordmarks at rest opacity on tile albedo; kicker on background exceeds 15:1"
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap",
+      "@/primitives",
+      "@/text"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nvar import_primitives = require(\"@/primitives\");\nvar import_text = require(\"@/text\");\nfunction createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, MeshStandardNodeMaterial, Color } = ctx.THREE;\n  const root = new Group();\n  root.name = \"brand-mark-wall\";\n  const albedoNode = (0, import_tsl.mix)(\n    (0, import_tsl.color)(new Color(\"#1a1a22\")),\n    (0, import_tsl.color)(new Color(\"#121218\")),\n    (0, import_tsl.uv)().y\n  );\n  const tileMaterial = new MeshStandardNodeMaterial({\n    colorNode: albedoNode,\n    metalness: 0.5,\n    roughness: 0.55,\n    clearcoat: 0.2,\n    clearcoatRoughness: 0.05,\n    // Anisotropy (aligned to X)\n    anisotropy: 0.6,\n    anisotropyDirectionNode: (0, import_tsl.vec3)(1, 0, 0),\n    transparent: true,\n    opacity: 1\n  });\n  const tileGeom = new PlaneGeometry(1, 0.62);\n  const cols = 3;\n  const rows = 2;\n  const gap = 0.25;\n  const tileW = 1;\n  const tileH = 0.62;\n  const totalW = cols * tileW + (cols - 1) * gap;\n  const totalH = rows * tileH + (rows - 1) * gap;\n  const startX = -totalW / 2 + tileW / 2;\n  const startY = totalH / 2 - tileH / 2;\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const kickerItem = items[0];\n  const brandItems = items.slice(1);\n  if (kickerItem && kickerItem.text) {\n    const kicker = ctx.fontAtlas.createText(kickerItem.text, {\n      fontSize: kickerItem.typography?.fontSize ?? 9,\n      color: \"#e8ecf2\",\n      align: \"center\",\n      letterSpacingPx: (kickerItem.typography?.letterSpacing ?? 0) * 0.01\n    });\n    kicker.position.set(0, startY + tileH / 2 + 0.3, 0.01);\n    const mat = kicker.traverse((obj) => {\n      if (obj.isMesh && obj.material) {\n        obj.material.transparent = true;\n        obj.material.opacity = 0.78;\n      }\n    });\n    root.add(kicker);\n  }\n  const timelines = [];\n  const tileGroups = [];\n  for (let r = 0; r < rows; r++) {\n    for (let c = 0; c < cols; c++) {\n      const idx = r * cols + c;\n      const word = brandItems[idx]?.text ?? \"\";\n      const tileGroup = new Group();\n      tileGroup.name = `tile-${idx}`;\n      tileGroup.position.set(startX + c * (tileW + gap), startY - r * (tileH + gap), 0);\n      tileGroup.userData = {};\n      const mesh = new Mesh(tileGeom, tileMaterial.clone());\n      mesh.renderOrder = 1;\n      mesh.material.transparent = true;\n      mesh.material.opacity = 0;\n      tileGroup.add(mesh);\n      const txt = ctx.fontAtlas.createText(word, {\n        fontSize: 13,\n        color: \"#e8ecf2\",\n        align: \"center\",\n        letterSpacingPx: 0.08 * 0.01\n      });\n      txt.position.set(0, 0, 0.01);\n      txt.traverse((obj) => {\n        if (obj.isMesh && obj.material) {\n          obj.material.transparent = true;\n          obj.material.opacity = 0.78;\n        }\n      });\n      tileGroup.add(txt);\n      const hoverEnter = () => {\n        const tl = import_gsap.gsap.timeline();\n        tl.to(mesh.material, {\n          opacity: 1,\n          duration: 0.16,\n          ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n        });\n        tl.to(txt.traverse((o) => o.isMesh && o.material ? o.material : null), {\n          opacity: 1,\n          duration: 0.16,\n          ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n        }, 0);\n        tl.to(tileGroup.position, {\n          z: 0.05,\n          duration: 0.16,\n          ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n        }, 0);\n        timelines.push(tl);\n      };\n      const hoverLeave = () => {\n        const tl = import_gsap.gsap.timeline();\n        tl.to(mesh.material, {\n          opacity: 0,\n          duration: 0.16,\n          ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n        });\n        tl.to(txt.traverse((o) => o.isMesh && o.material ? o.material : null), {\n          opacity: 0.78,\n          duration: 0.16,\n          ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n        }, 0);\n        tl.to(tileGroup.position, {\n          z: 0,\n          duration: 0.16,\n          ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n        }, 0);\n        timelines.push(tl);\n      };\n      root.userData.handlers = root.userData.handlers || {};\n      root.userData.handlers[`tile${idx}_hover`] = hoverEnter;\n      root.userData.handlers[`tile${idx}_leave`] = hoverLeave;\n      const entrance = import_gsap.gsap.fromTo(\n        tileGroup,\n        { y: tileGroup.position.y + 0.2 },\n        {\n          y: tileGroup.position.y,\n          duration: 0.5,\n          ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\",\n          delay: idx * 0.08,\n          onStart: () => {\n            mesh.material.opacity = 0;\n          },\n          onUpdate: () => {\n          },\n          onComplete: () => {\n            mesh.material.opacity = 1;\n          }\n        }\n      );\n      timelines.push(entrance);\n      root.add(tileGroup);\n      tileGroups.push(tileGroup);\n    }\n  }\n  root.userData.cleanup = () => {\n    timelines.forEach((tl) => {\n      if (tl && tl.kill) tl.kill();\n    });\n    tileGroups.forEach((tg) => {\n      tg.traverse((obj) => {\n        if (obj.isMesh) {\n          if (obj.geometry) obj.geometry.dispose();\n          if (obj.material) {\n            if (obj.material.map) obj.material.map.dispose();\n            obj.material.dispose();\n          }\n        }\n      });\n    });\n    if (tileMaterial) {\n      if (tileMaterial.map) tileMaterial.map.dispose();\n      tileMaterial.dispose();\n    }\n    if (tileGeom) tileGeom.dispose();\n  };\n  return root;\n}\n",
+  "transformError": null
+}

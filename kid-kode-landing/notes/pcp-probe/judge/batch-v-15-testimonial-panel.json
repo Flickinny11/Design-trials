@@ -1,0 +1,75 @@
+{
+  "label": "batch-v-15-testimonial-panel",
+  "judgedAt": "2026-07-10T23:55:25.906Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-15-testimonial-panel/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-15-testimonial-panel/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-15-testimonial-panel/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-15-testimonial-panel/F4.jpg"
+    },
+    {
+      "label": "F5",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-15-testimonial-panel/F5.jpg"
+    },
+    {
+      "label": "F6",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-15-testimonial-panel/F6.jpg"
+    },
+    {
+      "label": "F7",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-15-testimonial-panel/F7.jpg"
+    },
+    {
+      "label": "F8",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-15-testimonial-panel/F8.jpg"
+    }
+  ],
+  "mappingFile": "notes/pcp-probe/judge/blind/batch-v-15-testimonial-panel/mapping.json",
+  "costUsd": 0.821829,
+  "durationApiMs": 49732,
+  "wallMs": 52550,
+  "usage": {
+    "input_tokens": 3391,
+    "cache_creation_input_tokens": 26077,
+    "cache_read_input_tokens": 76406,
+    "output_tokens": 3718,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 26077,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 151,
+        "output_tokens": 2501,
+        "cache_read_input_tokens": 38203,
+        "cache_creation_input_tokens": 18679,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 18679
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 24, \"mustFix\": [ { \"defect\": \"OFF_PALETTE\", \"region\": \"upper-right quadrant (quote glyph is pale white, spec requires #ff2a38)\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"upper-right quadrant (glyph vastly oversized, bleeding off frame)\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center card (no quote text or attribution line)\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"whole frame (glyph seated top-right, spec says top-left with padding)\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"quote glyph (soft blur, no extrusion or key-light edge)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"left third of background field\" } ], \"notes\": \"Panel gradient and hairline hinted, but glyph is white, blurred, misplaced, gigantic; all typography absent. Far below bar.\" }, { \"frame\": \"F2\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"whole frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"whole frame (no panel, glyph, quote, or attribution)\" }, { \"defect\": \"ALL_BLACK_ELEMENT\", \"region\": \"background field\" } ], \"notes\": \"Near-empty black frame with one flat white square; nothing from the spec rendered.\" }, { \"frame\": \"F3\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"whole frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"whole frame (no panel, glyph, quote, or attribution)\" }, { \"defect\": \"ALL_BLACK_ELEMENT\", \"region\": \"background field\" } ], \"notes\": \"Identical near-void: flat white square on black, zero spec content, zero materiality.\" }, { \"frame\": \"F4\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"whole frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"whole frame (no panel, glyph, quote, or attribution)\" }, { \"defect\": \"ALL_BLACK_ELEMENT\", \"region\": \"background field\" } ], \"notes\": \"Near-void frame; flat white square only. No testimonial panel elements exist.\" }, { \"frame\": \"F5\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"whole frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"whole frame (no panel, glyph, quote, or attribution)\" }, { \"defect\": \"ALL_BLACK_ELEMENT\", \"region\": \"background field\" } ], \"notes\": \"Same broken output: black void plus unlit white square, no spec elements rendered.\" }, { \"frame\": \"F6\", \"score\": 14, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"whole frame (no panel surface, quote text, or attribution)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field (right two-thirds entirely empty black)\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"upper-left quadrant (isolated glyph-blob and stray red dash, no layout)\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"upper-left quadrant (red form reads as a vase, not a quotation mark)\" }, { \"defect\": \"ALL_BLACK_ELEMENT\", \"region\": \"background field\" } ], \"notes\": \"Only the red accent survived, shaded but malformed; panel and all typography missing, frame mostly void.\" }, { \"frame\": \"F7\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"whole frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"whole frame (no panel, glyph, quote, or attribution)\" }, { \"defect\": \"ALL_BLACK_ELEMENT\", \"region\": \"background field\" } ], \"notes\": \"Near-void duplicate: flat white square on black, no spec content or light response.\" }, { \"frame\": \"F8\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"whole frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"whole frame (no panel, glyph, quote, or attribution)\" }, { \"defect\": \"ALL_BLACK_ELEMENT\", \"region\": \"background field\" } ], \"notes\": \"Near-void duplicate: unlit white square on black void, nothing from the testimonial spec.\" } ] }"
+}

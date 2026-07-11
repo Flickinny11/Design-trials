@@ -1,0 +1,190 @@
+{
+  "id": "pcp-probe/old--gpt-oss-120b/v-09-editorial-oversized-type-r2",
+  "arm": "old",
+  "contestant": "gpt-oss-120b",
+  "caseId": "v-09-editorial-oversized-type",
+  "run": 2,
+  "node": {
+    "nodeId": "v-09-editorial-oversized-type",
+    "subtype": "oversized-type",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Editorial oversized type — A massive editorial headline with tight tracking discipline, a kicker line, and an accent underline rule.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "NOVA ATELIER / JOURNAL",
+            "role": "kicker",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "PRECISION IS",
+            "role": "hero",
+            "typography": {
+              "fontSize": 124,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "A HABIT.",
+            "role": "hero",
+            "typography": {
+              "fontSize": 124,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Notes from the bench: tolerances, tempering, and the case for slower watchmaking.",
+            "role": "body",
+            "typography": {
+              "fontSize": 26,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "ISSUE 12 / JULY 2026",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 1,
+              "hex": "#14141a"
+            }
+          ]
+        },
+        "typography": {
+          "hero": {
+            "family": "Lora",
+            "fontSize": 124,
+            "fontWeight": 600,
+            "letterSpacing": -0.015,
+            "lineHeight": 0.98
+          },
+          "kicker": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.4
+          },
+          "body": {
+            "family": "JetBrains Mono",
+            "fontSize": 26,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.55
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Full-bleed editorial plate 7 x 5.5 scene units at z=0 with a vertical engineered gradient #0b0b10 to #14141a plus 1.5 percent monochrome grain (no soft pastel blur). All type left-aligned at x=-3.1 on a strict 0.25-unit baseline grid: kicker at y=1.7 (JetBrains Mono 700, uppercase, tracking 0.12em); hero in two stacked lines at y=0.9 and y=0.25 (Lora 600, em height 0.62 units, tracking -0.015em, lineHeight 0.98); accent underline rule 2.2 x 0.05 units #ff2a38 at emissive 1.2 at y=-0.15; body paragraph max-width 4.5 units at y=-0.8; caption at y=-1.9. Print-depth trick: hero glyph planes duplicated 0.02 units behind at #16161d for a letterpress shadow edge. Entrance: rise-in per block top-to-bottom (y +0.4 to 0, opacity 0 to 1, 700ms, cubic-bezier(0.215,0.61,0.355,1)) with 80ms stagger; the rule draws scaleX 0 to 1 over 500ms cubic-bezier(0.25,0.46,0.45,0.94) after the hero lands."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        6.2
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#3a3f4a",
+        "intensity": 0.55
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 0.8,
+        "position": [
+          1.5,
+          2.5,
+          4
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Type blocks rise in top-to-bottom with an 80ms stagger; the red rule draws left to right after the hero settles."
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap",
+      "@/primitives",
+      "@/text"
+    ],
+    "violations": []
+  },
+  "cjs": "var __create = Object.create;\nvar __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __getProtoOf = Object.getPrototypeOf;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(\n  // If the importer is in node compatibility mode or this is not an ESM\n  // file that has been converted to a CommonJS file using a Babel-\n  // compatible transform (i.e. \"__esModule\" has not been set), then set\n  // \"default\" to the CommonJS \"module.exports\" for node compatibility.\n  isNodeMode || !mod || !mod.__esModule ? __defProp(target, \"default\", { value: mod, enumerable: true }) : target,\n  mod\n));\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar THREE = __toESM(require(\"three/webgpu\"));\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nvar import_primitives = require(\"@/primitives\");\nvar import_text = require(\"@/text\");\nfunction createNode(config, ctx) {\n  const root = new THREE.Group();\n  root.position.set(0, 0, 0);\n  root.rotation.set(0, 0, 0);\n  root.scale.set(1, 1, 1);\n  const disposables = [];\n  const bgGeom = new THREE.PlaneGeometry(7, 5.5);\n  const bgMat = new import_tsl.MeshBasicNodeMaterial({\n    colorNode: (0, import_tsl.mix)(\n      (0, import_tsl.color)(\"#0b0b10\"),\n      // top\n      (0, import_tsl.color)(\"#14141a\"),\n      // bottom\n      (0, import_tsl.uv)().y\n    ),\n    transparent: false,\n    side: THREE.DoubleSide\n  });\n  const bgMesh = new THREE.Mesh(bgGeom, bgMat);\n  bgMesh.position.set(0, 0, -0.1);\n  root.add(bgMesh);\n  disposables.push(bgGeom, bgMat, bgMesh);\n  const colors = {\n    ink: new THREE.Color(\"#16161d\"),\n    paper: new THREE.Color(\"#e8ecf2\"),\n    accent: new THREE.Color(\"#ff2a38\")\n  };\n  const leftX = -3.1;\n  const baseline = 0.25;\n  const kickerOpts = {\n    fontFamily: \"JetBrains Mono\",\n    fontWeight: 700,\n    fontSize: 18,\n    letterSpacing: 0.12,\n    lineHeight: 1.4,\n    color: colors.ink,\n    align: \"left\",\n    uppercase: true\n  };\n  const kicker = (0, import_text.createTextMesh)(\"NOVA ATELIER / JOURNAL\", kickerOpts);\n  kicker.position.set(leftX, 1.7, 0);\n  kicker.material.transparent = true;\n  kicker.material.opacity = 0;\n  root.add(kicker);\n  disposables.push(kicker);\n  const heroOpts = {\n    fontFamily: \"Lora\",\n    fontWeight: 600,\n    fontSize: 124,\n    letterSpacing: -0.015,\n    lineHeight: 0.98,\n    color: colors.ink,\n    align: \"left\",\n    uppercase: false\n  };\n  const heroLine1 = (0, import_text.createTextMesh)(\"PRECISION IS\", heroOpts);\n  heroLine1.position.set(leftX, 0.9, 0);\n  heroLine1.material.transparent = true;\n  heroLine1.material.opacity = 0;\n  root.add(heroLine1);\n  disposables.push(heroLine1);\n  const heroLine1Shadow = heroLine1.clone();\n  heroLine1Shadow.position.z -= 0.02;\n  heroLine1Shadow.material = heroLine1Shadow.material.clone();\n  heroLine1Shadow.material.color = colors.ink;\n  root.add(heroLine1Shadow);\n  disposables.push(heroLine1Shadow);\n  const heroLine2 = (0, import_text.createTextMesh)(\"A HABIT.\", heroOpts);\n  heroLine2.position.set(leftX, 0.25, 0);\n  heroLine2.material.transparent = true;\n  heroLine2.material.opacity = 0;\n  root.add(heroLine2);\n  disposables.push(heroLine2);\n  const heroLine2Shadow = heroLine2.clone();\n  heroLine2Shadow.position.z -= 0.02;\n  heroLine2Shadow.material = heroLine2Shadow.material.clone();\n  heroLine2Shadow.material.color = colors.ink;\n  root.add(heroLine2Shadow);\n  disposables.push(heroLine2Shadow);\n  const bodyOpts = {\n    fontFamily: \"JetBrains Mono\",\n    fontWeight: 400,\n    fontSize: 26,\n    letterSpacing: 0,\n    lineHeight: 1.55,\n    color: colors.ink,\n    align: \"left\",\n    maxWidth: 4.5,\n    uppercase: false\n  };\n  const bodyText = \"Notes from the bench: tolerances, tempering, and the case for slower watchmaking.\";\n  const body = (0, import_text.createTextMesh)(bodyText, bodyOpts);\n  body.position.set(leftX, -0.8, 0);\n  body.material.transparent = true;\n  body.material.opacity = 0;\n  root.add(body);\n  disposables.push(body);\n  const captionOpts = {\n    fontFamily: \"JetBrains Mono\",\n    fontWeight: 400,\n    fontSize: 18,\n    letterSpacing: 0.08,\n    lineHeight: 1.4,\n    color: colors.ink,\n    align: \"left\",\n    uppercase: true\n  };\n  const caption = (0, import_text.createTextMesh)(\"ISSUE 12 / JULY 2026\", captionOpts);\n  caption.position.set(leftX, -1.9, 0);\n  caption.material.transparent = true;\n  caption.material.opacity = 0;\n  root.add(caption);\n  disposables.push(caption);\n  const ruleGeom = new THREE.PlaneGeometry(2.2, 0.05);\n  const ruleMat = new import_tsl.MeshBasicNodeMaterial({\n    colorNode: (0, import_tsl.color)(\"#ff2a38\"),\n    emissiveNode: (0, import_tsl.color)(\"#ff2a38\").mul(1.2),\n    transparent: true\n  });\n  const rule = new THREE.Mesh(ruleGeom, ruleMat);\n  rule.position.set(leftX + 1.1, -0.15, 0.01);\n  rule.scale.set(0, 1, 1);\n  root.add(rule);\n  disposables.push(ruleGeom, ruleMat, rule);\n  const timeline = import_gsap.gsap.timeline({ defaults: { ease: \"cubic-bezier(0.215,0.61,0.355,1)\" } });\n  const blocks = [\n    { obj: kicker, targetY: kicker.position.y },\n    { obj: heroLine1, targetY: heroLine1.position.y },\n    { obj: heroLine2, targetY: heroLine2.position.y },\n    { obj: body, targetY: body.position.y },\n    { obj: caption, targetY: caption.position.y }\n  ];\n  blocks.forEach((b, i) => {\n    b.obj.position.y = b.targetY + 0.4;\n    timeline.to(\n      b.obj.position,\n      {\n        y: b.targetY,\n        duration: 0.7\n      },\n      i * 0.08\n    ).to(\n      b.obj.material,\n      {\n        opacity: 1,\n        duration: 0.7\n      },\n      i * 0.08\n    );\n  });\n  const hero2EndTime = 0.08 * 2 + 0.7;\n  timeline.add(\n    () => {\n      import_gsap.gsap.to(rule.scale, {\n        x: 1,\n        duration: 0.5,\n        ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n      });\n    },\n    hero2EndTime\n  );\n  timeline.play();\n  root.userData.handlers = {};\n  root.userData.cleanup = () => {\n    timeline.kill();\n    disposables.forEach((d) => {\n      if (d && d.dispose) d.dispose();\n      if (d && d.geometry) d.geometry.dispose();\n      if (d && d.material) d.material.dispose();\n    });\n  };\n  return root;\n}\n",
+  "transformError": null
+}

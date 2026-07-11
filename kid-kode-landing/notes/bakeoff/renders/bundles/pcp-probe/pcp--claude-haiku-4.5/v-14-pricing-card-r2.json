@@ -1,0 +1,239 @@
+{
+  "id": "pcp-probe/pcp--claude-haiku-4.5/v-14-pricing-card-r2",
+  "arm": "pcp",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-14-pricing-card",
+  "run": 2,
+  "node": {
+    "nodeId": "v-14-pricing-card",
+    "subtype": "pricing-card",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Premium pricing card — A single flagship pricing card: tier name, price figure, feature list rhythm, one accent CTA row.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "ATELIER RESERVE",
+            "role": "tier-name",
+            "typography": {
+              "fontSize": 20,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "$480",
+            "role": "price",
+            "typography": {
+              "fontSize": 62,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "PER MONTH, BILLED ANNUALLY",
+            "role": "caption",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Quarterly movement service",
+            "role": "feature",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Priority commission slots",
+            "role": "feature",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Private fitting lounge access",
+            "role": "feature",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Lifetime case refinishing",
+            "role": "feature",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "JOIN THE RESERVE",
+            "role": "cta-label",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#16161d",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#ff4450"
+            },
+            {
+              "at": 1,
+              "hex": "#c1121f"
+            }
+          ]
+        },
+        "typography": {
+          "tier-name": {
+            "family": "JetBrains Mono",
+            "fontSize": 20,
+            "fontWeight": 700,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.2
+          },
+          "price": {
+            "family": "Lora",
+            "fontSize": 62,
+            "fontWeight": 600,
+            "letterSpacing": -0.01,
+            "lineHeight": 1
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 400,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.4
+          },
+          "feature": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.5
+          },
+          "cta-label": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 700,
+            "letterSpacing": 0.08,
+            "lineHeight": 1
+          }
+        },
+        "effects": "Card plane 2.4w x 3.2h scene units, corner radius 0.06, albedo #16161d over background #0b0b10 with a 0.006-unit hairline border #2a2a33; machined header strip 2.4w x 0.08h across the top edge with brushed anisotropy 0.6, roughness 0.55, metalness 0.5, clearcoat 0.2; interior padding 0.5 (2x base unit); vertical rhythm top-down: tier name, price figure with per-month caption on its baseline, 0.5-unit gap, then four feature rows each 0.375h (1.5x base) separated by 0.006-unit hairlines #23232b; CTA row 1.4w x 0.36h anchored 0.5 units above the bottom edge, engineered vertical gradient #ff4450 (at 0.0) -> #c1121f (at 1.0), ink label, perimeter emissive #ff2a38 at intensity 1.5; card mount weighted-settle scale 1.04 -> 1.0 over 900ms cubic-bezier(0.165,0.84,0.44,1); feature rows stagger fade-up opacity 0 -> 1 and y +0.2 -> 0 over 500ms cubic-bezier(0.25,0.46,0.45,0.94) at 80ms stagger; CTA press scale 1.0 -> 0.97 over 120ms cubic-bezier(0.175,0.885,0.32,1.275); the upper-left key light drags a specular band across the header strip during the settle so the card reads machined, not printed."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        4.4
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 45
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.35
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1.15,
+        "position": [
+          -2.5,
+          3,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.6,
+        "position": [
+          1.8,
+          -1.2,
+          -1
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#8a93a3",
+        "intensity": 0.3,
+        "position": [
+          3,
+          0.5,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Card settles with 1.04 overshoot, feature rows cascade in at 80ms stagger, CTA compresses on press.",
+    "contrastMinimum": "4.5:1 features and price on surface; 4.8:1 ink CTA label on accent"
+  },
+  "parsed": true,
+  "fenced": true,
+  "depGate": {
+    "sources": [
+      "gsap",
+      "three/tsl"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_gsap = require(\"gsap\");\nvar import_tsl = require(\"three/tsl\");\nfunction createNode(config, ctx) {\n  const { THREE } = ctx;\n  const { Group, Mesh, PlaneGeometry, Color } = THREE;\n  const CARD_W = 2.4;\n  const CARD_H = 3.2;\n  const PADDING = 0.5;\n  const HEADER_H = 0.08;\n  const FEATURE_H = 0.375;\n  const FEATURE_SEP = 6e-3;\n  const CTA_W = 1.4;\n  const CTA_H = 0.36;\n  const CTA_BOTTOM = 0.5;\n  const colors = {\n    background: new Color(\"#0b0b10\"),\n    surface: new Color(\"#16161d\"),\n    border: new Color(\"#2a2a33\"),\n    separator: new Color(\"#23232b\"),\n    accent: new Color(\"#ff2a38\"),\n    gradTop: new Color(\"#ff4450\"),\n    gradBot: new Color(\"#c1121f\"),\n    ink: new Color(\"#16161d\"),\n    paper: new Color(\"#e8ecf2\")\n  };\n  const timelines = [];\n  const toDispose = [];\n  const textMeshes = [];\n  const root = new Group();\n  {\n    const geom = new PlaneGeometry(7, 6);\n    const mat = new THREE.MeshBasicNodeMaterial();\n    const uvNode = (0, import_tsl.uv)();\n    mat.colorNode = (0, import_tsl.mix)(\n      (0, import_tsl.uniform)(colors.gradBot),\n      (0, import_tsl.uniform)(colors.gradTop),\n      uvNode.y\n    );\n    const mesh = new Mesh(geom, mat);\n    mesh.position.z = -2.5;\n    root.add(mesh);\n    toDispose.push(geom, mat);\n  }\n  const cardGroup = new Group();\n  root.add(cardGroup);\n  {\n    const geom = new PlaneGeometry(CARD_W, CARD_H);\n    const mat = new THREE.MeshStandardNodeMaterial({\n      color: colors.surface,\n      roughness: 0.5,\n      metalness: 0\n    });\n    const mesh = new Mesh(geom, mat);\n    cardGroup.add(mesh);\n    toDispose.push(geom, mat);\n  }\n  {\n    const geom = new PlaneGeometry(CARD_W + 0.012, CARD_H + 0.012);\n    const mat = new THREE.MeshBasicNodeMaterial({ color: colors.border });\n    const mesh = new Mesh(geom, mat);\n    mesh.position.z = -1e-3;\n    cardGroup.add(mesh);\n    toDispose.push(geom, mat);\n  }\n  {\n    const geom = new PlaneGeometry(CARD_W, HEADER_H);\n    const mat = new THREE.MeshStandardNodeMaterial({\n      color: colors.surface,\n      roughness: 0.55,\n      metalness: 0.5,\n      clearcoat: 0.2\n    });\n    mat.anisotropy = 0.6;\n    const mesh = new Mesh(geom, mat);\n    mesh.position.y = CARD_H / 2 - HEADER_H / 2;\n    mesh.position.z = 1e-3;\n    cardGroup.add(mesh);\n    toDispose.push(geom, mat);\n  }\n  {\n    const text = ctx.fontAtlas.createText(\"ATELIER RESERVE\", {\n      fontSize: 20,\n      color: colors.paper,\n      align: \"left\"\n    });\n    text.position.set(-CARD_W / 2 + PADDING, CARD_H / 2 - HEADER_H - 0.2, 2e-3);\n    cardGroup.add(text);\n    textMeshes.push(text);\n  }\n  {\n    const text = ctx.fontAtlas.createText(\"$480\", {\n      fontSize: 62,\n      color: colors.paper,\n      align: \"left\"\n    });\n    text.position.set(-CARD_W / 2 + PADDING, CARD_H / 2 - HEADER_H - 0.52, 2e-3);\n    cardGroup.add(text);\n    textMeshes.push(text);\n  }\n  {\n    const text = ctx.fontAtlas.createText(\"PER MONTH, BILLED ANNUALLY\", {\n      fontSize: 9,\n      color: colors.paper,\n      align: \"left\"\n    });\n    text.position.set(-CARD_W / 2 + PADDING, CARD_H / 2 - HEADER_H - 0.68, 2e-3);\n    cardGroup.add(text);\n    textMeshes.push(text);\n  }\n  const features = [\n    \"Quarterly movement service\",\n    \"Priority commission slots\",\n    \"Private fitting lounge access\",\n    \"Lifetime case refinishing\"\n  ];\n  const featureTexts = [];\n  const featureStartY = CARD_H / 2 - HEADER_H - 1.3;\n  for (let i = 0; i < features.length; i++) {\n    const featureY = featureStartY - i * (FEATURE_H + FEATURE_SEP);\n    const text = ctx.fontAtlas.createText(features[i], {\n      fontSize: 13,\n      color: colors.paper,\n      align: \"left\"\n    });\n    text.position.set(-CARD_W / 2 + PADDING, featureY, 2e-3);\n    cardGroup.add(text);\n    featureTexts.push({ mesh: text, initialY: featureY });\n    textMeshes.push(text);\n    if (i < features.length - 1) {\n      const geom = new PlaneGeometry(CARD_W - 2 * PADDING, FEATURE_SEP);\n      const mat = new THREE.MeshBasicNodeMaterial({ color: colors.separator });\n      const sep = new Mesh(geom, mat);\n      sep.position.y = featureY - FEATURE_H / 2;\n      sep.position.z = 1e-3;\n      cardGroup.add(sep);\n      toDispose.push(geom, mat);\n    }\n  }\n  const ctaGroup = new Group();\n  cardGroup.add(ctaGroup);\n  const ctaY = -CARD_H / 2 + CTA_BOTTOM + CTA_H / 2;\n  ctaGroup.position.y = ctaY;\n  {\n    const geom = new PlaneGeometry(CTA_W, CTA_H);\n    const mat = new THREE.MeshStandardNodeMaterial({\n      emissive: colors.accent,\n      emissiveIntensity: 1.5,\n      roughness: 0.5,\n      metalness: 0\n    });\n    const uvNode = (0, import_tsl.uv)();\n    mat.colorNode = (0, import_tsl.mix)(\n      (0, import_tsl.uniform)(colors.gradBot),\n      (0, import_tsl.uniform)(colors.gradTop),\n      uvNode.y\n    );\n    const mesh = new Mesh(geom, mat);\n    mesh.position.z = 1e-3;\n    ctaGroup.add(mesh);\n    toDispose.push(geom, mat);\n  }\n  {\n    const text = ctx.fontAtlas.createText(\"JOIN THE RESERVE\", {\n      fontSize: 13,\n      color: colors.ink,\n      align: \"center\"\n    });\n    text.position.z = 2e-3;\n    ctaGroup.add(text);\n    textMeshes.push(text);\n  }\n  {\n    const light = new THREE.DirectionalLight(16777215, 1.2);\n    light.position.set(2, 2, 2);\n    root.add(light);\n  }\n  {\n    const light = new THREE.DirectionalLight(colors.accent, 0.8);\n    light.position.set(-2, -1, 1);\n    root.add(light);\n  }\n  cardGroup.scale.set(1.04, 1.04, 1.04);\n  const settleTl = import_gsap.gsap.timeline();\n  timelines.push(settleTl);\n  settleTl.to(cardGroup.scale, {\n    x: 1,\n    y: 1,\n    z: 1,\n    duration: 0.9,\n    ease: \"cubic-bezier(0.165, 0.84, 0.44, 1)\"\n  });\n  const staggerTl = import_gsap.gsap.timeline({ delay: 0.1 });\n  timelines.push(staggerTl);\n  for (let i = 0; i < featureTexts.length; i++) {\n    const { mesh, initialY } = featureTexts[i];\n    const startY = initialY + 0.2;\n    mesh.position.y = startY;\n    staggerTl.to(\n      mesh.position,\n      {\n        y: initialY,\n        duration: 0.5,\n        ease: \"cubic-bezier(0.25, 0.46, 0.45, 0.94)\"\n      },\n      i * 0.08\n    );\n  }\n  ctaGroup.userData.handlers = ctaGroup.userData.handlers || {};\n  ctaGroup.userData.handlers.click = () => {\n    const pressTl = import_gsap.gsap.timeline();\n    timelines.push(pressTl);\n    pressTl.to(ctaGroup.scale, {\n      x: 0.97,\n      y: 0.97,\n      z: 0.97,\n      duration: 0.12,\n      ease: \"cubic-bezier(0.175, 0.885, 0.32, 1.275)\"\n    });\n    pressTl.to(\n      ctaGroup.scale,\n      {\n        x: 1,\n        y: 1,\n        z: 1,\n        duration: 0.15,\n        ease: \"power2.out\"\n      },\n      0.12\n    );\n    ctx.emit(\"navigate\", { to: \"hub-pricing\" });\n  };\n  root.userData.cleanup = () => {\n    timelines.forEach((tl) => tl.kill());\n    toDispose.forEach((res) => {\n      if (res && res.dispose) res.dispose();\n    });\n    textMeshes.forEach((text) => {\n      if (text.material && text.material.dispose) text.material.dispose();\n      if (text.geometry && text.geometry.dispose) text.geometry.dispose();\n    });\n  };\n  return root;\n}\n",
+  "transformError": null
+}

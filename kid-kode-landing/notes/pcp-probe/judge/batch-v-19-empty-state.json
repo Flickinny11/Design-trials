@@ -1,0 +1,75 @@
+{
+  "label": "batch-v-19-empty-state",
+  "judgedAt": "2026-07-10T23:58:47.356Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-19-empty-state/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-19-empty-state/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-19-empty-state/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-19-empty-state/F4.jpg"
+    },
+    {
+      "label": "F5",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-19-empty-state/F5.jpg"
+    },
+    {
+      "label": "F6",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-19-empty-state/F6.jpg"
+    },
+    {
+      "label": "F7",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-19-empty-state/F7.jpg"
+    },
+    {
+      "label": "F8",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-19-empty-state/F8.jpg"
+    }
+  ],
+  "mappingFile": "notes/pcp-probe/judge/blind/batch-v-19-empty-state/mapping.json",
+  "costUsd": 0.8368140000000001,
+  "durationApiMs": 50645,
+  "wallMs": 53557,
+  "usage": {
+    "input_tokens": 3391,
+    "cache_creation_input_tokens": 26058,
+    "cache_read_input_tokens": 76406,
+    "output_tokens": 4026,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 26058,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 151,
+        "output_tokens": 2844,
+        "cache_read_input_tokens": 38203,
+        "cache_creation_input_tokens": 18652,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 18652
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":38,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center-right (no guidance copy or button label anywhere)\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center-left ghost card (no ghost dial inside wireframe)\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper-right corner (huge stray white blob intruding)\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"left edge (unexplained gray band crossing panel)\"}],\"notes\":\"Grid, gradient, ghost outline and red accent exist, but zero text and stray white/gray intrusions wreck it.\"},{\"frame\":\"F2\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame (no panel, grid, copy, ghost, or accent)\"}],\"notes\":\"Near-empty black field with one flat white square; nothing from spec rendered.\"},{\"frame\":\"F3\",\"score\":52,\"mustFix\":[{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper-right (headline and subcopy clipped at frame edge)\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"center button (label overflows button bounds, leading letter cut)\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"background grid (faint green gridlines outside red/black/white)\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center button (flat fill, no physical light response)\"}],\"notes\":\"All spec elements present—copy, ghost card with dial, grid, accent CTA—but clipping, overflow, and flat button undercut it.\"},{\"frame\":\"F4\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame (no panel, grid, copy, ghost, or accent)\"}],\"notes\":\"Near-empty black field with one flat white square; nothing from spec rendered.\"},{\"frame\":\"F5\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame (no panel, grid, copy, ghost, or accent)\"}],\"notes\":\"Identical void frame: black field, centered flat white square, no spec content.\"},{\"frame\":\"F6\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame (no panel, grid, copy, ghost, or accent)\"}],\"notes\":\"Identical void frame: black field, centered flat white square, no spec content.\"},{\"frame\":\"F7\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame (no panel, grid, copy, ghost, or accent)\"}],\"notes\":\"Identical void frame: black field, centered flat white square, no spec content.\"},{\"frame\":\"F8\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame (no panel, grid, copy, ghost, or accent)\"}],\"notes\":\"Identical void frame: black field, centered flat white square, no spec content.\"}]}"
+}

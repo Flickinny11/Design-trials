@@ -1,0 +1,20 @@
+{
+  "bundle": "pcp-probe/old--claude-haiku-4.5/v-11-gradient-cta-r1",
+  "arm": "old",
+  "contestant": "claude-haiku-4.5",
+  "capturedAt": "2026-07-10T23:44:30.142Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "pcp-probe/old--claude-haiku-4.5/v-11-gradient-cta-r1",
+    "moduleRuntimeError": "TypeError: ctx.fontAtlas.createTextMesh is not a function"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

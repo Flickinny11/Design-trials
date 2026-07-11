@@ -63,19 +63,70 @@ L1 v2 lands at **~2.0K provider tokens — 17% of the ≤12K target**; nothing w
 
 ### Delta tables (recomputed from committed artifacts by `scripts/pcp/probe-metrics.mjs`)
 
-<!-- WPCP-DELTA-TABLES -->
+All 160 generations completed with **zero transport errors** and all 160 bundles were renderable (no unrenderable artifacts — the Fireworks 12288 budget removed the truncation failure mode entirely). Old-arm haiku replicates W-BAKE's measured 80% crash rate exactly — a strong validity signal for the harness.
+
+**Per-lane metrics** (n=40 renders each; design 0–100 vs the frozen visualSpecs, blind Fable-5):
+
+| Lane | Design mean ± sd | Runtime-crash rate | MUST-FIX rate | Mean MUST-FIX/render | Top defects |
+|---|---|---|---|---|---|
+| old / claude-haiku-4.5 | 10.6 ± 10.1 | **80.0%** (32/40) | 100% | 4.5 | MISSING_SPEC 38, FLAT_VOID 33, RUNTIME_ERROR 32, BLANK 25 |
+| **pcp / claude-haiku-4.5** | **15.9 ± 13.2** | **30.0%** (12/40) | 100% | 4.5 | MISSING_SPEC 38, FLAT_VOID 30, BROKEN_COMP 27, DEAD_LIGHTING 21 |
+| old / gpt-oss-120b | 7.3 ± 4.0 | **100%** (40/40) | 100% | 4.5 | RUNTIME_ERROR 40, MISSING_SPEC 36, FLAT_VOID 34, BLANK 32 |
+| **pcp / gpt-oss-120b** | **9.3 ± 7.8** | **85.0%** (34/40) | 100% | 4.7 | MISSING_SPEC 37, FLAT_VOID 35, RUNTIME_ERROR 34, BLANK 28 |
+
+**Deltas (pcp − old):**
+
+| Model | Design mean | Crash rate | MUST-FIX rate | 3D subset mean | 2D subset mean |
+|---|---|---|---|---|---|
+| claude-haiku-4.5 | **+5.3** (10.6→15.9, +50% rel.) | **−50 pts** (80%→30%) | 0 (100%→100%) | 14.8→19.0 | 7.9→**13.8** (+75% rel.) |
+| gpt-oss-120b | **+2.0** (7.3→9.3) | **−15 pts** (100%→85%) | 0 | 9.8→13.7 | 5.6→6.4 |
+
+**Reading it honestly:**
+- **The crash-cluster kill is real and total where it was aimed.** The W-BAKE §6 cluster (~57% of crashes = ctx API-surface guesses) is **eliminated in the PCP arm for both models**: wrong loader spellings 11→0, `createTextMesh` hallucinations 25→0 across both models (scan table below). Haiku's crash rate drops 80%→30% — survival past `createNode` went from 8 renders to 28.
+- **Design moves but does not one-shot.** MUST-FIX stays 100% (as it did for every W-BAKE contestant, including sonnet). The gain is composition-shaped: PCP frames build stages, plinths, contact shadows, and depth planes where old frames were tiny-subject-in-void; haiku's 2D-layout subset jumps 75% relative. **5 of the probe's 6 best renders are PCP-arm.** New failure modes surfaced by survival: exposure control (blown-white key lights), BROKEN_COMPOSITION from more ambitious scenes — the doctrine's next iteration targets.
+- **gpt-oss is instruction-limited, not information-limited.** Its PCP arm uses every documented call correctly (39/40 `createText`, 0 hallucinations) yet still crashes 85%: the residual clusters are gsap default-import interop under the lab shim (14) and NodeMaterial-import confusion the L1 explicitly warns against (12) — it reads the surface but ignores the import discipline. The PCP lifts what instruction can lift; the OD11 vision micro-loop + repair remains load-bearing for this model class (consistent with W-BAKE's conclusion).
+- Old-arm gpt-oss crashed 40/40 here vs W-BAKE's 71%: W-BAKE's Groq lane truncated 8/35 generations into unrenderable artifacts (scored ≤4 without executing) and its 9 unrenderables never reached `createNode`; on Fireworks@12288 every module parses, executes, and crashes honestly. Same model, instrument with fewer masks.
+- Survivor-quality cut: haiku non-crashed renders average 22.0 (n=8, old) vs 20.2 (n=28, pcp) — per-survivor quality held while the survivor pool tripled; the mean gain is real capability recovered, not judge drift.
 
 ### API-surface usage scan (deterministic grep over raw generations, `notes/pcp-probe/api-usage.json`)
 
-<!-- WPCP-API-SCAN -->
+| Marker (of 40 gens/lane) | old/haiku | pcp/haiku | old/gpt-oss | pcp/gpt-oss |
+|---|---|---|---|---|
+| `ctx.textureLoader.loadTexture(` (real) | 0 | **7** | 0 | **7** |
+| `ctx.textureLoader.load(` (crash) | 8 | **0** | 5 | **0** |
+| `ctx.glbLoader.loadGLB(` (real) | 0 | **3** | 0 | **4** |
+| `ctx.glbLoader.load(` (crash) | 3 | **0** | 0 | **0** |
+| `ctx.fontAtlas.createText(` (real) | 15 | **36** | 10 | **39** |
+| `createTextMesh` (hallucination) | 9 | **0** | 16 | **0** |
+| `config.textContent` (data-driven copy) | 4 | 4 | 13 | **25** |
+
+Every crash-cluster spelling goes to ZERO in the PCP arm, for both models. Runtime-crash clusters (from per-frame `moduleRuntimeError`, deterministic): old-arm = the W-BAKE taxonomy verbatim (`.load is not a function` ×15, `createTextMesh is not a function` ×5, `fontAtlas.render` guesses, TSL-import confusion ×12); pcp-arm residuals = gsap default-import interop under the lab CJS shim (20 across models — see anomaly 3), NodeMaterials reached via `ctx.THREE`/`three/tsl` against the explicit L1 warning (15, dominated by gpt-oss), config-shape edge guesses (rest).
 
 ## 6. Cost ledger
 
-<!-- WPCP-LEDGER -->
+Per-call ledgers committed under `notes/pcp-probe/` (per-lane files — concurrent lanes would clobber one file; merged by `probe-metrics.mjs`). HARD CAP $30 enforced in-process: generation lanes at $7.50/lane; the judge enforces the MERGED total with a $0.50 stop margin.
+
+| Ledger | USD | Billing |
+|---|---|---|
+| old / claude-haiku-4.5 (40 gens) | $3.57 | subscription-equivalent (CLI `total_cost_usd`) |
+| pcp / claude-haiku-4.5 (40 gens) | $4.31 | subscription-equivalent |
+| old / gpt-oss-120b (40 gens) | $0.13 | metered (Fireworks, published rates) |
+| pcp / gpt-oss-120b (40 gens) | $0.13 | metered |
+| Fable-5 judge (21 batches: 20 blind + the archived full-res v-01 smoke at $1.57) | $15.92 | subscription-equivalent |
+| **Total** | **$24.06** | **of the $30 hard cap — never breached** |
+
+D2 exemplar and doc authoring used zero metered spend (all sources committed). The only other wave cost is the D5 token ground truth, which rode the probe's own generation calls.
 
 ## 7. Honest anomalies
 
-<!-- WPCP-ANOMALIES -->
+1. **gpt-oss route ≠ the wave prompt's "(Groq)".** Disclosed in §5: Fireworks un-suspended by probe time (probe records committed for BOTH routes); running both arms on Fireworks@12288 removed the truncation/TPD confounds Groq imposed on W-BAKE. Both arms identical transport → I-P3 intact.
+2. **The v-01 full-res judge smoke batch ($1.57) was archived and the case re-judged** under the uniform 800px-JPEG blind discipline, so all 20 cases are scored under identical pixels. The archived transcript (`judge/batch-v-01-…-fullres-archived.json`) stays in evidence; its spend stays in the ledger.
+3. **gsap default-import interop is a lab-harness limitation, surfaced by survival.** `import gsap from 'gsap'` compiles (esbuild CJS) to a `.default` read that is undefined under the lab's require-shim (the shim serves the gsap object; the named form `import { gsap } from 'gsap'` works). This crash cluster (20 pcp-arm renders across models) exists in BOTH arms' harness — old-arm modules mostly died earlier on API-name errors, so it surfaces in the arm that survives past them. Production's native-import path has different interop; the honest statements are (a) arm-vs-arm comparison is unaffected (same shim), (b) the measured PCP crash reduction is therefore a LOWER bound (some pcp "crashes" are harness interop, not model error), (c) the L1's next iteration should pin the named import form — recorded in §9, deliberately NOT patched post-probe so the committed L1 v2 bytes remain exactly what the probe measured.
+4. **`ctx.THREE` NodeMaterial reads.** The L1 v2 example (`const { Group, Mesh } = ctx.THREE`) was extrapolated by models to NodeMaterials, which live in `three/webgpu`, not the plain `three` namespace `ctx.THREE` exposes — 15 pcp-arm crashes. Same §9 next-iteration note; same no-post-probe-patch discipline.
+5. **Haiku lanes were restarted once at higher concurrency** (3→5) ~25 minutes in, purely a wall-clock decision; records are skip-if-exists so no generation was redone or lost, and per-gen transport settings were unchanged. The killed processes' in-flight calls were regenerated.
+6. **Claude-lane prompt-token ground truth is not observable via the CLI** (`usage.input_tokens` reports ~10 non-cached tokens; the real prompt rides cache-creation fields). The provider-tokenizer ground truth in §4 therefore comes from the Fireworks lanes; Claude-lane costs are per-call `total_cost_usd`, authoritative.
+7. **Amendment A is still DRAFT** — the registry skeleton + guides were seeded under explicit wave-prompt authorization; the L2 skill-index section defaults OFF so the ratified five-class WORLD shape is unchanged (byte-proven by the corpus-reproduction test).
+8. **W-BAKE's judge blindness had a path leak** (contestant-named directories inside the judge's Read paths — visible in its committed transcripts). It did not invalidate W-BAKE's spec-anchored scoring, but this probe's arm comparison required real blinding, so the probe pre-copies frames to anonymous paths. Flagged here so W-BAKE-B inherits the fix.
 
 ## 8. Judge verdicts (verbatim)
 
@@ -83,4 +134,9 @@ L1 v2 lands at **~2.0K provider tokens — 17% of the ≤12K target**; nothing w
 
 ## 9. What W-BAKE-B inherits from this wave
 
-<!-- WPCP-INHERIT -->
+- **The instrument, aligned.** W-BAKE-B contestants generate under L1 v2 on the live compiler — the ~57% ctx-API crash cluster is no longer part of what the bakeoff measures, so axis-2 scores measure DESIGN, not API-spelling luck. The widened `MISSING_GLB_LOADER` verifier rule scores the real surface.
+- **A drift-proof surface.** Any runtime-surface change regenerates into L1 automatically (`extract-runtime-surface.mjs --check` in the test suite) — W-BAKE-B never re-litigates "what does ctx expose".
+- **Judge blinding.** The pre-blinded anonymous-path + uniform-JPEG discipline (probe-judge.mjs) replaces the path-leaking pattern for any future comparative judging.
+- **Two measured L1 v2.1 refinements, ready to land as the first W-BAKE-B commit** (kept out of this wave so the probed bytes stay canonical): pin `import { gsap } from 'gsap'` (named form), and mark `ctx.THREE` as NodeMaterial-free (import NodeMaterials from `'three/webgpu'`). Both are one-liners in `pcp-blocks.ts`/the generator templates; both carry committed crash evidence.
+- **The per-model reading for §6.2.** haiku-4.5 under PCP: 30% crash / 15.9 design mean — instruction-responsive, the moderate-tier pick strengthens. gpt-oss under PCP: correct API usage but 85% crash on import discipline — cheap-tier routing MUST assume the OD11 micro-loop + repair, and W-BAKE-B's simple-tier evaluation should weight repairability over first-pass polish.
+- **The skill registry seam.** When Amendment A ratifies, `buildSkillIndexBlock` drops into the L2 template's optional section and `hydrateSkillBodies` rides L3 — no new wiring needed.

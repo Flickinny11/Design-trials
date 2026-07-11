@@ -1,0 +1,19 @@
+{
+  "bundle": "pcp-probe/old--claude-haiku-4.5/v-15-testimonial-panel-r2",
+  "arm": "old",
+  "contestant": "claude-haiku-4.5",
+  "capturedAt": "2026-07-10T23:45:09.670Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 3,
+    "nodeMounted": true,
+    "bundleId": "pcp-probe/old--claude-haiku-4.5/v-15-testimonial-panel-r2"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

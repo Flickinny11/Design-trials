@@ -1,0 +1,58 @@
+[
+  {
+    "label": "F1",
+    "bundleId": "pcp-probe/old--claude-haiku-4.5/v-14-pricing-card-r1",
+    "arm": "old",
+    "contestant": "claude-haiku-4.5",
+    "source": "notes/pcp-probe/frames/old--claude-haiku-4.5/v-14-pricing-card-r1.png"
+  },
+  {
+    "label": "F2",
+    "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-14-pricing-card-r1",
+    "arm": "pcp",
+    "contestant": "gpt-oss-120b",
+    "source": "notes/pcp-probe/frames/pcp--gpt-oss-120b/v-14-pricing-card-r1.png"
+  },
+  {
+    "label": "F3",
+    "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-14-pricing-card-r2",
+    "arm": "pcp",
+    "contestant": "gpt-oss-120b",
+    "source": "notes/pcp-probe/frames/pcp--gpt-oss-120b/v-14-pricing-card-r2.png"
+  },
+  {
+    "label": "F4",
+    "bundleId": "pcp-probe/old--claude-haiku-4.5/v-14-pricing-card-r2",
+    "arm": "old",
+    "contestant": "claude-haiku-4.5",
+    "source": "notes/pcp-probe/frames/old--claude-haiku-4.5/v-14-pricing-card-r2.png"
+  },
+  {
+    "label": "F5",
+    "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-14-pricing-card-r2",
+    "arm": "pcp",
+    "contestant": "claude-haiku-4.5",
+    "source": "notes/pcp-probe/frames/pcp--claude-haiku-4.5/v-14-pricing-card-r2.png"
+  },
+  {
+    "label": "F6",
+    "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-14-pricing-card-r1",
+    "arm": "pcp",
+    "contestant": "claude-haiku-4.5",
+    "source": "notes/pcp-probe/frames/pcp--claude-haiku-4.5/v-14-pricing-card-r1.png"
+  },
+  {
+    "label": "F7",
+    "bundleId": "pcp-probe/old--gpt-oss-120b/v-14-pricing-card-r2",
+    "arm": "old",
+    "contestant": "gpt-oss-120b",
+    "source": "notes/pcp-probe/frames/old--gpt-oss-120b/v-14-pricing-card-r2.png"
+  },
+  {
+    "label": "F8",
+    "bundleId": "pcp-probe/old--gpt-oss-120b/v-14-pricing-card-r1",
+    "arm": "old",
+    "contestant": "gpt-oss-120b",
+    "source": "notes/pcp-probe/frames/old--gpt-oss-120b/v-14-pricing-card-r1.png"
+  }
+]

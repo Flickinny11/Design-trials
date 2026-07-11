@@ -1,0 +1,75 @@
+{
+  "label": "batch-v-06-loop-column-gallery",
+  "judgedAt": "2026-07-10T23:36:17.574Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-06-loop-column-gallery/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-06-loop-column-gallery/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-06-loop-column-gallery/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-06-loop-column-gallery/F4.jpg"
+    },
+    {
+      "label": "F5",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-06-loop-column-gallery/F5.jpg"
+    },
+    {
+      "label": "F6",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-06-loop-column-gallery/F6.jpg"
+    },
+    {
+      "label": "F7",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-06-loop-column-gallery/F7.jpg"
+    },
+    {
+      "label": "F8",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-06-loop-column-gallery/F8.jpg"
+    }
+  ],
+  "mappingFile": "notes/pcp-probe/judge/blind/batch-v-06-loop-column-gallery/mapping.json",
+  "costUsd": 0.828408,
+  "durationApiMs": 51009,
+  "wallMs": 53669,
+  "usage": {
+    "input_tokens": 3391,
+    "cache_creation_input_tokens": 26047,
+    "cache_read_input_tokens": 76406,
+    "output_tokens": 3864,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 26047,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 151,
+        "output_tokens": 2613,
+        "cache_read_input_tokens": 38203,
+        "cache_creation_input_tokens": 18681,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 18681
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 24, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"entire left half\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"column — only 2 of 6 plates, no red frame accent\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"plate textures upper-right\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"plates — glow-card placeholder instead of distinct photographs\" } ], \"notes\": \"Two beveled plates with real light falloff, but half the frame is void and textures are blue placeholder glows, not photos.\" }, { \"frame\": \"F2\", \"score\": 8, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame — near-empty black field\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — single tiny plate\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"column — 1 plate instead of 6, no red framing\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center plate\" } ], \"notes\": \"One tiny blue glowing square in a black void; spec column absent.\" }, { \"frame\": \"F3\", \"score\": 8, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame — near-empty black field\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — single tiny plate\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"column — 1 plate instead of 6, no red framing\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center plate\" } ], \"notes\": \"Identical near-empty render: tiny blue square centered, everything else void.\" }, { \"frame\": \"F4\", \"score\": 8, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame — near-empty black field\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — single tiny plate\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"column — 1 plate instead of 6, no red framing\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center plate\" } ], \"notes\": \"Same near-empty frame; no column, no photographs, no motion evidence.\" }, { \"frame\": \"F5\", \"score\": 8, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame — near-empty black field\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — single tiny plate\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"column — 1 plate instead of 6, no red framing\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center plate\" } ], \"notes\": \"Near-empty duplicate frame; single miniature blue plate in void.\" }, { \"frame\": \"F6\", \"score\": 8, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame — near-empty black field\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — single tiny plate\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"column — 1 plate instead of 6, no red framing\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center plate\" } ], \"notes\": \"Near-empty duplicate frame; loop column entirely unrealized.\" }, { \"frame\": \"F7\", \"score\": 14, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center plates — textures failed, pure white fills, no photographs or red framing\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"entire left half\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"upper-right quadrant — giant blurred white mass\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center plates — blown flat white, no material response\" }, { \"defect\": \"LOW_CONTRAST\", \"region\": \"plate interiors — zero detail\" } ], \"notes\": \"Plates render as blown white slabs against a void; textures missing, composition collapsed.\" }, { \"frame\": \"F8\", \"score\": 8, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame — near-empty black field\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — single tiny plate\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"column — 1 plate instead of 6, no red framing\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center plate\" } ], \"notes\": \"Same near-empty render as F2-F6; batch shows frozen single-plate state, not a cycling gallery.\" } ] }"
+}

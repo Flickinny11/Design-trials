@@ -1,0 +1,195 @@
+{
+  "id": "pcp-probe/pcp--claude-haiku-4.5/v-18-nav-dock-r2",
+  "arm": "pcp",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-18-nav-dock",
+  "run": 2,
+  "node": {
+    "nodeId": "v-18-nav-dock",
+    "subtype": "nav-dock",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Navigation dock — A floating navigation dock of five entries with active state, machined rail, and press-down affordance.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "HOME",
+            "role": "nav-active",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "FEATURES",
+            "role": "nav-item",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "COLLECTION",
+            "role": "nav-item",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "PRICING",
+            "role": "nav-item",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "JOURNAL",
+            "role": "nav-item",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#1b1b23"
+            },
+            {
+              "at": 1,
+              "hex": "#101015"
+            }
+          ]
+        },
+        "typography": {
+          "nav-active": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 700,
+            "letterSpacing": 0.08,
+            "lineHeight": 1
+          },
+          "nav-item": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1
+          }
+        },
+        "effects": "Floating rail 3.6w x 0.5h scene units, corner radius 0.1, brushed-metal PBR with vertical albedo ramp #1b1b23 (at 0.0) -> #101015 (at 1.0), anisotropy 0.6 along x, roughness 0.55, metalness 0.5, clearcoat 0.2, chamfered edge 0.02 catching a continuous specular line from the key light; rail floats translateZ +0.15 above a contact-shadow plane at 35 percent opacity, shadow offset 0.06 down; five entries laid out on centers 0.68 apart with 0.25-unit (1x base) horizontal padding inside each hit cell 0.6w x 0.34h; active entry Home in paper 700 with an underline bar 0.28w x 0.025h in #ff2a38 emissive intensity 1.8 seated 0.06 below its baseline; inactive entries #a6adba 400; hover inactive color #a6adba -> #e8ecf2 over 160ms cubic-bezier(0.25,0.46,0.45,0.94); press per entry scale 1.0 -> 0.97 over 120ms cubic-bezier(0.175,0.885,0.32,1.275) with the cell dipping translateZ -0.03 into the rail; on active change the underline bar translates x to the new entry over 260ms cubic-bezier(0.165,0.84,0.44,1) with a weighted 1.04 overshoot; mount rise-in y +0.4 -> 0 over 700ms cubic-bezier(0.215,0.61,0.355,1)."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0.05,
+        3
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 45
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.35
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1.15,
+        "position": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.5,
+        "position": [
+          -1.5,
+          -0.6,
+          -1
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#8a93a3",
+        "intensity": 0.3,
+        "position": [
+          -2.5,
+          1,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Rail rises in once; the red active underline slides between entries with a weighted overshoot; pressed entries compress and dip into the rail.",
+    "contrastMinimum": "4.5:1 inactive entries on rail; active underline 4.6:1 against rail"
+  },
+  "parsed": true,
+  "fenced": true,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __create = Object.create;\nvar __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __getProtoOf = Object.getPrototypeOf;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(\n  // If the importer is in node compatibility mode or this is not an ESM\n  // file that has been converted to a CommonJS file using a Babel-\n  // compatible transform (i.e. \"__esModule\" has not been set), then set\n  // \"default\" to the CommonJS \"module.exports\" for node compatibility.\n  isNodeMode || !mod || !mod.__esModule ? __defProp(target, \"default\", { value: mod, enumerable: true }) : target,\n  mod\n));\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = __toESM(require(\"gsap\"));\nfunction createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n  const group = new Group();\n  const timelines = [];\n  const colors = {\n    paper: \"#e8ecf2\",\n    accent: \"#ff2a38\",\n    gradientTop: \"#1b1b23\",\n    gradientBottom: \"#101015\",\n    inactive: \"#a6adba\"\n  };\n  const railWidth = 3.6;\n  const railHeight = 0.5;\n  const entryWidth = 0.6;\n  const entryHeight = 0.34;\n  const spacing = 0.68;\n  const numEntries = 5;\n  const railGeom = new PlaneGeometry(railWidth, railHeight);\n  const railMat = new import_webgpu.MeshStandardNodeMaterial();\n  const uvNode = (0, import_tsl.uv)();\n  railMat.colorNode = (0, import_tsl.mix)(\n    (0, import_tsl.color)(colors.gradientTop),\n    (0, import_tsl.color)(colors.gradientBottom),\n    uvNode.y\n  );\n  railMat.roughness = 0.55;\n  railMat.metalness = 0.5;\n  railMat.clearcoat = 0.2;\n  railMat.anisotropy = 0.6;\n  const railMesh = new Mesh(railGeom, railMat);\n  railMesh.position.z = 0.15;\n  group.add(railMesh);\n  const shadowGeom = new PlaneGeometry(railWidth + 0.4, railHeight * 0.5);\n  const shadowMat = new import_webgpu.MeshBasicNodeMaterial({\n    color: 0,\n    opacity: 0.35,\n    transparent: true\n  });\n  const shadowMesh = new Mesh(shadowGeom, shadowMat);\n  shadowMesh.position.set(0, -0.06, 0.12);\n  group.add(shadowMesh);\n  const entries = [\n    { label: \"HOME\", active: true, target: \"hub-home\" },\n    { label: \"FEATURES\", active: false, target: \"hub-features\" },\n    { label: \"COLLECTION\", active: false, target: \"hub-collection\" },\n    { label: \"PRICING\", active: false, target: \"hub-pricing\" },\n    { label: \"JOURNAL\", active: false, target: \"hub-journal\" }\n  ];\n  const entryMeshes = [];\n  const totalWidth = (numEntries - 1) * spacing;\n  const startX = -totalWidth / 2;\n  let activeEntryGroup = null;\n  entries.forEach((entry, idx) => {\n    const posX = startX + idx * spacing;\n    const entryGroup = new Group();\n    entryGroup.position.set(posX, 0, 0);\n    entryGroup.userData.target = entry.target;\n    entryGroup.userData.isActive = entry.active;\n    entryGroup.userData.index = idx;\n    const hitGeom = new PlaneGeometry(entryWidth, entryHeight);\n    const hitMat = new import_webgpu.MeshBasicNodeMaterial({ transparent: true, opacity: 0 });\n    const hitMesh = new Mesh(hitGeom, hitMat);\n    entryGroup.add(hitMesh);\n    entryGroup.userData.hitMesh = hitMesh;\n    const textColor = entry.active ? colors.paper : colors.inactive;\n    const textObj = ctx.fontAtlas.createText(entry.label, {\n      fontSize: 13,\n      color: textColor,\n      align: \"center\",\n      letterSpacingPx: 1.04\n    });\n    textObj.position.z = 0.05;\n    entryGroup.add(textObj);\n    entryGroup.userData.textObj = textObj;\n    if (entry.active) {\n      activeEntryGroup = entryGroup;\n    }\n    group.add(entryGroup);\n    entryMeshes.push(entryGroup);\n  });\n  const underlineGeom = new PlaneGeometry(0.28, 0.025);\n  const underlineMat = new import_webgpu.MeshBasicNodeMaterial({\n    color: colors.accent,\n    emissive: colors.accent,\n    emissiveIntensity: 1.8\n  });\n  const underlineMesh = new Mesh(underlineGeom, underlineMat);\n  underlineMesh.position.set(startX, -0.15, 0.06);\n  group.add(underlineMesh);\n  group.userData.underline = underlineMesh;\n  const getTextMaterial = (textObj) => {\n    if (textObj.material) return textObj.material;\n    if (textObj.children && textObj.children.length > 0) {\n      return textObj.children[0].material || null;\n    }\n    return null;\n  };\n  const hexToRgb = (hex) => {\n    const result = /^#?([a-f\\d]{2})([a-f\\d]{2})([a-f\\d]{2})$/i.exec(hex);\n    return result ? {\n      r: parseInt(result[1], 16) / 255,\n      g: parseInt(result[2], 16) / 255,\n      b: parseInt(result[3], 16) / 255\n    } : { r: 1, g: 1, b: 1 };\n  };\n  const inactiveRgb = hexToRgb(colors.inactive);\n  const activeRgb = { r: 1, g: 1, b: 1 };\n  group.userData.handlers = {\n    click: (event) => {\n      const targetMesh = event.object;\n      const targetGroup = entryMeshes.find((e) => e.userData.hitMesh === targetMesh);\n      if (!targetGroup) return;\n      if (activeEntryGroup !== targetGroup) {\n        if (activeEntryGroup) {\n          const oldMat = getTextMaterial(activeEntryGroup.userData.textObj);\n          if (oldMat && oldMat.color) {\n            import_gsap.default.to(oldMat.color, {\n              ...inactiveRgb,\n              duration: 0.26,\n              ease: \"back.out(1.04)\"\n            });\n          }\n          activeEntryGroup.userData.isActive = false;\n        }\n        const newMat = getTextMaterial(targetGroup.userData.textObj);\n        if (newMat && newMat.color) {\n          import_gsap.default.to(newMat.color, {\n            ...activeRgb,\n            duration: 0.26,\n            ease: \"back.out(1.04)\"\n          });\n        }\n        targetGroup.userData.isActive = true;\n        const underlineTl = import_gsap.default.timeline();\n        underlineTl.to(group.userData.underline.position, {\n          x: targetGroup.position.x,\n          duration: 0.26,\n          ease: \"back.out(1.04)\"\n        });\n        timelines.push(underlineTl);\n        ctx.emit(\"navigate\", { to: targetGroup.userData.target });\n        activeEntryGroup = targetGroup;\n      }\n      const pressTl = import_gsap.default.timeline();\n      pressTl.to(targetGroup.scale, {\n        x: 0.97,\n        y: 0.97,\n        duration: 0.12,\n        ease: \"back.out\"\n      }, 0);\n      pressTl.to(targetGroup.position, {\n        z: -0.03,\n        duration: 0.12,\n        ease: \"back.out\"\n      }, 0);\n      pressTl.to(targetGroup.scale, {\n        x: 1,\n        y: 1,\n        duration: 0.2,\n        ease: \"back.out\"\n      }, 0.12);\n      pressTl.to(targetGroup.position, {\n        z: 0,\n        duration: 0.2,\n        ease: \"back.out\"\n      }, 0.12);\n      timelines.push(pressTl);\n    },\n    mouseenter: (event) => {\n      const targetMesh = event.object;\n      const targetGroup = entryMeshes.find((e) => e.userData.hitMesh === targetMesh);\n      if (!targetGroup || targetGroup.userData.isActive) return;\n      const textMat = getTextMaterial(targetGroup.userData.textObj);\n      if (textMat && textMat.color) {\n        import_gsap.default.to(textMat.color, {\n          r: 1,\n          g: 1,\n          b: 1,\n          duration: 0.16\n        });\n      }\n    },\n    mouseleave: (event) => {\n      const targetMesh = event.object;\n      const targetGroup = entryMeshes.find((e) => e.userData.hitMesh === targetMesh);\n      if (!targetGroup || targetGroup.userData.isActive) return;\n      const textMat = getTextMaterial(targetGroup.userData.textObj);\n      if (textMat && textMat.color) {\n        import_gsap.default.to(textMat.color, {\n          ...inactiveRgb,\n          duration: 0.16\n        });\n      }\n    }\n  };\n  const mountTl = import_gsap.default.timeline();\n  group.position.y = 0.4;\n  mountTl.to(group.position, {\n    y: 0,\n    duration: 0.7,\n    ease: \"power3.out\"\n  });\n  timelines.push(mountTl);\n  group.userData.cleanup = () => {\n    timelines.forEach((tl) => tl.kill());\n    railGeom.dispose();\n    railMat.dispose();\n    shadowGeom.dispose();\n    shadowMat.dispose();\n    underlineGeom.dispose();\n    underlineMat.dispose();\n    entryMeshes.forEach((entry) => {\n      if (entry.userData.hitMesh) {\n        entry.userData.hitMesh.geometry.dispose();\n        entry.userData.hitMesh.material.dispose();\n      }\n    });\n  };\n  return group;\n}\n",
+  "transformError": null
+}

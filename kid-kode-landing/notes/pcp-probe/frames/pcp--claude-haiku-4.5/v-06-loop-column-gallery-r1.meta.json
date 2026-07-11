@@ -1,0 +1,21 @@
+{
+  "bundle": "pcp-probe/pcp--claude-haiku-4.5/v-06-loop-column-gallery-r1",
+  "arm": "pcp",
+  "contestant": "claude-haiku-4.5",
+  "capturedAt": "2026-07-10T23:29:58.889Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 37,
+    "nodeMounted": true,
+    "bundleId": "pcp-probe/pcp--claude-haiku-4.5/v-06-loop-column-gallery-r1"
+  },
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

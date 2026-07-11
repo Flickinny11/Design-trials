@@ -1,0 +1,155 @@
+{
+  "wave": "wpcp-probe-judge",
+  "calls": [
+    {
+      "batch": "batch-v-01-orbit-product-hero",
+      "frames": 8,
+      "costUsd": 1.5676390000000002,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T23:25:53.202Z"
+    },
+    {
+      "batch": "batch-v-01-orbit-product-hero",
+      "frames": 8,
+      "costUsd": 0.7124280000000001,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T23:31:50.110Z"
+    },
+    {
+      "batch": "batch-v-02-particle-constellation",
+      "frames": 8,
+      "costUsd": 0.7048350000000001,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T23:32:50.111Z"
+    },
+    {
+      "batch": "batch-v-03-glass-prism-refraction",
+      "frames": 8,
+      "costUsd": 0.7158899999999999,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T23:33:52.603Z"
+    },
+    {
+      "batch": "batch-v-04-kinetic-type-headline",
+      "frames": 8,
+      "costUsd": 0.669302,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T23:34:44.607Z"
+    },
+    {
+      "batch": "batch-v-05-pedestal-material-study",
+      "frames": 8,
+      "costUsd": 0.6553070000000001,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T23:35:23.858Z"
+    },
+    {
+      "batch": "batch-v-06-loop-column-gallery",
+      "frames": 8,
+      "costUsd": 0.828408,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T23:36:17.574Z"
+    },
+    {
+      "batch": "batch-v-07-filmstrip-carousel",
+      "frames": 8,
+      "costUsd": 0.834479,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T23:48:49.349Z"
+    },
+    {
+      "batch": "batch-v-08-orrery-mechanism",
+      "frames": 8,
+      "costUsd": 0.724926,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T23:49:54.416Z"
+    },
+    {
+      "batch": "batch-v-09-editorial-oversized-type",
+      "frames": 8,
+      "costUsd": 0.6342559999999999,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T23:50:31.668Z"
+    },
+    {
+      "batch": "batch-v-10-bento-metrics",
+      "frames": 8,
+      "costUsd": 0.686613,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T23:51:25.020Z"
+    },
+    {
+      "batch": "batch-v-11-gradient-cta",
+      "frames": 8,
+      "costUsd": 0.851753,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T23:52:21.850Z"
+    },
+    {
+      "batch": "batch-v-12-photo-hero-composite",
+      "frames": 8,
+      "costUsd": 0.674545,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T23:53:11.179Z"
+    },
+    {
+      "batch": "batch-v-13-brand-wall",
+      "frames": 8,
+      "costUsd": 0.6582729999999999,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T23:53:54.220Z"
+    },
+    {
+      "batch": "batch-v-14-pricing-card",
+      "frames": 8,
+      "costUsd": 0.6159209999999999,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T23:54:33.314Z"
+    },
+    {
+      "batch": "batch-v-15-testimonial-panel",
+      "frames": 8,
+      "costUsd": 0.821829,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T23:55:25.907Z"
+    },
+    {
+      "batch": "batch-v-16-feature-triptych",
+      "frames": 8,
+      "costUsd": 0.6984920000000001,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T23:56:21.711Z"
+    },
+    {
+      "batch": "batch-v-17-data-ribbon",
+      "frames": 8,
+      "costUsd": 0.650711,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T23:57:04.745Z"
+    },
+    {
+      "batch": "batch-v-18-nav-dock",
+      "frames": 8,
+      "costUsd": 0.6708339999999999,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T23:57:53.755Z"
+    },
+    {
+      "batch": "batch-v-19-empty-state",
+      "frames": 8,
+      "costUsd": 0.8368140000000001,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T23:58:47.357Z"
+    },
+    {
+      "batch": "batch-v-20-footer-colophon",
+      "frames": 8,
+      "costUsd": 0.7084079999999999,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-10T23:59:39.117Z"
+    }
+  ],
+  "totals": {
+    "subscriptionEquivalentUsd": 15.921662999999999
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "lanes": {
+    "old--claude-haiku-4.5": {
+      "scored": 40,
+      "designMean": 10.6,
+      "designSd": 10.1,
+      "crashRate": 0.8,
+      "crashes": 32,
+      "mustFixRate": 1,
+      "meanMustFixPerRender": 4.5,
+      "unrenderable": 0,
+      "depViolationBundles": 0,
+      "truncatedGenerations": 0,
+      "transportErrors": 0,
+      "promptTokens": {
+        "min": 10,
+        "max": 10,
+        "mean": 10
+      },
+      "topDefects": [
+        "MISSING_SPEC_ELEMENT 38",
+        "FLAT_VOID 33",
+        "RUNTIME_ERROR 32",
+        "BLANK_RENDER 25",
+        "DEAD_LIGHTING 16",
+        "SCALE_ERROR 12"
+      ]
+    },
+    "old--gpt-oss-120b": {
+      "scored": 40,
+      "designMean": 7.3,
+      "designSd": 4,
+      "crashRate": 1,
+      "crashes": 40,
+      "mustFixRate": 1,
+      "meanMustFixPerRender": 4.5,
+      "unrenderable": 0,
+      "depViolationBundles": 2,
+      "truncatedGenerations": 0,
+      "transportErrors": 0,
+      "promptTokens": {
+        "min": 2083,
+        "max": 2325,
+        "mean": 2220
+      },
+      "topDefects": [
+        "RUNTIME_ERROR 40",
+        "MISSING_SPEC_ELEMENT 36",
+        "FLAT_VOID 34",
+        "BLANK_RENDER 32",
+        "DEAD_LIGHTING 14",
+        "SCALE_ERROR 10"
+      ]
+    },
+    "pcp--claude-haiku-4.5": {
+      "scored": 40,
+      "designMean": 15.9,
+      "designSd": 13.2,
+      "crashRate": 0.3,
+      "crashes": 12,
+      "mustFixRate": 1,
+      "meanMustFixPerRender": 4.5,
+      "unrenderable": 0,
+      "depViolationBundles": 0,
+      "truncatedGenerations": 0,
+      "transportErrors": 0,
+      "promptTokens": {
+        "min": 10,
+        "max": 10,
+        "mean": 10
+      },
+      "topDefects": [
+        "MISSING_SPEC_ELEMENT 38",
+        "FLAT_VOID 30",
+        "BROKEN_COMPOSITION 27",
+        "DEAD_LIGHTING 21",
+        "OFF_PALETTE 18",
+        "BLANK_RENDER 13"
+      ]
+    },
+    "pcp--gpt-oss-120b": {
+      "scored": 40,
+      "designMean": 9.3,
+      "designSd": 7.8,
+      "crashRate": 0.85,
+      "crashes": 34,
+      "mustFixRate": 1,
+      "meanMustFixPerRender": 4.7,
+      "unrenderable": 0,
+      "depViolationBundles": 1,
+      "truncatedGenerations": 0,
+      "transportErrors": 0,
+      "promptTokens": {
+        "min": 3789,
+        "max": 4031,
+        "mean": 3926
+      },
+      "topDefects": [
+        "MISSING_SPEC_ELEMENT 37",
+        "FLAT_VOID 35",
+        "RUNTIME_ERROR 34",
+        "BLANK_RENDER 28",
+        "DEAD_LIGHTING 17",
+        "SCALE_ERROR 11"
+      ]
+    }
+  },
+  "deltas": {
+    "claude-haiku-4.5": {
+      "designMean": 5.3,
+      "crashRate": -0.5,
+      "mustFixRate": 0,
+      "meanMustFixPerRender": 0,
+      "unrenderable": 0
+    },
+    "gpt-oss-120b": {
+      "designMean": 2,
+      "crashRate": -0.15,
+      "mustFixRate": 0,
+      "meanMustFixPerRender": 0.2,
+      "unrenderable": 0
+    }
+  },
+  "promptTokens": {},
+  "ledger": {
+    "ledger-judge.json": 15.92,
+    "ledger-old-claude-haiku-4.5.json": 3.57,
+    "ledger-old-gpt-oss-120b.json": 0.13,
+    "ledger-pcp-claude-haiku-4.5.json": 4.31,
+    "ledger-pcp-gpt-oss-120b.json": 0.13,
+    "totalUsd": 24.06,
+    "hardCapUsd": 30
+  }
+}

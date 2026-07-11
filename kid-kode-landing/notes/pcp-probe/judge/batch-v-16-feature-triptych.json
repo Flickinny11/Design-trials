@@ -1,0 +1,75 @@
+{
+  "label": "batch-v-16-feature-triptych",
+  "judgedAt": "2026-07-10T23:56:21.710Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-16-feature-triptych/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-16-feature-triptych/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-16-feature-triptych/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-16-feature-triptych/F4.jpg"
+    },
+    {
+      "label": "F5",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-16-feature-triptych/F5.jpg"
+    },
+    {
+      "label": "F6",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-16-feature-triptych/F6.jpg"
+    },
+    {
+      "label": "F7",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-16-feature-triptych/F7.jpg"
+    },
+    {
+      "label": "F8",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-16-feature-triptych/F8.jpg"
+    }
+  ],
+  "mappingFile": "notes/pcp-probe/judge/blind/batch-v-16-feature-triptych/mapping.json",
+  "costUsd": 0.6984920000000001,
+  "durationApiMs": 52777,
+  "wallMs": 55751,
+  "usage": {
+    "input_tokens": 3391,
+    "cache_creation_input_tokens": 18704,
+    "cache_read_input_tokens": 83868,
+    "output_tokens": 4050,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18704,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 151,
+        "output_tokens": 2872,
+        "cache_read_input_tokens": 45665,
+        "cache_creation_input_tokens": 11242,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 11242
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":8,\"mustFix\":[{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"entire frame\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"upper-left and upper-right red masses\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center (no three cards, no titles/body, no icon seats)\"},{\"defect\":\"FLAT_VOID\",\"region\":\"lower black band\"},{\"defect\":\"ALL_BLACK_ELEMENT\",\"region\":\"lower-center rectangle\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"entire frame\"}],\"notes\":\"Incoherent zoomed blobs; three gray dots are the only trace of icon seats. No cards, no typography, no material response.\"},{\"frame\":\"F2\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame near-empty\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"tiny center thumbnail\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center (no triptych, no text)\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center thumbnail\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"center thumbnail\"}],\"notes\":\"Near-void black frame with one tiny blue glass slab; wrong subject, wrong palette, no triptych content.\"},{\"frame\":\"F3\",\"score\":9,\"mustFix\":[{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"entire frame\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"upper-right red disc and white mass\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center (no card faces, titles, or icon glyphs)\"},{\"defect\":\"FLAT_VOID\",\"region\":\"lower black band\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"entire frame\"},{\"defect\":\"LOW_CONTRAST\",\"region\":\"center dash marks\"}],\"notes\":\"Blurred macro blobs; three dashes and faint gray slabs hint at cards but nothing legible or material.\"},{\"frame\":\"F4\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame near-empty\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"tiny center thumbnail\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center (no triptych, no text)\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center thumbnail\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"center thumbnail\"}],\"notes\":\"Identical near-void: ~95% black with a tiny blue glass slab; no cards, seats, or typography.\"},{\"frame\":\"F5\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame near-empty\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"tiny center thumbnail\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center (no triptych, no text)\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center thumbnail\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"center thumbnail\"}],\"notes\":\"Same near-void render as F4; single miniature blue slab, spec entirely unfulfilled.\"},{\"frame\":\"F6\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame near-empty\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"tiny center thumbnail\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center (no triptych, no text)\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center thumbnail\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"center thumbnail\"}],\"notes\":\"Duplicate near-void frame; blue drift accent, no triptych elements rendered.\"},{\"frame\":\"F7\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame near-empty\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"tiny center thumbnail\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center (no triptych, no text)\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center thumbnail\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"center thumbnail\"}],\"notes\":\"Duplicate near-void frame; tiny blue glass slab only, zero spec compliance.\"},{\"frame\":\"F8\",\"score\":6,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame near-empty\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"tiny center thumbnail\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center (no triptych, no text)\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center thumbnail\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"center thumbnail\"}],\"notes\":\"Duplicate near-void frame; no cards, icon seats, or typography anywhere.\"}]}"
+}

@@ -1,0 +1,75 @@
+{
+  "label": "batch-v-20-footer-colophon",
+  "judgedAt": "2026-07-10T23:59:39.116Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-20-footer-colophon/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-20-footer-colophon/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-20-footer-colophon/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-20-footer-colophon/F4.jpg"
+    },
+    {
+      "label": "F5",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-20-footer-colophon/F5.jpg"
+    },
+    {
+      "label": "F6",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-20-footer-colophon/F6.jpg"
+    },
+    {
+      "label": "F7",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-20-footer-colophon/F7.jpg"
+    },
+    {
+      "label": "F8",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-20-footer-colophon/F8.jpg"
+    }
+  ],
+  "mappingFile": "notes/pcp-probe/judge/blind/batch-v-20-footer-colophon/mapping.json",
+  "costUsd": 0.7084079999999999,
+  "durationApiMs": 49419,
+  "wallMs": 51713,
+  "usage": {
+    "input_tokens": 3414,
+    "cache_creation_input_tokens": 18719,
+    "cache_read_input_tokens": 135604,
+    "output_tokens": 3203,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18719,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 151,
+        "output_tokens": 1997,
+        "cache_read_input_tokens": 51776,
+        "cache_creation_input_tokens": 5146,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5146
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 4, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"full frame — no wordmark, columns, legal line, or rules\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Near-empty black field with lone white square; no footer content rendered at all.\" }, { \"frame\": \"F2\", \"score\": 14, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center band — no wordmark, link columns, or legal line\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center band — light gray-lavender, not #121218→#0b0b10 ink ramp\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"background field — unrelated black/white swirl instead of #0b0b10\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"center band interior — vast typeless expanse\" } ], \"notes\": \"Band and red accent dash exist, but zero typography and washed-out off-palette surface; not a colophon.\" }, { \"frame\": \"F3\", \"score\": 4, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"full frame — no footer elements\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Black void with centered white square; spec entirely absent.\" }, { \"frame\": \"F4\", \"score\": 4, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"full frame — no footer elements\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Identical black void with white square; nothing from the spec rendered.\" }, { \"frame\": \"F5\", \"score\": 4, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"full frame — no footer elements\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Black void with white square; no wordmark, columns, rules, or text.\" }, { \"frame\": \"F6\", \"score\": 4, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"full frame — no footer elements\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Same near-empty black frame with white square; unusable.\" }, { \"frame\": \"F7\", \"score\": 4, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"full frame — no footer elements\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Black void with centered white square; spec entirely absent.\" }, { \"frame\": \"F8\", \"score\": 22, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center band — no wordmark, link columns, or legal line; only accent bar present\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"background field — black/white swirl replaces #0b0b10 ground\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"center band interior — large typeless dark expanse\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center band — near-flat fill, minimal ramp or material response\" } ], \"notes\": \"Closest palette match: dark ink band, red accent dash, faint hairline — but no typography whatsoever.\" } ] }"
+}

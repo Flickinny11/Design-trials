@@ -1,0 +1,19 @@
+{
+  "bundle": "pcp-probe/pcp--gpt-oss-120b/v-17-data-ribbon-r2",
+  "arm": "pcp",
+  "contestant": "gpt-oss-120b",
+  "capturedAt": "2026-07-10T23:26:01.613Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 27,
+    "nodeMounted": true,
+    "bundleId": "pcp-probe/pcp--gpt-oss-120b/v-17-data-ribbon-r2"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

@@ -1,0 +1,20 @@
+{
+  "bundle": "pcp-probe/old--claude-haiku-4.5/v-01-orbit-product-hero-r2",
+  "arm": "old",
+  "contestant": "claude-haiku-4.5",
+  "capturedAt": "2026-07-10T23:19:45.567Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "pcp-probe/old--claude-haiku-4.5/v-01-orbit-product-hero-r2",
+    "moduleRuntimeError": "TypeError: ctx.glbLoader is not a function"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

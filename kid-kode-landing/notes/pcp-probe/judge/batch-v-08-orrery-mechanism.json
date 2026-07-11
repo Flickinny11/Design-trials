@@ -1,0 +1,75 @@
+{
+  "label": "batch-v-08-orrery-mechanism",
+  "judgedAt": "2026-07-10T23:49:54.415Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-08-orrery-mechanism/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-08-orrery-mechanism/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-08-orrery-mechanism/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-08-orrery-mechanism/F4.jpg"
+    },
+    {
+      "label": "F5",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-08-orrery-mechanism/F5.jpg"
+    },
+    {
+      "label": "F6",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-08-orrery-mechanism/F6.jpg"
+    },
+    {
+      "label": "F7",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-08-orrery-mechanism/F7.jpg"
+    },
+    {
+      "label": "F8",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-08-orrery-mechanism/F8.jpg"
+    }
+  ],
+  "mappingFile": "notes/pcp-probe/judge/blind/batch-v-08-orrery-mechanism/mapping.json",
+  "costUsd": 0.724926,
+  "durationApiMs": 62191,
+  "wallMs": 65015,
+  "usage": {
+    "input_tokens": 3391,
+    "cache_creation_input_tokens": 18955,
+    "cache_read_input_tokens": 84100,
+    "output_tokens": 4473,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18955,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 151,
+        "output_tokens": 3276,
+        "cache_read_input_tokens": 45897,
+        "cache_creation_input_tokens": 11261,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 11261
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 20, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"right of center — no secondary gear\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"gear pivot — no jewel accent\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center gear\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center gear — brass, not machined steel\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"upper-center — gear undersized, floating\" } ], \"notes\": \"Single dim brass gear adrift in a black void; no meshing pair, no jewel, no gradient, no material story.\" }, { \"frame\": \"F2\", \"score\": 47, \"mustFix\": [ { \"defect\": \"OFF_PALETTE\", \"region\": \"background field — flat gray-lavender panel, not spec dark gradient\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"right edge — blown white streak and detached black axle rods\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"both gears — soft flat fill, no machined highlights\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"both gears — brass, spec calls machined steel\" } ], \"notes\": \"Most spec-complete: two meshed gears plus red jewel pivot, but gray backdrop, blown right edge, and flat lighting kill it.\" }, { \"frame\": \"F3\", \"score\": 20, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"right of center — no secondary gear\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"gear pivot — no jewel accent\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center gear\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center gear — brass, not machined steel\" } ], \"notes\": \"Near-duplicate of F1: lone brass gear on void, missing secondary gear, jewel, and gradient.\" }, { \"frame\": \"F4\", \"score\": 4, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"entire frame\" } ], \"notes\": \"Frame is empty near-black; nothing from the spec rendered.\" }, { \"frame\": \"F5\", \"score\": 20, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"right of center — no secondary gear\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"gear pivot — no jewel accent\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center gear\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center gear — brass, not machined steel\" } ], \"notes\": \"Same lone-gear-on-void framing as F1/F3; spec mechanism and accent absent.\" }, { \"frame\": \"F6\", \"score\": 20, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"right of center — no secondary gear\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"gear pivot — no jewel accent\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center gear\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center gear — brass, not machined steel\" } ], \"notes\": \"Indistinguishable from F1/F3/F5; single flat-lit gear, no pair, no jewel, void background.\" }, { \"frame\": \"F7\", \"score\": 18, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"frame-wide — no secondary gear\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"gear pivot — no jewel accent\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"upper-left-center — edge-on angle hides gear face and teeth\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center gear\" } ], \"notes\": \"Gear rotated nearly edge-on so the mechanism is unreadable; otherwise same void and missing elements.\" }, { \"frame\": \"F8\", \"score\": 15, \"mustFix\": [ { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"frame-wide — gear cropped at top edge, camera inside the scene\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"right half — blown flat white field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"frame-wide — no meshing secondary gear visible\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"right half — white field violates dark-first spec background\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"left half — unlit black region against gear\" } ], \"notes\": \"Camera crashed into the mechanism: cropped edge-on gear, half the frame blown white; jewel present but composition is wrecked.\" } ] }"
+}

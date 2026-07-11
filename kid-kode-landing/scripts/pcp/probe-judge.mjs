@@ -13,12 +13,21 @@
 // comparative call, so old and pcp are scored on the same scale by the same
 // judge in the same context.
 
-import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync, copyFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
+import { createRequire } from 'node:module';
 import { ROOT } from '../bakeoff/contestants.mjs';
+
+const require_ = createRequire(import.meta.url);
+// Blind copies are identical 800px JPEGs — the W-BAKE GOLDEN-SET discipline
+// ("every frame downscaled once to an identical 800px JPEG so judges see the
+// SAME pixels"). Applied to BOTH arms equally; also what keeps 20 8-frame
+// vision batches inside the $30 hard cap (full-res PNG batches measured
+// $1.57 each on the v-01 smoke test — archived).
+const sharp = require_(path.join(ROOT, 'node_modules', 'sharp'));
 import { RUBRIC, EXEMPLARS, loadCases, specBrief as rubricSpecBrief, VERDICT_SHAPE } from '../bakeoff/rubric.mjs';
 
 const pexecFile = promisify(execFile);
@@ -97,12 +106,13 @@ async function judgeBatch(batch, label) {
   mkdirSync(blindCaseDir, { recursive: true });
   const ordered = [...batch].sort((a, b) => sha(a.bundleId + 'wpcp-blind').localeCompare(sha(b.bundleId + 'wpcp-blind')));
   const mapping = [];
-  ordered.forEach((b, i) => {
-    const blindPath = path.join(blindCaseDir, `F${i + 1}.png`);
-    copyFileSync(b.frame, blindPath);
+  for (let i = 0; i < ordered.length; i += 1) {
+    const b = ordered[i];
+    const blindPath = path.join(blindCaseDir, `F${i + 1}.jpg`);
+    await sharp(b.frame).resize({ width: 800 }).jpeg({ quality: 82 }).toFile(blindPath);
     b.blindPath = blindPath;
     mapping.push({ label: `F${i + 1}`, bundleId: b.bundleId, arm: b.arm, contestant: b.contestant, source: path.relative(ROOT, b.frame) });
-  });
+  }
   writeFileSync(path.join(blindCaseDir, 'mapping.json'), JSON.stringify(mapping, null, 2));
 
   const lines = [RUBRIC, ''];

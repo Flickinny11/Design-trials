@@ -1,0 +1,75 @@
+{
+  "label": "batch-v-12-photo-hero-composite",
+  "judgedAt": "2026-07-10T23:53:11.178Z",
+  "model": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-12-photo-hero-composite/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-12-photo-hero-composite/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-12-photo-hero-composite/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-12-photo-hero-composite/F4.jpg"
+    },
+    {
+      "label": "F5",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-12-photo-hero-composite/F5.jpg"
+    },
+    {
+      "label": "F6",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-12-photo-hero-composite/F6.jpg"
+    },
+    {
+      "label": "F7",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-12-photo-hero-composite/F7.jpg"
+    },
+    {
+      "label": "F8",
+      "blindPath": "notes/pcp-probe/judge/blind/batch-v-12-photo-hero-composite/F8.jpg"
+    }
+  ],
+  "mappingFile": "notes/pcp-probe/judge/blind/batch-v-12-photo-hero-composite/mapping.json",
+  "costUsd": 0.674545,
+  "durationApiMs": 46685,
+  "wallMs": 49278,
+  "usage": {
+    "input_tokens": 3391,
+    "cache_creation_input_tokens": 18491,
+    "cache_read_input_tokens": 83644,
+    "output_tokens": 3669,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18491,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 151,
+        "output_tokens": 2480,
+        "cache_read_input_tokens": 45441,
+        "cache_creation_input_tokens": 11253,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 11253
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":8,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"whole frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center placeholder icon\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"photo plate, caption block, red accent\"}],\"notes\":\"Near-empty black frame with a blue broken-image placeholder; no photo plate, grade, or caption rendered.\"},{\"frame\":\"F2\",\"score\":8,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"whole frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center placeholder icon\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"photo plate, caption block, red accent\"}],\"notes\":\"Identical failed-asset placeholder on flat black; spec content entirely absent.\"},{\"frame\":\"F3\",\"score\":8,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"whole frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center placeholder icon\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"photo plate, caption block, red accent\"}],\"notes\":\"Same blue placeholder glyph centered in a void; nothing from the visualSpec rendered.\"},{\"frame\":\"F4\",\"score\":8,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"whole frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center placeholder icon\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"photo plate, caption block, red accent\"}],\"notes\":\"Failed image load placeholder on empty black field; no hero composite present.\"},{\"frame\":\"F5\",\"score\":8,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"whole frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center placeholder icon\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"photo plate, caption block, red accent\"}],\"notes\":\"Same near-empty placeholder frame; photo plate and caption never rendered.\"},{\"frame\":\"F6\",\"score\":3,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"whole frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"whole frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"whole frame\"}],\"notes\":\"Completely black frame; nothing rendered at all.\"},{\"frame\":\"F7\",\"score\":16,\"mustFix\":[{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"whole frame\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"right two-thirds, giant cropped white letterform\"},{\"defect\":\"FLAT_VOID\",\"region\":\"upper-left quadrant\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"photo plate, subject, caption block\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"lower gray band\"},{\"defect\":\"LOW_CONTRAST\",\"region\":\"red accent tick, lower-left\"}],\"notes\":\"Renders shapes but composition is broken: cropped oversized letterform, flat gray band, no photographic plate or caption.\"},{\"frame\":\"F8\",\"score\":8,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"whole frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center placeholder icon\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"photo plate, caption block, red accent\"}],\"notes\":\"Same blue placeholder on empty black; hero composite absent entirely.\"}]}"
+}
