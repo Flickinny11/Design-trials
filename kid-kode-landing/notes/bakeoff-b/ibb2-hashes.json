@@ -1,0 +1,16 @@
+{
+  "computedAt": "2026-07-11T02:35:35.414Z",
+  "note": "I-BB2: one L1 v2.1 + one frozen L2 shared by every contestant lane (run-gen-b.mjs reads these exact bytes); corpus = frozen W-BAKE corpus unchanged",
+  "l1_v2_1": "7d1e28bdba1a2c5c888cc489ef7e468488928f10f015c32b2c4f526ca9430cbf",
+  "l2_frozen": "9c7c5d701a2916dd0e7bdf099e09ce2f9dab68205b3c94648fe0ec508a397332",
+  "corpus": {
+    "functional": {
+      "files": 50,
+      "sha256_concat": "2f28ba2c1eace012cf9fc800b8055e0e0680153ecc51e1d32e216c35d24f775e"
+    },
+    "visual": {
+      "files": 20,
+      "sha256_concat": "20ade4264724d335d802499f65473ce4f980b66f1ac409490a277e7263c41f5a"
+    }
+  }
+}
