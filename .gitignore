@@ -64,3 +64,7 @@ artifacts/
 # Throwaway Playwright-MCP page snapshots
 .playwright-mcp/
 w6-reduced.png
+
+# key material (I-BB6) — never commit
+.constellation/
+key-capture.sh
