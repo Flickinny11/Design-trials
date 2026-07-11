@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-26-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 5628,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4391,
+    "completionTokens": 645
+  },
+  "costUsd": 0.007616,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, color } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  \n  // Create group for this card label\n  const group = new THREE.Group();\n  \n  // Timelines to track for cleanup\n  const timelines = [];\n  \n  // Create text label: \"Pricing 3\"\n  const textContent = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const textItem = textContent.find(item => item.text === 'Pricing 3') || \n                   { text: 'Pricing 3', fontSize: 39, color: '#e8ecf2' };\n  \n  const textMesh = ctx.fontAtlas.createText(String(textItem.text), {\n    fontSize: textItem.typography?.fontSize ?? 39,\n    color: textItem.color ?? '#e8ecf2',\n    align: 'center'\n  });\n  textMesh.position.z = 0.05;\n  group.add(textMesh);\n  \n  // Create backdrop plane with engineered gradient\n  const planeGeom = new THREE.PlaneGeometry(1.2, 0.35);\n  \n  // Gradient material: dark surface to slightly lighter\n  const gradientNode = mix(\n    color('#0b0b10'),  // surface (dark base)\n    color('#16161d'),  // ink (slightly lighter)\n    uv().y           // vertical gradient\n  );\n  \n  const planeMat = new MeshBasicNodeMaterial({\n    colorNode: gradientNode,\n    transparent: true,\n    opacity: 0.95\n  });\n  \n  const plane = new THREE.Mesh(planeGeom, planeMat);\n  plane.position.z = 0.02;\n  group.add(plane);\n  \n  // No cinematic primitives to apply (node ships without primitive)\n  \n  // Setup cleanup\n  group.userData.cleanup = function() {\n    timelines.forEach(tl => tl.kill());\n    timelines.length = 0;\n    \n    // Dispose geometries and materials\n    if (planeGeom) planeGeom.dispose();\n    if (planeMat) planeMat.dispose();\n    if (textMesh.geometry) textMesh.geometry.dispose();\n    if (textMesh.material) textMesh.material.dispose();\n  };\n  \n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

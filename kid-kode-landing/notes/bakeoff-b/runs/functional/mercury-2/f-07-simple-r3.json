@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-07-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 3531,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3654,
+    "completionTokens": 468
+  },
+  "costUsd": 0.0012645,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { primitives } from '@/primitives';\nimport { text } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, PlaneGeometry, Mesh } = ctx.THREE;\n  const node = new Group();\n\n  // Geometry: unit plane (will be scaled by config.sceneScale if provided)\n  const geometry = new PlaneGeometry(1, 1);\n  const material = new MeshBasicNodeMaterial({ color: 0xffffff, map: null });\n  const mesh = new Mesh(geometry, material);\n  node.add(mesh);\n\n  // Load texture if an image URL is supplied\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Apply rotation and scale from config (position is handled by the adapter)\n  if (config.sceneRotation && Array.isArray(config.sceneRotation)) {\n    const [rx, ry, rz] = config.sceneRotation;\n    node.rotation.set(rx, ry, rz);\n  }\n  if (config.sceneScale && Array.isArray(config.sceneScale)) {\n    const [sx, sy, sz] = config.sceneScale;\n    node.scale.set(sx, sy, sz);\n  }\n\n  // No cinematic primitives for this node\n  node.userData.primitives = [];\n\n  // Event handlers container (empty as no interactions are defined)\n  node.userData.handlers = {};\n\n  // Cleanup routine\n  node.userData.cleanup = () => {\n    // Dispose material and geometry\n    material.dispose();\n    geometry.dispose();\n    // Cancel any GSAP timelines that might have been created (none for this node)\n    // (placeholder for future timelines)\n    if (node.userData._timelines) {\n      node.userData._timelines.forEach((tl) => tl.kill());\n    }\n    // Cleanup primitives if any were added in the future\n    if (node.userData.primitives) {\n      node.userData.primitives.forEach((p) => {\n        if (p && typeof p.cleanup === 'function') p.cleanup();\n      });\n    }\n  };\n\n  return node;\n}"
+}

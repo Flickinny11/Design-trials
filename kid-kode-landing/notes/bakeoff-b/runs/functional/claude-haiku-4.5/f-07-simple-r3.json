@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-07-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 3841,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4372,
+    "completionTokens": 478
+  },
+  "costUsd": 0.006762,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // Create plane geometry\n  const geometry = new THREE.PlaneGeometry(1, 1);\n\n  // Load the feature card image\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = uv().mul(vec3(1.0));\n\n  let textureNode = null;\n  const mesh = new THREE.Mesh(geometry, material);\n\n  // Load texture asynchronously and update material\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      tex.colorSpace = THREE.SRGBColorSpace;\n      textureNode = texture(tex);\n      material.colorNode = textureNode;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Apply scene position, rotation, and scale from config\n  if (config.scenePosition) {\n    mesh.position.set(config.scenePosition.x, config.scenePosition.y, config.scenePosition.z);\n  }\n  if (config.sceneRotation) {\n    mesh.rotation.set(config.sceneRotation.x, config.sceneRotation.y, config.sceneRotation.z);\n  }\n  if (config.sceneScale) {\n    mesh.scale.set(config.sceneScale.x, config.sceneScale.y, config.sceneScale.z);\n  }\n\n  // Setup userData for cleanup\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (textureNode && textureNode.value) {\n      textureNode.value.dispose();\n    }\n  };\n\n  return mesh;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-13-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 5325,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4379,
+    "completionTokens": 663
+  },
+  "costUsd": 0.007694,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, color } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { Mesh, PlaneGeometry, Group } = ctx.THREE;\n\n  const group = new Group();\n  group.position.set(0, 3, 0);\n  group.rotation.order = 'YXZ';\n  group.scale.set(1, 1, 1);\n\n  // Create backdrop gradient plane (engineered surface)\n  const backdropGeom = new PlaneGeometry(7, 6);\n  const backdropMat = new MeshBasicNodeMaterial({\n    colorNode: mix(\n      color(0x0b0b10), // surface (dark base)\n      color(0x16161d), // ink (upper tone)\n      uv().y\n    ),\n  });\n  const backdrop = new Mesh(backdropGeom, backdropMat);\n  backdrop.position.z = -2.5;\n  backdrop.renderOrder = 0;\n  group.add(backdrop);\n\n  // Load and apply image texture to plane\n  const planeGeom = new PlaneGeometry(2.56, 1.6); // Aspect from atlas: 512/320\n  const planeMat = new MeshBasicNodeMaterial({\n    side: ctx.THREE.DoubleSide,\n  });\n\n  const plane = new Mesh(planeGeom, planeMat);\n  plane.position.z = 0;\n  plane.renderOrder = 1;\n  group.add(plane);\n\n  // Load texture asynchronously\n  ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n    planeMat.map = texture;\n    planeMat.needsUpdate = true;\n  });\n\n  // Create text: \"Collection\" headline (96px, 400 weight)\n  const textObj = ctx.fontAtlas.createText('Collection', {\n    fontSize: 96,\n    color: '#e8ecf2', // paper color for contrast on dark stage\n    align: 'center',\n  });\n  textObj.position.set(0, -1.2, 0.1);\n  textObj.scale.set(1, 1, 1);\n  group.add(textObj);\n\n  // Cleanup handler\n  group.userData.cleanup = () => {\n    backdropGeom.dispose();\n    backdropMat.dispose();\n    planeGeom.dispose();\n    planeMat.dispose();\n    if (planeMat.map) planeMat.map.dispose();\n  };\n\n  return group;\n}\n```"
+}

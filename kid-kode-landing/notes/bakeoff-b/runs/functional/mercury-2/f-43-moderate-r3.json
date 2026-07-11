@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-43-moderate",
+  "run": 3,
+  "ok": true,
+  "wallMs": 2724,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3672,
+    "completionTokens": 446
+  },
+  "costUsd": 0.0012525,
+  "billing": "metered",
+  "output": "import { Group, Mesh, PlaneGeometry, MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  // Root object\n  const root = new Group();\n\n  // Plane geometry – use image aspect ratio (512:320 ≈ 1.6)\n  const geometry = new PlaneGeometry(1.6, 1);\n  const material = new MeshBasicNodeMaterial({ map: null, transparent: true });\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Load texture asynchronously\n  let loadedTexture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      loadedTexture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Apply cinematic primitives from config\n  const primitiveInstances = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const fn = ctx.primitives[prim.name];\n      if (fn) {\n        const instance = fn(mesh, prim.params);\n        primitiveInstances.push(instance);\n      }\n    }\n  }\n\n  // Event handlers container\n  root.userData.handlers = {};\n\n  // Hover rise‑in effect\n  let hoverTimeline = null;\n  root.userData.handlers.hover = () => {\n    if (hoverTimeline) hoverTimeline.kill();\n    hoverTimeline = gsap.timeline();\n    hoverTimeline.to(mesh.position, {\n      y: mesh.position.y + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n  };\n\n  // Click emit event\n  root.userData.handlers.click = () => {\n    ctx.emit('hub-journal.select', {});\n  };\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    if (hoverTimeline) hoverTimeline.kill();\n    primitiveInstances.forEach((inst) => {\n      if (inst.cleanup) inst.cleanup();\n    });\n    geometry.dispose();\n    material.dispose();\n    if (loadedTexture) loadedTexture.dispose();\n  };\n\n  return root;\n}"
+}

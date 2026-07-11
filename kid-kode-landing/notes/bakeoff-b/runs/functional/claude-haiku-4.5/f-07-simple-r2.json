@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-07-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 4707,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4372,
+    "completionTokens": 569
+  },
+  "costUsd": 0.007217,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, texture, vec3, mul } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { PlaneGeometry, Mesh, Group } = ctx.THREE;\n\n  const group = new Group();\n  group.position.set(-3.2, -0.3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Load the feature card texture\n  let textureResource = null;\n  const loadTexture = () => {\n    return ctx.textureLoader\n      .loadTexture(config.imageUrl)\n      .then((tex) => {\n        textureResource = tex;\n        // Create plane with loaded texture\n        const geometry = new PlaneGeometry(3.5, 2.2);\n        const material = new MeshBasicNodeMaterial();\n\n        // Set up texture node with UV mapping\n        const texNode = texture(tex, uv());\n        material.colorNode = texNode;\n\n        const mesh = new Mesh(geometry, material);\n        mesh.renderOrder = 10;\n        group.add(mesh);\n\n        return mesh;\n      })\n      .catch((err) => {\n        console.error('Failed to load feature card texture:', err);\n        // Fallback: create a plane with a surface color\n        const geometry = new PlaneGeometry(3.5, 2.2);\n        const material = new MeshBasicNodeMaterial({\n          color: 0x0b0b10,\n        });\n        const mesh = new Mesh(geometry, material);\n        mesh.renderOrder = 10;\n        group.add(mesh);\n        return mesh;\n      });\n  };\n\n  // Trigger async load\n  loadTexture();\n\n  // Cleanup handler\n  group.userData.cleanup = () => {\n    group.traverse((child) => {\n      if (child.geometry) {\n        child.geometry.dispose();\n      }\n      if (child.material) {\n        child.material.dispose();\n      }\n    });\n    if (textureResource) {\n      textureResource.dispose();\n    }\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

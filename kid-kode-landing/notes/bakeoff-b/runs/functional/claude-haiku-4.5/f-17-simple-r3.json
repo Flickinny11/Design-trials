@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-17-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 7203,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4385,
+    "completionTokens": 923
+  },
+  "costUsd": 0.009,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, color } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  \n  // Root group\n  const group = new THREE.Group();\n  group.position.set(0, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n  \n  // Parse colors\n  const colors = config.intent?.visualSpec?.colors || {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n  \n  // Create plane geometry (2:1.25 aspect from atlas region 512x320)\n  const planeWidth = 1.6;\n  const planeHeight = 1.0;\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n  \n  // Load brushed metal texture\n  let texturePromise = Promise.resolve(null);\n  if (config.imageUrl) {\n    texturePromise = ctx.textureLoader.loadTexture(config.imageUrl).catch(() => null);\n  }\n  \n  texturePromise.then((metalTexture) => {\n    // Build material with gradient + texture\n    const uvNode = uv();\n    \n    // Vertical gradient: surface at bottom to ink at top\n    const gradientNode = mix(\n      color(colors.surface),\n      color(colors.ink),\n      uvNode.y\n    );\n    \n    // Texture blend (if loaded, otherwise just gradient)\n    let finalColorNode = gradientNode;\n    if (metalTexture) {\n      metalTexture.colorSpace = THREE.SRGBColorSpace;\n      const sampledMetal = new THREE.TextureNode(metalTexture);\n      finalColorNode = mix(gradientNode, sampledMetal, 0.3);\n    }\n    \n    const material = new MeshBasicNodeMaterial();\n    material.colorNode = finalColorNode;\n    material.transparent = true;\n    \n    const mesh = new THREE.Mesh(geometry, material);\n    group.add(mesh);\n  });\n  \n  // Render headline text via fontAtlas\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const headlineItem = textItems.find(item => item.role === 'headline') || \n                       { text: 'Collection 2', fontSize: 39 };\n  \n  const headlineText = ctx.fontAtlas.createText(headlineItem.text, {\n    fontSize: headlineItem.typography?.fontSize ?? 39,\n    color: colors.paper,\n    align: 'center'\n  });\n  \n  // Position text centered on plane, slightly above middle\n  headlineText.position.set(0, 0.15, 0.01);\n  group.add(headlineText);\n  \n  // Cleanup handler\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    texturePromise.then((tex) => {\n      if (tex) tex.dispose();\n    });\n    group.children.forEach((child) => {\n      if (child.geometry) child.geometry.dispose();\n      if (child.material) {\n        if (Array.isArray(child.material)) {\n          child.material.forEach(m => m.dispose());\n        } else {\n          child.material.dispose();\n        }\n      }\n    });\n  };\n  \n  return group;\n}\n```"
+}

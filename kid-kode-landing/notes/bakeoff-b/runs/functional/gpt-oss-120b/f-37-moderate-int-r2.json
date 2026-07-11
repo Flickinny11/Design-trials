@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-37-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 10354,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3802,
+    "completionTokens": 1517
+  },
+  "costUsd": 0.0014805,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Geometry – 1 unit square (will be scaled by the mesh if needed)\n  const geometry = new PlaneGeometry(1, 1);\n\n  // Material – basic unlit texture\n  const material = new MeshBasicNodeMaterial();\n  material.color = { r: 1, g: 1, b: 1 };\n  material.map = null;\n\n  // Load texture synchronously‑style (promise resolves later)\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Mesh\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // ---------------------------------------------------------------------------\n  // Hover animation (rise‑in 0.15 units)\n  const hoverTl = gsap.timeline({ paused: true });\n  hoverTl.to(mesh.position, {\n    y: '+=0.15',\n    duration: 0.3,\n    ease: 'power3.out',\n  });\n\n  // Click handler – emit navigation event\n  const clickHandler = () => {\n    ctx.emit('hub-pricing.select');\n  };\n\n  // Attach interaction handlers to userData (adapter will forward events)\n  root.userData.handlers = {\n    hover: () => hoverTl.restart(),\n    hoverOut: () => hoverTl.reverse(),\n    click: clickHandler,\n  };\n\n  // ---------------------------------------------------------------------------\n  // Apply cinematic primitives\n  const primitiveInstances = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const instance = ctx.primitives[prim.name](\n        root,\n        { ...prim.params, trigger: prim.trigger }\n      );\n      primitiveInstances.push(instance);\n    }\n  }\n\n  // ---------------------------------------------------------------------------\n  // Cleanup\n  root.userData.cleanup = () => {\n    hoverTl.kill();\n    for (const inst of primitiveInstances) {\n      if (inst && typeof inst.cleanup === 'function') {\n        inst.cleanup();\n      }\n    }\n    geometry.dispose();\n    material.dispose();\n  };\n\n  return root;\n}"
+}

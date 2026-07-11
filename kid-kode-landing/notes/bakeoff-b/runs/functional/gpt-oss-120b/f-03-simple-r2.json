@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-03-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 9114,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3737,
+    "completionTokens": 1587
+  },
+  "costUsd": 0.00151275,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { createNode as _ } from '@/primitives';\nimport { createText as __ } from '@/text';\nimport { pow, mul, uv, vec2 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Texture } = ctx.THREE;\n\n  // Root container; placement will be applied by the adapter.\n  const root = new Group();\n\n  // Atlas region (fallback to full image if missing).\n  const atlasRect = (config.atlasRegion && config.atlasRegion.sourceRect) || {\n    x: 0,\n    y: 0,\n    w: 512,\n    h: 320,\n  };\n  const width = atlasRect.w;\n  const height = atlasRect.h;\n  const aspect = width / height;\n\n  // Plane geometry sized to the region's aspect ratio.\n  const geometry = new PlaneGeometry(aspect, 1, 1, 1);\n  geometry.translate(0, 0, 0);\n\n  // Basic node material; texture will be assigned asynchronously.\n  const material = new MeshBasicNodeMaterial();\n\n  // Load the texture (sprite image) via the provided loader.\n  let loadedTexture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      loadedTexture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Create mesh and add to root.\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Simple billboard: orient plane toward the active camera each frame.\n  mesh.onBeforeRender = (renderer, scene, camera) => {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  // No cinematic primitives for this node, but keep the hook for future extensions.\n  const primitiveHandles = [];\n\n  // Cleanup routine: dispose geometry, material, texture and kill any GSAP timelines.\n  root.userData.cleanup = () => {\n    // Dispose material and its texture.\n    if (material) {\n      material.dispose();\n    }\n    if (loadedTexture) {\n      loadedTexture.dispose();\n    }\n    // Dispose geometry.\n    if (geometry) {\n      geometry.dispose();\n    }\n    // Dispose primitives if any were created.\n    primitiveHandles.forEach((h) => {\n      if (h && typeof h.cleanup === 'function') {\n        h.cleanup();\n      }\n    });\n    // Kill all GSAP timelines attached to this node.\n    gsap.globalTimeline.getChildren(true, false, false).forEach((t) => {\n      if (t && t.data && t.data.node === root) {\n        t.kill();\n      }\n    });\n  };\n\n  // Placeholder for event handlers (none required for this sprite node).\n  root.userData.handlers = {};\n\n  return root;\n}"
+}

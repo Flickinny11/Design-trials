@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-22-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 5469,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4389,
+    "completionTokens": 613
+  },
+  "costUsd": 0.007454,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { color, uv, mx_noise_float } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, PlaneGeometry, Mesh, Vector3 } = ctx.THREE;\n  \n  const group = new Group();\n  group.position.set(-3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Plane geometry for the card label\n  const planeGeom = new PlaneGeometry(2.8, 0.5);\n  \n  // Create material with gradient and noise for engineered aesthetic\n  const colorInk = color(0x16161d);\n  const colorPaper = color(0xe8ecf2);\n  const colorAccent = color(0xff2a38);\n  const colorSurface = color(0x0b0b10);\n  \n  // Vertical gradient node: surface (bottom) to ink (top)\n  const gradientNode = mx_noise_float(uv().mul(2.0)).mul(0.08).add(\n    uv().y.mix(colorSurface, colorInk)\n  );\n  \n  const mat = new MeshBasicNodeMaterial();\n  mat.colorNode = colorSurface.mix(colorInk, uv().y.mul(0.4).add(0.3));\n  \n  const planeMesh = new Mesh(planeGeom, mat);\n  group.add(planeMesh);\n\n  // Text: \"Pricing 1\" at 39px (headline role, serif display)\n  // Map 39px to scene units: 39px / 100 ≈ 0.39 scene units for display serif at standard scale\n  const textObj = ctx.fontAtlas.createText('Pricing 1', {\n    fontSize: 39,\n    color: 0xe8ecf2,\n    align: 'left'\n  });\n  textObj.position.set(-1.3, 0, 0.01);\n  group.add(textObj);\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    planeGeom.dispose();\n    mat.dispose();\n    gsap.killTweensOf(group);\n  };\n\n  return group;\n}\n```"
+}

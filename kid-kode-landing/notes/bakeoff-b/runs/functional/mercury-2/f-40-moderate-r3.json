@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-40-moderate",
+  "run": 3,
+  "ok": true,
+  "wallMs": 5563,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3743,
+    "completionTokens": 749
+  },
+  "costUsd": 0.0014975,
+  "billing": "metered",
+  "output": "import { MeshStandardNodeMaterial } from 'three/webgpu';\nimport { texture, displacement } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport * as primitives from '@/primitives';\nimport * as text from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Vector3 } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Geometry (tessellated plane)\n  const geometry = new PlaneGeometry(1, 1, 64, 64);\n\n  // Base material (machined‑metal look)\n  const material = new MeshStandardNodeMaterial({\n    color: 0xffffff,\n    metalness: 0.3,\n    roughness: 0.6,\n    clearcoat: 0.1,\n  });\n\n  // Placeholder nodes (will be replaced once textures load)\n  material.mapNode = null;\n  material.displacementNode = null;\n\n  // Mesh\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Load color texture\n  const texturePromises = [];\n\n  if (config.imageUrl) {\n    const texPromise = ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.mapNode = texture(tex);\n      material.needsUpdate = true;\n    });\n    texturePromises.push(texPromise);\n  }\n\n  // Load depth map for displacement\n  if (config.depthMapUrl) {\n    const depthPromise = ctx.textureLoader.loadTexture(config.depthMapUrl).then((tex) => {\n      material.displacementNode = displacement(texture(tex), 0.1);\n      material.needsUpdate = true;\n    });\n    texturePromises.push(depthPromise);\n  }\n\n  // Apply cinematic primitives from config\n  const primitiveRefs = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const p of config.cinematicPrimitives) {\n      const prim = ctx.primitives[p.name](root, p.params);\n      primitiveRefs.push(prim);\n    }\n  }\n\n  // Event handlers (hover lift, click emit)\n  const hoverTL = { value: null };\n  root.userData.handlers = {\n    hover: {\n      onEnter: () => {\n        if (hoverTL.value) hoverTL.value.kill();\n        hoverTL.value = gsap.timeline();\n        hoverTL.value.to(root.position, {\n          y: root.position.y + 0.15,\n          duration: 0.3,\n          ease: 'power3.out',\n        });\n      },\n      onLeave: () => {\n        if (hoverTL.value) {\n          hoverTL.value.to(root.position, {\n            y: root.position.y - 0.15,\n            duration: 0.3,\n            ease: 'power3.out',\n          });\n          hoverTL.value = null;\n        }\n      },\n    },\n    click: {\n      onClick: () => {\n        ctx.emit('hub-features.select', {});\n      },\n    },\n  };\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Dispose geometry and material\n    geometry.dispose();\n    material.dispose();\n\n    // Dispose loaded textures if they exist\n    texturePromises.forEach((p) => {\n      p.then((tex) => {\n        if (tex && typeof tex.dispose === 'function') tex.dispose();\n      });\n    });\n\n    // Kill GSAP timelines\n    if (hoverTL.value) hoverTL.value.kill();\n\n    // Cleanup primitives\n    primitiveRefs.forEach((ref) => {\n      if (ref && typeof ref.cleanup === 'function') ref.cleanup();\n    });\n  };\n\n  return root;\n}"
+}

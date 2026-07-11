@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-34-moderate-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 12131,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3840,
+    "completionTokens": 2053
+  },
+  "costUsd": 0.0018078,
+  "billing": "metered",
+  "output": "import { gsap } from 'gsap';\nimport { Group } from '@/primitives';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {string} meshUrl\n * @property {Array<{name:string,params?:Object,trigger?:string}>} cinematicPrimitives\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {any} THREE\n * @property {any} glbLoader\n * @property {any} emit\n * @property {any} primitives\n */\n\n/**\n * Creates a compact metric card node.\n *\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  const { Group } = ctx.THREE;\n  const root = new Group();\n\n  /** Store handles for cleanup */\n  const primitiveHandles = [];\n  const interactionState = {\n    hoverTimeline: null,\n  };\n  let gltfGroup = null;\n\n  /* ---------------------------------------------------------------------- */\n  /* Cinematic primitives */\n  const cinPrims = config.cinematicPrimitives ?? [];\n  for (const prim of cinPrims) {\n    const handler = ctx.primitives[prim.name];\n    if (handler) {\n      const result = handler(root, prim.params ?? {});\n      if (result) primitiveHandles.push(result);\n    }\n  }\n\n  /* ---------------------------------------------------------------------- */\n  /* Load GLB mesh */\n  if (config.meshUrl) {\n    ctx.glbLoader.loadGLB(config.meshUrl).then((gltf) => {\n      gltfGroup = gltf.scene || gltf;\n      root.add(gltfGroup);\n    });\n  }\n\n  /* ---------------------------------------------------------------------- */\n  /* Interaction handlers (exposed via userData) */\n  root.userData.handlers = {};\n\n  // hover lift – rise‑in (subtle 0.15 units)\n  root.userData.handlers.hover = () => {\n    if (interactionState.hoverTimeline) interactionState.hoverTimeline.kill();\n    interactionState.hoverTimeline = gsap.to(root.position, {\n      y: (root.position.y || 0) + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n  };\n\n  // hover out – return to base\n  root.userData.handlers.unhover = () => {\n    if (interactionState.hoverTimeline) interactionState.hoverTimeline.kill();\n    interactionState.hoverTimeline = gsap.to(root.position, {\n      y: 0,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n  };\n\n  // click – emit navigation event\n  root.userData.handlers.click = () => {\n    ctx.emit('hub-home.select', {});\n  };\n\n  /* ---------------------------------------------------------------------- */\n  /* Cleanup */\n  root.userData.cleanup = () => {\n    // Kill interaction timelines\n    if (interactionState.hoverTimeline) interactionState.hoverTimeline.kill();\n\n    // Cleanup cinematic primitives\n    for (const h of primitiveHandles) {\n      if (h && typeof h.cleanup === 'function') h.cleanup();\n    }\n\n    // Dispose GLTF resources\n    if (gltfGroup) {\n      gltfGroup.traverse((obj) => {\n        if (obj.isMesh) {\n          if (obj.geometry) obj.geometry.dispose();\n          if (obj.material) {\n            if (Array.isArray(obj.material)) {\n              obj.material.forEach((m) => m.dispose());\n            } else {\n              obj.material.dispose();\n            }\n          }\n        }\n      });\n    }\n  };\n\n  return root;\n}"
+}

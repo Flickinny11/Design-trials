@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-18-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 5872,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4384,
+    "completionTokens": 747
+  },
+  "costUsd": 0.008119,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec4, mix } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { Group, PlaneGeometry, Mesh } = ctx.THREE;\n\n  const group = new Group();\n  group.position.set(3.2, -0.3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Atlas region: 0, 0, 512, 320 from a likely 1024x1024 atlas\n  // Aspect ratio: 512/320 = 1.6\n  const atlasWidth = 512;\n  const atlasHeight = 320;\n  const aspectRatio = atlasWidth / atlasHeight;\n\n  // Create a plane geometry with the correct aspect ratio\n  // Height = 1.2 units (reasonable card size), width scales by aspect ratio\n  const height = 1.2;\n  const width = height * aspectRatio;\n  const geometry = new PlaneGeometry(width, height);\n\n  // Load the ceramic-grain texture\n  const texturePromise = config.imageUrl\n    ? ctx.textureLoader.loadTexture(config.imageUrl)\n    : Promise.resolve(null);\n\n  texturePromise.then((texture) => {\n    if (!texture) return;\n\n    // Set up texture for atlas region\n    // Assuming 1024x1024 atlas; UV region is [0, 0, 512, 320]\n    const atlasSize = 1024;\n    const offsetX = 0 / atlasSize;\n    const offsetY = 0 / atlasSize;\n    const scaleX = atlasWidth / atlasSize;\n    const scaleY = atlasHeight / atlasSize;\n\n    texture.offset.set(offsetX, offsetY);\n    texture.repeat.set(scaleX, scaleY);\n    texture.needsUpdate = true;\n\n    // Create material with TSL nodes\n    const mapNode = texture ? uv().mul(vec4(scaleX, scaleY, 1, 1)).add(vec4(offsetX, offsetY, 0, 0)) : uv();\n    \n    const material = new MeshBasicNodeMaterial({\n      colorNode: texture ? texture : undefined,\n      map: texture,\n      transparent: true,\n      depthTest: true,\n      depthWrite: true,\n    });\n\n    const mesh = new Mesh(geometry, material);\n    group.add(mesh);\n\n    // Store cleanup\n    group.userData.cleanup = () => {\n      if (texture) texture.dispose();\n      geometry.dispose();\n      material.dispose();\n      mesh.removeFromParent();\n    };\n  });\n\n  // Fallback cleanup if no texture loads\n  if (!group.userData.cleanup) {\n    group.userData.cleanup = () => {\n      geometry.dispose();\n    };\n  }\n\n  return group;\n}\n```"
+}

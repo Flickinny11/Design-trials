@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-04-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 3386,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3660,
+    "completionTokens": 325
+  },
+  "costUsd": 0.00115875,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Container for the node\n  const root = new Group();\n\n  // Geometry – a unit plane (will be scaled by the adapter if needed)\n  const geometry = new PlaneGeometry(1, 1);\n\n  // Basic material; texture will be applied asynchronously\n  const material = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    transparent: true,\n    depthWrite: false,\n  });\n\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Load texture synchronously (promise resolves later)\n  let loadedTexture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      loadedTexture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Handlers placeholder (no interactions defined)\n  root.userData.handlers = {};\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Dispose texture\n    if (loadedTexture) {\n      loadedTexture.dispose();\n    }\n    // Dispose material and geometry\n    material.dispose();\n    geometry.dispose();\n\n    // Kill any GSAP timelines that might have been created in the future\n    if (root.userData._gsapTimeline) {\n      root.userData._gsapTimeline.kill();\n    }\n  };\n\n  return root;\n}"
+}

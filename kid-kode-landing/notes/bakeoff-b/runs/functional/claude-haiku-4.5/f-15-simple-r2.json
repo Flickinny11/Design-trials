@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-15-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 4766,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4397,
+    "completionTokens": 591
+  },
+  "costUsd": 0.007352,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec2 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // Create group for the sprite\n  const group = new THREE.Group();\n  group.position.set(-3.2, 1, 0.06);\n\n  // Atlas region: 512x320 pixels\n  const atlasWidth = 512;\n  const atlasHeight = 320;\n  const aspectRatio = atlasWidth / atlasHeight;\n\n  // Create plane geometry with atlas aspect ratio\n  const planeGeometry = new THREE.PlaneGeometry(aspectRatio * 1.5, 1.5);\n\n  // Load texture and create material\n  ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n    texture.colorSpace = THREE.SRGBColorSpace;\n\n    // Calculate UV region for atlas (assuming atlas is 512x320, region is full)\n    const uvOffset = new THREE.Vector2(0, 0);\n    const uvScale = new THREE.Vector2(1, 1);\n\n    texture.offset.copy(uvOffset);\n    texture.repeat.copy(uvScale);\n\n    // Create material with texture node\n    const material = new MeshBasicNodeMaterial({\n      colorNode: texture,\n      transparent: true,\n      side: THREE.DoubleSide,\n      depthTest: true,\n      depthWrite: false,\n    });\n\n    const plane = new THREE.Mesh(planeGeometry, material);\n    group.add(plane);\n  });\n\n  // Create text label \"Collection 1\"\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const labelItem = textItems.find((item) => item.text === 'Collection 1');\n\n  if (labelItem) {\n    const textObj = ctx.fontAtlas.createText('Collection 1', {\n      fontSize: 39,\n      color: '#e8ecf2',\n      align: 'center',\n    });\n    textObj.position.set(0, -1.0, 0.1);\n    group.add(textObj);\n  }\n\n  // Setup cleanup\n  group.userData.cleanup = () => {\n    planeGeometry.dispose();\n  };\n\n  return group;\n}\n```"
+}

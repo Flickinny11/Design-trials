@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-32-moderate-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 3622,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3627,
+    "completionTokens": 743
+  },
+  "costUsd": 0.001464,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport {} from '@/primitives';\nimport {} from '@/text';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {string} [imageUrl]\n * @property {Array<{name:string,params:any,trigger:string}>} [cinematicPrimitives]\n * @property {Array<{text:string,role:string,typography?:any}>} [textContent]\n * @property {any} [intent]\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {any} THREE\n * @property {any} textureLoader\n * @property {any} glbLoader\n * @property {any} videoLoader\n * @property {any} fontAtlas\n * @property {any} primitives\n * @property {Function} emit\n * @property {string} [tier]\n */\n\n/**\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Geometry & material\n  const geometry = new PlaneGeometry(1, 1);\n  const material = new MeshBasicNodeMaterial({ transparent: true });\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Load texture asynchronously\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Primitive instances container\n  const primitiveInstances = [];\n\n  // Apply cinematic primitives if any\n  if (Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach((p) => {\n      const inst = ctx.primitives[p.name](root, p.params);\n      primitiveInstances.push(inst);\n    });\n  }\n\n  // GSAP timelines for interactions\n  const hoverEnterTL = gsap.timeline({ paused: true }).to(mesh.position, {\n    y: 0.15,\n    duration: 0.7,\n    ease: 'power3.out',\n  });\n\n  const hoverLeaveTL = gsap.timeline({ paused: true }).to(mesh.position, {\n    y: 0,\n    duration: 0.7,\n    ease: 'power3.in',\n  });\n\n  const pressTL = gsap.timeline({ paused: true })\n    .to(mesh.scale, {\n      x: 0.97,\n      y: 0.97,\n      z: 0.97,\n      duration: 0.12,\n      ease: 'back.out(1.7)',\n    })\n    .to(mesh.scale, {\n      x: 1,\n      y: 1,\n      z: 1,\n      duration: 0.2,\n      ease: 'power2.out',\n    });\n\n  // Event handlers exposed via userData\n  root.userData.handlers = {\n    hoverEnter: () => hoverEnterTL.restart(),\n    hoverLeave: () => hoverLeaveTL.restart(),\n    click: () => {\n      pressTL.restart();\n      ctx.emit('hub-journal.select', {});\n    },\n  };\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    hoverEnterTL.kill();\n    hoverLeaveTL.kill();\n    pressTL.kill();\n    primitiveInstances.forEach((inst) => {\n      if (inst && typeof inst.cleanup === 'function') inst.cleanup();\n    });\n    geometry.dispose();\n    material.dispose();\n  };\n\n  return root;\n}"
+}

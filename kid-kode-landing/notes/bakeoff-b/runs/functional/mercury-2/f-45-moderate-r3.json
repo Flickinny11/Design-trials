@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-45-moderate",
+  "run": 3,
+  "ok": true,
+  "wallMs": 3563,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3644,
+    "completionTokens": 567
+  },
+  "costUsd": 0.00133625,
+  "billing": "metered",
+  "output": "import { MeshStandardNodeMaterial } from 'three/webgpu';\nimport { texture, uniform } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root object\n  const root = new Group();\n\n  // Geometry for the thin rule\n  const geometry = new PlaneGeometry(2, 0.2, 64, 64);\n  const material = new MeshStandardNodeMaterial();\n  material.metalness = 0.3;\n  material.roughness = 0.6;\n  material.clearcoat = 0.1;\n  material.transparent = true;\n\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Store disposables\n  const disposables = [];\n  const timelines = [];\n  const primitiveInstances = [];\n\n  // Load textures\n  const colorTexPromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  const depthTexPromise = ctx.textureLoader.loadTexture(config.depthMapUrl);\n\n  colorTexPromise.then((tex) => {\n    disposables.push(tex);\n    material.colorNode = texture(tex).rgb;\n    material.needsUpdate = true;\n  });\n\n  depthTexPromise.then((tex) => {\n    disposables.push(tex);\n    const dispScale = uniform(0.1);\n    material.displacementNode = texture(tex).r.mul(dispScale);\n    material.displacementScale = 0.1;\n    material.needsUpdate = true;\n  });\n\n  // Parallax primitive (required for render mode)\n  if (ctx.primitives && ctx.primitives['parallax-scroll']) {\n    const parallax = ctx.primitives['parallax-scroll'](root, {});\n    primitiveInstances.push(parallax);\n  }\n\n  // Interaction handlers\n  const hoverTimeline = gsap.timeline({ paused: true });\n  timelines.push(hoverTimeline);\n\n  const handlers = {\n    hover: () => {\n      hoverTimeline.clear();\n      hoverTimeline.to(root.position, {\n        y: root.position.y + 0.15,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n    },\n    click: () => {\n      ctx.emit('hub-features.select', {});\n    },\n  };\n  root.userData.handlers = handlers;\n\n  // Cleanup\n  root.userData.cleanup = () => {\n    // Dispose geometry and material\n    geometry.dispose();\n    material.dispose();\n\n    // Dispose textures\n    disposables.forEach((tex) => tex.dispose && tex.dispose());\n\n    // Kill GSAP timelines\n    timelines.forEach((tl) => tl.kill());\n\n    // Cleanup primitives\n    primitiveInstances.forEach((inst) => inst.cleanup && inst.cleanup());\n  };\n\n  return root;\n}"
+}

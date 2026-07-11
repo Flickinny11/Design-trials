@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-01-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 2991,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3675,
+    "completionTokens": 561
+  },
+  "costUsd": 0.0013395,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport * as primitives from '@/primitives';\nimport * as text from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Color } = ctx.THREE;\n\n  // Root container – position/rotation/scale are applied by the adapter.\n  const root = new Group();\n\n  // ---------- BACKDROP PLANE ----------\n  const planeGeom = new PlaneGeometry(7, 6);\n  const planeMat = new MeshBasicNodeMaterial();\n  // Base surface color from visual spec or default.\n  const surfaceColor = config.intent?.visualSpec?.colors?.surface ?? '#0b0b10';\n  planeMat.color = new Color(surfaceColor);\n\n  // Load texture if an image URL is provided.\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      planeMat.map = tex;\n      planeMat.needsUpdate = true;\n    });\n  }\n\n  const planeMesh = new Mesh(planeGeom, planeMat);\n  planeMesh.position.set(0, 0, 0);\n  root.add(planeMesh);\n\n  // ---------- TEXT CONTENT ----------\n  const items =\n    config.textContent ??\n    config.intent?.visualSpec?.textContent ??\n    [];\n\n  for (const item of items) {\n    const txtOpts = {\n      fontSize: item.typography?.fontSize ?? 31,\n      color: config.intent?.visualSpec?.colors?.ink ?? '#16161d',\n      align: 'left',\n    };\n    const txtObj = ctx.fontAtlas.createText(item.text, txtOpts);\n    // Position text slightly in front of the plane to avoid z‑fighting.\n    txtObj.position.set(0, 0, 0.01);\n    root.add(txtObj);\n  }\n\n  // ---------- PRIMITIVES (none in this spec) ----------\n  const primitiveHandles = [];\n\n  // ---------- EVENT HANDLERS ----------\n  root.userData.handlers = {};\n\n  // ---------- CLEANUP ----------\n  root.userData.cleanup = () => {\n    // Dispose material & geometry.\n    planeMat.dispose();\n    planeGeom.dispose();\n    if (planeMat.map) {\n      planeMat.map.dispose();\n    }\n    // Dispose any primitive handles (none here).\n    for (const h of primitiveHandles) {\n      if (h && typeof h.cleanup === 'function') h.cleanup();\n    }\n    // Kill any GSAP timelines that might have been created elsewhere.\n    if (root.userData._timelines) {\n      for (const tl of root.userData._timelines) tl.kill();\n    }\n  };\n\n  return root;\n}\n"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-38-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 2962,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3607,
+    "completionTokens": 705
+  },
+  "costUsd": 0.0014305,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport * as primitives from '@/primitives';\nimport * as text from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new ctx.THREE.Group();\n\n  // Plane geometry based on image aspect (512x320 => 1.6:1)\n  const geometry = new ctx.THREE.PlaneGeometry(1.6, 1);\n  const material = new MeshBasicNodeMaterial();\n  const mesh = new ctx.THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Load texture asynchronously\n  ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    material.map = tex;\n    material.needsUpdate = true;\n  });\n\n  // Apply rotation & scale from config (scenePosition is applied by adapter)\n  if (config.rotation) group.rotation.set(...config.rotation);\n  if (config.scale) group.scale.set(...config.scale);\n\n  // Store active GSAP timelines for cleanup\n  const activeTimelines = [];\n\n  // Event handlers container\n  const handlers = {};\n\n  // Hover lift (rise‑in) effect\n  handlers.hover = {\n    enter: () => {\n      const tl = gsap.timeline();\n      tl.to(group.position, {\n        y: group.position.y + 0.15,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n      activeTimelines.push(tl);\n    },\n    leave: () => {\n      const tl = gsap.timeline();\n      tl.to(group.position, {\n        y: group.position.y - 0.15,\n        duration: 0.3,\n        ease: 'power3.in',\n      });\n      activeTimelines.push(tl);\n    },\n  };\n\n  // Click: press‑down animation + emit navigation event\n  handlers.click = () => {\n    const tl = gsap.timeline();\n    tl.to(group.scale, {\n      x: group.scale.x * 0.97,\n      y: group.scale.y * 0.97,\n      z: group.scale.z * 0.97,\n      duration: 0.12,\n      ease: 'back.out(1.7)',\n    })\n      .to(\n        group.scale,\n        {\n          x: group.scale.x / 0.97,\n          y: group.scale.y / 0.97,\n          z: group.scale.z / 0.97,\n          duration: 0.2,\n          ease: 'power2.out',\n        },\n        '+=0.05'\n      )\n      .call(() => {\n        ctx.emit('hub-journal.select', {});\n      });\n    activeTimelines.push(tl);\n  };\n\n  group.userData.handlers = handlers;\n\n  // Apply any cinematic primitives defined in config\n  const primitiveInstances = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const instance = ctx.primitives[prim.name](group, prim.params);\n      primitiveInstances.push(instance);\n    }\n  }\n\n  // Cleanup routine\n  group.userData.cleanup = () => {\n    // Dispose geometry & material\n    geometry.dispose();\n    material.dispose();\n\n    // Kill GSAP timelines\n    activeTimelines.forEach((t) => t.kill());\n\n    // Cleanup primitives\n    primitiveInstances.forEach((p) => {\n      if (p && typeof p.cleanup === 'function') p.cleanup();\n    });\n  };\n\n  return group;\n}"
+}

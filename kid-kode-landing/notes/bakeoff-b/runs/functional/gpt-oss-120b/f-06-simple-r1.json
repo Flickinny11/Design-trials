@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-06-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 12907,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3750,
+    "completionTokens": 2553
+  },
+  "costUsd": 0.0020943000000000003,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { } from '@/primitives';\nimport { } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, PlaneGeometry, Mesh } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // ---------- Geometry ----------\n  // Atlas region (fallback to full image if not provided)\n  const atlasRect = (config.atlasRegion && config.atlasRegion.rect) || {\n    x: 0,\n    y: 0,\n    width: 512,\n    height: 320,\n  };\n  const aspect = atlasRect.width / atlasRect.height;\n  const geometry = new PlaneGeometry(aspect, 1);\n\n  // ---------- Material ----------\n  const material = new MeshBasicNodeMaterial();\n  material.transparent = true;\n\n  // Load texture (if any)\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      // Apply atlas UV offset / repeat\n      const texW = tex.image?.width || atlasRect.width;\n      const texH = tex.image?.height || atlasRect.height;\n\n      const uScale = atlasRect.width / texW;\n      const vScale = atlasRect.height / texH;\n\n      tex.offset.set(atlasRect.x / texW, 1 - (atlasRect.y + atlasRect.height) / texH);\n      tex.repeat.set(uScale, vScale);\n      tex.needsUpdate = true;\n\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // ---------- Mesh ----------\n  const plane = new Mesh(geometry, material);\n  // Billboard behavior: always face the camera\n  plane.onBeforeRender = (renderer, scene, camera) => {\n    plane.lookAt(camera.position);\n  };\n  root.add(plane);\n\n  // ---------- Text ----------\n  const items =\n    config.textContent ??\n    config.intent?.visualSpec?.textContent ??\n    [];\n\n  for (const item of items) {\n    const txt = ctx.fontAtlas.createText(item.text ?? '', {\n      fontSize: item.typography?.fontSize ?? 96,\n      color: (config.colors?.paper) ?? '#e8ecf2',\n      align: 'center',\n    });\n    // Position text slightly above the plane and a bit forward to avoid z‑fighting\n    txt.position.set(0, 0.6, 0.01);\n    root.add(txt);\n  }\n\n  // ---------- Cinematic Primitives ----------\n  const primitiveHandles = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      try {\n        const handle = ctx.primitives[prim.name](root, prim.params);\n        primitiveHandles.push(handle);\n      } catch (e) {\n        // Silently ignore missing primitive implementations\n      }\n    }\n  }\n\n  // ---------- Event Handlers Placeholder ----------\n  root.userData.handlers = {};\n\n  // ---------- Cleanup ----------\n  root.userData.cleanup = () => {\n    // Dispose geometry & material\n    geometry.dispose();\n    material.dispose();\n\n    // Dispose texture if it was set\n    if (material.map) {\n      material.map.dispose();\n    }\n\n    // Cleanup primitives\n    for (const h of primitiveHandles) {\n      if (h && typeof h.cleanup === 'function') {\n        h.cleanup();\n      }\n    }\n\n    // Kill any GSAP timelines that might have been created elsewhere\n    gsap.globalTimeline.clear();\n\n    // Dispose any child text objects\n    root.traverse((obj) => {\n      if (obj.geometry) obj.geometry.dispose();\n      if (obj.material) {\n        if (Array.isArray(obj.material)) {\n          obj.material.forEach((m) => m.dispose());\n        } else {\n          obj.material.dispose();\n        }\n      }\n    });\n  };\n\n  return root;\n}"
+}

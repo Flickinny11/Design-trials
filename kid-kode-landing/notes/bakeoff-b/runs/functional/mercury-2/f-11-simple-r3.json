@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-11-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 4618,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3523,
+    "completionTokens": 533
+  },
+  "costUsd": 0.0012805,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport {} from '@/primitives';\nimport {} from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n  const root = new Group();\n\n  // Store disposables and timelines for cleanup\n  const disposables = [];\n  const timelines = [];\n\n  // Create plane geometry and basic material\n  const geometry = new PlaneGeometry(1, 1);\n  const material = new MeshBasicNodeMaterial();\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Load texture if an image URL is provided\n  const imageUrl = config.imageUrl ?? config.meshUrl ?? null;\n  let loadedTexture = null;\n  if (imageUrl) {\n    ctx.textureLoader.loadTexture(imageUrl).then((tex) => {\n      loadedTexture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n      disposables.push(() => {\n        if (tex?.dispose) tex.dispose();\n      });\n    });\n  }\n\n  // Apply cinematic primitives defined in config\n  const primitiveInstances = [];\n  const primitives = config.cinematicPrimitives ?? [];\n  for (const prim of primitives) {\n    const name = prim.name;\n    const params = prim.params || {};\n    const instance = ctx.primitives[name](root, params);\n    primitiveInstances.push(instance);\n    if (instance?.timeline) timelines.push(instance.timeline);\n  }\n\n  // Render any text items using the font atlas\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    const textNode = ctx.fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize,\n      color: item.typography?.color ?? '#e8ecf2',\n      align: 'left',\n    });\n    root.add(textNode);\n  }\n\n  // Prepare userData for event handlers and cleanup\n  root.userData.handlers = {};\n\n  root.userData.cleanup = () => {\n    // Cleanup primitives\n    for (const inst of primitiveInstances) {\n      if (inst?.cleanup) inst.cleanup();\n    }\n    // Kill GSAP timelines\n    for (const tl of timelines) {\n      tl.kill();\n    }\n    // Dispose geometry, material, and texture\n    if (geometry?.dispose) geometry.dispose();\n    if (material?.dispose) material.dispose();\n    if (loadedTexture?.dispose) loadedTexture.dispose();\n    // Run any additional disposables\n    for (const fn of disposables) fn();\n  };\n\n  return root;\n}"
+}

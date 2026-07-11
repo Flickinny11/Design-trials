@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-10-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 10277,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3741,
+    "completionTokens": 1678
+  },
+  "costUsd": 0.0015679499999999998,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Vector3 } = ctx.THREE;\n\n  // Root container – position/rotation/scale will be applied by the adapter.\n  const root = new Group();\n\n  // --- Geometry & Material -------------------------------------------------\n  // Use the aspect ratio of the source image (512 / 320 ≈ 1.6) for a proportional plane.\n  const planeAspect = 512 / 320;\n  const geometry = new PlaneGeometry(planeAspect, 1);\n  const material = new MeshBasicNodeMaterial({ color: 0xffffff, transparent: true });\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Load texture asynchronously; the function stays synchronous.\n  let texture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      texture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // --- Text -----------------------------------------------------------------\n  const items =\n    config.textContent ??\n    config.intent?.visualSpec?.textContent ??\n    [];\n\n  const textObjects = [];\n\n  for (const item of items) {\n    const fontSize = item.typography?.fontSize ?? 39;\n    const color = (config.visualSpec?.colors?.paper) || '#e8ecf2';\n    const txt = ctx.fontAtlas.createText(item.text ?? '', {\n      fontSize,\n      color,\n      align: 'center',\n    });\n\n    // Slightly lift the text above the plane to avoid Z‑fighting.\n    txt.position.set(0, 0, 0.01);\n    root.add(txt);\n    textObjects.push(txt);\n  }\n\n  // --- Cinematic Primitives -------------------------------------------------\n  const primitiveCleanups = [];\n\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const primitive of config.cinematicPrimitives) {\n      const handler = ctx.primitives[primitive.name];\n      if (typeof handler === 'function') {\n        const result = handler(root, primitive.params ?? {});\n        if (result && typeof result.cleanup === 'function') {\n          primitiveCleanups.push(result.cleanup);\n        }\n      }\n    }\n  }\n\n  // --- UserData ------------------------------------------------------------\n  root.userData.handlers = {};\n\n  root.userData.cleanup = () => {\n    // Dispose Three.js resources.\n    geometry.dispose();\n    material.dispose();\n    if (texture) texture.dispose();\n\n    // Dispose any text objects (they hold their own resources).\n    for (const obj of textObjects) {\n      if (obj.parent) obj.parent.remove(obj);\n    }\n\n    // Run primitive cleanups.\n    for (const clean of primitiveCleanups) clean();\n\n    // Clear handlers reference.\n    root.userData.handlers = {};\n  };\n\n  return root;\n}"
+}

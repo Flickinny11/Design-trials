@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-25-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 3100,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3601,
+    "completionTokens": 711
+  },
+  "costUsd": 0.0014335,
+  "billing": "metered",
+  "output": "import { Mesh, Plane, Group } from \"three/webgpu\";\nimport { MeshBasicNodeMaterial } from \"three/webgpu\";\nimport { gsap } from \"gsap\";\nimport {} from \"@/primitives\";\nimport {} from \"@/text\";\n\n/**\n * @typedef {Object} NodeConfig\n * @property {string} [imageUrl]\n * @property {Array<{name:string,params:any,trigger:string}>} [cinematicPrimitives]\n * @property {Array<any>} [textContent]\n * @property {any} [intent]\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {any} THREE\n * @property {Object} textureLoader\n * @property {Function} textureLoader.loadTexture\n * @property {Object} primitives\n * @property {Function} emit\n * @property {string} [tier]\n */\n\n/**\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // root container\n  const root = new Group();\n\n  // store resources for cleanup\n  const disposables = {\n    geometry: null,\n    material: null,\n    texture: null,\n    timelines: [],\n    primitives: [],\n  };\n\n  // ---------- PRIMITIVES ----------\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const fn = ctx.primitives[prim.name];\n      if (typeof fn === \"function\") {\n        const instance = fn(root, prim.params);\n        disposables.primitives.push(instance);\n      }\n    }\n  }\n\n  // ---------- TEXT ----------\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of textItems) {\n    const txt = ctx.fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize,\n      color: item.role === \"accent\" ? \"#ff2a38\" : \"#e8ecf2\",\n      align: \"left\",\n    });\n    root.add(txt);\n  }\n\n  // ---------- TEXTURED PLANE ----------\n  if (config.imageUrl) {\n    const geometry = new PlaneGeometry(1.6, 1.0);\n    const material = new MeshBasicNodeMaterial({ map: null });\n    const mesh = new Mesh(geometry, material);\n    root.add(mesh);\n\n    disposables.geometry = geometry;\n    disposables.material = material;\n\n    // async texture load (cached)\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n      disposables.texture = tex;\n    });\n  }\n\n  // ---------- EVENT HANDLERS ----------\n  root.userData.handlers = {};\n\n  // ---------- CLEANUP ----------\n  root.userData.cleanup = () => {\n    // dispose primitives\n    for (const p of disposables.primitives) {\n      if (p && typeof p.cleanup === \"function\") p.cleanup();\n    }\n\n    // kill GSAP timelines\n    for (const tl of disposables.timelines) {\n      tl.kill();\n    }\n\n    // dispose material / geometry / texture\n    if (disposables.material) disposables.material.dispose();\n    if (disposables.geometry) disposables.geometry.dispose();\n    if (disposables.texture) disposables.texture.dispose();\n  };\n\n  return root;\n}"
+}

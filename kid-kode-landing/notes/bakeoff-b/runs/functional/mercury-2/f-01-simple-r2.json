@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-01-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 3355,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3524,
+    "completionTokens": 517
+  },
+  "costUsd": 0.00126875,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Container for the node\n  const root = new Group();\n\n  // ---------- Textured Plane ----------\n  const planeGeom = new PlaneGeometry(7, 6);\n  const planeMat = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    transparent: true,\n    depthWrite: true,\n  });\n  const plane = new Mesh(planeGeom, planeMat);\n  // plane is placed at the spec‑defined Z depth\n  plane.position.set(0, 0, -2.5);\n  root.add(plane);\n\n  // Load texture (if any) – async but setup is sync\n  const cleanupResources = {\n    textures: [],\n    texts: [],\n    primitives: [],\n    timelines: [],\n  };\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      planeMat.map = tex;\n      planeMat.needsUpdate = true;\n      cleanupResources.textures.push(tex);\n    });\n  }\n\n  // ---------- Text Content ----------\n  const items =\n    config.textContent ??\n    config.intent?.visualSpec?.textContent ??\n    [];\n\n  const defaultColor =\n    config.intent?.visualSpec?.colors?.paper ?? '#e8ecf2';\n\n  for (const item of items) {\n    const txt = ctx.fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize ?? 31,\n      color: defaultColor,\n      align: 'left',\n    });\n    // Position text slightly in front of the plane\n    txt.position.set(0, 0, 0.01);\n    root.add(txt);\n    cleanupResources.texts.push(txt);\n  }\n\n  // ---------- Event Handlers ----------\n  root.userData.handlers = {};\n\n  // ---------- Cleanup ----------\n  root.userData.cleanup = () => {\n    // Dispose geometry & material\n    planeGeom.dispose();\n    planeMat.dispose();\n\n    // Dispose loaded textures\n    cleanupResources.textures.forEach((t) => {\n      if (t.dispose) t.dispose();\n    });\n\n    // Dispose any primitives (none in this spec)\n    cleanupResources.primitives.forEach((p) => {\n      if (p.cleanup) p.cleanup();\n    });\n\n    // Kill GSAP timelines\n    cleanupResources.timelines.forEach((tl) => {\n      tl.kill();\n    });\n\n    // Remove references\n    root.clear();\n  };\n\n  return root;\n}"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-24-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 3431,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3651,
+    "completionTokens": 511
+  },
+  "costUsd": 0.001296,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport {} from '@/primitives';\nimport {} from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new ctx.THREE.Group();\n  group.userData.handlers = {};\n\n  // Store cleanup callbacks\n  const disposables = [];\n\n  // Load texture and create plane\n  const texturePromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  const planeGeom = new ctx.THREE.PlaneGeometry(1.6, 1); // aspect 512/320 = 1.6\n  const material = new MeshBasicNodeMaterial();\n  material.transparent = true;\n  material.depthWrite = false;\n  const plane = new ctx.THREE.Mesh(planeGeom, material);\n  group.add(plane);\n\n  texturePromise.then((tex) => {\n    material.map = tex;\n    material.needsUpdate = true;\n    disposables.push(() => tex.dispose());\n  });\n\n  // Create text objects\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  items.forEach((item) => {\n    const txt = ctx.fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize ?? 39,\n      color: config.intent?.visualSpec?.colors?.paper ?? '#e8ecf2',\n      align: 'center',\n      maxWidthPx: 512,\n    });\n    group.add(txt);\n    disposables.push(() => {\n      if (txt.geometry) txt.geometry.dispose();\n      if (txt.material) txt.material.dispose();\n    });\n  });\n\n  // Apply cinematic primitives\n  const primitiveInstances = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach((p) => {\n      const prim = ctx.primitives[p.name](group, p.params);\n      primitiveInstances.push(prim);\n    });\n  }\n\n  // Cleanup routine\n  group.userData.cleanup = () => {\n    // Dispose material and geometry\n    material.dispose();\n    planeGeom.dispose();\n\n    // Dispose texture\n    texturePromise.then((tex) => tex.dispose()).catch(() => {});\n\n    // Dispose primitives\n    primitiveInstances.forEach((prim) => {\n      if (prim.cleanup) prim.cleanup();\n      if (prim.timeline && prim.timeline.kill) prim.timeline.kill();\n    });\n\n    // Run stored disposables\n    disposables.forEach((fn) => fn());\n  };\n\n  return group;\n}"
+}

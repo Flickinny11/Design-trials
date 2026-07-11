@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-5.6-luna",
+  "model": "openai/gpt-5.6-luna",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-04-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 340,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3674,
+    "completionTokens": 1445
+  },
+  "costUsd": 0.012344,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { mix, smoothstep, uv, vec3 } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nfunction createNode(config, ctx) {\n  const THREE = ctx.THREE;\n  const root = new THREE.Group();\n  const resources = [];\n  const timelines = [];\n  const primitiveResults = [];\n\n  root.userData.handlers = {};\n\n  const backdropGeometry = new THREE.PlaneGeometry(7, 6);\n  const backdropMaterial = new MeshBasicNodeMaterial();\n  backdropMaterial.colorNode = mix(\n    vec3(0.043, 0.043, 0.063),\n    mix(\n      vec3(0.086, 0.086, 0.114),\n      vec3(0.910, 0.925, 0.949),\n      smoothstep(0.58, 1.0, uv().y)\n    ),\n    smoothstep(0.0, 0.82, uv().y)\n  );\n\n  const backdrop = new THREE.Mesh(backdropGeometry, backdropMaterial);\n  backdrop.position.set(0, 0, -2.5);\n  root.add(backdrop);\n  resources.push(backdropGeometry, backdropMaterial);\n\n  const surfaceGeometry = new THREE.PlaneGeometry(4.8, 1.28);\n  const surfaceMaterial = new MeshBasicNodeMaterial({\n    color: 0x16161d,\n    transparent: true,\n    opacity: 0.96\n  });\n  const surface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);\n  surface.position.set(0, 0, -0.35);\n  root.add(surface);\n  resources.push(surfaceGeometry, surfaceMaterial);\n\n  const edgeGeometry = new THREE.PlaneGeometry(4.8, 0.025);\n  const edgeMaterial = new MeshBasicNodeMaterial({\n    color: 0xff2a38\n  });\n  const edge = new THREE.Mesh(edgeGeometry, edgeMaterial);\n  edge.position.set(0, -0.64, -0.28);\n  root.add(edge);\n  resources.push(edgeGeometry, edgeMaterial);\n\n  const accentGeometry = new THREE.PlaneGeometry(0.7, 0.08);\n  const accentMaterial = new MeshBasicNodeMaterial({\n    color: 0xe8ecf2\n  });\n  const accent = new THREE.Mesh(accentGeometry, accentMaterial);\n  accent.position.set(-1.72, 0.42, -0.16);\n  root.add(accent);\n  resources.push(accentGeometry, accentMaterial);\n\n  const foregroundGeometry = new THREE.PlaneGeometry(1.15, 0.34);\n  const foregroundMaterial = new MeshBasicNodeMaterial({\n    color: 0x0b0b10,\n    transparent: true,\n    opacity: 0.82\n  });\n  const foreground = new THREE.Mesh(foregroundGeometry, foregroundMaterial);\n  foreground.position.set(1.55, -0.28, 0.08);\n  root.add(foreground);\n  resources.push(foregroundGeometry, foregroundMaterial);\n\n  const imageUrl = config.imageUrl ?? config.intent?.visualSpec?.imageUrl;\n  if (imageUrl) {\n    ctx.textureLoader.loadTexture(imageUrl).then((texture) => {\n      if (root.userData.cleaned) {\n        texture.dispose?.();\n        return;\n      }\n\n      surfaceMaterial.map = texture;\n      surfaceMaterial.transparent = true;\n      surfaceMaterial.needsUpdate = true;\n      resources.push(texture);\n    }).catch(() => {});\n  }\n\n  const primitives = config.cinematicPrimitives ?? [];\n  for (const primitive of primitives) {\n    const handler = ctx.primitives?.[primitive.name];\n    if (typeof handler === 'function') {\n      const result = handler(root, primitive.params);\n      if (result) {\n        primitiveResults.push(result);\n        if (result.timeline) timelines.push(result.timeline);\n      }\n    }\n  }\n\n  root.userData.cleanup = () => {\n    if (root.userData.cleaned) return;\n    root.userData.cleaned = true;\n\n    for (const timeline of timelines) {\n      timeline?.kill?.();\n    }\n\n    for (const result of primitiveResults) {\n      result?.cleanup?.();\n    }\n\n    for (const resource of resources) {\n      resource?.dispose?.();\n    }\n\n    root.clear();\n  };\n\n  return root;\n}\n\nexport default createNode;"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-45-moderate",
+  "run": 1,
+  "ok": true,
+  "wallMs": 16020,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3827,
+    "completionTokens": 2803
+  },
+  "costUsd": 0.0022558499999999998,
+  "billing": "metered",
+  "output": "import { MeshStandardNodeMaterial } from 'three/webgpu';\nimport { texture, mul, float } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport { } from '@/primitives';\nimport { } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Geometry (tessellated)\n  const geometry = new PlaneGeometry(1, 1, 64, 64);\n  geometry.rotateX(-Math.PI / 2); // make it face upward by default (optional)\n\n  // Basic NodeMaterial placeholder\n  const material = new MeshStandardNodeMaterial({ color: 0xffffff, transparent: true });\n\n  // Mesh\n  const plane = new Mesh(geometry, material);\n  root.add(plane);\n\n  // Load textures asynchronously (function stays synchronous)\n  let colorTexture, depthTexture;\n  const colorPromise = config.imageUrl\n    ? ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n        colorTexture = tex;\n        const colorNode = texture(tex);\n        material.colorNode = colorNode;\n        material.needsUpdate = true;\n      })\n    : Promise.resolve();\n\n  const depthPromise = config.depthMapUrl\n    ? ctx.textureLoader.loadTexture(config.depthMapUrl).then((tex) => {\n        depthTexture = tex;\n        const depthNode = texture(tex);\n        // Displace using red channel scaled modestly\n        material.displacementNode = mul(depthNode.r, float(0.15));\n        material.displacementScale = 1.0; // fallback for non‑node pipelines\n        material.needsUpdate = true;\n      })\n    : Promise.resolve();\n\n  // Ensure any texture load errors do not break the node\n  Promise.all([colorPromise, depthPromise]).catch(() => { /* silent */ });\n\n  // Interaction: hover lift (rise‑in) and click emit\n  const hoverTL = gsap.timeline({ paused: true });\n  hoverTL.to(\n    plane.position,\n    {\n      y: plane.position.y + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    },\n  );\n\n  // Store handlers in userData\n  root.userData.handlers = {\n    hover: (isHover) => {\n      if (isHover) hoverTL.play(0);\n      else hoverTL.reverse();\n    },\n    click: () => {\n      ctx.emit('hub-features.select');\n    },\n  };\n\n  // Apply parallax primitive (if available)\n  let parallaxPrimitive = null;\n  if (ctx.primitives && typeof ctx.primitives['parallax-scroll'] === 'function') {\n    parallaxPrimitive = ctx.primitives['parallax-scroll'](plane, {});\n  }\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    hoverTL.kill();\n    if (parallaxPrimitive && typeof parallaxPrimitive.cleanup === 'function') {\n      parallaxPrimitive.cleanup();\n    }\n    if (geometry) geometry.dispose();\n    if (material) material.dispose();\n    if (colorTexture) colorTexture.dispose();\n    if (depthTexture) depthTexture.dispose();\n  };\n\n  return root;\n}"
+}

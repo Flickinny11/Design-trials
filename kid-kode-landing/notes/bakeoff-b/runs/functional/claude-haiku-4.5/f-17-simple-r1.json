@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-17-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 7424,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4385,
+    "completionTokens": 758
+  },
+  "costUsd": 0.008175,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, texture, mix, vec3 } from 'three/tsl';\nimport { Group, Mesh, PlaneGeometry, Color } from 'three';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n  group.position.set(0, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Load the brushed-metal texture\n  const metalTexture = ctx.textureLoader.loadTexture(config.imageUrl);\n\n  // Create the plane geometry (card-like proportions for label)\n  const geometry = new PlaneGeometry(2.4, 0.5);\n\n  // TSL-based material with engineered gradient and subtle grain\n  const uvNode = uv();\n\n  // Sample the brushed-metal texture for surface detail\n  const metalSample = texture(metalTexture, uvNode);\n\n  // Engineered vertical gradient: surface (#0b0b10) to ink (#16161d) with subtle lift\n  const gradientY = uvNode.y;\n  const surfaceColor = new Color('#0b0b10');\n  const inkColor = new Color('#16161d');\n  const gradientMix = mix(vec3(...surfaceColor.toArray()), vec3(...inkColor.toArray()), gradientY);\n\n  // Blend gradient with metal texture for subtle grain and surface detail\n  const blendedColor = mix(gradientMix, metalSample.rgb, 0.15);\n\n  // Create material with the blended color\n  const material = new MeshBasicNodeMaterial({\n    colorNode: blendedColor,\n    transparent: true,\n    opacity: 0.95,\n  });\n\n  // Create the plane mesh\n  const plane = new Mesh(geometry, material);\n  group.add(plane);\n\n  // Create text label: \"Collection 2\"\n  const textContent = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const labelText = textContent.find((item) => item.role === 'headline')?.text ?? 'Collection 2';\n\n  // Render text with headline sizing (39px → ~0.34 scene units at typical DPI)\n  const textMesh = ctx.fontAtlas.createText(labelText, {\n    fontSize: 0.3,\n    color: '#e8ecf2', // paper color for contrast\n    align: 'center',\n    letterSpacingPx: 1.5,\n  });\n\n  // Position text centered on the plane\n  textMesh.position.set(0, 0, 0.01); // Slight z offset to prevent z-fighting\n  group.add(textMesh);\n\n  // Cleanup function\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    metalTexture.dispose();\n  };\n\n  // Event handlers (none specified)\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

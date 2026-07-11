@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-37-moderate-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 2426,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3703,
+    "completionTokens": 498
+  },
+  "costUsd": 0.00129925,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Vector3 } = ctx.THREE;\n\n  // root container\n  const root = new Group();\n\n  // geometry & material for the textured plane\n  const geometry = new PlaneGeometry(2, 1.25);\n  const material = new MeshBasicNodeMaterial({ map: null, transparent: true });\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // async texture load (sync function)\n  let texture;\n  ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    texture = tex;\n    material.map = tex;\n    material.needsUpdate = true;\n  });\n\n  // apply cinematic primitives from config\n  const primInstances = [];\n  const primitives = config.cinematicPrimitives ?? [];\n  for (const p of primitives) {\n    const fn = ctx.primitives[p.name];\n    if (fn) {\n      const inst = fn(root, p.params || {});\n      primInstances.push(inst);\n    }\n  }\n\n  // GSAP timelines for interactions\n  const hoverTL = gsap.timeline({ paused: true }).to(mesh.position, {\n    y: '+=0.15',\n    duration: 0.7,\n    ease: 'power3.out',\n  });\n\n  const clickTL = gsap.timeline({ paused: true }).to(mesh.scale, {\n    x: 0.97,\n    y: 0.97,\n    z: 0.97,\n    duration: 0.12,\n    ease: 'back.out',\n  });\n\n  // event handlers attached to userData\n  root.userData.handlers = {\n    hover: () => {\n      hoverTL.restart();\n    },\n    click: () => {\n      clickTL.restart();\n      ctx.emit('hub-pricing.select');\n    },\n  };\n\n  // cleanup routine\n  root.userData.cleanup = () => {\n    // dispose three.js resources\n    geometry.dispose();\n    material.dispose();\n    if (texture) texture.dispose();\n\n    // kill GSAP timelines\n    hoverTL.kill();\n    clickTL.kill();\n\n    // cleanup primitives\n    for (const inst of primInstances) {\n      if (inst && typeof inst.cleanup === 'function') {\n        inst.cleanup();\n      }\n    }\n  };\n\n  return root;\n}"
+}

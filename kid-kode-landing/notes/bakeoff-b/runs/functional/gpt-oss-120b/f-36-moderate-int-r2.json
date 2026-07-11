@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-36-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 11863,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3793,
+    "completionTokens": 2020
+  },
+  "costUsd": 0.00178095,
+  "billing": "metered",
+  "output": "import {\n  Mesh,\n  PlaneGeometry,\n  Group,\n  Color\n} from 'three/webgpu';\nimport {\n  mix,\n  fresnel,\n  vec3,\n  color\n} from 'three/tsl';\nimport { gsap } from 'gsap';\nimport { } from '@/primitives';\nimport { } from '@/text';\n\nexport default function createNode(config, ctx) {\n  // Root container\n  const container = new Group();\n\n  // Geometry for the badge (aspect ratio from texture, default 1:1)\n  const geometry = new PlaneGeometry(1, 1, 1, 1);\n  geometry.rotateX(-Math.PI / 2); // make it face up (optional)\n\n  // Base material with texture support\n  const material = new MeshStandardNodeMaterial();\n  material.color = new Color('#ffffff');\n  material.metalness = 0.0;\n  material.roughness = 0.8;\n  material.clearcoat = 0.0;\n\n  // Edge accent using Fresnel blend\n  const accentColor = new Color('#ff2a38');\n  material.emissiveNode = mix(\n    vec3(0, 0, 0),\n    color(accentColor),\n    fresnel({ bias: 0.0, scale: 1.0, power: 2.0 })\n  );\n  material.emissiveIntensity = 0.5;\n\n  // Mesh creation\n  const mesh = new Mesh(geometry, material);\n  container.add(mesh);\n\n  // Load texture asynchronously\n  let texturePromise = null;\n  if (config.imageUrl) {\n    texturePromise = ctx.textureLoader\n      .loadTexture(config.imageUrl)\n      .then((tex) => {\n        material.map = tex;\n        material.needsUpdate = true;\n        return tex;\n      });\n  }\n\n  // Interaction state\n  let hoverState = false;\n  let hoverTimeline = null;\n  const riseDistance = 0.15; // scene units\n\n  // Handlers container\n  const handlers = {};\n\n  // Hover handler (toggle rise-in / settle)\n  handlers.hover = () => {\n    hoverState = !hoverState;\n    if (hoverTimeline) hoverTimeline.kill();\n    hoverTimeline = gsap.timeline();\n    const targetY = hoverState ? mesh.position.y + riseDistance : mesh.position.y - riseDistance;\n    hoverTimeline.to(\n      mesh.position,\n      {\n        y: targetY,\n        duration: 0.7,\n        ease: 'power3.out'\n      }\n    );\n  };\n\n  // Click handler – emit selection event\n  handlers.click = () => {\n    ctx.emit('hub-collection.select', {});\n  };\n\n  // Attach handlers to userData\n  container.userData.handlers = handlers;\n\n  // Cleanup routine\n  container.userData.cleanup = () => {\n    // Dispose geometry & material\n    geometry.dispose();\n    material.dispose();\n\n    // Dispose texture if loaded\n    if (texturePromise) {\n      texturePromise.then((tex) => {\n        tex.dispose();\n      });\n    }\n\n    // Kill any GSAP timelines\n    if (hoverTimeline) hoverTimeline.kill();\n    hoverTimeline = null;\n  };\n\n  return container;\n}\n"
+}

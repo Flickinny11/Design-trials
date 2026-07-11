@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-23-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 1944,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3615,
+    "completionTokens": 762
+  },
+  "costUsd": 0.00147525,
+  "billing": "metered",
+  "output": "import { Group, Mesh, PlaneGeometry } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { primitives } from '@/primitives';\nimport { text } from '@/text';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {string} [imageUrl]\n * @property {Array<{text:string, role:string, typography?:{fontSize:number}}>} [textContent]\n * @property {Array<{name:string, params:any, trigger:string}>} [cinematicPrimitives]\n * @property {Object} [intent]\n * @property {Object} [intent.visualSpec]\n * @property {Array<{text:string, role:string, typography?:{fontSize:number}}>} [intent.visualSpec.textContent]\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {Object} THREE\n * @property {Object} textureLoader\n * @property {Object} glbLoader\n * @property {Object} [videoLoader]\n * @property {Object} fontAtlas\n * @property {Object} primitives\n * @property {Function} emit\n * @property {string} [tier]\n */\n\n/**\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n  root.name = 'PricingCard2';\n\n  // Geometry – a simple plane (size 1x1, can be scaled externally)\n  const geometry = new PlaneGeometry(1, 1);\n  // Material – basic node material with texture map\n  const material = new MeshBasicNodeMaterial();\n  material.color.set('#0b0b10'); // surface fallback color\n\n  // Load texture if provided\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  const mesh = new Mesh(geometry, material);\n  mesh.name = 'CardPlane';\n  root.add(mesh);\n\n  // Apply cinematic primitives if any (none for this node, but keep pattern)\n  const primitiveInstances = [];\n  if (config.cinematicPrimitives) {\n    for (const prim of config.cinematicPrimitives) {\n      const instance = ctx.primitives[prim.name](root, prim.params);\n      primitiveInstances.push(instance);\n    }\n  }\n\n  // Text handling – none for this node, but keep placeholder for future\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of textItems) {\n    const txtObj = ctx.fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize ?? 0.13,\n      color: '#e8ecf2',\n      align: 'center',\n    });\n    root.add(txtObj);\n  }\n\n  // Event handlers container (empty as no interactions defined)\n  root.userData.handlers = {};\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Dispose primitives\n    for (const inst of primitiveInstances) {\n      if (inst && typeof inst.cleanup === 'function') {\n        inst.cleanup();\n      }\n    }\n    // Dispose material and geometry\n    if (material.map && typeof material.map.dispose === 'function') {\n      material.map.dispose();\n    }\n    material.dispose();\n    geometry.dispose();\n\n    // Kill any GSAP timelines that might have been created\n    gsap.globalTimeline.clear();\n  };\n\n  return root;\n}"
+}

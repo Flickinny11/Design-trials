@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-30-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 11406,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3742,
+    "completionTokens": 2133
+  },
+  "costUsd": 0.0018410999999999998,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport {} from '@/primitives';\nimport {} from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n  const container = new Group();\n\n  // --- Geometry --------------------------------------------------------------\n  const atlasRect = config.atlasRegion?.sourceRect || { width: 512, height: 320 };\n  const aspect = atlasRect.width / atlasRect.height;\n  const geometry = new PlaneGeometry(aspect, 1);\n\n  // --- Material ---------------------------------------------------------------\n  const material = new MeshBasicNodeMaterial();\n  material.transparent = true;\n\n  // Load texture asynchronously, but apply when ready\n  ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    material.map = texture(tex);\n    material.needsUpdate = true;\n  });\n\n  // --- Mesh -------------------------------------------------------------------\n  const mesh = new Mesh(geometry, material);\n  // Billboard behaviour\n  mesh.onBeforeRender = (_renderer, _scene, camera) => {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n  container.add(mesh);\n\n  // --- Cinematic Primitives ---------------------------------------------------\n  const primitiveInstances = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const instance = ctx.primitives[prim.name](container, prim.params);\n      primitiveInstances.push(instance);\n    }\n  }\n\n  // --- Event Handlers placeholder ---------------------------------------------\n  container.userData.handlers = {};\n\n  // --- Cleanup ---------------------------------------------------------------\n  container.userData.cleanup = () => {\n    // Dispose material and geometry\n    if (material.map) {\n      const tex = material.map.value?.value || material.map;\n      if (tex && typeof tex.dispose === 'function') tex.dispose();\n    }\n    material.dispose();\n    geometry.dispose();\n\n    // Kill any GSAP timelines (none in this node, but guard for future)\n    if (Array.isArray(primitiveInstances)) {\n      for (const inst of primitiveInstances) {\n        if (inst && typeof inst.cleanup === 'function') inst.cleanup();\n      }\n    }\n    gsap.killTweensOf(container);\n  };\n\n  return container;\n}"
+}

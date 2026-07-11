@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-20-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 3371,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3540,
+    "completionTokens": 450
+  },
+  "costUsd": 0.0012225,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // root container\n  const root = new Group();\n  root.position.set(0, 3, 0);\n  root.rotation.set(0, 0, 0);\n  root.scale.set(1, 1, 1);\n\n  // plane geometry (7×6 units, matching backdrop spec)\n  const geometry = new PlaneGeometry(7, 6);\n  const material = new MeshBasicNodeMaterial({\n    color: '#0b0b10', // surface color as fallback\n    transparent: true,\n  });\n  const plane = new Mesh(geometry, material);\n  root.add(plane);\n\n  // load texture asynchronously (function stays sync)\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // render text items via fontAtlas\n  const items =\n    config.textContent ??\n    config.intent?.visualSpec?.textContent ??\n    [];\n  for (const item of items) {\n    const txt = ctx.fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize ?? 96,\n      color: config?.intent?.visualSpec?.colors?.ink ?? '#16161d',\n      align: 'center',\n    });\n    // place text just in front of the plane\n    txt.position.set(0, 0, 0.01);\n    root.add(txt);\n  }\n\n  // placeholder for event handlers (none defined)\n  root.userData.handlers = {};\n\n  // cleanup routine\n  root.userData.cleanup = () => {\n    // dispose material and geometry\n    material.dispose();\n    geometry.dispose();\n    if (material.map) material.map.dispose();\n\n    // kill any GSAP timelines that might have been created elsewhere\n    if (root.userData._timelines) {\n      root.userData._timelines.forEach((t) => t.kill());\n    }\n  };\n\n  return root;\n}"
+}

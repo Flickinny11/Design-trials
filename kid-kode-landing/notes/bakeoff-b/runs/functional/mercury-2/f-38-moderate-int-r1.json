@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-38-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 4519,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3581,
+    "completionTokens": 512
+  },
+  "costUsd": 0.00127925,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Plane geometry (1x1 unit, texture will define aspect via material)\n  const geometry = new PlaneGeometry(1, 1);\n  const material = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    map: null,\n    transparent: true,\n  });\n\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Apply rotation & scale from config (position is set by adapter)\n  if (config.rotation && config.rotation.length === 3) {\n    mesh.rotation.set(config.rotation[0], config.rotation[1], config.rotation[2]);\n  }\n  if (config.scale && config.scale.length === 3) {\n    mesh.scale.set(config.scale[0], config.scale[1], config.scale[2]);\n  }\n\n  // Load texture asynchronously; material gets updated when ready\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Hover lift (rise‑in) timeline\n  const hoverTimeline = gsap.timeline({ paused: true });\n  hoverTimeline.to(mesh.position, {\n    y: mesh.position.y + 0.15,\n    duration: 0.7,\n    ease: 'power3.out',\n  });\n\n  // Click press‑down timeline\n  const pressTimeline = gsap.timeline({ paused: true });\n  pressTimeline.to(mesh.scale, {\n    x: mesh.scale.x * 0.97,\n    y: mesh.scale.y * 0.97,\n    z: mesh.scale.z * 0.97,\n    duration: 0.12,\n    ease: 'back.out(1.7)',\n  });\n\n  // Event handlers attached to userData\n  root.userData.handlers = {\n    hover: (enter) => {\n      if (enter) {\n        hoverTimeline.play(0);\n      } else {\n        hoverTimeline.reverse();\n      }\n    },\n    click: () => {\n      pressTimeline.restart();\n      ctx.emit('hub-journal.select', {});\n    },\n  };\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    hoverTimeline.kill();\n    pressTimeline.kill();\n    geometry.dispose();\n    material.dispose();\n  };\n\n  return root;\n}"
+}

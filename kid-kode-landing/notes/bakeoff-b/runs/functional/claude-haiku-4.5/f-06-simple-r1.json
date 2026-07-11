@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-06-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 7885,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4391,
+    "completionTokens": 951
+  },
+  "costUsd": 0.009146,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec2 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // Create group for the sprite element\n  const group = new THREE.Group();\n\n  // Atlas region: 512x320 pixels at (0, 0)\n  // Assuming atlas is 2048x2048 (standard power-of-2)\n  const atlasSize = 2048;\n  const regionX = 0;\n  const regionY = 0;\n  const regionW = 512;\n  const regionH = 320;\n\n  // UV bounds for this region\n  const uvMinX = regionX / atlasSize;\n  const uvMinY = regionY / atlasSize;\n  const uvMaxX = (regionX + regionW) / atlasSize;\n  const uvMaxY = (regionY + regionH) / atlasSize;\n\n  // Plane geometry: aspect ratio 512:320 = 1.6:1\n  // Scale to fit nicely in scene (headline-sized)\n  const width = 3.2; // ~headline scale in scene units\n  const height = width * (regionH / regionW); // 2.0\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  // Adjust UVs to the atlas region\n  const positions = geometry.attributes.position;\n  const uvAttribute = geometry.attributes.uv;\n\n  for (let i = 0; i < uvAttribute.count; i++) {\n    let u = uvAttribute.getX(i);\n    let v = uvAttribute.getY(i);\n    // Map [0,1] to atlas region\n    u = uvMinX + u * (uvMaxX - uvMinX);\n    v = uvMinY + v * (uvMaxY - uvMinY);\n    uvAttribute.setXY(i, u, v);\n  }\n  uvAttribute.needsUpdate = true;\n\n  // Load the ceramic grain texture\n  const texturePromise = ctx.textureLoader.loadTexture(config.imageUrl);\n\n  // TSL-based material with proper atlas UV mapping\n  const material = new MeshBasicNodeMaterial({\n    side: THREE.DoubleSide,\n    transparent: true,\n    toneMapped: false,\n  });\n\n  // Create mesh (material will be updated once texture loads)\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Update material with texture once loaded\n  texturePromise.then((texture) => {\n    texture.minFilter = THREE.LinearFilter;\n    texture.magFilter = THREE.LinearFilter;\n    // material.colorNode is set via map, but for NodeMaterial we pass color\n    material.map = texture;\n    material.needsUpdate = true;\n  });\n\n  // Create text content: \"Features\" headline\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const featuresTitleItem = textItems.find((item) => item.text === 'Features') || {\n    text: 'Features',\n    role: 'headline',\n  };\n\n  const titleText = ctx.fontAtlas.createText(featuresTitleItem.text, {\n    fontSize: 96,\n    color: config.intent?.visualSpec?.colors?.paper ?? '#e8ecf2',\n    align: 'center',\n  });\n\n  // Position text above the grain plane (z offset for layering)\n  titleText.position.z = 0.1;\n  group.add(titleText);\n\n  // Setup cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (mesh.material.map) {\n      mesh.material.map.dispose();\n    }\n  };\n\n  return group;\n}\n```"
+}

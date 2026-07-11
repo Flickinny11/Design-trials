@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-11-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 7610,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3728,
+    "completionTokens": 1289
+  },
+  "costUsd": 0.0013326,
+  "billing": "metered",
+  "output": "import { Group, Mesh, PlaneGeometry, MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, mix, color, texture } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport { } from '@/primitives';\nimport { } from '@/text';\n\n/**\n * @param {any} config\n * @param {any} ctx\n * @returns {import('three').Object3D}\n */\nexport default function createNode(config, ctx) {\n  const { Group: ThreeGroup, Mesh: ThreeMesh, PlaneGeometry, MeshBasicNodeMaterial } = ctx.THREE;\n\n  // Root container (position/rotation/scaling are applied by the adapter)\n  const root = new ThreeGroup();\n\n  // Geometry for the card\n  const geometry = new PlaneGeometry(7, 6, 1, 1); // size placeholder; spec does not dictate exact size\n  // Gradient node: vertical blend between ink and paper\n  const gradientNode = mix(\n    color(config.visual?.colors?.ink ?? '#16161d'),\n    color(config.visual?.colors?.paper ?? '#e8ecf2'),\n    uv().y\n  );\n\n  // Base material with gradient; texture will be added once loaded\n  const material = new MeshBasicNodeMaterial({\n    color: gradientNode,\n    // map will be assigned later\n    transparent: true,\n    depthWrite: false\n  });\n\n  const plane = new ThreeMesh(geometry, material);\n  root.add(plane);\n\n  // Load the brushed metal texture and apply it when ready\n  const texturePromise = ctx.textureLoader.loadTexture(\n    config.imageUrl || '/prism-assets/chrome/brushed-metal.map.png'\n  ).then((tex) => {\n    // Combine texture with gradient using multiply for subtle grain effect\n    const texNode = texture(tex);\n    const combined = mix(gradientNode, texNode, 0.2); // 20% texture blend\n    material.color = combined;\n    material.map = tex;\n    material.needsUpdate = true;\n    // Keep reference for cleanup\n    cleanupResources.texture = tex;\n  }).catch(() => {\n    // If texture fails, keep gradient only\n  });\n\n  // Store references for cleanup\n  const cleanupResources = {\n    geometry,\n    material,\n    texture: null,\n    timelines: [] // no GSAP timelines for this node, but kept for pattern\n  };\n\n  // Attach empty handlers object (no interactions defined)\n  root.userData.handlers = {};\n\n  // Cleanup function\n  root.userData.cleanup = () => {\n    // Dispose geometry\n    if (cleanupResources.geometry) cleanupResources.geometry.dispose();\n    // Dispose material\n    if (cleanupResources.material) cleanupResources.material.dispose();\n    // Dispose texture if it was loaded\n    if (cleanupResources.texture) cleanupResources.texture.dispose();\n    // Kill any GSAP timelines that might have been added\n    cleanupResources.timelines.forEach((t) => t.kill());\n    // Cancel any pending texture load promises (no native cancel, rely on disposal)\n  };\n\n  return root;\n}"
+}

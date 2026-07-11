@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-35-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 4028,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3634,
+    "completionTokens": 725
+  },
+  "costUsd": 0.00145225,
+  "billing": "metered",
+  "output": "import { MeshStandardNodeMaterial } from 'three/webgpu';\nimport { texture, uv, mul, float } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport { primitives } from '@/primitives';\nimport { text } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Color } = ctx.THREE;\n\n  // Create container\n  const root = new Group();\n  root.position.set(-1.25, 1.6, 0);\n  root.rotation.set(0, 0, 0);\n  root.scale.set(1, 1, 1);\n\n  // Geometry\n  const geometry = new PlaneGeometry(1, 0.3, 64, 64); // horizontal row size\n\n  // Material (placeholder, will be filled when textures load)\n  const material = new MeshStandardNodeMaterial({\n    color: new Color('#e8ecf2'), // paper as base\n    roughness: 0.6,\n    metalness: 0.2,\n    transparent: true,\n  });\n\n  // Create mesh\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Load textures asynchronously\n  const texPromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  const depthPromise = ctx.textureLoader.loadTexture(config.depthMapUrl);\n\n  texPromise.then((tex) => {\n    material.mapNode = texture(uv(), tex);\n    material.needsUpdate = true;\n  });\n\n  depthPromise.then((depthTex) => {\n    // displacementScale = 0.15 scene units (as per spec)\n    material.displacementNode = mul(texture(uv(), depthTex), float(0.15));\n    material.needsUpdate = true;\n  });\n\n  // Interaction timelines storage\n  const timelines = [];\n\n  // Hover effect: rise-in (translate Y +0.15)\n  function onHoverEnter() {\n    const tl = gsap.timeline();\n    tl.to(mesh.position, { y: mesh.position.y + 0.15, duration: 0.7, ease: 'power3.out' });\n    timelines.push(tl);\n  }\n\n  function onHoverLeave() {\n    const tl = gsap.timeline();\n    tl.to(mesh.position, { y: mesh.position.y - 0.15, duration: 0.7, ease: 'power3.out' });\n    timelines.push(tl);\n  }\n\n  // Click effect: emit navigation event\n  function onClick() {\n    ctx.emit('navigate', { to: 'hub-features' });\n  }\n\n  // Attach handlers to userData\n  root.userData.handlers = {\n    hover: (enter) => {\n      if (enter) onHoverEnter();\n      else onHoverLeave();\n    },\n    click: onClick,\n  };\n\n  // Apply any cinematic primitives defined in config\n  const primitiveCleanups = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const { name, params, trigger } = prim;\n      const primInstance = ctx.primitives[name](root, params);\n      primitiveCleanups.push(primInstance);\n    }\n  }\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Dispose geometry & material\n    geometry.dispose();\n    material.dispose();\n\n    // Kill GSAP timelines\n    for (const tl of timelines) tl.kill();\n\n    // Cleanup primitives\n    for (const p of primitiveCleanups) {\n      if (p.cleanup) p.cleanup();\n    }\n  };\n\n  return root;\n}"
+}

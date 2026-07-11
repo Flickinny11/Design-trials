@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-25-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 7105,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3729,
+    "completionTokens": 1247
+  },
+  "costUsd": 0.00130755,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { createText } from '@/text';\nimport { orbit, depthRotate, dissolveMorph, displacementTransition, parallaxScroll, magneticCursor, particleEmerge, flyThrough, kineticText } from '@/primitives';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Determine plane size based on source rect aspect (default 512x320)\n  const src = config.atlasRegion?.sourceRect ?? { width: 512, height: 320 };\n  const aspect = src.width / src.height;\n  const planeWidth = aspect; // 1 unit height, width = aspect\n  const planeHeight = 1;\n\n  // Geometry and material\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n  const material = new MeshBasicNodeMaterial({ color: 0xffffff });\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Load texture if provided\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // No cinematic primitives for this node, but keep API compatibility\n  const primitiveInstances = [];\n\n  // Attach cleanup\n  root.userData.handlers = {};\n  root.userData.cleanup = () => {\n    // Dispose material and geometry\n    if (material.map) {\n      material.map.dispose();\n    }\n    material.dispose();\n    geometry.dispose();\n\n    // Cleanup any primitive resources\n    primitiveInstances.forEach((inst) => {\n      if (inst && typeof inst.cleanup === 'function') {\n        inst.cleanup();\n      }\n    });\n  };\n\n  return root;\n}"
+}

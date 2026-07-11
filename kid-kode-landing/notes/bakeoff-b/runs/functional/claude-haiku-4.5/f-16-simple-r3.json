@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-16-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 5456,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4372,
+    "completionTokens": 756
+  },
+  "costUsd": 0.008152,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // ─────────────────────────────────────────────────────────────\n  // 1. BUILD STAGE BACKDROP (if this is the primary render)\n  // ─────────────────────────────────────────────────────────────\n  const group = new THREE.Group();\n\n  // Interpret config.intent?.visualSpec?.colors or fallback\n  const colors = config.colors ?? config.intent?.visualSpec?.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n\n  // ─────────────────────────────────────────────────────────────\n  // 2. LOAD & APPLY TEXTURE\n  // ─────────────────────────────────────────────────────────────\n  const planeGeometry = new THREE.PlaneGeometry(2, 1.25);\n  \n  // Create material with texture loading\n  const planeMaterial = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    side: THREE.DoubleSide,\n    transparent: true\n  });\n\n  const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);\n  group.add(planeMesh);\n\n  // Load texture asynchronously\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n      texture.colorSpace = THREE.SRGBColorSpace;\n      planeMaterial.map = texture;\n      planeMaterial.needsUpdate = true;\n    });\n  }\n\n  // ─────────────────────────────────────────────────────────────\n  // 3. APPLY SCENE POSITION (adapter will apply this, but store for reference)\n  // ─────────────────────────────────────────────────────────────\n  if (config.scenePosition) {\n    group.position.copy(config.scenePosition);\n  } else {\n    group.position.set(0, -0.3, 0);\n  }\n  \n  if (config.sceneRotation) {\n    group.rotation.setFromVector3(config.sceneRotation);\n  }\n  \n  if (config.sceneScale) {\n    group.scale.copy(config.sceneScale);\n  }\n\n  // ─────────────────────────────────────────────────────────────\n  // 4. SETUP CLEANUP\n  // ─────────────────────────────────────────────────────────────\n  group.userData.cleanup = () => {\n    planeGeometry.dispose();\n    planeMaterial.dispose();\n    if (planeMaterial.map) {\n      planeMaterial.map.dispose();\n    }\n  };\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-28-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 7420,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4374,
+    "completionTokens": 1026
+  },
+  "costUsd": 0.009504,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, vec4, mix, texture, uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // ─────────────────────────────────────────────────────────────────\n  // SETUP: Extract configuration\n  // ─────────────────────────────────────────────────────────────────\n  const imageUrl = config.imageUrl || '/prism-mock/home/nodes/orb-decor.png';\n  const scenePos = config.scenePosition || [-3.2, -0.3, 0];\n  const sceneRot = config.sceneRotation || [0, 0, 0];\n  const sceneScale = config.sceneScale || [1, 1, 1];\n\n  // Aspect ratio from atlas region (512 x 320 = 1.6:1)\n  const atlasW = 512;\n  const atlasH = 320;\n  const aspectRatio = atlasW / atlasH; // ~1.6\n\n  // ─────────────────────────────────────────────────────────────────\n  // GEOMETRY: Plane matching atlas aspect\n  // ─────────────────────────────────────────────────────────────────\n  const planeHeight = 1.2; // scene units\n  const planeWidth = planeHeight * aspectRatio; // ~1.92\n\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight, 1, 1);\n\n  // ─────────────────────────────────────────────────────────────────\n  // MATERIAL: MeshBasicNodeMaterial with TSL shader\n  // ─────────────────────────────────────────────────────────────────\n  let texMap = null;\n  const texUniform = uniform(null);\n\n  // Load texture asynchronously (non-blocking return)\n  ctx.textureLoader.loadTexture(imageUrl).then((tex) => {\n    texMap = tex;\n    texUniform.value = tex;\n  });\n\n  // TSL shader: base texture + subtle grain overlay\n  const uvNode = uv();\n  \n  // Simple grain pattern (via sin-based noise)\n  const grain = mix(\n    vec4(1.0),\n    vec4(0.97),\n    texture(texUniform).mul(0.05)\n  );\n\n  const material = new MeshBasicNodeMaterial({\n    colorNode: texture(texUniform).mul(grain),\n    side: THREE.FrontSide,\n    transparent: true,\n  });\n\n  // ─────────────────────────────────────────────────────────────────\n  // MESH: Position, rotation, scale from spec\n  // ─────────────────────────────────────────────────────────────────\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.fromArray(scenePos);\n  mesh.rotation.order = 'XYZ';\n  mesh.rotation.fromArray(sceneRot);\n  mesh.scale.fromArray(sceneScale);\n\n  // ─────────────────────────────────────────────────────────────────\n  // CONTAINER: Root object\n  // ─────────────────────────────────────────────────────────────────\n  const root = new THREE.Group();\n  root.add(mesh);\n\n  // ─────────────────────────────────────────────────────────────────\n  // CLEANUP: Dispose resources\n  // ─────────────────────────────────────────────────────────────────\n  root.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (texMap) {\n      texMap.dispose();\n    }\n  };\n\n  // ─────────────────────────────────────────────────────────────────\n  // HANDLERS: No interactivity (static composition per spec)\n  // ─────────────────────────────────────────────────────────────────\n  root.userData.handlers = {};\n\n  return root;\n}\n```"
+}

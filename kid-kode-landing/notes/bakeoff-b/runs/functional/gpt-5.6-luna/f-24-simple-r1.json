@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-5.6-luna",
+  "model": "openai/gpt-5.6-luna",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-24-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 282,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3707,
+    "completionTokens": 2975
+  },
+  "costUsd": 0.021557,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, smoothstep } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const {\n    Group,\n    Mesh,\n    PlaneGeometry,\n    BoxGeometry,\n    Color,\n  } = ctx.THREE;\n\n  const root = new Group();\n  const timelines = [];\n  const ownedResources = [];\n  const pendingTextures = [];\n\n  root.userData.handlers = {};\n\n  const cardWidth = 2.56;\n  const cardHeight = 1.6;\n\n  const backingMaterial = new MeshBasicNodeMaterial({\n    color: '#0b0b10',\n  });\n  const backingGeometry = new BoxGeometry(cardWidth, cardHeight, 0.08);\n  const backing = new Mesh(backingGeometry, backingMaterial);\n  backing.position.z = -0.06;\n  root.add(backing);\n  ownedResources.push(backingGeometry, backingMaterial);\n\n  const surfaceMaterial = new MeshBasicNodeMaterial();\n  const gradientPosition = smoothstep(0.04, 0.96, uv().y);\n  surfaceMaterial.colorNode = mix(\n    vec3(0.043, 0.043, 0.063),\n    vec3(0.086, 0.086, 0.114),\n    gradientPosition,\n  );\n\n  const surfaceGeometry = new PlaneGeometry(cardWidth, cardHeight);\n  const surface = new Mesh(surfaceGeometry, surfaceMaterial);\n  surface.position.z = 0.01;\n  root.add(surface);\n  ownedResources.push(surfaceGeometry, surfaceMaterial);\n\n  const accentMaterial = new MeshBasicNodeMaterial({\n    color: '#ff2a38',\n  });\n  const accentGeometry = new BoxGeometry(0.055, 0.82, 0.018);\n  const accent = new Mesh(accentGeometry, accentMaterial);\n  accent.position.set(-1.08, -0.02, 0.045);\n  root.add(accent);\n  ownedResources.push(accentGeometry, accentMaterial);\n\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  let textOffset = 0;\n\n  for (const item of items) {\n    const text = typeof item === 'string' ? item : item?.text;\n    if (typeof text !== 'string') continue;\n\n    const typography = typeof item === 'object' ? item.typography ?? {} : {};\n    const textObject = ctx.fontAtlas.createText(text, {\n      fontSize: typography.fontSize ?? 39,\n      color: '#e8ecf2',\n      align: typography.align ?? 'left',\n      maxWidthPx: typography.maxWidthPx,\n      letterSpacingPx: typography.letterSpacingPx,\n    });\n\n    textObject.position.set(-0.88, 0.02 - textOffset, 0.07);\n    root.add(textObject);\n    textOffset += 0.32;\n  }\n\n  const imageUrl = config.imageUrl;\n  if (imageUrl) {\n    const texturePromise = ctx.textureLoader.loadTexture(imageUrl);\n    pendingTextures.push(texturePromise);\n\n    texturePromise.then((texture) => {\n      texture.repeat.set(1, 1);\n      texture.offset.set(0, 0);\n      texture.needsUpdate = true;\n\n      if ('colorSpace' in texture && ctx.THREE.SRGBColorSpace) {\n        texture.colorSpace = ctx.THREE.SRGBColorSpace;\n      }\n\n      surfaceMaterial.map = texture;\n      surfaceMaterial.needsUpdate = true;\n      ownedResources.push(texture);\n    }).catch(() => {});\n  }\n\n  root.onBeforeRender = (_renderer, _scene, camera) => {\n    root.quaternion.copy(camera.quaternion);\n  };\n\n  root.userData.cleanup = () => {\n    for (const timeline of timelines) {\n      if (timeline && typeof timeline.kill === 'function') timeline.kill();\n    }\n\n    for (const resource of ownedResources) {\n      if (resource && typeof resource.dispose === 'function') {\n        resource.dispose();\n      }\n    }\n\n    root.traverse((object) => {\n      if (object !== root && object.userData?.cleanup && object.userData.cleanup !== root.userData.cleanup) {\n        object.userData.cleanup();\n      }\n    });\n\n    root.clear();\n  };\n\n  return root;\n}"
+}

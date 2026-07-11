@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-11-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 7026,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3728,
+    "completionTokens": 1069
+  },
+  "costUsd": 0.0012005999999999998,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Geometry for the card plane (default size 2 x 1 units)\n  const geometry = new PlaneGeometry(2, 1);\n  // Basic material – will receive the loaded texture\n  const material = new MeshBasicNodeMaterial({ color: 0xffffff });\n\n  // Mesh assembly\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Load the texture asynchronously; assign when ready\n  let loadedTexture = null;\n  const texturePromise = ctx.textureLoader\n    .loadTexture(config.imageUrl)\n    .then((tex) => {\n      loadedTexture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    })\n    .catch(() => {\n      // Silently ignore texture load failures\n    });\n\n  // Prepare userData for external interaction\n  root.userData.handlers = {};\n  root.userData.cleanup = () => {\n    // Dispose geometry and material\n    geometry.dispose();\n    material.dispose();\n\n    // Dispose texture if it was loaded\n    if (loadedTexture) {\n      loadedTexture.dispose();\n    }\n\n    // Kill any pending GSAP timelines (none in this node)\n    // (placeholder for future timelines)\n  };\n\n  // Store references to aid cleanup and possible future extensions\n  root.__prism = {\n    texturePromise,\n    material,\n    geometry,\n    mesh,\n  };\n\n  return root;\n}"
+}

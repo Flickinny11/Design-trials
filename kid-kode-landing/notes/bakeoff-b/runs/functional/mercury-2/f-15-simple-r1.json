@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-15-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 4390,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3635,
+    "completionTokens": 617
+  },
+  "costUsd": 0.0013715,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { createText } from '@/text';\nimport { primitives } from '@/primitives';\n\nexport default function createNode(config, ctx) {\n  const { Group, PlaneGeometry, Mesh } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // ---- Textured Plane (sprite) ----\n  const atlas = config.atlasRegion || { width: 512, height: 320 };\n  const aspect = atlas.width / atlas.height;\n  const planeGeom = new PlaneGeometry(aspect, 1);\n  const planeMat = new MeshBasicNodeMaterial({ transparent: true });\n  const planeMesh = new Mesh(planeGeom, planeMat);\n  root.add(planeMesh);\n\n  // Load texture asynchronously, but return immediately\n  const texPromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  texPromise.then((tex) => {\n    planeMat.map = tex;\n    planeMat.needsUpdate = true;\n    // If atlas region is not full texture, set offset/repeat\n    if (atlas.x !== 0 || atlas.y !== 0 || atlas.width !== tex.image.width || atlas.height !== tex.image.height) {\n      const u0 = atlas.x / tex.image.width;\n      const v0 = atlas.y / tex.image.height;\n      const uScale = atlas.width / tex.image.width;\n      const vScale = atlas.height / tex.image.height;\n      tex.offset.set(u0, v0);\n      tex.repeat.set(uScale, vScale);\n      tex.needsUpdate = true;\n    }\n  });\n\n  // ---- Text Content ----\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    const txt = ctx.fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize ?? 39,\n      color: config.intent?.visualSpec?.colors?.paper ?? '#e8ecf2',\n      align: 'center',\n    });\n    // Position text slightly in front of the plane\n    txt.position.set(0, 0, 0.01);\n    root.add(txt);\n  }\n\n  // ---- Event Handlers (none for this static node) ----\n  root.userData.handlers = {};\n\n  // ---- Cleanup ----\n  root.userData.cleanup = () => {\n    // Dispose geometry & material\n    planeGeom.dispose();\n    planeMat.dispose();\n    // Texture will be disposed by the loader cache; if we kept a reference we could dispose it here\n    // Dispose any text objects\n    for (const child of root.children) {\n      if (child.isObject3D && child !== planeMesh) {\n        if (child.geometry) child.geometry.dispose();\n        if (child.material) child.material.dispose();\n      }\n    }\n    // No GSAP timelines in this node, but ensure any future ones are killed\n    gsap.globalTimeline.clear();\n  };\n\n  return root;\n}"
+}

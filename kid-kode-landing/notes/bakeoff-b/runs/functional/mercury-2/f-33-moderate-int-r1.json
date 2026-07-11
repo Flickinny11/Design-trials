@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-33-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 2793,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3593,
+    "completionTokens": 579
+  },
+  "costUsd": 0.0013325,
+  "billing": "metered",
+  "output": "import { Group, Mesh, PlaneGeometry, MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const root = new Group();\n\n  // --- Plane (card background) ---\n  const planeGeom = new PlaneGeometry(7, 6); // size placeholder, will be scaled later if needed\n  const planeMat = new MeshBasicNodeMaterial({ transparent: true });\n  const plane = new Mesh(planeGeom, planeMat);\n  root.add(plane);\n\n  // Load texture (if any)\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      planeMat.map = tex;\n      planeMat.needsUpdate = true;\n    });\n  }\n\n  // --- Text ---\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    const opts = {\n      fontSize: item.typography?.fontSize ?? 39,\n      color: config.visualSpec?.colors?.paper ?? '#e8ecf2',\n      align: 'center',\n    };\n    const txtObj = ctx.fontAtlas.createText(item.text, opts);\n    // Position text slightly above plane\n    txtObj.position.set(0, 0, 0.01);\n    root.add(txtObj);\n  }\n\n  // --- Interaction Handlers ---\n  const timelines = [];\n\n  // Hover lift (rise-in)\n  const hoverEnter = () => {\n    const tl = gsap.to(plane.position, { y: 0.15, duration: 0.7, ease: 'power3.out' });\n    timelines.push(tl);\n  };\n  const hoverLeave = () => {\n    const tl = gsap.to(plane.position, { y: 0, duration: 0.7, ease: 'power3.out' });\n    timelines.push(tl);\n  };\n\n  // Click press-down + emit\n  const onClick = () => {\n    const tl = gsap.to(root.scale, { x: 0.97, y: 0.97, z: 0.97, duration: 0.12, ease: 'back.out(1.7)' });\n    timelines.push(tl);\n    ctx.emit('hub-journal.select', {});\n  };\n\n  // Attach handlers to userData\n  root.userData.handlers = {\n    hover: { enter: hoverEnter, leave: hoverLeave },\n    click: onClick,\n  };\n\n  // --- Cleanup ---\n  root.userData.cleanup = () => {\n    // Dispose material and geometry\n    planeMat.dispose();\n    planeGeom.dispose();\n    // Dispose texture if loaded\n    if (planeMat.map) planeMat.map.dispose();\n    // Kill GSAP timelines\n    timelines.forEach((t) => t.kill());\n  };\n\n  return root;\n}"
+}

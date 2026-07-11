@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-5.6-luna",
+  "model": "openai/gpt-5.6-luna",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-06-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 288,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3702,
+    "completionTokens": 2475
+  },
+  "costUsd": 0.018552,
+  "billing": "metered",
+  "output": "import { PlaneGeometry, Mesh, Group, Color } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, mix, smoothstep, vec3, texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { Group: ThreeGroup, Mesh: ThreeMesh, PlaneGeometry: ThreePlaneGeometry } = ctx.THREE;\n\n  const root = new ThreeGroup();\n  root.name = 'features-title';\n\n  const timelines = [];\n  const disposables = [];\n  const handlers = {};\n\n  const surface = new Color('#0b0b10');\n  const ink = new Color('#16161d');\n  const paper = '#e8ecf2';\n  const accent = '#ff2a38';\n\n  const backdropMaterial = new MeshBasicNodeMaterial();\n  backdropMaterial.colorNode = mix(\n    vec3(surface.r, surface.g, surface.b),\n    vec3(ink.r, ink.g, ink.b),\n    smoothstep(0.05, 0.95, uv().y)\n  );\n\n  const backdrop = new ThreeMesh(\n    new ThreePlaneGeometry(7, 6),\n    backdropMaterial\n  );\n  backdrop.name = 'engineered-gradient-backdrop';\n  backdrop.position.set(0, 0, -2.5);\n  root.add(backdrop);\n  disposables.push(backdrop.geometry, backdrop.material);\n\n  const grainMaterial = new MeshBasicNodeMaterial({\n    color: new Color('#16161d'),\n    transparent: true,\n    opacity: 0.42\n  });\n\n  const grainPlane = new ThreeMesh(\n    new ThreePlaneGeometry(5.12, 3.2),\n    grainMaterial\n  );\n  grainPlane.name = 'ceramic-grain-sprite';\n  grainPlane.position.set(0, 0, -0.35);\n  root.add(grainPlane);\n  disposables.push(grainPlane.geometry, grainPlane.material);\n\n  const accentMaterial = new MeshBasicNodeMaterial({\n    color: new Color(accent)\n  });\n\n  const accentLine = new ThreeMesh(\n    new ThreePlaneGeometry(1.65, 0.045),\n    accentMaterial\n  );\n  accentLine.name = 'signal-red-rule';\n  accentLine.position.set(-1.55, -0.72, 0.08);\n  root.add(accentLine);\n  disposables.push(accentLine.geometry, accentLine.material);\n\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    const content = typeof item?.text === 'string' ? item.text : '';\n    if (!content) continue;\n\n    const textObject = ctx.fontAtlas.createText(content, {\n      fontSize: item.typography?.fontSize ?? 96,\n      color: paper,\n      align: 'left'\n    });\n\n    textObject.name = item.role ? `text-${item.role}` : 'headline';\n    textObject.position.set(-2.35, 0.02, 0.12);\n    root.add(textObject);\n  }\n\n  const billboard = (object) => {\n    object.onBeforeRender = (_renderer, _scene, camera) => {\n      object.quaternion.copy(camera.quaternion);\n    };\n  };\n\n  billboard(grainPlane);\n\n  const imageUrl = config.imageUrl;\n  if (imageUrl) {\n    ctx.textureLoader.loadTexture(imageUrl).then((loadedTexture) => {\n      loadedTexture.wrapS = ctx.THREE.ClampToEdgeWrapping;\n      loadedTexture.wrapT = ctx.THREE.ClampToEdgeWrapping;\n      loadedTexture.repeat.set(1, 1);\n      loadedTexture.offset.set(0, 0);\n\n      grainMaterial.map = loadedTexture;\n      grainMaterial.colorNode = texture(loadedTexture);\n      grainMaterial.needsUpdate = true;\n    }).catch(() => {});\n  }\n\n  root.userData.handlers = handlers;\n  root.userData.cleanup = () => {\n    for (const timeline of timelines) {\n      if (timeline && typeof timeline.kill === 'function') timeline.kill();\n    }\n\n    for (const disposable of disposables) {\n      if (disposable && typeof disposable.dispose === 'function') {\n        disposable.dispose();\n      }\n    }\n\n    root.traverse((object) => {\n      if (object.onBeforeRender) object.onBeforeRender = null;\n    });\n  };\n\n  return root;\n}"
+}

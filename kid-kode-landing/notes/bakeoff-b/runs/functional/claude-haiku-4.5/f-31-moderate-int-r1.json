@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-31-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 8047,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4458,
+    "completionTokens": 1208
+  },
+  "costUsd": 0.010498,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const group = new THREE.Group();\n  \n  // Parse text content\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const textItem = items.find(item => item.role === 'headline') || items[0];\n  const textContent = textItem?.text ?? 'Journal 2';\n  \n  // Create the card plane\n  const geometry = new THREE.PlaneGeometry(1.6, 1.0);\n  const material = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    transparent: true,\n    opacity: 1.0\n  });\n  \n  const plane = new THREE.Mesh(geometry, material);\n  plane.position.copy(new THREE.Vector3(0, 1, 0.06));\n  group.add(plane);\n  \n  // Load and apply the image texture\n  let textureCleanup = null;\n  ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n    material.color.setHex(0xffffff);\n    material.map = texture;\n    material.needsUpdate = true;\n    textureCleanup = () => texture.dispose();\n  }).catch(() => {\n    material.color.setHex(0x16161d);\n  });\n  \n  // Add headline text\n  const headlineObj = ctx.fontAtlas.createText(textContent, {\n    fontSize: 39,\n    color: '#e8ecf2',\n    align: 'center',\n    letterSpacingPx: 0\n  });\n  headlineObj.position.set(0, 0.28, 0.1);\n  headlineObj.scale.multiplyScalar(0.008);\n  group.add(headlineObj);\n  \n  // Apply parallax-scroll primitive\n  const primResult = ctx.primitives['parallax-scroll'](group, {\n    intensity: 0.25,\n    trigger: 'scroll'\n  });\n  \n  // Animation state\n  let isHovering = false;\n  let hoverTimeline = null;\n  let pressTimeline = null;\n  \n  // Hover effect: rise-in (0.15 scene units up, power3.out, 0.7s)\n  const handleHover = () => {\n    if (isHovering) return;\n    isHovering = true;\n    \n    if (pressTimeline) pressTimeline.kill();\n    if (hoverTimeline) hoverTimeline.kill();\n    \n    hoverTimeline = gsap.timeline();\n    hoverTimeline.to(group.position, {\n      y: 1.15,\n      duration: 0.7,\n      ease: 'power3.out'\n    }, 0);\n  };\n  \n  const handleHoverOut = () => {\n    if (!isHovering) return;\n    isHovering = false;\n    \n    if (hoverTimeline) hoverTimeline.kill();\n    \n    hoverTimeline = gsap.timeline();\n    hoverTimeline.to(group.position, {\n      y: 1,\n      duration: 0.5,\n      ease: 'power2.out'\n    }, 0);\n  };\n  \n  // Click effect: press-down (scale 0.97, 120ms, back.out) + emit navigate\n  const handleClick = () => {\n    if (pressTimeline) pressTimeline.kill();\n    \n    pressTimeline = gsap.timeline();\n    pressTimeline.to(group.scale, {\n      x: 0.97,\n      y: 0.97,\n      duration: 0.12,\n      ease: 'back.out'\n    }, 0);\n    \n    pressTimeline.to(group.scale, {\n      x: 1,\n      y: 1,\n      duration: 0.3,\n      ease: 'power2.out'\n    }, 0.12);\n    \n    ctx.emit('navigate', { to: 'hub-journal' });\n  };\n  \n  // Attach handlers\n  group.userData.handlers = {\n    hover: handleHover,\n    hoverOut: handleHoverOut,\n    click: handleClick\n  };\n  \n  // Cleanup function\n  group.userData.cleanup = () => {\n    if (hoverTimeline) hoverTimeline.kill();\n    if (pressTimeline) pressTimeline.kill();\n    if (primResult?.cleanup) primResult.cleanup();\n    if (textureCleanup) textureCleanup();\n    geometry.dispose();\n    material.dispose();\n  };\n  \n  return group;\n}\n```"
+}

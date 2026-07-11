@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-43-moderate",
+  "run": 2,
+  "ok": true,
+  "wallMs": 3218,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3672,
+    "completionTokens": 500
+  },
+  "costUsd": 0.001293,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport * as primitives from '@/primitives';\nimport * as text from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n  const root = new Group();\n\n  // Plane geometry – size based on typical card dimensions\n  const geometry = new PlaneGeometry(7, 6);\n  const material = new MeshBasicNodeMaterial();\n  const plane = new Mesh(geometry, material);\n  root.add(plane);\n\n  // Load texture asynchronously; material will be updated when ready\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Apply cinematic primitives from config\n  const primitiveHandles = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const fn = ctx.primitives[prim.name];\n      if (fn) {\n        const handle = fn(root, prim.params);\n        primitiveHandles.push(handle);\n      }\n    }\n  }\n\n  // GSAP timelines for interactions\n  const hoverTimeline = gsap.timeline({ paused: true });\n  hoverTimeline.to(root.position, {\n    y: '+=0.15',\n    duration: 0.7,\n    ease: 'power3.out',\n  });\n\n  const pressTimeline = gsap.timeline({ paused: true });\n  pressTimeline.to(root.scale, {\n    x: 0.97,\n    y: 0.97,\n    z: 0.97,\n    duration: 0.12,\n    ease: 'back.out(1)',\n  });\n\n  // Interaction handlers attached to userData\n  root.userData.handlers = {\n    hover: (enter) => {\n      if (enter) hoverTimeline.play();\n      else hoverTimeline.reverse();\n    },\n    click: () => {\n      pressTimeline.restart();\n      ctx.emit('hub-journal.select', {});\n    },\n  };\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    material.dispose();\n    geometry.dispose();\n    hoverTimeline.kill();\n    pressTimeline.kill();\n    for (const h of primitiveHandles) {\n      if (h && typeof h.cleanup === 'function') h.cleanup();\n    }\n  };\n\n  return root;\n}"
+}

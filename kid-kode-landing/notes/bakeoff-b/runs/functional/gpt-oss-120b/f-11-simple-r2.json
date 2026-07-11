@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-11-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 8812,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3728,
+    "completionTokens": 1459
+  },
+  "costUsd": 0.0014345999999999999,
+  "billing": "metered",
+  "output": "import { gsap } from 'gsap';\nimport { MeshBasicNodeMaterial, PlaneGeometry, Mesh } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const { Group, DoubleSide } = ctx.THREE;\n\n  // Root object for this node\n  const root = new Group();\n\n  // Plane geometry – use image aspect ratio if available\n  const aspect = 512 / 320; // fallback aspect from atlas region\n  const width = aspect;\n  const height = 1;\n  const geometry = new PlaneGeometry(width, height);\n\n  // Basic material; texture will be assigned asynchronously\n  const material = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    map: null,\n    side: DoubleSide,\n  });\n\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Load the brushed‑metal texture\n  let loadedTex = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      loadedTex = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // No interactive handlers for this node\n  root.userData.handlers = {};\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Dispose of GSAP timelines if any (none in this node)\n    // Dispose material, geometry and texture\n    if (material) material.dispose();\n    if (geometry) geometry.dispose();\n    if (loadedTex) loadedTex.dispose();\n  };\n\n  return root;\n}"
+}

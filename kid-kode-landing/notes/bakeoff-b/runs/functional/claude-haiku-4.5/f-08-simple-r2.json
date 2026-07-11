@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-08-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 5059,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4388,
+    "completionTokens": 518
+  },
+  "costUsd": 0.006978,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, color } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // Create the plane geometry (512x320 px → ~2.13x1.33 scene units at standard scale)\n  const width = 2.13;\n  const height = 1.33;\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  // Load and apply the texture\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = color(0xffffff);\n\n  ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    material.colorNode = uv().mul(vec3(1.0)).mul(color(tex));\n    material.map = tex;\n    material.needsUpdate = true;\n  });\n\n  const plane = new THREE.Mesh(geometry, material);\n\n  // Apply scene position (adapter will use this)\n  if (config.scenePosition) {\n    plane.position.copy(config.scenePosition);\n  }\n\n  // Create text overlay for \"Features 1\"\n  const textContent = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const textItem = textContent.find((item) => item.role === 'headline');\n\n  const group = new THREE.Group();\n  group.add(plane);\n\n  if (textItem) {\n    const text = ctx.fontAtlas.createText(textItem.text, {\n      fontSize: textItem.typography?.fontSize ?? 39,\n      color: '#e8ecf2',\n      align: 'left',\n    });\n    text.position.set(-width * 0.45, height * 0.35, 0.01);\n    group.add(text);\n  }\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

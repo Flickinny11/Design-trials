@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-16-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 6773,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3728,
+    "completionTokens": 1164
+  },
+  "costUsd": 0.0012576,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport {} from '@/primitives';\nimport {} from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Plane geometry based on image aspect (512:320 ≈ 1.6:1)\n  const plane = new Mesh(\n    new PlaneGeometry(1.6, 1),\n    new MeshBasicNodeMaterial({ transparent: true })\n  );\n\n  root.add(plane);\n\n  // Load texture synchronously (promise handled internally)\n  let loadedTexture = null;\n  ctx.textureLoader\n    .loadTexture(config.imageUrl)\n    .then((tex) => {\n      loadedTexture = tex;\n      // Assign texture node to material color\n      plane.material.color = texture(tex);\n      plane.material.needsUpdate = true;\n    })\n    .catch(() => {\n      // Fail silently; plane will remain untextured\n    });\n\n  // No cinematic primitives to apply for this node\n\n  // Event handlers placeholder (none defined)\n  root.userData.handlers = {};\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Dispose geometry\n    if (plane.geometry) plane.geometry.dispose();\n\n    // Dispose material\n    if (plane.material) plane.material.dispose();\n\n    // Dispose texture if it was loaded\n    if (loadedTexture) loadedTexture.dispose();\n\n    // Kill any GSAP timelines (none used but defensive)\n    gsap.globalTimeline.clear();\n  };\n\n  return root;\n}"
+}

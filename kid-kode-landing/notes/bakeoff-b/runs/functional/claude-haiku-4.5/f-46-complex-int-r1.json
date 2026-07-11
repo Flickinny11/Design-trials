@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-46-complex-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 7726,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4528,
+    "completionTokens": 1140
+  },
+  "costUsd": 0.010228,
+  "billing": "metered",
+  "output": "```javascript\nimport { gsap } from 'gsap';\nimport { MeshStandardNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, smoothstep, time, uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, Object3D } = ctx.THREE;\n  \n  const root = new Group();\n  root.position.set(0, -0.2, 0);\n  root.userData.cleanup = () => {\n    gsap.killTweensOf(root.position);\n    gsap.killTweensOf(root.rotation);\n    gsap.killTweensOf(root.scale);\n    \n    if (root.userData.primitiveCleanups) {\n      root.userData.primitiveCleanups.forEach(fn => fn());\n    }\n    \n    root.traverse(child => {\n      if (child.geometry) child.geometry.dispose();\n      if (child.material) {\n        if (Array.isArray(child.material)) {\n          child.material.forEach(m => m.dispose());\n        } else {\n          child.material.dispose();\n        }\n      }\n    });\n  };\n  \n  root.userData.primitiveCleanups = [];\n  root.userData.handlers = {};\n  \n  // Load the GLB mesh\n  ctx.glbLoader.loadGLB(config.meshUrl).then((gltf) => {\n    const mesh = gltf.scene;\n    \n    // Clone materials and enhance with PBR + emissive accent\n    mesh.traverse((child) => {\n      if (child.isMesh && child.material) {\n        const originalMat = child.material;\n        \n        // Create enhanced material with machined-metal aesthetic\n        const newMat = new MeshStandardNodeMaterial();\n        \n        // Base PBR: brushed metal with restrained clearcoat\n        newMat.metalness = 0.48;\n        newMat.roughness = 0.55;\n        newMat.clearcoat = 0.2;\n        newMat.clearcoatRoughness = 0.3;\n        \n        // Preserve existing color if present\n        if (originalMat.color) {\n          newMat.color.copy(originalMat.color);\n        } else {\n          newMat.color.setHex(0x16161d); // ink fallback\n        }\n        \n        // Add subtle emissive accent (red signal, low intensity to avoid blow-out)\n        newMat.emissive.setHex(0xff2a38);\n        newMat.emissiveIntensity = 0.15;\n        \n        // Transfer map if exists\n        if (originalMat.map) {\n          newMat.map = originalMat.map;\n        }\n        \n        child.material = newMat;\n      }\n    });\n    \n    root.add(mesh);\n    \n    // Apply cinematic primitives\n    // 1. Parallax scroll\n    const parallaxResult = ctx.primitives['parallax-scroll'](root, { \n      intensity: 0.4 \n    });\n    if (parallaxResult && parallaxResult.cleanup) {\n      root.userData.primitiveCleanups.push(parallaxResult.cleanup);\n    }\n    \n    // 2. Magnetic cursor on hover\n    const magneticResult = ctx.primitives['magnetic-cursor'](root, { \n      radius: 1.2,\n      strength: 0.35\n    });\n    if (magneticResult && magneticResult.cleanup) {\n      root.userData.primitiveCleanups.push(magneticResult.cleanup);\n    }\n  });\n  \n  // Hover interaction: rise-in entrance\n  root.userData.handlers.onHover = (isHovering) => {\n    if (isHovering) {\n      gsap.to(root.position, {\n        y: -0.2 + 0.15,\n        duration: 0.7,\n        ease: 'power3.out',\n        overwrite: 'auto'\n      });\n    } else {\n      gsap.to(root.position, {\n        y: -0.2,\n        duration: 0.7,\n        ease: 'power3.out',\n        overwrite: 'auto'\n      });\n    }\n  };\n  \n  // Click interaction: emit event\n  root.userData.handlers.onClick = () => {\n    ctx.emit('navigate', { to: 'hub-collection' });\n  };\n  \n  return root;\n}\n```"
+}

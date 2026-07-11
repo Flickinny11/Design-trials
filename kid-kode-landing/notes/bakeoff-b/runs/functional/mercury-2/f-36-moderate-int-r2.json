@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-36-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 3264,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3703,
+    "completionTokens": 959
+  },
+  "costUsd": 0.001645,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial, MeshStandardNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { } } from '@/primitives';\nimport { } } from '@/text';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {string} [imageUrl]\n * @property {Object} [intent]\n * @property {Object} [intent.visualSpec]\n * @property {Object} [intent.visualSpec.colors]\n * @property {Array} [cinematicPrimitives]\n * @property {Array} [textContent]\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {Object} THREE\n * @property {Object} textureLoader\n * @property {Object} glbLoader\n * @property {Object} [videoLoader]\n * @property {Object} fontAtlas\n * @property {Object} primitives\n * @property {Function} emit\n * @property {string} [tier]\n */\n\n/**\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Base plane geometry (capsule label)\n  const planeGeom = new PlaneGeometry(1, 0.4);\n  const planeMat = new MeshBasicNodeMaterial();\n  const plane = new Mesh(planeGeom, planeMat);\n  root.add(plane);\n\n  // Load texture if provided\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      planeMat.map = tex;\n      planeMat.needsUpdate = true;\n    });\n  }\n\n  // Accent edge – slightly larger plane with emissive material\n  const edgeGeom = new PlaneGeometry(1.02, 0.42);\n  const accentColor =\n    config.intent?.visualSpec?.colors?.accent || '#ff2a38';\n  const edgeMat = new MeshStandardNodeMaterial({\n    color: 0x000000,\n    emissiveColor: accentColor,\n    emissiveIntensity: 1.5,\n    transparent: true,\n    opacity: 0,\n  });\n  const edge = new Mesh(edgeGeom, edgeMat);\n  edge.position.set(0, 0, 0.01);\n  root.add(edge);\n\n  // Store timelines for cleanup\n  const activeTimelines = [];\n\n  // Event handlers\n  const handlers = {};\n\n  // Hover lift (rise‑in)\n  handlers.hover = () => {\n    const tl = gsap.timeline();\n    tl.to(plane.position, {\n      y: 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n    tl.to(\n      edgeMat,\n      { opacity: 0.8, duration: 0.7, ease: 'power3.out' },\n      0\n    );\n    activeTimelines.push(tl);\n  };\n\n  // Unhover revert\n  handlers.unhover = () => {\n    const tl = gsap.timeline();\n    tl.to(plane.position, {\n      y: 0,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n    tl.to(\n      edgeMat,\n      { opacity: 0, duration: 0.7, ease: 'power3.out' },\n      0\n    );\n    activeTimelines.push(tl);\n  };\n\n  // Click emit\n  handlers.click = () => {\n    ctx.emit('hub-collection.select', {});\n  };\n\n  // Attach handlers to userData\n  root.userData.handlers = handlers;\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Dispose geometries and materials\n    planeGeom.dispose();\n    planeMat.dispose();\n    edgeGeom.dispose();\n    edgeMat.dispose();\n\n    // Kill any GSAP timelines\n    activeTimelines.forEach((tl) => tl.kill());\n  };\n\n  // Apply any cinematic primitives listed in config\n  if (Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach((prim) => {\n      const primitive = ctx.primitives[prim.name];\n      if (primitive) {\n        const instance = primitive(root, prim.params);\n        // Store cleanup for the primitive\n        const prevCleanup = root.userData.cleanup;\n        root.userData.cleanup = () => {\n          if (typeof prevCleanup === 'function') prevCleanup();\n          instance.cleanup && instance.cleanup();\n        };\n      }\n    });\n  }\n\n  return root;\n}\n"
+}

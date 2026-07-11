@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-22-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 3915,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3549,
+    "completionTokens": 567
+  },
+  "costUsd": 0.0013125,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Plane mesh for the pricing card background / image\n  const planeGeo = new PlaneGeometry(1, 1);\n  const planeMat = new MeshBasicNodeMaterial({ color: 0xffffff });\n  const planeMesh = new Mesh(planeGeo, planeMat);\n  root.add(planeMesh);\n\n  // Load texture if provided\n  const disposables = {\n    texture: null,\n    material: planeMat,\n    geometry: planeGeo,\n    mesh: planeMesh,\n    timeline: null,\n  };\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      planeMat.map = tex;\n      planeMat.needsUpdate = true;\n      disposables.texture = tex;\n    });\n  }\n\n  // Text content\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    const txtOpts = {\n      fontSize: item.typography?.fontSize ?? 39,\n      color: config.colors?.paper ?? '#e8ecf2',\n      align: 'center',\n    };\n    const txtObj = ctx.fontAtlas.createText(item.text, txtOpts);\n    // Position text slightly above the plane (z offset)\n    txtObj.position.set(0, 0, 0.01);\n    root.add(txtObj);\n  }\n\n  // Simple entrance animation (rise‑in) using GSAP\n  const tl = gsap.timeline();\n  tl.from(planeMesh.position, { y: -0.4, duration: 0.7, ease: 'power3.out' });\n  tl.from(planeMesh.scale, { x: 0, y: 0, duration: 0.7, ease: 'power3.out' }, '<');\n  disposables.timeline = tl;\n\n  // Event handlers placeholder\n  root.userData.handlers = {};\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Kill GSAP timelines\n    if (disposables.timeline) disposables.timeline.kill();\n\n    // Dispose material, geometry, and texture\n    if (disposables.material) disposables.material.dispose();\n    if (disposables.geometry) disposables.geometry.dispose();\n    if (disposables.texture) disposables.texture.dispose();\n\n    // Remove children\n    root.traverse((obj) => {\n      if (obj !== root) {\n        if (obj.geometry) obj.geometry.dispose();\n        if (obj.material) obj.material.dispose();\n      }\n    });\n  };\n\n  return root;\n}"
+}

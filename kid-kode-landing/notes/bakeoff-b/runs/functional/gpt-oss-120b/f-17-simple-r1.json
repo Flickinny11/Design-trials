@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-17-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 6585,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3739,
+    "completionTokens": 1060
+  },
+  "costUsd": 0.00119685,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { PlaneGeometry, Group, Mesh, Color } from 'three';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group: CGroup, Mesh: CMesh } = ctx.THREE;\n\n  // Root container\n  const root = new CGroup();\n\n  // ---- Plane ----\n  const geometry = new PlaneGeometry(1, 1);\n  const material = new MeshBasicNodeMaterial();\n  material.color = new Color(0xffffff);\n  material.transparent = true;\n\n  const plane = new CMesh(geometry, material);\n  // Apply position/rotation/scale from config (scenePlacement is handled by adapter,\n  // but we still set local transforms if needed)\n  plane.position.set(0, 0, 0);\n  plane.rotation.set(0, 0, 0);\n  plane.scale.set(1, 1, 1);\n  root.add(plane);\n\n  // Load texture asynchronously\n  let texture = null;\n  const texPromise = ctx.textureLoader\n    .loadTexture(config.imageUrl)\n    .then((tex) => {\n      texture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    })\n    .catch(() => {\n      // Fail silently – keep material without texture\n    });\n\n  // ---- Text ----\n  const textItems = config.textContent ??\n    config.intent?.visualSpec?.textContent ??\n    [];\n\n  for (const item of textItems) {\n    const fontSize = item.typography?.fontSize ?? 39; // fallback to spec size\n    const textObj = ctx.fontAtlas.createText(item.text ?? '', {\n      fontSize,\n      color: config.visualSpec?.colors?.paper ?? '#e8ecf2',\n      align: 'center',\n    });\n    // Position text slightly above the plane\n    textObj.position.set(0, 0, 0.01);\n    root.add(textObj);\n  }\n\n  // ---- User Data & Cleanup ----\n  root.userData = {\n    handlers: {},\n    cleanup() {\n      // Dispose material and geometry\n      if (material) {\n        material.dispose();\n      }\n      if (geometry) {\n        geometry.dispose();\n      }\n      if (texture) {\n        texture.dispose();\n      }\n      // Kill any GSAP timelines (none are created here, but safe guard)\n      gsap.globalTimeline.clear();\n      // Remove children\n      root.traverse((obj) => {\n        if (obj !== root && obj.parent) {\n          obj.parent.remove(obj);\n        }\n      });\n    },\n  };\n\n  return root;\n}"
+}

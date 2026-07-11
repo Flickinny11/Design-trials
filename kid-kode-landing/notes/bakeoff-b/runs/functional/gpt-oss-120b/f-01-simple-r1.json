@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-01-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 8408,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3739,
+    "completionTokens": 1313
+  },
+  "costUsd": 0.00134865,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n  const node = new Group();\n\n  // --- Plane with texture ----------------------------------------------------\n  const geometry = new PlaneGeometry(7, 6);\n  const material = new MeshBasicNodeMaterial({ map: null, transparent: true });\n  const plane = new Mesh(geometry, material);\n  node.add(plane);\n\n  let loadedTexture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      loadedTexture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // --- Text ---------------------------------------------------------------\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    const txt = ctx.fontAtlas.createText(item.text ?? '', {\n      fontSize: (item.typography && item.typography.fontSize) || 31,\n      color: (config.visual && config.visual.colors && config.visual.colors.paper) || '#e8ecf2',\n      align: 'left',\n    });\n    // slightly in front of the plane\n    txt.position.set(0, 0, 0.01);\n    node.add(txt);\n  }\n\n  // --- UserData ------------------------------------------------------------\n  node.userData.handlers = {};\n\n  node.userData.cleanup = () => {\n    // Dispose material, geometry and texture\n    material.dispose && material.dispose();\n    geometry.dispose && geometry.dispose();\n    if (loadedTexture && loadedTexture.dispose) loadedTexture.dispose();\n\n    // Kill any GSAP timelines that might have been created elsewhere\n    if (node.userData._gsapTimelines) {\n      for (const tl of node.userData._gsapTimelines) {\n        tl.kill();\n      }\n    }\n  };\n\n  return node;\n}"
+}

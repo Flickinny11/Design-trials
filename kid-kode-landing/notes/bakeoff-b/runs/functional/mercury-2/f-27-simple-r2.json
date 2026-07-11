@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-27-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 3323,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3671,
+    "completionTokens": 797
+  },
+  "costUsd": 0.0015155,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { createText } from '@/text';\nimport { primitives } from '@/primitives';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Vector2 } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Store resources for cleanup\n  const resources = {\n    texture: null,\n    material: null,\n    geometry: null,\n    timelines: [],\n    primitives: [],\n  };\n  root.userData._resources = resources;\n\n  // ---------- TEXTURED PLANE ----------\n  const imageUrl = config.imageUrl ?? config.meshUrl ?? null;\n  if (imageUrl) {\n    // Plane size based on atlas region (512x320) aspect ratio\n    const atlasWidth = 512;\n    const atlasHeight = 320;\n    const aspect = atlasWidth / atlasHeight;\n    const planeWidth = 2; // arbitrary scene units\n    const planeHeight = planeWidth / aspect;\n\n    const geometry = new PlaneGeometry(planeWidth, planeHeight);\n    const material = new MeshBasicNodeMaterial();\n    // default color is white; texture will define appearance\n    const mesh = new Mesh(geometry, material);\n    // Ensure plane faces camera (billboard) – will be updated by outer render loop if needed\n    mesh.rotation.set(0, 0, 0);\n    root.add(mesh);\n\n    // Store for cleanup\n    resources.geometry = geometry;\n    resources.material = material;\n\n    // Load texture asynchronously\n    ctx.textureLoader.loadTexture(imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n      resources.texture = tex;\n    });\n  }\n\n  // ---------- TEXT CONTENT ----------\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    const textStr = item.text ?? '';\n    const fontSize = item.typography?.fontSize ?? 96;\n    const color = config.intent?.visualSpec?.colors?.ink ?? '#16161d';\n    const textObj = ctx.fontAtlas.createText(textStr, {\n      fontSize,\n      color,\n      align: 'center',\n    });\n    // Position text slightly in front of the plane to avoid Z‑fight\n    textObj.position.set(0, 0, 0.01);\n    root.add(textObj);\n  }\n\n  // ---------- PRIMITIVES ----------\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const { name, params, trigger } = prim;\n      if (typeof ctx.primitives[name] === 'function') {\n        const primInst = ctx.primitives[name](root, params);\n        resources.primitives.push(primInst);\n        // If primitive provides a timeline, keep reference for cleanup\n        if (primInst.timeline) {\n          resources.timelines.push(primInst.timeline);\n        }\n      }\n    }\n  }\n\n  // ---------- HANDLERS ----------\n  root.userData.handlers = {};\n\n  // ---------- CLEANUP ----------\n  root.userData.cleanup = () => {\n    // Dispose texture\n    if (resources.texture) {\n      resources.texture.dispose();\n    }\n    // Dispose material\n    if (resources.material) {\n      resources.material.dispose();\n    }\n    // Dispose geometry\n    if (resources.geometry) {\n      resources.geometry.dispose();\n    }\n    // Kill GSAP timelines\n    for (const tl of resources.timelines) {\n      tl.kill();\n    }\n    // Cleanup primitives\n    for (const p of resources.primitives) {\n      if (p.cleanup) p.cleanup();\n    }\n    // Remove from parent if attached\n    if (root.parent) {\n      root.parent.remove(root);\n    }\n  };\n\n  return root;\n}"
+}

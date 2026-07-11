@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-50-complex",
+  "run": 1,
+  "ok": true,
+  "wallMs": 3799,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3684,
+    "completionTokens": 604
+  },
+  "costUsd": 0.001374,
+  "billing": "metered",
+  "output": "import { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group } = ctx.THREE;\n  const root = new Group();\n\n  // Handlers container\n  root.userData.handlers = {};\n\n  // Store primitives for cleanup\n  const primitiveInstances = [];\n\n  // -----------------------------------------------------------------\n  // Load GLB mesh (synchronous return, async loading inside)\n  // -----------------------------------------------------------------\n  if (config.meshUrl) {\n    ctx.glbLoader.loadGLB(config.meshUrl).then((gltf) => {\n      const mesh = gltf.scene;\n      root.add(mesh);\n    });\n  }\n\n  // -----------------------------------------------------------------\n  // Apply cinematic primitives defined in config\n  // -----------------------------------------------------------------\n  const primitives = config.cinematicPrimitives || [];\n  primitives.forEach((p) => {\n    const instance = ctx.primitives[p.name](root, p.params);\n    primitiveInstances.push(instance);\n  });\n\n  // -----------------------------------------------------------------\n  // Interaction: Hover – rise‑in preset (0.15 scene units)\n  // -----------------------------------------------------------------\n  let hoverTimeline = null;\n  root.userData.handlers.hover = () => {\n    // if any previous hover animation is running, kill it first\n    if (hoverTimeline) hoverTimeline.kill();\n    hoverTimeline = gsap.timeline();\n    hoverTimeline.to(root.position, {\n      y: `+=0.15`,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n  };\n  // Optional leave handler (revert the rise‑in)\n  root.userData.handlers.hoverLeave = () => {\n    if (hoverTimeline) hoverTimeline.kill();\n    hoverTimeline = gsap.timeline();\n    hoverTimeline.to(root.position, {\n      y: `-=${0.15}`,\n      duration: 0.3,\n      ease: 'power3.in',\n    });\n  };\n\n  // -----------------------------------------------------------------\n  // Interaction: Click – emit navigation event\n  // -----------------------------------------------------------------\n  root.userData.handlers.click = () => {\n    ctx.emit('hub-features.select');\n  };\n\n  // -----------------------------------------------------------------\n  // Cleanup routine\n  // -----------------------------------------------------------------\n  root.userData.cleanup = () => {\n    // Kill hover timeline if present\n    if (hoverTimeline) hoverTimeline.kill();\n\n    // Cleanup all primitives (timeline + resources)\n    primitiveInstances.forEach((inst) => {\n      if (inst) {\n        if (inst.timeline && typeof inst.timeline.kill === 'function') {\n          inst.timeline.kill();\n        }\n        if (typeof inst.cleanup === 'function') {\n          inst.cleanup();\n        }\n      }\n    });\n\n    // Dispose geometries and materials from the loaded GLB\n    root.traverse((child) => {\n      if (child.isMesh) {\n        if (child.geometry) child.geometry.dispose();\n        if (child.material) {\n          if (Array.isArray(child.material)) {\n            child.material.forEach((m) => m.dispose());\n          } else {\n            child.material.dispose();\n          }\n        }\n      }\n    });\n  };\n\n  return root;\n}"
+}

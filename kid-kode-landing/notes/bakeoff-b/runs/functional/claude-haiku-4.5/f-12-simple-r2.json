@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-12-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 7201,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4398,
+    "completionTokens": 929
+  },
+  "costUsd": 0.009043,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec2, vec3 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // Create group for the sprite\n  const group = new THREE.Group();\n  group.userData.cleanup = () => {\n    // Cleanup will be called by adapter\n  };\n\n  // Atlas region: 512x320 pixels\n  // Assuming a 2048x2048 atlas (common standard)\n  const atlasSize = 2048;\n  const regionX = 0;\n  const regionY = 0;\n  const regionWidth = 512;\n  const regionHeight = 320;\n\n  // Calculate UV bounds for the atlas region\n  const uMin = regionX / atlasSize;\n  const vMin = regionY / atlasSize;\n  const uMax = (regionX + regionWidth) / atlasSize;\n  const vMax = (regionY + regionHeight) / atlasSize;\n\n  // Aspect ratio: 512/320 = 1.6\n  const aspectRatio = regionWidth / regionHeight;\n\n  // Create plane geometry scaled to aspect ratio\n  // Set a reasonable base height and scale width accordingly\n  const planeHeight = 1.2;\n  const planeWidth = planeHeight * aspectRatio;\n\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight, 1, 1);\n\n  // Adjust UVs to match atlas region\n  const uvAttribute = geometry.getAttribute('uv');\n  const uvArray = uvAttribute.array;\n\n  // UV coordinates for the four corners of the plane\n  // Bottom-left: (uMin, vMin)\n  // Bottom-right: (uMax, vMin)\n  // Top-left: (uMin, vMax)\n  // Top-right: (uMax, vMax)\n  uvArray[0] = uMin;\n  uvArray[1] = vMin; // bottom-left\n\n  uvArray[2] = uMax;\n  uvArray[3] = vMin; // bottom-right\n\n  uvArray[4] = uMin;\n  uvArray[5] = vMax; // top-left\n\n  uvArray[6] = uMax;\n  uvArray[7] = vMax; // top-right\n\n  uvAttribute.needsUpdate = true;\n\n  // Load the ceramic grain texture\n  let material;\n  ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n    // Configure texture\n    texture.magFilter = THREE.LinearFilter;\n    texture.minFilter = THREE.LinearMipmapLinearFilter;\n\n    // Create MeshBasicNodeMaterial with texture mapping\n    const textureNode = new THREE.TextureNode(texture, uv());\n    material = new MeshBasicNodeMaterial();\n    material.colorNode = textureNode;\n\n    mesh.material = material;\n  });\n\n  // Create material first (will be replaced when texture loads)\n  material = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n  });\n\n  const mesh = new THREE.Mesh(geometry, material);\n\n  // Billboard toward camera (face toward +Z)\n  mesh.position.z = 0;\n\n  group.add(mesh);\n\n  // Create text label \"Features 3\"\n  const textLabel = ctx.fontAtlas.createText('Features 3', {\n    fontSize: 39,\n    color: '#16161d',\n    align: 'center',\n  });\n\n  // Position text below the sprite\n  textLabel.position.y = -planeHeight / 2 - 0.3;\n  textLabel.position.z = 0.01;\n\n  group.add(textLabel);\n\n  return group;\n}\n```"
+}

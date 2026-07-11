@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-21-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 4977,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4385,
+    "completionTokens": 506
+  },
+  "costUsd": 0.006915,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // Create a billboard plane with atlas region aspect ratio\n  // Source rect: 512x320 → aspect 1.6:1\n  const aspectRatio = 512 / 320;\n  const geometry = new THREE.PlaneGeometry(aspectRatio * 1.2, 1.2);\n\n  // Load the sprite texture\n  const texturePromise = ctx.textureLoader.loadTexture(config.imageUrl);\n\n  // Create material with TSL nodes\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    side: THREE.DoubleSide,\n  });\n\n  // UV offset for atlas region (0, 0, 512, 320) in a larger atlas\n  // Assuming the atlas source rect maps directly to this texture\n  // UV bounds: x [0, 512/atlasWidth], y [0, 320/atlasHeight]\n  // For a 512x320 texture, we use full UV range [0,1] x [0,1]\n  const uvNode = uv();\n  material.colorNode = uniform(new THREE.Texture()).mul(uvNode);\n\n  // Apply texture once loaded\n  texturePromise.then((texture) => {\n    material.colorNode = uniform(texture);\n    material.needsUpdate = true;\n  });\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.castShadow = true;\n  mesh.receiveShadow = true;\n\n  // Build group with proper scene positioning\n  const group = new THREE.Group();\n  group.add(mesh);\n\n  // Store cleanup routine\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texturePromise.then((texture) => {\n      texture.dispose();\n    }).catch(() => {});\n  };\n\n  return group;\n}\n```"
+}

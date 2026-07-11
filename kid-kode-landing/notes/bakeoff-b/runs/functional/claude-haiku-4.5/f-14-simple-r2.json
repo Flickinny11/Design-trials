@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-14-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 3625,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4375,
+    "completionTokens": 483
+  },
+  "costUsd": 0.00679,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  \n  // Create plane geometry (default 1x1)\n  const geometry = new THREE.PlaneGeometry(1, 1);\n  \n  // Create material with texture\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = uv().convert('vec3');\n  \n  // Load and apply texture\n  const texturePromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  texturePromise.then((texture) => {\n    material.map = texture;\n    material.needsUpdate = true;\n  });\n  \n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  \n  // Apply scene position\n  if (config.scenePosition) {\n    mesh.position.set(\n      config.scenePosition[0],\n      config.scenePosition[1],\n      config.scenePosition[2]\n    );\n  }\n  \n  // Apply rotation\n  if (config.sceneRotation) {\n    mesh.rotation.set(\n      config.sceneRotation[0],\n      config.sceneRotation[1],\n      config.sceneRotation[2]\n    );\n  }\n  \n  // Apply scale\n  if (config.sceneScale) {\n    mesh.scale.set(\n      config.sceneScale[0],\n      config.sceneScale[1],\n      config.sceneScale[2]\n    );\n  }\n  \n  // Initialize userData\n  mesh.userData.handlers = {};\n  mesh.userData.cleanup = function() {\n    geometry.dispose();\n    material.dispose();\n    if (material.map) {\n      material.map.dispose();\n    }\n  };\n  \n  return mesh;\n}\n```"
+}

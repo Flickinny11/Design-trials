@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-11-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 4399,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4373,
+    "completionTokens": 511
+  },
+  "costUsd": 0.006928,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, texture, vec3 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { Mesh, PlaneGeometry, Group } = ctx.THREE;\n\n  const group = new Group();\n  group.position.set(3.2, -0.3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Plane geometry: 2.0 x 1.25 units (512x320 aspect ratio)\n  const geometry = new PlaneGeometry(2.0, 1.25);\n  const material = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    side: ctx.THREE.FrontSide,\n    toneMapped: true,\n  });\n\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  // Load brushed-metal texture\n  ctx.textureLoader\n    .loadTexture(config.imageUrl)\n    .then((brushedMetalTex) => {\n      brushedMetalTex.colorSpace = 'srgb';\n      brushedMetalTex.magFilter = ctx.THREE.LinearFilter;\n      brushedMetalTex.minFilter = ctx.THREE.LinearMipmapLinearFilter;\n\n      // Create TSL nodes for material\n      const uvNode = uv();\n      const texNode = texture(brushedMetalTex, uvNode);\n\n      // Apply texture to material\n      material.colorNode = texNode;\n      material.needsUpdate = true;\n    })\n    .catch((err) => {\n      console.error('Failed to load brushed-metal texture:', err);\n    });\n\n  // Cleanup function\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n  };\n\n  // No event handlers required for static composition\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

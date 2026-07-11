@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-20-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 10271,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3738,
+    "completionTokens": 1615
+  },
+  "costUsd": 0.0015296999999999997,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport {} from '@/primitives';\nimport {} from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, PlaneGeometry, Mesh } = ctx.THREE;\n\n  // Root container (adapter will set position/rotation/scale)\n  const root = new Group();\n\n  // --------- Textured Plane ----------\n  const planeWidth = 7; // generic size, fits hub frame\n  const planeHeight = 6;\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n  const material = new MeshBasicNodeMaterial({ transparent: true });\n\n  // Load texture if URL provided\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n      // Ensure texture gets disposed on cleanup\n      cleanupResources.texture = tex;\n    });\n  }\n\n  const planeMesh = new Mesh(geometry, material);\n  // Slightly raise the plane so text can sit just above it\n  planeMesh.position.set(0, 0, 0.001);\n  root.add(planeMesh);\n\n  // --------- Text Content ----------\n  const items =\n    config.textContent ??\n    config.intent?.visualSpec?.textContent ??\n    [];\n\n  const colors = config.visual?.colors ??\n    config.intent?.visualSpec?.colors ??\n    {};\n\n  const textColor = colors.paper || '#e8ecf2';\n\n  const textObjects = [];\n\n  for (const item of items) {\n    const txt = item?.text ?? item?.content ?? '';\n    const opts = {\n      fontSize: item?.typography?.fontSize ?? 96,\n      color: textColor,\n      align: 'center',\n    };\n    const textObj = ctx.fontAtlas.createText(txt, opts);\n    // Position headline near top of the plane\n    textObj.position.set(0, 1.5, 0.01);\n    root.add(textObj);\n    textObjects.push(textObj);\n  }\n\n  // --------- Cleanup ----------\n  const cleanupResources = {\n    texture: null,\n    timelines: [],\n    primitives: [],\n  };\n\n  root.userData.cleanup = () => {\n    // Dispose geometry and material\n    geometry.dispose();\n    material.dispose();\n    if (cleanupResources.texture) cleanupResources.texture.dispose();\n\n    // Kill any GSAP timelines (none in this node but safe)\n    cleanupResources.timelines.forEach((t) => t.kill && t.kill());\n\n    // Cleanup primitives if any were added later\n    cleanupResources.primitives.forEach((p) => p.cleanup && p.cleanup());\n  };\n\n  // Empty handlers placeholder (no interactions defined)\n  root.userData.handlers = {};\n\n  return root;\n}"
+}

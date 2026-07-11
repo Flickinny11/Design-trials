@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-17-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 11595,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3739,
+    "completionTokens": 2021
+  },
+  "costUsd": 0.0017734499999999998,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { createNode as _placeholder } from '@/primitives';\nimport { createText as _textPlaceholder } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // ---------- Plane ----------\n  const planeGeom = new PlaneGeometry(1, 1);\n  const planeMat = new MeshBasicNodeMaterial();\n  const planeMesh = new Mesh(planeGeom, planeMat);\n  root.add(planeMesh);\n\n  // Load texture (if provided)\n  let loadedTexture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      loadedTexture = tex;\n      planeMat.map = tex;\n      planeMat.needsUpdate = true;\n    });\n  }\n\n  // ---------- Text ----------\n  const items =\n    config.textContent ??\n    config.intent?.visualSpec?.textContent ??\n    [];\n\n  for (const item of items) {\n    const txt = ctx.fontAtlas.createText(item.text ?? '', {\n      fontSize: item.typography?.fontSize ?? 39,\n      color:\n        item.role === 'headline'\n          ? config.intent?.visualSpec?.colors?.paper ?? '#e8ecf2'\n          : config.intent?.visualSpec?.colors?.ink ?? '#16161d',\n      align: 'center',\n    });\n    // Position text slightly above the plane to avoid z‑fighting\n    txt.position.set(0, 0, 0.01);\n    root.add(txt);\n  }\n\n  // ---------- Cinematic Primitives ----------\n  const primitiveCleanups = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      if (prim && prim.name && typeof ctx.primitives[prim.name] === 'function') {\n        const { cleanup } = ctx.primitives[prim.name](root, prim.params);\n        if (typeof cleanup === 'function') primitiveCleanups.push(cleanup);\n      }\n    }\n  }\n\n  // ---------- Handlers ----------\n  root.userData.handlers = {};\n\n  // ---------- Cleanup ----------\n  root.userData.cleanup = () => {\n    // Dispose plane geometry & material\n    planeGeom.dispose();\n    planeMat.dispose();\n    if (loadedTexture && loadedTexture.dispose) loadedTexture.dispose();\n\n    // Dispose any child geometry/material (e.g., text)\n    root.traverse((obj) => {\n      if (obj.geometry && obj.geometry.dispose) obj.geometry.dispose();\n      if (obj.material) {\n        if (Array.isArray(obj.material)) {\n          obj.material.forEach((m) => m && m.dispose && m.dispose());\n        } else {\n          obj.material.dispose && obj.material.dispose();\n        }\n      }\n    });\n\n    // Kill stored primitive cleanups\n    primitiveCleanups.forEach((fn) => {\n      try {\n        fn();\n      } catch (e) {\n        // ignore\n      }\n    });\n\n    // Kill any GSAP timelines stored on userData\n    if (Array.isArray(root.userData._gsapTimelines)) {\n      root.userData._gsapTimelines.forEach((tl) => tl.kill && tl.kill());\n    }\n  };\n\n  return root;\n}"
+}

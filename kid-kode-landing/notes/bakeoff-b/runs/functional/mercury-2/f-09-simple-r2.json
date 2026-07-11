@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-09-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 5625,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3626,
+    "completionTokens": 559
+  },
+  "costUsd": 0.00132575,
+  "billing": "metered",
+  "output": "import { Mesh, PlaneGeometry, Group, Vector3 } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { primitives } from '@/primitives';\nimport { text } from '@/text';\n\nexport default function createNode(config, ctx) {\n  // Root object\n  const root = new ctx.THREE.Group();\n\n  // Apply rotation & scale from config (position handled by adapter)\n  const rot = config.rotation ?? { x: 0, y: 0, z: 0 };\n  const scl = config.scale ?? { x: 1, y: 1, z: 1 };\n  root.rotation.set(rot.x, rot.y, rot.z);\n  root.scale.set(scl.x, scl.y, scl.z);\n\n  // Atlas region – fallback to spec values\n  const atlas = {\n    x: 0,\n    y: 0,\n    width: 512,\n    height: 320,\n    ...(config.atlasRegion || {})\n  };\n  const aspect = atlas.width / atlas.height;\n\n  // Geometry sized to atlas aspect ratio\n  const geometry = new ctx.THREE.PlaneGeometry(aspect, 1);\n\n  // Basic node material (transparent to allow alpha)\n  const material = new ctx.THREE.MeshBasicNodeMaterial({\n    color: 0xffffff,\n    transparent: true,\n    side: ctx.THREE.DoubleSide\n  });\n\n  // Mesh\n  const mesh = new ctx.THREE.Mesh(geometry, material);\n  root.add(mesh);\n\n  // Load texture asynchronously and assign to material\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then(tex => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Billboard handler – aligns mesh to camera each frame if camera available\n  const billboard = () => {\n    if (ctx.camera && ctx.camera.position) {\n      // Keep the plane facing the camera\n      mesh.lookAt(ctx.camera.position);\n    }\n  };\n  root.userData.handlers = {\n    update: billboard\n  };\n\n  // Cleanup resources\n  root.userData.cleanup = () => {\n    // Dispose geometry & material\n    geometry.dispose();\n    material.dispose();\n    if (material.map && material.map.dispose) {\n      material.map.dispose();\n    }\n    // Kill any GSAP timelines (none created here but safe)\n    gsap.globalTimeline.clear();\n    // Cleanup primitives if any were added (none for this node)\n    if (root.userData.primitiveInstances) {\n      root.userData.primitiveInstances.forEach(p => {\n        if (p && p.cleanup) p.cleanup();\n      });\n    }\n  };\n\n  return root;\n}"
+}

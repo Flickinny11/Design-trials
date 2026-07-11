@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-31-moderate-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 4975,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3629,
+    "completionTokens": 622
+  },
+  "costUsd": 0.00137375,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { vec2, uv, mix, time, uniform } from 'three/tsl';\nimport { primitives } from '@/primitives';\nimport { text } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n  const root = new Group();\n\n  // Geometry & material\n  const geometry = new PlaneGeometry(1.5, 2);\n  const material = new MeshBasicNodeMaterial({ color: 0xffffff });\n  const plane = new Mesh(geometry, material);\n  root.add(plane);\n\n  // Load texture\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Text\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    const txt = ctx.fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize ?? 39,\n      color: config.intent?.visualSpec?.colors?.paper ?? '#e8ecf2',\n      align: 'center',\n    });\n    txt.position.set(0, 0.5, 0.01);\n    root.add(txt);\n  }\n\n  // Cinematic primitives\n  const primitiveInstances = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const instance = ctx.primitives[prim.name](root, prim.params);\n      primitiveInstances.push(instance);\n    }\n  }\n\n  // GSAP timelines\n  const timelines = [];\n\n  // Hover rise‑in\n  const hoverTimeline = gsap.timeline({ paused: true });\n  hoverTimeline.to(root.position, {\n    y: root.position.y + 0.15,\n    duration: 0.7,\n    ease: 'power3.out',\n  });\n  timelines.push(hoverTimeline);\n\n  // Click press‑down (scale)\n  const pressTimeline = gsap.timeline({ paused: true });\n  pressTimeline.to(root.scale, {\n    x: 0.97,\n    y: 0.97,\n    z: 0.97,\n    duration: 0.12,\n    ease: 'back.out',\n  });\n  timelines.push(pressTimeline);\n\n  // Handlers\n  root.userData.handlers = {\n    hoverEnter: () => hoverTimeline.play(),\n    hoverLeave: () => hoverTimeline.reverse(),\n    click: () => {\n      pressTimeline.restart();\n      ctx.emit('hub-journal.select', {});\n    },\n  };\n\n  // Cleanup\n  root.userData.cleanup = () => {\n    material.dispose();\n    geometry.dispose();\n    timelines.forEach((t) => t.kill());\n    primitiveInstances.forEach((inst) => {\n      if (inst && typeof inst.cleanup === 'function') inst.cleanup();\n    });\n  };\n\n  return root;\n}"
+}

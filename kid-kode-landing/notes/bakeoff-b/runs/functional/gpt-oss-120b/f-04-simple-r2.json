@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-04-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 6141,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3722,
+    "completionTokens": 1076
+  },
+  "costUsd": 0.0012039000000000002,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { createNode as dummy } from '@/primitives';\nimport { createNode as dummyText } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Color } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Geometry – a unit plane (will be scaled via config if needed)\n  const geometry = new PlaneGeometry(1, 1);\n  // Basic node material\n  const material = new MeshBasicNodeMaterial();\n  material.color = new Color(0xffffff);\n  material.transparent = true; // allow for textures with alpha if any\n\n  // Mesh\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Load texture if provided\n  let loadedTexture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      loadedTexture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Store any timelines (none for this node but keep structure)\n  const timelines = [];\n\n  // Handlers placeholder (no interactions defined)\n  root.userData.handlers = {};\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Kill GSAP timelines\n    timelines.forEach((tl) => tl.kill());\n\n    // Dispose material resources\n    if (material.map) material.map.dispose();\n    material.dispose();\n\n    // Dispose geometry\n    geometry.dispose();\n\n    // Dispose loaded texture if still referenced\n    if (loadedTexture && loadedTexture.dispose) {\n      loadedTexture.dispose();\n    }\n  };\n\n  return root;\n}"
+}

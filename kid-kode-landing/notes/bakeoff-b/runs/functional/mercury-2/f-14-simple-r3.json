@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-14-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 3777,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3612,
+    "completionTokens": 395
+  },
+  "costUsd": 0.00119925,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // root object for this node\n  const root = new Group();\n\n  // geometry and material for the textured plane\n  const geometry = new PlaneGeometry(1, 1);\n  const material = new MeshBasicNodeMaterial({ color: 0xffffff });\n  const plane = new Mesh(geometry, material);\n  root.add(plane);\n\n  // load texture asynchronously; material will be updated when ready\n  const texturePromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  texturePromise.then((tex) => {\n    material.map = tex;\n    material.needsUpdate = true;\n  });\n\n  // keep references for cleanup\n  const disposables = { geometry, material };\n  const timelines = [];\n\n  // apply any cinematic primitives defined in the config\n  const primitiveHandles = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const handle = ctx.primitives[prim.name](root, prim.params);\n      primitiveHandles.push(handle);\n      if (handle.timeline) timelines.push(handle.timeline);\n    }\n  }\n\n  // userData contract\n  root.userData = {\n    handlers: {}, // no interactions defined for this node\n    cleanup() {\n      // dispose geometry and material\n      disposables.geometry?.dispose();\n      disposables.material?.dispose();\n      if (disposables.material?.map) disposables.material.map.dispose();\n\n      // kill any GSAP timelines created by primitives or animations\n      timelines.forEach((tl) => tl.kill());\n\n      // invoke primitive cleanups\n      primitiveHandles.forEach((h) => {\n        if (typeof h.cleanup === 'function') h.cleanup();\n      });\n    },\n  };\n\n  return root;\n}"
+}

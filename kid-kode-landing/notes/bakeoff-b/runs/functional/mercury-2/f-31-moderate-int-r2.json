@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-31-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 2876,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3715,
+    "completionTokens": 645
+  },
+  "costUsd": 0.0014125,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Plane for the card texture\n  const geometry = new PlaneGeometry(1, 1);\n  const material = new MeshBasicNodeMaterial();\n  const plane = new Mesh(geometry, material);\n  root.add(plane);\n\n  // Load texture (imageUrl)\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Render text items\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of textItems) {\n    const txt = ctx.fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize ?? 39,\n      color: (config.intent?.visualSpec?.colors?.paper) || '#e8ecf2',\n      align: 'left',\n    });\n    // Slightly lift text above the plane to avoid Z‑fighting\n    txt.position.set(0, 0, 0.01);\n    root.add(txt);\n  }\n\n  // Apply cinematic primitives\n  const primitiveHandles = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const fn = ctx.primitives[prim.name];\n      if (fn) {\n        const handle = fn(root, prim.params);\n        primitiveHandles.push(handle);\n      }\n    }\n  }\n\n  // GSAP timelines for interactions\n  const timelines = [];\n\n  // Hover lift (rise‑in)\n  const hoverTL = gsap.timeline({ paused: true });\n  hoverTL.to(root.position, {\n    y: root.position.y + 0.15,\n    duration: 0.7,\n    ease: 'power3.out',\n  });\n  timelines.push(hoverTL);\n\n  // Click press‑down\n  const clickTL = gsap.timeline({ paused: true });\n  clickTL.to(root.scale, {\n    x: 0.97,\n    y: 0.97,\n    z: 0.97,\n    duration: 0.12,\n    ease: 'back.out(1)',\n  });\n  timelines.push(clickTL);\n\n  // Event handlers\n  root.userData.handlers = {\n    hover: () => {\n      hoverTL.restart();\n    },\n    click: () => {\n      clickTL.restart();\n      ctx.emit('navigate', { to: 'hub-journal' });\n    },\n  };\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    timelines.forEach((t) => t.kill());\n    primitiveHandles.forEach((p) => {\n      if (p && typeof p.cleanup === 'function') p.cleanup();\n    });\n  };\n\n  return root;\n}\n"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-02-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 2566,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3571,
+    "completionTokens": 419
+  },
+  "costUsd": 0.001207,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { } } from '@/primitives';\nimport { createText } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Container for the node\n  const node = new Group();\n\n  // Plane geometry – size matches typical backdrop (7x6 units)\n  const geometry = new PlaneGeometry(7, 6);\n  const material = new MeshBasicNodeMaterial({\n    map: null,\n    transparent: true,\n    depthWrite: false,\n  });\n\n  const plane = new Mesh(geometry, material);\n  // Apply rotation and scale from spec (adapter will set position)\n  plane.rotation.set(0, 0, 0);\n  plane.scale.set(1, 1, 1);\n  node.add(plane);\n\n  // Load texture asynchronously; assign when ready\n  let loadedTexture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n      loadedTexture = tex;\n    });\n  }\n\n  // No primitives for this node, but keep a place for future ones\n  const primitiveInstances = [];\n\n  // Event handlers placeholder\n  node.userData.handlers = {};\n\n  // Cleanup routine\n  node.userData.cleanup = () => {\n    // Dispose primitives if any were added\n    primitiveInstances.forEach((p) => {\n      if (p && typeof p.cleanup === 'function') p.cleanup();\n    });\n    // Kill any GSAP timelines (none in this node)\n    // (If timelines were added, store them and kill here)\n\n    // Dispose material, geometry, and texture\n    if (material) material.dispose();\n    if (geometry) geometry.dispose();\n    if (loadedTexture) loadedTexture.dispose();\n\n    // Remove from parent if still attached\n    if (node.parent) node.parent.remove(node);\n  };\n\n  return node;\n}"
+}

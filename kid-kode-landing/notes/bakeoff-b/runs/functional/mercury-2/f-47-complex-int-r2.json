@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-47-complex-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 3500,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3752,
+    "completionTokens": 770
+  },
+  "costUsd": 0.0015155,
+  "billing": "metered",
+  "output": "import { MeshStandardNodeMaterial } from 'three/webgpu';\nimport {\n  texture,\n  mix,\n  dot,\n  normalize,\n  viewDirectionNode,\n  normalWorldNode,\n  pow,\n  color\n} from 'three/tsl';\nimport { gsap } from 'gsap';\nimport * as primitives from '@/primitives';\nimport * as text from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Color } = ctx.THREE;\n\n  // Root group for this node\n  const root = new Group();\n\n  // Geometry (tessellated plane)\n  const geometry = new PlaneGeometry(4, 0.8, 64, 64);\n\n  // Base material (machined‑metal PBR)\n  const material = new MeshStandardNodeMaterial({\n    color: new Color('#0b0b10'), // surface\n    metalness: 0.3,\n    roughness: 0.6,\n    clearcoat: 0.1\n  });\n\n  // Displacement node (depth map)\n  let displacementNode = null;\n  if (config.depthMapUrl) {\n    ctx.textureLoader.loadTexture(config.depthMapUrl).then((tex) => {\n      displacementNode = texture(tex);\n      material.displacementNode = displacementNode;\n      material.displacementScale = 0.2;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Color map (image)\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Rim‑light via emissive node (accent red)\n  const rimNode = mix(\n    color('#000000'),\n    color('#ff2a38'),\n    pow(\n      1.0 - dot(normalize(viewDirectionNode), normalize(normalWorldNode)),\n      2.0\n    )\n  );\n  material.emissiveNode = rimNode;\n  material.emissiveIntensity = 1.0;\n\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Store timelines for cleanup\n  const timelines = [];\n\n  // Interaction handlers\n  const handlers = {};\n\n  // Hover – rise‑in effect (0.15 scene units)\n  handlers.hover = () => {\n    const tl = gsap.timeline();\n    tl.to(mesh.position, {\n      y: mesh.position.y + 0.15,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n    timelines.push(tl);\n  };\n  // Hover out – revert\n  handlers.hoverOut = () => {\n    const tl = gsap.timeline();\n    tl.to(mesh.position, {\n      y: mesh.position.y - 0.15,\n      duration: 0.7,\n      ease: 'power3.out'\n    });\n    timelines.push(tl);\n  };\n  // Click – emit navigation event\n  handlers.click = () => {\n    ctx.emit('navigate', { to: 'hub-pricing' });\n  };\n\n  root.userData.handlers = handlers;\n\n  // Apply cinematic primitives from config\n  const primitiveInstances = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const instance = ctx.primitives[prim.name](\n        root,\n        { ...prim.params, trigger: prim.trigger }\n      );\n      primitiveInstances.push(instance);\n    }\n  }\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    material.dispose();\n    geometry.dispose();\n    for (const tl of timelines) tl.kill();\n    for (const p of primitiveInstances) p.cleanup();\n  };\n\n  return root;\n}\n"
+}

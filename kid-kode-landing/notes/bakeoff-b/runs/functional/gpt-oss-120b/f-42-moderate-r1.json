@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-42-moderate",
+  "run": 1,
+  "ok": true,
+  "wallMs": 18331,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3784,
+    "completionTokens": 2668
+  },
+  "costUsd": 0.0021684,
+  "billing": "metered",
+  "output": "import { MeshStandardNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, min, max, step, smoothstep, mul } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Color } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n  root.position.set(\n    config.position?.[0] ?? 0,\n    config.position?.[1] ?? 0,\n    config.position?.[2] ?? 0\n  );\n  root.rotation.set(\n    config.rotation?.[0] ?? 0,\n    config.rotation?.[1] ?? 0,\n    config.rotation?.[2] ?? 0\n  );\n  root.scale.set(\n    config.scale?.[0] ?? 1,\n    config.scale?.[1] ?? 1,\n    config.scale?.[2] ?? 1\n  );\n\n  // Geometry – capsule‑like label (wide flat plane)\n  const width = 1.0;\n  const height = 0.34;\n  const geometry = new PlaneGeometry(width, height, 1, 1);\n\n  // Material with texture map and accent edge emissive\n  const material = new MeshStandardNodeMaterial();\n  material.transparent = true;\n  material.roughness = 1.0;\n  material.metalness = 0.0;\n  material.emissiveIntensity = 1.5;\n\n  // Accent edge via emissive node (thin border)\n  const accentHex = (config.visualSpec?.colors?.accent) || '#ff2a38';\n  const accentColor = new Color(accentHex);\n  const accentVec = vec3(accentColor.r, accentColor.g, accentColor.b);\n\n  // Edge mask: 1 near edges, 0 inside\n  const edgeDist = min(\n    min(uv.x, uv.y),\n    min(step(uv.x, 0.0), step(uv.y, 0.0)) // placeholder for 1-uv, replaced below\n  );\n  // Proper distance to nearest edge (using min of four sides)\n  const distToLeft = uv.x;\n  const distToRight = sub(1.0, uv.x);\n  const distToBottom = uv.y;\n  const distToTop = sub(1.0, uv.y);\n  const nearest = min(min(distToLeft, distToRight), min(distToBottom, distToTop));\n  const edgeMask = step(smoothstep(0.0, 0.02, nearest), 1.0); // 1 on edge, 0 inside\n  material.emissiveNode = mul(accentVec, edgeMask);\n\n  // Mesh\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Load texture asynchronously\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // --------------------------------------------------------------------\n  // Interaction handlers ------------------------------------------------\n  // --------------------------------------------------------------------\n  const hoverTL = gsap.timeline({ paused: true });\n  hoverTL.to(mesh.position, {\n    y: mesh.position.y + 0.15,\n    duration: 0.7,\n    ease: 'power3.out',\n  });\n\n  root.userData.handlers = {\n    hover: () => hoverTL.play(),\n    hoverOut: () => hoverTL.reverse(),\n    click: () => ctx.emit('hub-pricing.select'),\n  };\n\n  // Cleanup -------------------------------------------------------------\n  root.userData.cleanup = () => {\n    hoverTL.kill();\n    geometry.dispose();\n    material.dispose();\n    // texture will be disposed by the engine when its reference count drops\n  };\n\n  return root;\n}"
+}

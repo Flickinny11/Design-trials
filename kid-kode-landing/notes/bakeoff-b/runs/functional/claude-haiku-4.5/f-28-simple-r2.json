@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-28-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 3728,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4374,
+    "completionTokens": 406
+  },
+  "costUsd": 0.006404,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, uniform, mix } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { PlaneGeometry, Mesh, Group } = ctx.THREE;\n\n  // Create group to hold the plane\n  const group = new Group();\n  group.position.set(-3.2, -0.3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Create plane geometry (standard journal card aspect ratio)\n  const geometry = new PlaneGeometry(2.0, 1.25, 1, 1);\n\n  // Create material with texture\n  const material = new MeshBasicNodeMaterial({\n    toneMapped: true,\n  });\n\n  // Load and apply the image texture\n  const texturePromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  texturePromise.then((texture) => {\n    // Set UV as the base color node\n    material.colorNode = uv();\n    material.map = texture;\n    material.needsUpdate = true;\n  });\n\n  // Create mesh and add to group\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  // Setup cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (mesh.material.map) {\n      mesh.material.map.dispose();\n    }\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

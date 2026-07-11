@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-39-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 10544,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3824,
+    "completionTokens": 1684
+  },
+  "costUsd": 0.001584,
+  "billing": "metered",
+  "output": "import { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group } = ctx.THREE;\n\n  const root = new Group();\n  root.userData.handlers = {};\n\n  // Store resources for cleanup\n  let loadedScene = null;\n  const timelines = [];\n\n  // Load GLB mesh\n  if (config && config.meshUrl) {\n    ctx.glbLoader.loadGLB(config.meshUrl).then((gltf) => {\n      loadedScene = gltf.scene;\n      root.add(loadedScene);\n    });\n  }\n\n  // Hover lift (rise‑in) effect\n  const hoverTimeline = gsap.timeline({ paused: true });\n  hoverTimeline.to(root.position, {\n    y: '+=0.15',\n    duration: 0.3,\n    ease: 'power3.out',\n  });\n  timelines.push(hoverTimeline);\n\n  // Click emit & press‑down effect\n  const clickHandler = () => {\n    // Emit navigation/event\n    ctx.emit('hub-home.select', {});\n\n    // Press‑down animation\n    const pressTL = gsap.timeline();\n    pressTL\n      .to(\n        root.scale,\n        { x: 0.97, y: 0.97, z: 0.97, duration: 0.12, ease: 'back.out(1.7)' },\n        0\n      )\n      .to(\n        root.scale,\n        { x: 1, y: 1, z: 1, duration: 0.12, ease: 'power2.out' },\n        0.12\n      );\n    timelines.push(pressTL);\n  };\n\n  // Expose handlers\n  root.userData.handlers.hover = (enter) => {\n    if (enter) {\n      hoverTimeline.play();\n    } else {\n      hoverTimeline.reverse();\n    }\n  };\n  root.userData.handlers.click = clickHandler;\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Kill all GSAP timelines\n    timelines.forEach((tl) => tl.kill());\n\n    // Dispose loaded GLTF resources\n    if (loadedScene) {\n      loadedScene.traverse((child) => {\n        if (child.isMesh) {\n          if (child.geometry) child.geometry.dispose();\n          const material = child.material;\n          if (Array.isArray(material)) {\n            material.forEach((m) => m && m.dispose && m.dispose());\n          } else if (material && material.dispose) {\n            material.dispose();\n          }\n        }\n      });\n    }\n  };\n\n  return root;\n}"
+}

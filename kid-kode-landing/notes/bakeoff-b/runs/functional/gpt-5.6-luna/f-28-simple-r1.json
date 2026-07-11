@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-5.6-luna",
+  "model": "openai/gpt-5.6-luna",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-28-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 369,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3682,
+    "completionTokens": 1993
+  },
+  "costUsd": 0.01564,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { vec3, mix, smoothstep, uv } from 'three/tsl';\n\nfunction createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, BoxGeometry } = ctx.THREE;\n  const root = new Group();\n  const primitiveResults = [];\n  const ownedResources = [];\n  const timelines = [];\n\n  const colors =\n    config.intent?.visualSpec?.colors ?? {\n      ink: '#16161d',\n      paper: '#e8ecf2',\n      accent: '#ff2a38',\n      surface: '#0b0b10'\n    };\n\n  const hexToVec3 = (hex) => {\n    const value = String(hex).replace('#', '');\n    const r = parseInt(value.slice(0, 2), 16) / 255;\n    const g = parseInt(value.slice(2, 4), 16) / 255;\n    const b = parseInt(value.slice(4, 6), 16) / 255;\n    return vec3(r, g, b);\n  };\n\n  const makeGradientMaterial = (topHex, bottomHex) => {\n    const material = new MeshBasicNodeMaterial();\n    const y = smoothstep(0.05, 0.95, uv().y);\n    material.colorNode = mix(\n      hexToVec3(bottomHex),\n      hexToVec3(topHex),\n      y\n    );\n    return material;\n  };\n\n  const backdropGeometry = new PlaneGeometry(7, 6);\n  const backdropMaterial = makeGradientMaterial(colors.ink, colors.surface);\n  const backdrop = new Mesh(backdropGeometry, backdropMaterial);\n  backdrop.position.set(0, 0, -2.5);\n  root.add(backdrop);\n  ownedResources.push(backdropGeometry, backdropMaterial);\n\n  const surfaceGeometry = new PlaneGeometry(4.85, 3.15);\n  const surfaceMaterial = makeGradientMaterial(colors.ink, colors.surface);\n  const surface = new Mesh(surfaceGeometry, surfaceMaterial);\n  surface.position.set(0, 0, -1.35);\n  root.add(surface);\n  ownedResources.push(surfaceGeometry, surfaceMaterial);\n\n  const imageGeometry = new PlaneGeometry(4.2, 2.625);\n  const imageMaterial = new MeshBasicNodeMaterial({\n    color: colors.paper\n  });\n  const imagePlane = new Mesh(imageGeometry, imageMaterial);\n  imagePlane.position.set(0, 0, -0.15);\n  root.add(imagePlane);\n  ownedResources.push(imageGeometry, imageMaterial);\n\n  const edgeMaterial = new MeshBasicNodeMaterial({\n    color: colors.accent\n  });\n\n  const topEdgeGeometry = new BoxGeometry(4.2, 0.025, 0.025);\n  const topEdge = new Mesh(topEdgeGeometry, edgeMaterial);\n  topEdge.position.set(0, 1.34, 0.02);\n  root.add(topEdge);\n  ownedResources.push(topEdgeGeometry);\n\n  const sideEdgeGeometry = new BoxGeometry(0.025, 0.42, 0.025);\n  const sideEdge = new Mesh(sideEdgeGeometry, edgeMaterial);\n  sideEdge.position.set(-2.08, -1.1, 0.02);\n  root.add(sideEdge);\n  ownedResources.push(sideEdgeGeometry, edgeMaterial);\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n      if (!root.parent && root.userData.cleaned) {\n        texture.dispose?.();\n        return;\n      }\n\n      texture.colorSpace = ctx.THREE.SRGBColorSpace;\n      imageMaterial.map = texture;\n      imageMaterial.needsUpdate = true;\n      ownedResources.push(texture);\n    });\n  }\n\n  for (const primitive of config.cinematicPrimitives ?? []) {\n    const result = ctx.primitives[primitive.name](root, primitive.params);\n    if (result) {\n      primitiveResults.push(result);\n      if (result.timeline) timelines.push(result.timeline);\n    }\n  }\n\n  root.userData.handlers = {};\n  root.userData.cleanup = () => {\n    if (root.userData.cleaned) return;\n    root.userData.cleaned = true;\n\n    for (const timeline of timelines) {\n      timeline?.kill?.();\n    }\n\n    for (const result of primitiveResults) {\n      result?.cleanup?.();\n    }\n\n    for (const resource of ownedResources) {\n      resource?.dispose?.();\n    }\n\n    root.clear();\n  };\n\n  return root;\n}\n\nexport default createNode;"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-37-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 7888,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4456,
+    "completionTokens": 1118
+  },
+  "costUsd": 0.010046,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, smoothstep, time, uniform } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const {\n    imageUrl,\n    scenePosition = [0, 0, 0],\n    cinematicPrimitives = [],\n  } = config;\n\n  // === ROOT GROUP ===\n  const group = new THREE.Group();\n  group.position.fromArray(scenePosition);\n  group.userData.handlers = {};\n  group.userData.primitiveCleanups = [];\n\n  // === PLANE GEOMETRY ===\n  const geometry = new THREE.PlaneGeometry(2.5, 1.5, 1, 1);\n\n  // === MATERIAL WITH SHADER NODES ===\n  const colorUniform = uniform(new THREE.Color(0xffffff));\n  const hoverAlpha = uniform(1.0);\n  const materialNode = new MeshBasicNodeMaterial({\n    colorSpace: THREE.SRGBColorSpace,\n  });\n\n  // Load texture asynchronously\n  if (imageUrl) {\n    ctx.textureLoader.loadTexture(imageUrl).then((texture) => {\n      materialNode.map = texture;\n      materialNode.needsUpdate = true;\n    });\n  }\n\n  // Basic hover effect on alpha via shader nodes\n  materialNode.transparent = true;\n  materialNode.opacityNode = hoverAlpha;\n\n  // === MESH ===\n  const mesh = new THREE.Mesh(geometry, materialNode);\n  group.add(mesh);\n\n  // === INTERACTION STATE ===\n  let isHovering = false;\n  let hoverTimeline = null;\n  let pressTimeline = null;\n\n  // === HOVER HANDLERS ===\n  group.userData.handlers.onHover = () => {\n    if (isHovering) return;\n    isHovering = true;\n\n    // Kill prior hover timeline if active\n    if (hoverTimeline) hoverTimeline.kill();\n\n    // Rise-in: y +0.15, power3.out, 0.7s\n    hoverTimeline = gsap.to(mesh.position, {\n      y: 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n      overwrite: 'auto',\n    });\n  };\n\n  group.userData.handlers.onHoverEnd = () => {\n    if (!isHovering) return;\n    isHovering = false;\n\n    // Return to y=0 with settle motion\n    if (hoverTimeline) hoverTimeline.kill();\n    hoverTimeline = gsap.to(mesh.position, {\n      y: 0,\n      duration: 0.9,\n      ease: 'power4.out',\n      overwrite: 'auto',\n    });\n  };\n\n  // === CLICK HANDLER ===\n  group.userData.handlers.onClick = () => {\n    // Press-down: scale 0.97, 120ms, back.out\n    if (pressTimeline) pressTimeline.kill();\n    pressTimeline = gsap.to(mesh.scale, {\n      x: 0.97,\n      y: 0.97,\n      duration: 0.12,\n      ease: 'back.out',\n      yoyo: true,\n      repeat: 1,\n      overwrite: 'auto',\n    });\n\n    // Emit navigation event\n    ctx.emit('hub-pricing.select', { quote: true });\n  };\n\n  // === APPLY CINEMATIC PRIMITIVES ===\n  for (const primitive of cinematicPrimitives) {\n    if (primitive.name === 'parallax-scroll' && primitive.trigger === 'scroll') {\n      const result = ctx.primitives['parallax-scroll'](group, primitive.params || {});\n      if (result && result.cleanup) {\n        group.userData.primitiveCleanups.push(result.cleanup);\n      }\n    }\n  }\n\n  // === CLEANUP ===\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    materialNode.dispose();\n    if (hoverTimeline) hoverTimeline.kill();\n    if (pressTimeline) pressTimeline.kill();\n    for (const cleanup of group.userData.primitiveCleanups) {\n      cleanup();\n    }\n  };\n\n  return group;\n}\n```"
+}

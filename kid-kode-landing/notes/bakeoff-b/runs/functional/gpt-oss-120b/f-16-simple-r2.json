@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-16-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 6192,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3728,
+    "completionTokens": 1123
+  },
+  "costUsd": 0.001233,
+  "billing": "metered",
+  "output": "import { Mesh, PlaneGeometry, MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { } from '@/primitives';\nimport { } from '@/text';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {string} [imageUrl]\n * @property {Array<{ name: string, params: any, trigger: string }>} [cinematicPrimitives]\n * @property {any} [textContent]\n * @property {any} [intent]\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {any} THREE\n * @property {{ loadTexture: (url:string)=>Promise<any> }} textureLoader\n * @property {{ loadGLB: (url:string)=>Promise<any> }} glbLoader\n * @property {any} fontAtlas\n * @property {Record<string, (target:any, params:any)=>{timeline:any, cleanup:()=>void}>} primitives\n * @property {(event:string, payload:any)=>void} emit\n * @property {string} [tier]\n */\n\n/**\n * Creates a textured plane node.\n *\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  // Root container – a Group to hold potential future children\n  const { Group } = ctx.THREE;\n  const root = new Group();\n\n  // Geometry & material\n  const geometry = new PlaneGeometry(7, 6); // default size; can be adjusted if needed\n  const material = new MeshBasicNodeMaterial({ color: 0xffffff });\n\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Load texture asynchronously (function stays synchronous)\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    }).catch(() => {\n      // Fail silently – keep plain material\n    });\n  }\n\n  // Apply cinematic primitives if any\n  const primitiveHandles = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const handler = ctx.primitives[prim.name];\n      if (handler) {\n        const result = handler(mesh, prim.params ?? {});\n        if (result) {\n          primitiveHandles.push(result);\n        }\n      }\n    }\n  }\n\n  // Text handling (none expected for this node, but keep pattern)\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    if (item && typeof item.text === 'string') {\n      const textObj = ctx.fontAtlas.createText(item.text, {\n        fontSize: item.typography?.fontSize,\n        color: item.role?.color ?? '#e8ecf2',\n        align: 'left',\n      });\n      root.add(textObj);\n    }\n  }\n\n  // Set up userData with empty handlers and cleanup\n  root.userData.handlers = {};\n\n  root.userData.cleanup = () => {\n    // Dispose material and geometry\n    material.dispose();\n    geometry.dispose();\n\n    // Cleanup primitives\n    for (const ph of primitiveHandles) {\n      if (ph && typeof ph.cleanup === 'function') {\n        ph.cleanup();\n      }\n    }\n\n    // Kill any GSAP timelines (none expected here)\n    gsap.globalTimeline.clear(); // safe no‑op if none\n  };\n\n  return root;\n}"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-18-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 2905,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3546,
+    "completionTokens": 824
+  },
+  "costUsd": 0.0015045,
+  "billing": "metered",
+  "output": "import { Group, Mesh, PlaneGeometry, MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport * as primitives from '@/primitives';\nimport * as text from '@/text';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {string} [imageUrl]\n * @property {Array<{name:string,params:any,trigger:string}>} [cinematicPrimitives]\n * @property {Array<{text:string,role:string,typography?:{fontSize?:number}}>} [textContent]\n * @property {Array<number>} [rotation]\n * @property {Array<number>} [scale]\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {any} THREE\n * @property {any} textureLoader\n * @property {any} glbLoader\n * @property {any} videoLoader\n * @property {any} fontAtlas\n * @property {any} primitives\n * @property {Function} emit\n * @property {string} [tier]\n */\n\n/**\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // Plane geometry sized to atlas region aspect ratio (512:320 = 1.6:1)\n  const aspect = 512 / 320;\n  const geometry = new PlaneGeometry(aspect, 1, 1, 1);\n\n  // Basic node material (transparent to allow any alpha in texture)\n  const material = new MeshBasicNodeMaterial();\n  material.transparent = true;\n\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  // Load texture asynchronously via ctx loader (but keep function sync)\n  let loadedTexture = null;\n  ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    loadedTexture = tex;\n    material.map = tex;\n    material.needsUpdate = true;\n  });\n\n  // Apply rotation and scale from config (position is applied by adapter)\n  if (Array.isArray(config.rotation)) {\n    group.rotation.set(...config.rotation);\n  }\n  if (Array.isArray(config.scale)) {\n    group.scale.set(...config.scale);\n  }\n\n  // Apply any cinematic primitives listed in config\n  const primitiveHandles = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const name = prim.name;\n      const params = prim.params || {};\n      if (ctx.primitives && typeof ctx.primitives[name] === 'function') {\n        const handle = ctx.primitives[name](group, params);\n        primitiveHandles.push(handle);\n      }\n    }\n  }\n\n  // Render any text items via fontAtlas (none in this spec, but keep logic)\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    const txtOpts = {\n      fontSize: item.typography?.fontSize,\n      color: '#e8ecf2',\n      align: 'left',\n    };\n    const txtObj = ctx.fontAtlas.createText(item.text, txtOpts);\n    group.add(txtObj);\n  }\n\n  // Billboard handler – called by the runtime each frame with the active camera\n  group.userData.handlers = {\n    update: (camera) => {\n      // Keep the plane facing the camera\n      group.lookAt(camera.position);\n    },\n  };\n\n  // Cleanup resources and kill any timelines\n  group.userData.cleanup = () => {\n    // Dispose geometry and material\n    geometry.dispose();\n    material.dispose();\n    // Dispose loaded texture\n    if (loadedTexture) {\n      loadedTexture.dispose();\n    }\n    // Cleanup primitives\n    for (const h of primitiveHandles) {\n      if (h && typeof h.cleanup === 'function') {\n        h.cleanup();\n      }\n    }\n    // Kill any GSAP timelines (none created here but safe)\n    gsap.globalTimeline.clear();\n  };\n\n  return group;\n}"
+}

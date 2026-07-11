@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-08-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 3488,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3547,
+    "completionTokens": 564
+  },
+  "costUsd": 0.00130975,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport * as primitives from '@/primitives';\nimport * as text from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new ctx.THREE.Group();\n  group.userData.handlers = {};\n\n  const cleanupFns = [];\n\n  // ---- Textured Plane ----\n  const planeGeom = new ctx.THREE.PlaneGeometry(1, 1);\n  const planeMat = new MeshBasicNodeMaterial({ map: null });\n  const planeMesh = new ctx.THREE.Mesh(planeGeom, planeMat);\n  group.add(planeMesh);\n\n  let loadedTex = null;\n  const texPromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  texPromise.then(tex => {\n    loadedTex = tex;\n    planeMat.map = tex;\n    planeMat.needsUpdate = true;\n    // Adjust geometry to texture aspect if possible\n    if (tex.image && tex.image.width && tex.image.height) {\n      const aspect = tex.image.width / tex.image.height;\n      planeGeom.scale(aspect, 1, 1);\n    }\n  });\n  cleanupFns.push(() => {\n    planeMat.dispose();\n    planeGeom.dispose();\n    if (loadedTex) loadedTex.dispose();\n  });\n\n  // ---- Text Content ----\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  items.forEach(item => {\n    const txt = ctx.fontAtlas.createText(item.text, {\n      fontSize: (item.typography && item.typography.fontSize) ?? 0.34,\n      color: (config.intent?.visualSpec?.colors?.paper) ?? '#e8ecf2',\n      align: 'center',\n      maxWidthPx: 512,\n      letterSpacingPx: 0\n    });\n    // Slightly offset in front of the plane\n    txt.position.set(0, 0, 0.01);\n    group.add(txt);\n    cleanupFns.push(() => {\n      if (txt.parent) txt.parent.remove(txt);\n    });\n  });\n\n  // ---- Cinematic Primitives (if any) ----\n  if (Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach(p => {\n      const prim = ctx.primitives[p.name](group, p.params);\n      if (prim && typeof prim.cleanup === 'function') {\n        cleanupFns.push(() => prim.cleanup());\n      }\n      if (prim && prim.timeline && typeof prim.timeline.kill === 'function') {\n        cleanupFns.push(() => prim.timeline.kill());\n      }\n    });\n  }\n\n  // ---- Cleanup ----\n  group.userData.cleanup = () => {\n    cleanupFns.forEach(fn => {\n      try { fn(); } catch (e) {}\n    });\n  };\n\n  return group;\n}\n"
+}

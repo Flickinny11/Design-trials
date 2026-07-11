@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-45-moderate",
+  "run": 1,
+  "ok": true,
+  "wallMs": 3689,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3738,
+    "completionTokens": 844
+  },
+  "costUsd": 0.0015675,
+  "billing": "metered",
+  "output": "import { MeshStandardNodeMaterial } from 'three/webgpu';\nimport { texture, uv, mul, add, sub, sin, cos, time, vec3 } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport * as primitives from '@/primitives';\nimport * as text from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Geometry – thin rule (adjust size as needed)\n  const geometry = new PlaneGeometry(1.5, 0.2, 64, 64);\n  const material = new MeshStandardNodeMaterial();\n  material.roughness = 0.6;\n  material.metalness = 0.3;\n  material.clearcoat = 0.1;\n\n  // Load textures (async, but function stays sync)\n  const colorTexPromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  const depthTexPromise = ctx.textureLoader.loadTexture(config.depthMapUrl);\n\n  // Apply textures when ready\n  colorTexPromise.then((tex) => {\n    material.map = tex;\n    material.needsUpdate = true;\n    resources.colorTex = tex;\n  });\n  depthTexPromise.then((tex) => {\n    // Displacement node using TSL\n    const dispNode = mul(texture(tex, uv), 0.08);\n    material.displacementNode = dispNode;\n    material.needsUpdate = true;\n    resources.depthTex = tex;\n  });\n\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Apply config transforms (position handled by adapter)\n  if (config.rotation) root.rotation.set(...config.rotation);\n  if (config.scale) root.scale.set(...config.scale);\n\n  // Event handlers storage\n  const handlers = {};\n  root.userData.handlers = handlers;\n\n  // GSAP timelines storage for cleanup\n  const timelines = [];\n\n  // Hover effect – rise-in (subtle, 0.15 units)\n  handlers.hover = () => {\n    const tl = gsap.timeline();\n    tl.to(mesh.position, {\n      y: mesh.position.y + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n    timelines.push(tl);\n  };\n  // Hover leave – revert\n  handlers.hoverLeave = () => {\n    const tl = gsap.timeline();\n    tl.to(mesh.position, {\n      y: mesh.position.y - 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n    timelines.push(tl);\n  };\n\n  // Click effect – emit navigation event\n  handlers.click = () => {\n    ctx.emit('hub-features.select', {});\n  };\n\n  // Apply cinematic primitives if any (including required parallax)\n  const primitiveInstances = [];\n  const primitivesList = config.cinematicPrimitives || [];\n  // Ensure parallax-scroll is present\n  const hasParallax = primitivesList.some((p) => p.name === 'parallax-scroll');\n  if (!hasParallax) {\n    primitivesList.push({ name: 'parallax-scroll', params: {}, trigger: 'load' });\n  }\n  for (const p of primitivesList) {\n    const instance = ctx.primitives[p.name](root, p.params);\n    primitiveInstances.push(instance);\n  }\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Dispose geometry & material\n    geometry.dispose();\n    material.dispose();\n    // Dispose textures if loaded\n    if (resources.colorTex) resources.colorTex.dispose();\n    if (resources.depthTex) resources.depthTex.dispose();\n    // Kill GSAP timelines\n    timelines.forEach((t) => t.kill());\n    // Cleanup primitives\n    primitiveInstances.forEach((inst) => {\n      if (inst && typeof inst.cleanup === 'function') inst.cleanup();\n    });\n  };\n\n  // Resource holder for cleanup\n  const resources = {\n    colorTex: null,\n    depthTex: null,\n  };\n\n  return root;\n}"
+}

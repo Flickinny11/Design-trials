@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-12-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 7493,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4398,
+    "completionTokens": 893
+  },
+  "costUsd": 0.008863,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // Create the group for this node\n  const group = new THREE.Group();\n\n  // Load the texture\n  const texturePromise = ctx.textureLoader.loadTexture(config.imageUrl);\n\n  // Create plane geometry — atlas region 512×320 → aspect 1.6\n  // Sized to match the aspect ratio in scene units\n  const width = 1.6;\n  const height = 1.0;\n  const geometry = new THREE.PlaneGeometry(width, height);\n\n  // Prepare material with texture node\n  let material = null;\n  const meshPromise = texturePromise.then((texture) => {\n    // Set texture properties\n    texture.flipY = false;\n    texture.magFilter = THREE.LinearFilter;\n    texture.minFilter = THREE.LinearMipmapLinearFilter;\n\n    // Compute UV scale and offset for atlas region\n    // Atlas sheet dimensions assumed 2048×2048 (standard)\n    // Region: x=0, y=0, w=512, h=320\n    const atlasWidth = 2048;\n    const atlasHeight = 2048;\n    const regionX = 0;\n    const regionY = 0;\n    const regionW = 512;\n    const regionH = 320;\n\n    const uvScale = new THREE.Vector2(\n      regionW / atlasWidth,\n      regionH / atlasHeight\n    );\n    const uvOffset = new THREE.Vector2(\n      regionX / atlasWidth,\n      regionY / atlasHeight\n    );\n\n    // Create material with TSL nodes\n    const uvNode = uv().mul(uniform(uvScale)).add(uniform(uvOffset));\n    material = new MeshBasicNodeMaterial({\n      colorNode: uvNode.uv(texture),\n      side: THREE.DoubleSide,\n      transparent: true,\n    });\n\n    // Create mesh and add to group\n    const mesh = new THREE.Mesh(geometry, material);\n    group.add(mesh);\n\n    return mesh;\n  });\n\n  // Create text label\n  const textPromise = Promise.resolve().then(() => {\n    const textContent = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n    const headline = textContent.find((item) => item.role === 'headline') || {\n      text: 'Features 3',\n      role: 'headline',\n      typography: { fontSize: 39 },\n    };\n\n    const textObj = ctx.fontAtlas.createText(headline.text, {\n      fontSize: headline.typography?.fontSize || 39,\n      color: config.intent?.visualSpec?.colors?.ink || '#16161d',\n      align: 'center',\n    });\n\n    // Position text above/below the sprite\n    textObj.position.z = 0.05;\n    textObj.position.y = -height / 2 - 0.3;\n    group.add(textObj);\n\n    return textObj;\n  });\n\n  // Billboarding helper — make plane face camera\n  const updateBillboard = (camera) => {\n    group.quaternion.copy(camera.quaternion);\n  };\n\n  // Attach cleanup\n  group.userData.cleanup = () => {\n    if (material) material.dispose();\n    geometry.dispose();\n\n    // Clean up timelines (none in this spec)\n  };\n\n  group.userData.handlers = {\n    updateBillboard,\n  };\n\n  return group;\n}\n```"
+}

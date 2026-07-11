@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-19-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 7892,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4386,
+    "completionTokens": 1200
+  },
+  "costUsd": 0.010386,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, color } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const group = new THREE.Group();\n\n  // ─────────────────────────────────────────────────────────────────────────────\n  // 1. STAGE: Gradient backdrop plane\n  // ─────────────────────────────────────────────────────────────────────────────\n  const stageGeom = new THREE.PlaneGeometry(7, 6);\n  const stageMaterial = new MeshBasicNodeMaterial();\n  \n  // Gradient from surface (#0b0b10) to ink (#16161d)\n  const gradientNode = mix(\n    color(new THREE.Color('#0b0b10')),\n    color(new THREE.Color('#16161d')),\n    uv().y\n  );\n  stageMaterial.colorNode = gradientNode;\n  \n  const stagePlane = new THREE.Mesh(stageGeom, stageMaterial);\n  stagePlane.position.z = -2.5;\n  group.add(stagePlane);\n\n  // ─────────────────────────────────────────────────────────────────────────────\n  // 2. HERO TEXTURED PLANE\n  // ─────────────────────────────────────────────────────────────────────────────\n  const cardGeom = new THREE.PlaneGeometry(2, 1.25);\n  const cardMaterial = new MeshBasicNodeMaterial();\n  \n  const cardPlane = new THREE.Mesh(cardGeom, cardMaterial);\n  cardPlane.position.set(3.2, 1, 0.06);\n  cardPlane.rotation.order = 'XYZ';\n  \n  group.add(cardPlane);\n  \n  // Load texture and apply\n  ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    tex.colorSpace = THREE.SRGBColorSpace;\n    cardMaterial.map = tex;\n    cardMaterial.needsUpdate = true;\n  });\n\n  // ─────────────────────────────────────────────────────────────────────────────\n  // 3. HEADLINE TEXT: \"Collection 3\"\n  // ─────────────────────────────────────────────────────────────────────────────\n  const textContent = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  let headlineText = 'Collection 3';\n  \n  for (const item of textContent) {\n    if (item.role === 'headline' && item.text) {\n      headlineText = String(item.text);\n      break;\n    }\n  }\n  \n  const headline = ctx.fontAtlas.createText(headlineText, {\n    fontSize: 39,\n    color: '#e8ecf2',\n    align: 'center',\n    maxWidthPx: 400\n  });\n  headline.position.set(3.2, 0.35, 0.5);\n  group.add(headline);\n\n  // ─────────────────────────────────────────────────────────────────────────────\n  // 4. CONTACT-SHADOW PLANE\n  // ─────────────────────────────────────────────────────────────────────────────\n  const shadowGeom = new THREE.PlaneGeometry(3.2, 1.6);\n  const shadowMaterial = new MeshBasicNodeMaterial();\n  shadowMaterial.transparent = true;\n  shadowMaterial.colorNode = mix(\n    color(new THREE.Color('#000000')),\n    color(new THREE.Color('#000000')),\n    uv().y\n  );\n  shadowMaterial.opacity = 0.5;\n  \n  const shadowPlane = new THREE.Mesh(shadowGeom, shadowMaterial);\n  shadowPlane.position.set(3.2, -0.4, -0.1);\n  group.add(shadowPlane);\n\n  // ─────────────────────────────────────────────────────────────────────────────\n  // 5. CLEANUP & HANDLERS\n  // ─────────────────────────────────────────────────────────────────────────────\n  group.userData.cleanup = () => {\n    cardGeom.dispose();\n    cardMaterial.dispose();\n    stageGeom.dispose();\n    stageMaterial.dispose();\n    shadowGeom.dispose();\n    shadowMaterial.dispose();\n    gsap.killTweensOf([cardPlane.position, cardPlane.scale, headline.position]);\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

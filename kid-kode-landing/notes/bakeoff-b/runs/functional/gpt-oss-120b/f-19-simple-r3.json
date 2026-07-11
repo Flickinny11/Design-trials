@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-19-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 7865,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3742,
+    "completionTokens": 1235
+  },
+  "costUsd": 0.0013023,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { Group, Mesh, PlaneGeometry } from '@/primitives';\n\nexport default function createNode(config, ctx) {\n  // root container\n  const root = new Group();\n\n  // geometry preserving image aspect (512 : 320 = 1.6)\n  const aspect = 512 / 320;\n  const width = 1.6; // arbitrary unit, matches aspect\n  const height = 1;\n  const geometry = new PlaneGeometry(width, height);\n\n  // material – will receive texture later\n  const material = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    map: null,\n    transparent: true,\n  });\n\n  const plane = new Mesh(geometry, material);\n  // apply placement from spec (already handled by adapter for root, but keep for safety)\n  plane.position.set(3.2, 1, 0.06);\n  plane.rotation.set(0, 0, 0);\n  plane.scale.set(1, 1, 1);\n  root.add(plane);\n\n  // load texture asynchronously; keep reference for cleanup\n  let loadedTexture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      loadedTexture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // render text items via font atlas\n  const items =\n    config.textContent ??\n    config.intent?.visualSpec?.textContent ??\n    [];\n\n  for (const item of items) {\n    const txt = ctx.fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize ?? 39,\n      color: (config.visualSpec?.colors?.paper ?? '#e8ecf2') as any,\n      align: 'center',\n    });\n    // place text slightly in front of the plane\n    txt.position.set(0, 0, 0.01);\n    root.add(txt);\n  }\n\n  // no primitives to apply per spec\n\n  // cleanup routine\n  root.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (loadedTexture) {\n      loadedTexture.dispose();\n    }\n    // No GSAP timelines were created, but ensure any could be killed\n    // if (root.userData._timelines) root.userData._timelines.forEach(t => t.kill());\n  };\n\n  // placeholder for handlers object (no interactions in spec)\n  root.userData.handlers = {};\n\n  return root;\n}\n"
+}

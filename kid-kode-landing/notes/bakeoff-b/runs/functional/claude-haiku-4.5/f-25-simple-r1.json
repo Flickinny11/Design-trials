@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-25-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 4024,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4373,
+    "completionTokens": 530
+  },
+  "costUsd": 0.007023,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, texture } from 'three/tsl';\n\nexport default async function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // Create plane geometry\n  const geometry = new THREE.PlaneGeometry(1.6, 1, 1, 1);\n\n  // Load the texture\n  const texturePromise = ctx.textureLoader.loadTexture(config.imageUrl);\n\n  // Create material with TSL nodes\n  const material = new MeshBasicNodeMaterial();\n\n  // Apply texture once loaded\n  texturePromise.then((tex) => {\n    tex.colorSpace = 'srgb';\n    material.colorNode = texture(tex);\n  });\n\n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n\n  // Apply scene position\n  if (config.scenePosition) {\n    mesh.position.set(\n      config.scenePosition.x,\n      config.scenePosition.y,\n      config.scenePosition.z\n    );\n  }\n\n  // Apply rotation\n  if (config.scenePosition?.rotation) {\n    mesh.rotation.order = 'XYZ';\n    mesh.rotation.x = config.scenePosition.rotation.x || 0;\n    mesh.rotation.y = config.scenePosition.rotation.y || 0;\n    mesh.rotation.z = config.scenePosition.rotation.z || 0;\n  }\n\n  // Apply scale\n  if (config.scenePosition?.scale) {\n    mesh.scale.set(\n      config.scenePosition.scale.x || 1,\n      config.scenePosition.scale.y || 1,\n      config.scenePosition.scale.z || 1\n    );\n  }\n\n  // Setup userData for cleanup\n  mesh.userData.handlers = {};\n  mesh.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texturePromise.then((tex) => {\n      if (tex) tex.dispose();\n    });\n  };\n\n  return mesh;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-04-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 6958,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4363,
+    "completionTokens": 966
+  },
+  "costUsd": 0.009193,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, texture, mix, vec3 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // ============================================================================\n  // STAGE: Backdrop with engineered gradient\n  // ============================================================================\n  const backdropGroup = new THREE.Group();\n\n  // Parse colors from config\n  const colors = config.intent?.visualSpec?.colors || {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10',\n  };\n\n  // Create backdrop plane (7x6 units at z=-2.5)\n  const backdropGeo = new THREE.PlaneGeometry(7, 6);\n  const backdropMat = new THREE.MeshBasicMaterial({\n    color: new THREE.Color(colors.surface),\n  });\n  const backdrop = new THREE.Mesh(backdropGeo, backdropMat);\n  backdrop.position.z = -2.5;\n  backdrop.renderOrder = -10;\n  backdropGroup.add(backdrop);\n\n  // ============================================================================\n  // PRIMARY CTA: Textured plane with orb-decor image\n  // ============================================================================\n  const ctaGroup = new THREE.Group();\n\n  // Load the orb-decor texture\n  let textureLoaded = false;\n  const planeGeo = new THREE.PlaneGeometry(1.2, 1.2);\n  const planeMat = new THREE.MeshBasicMaterial({\n    color: 0xffffff,\n    transparent: true,\n    side: THREE.DoubleSide,\n  });\n  const plane = new THREE.Mesh(planeGeo, planeMat);\n\n  // Async load and apply texture\n  if (config.imageUrl) {\n    ctx.textureLoader\n      .loadTexture(config.imageUrl)\n      .then((tex) => {\n        planeMat.map = tex;\n        planeMat.needsUpdate = true;\n        textureLoaded = true;\n      })\n      .catch(() => {\n        console.warn('Failed to load orb-decor texture:', config.imageUrl);\n      });\n  }\n\n  plane.position.copy(\n    new THREE.Vector3(\n      config.scenePosition?.[0] ?? 0,\n      config.scenePosition?.[1] ?? -2.85,\n      config.scenePosition?.[2] ?? 0.2\n    )\n  );\n  plane.rotation.order = 'XYZ';\n\n  if (config.scenePosition) {\n    plane.position.set(\n      config.scenePosition[0] ?? 0,\n      config.scenePosition[1] ?? -2.85,\n      config.scenePosition[2] ?? 0.2\n    );\n  }\n\n  ctaGroup.add(plane);\n\n  // ============================================================================\n  // COMPOSITION: Root group\n  // ============================================================================\n  const root = new THREE.Group();\n  root.add(backdropGroup);\n  root.add(ctaGroup);\n\n  // ============================================================================\n  // CLEANUP & HANDLERS\n  // ============================================================================\n  const primitiveCleanups = [];\n\n  root.userData.handlers = {};\n\n  root.userData.cleanup = () => {\n    // Kill all primitive timelines\n    for (const cleanup of primitiveCleanups) {\n      if (cleanup && typeof cleanup === 'function') {\n        cleanup();\n      }\n    }\n    primitiveCleanups.length = 0;\n\n    // Dispose materials and geometries\n    backdropMat.dispose();\n    backdropGeo.dispose();\n    planeMat.dispose();\n    if (planeMat.map) {\n      planeMat.map.dispose();\n    }\n    planeGeo.dispose();\n  };\n\n  return root;\n}"
+}

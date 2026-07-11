@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-17-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 9398,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3739,
+    "completionTokens": 1504
+  },
+  "costUsd": 0.00146325,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { } from '@/primitives';\nimport { } from '@/text';\n\nexport default function createNode(config, ctx) {\n    const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n    // Root container\n    const root = new Group();\n\n    // -------------------------------------------------\n    // 1. Textured plane (static, no lighting)\n    // -------------------------------------------------\n    // Use texture aspect ratio (512 / 320 = 1.6) – plane size 1.6 × 1.0 units\n    const planeWidth = 1.6;\n    const planeHeight = 1.0;\n\n    const geometry = new PlaneGeometry(planeWidth, planeHeight);\n    const material = new MeshBasicNodeMaterial({ color: 0xffffff, transparent: true });\n    const plane = new Mesh(geometry, material);\n    root.add(plane);\n\n    // Load texture asynchronously (function stays sync)\n    if (config.imageUrl) {\n        ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n            material.map = tex;\n            material.needsUpdate = true;\n        });\n    }\n\n    // -------------------------------------------------\n    // 2. Headline text label\n    // -------------------------------------------------\n    const textItems = config.textContent ??\n        config.intent?.visualSpec?.textContent ??\n        [];\n\n    const textObjects = [];\n\n    for (const item of textItems) {\n        const opts = {\n            fontSize: (item.typography && item.typography.fontSize) || 39,\n            color: (item.role === 'headline' ? config.colors?.paper : config.colors?.paper) || '#e8ecf2',\n            align: 'center',\n        };\n        const txt = ctx.fontAtlas.createText(item.text, opts);\n        // Position the text slightly in front of the plane (z +0.01) and centered vertically\n        txt.position.set(0, 0, 0.01);\n        root.add(txt);\n        textObjects.push(txt);\n    }\n\n    // -------------------------------------------------\n    // 3. UserData – handlers and cleanup\n    // -------------------------------------------------\n    root.userData.handlers = {};\n\n    // Store references for cleanup\n    const disposables = {\n        geometry,\n        material,\n        textures: [], // will be populated when texture loads\n        timelines: [], // none for this node, kept for consistency\n    };\n\n    // Capture texture load to dispose later\n    if (config.imageUrl) {\n        ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n            disposables.textures.push(tex);\n        });\n    }\n\n    root.userData.cleanup = () => {\n        // Dispose timelines (none expected)\n        disposables.timelines.forEach((tl) => {\n            if (tl && tl.kill) tl.kill();\n        });\n\n        // Dispose material and geometry\n        if (material) material.dispose();\n        if (geometry) geometry.dispose();\n\n        // Dispose loaded textures\n        disposables.textures.forEach((tex) => {\n            if (tex && tex.dispose) tex.dispose();\n        });\n\n        // Remove children (meshes, texts) from scene graph\n        root.traverse((obj) => {\n            if (obj !== root && obj.parent) {\n                obj.parent.remove(obj);\n                if (obj.geometry) obj.geometry.dispose?.();\n                if (obj.material) obj.material.dispose?.();\n            }\n        });\n    };\n\n    return root;\n}"
+}

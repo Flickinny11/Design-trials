@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-11-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 3471,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4373,
+    "completionTokens": 324
+  },
+  "costUsd": 0.005993,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, texture, vec3 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // Create plane geometry (512x320 px → ~1.6:1 aspect)\n  const planeGeometry = new THREE.PlaneGeometry(1.6, 1.0);\n\n  // Load the brushed metal texture\n  const material = new MeshBasicNodeMaterial();\n  material.colorNode = uv().xy.mul(vec3(1)).assign(texture(null));\n\n  ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    material.colorNode = texture(tex);\n    material.needsUpdate = true;\n  });\n\n  // Create plane mesh\n  const plane = new THREE.Mesh(planeGeometry, material);\n  plane.position.copy(new THREE.Vector3(3.2, -0.3, 0));\n  plane.rotation.order = 'XYZ';\n\n  // Setup cleanup\n  plane.userData.cleanup = () => {\n    planeGeometry.dispose();\n    material.dispose();\n  };\n\n  plane.userData.handlers = {};\n\n  return plane;\n}\n```"
+}

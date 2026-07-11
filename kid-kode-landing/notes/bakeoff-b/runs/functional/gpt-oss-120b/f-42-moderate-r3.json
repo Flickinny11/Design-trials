@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-42-moderate",
+  "run": 3,
+  "ok": true,
+  "wallMs": 19306,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3784,
+    "completionTokens": 2698
+  },
+  "costUsd": 0.0021864000000000002,
+  "billing": "metered",
+  "output": "import { MeshStandardNodeMaterial, Mesh, Group, PlaneGeometry, Color } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { } from '@/primitives';\nimport { } from '@/text';\n\n/**\n * @param {any} config - node configuration\n * @param {any} ctx - runtime context\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const group = new Group();\n\n  // Geometry for the capsule‑like badge\n  const geometry = new PlaneGeometry(0.8, 0.3);\n\n  // Base material (uses lighting for accent emissive edge)\n  const material = new MeshStandardNodeMaterial();\n  const colors = (config.intent && config.intent.visualSpec && config.intent.visualSpec.colors) || {};\n\n  // Base colour (paper) and accent emissive edge\n  material.color = new Color(colors.paper ?? '#e8ecf2');\n  material.emissive = new Color(colors.accent ?? '#ff2a38');\n  material.emissiveIntensity = 0.5;\n  material.roughness = 0.7;\n  material.metalness = 0.0;\n\n  // Load the grain texture if provided\n  let loadedTexture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      loadedTexture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  // Store timelines for cleanup\n  const activeTimelines = [];\n\n  // Interaction handlers\n  const handlers = {\n    hover: () => {\n      const baseY = group.position.y;\n      const tl = gsap.timeline({ defaults: { duration: 0.3, ease: 'power3.out' } });\n      tl.to(group.position, { y: baseY + 0.15 });\n      activeTimelines.push(tl);\n    },\n    click: () => {\n      ctx.emit('hub-pricing.select', {});\n    },\n  };\n  group.userData.handlers = handlers;\n\n  // Cleanup routine\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    if (loadedTexture) loadedTexture.dispose();\n    material.dispose();\n\n    activeTimelines.forEach((tl) => tl.kill());\n    activeTimelines.length = 0;\n  };\n\n  // Apply cinematic primitives if any (none in this spec)\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      if (ctx.primitives && typeof ctx.primitives[prim.name] === 'function') {\n        const { cleanup, timeline } = ctx.primitives[prim.name](group, prim.params || {});\n        // store for later cleanup\n        if (timeline) activeTimelines.push(timeline);\n        if (cleanup) {\n          const prev = group.userData.cleanup;\n          group.userData.cleanup = () => {\n            prev();\n            cleanup();\n          };\n        }\n      }\n    }\n  }\n\n  return group;\n}"
+}

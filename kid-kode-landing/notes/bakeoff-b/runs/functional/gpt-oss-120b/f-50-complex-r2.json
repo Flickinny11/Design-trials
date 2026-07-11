@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-50-complex",
+  "run": 2,
+  "ok": true,
+  "wallMs": 9809,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3846,
+    "completionTokens": 1765
+  },
+  "costUsd": 0.0016359,
+  "billing": "metered",
+  "output": "import { Group } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { } from '@/primitives';\nimport { } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const root = new Group();\n\n  // Store references for cleanup\n  const primitiveHandles = [];\n  let gltfScene = null;\n  let riseInTimeline = null;\n\n  // Load GLB mesh\n  if (config.meshUrl) {\n    ctx.glbLoader.loadGLB(config.meshUrl).then((gltf) => {\n      gltfScene = gltf.scene || gltf;\n      root.add(gltfScene);\n    });\n  }\n\n  // Apply cinematic primitives\n  const primitives = config.cinematicPrimitives ?? [];\n  for (const prim of primitives) {\n    if (typeof ctx.primitives[prim.name] === 'function') {\n      const handle = ctx.primitives[prim.name](root, prim.params);\n      primitiveHandles.push(handle);\n    }\n  }\n\n  // Interaction handlers\n  const handlers = {};\n\n  // Hover – rise-in preset (subtle, 0.15 units)\n  riseInTimeline = gsap.fromTo(\n    root.position,\n    { y: 0.15 },\n    {\n      y: 0,\n      duration: 0.7,\n      ease: 'power3.out',\n      paused: true,\n    }\n  );\n\n  handlers.hover = () => {\n    if (riseInTimeline) {\n      riseInTimeline.restart();\n    }\n  };\n\n  // Click – emit navigation event\n  handlers.click = () => {\n    ctx.emit('hub-features.select');\n  };\n\n  root.userData.handlers = handlers;\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Kill GSAP timeline\n    if (riseInTimeline) {\n      riseInTimeline.kill();\n      riseInTimeline = null;\n    }\n\n    // Cleanup primitives\n    for (const h of primitiveHandles) {\n      if (h && typeof h.cleanup === 'function') {\n        h.cleanup();\n      }\n    }\n    primitiveHandles.length = 0;\n\n    // Dispose GLTF resources\n    if (gltfScene) {\n      gltfScene.traverse((node) => {\n        if (node.isMesh) {\n          if (node.geometry) {\n            node.geometry.dispose();\n          }\n          const mat = node.material;\n          if (Array.isArray(mat)) {\n            mat.forEach((m) => {\n              if (m.map) m.map.dispose();\n              m.dispose();\n            });\n          } else if (mat) {\n            if (mat.map) mat.map.dispose();\n            mat.dispose();\n          }\n        }\n      });\n      root.remove(gltfScene);\n      gltfScene = null;\n    }\n  };\n\n  return root;\n}"
+}

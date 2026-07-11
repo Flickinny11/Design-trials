@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-41-moderate",
+  "run": 2,
+  "ok": true,
+  "wallMs": 2559,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3684,
+    "completionTokens": 415
+  },
+  "costUsd": 0.00123225,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { default as primitives } from '@/primitives';\nimport { default as text } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new ctx.THREE.Group();\n\n  // Plane geometry – size chosen to fit a horizontal row (7 × 0.5 scene units)\n  const geometry = new ctx.THREE.PlaneGeometry(7, 0.5);\n  const material = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    transparent: true,\n    map: null,\n  });\n\n  const mesh = new ctx.THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Load texture asynchronously; material will be updated when ready\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // ---------- Interaction: ----------\n  const hoverTimeline = gsap.timeline({ paused: true });\n  hoverTimeline.to(mesh.position, {\n    y: '+=0.15',\n    duration: 0.7,\n    ease: 'power3.out',\n  });\n\n  function onHoverEnter() {\n    hoverTimeline.play(0);\n  }\n\n  function onHoverLeave() {\n    hoverTimeline.reverse();\n  }\n\n  function onClick() {\n    ctx.emit('hub-collection.select', {});\n  }\n\n  // Attach handlers to userData as required by the runtime\n  group.userData.handlers = {\n    hover: { onEnter: onHoverEnter, onLeave: onHoverLeave },\n    click: onClick,\n  };\n\n  // ---------- Cleanup ----------\n  group.userData.cleanup = () => {\n    hoverTimeline.kill();\n    geometry.dispose();\n    material.dispose();\n    // Primitive cleanup (none for this node, but keep pattern)\n    // if (ctx.primitives) { /* no primitives to clean */ }\n  };\n\n  return group;\n}"
+}

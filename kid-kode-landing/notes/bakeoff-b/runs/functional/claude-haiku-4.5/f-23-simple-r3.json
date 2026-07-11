@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-23-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 5793,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4372,
+    "completionTokens": 598
+  },
+  "costUsd": 0.007362,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, texture, mix } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { PlaneGeometry, Mesh, Group } = ctx.THREE;\n\n  const group = new Group();\n  group.position.set(0, -0.3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Create plane geometry (512x320 in atlas, normalized to scene units)\n  // Maintain 512:320 aspect ratio; scale to reasonable scene size\n  const aspectRatio = 512 / 320; // 1.6\n  const planeWidth = 1.6;\n  const planeHeight = 1.0;\n\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n\n  // Load brushed metal texture\n  const texturePromise = ctx.textureLoader.loadTexture(config.imageUrl);\n\n  // Create material with texture node\n  const material = new MeshBasicNodeMaterial();\n\n  // Set up UV coordinates for atlas region (0, 0, 512, 320 in a larger atlas)\n  // Assuming a power-of-2 atlas; map the rect to normalized UV space\n  const uvNode = uv();\n  const atlasUVNode = mix(\n    uvNode.mul(1.0), // Full plane uses the atlas rect\n    uvNode,\n    0.0 // No blending; direct passthrough\n  );\n\n  material.colorNode = texture(\n    atlasUVNode\n  );\n\n  // Placeholder until texture loads; then bind real texture\n  texturePromise.then((tex) => {\n    // Clamp texture to atlas region boundaries\n    tex.repeat.set(1.0, 1.0);\n    tex.offset.set(0.0, 0.0);\n    material.colorNode = texture(tex, atlasUVNode);\n    material.needsUpdate = true;\n  });\n\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  // userData cleanup hook\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (mesh.material.map) {\n      mesh.material.map.dispose();\n    }\n  };\n\n  return group;\n}\n```"
+}

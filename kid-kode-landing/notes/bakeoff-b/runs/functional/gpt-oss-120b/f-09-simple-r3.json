@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-09-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 10632,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3742,
+    "completionTokens": 1841
+  },
+  "costUsd": 0.0016658999999999999,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture, uv } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport {} from '@/primitives';\nimport {} from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Atlas region fallback\n  const rect = (config.atlasRegion && config.atlasRegion.sourceRect) || {\n    x: 0,\n    y: 0,\n    width: 512,\n    height: 320,\n  };\n\n  const aspect = rect.width / rect.height;\n  const geometry = new PlaneGeometry(aspect, 1);\n\n  const material = new MeshBasicNodeMaterial();\n  material.transparent = true;\n\n  // Load texture asynchronously\n  let _texture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      _texture = tex;\n\n      // Simple UV mapping (full texture). If atlas offsets are needed, compute them here.\n      const uvNode = uv(); // default UVs\n      material.mapNode = texture(tex, uvNode);\n      material.needsUpdate = true;\n    });\n  }\n\n  const mesh = new Mesh(geometry, material);\n\n  // Billboard: always face the camera\n  mesh.onBeforeRender = function (_, __, camera) {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  const root = new Group();\n  root.add(mesh);\n\n  // No interaction handlers for this node\n  root.userData.handlers = {};\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (_texture) _texture.dispose();\n    // No GSAP timelines were created for this node\n  };\n\n  return root;\n}"
+}

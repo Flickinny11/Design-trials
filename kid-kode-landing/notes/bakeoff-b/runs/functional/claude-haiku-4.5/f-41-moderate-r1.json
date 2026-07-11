@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-41-moderate",
+  "run": 1,
+  "ok": true,
+  "wallMs": 7751,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4437,
+    "completionTokens": 1203
+  },
+  "costUsd": 0.010452,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // Create the plane geometry\n  const geometry = new THREE.PlaneGeometry(3.2, 0.5);\n  \n  // Load the brushed metal texture\n  const material = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    transparent: true,\n    opacity: 0.95,\n  });\n\n  // Load texture asynchronously\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(\n    config.scenePosition?.[0] ?? 0,\n    config.scenePosition?.[1] ?? 0,\n    config.scenePosition?.[2] ?? 0\n  );\n\n  // Create subtle divider line at bottom (thin plane)\n  const dividerGeometry = new THREE.PlaneGeometry(3.2, 0.01);\n  const dividerMaterial = new MeshBasicNodeMaterial({\n    color: 0x16161d,\n    transparent: true,\n    opacity: 0.15,\n  });\n  const divider = new THREE.Mesh(dividerGeometry, dividerMaterial);\n  divider.position.z = 0.01;\n  divider.position.y = -0.25;\n  mesh.add(divider);\n\n  // Interaction state\n  const state = {\n    isHovering: false,\n    originalY: mesh.position.y,\n  };\n\n  // Timeline references for cleanup\n  const timelines = [];\n\n  // Hover handler: rise-in effect (subtle, 0.15 scene units)\n  const onHover = () => {\n    if (state.isHovering) return;\n    state.isHovering = true;\n\n    const tl = gsap.timeline();\n    tl.to(\n      mesh.position,\n      {\n        y: state.originalY + 0.15,\n        duration: 0.5,\n        ease: 'power3.out',\n      },\n      0\n    );\n    tl.to(\n      material,\n      {\n        opacity: 1.0,\n        duration: 0.3,\n      },\n      0\n    );\n    timelines.push(tl);\n  };\n\n  // Unhover handler: settle back\n  const onUnhover = () => {\n    if (!state.isHovering) return;\n    state.isHovering = false;\n\n    const tl = gsap.timeline();\n    tl.to(\n      mesh.position,\n      {\n        y: state.originalY,\n        duration: 0.7,\n        ease: 'power4.out',\n        overwrite: 'auto',\n      },\n      0\n    );\n    tl.to(\n      material,\n      {\n        opacity: 0.95,\n        duration: 0.4,\n      },\n      0\n    );\n    timelines.push(tl);\n  };\n\n  // Click handler: press-down effect + emit event\n  const onClick = () => {\n    const tl = gsap.timeline();\n    \n    // Press scale\n    tl.to(\n      mesh.scale,\n      {\n        x: 0.97,\n        y: 0.97,\n        duration: 0.12,\n        ease: 'back.out',\n      },\n      0\n    );\n\n    // Release back\n    tl.to(\n      mesh.scale,\n      {\n        x: 1.0,\n        y: 1.0,\n        duration: 0.3,\n        ease: 'power4.out',\n      },\n      0.12\n    );\n\n    timelines.push(tl);\n\n    // Emit selection event\n    ctx.emit('hub-collection.select', {\n      itemId: config.itemId || 'collection-row',\n    });\n  };\n\n  // Attach handlers\n  if (!mesh.userData.handlers) {\n    mesh.userData.handlers = {};\n  }\n  mesh.userData.handlers.onHover = onHover;\n  mesh.userData.handlers.onUnhover = onUnhover;\n  mesh.userData.handlers.onClick = onClick;\n\n  // Cleanup\n  mesh.userData.cleanup = () => {\n    timelines.forEach((tl) => tl.kill());\n    timelines.length = 0;\n    geometry.dispose();\n    dividerGeometry.dispose();\n    material.dispose();\n    dividerMaterial.dispose();\n  };\n\n  return mesh;\n}\n```"
+}

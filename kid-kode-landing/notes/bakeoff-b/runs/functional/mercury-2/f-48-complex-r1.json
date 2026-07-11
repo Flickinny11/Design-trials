@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-48-complex",
+  "run": 1,
+  "ok": true,
+  "wallMs": 3828,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3642,
+    "completionTokens": 560
+  },
+  "costUsd": 0.0013305,
+  "billing": "metered",
+  "output": "import { gsap } from 'gsap';\nimport { MeshStandardNodeMaterial } from 'three/webgpu';\nimport { vec3, mix, time, uniform } from 'three/tsl';\nimport * as primitives from '@/primitives';\nimport * as text from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Object3D, Mesh, Color } = ctx.THREE;\n  const root = new Group();\n\n  // Store cleanup actions\n  const disposables = [];\n\n  // Load GLB mesh\n  if (config.meshUrl) {\n    ctx.glbLoader.loadGLB(config.meshUrl).then((gltf) => {\n      const mesh = gltf.scene;\n      root.add(mesh);\n      // Dispose mesh resources on cleanup\n      disposables.push({\n        cleanup: () => {\n          mesh.traverse((child) => {\n            if (child.isMesh) {\n              if (child.geometry) child.geometry.dispose();\n              if (child.material) {\n                if (Array.isArray(child.material)) {\n                  child.material.forEach((m) => m.dispose());\n                } else {\n                  child.material.dispose();\n                }\n              }\n            }\n          });\n        },\n      });\n    });\n  }\n\n  // Apply cinematic primitives\n  if (Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach((prim) => {\n      const instance = ctx.primitives[prim.name](root, prim.params);\n      if (instance) disposables.push(instance);\n    });\n  }\n\n  // Hover effect (rise-in subtle)\n  const originalY = root.position.y;\n  let hoverTimeline = null;\n  const onHoverEnter = () => {\n    if (hoverTimeline) hoverTimeline.kill();\n    hoverTimeline = gsap.timeline();\n    hoverTimeline.to(root.position, {\n      y: originalY + 0.15,\n      duration: 0.2,\n      ease: 'power2.out',\n    });\n  };\n  const onHoverLeave = () => {\n    if (hoverTimeline) hoverTimeline.kill();\n    hoverTimeline = gsap.timeline();\n    hoverTimeline.to(root.position, {\n      y: originalY,\n      duration: 0.2,\n      ease: 'power2.out',\n    });\n  };\n\n  // Click handler emit event\n  const onClick = () => {\n    ctx.emit('hub-journal.select', {});\n  };\n\n  // Attach handlers\n  root.userData.handlers = {\n    hoverEnter: onHoverEnter,\n    hoverLeave: onHoverLeave,\n    click: onClick,\n  };\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    disposables.forEach((d) => {\n      if (typeof d.cleanup === 'function') d.cleanup();\n    });\n    if (hoverTimeline) hoverTimeline.kill();\n  };\n\n  return root;\n}"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-10-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 7099,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4386,
+    "completionTokens": 988
+  },
+  "costUsd": 0.009326,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, color } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  \n  // Extract text content\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const textItem = items.find(item => item.role === 'headline') || items[0];\n  const text = textItem?.text ?? 'Features 2';\n  const fontSize = textItem?.typography?.fontSize ?? 39;\n  \n  // Colors from spec\n  const colors = config.intent?.visualSpec?.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n  \n  const group = new THREE.Group();\n  \n  // Create backdrop plane (engineered gradient surface)\n  const backdropGeo = new THREE.PlaneGeometry(2.5, 1.2);\n  \n  // Gradient shader: surface (#0b0b10) to paper (#e8ecf2) vertical\n  const gradNode = mix(\n    color(colors.surface),\n    color(colors.paper),\n    mix(0, 0.08, uv().y)\n  );\n  \n  const backdropMat = new MeshBasicNodeMaterial({\n    colorNode: gradNode,\n    side: THREE.FrontSide,\n    transparent: true,\n    opacity: 0.95\n  });\n  \n  const backdrop = new THREE.Mesh(backdropGeo, backdropMat);\n  backdrop.position.z = -0.02;\n  group.add(backdrop);\n  \n  // Load and apply decorative image as overlay plane\n  const imageGeo = new THREE.PlaneGeometry(2.2, 1.0);\n  const imageMat = new MeshBasicNodeMaterial({\n    transparent: true,\n    opacity: 0.25,\n    side: THREE.FrontSide\n  });\n  \n  const imageMesh = new THREE.Mesh(imageGeo, imageMat);\n  imageMesh.position.z = -0.01;\n  group.add(imageMesh);\n  \n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n      imageMat.map = texture;\n      imageMat.needsUpdate = true;\n    }).catch(() => {\n      // Fallback: keep the plane visible with gradient only\n    });\n  }\n  \n  // Render headline text\n  const textMesh = ctx.fontAtlas.createText(text, {\n    fontSize: fontSize / 16,\n    color: colors.ink,\n    align: 'center'\n  });\n  textMesh.position.set(0, 0.15, 0.01);\n  group.add(textMesh);\n  \n  // Apply scene position\n  if (config.scenePosition) {\n    group.position.copy(config.scenePosition);\n  }\n  \n  // Apply rotation and scale\n  if (config.sceneRotation) {\n    group.rotation.copy(config.sceneRotation);\n  }\n  if (config.sceneScale) {\n    group.scale.copy(config.sceneScale);\n  }\n  \n  // Event handlers\n  group.userData.handlers = {};\n  \n  // Cleanup function\n  group.userData.cleanup = () => {\n    backdropGeo.dispose();\n    backdropMat.dispose();\n    imageGeo.dispose();\n    imageMat.dispose();\n    if (imageMat.map) imageMat.map.dispose();\n    textMesh.traverse((child) => {\n      if (child.geometry) child.geometry.dispose();\n      if (child.material) child.material.dispose();\n    });\n  };\n  \n  return group;\n}\n```"
+}

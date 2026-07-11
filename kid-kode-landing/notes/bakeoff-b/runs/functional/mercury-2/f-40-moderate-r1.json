@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-40-moderate",
+  "run": 1,
+  "ok": true,
+  "wallMs": 4789,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3786,
+    "completionTokens": 679
+  },
+  "costUsd": 0.00145575,
+  "billing": "metered",
+  "output": "import { MeshStandardNodeMaterial } from 'three/webgpu';\nimport { texture, float } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root object\n  const root = new Group();\n\n  // Geometry (tessellated plane)\n  const geometry = new PlaneGeometry(1, 1, 64, 64);\n  const material = new MeshStandardNodeMaterial();\n  material.transparent = true;\n\n  // Load textures asynchronously, material updates later\n  const imagePromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  const depthPromise = ctx.textureLoader.loadTexture(config.depthMapUrl);\n\n  imagePromise.then((tex) => {\n    material.mapNode = texture(tex);\n    material.needsUpdate = true;\n  });\n\n  depthPromise.then((tex) => {\n    const intensity =\n      (config.cinematicPrimitives?.find((p) => p.name === 'parallax-scroll')\n        ?.params?.intensity ?? 0.25) * 1.0;\n    material.displacementNode = texture(tex).mul(float(intensity));\n    material.needsUpdate = true;\n  });\n\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Apply cinematic primitives\n  const primitiveRefs = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const fn = ctx.primitives[prim.name];\n      if (fn) {\n        const ref = fn(root, prim.params);\n        primitiveRefs.push(ref);\n      }\n    }\n  }\n\n  // Event handlers storage\n  const handlers = {};\n\n  // Hover lift (rise‑in)\n  const hoverTl = gsap.timeline({ paused: true });\n  hoverTl.to(root.position, {\n    y: '+=0.15',\n    duration: 0.7,\n    ease: 'power3.out',\n  });\n  handlers.hover = () => hoverTl.play(0);\n  handlers.hoverOut = () => hoverTl.reverse();\n\n  // Click press‑down + emit\n  handlers.click = () => {\n    const pressTl = gsap.timeline();\n    pressTl.to(\n      root.scale,\n      { x: 0.97, y: 0.97, z: 0.97, duration: 0.12, ease: 'back.out(1.7)' }\n    );\n    pressTl.to(\n      root.scale,\n      { x: 1, y: 1, z: 1, duration: 0.2, ease: 'power4.out' }\n    );\n    ctx.emit('hub-features.select', {});\n  };\n\n  // Store timelines for cleanup\n  const timelines = [hoverTl];\n\n  // Attach handlers and cleanup to userData\n  root.userData.handlers = handlers;\n  root.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    imagePromise.then((tex) => tex.dispose());\n    depthPromise.then((tex) => tex.dispose());\n    primitiveRefs.forEach((ref) => ref.cleanup && ref.cleanup());\n    timelines.forEach((tl) => tl.kill());\n  };\n\n  return root;\n}"
+}

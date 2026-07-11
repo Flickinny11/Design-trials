@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-42-moderate",
+  "run": 1,
+  "ok": true,
+  "wallMs": 4221,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3722,
+    "completionTokens": 721
+  },
+  "costUsd": 0.00147125,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { default as primitives } from '@/primitives';\nimport { default as text } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Geometry & material\n  const width = 1.0;\n  const height = 0.5;\n  const geometry = new PlaneGeometry(width, height);\n  const baseColor = (config.intent?.visualSpec?.colors?.paper) || '#e8ecf2';\n  const material = new MeshBasicNodeMaterial({\n    color: baseColor,\n    transparent: true,\n    depthTest: true,\n    depthWrite: true,\n  });\n\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Load texture if provided\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Interaction state\n  const baseY = root.position.y;\n  const timelines = [];\n\n  // Hover handler (rise‑in)\n  const onHover = (enter) => {\n    const targetY = enter ? baseY + 0.15 : baseY;\n    const tl = gsap.timeline({ defaults: { duration: 0.7, ease: 'power3.out' } });\n    tl.to(root.position, { y: targetY });\n    timelines.push(tl);\n  };\n\n  // Click handler (emit and press‑down)\n  const onClick = () => {\n    // Emit navigation/event\n    ctx.emit('hub-pricing.select', {});\n\n    // Press‑down animation\n    const tl = gsap.timeline({ defaults: { duration: 0.12, ease: 'back.out(1.7)' } });\n    tl.to(root.scale, { x: 0.97, y: 0.97, z: 0.97 }).to(root.scale, { x: 1, y: 1, z: 1 });\n    timelines.push(tl);\n  };\n\n  // Attach handlers to userData\n  root.userData.handlers = {\n    hover: onHover,\n    click: onClick,\n  };\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Dispose geometry & material\n    geometry.dispose();\n    material.dispose();\n\n    // Kill all GSAP timelines\n    timelines.forEach((tl) => tl.kill());\n    timelines.length = 0;\n\n    // Remove handlers reference\n    root.userData.handlers = {};\n  };\n\n  // Apply any cinematic primitives listed in config (none in this spec)\n  if (Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach((prim) => {\n      const primitive = ctx.primitives[prim.name];\n      if (primitive) {\n        const instance = primitive(root, prim.params);\n        // Store cleanup for later\n        if (instance?.cleanup) {\n          const prevCleanup = root.userData.cleanup;\n          root.userData.cleanup = () => {\n            instance.cleanup();\n            if (prevCleanup) prevCleanup();\n          };\n        }\n        // Store timeline if provided\n        if (instance?.timeline) {\n          timelines.push(instance.timeline);\n        }\n      }\n    });\n  }\n\n  return root;\n}\n"
+}

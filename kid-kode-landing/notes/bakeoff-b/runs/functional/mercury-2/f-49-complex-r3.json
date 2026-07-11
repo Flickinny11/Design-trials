@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-49-complex",
+  "run": 3,
+  "ok": true,
+  "wallMs": 5958,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3738,
+    "completionTokens": 561
+  },
+  "costUsd": 0.00135525,
+  "billing": "metered",
+  "output": "import { MeshStandardNodeMaterial } from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport { Group, Mesh, PlaneGeometry } from 'three';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // Geometry\n  const geometry = new PlaneGeometry(7, 6, 64, 64);\n\n  // Material (Node based)\n  const material = new MeshStandardNodeMaterial();\n  material.roughness = 0.6;\n  material.metalness = 0.2;\n  material.clearcoat = 0.1;\n  material.displacementScale = 0.2; // subtle depth\n\n  // Mesh\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  // Load textures asynchronously (function remains sync)\n  const colorPromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  const depthPromise = ctx.textureLoader.loadTexture(config.depthMapUrl);\n\n  colorPromise.then((tex) => {\n    material.mapNode = texture(tex);\n    material.needsUpdate = true;\n  });\n\n  depthPromise.then((tex) => {\n    material.displacementNode = texture(tex);\n    material.needsUpdate = true;\n  });\n\n  // Apply cinematic primitives\n  const primitiveInstances = [];\n  const primitives = config.cinematicPrimitives ?? [];\n  for (const p of primitives) {\n    const inst = ctx.primitives[p.name](group, p.params);\n    primitiveInstances.push(inst);\n  }\n\n  // Event handlers\n  const timelines = [];\n  group.userData.handlers = {\n    hover: () => {\n      // rise-in: subtle upward motion 0.15 units\n      const tl = gsap.timeline();\n      tl.to(mesh.position, { y: mesh.position.y + 0.15, duration: 0,7, ease: 'power3.out' });\n      tl.to(mesh.position, { y: mesh.position.y, duration: 0.3, ease: 'power3.in' });\n      timelines.push(tl);\n    },\n    click: () => {\n      ctx.emit('hub-home.select', {});\n    },\n  };\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    // Dispose geometry and material\n    geometry.dispose();\n    material.dispose();\n\n    // Dispose textures if they were loaded\n    colorPromise.then((tex) => tex.dispose());\n    depthPromise.then((tex) => tex.dispose());\n\n    // Kill GSAP timelines\n    for (const tl of timelines) tl.kill();\n\n    // Cleanup primitives\n    for (const inst of primitiveInstances) {\n      if (inst && typeof inst.cleanup === 'function') inst.cleanup();\n    }\n  };\n\n  return group;\n}"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-09-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 6915,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4382,
+    "completionTokens": 923
+  },
+  "costUsd": 0.008997,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec4 } from 'three/tsl';\n\nexport default async function createNode(config, ctx) {\n  const { PlaneGeometry, Mesh, Group } = ctx.THREE;\n\n  // Create group for the sprite\n  const group = new Group();\n  group.userData.cleanup = () => {\n    // Dispose resources\n    geometry.dispose();\n    material.dispose();\n    if (texture) texture.dispose();\n  };\n\n  // Atlas region: 512x320 pixels at (0,0) in 512x512 atlas\n  const atlasWidth = 512;\n  const atlasHeight = 512;\n  const regionX = 0;\n  const regionY = 0;\n  const regionW = 512;\n  const regionH = 320;\n\n  // Aspect ratio of the region\n  const aspectRatio = regionW / regionH; // 512/320 = 1.6\n\n  // Create plane geometry: width scaled to aspect ratio, height = 1\n  const planeWidth = aspectRatio;\n  const planeHeight = 1;\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n\n  // Compute UV bounds for this atlas region\n  const uvMinX = regionX / atlasWidth;\n  const uvMaxX = (regionX + regionW) / atlasWidth;\n  const uvMinY = 1 - (regionY + regionH) / atlasHeight; // Flip Y for typical image convention\n  const uvMaxY = 1 - regionY / atlasHeight;\n\n  // Update UVs to point to the atlas region\n  const uvAttribute = geometry.attributes.uv;\n  for (let i = 0; i < uvAttribute.count; i++) {\n    let u = uvAttribute.getX(i);\n    let v = uvAttribute.getY(i);\n\n    // Remap [0,1] to atlas region\n    u = uvMinX + u * (uvMaxX - uvMinX);\n    v = uvMinY + v * (uvMaxY - uvMinY);\n\n    uvAttribute.setXY(i, u, v);\n  }\n  uvAttribute.needsUpdate = true;\n\n  // Load texture\n  let texture = null;\n  try {\n    texture = await ctx.textureLoader.loadTexture(config.imageUrl);\n    texture.colorSpace = 'srgb';\n  } catch (err) {\n    console.warn('Failed to load sprite texture:', err);\n  }\n\n  // Create material using TSL nodes\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    side: ctx.THREE.DoubleSide,\n  });\n\n  if (texture) {\n    // Use the texture's UV node to sample the sprite\n    material.colorNode = texture.getNode();\n  } else {\n    // Fallback: white if texture fails\n    const fallbackColor = uv().mul(0).add(vec4(1, 1, 1, 1));\n    material.colorNode = fallbackColor;\n  }\n\n  // Create mesh and add to group\n  const mesh = new Mesh(geometry, material);\n  mesh.position.copy(config.scenePosition || { x: 0, y: 0, z: 0 });\n  if (config.sceneRotation) {\n    mesh.rotation.order = 'YXZ';\n    mesh.rotation.set(config.sceneRotation.x, config.sceneRotation.y, config.sceneRotation.z);\n  }\n  if (config.sceneScale) {\n    mesh.scale.copy(config.sceneScale);\n  }\n\n  group.add(mesh);\n\n  return group;\n}\n```"
+}

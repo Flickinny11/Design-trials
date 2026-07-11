@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-33-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 2822,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3739,
+    "completionTokens": 594
+  },
+  "costUsd": 0.00138025,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport {} from '@/primitives';\nimport {} from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Apply cinematic primitives if any\n  const primitiveInstances = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const instance = ctx.primitives[prim.name](root, prim.params);\n      primitiveInstances.push(instance);\n    }\n  }\n\n  // Plane geometry – size derived from image aspect (default 1:0.6)\n  const planeGeom = new PlaneGeometry(1, 0.6);\n  const planeMat = new MeshBasicNodeMaterial();\n  const planeMesh = new Mesh(planeGeom, planeMat);\n  root.add(planeMesh);\n\n  // Load texture (if provided)\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      planeMat.map = tex;\n      planeMat.needsUpdate = true;\n    });\n  }\n\n  // Text content\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of textItems) {\n    const txt = ctx.fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize ?? 39,\n      color: config.intent?.visualSpec?.colors?.paper ?? '#e8ecf2',\n      align: 'center',\n    });\n    root.add(txt);\n  }\n\n  // Interaction handlers\n  root.userData.handlers = {};\n\n  // Hover rise‑in effect\n  root.userData.handlers.hover = {\n    enter: () => {\n      gsap.to(planeMesh.position, {\n        y: 0.15,\n        duration: 0.7,\n        ease: 'power3.out',\n      });\n    },\n    leave: () => {\n      gsap.to(planeMesh.position, {\n        y: 0,\n        duration: 0.5,\n        ease: 'power2.out',\n      });\n    },\n  };\n\n  // Click emission\n  root.userData.handlers.click = () => {\n    ctx.emit('hub-journal.select');\n  };\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Dispose geometry and material\n    planeGeom.dispose();\n    if (planeMat.map) planeMat.map.dispose();\n    planeMat.dispose();\n\n    // Dispose primitives\n    for (const p of primitiveInstances) {\n      if (p.cleanup) p.cleanup();\n    }\n\n    // Kill any GSAP tweens on the mesh\n    gsap.killTweensOf(planeMesh.position);\n  };\n\n  return root;\n}\n"
+}

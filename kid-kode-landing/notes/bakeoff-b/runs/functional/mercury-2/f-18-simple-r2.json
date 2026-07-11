@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-18-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 4157,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3607,
+    "completionTokens": 811
+  },
+  "costUsd": 0.00151,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { vec2 } from 'three/tsl';\nimport { createText } from '@/text';\nimport { orbit, depthRotate, dissolveMorph, displacementTransition, parallaxScroll, magneticCursor, particleEmerge, flyThrough, kineticText } from '@/primitives';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Object3D } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n  root.name = config.name || 'CollectionCard3';\n\n  // Atlas region (fallback to full texture if missing)\n  const atlas = config.atlasRegion || { x: 0, y: 0, width: 512, height: 320 };\n  const aspect = atlas.width / atlas.height;\n\n  // Geometry sized to aspect ratio (height = 1 unit)\n  const geometry = new PlaneGeometry(aspect, 1);\n  geometry.name = 'CardPlane';\n\n  // Basic node material (will receive texture later)\n  const material = new MeshBasicNodeMaterial();\n  material.name = 'CardMaterial';\n  material.transparent = true;\n  material.depthWrite = false;\n\n  // Mesh\n  const mesh = new Mesh(geometry, material);\n  mesh.name = 'CardMesh';\n  mesh.position.set(0, 0, 0);\n  root.add(mesh);\n\n  // Load texture asynchronously (function must stay sync)\n  let texture = null;\n  const texPromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  texPromise.then((tex) => {\n    texture = tex;\n    // Apply UV offset/repeat for atlas region (assuming full atlas size equals texture size)\n    const texSize = new vec2(tex.image.width, tex.image.height);\n    const u0 = atlas.x / texSize.x;\n    const v0 = atlas.y / texSize.y;\n    const uScale = atlas.width / texSize.x;\n    const vScale = atlas.height / texSize.y;\n    tex.offset.set(u0, v0);\n    tex.repeat.set(uScale, vScale);\n    tex.needsUpdate = true;\n    material.map = tex;\n    material.needsUpdate = true;\n  });\n\n  // Billboard handler – aligns plane to camera each frame\n  root.userData.handlers = {\n    update: (camera) => {\n      if (mesh && camera) {\n        mesh.quaternion.copy(camera.quaternion);\n      }\n    },\n  };\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Dispose geometry & material\n    geometry.dispose();\n    material.dispose();\n    // Dispose texture if it was loaded\n    if (texture) {\n      texture.dispose();\n    }\n    // Clear handlers\n    root.userData.handlers = {};\n  };\n\n  // No cinematic primitives for this node (config.cinematicPrimitives may be empty)\n  // But we still respect the contract: iterate if present\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const primitive = ctx.primitives[prim.name];\n      if (primitive) {\n        const instance = primitive(root, prim.params);\n        // Store for cleanup\n        if (!root.userData._primitiveInstances) root.userData._primitiveInstances = [];\n        root.userData._primitiveInstances.push(instance);\n        // Attach any event handlers if primitive provides them (optional)\n        if (instance.handlers) {\n          Object.assign(root.userData.handlers, instance.handlers);\n        }\n      }\n    }\n    // Extend cleanup to dispose primitives\n    const originalCleanup = root.userData.cleanup;\n    root.userData.cleanup = () => {\n      originalCleanup();\n      if (root.userData._primitiveInstances) {\n        for (const inst of root.userData._primitiveInstances) {\n          if (inst.cleanup) inst.cleanup();\n        }\n        root.userData._primitiveInstances = null;\n      }\n    };\n  }\n\n  return root;\n}\n"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-24-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 10737,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3755,
+    "completionTokens": 1690
+  },
+  "costUsd": 0.00157725,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport { createNode as placeholder } from '@/primitives';\nimport { createText as placeholderText } from '@/text';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {string} [imageUrl]\n * @property {any} [intent]\n * @property {any} [visualSpec]\n * @property {any[]} [textContent]\n * @property {any[]} [cinematicPrimitives]\n * @property {Object} [position]\n * @property {Object} [rotation]\n * @property {Object} [scale]\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {any} THREE\n * @property {any} textureLoader\n * @property {any} glbLoader\n * @property {any} videoLoader\n * @property {any} fontAtlas\n * @property {any} primitives\n * @property {Function} emit\n * @property {string} tier\n */\n\n/**\n * Creates a textured billboard plane for the Pricing card label.\n *\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {import('three').Object3D}\n */\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Color } = ctx.THREE;\n\n  // --- Geometry (aspect ratio 512 / 320 = 1.6) ---\n  const aspect = 512 / 320;\n  const geometry = new PlaneGeometry(aspect, 1, 1, 1);\n\n  // --- Material (will receive texture node later) ---\n  const material = new MeshBasicNodeMaterial();\n  material.transparent = true;\n\n  const plane = new Mesh(geometry, material);\n  // Ensure the plane faces the camera (billboard). We'll align its normal to +Z;\n  // the adapter will position it; no further rotation needed here.\n\n  const root = new Group();\n  root.add(plane);\n\n  // Load texture and bind to material via node system\n  const texturePromise = ctx.textureLoader\n    .loadTexture(config.imageUrl)\n    .then((tex) => {\n      material.mapNode = texture(tex);\n      material.needsUpdate = true;\n    })\n    .catch(() => {\n      // Silently fail – keep plane without texture\n    });\n\n  // Store references for cleanup\n  const disposables = {\n    geometry,\n    material,\n    texturePromise,\n    timelines: [] as any[],\n  };\n\n  // No cinematic primitives to apply for this node\n  // (If there were, they'd be processed here per spec)\n\n  // User data with cleanup and empty handlers container\n  root.userData = {\n    handlers: {},\n    cleanup: () => {\n      // Cancel any pending GSAP timelines\n      disposables.timelines.forEach((tl) => tl.kill && tl.kill());\n\n      // Dispose geometry and material\n      disposables.geometry.dispose();\n      disposables.material.dispose();\n\n      // No explicit disposal needed for texture; the loader's cache handles it\n    },\n  };\n\n  return root;\n}"
+}

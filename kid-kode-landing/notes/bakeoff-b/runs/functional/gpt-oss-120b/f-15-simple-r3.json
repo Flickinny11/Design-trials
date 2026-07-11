@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-15-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 13933,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3756,
+    "completionTokens": 2055
+  },
+  "costUsd": 0.0017964,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport {} from '@/primitives';\nimport {} from '@/text';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {string} [imageUrl]\n * @property {any[]} [textContent]\n * @property {any} [intent]\n * @property {any} [visualSpec]\n *\n * @typedef {Object} NodeContext\n * @property {any} THREE\n * @property {{loadTexture(url:string):Promise<any>}} textureLoader\n * @property {{emit(event:string, payload:any):void}} emit\n * @property {{[key:string]:(target:any, params:any)=>{timeline:any, cleanup:()=>void}}} primitives\n * @property {{createText(content:string, opts?:any):any}} fontAtlas\n */\n\n/**\n * Create a billboarded sprite with optional label text.\n *\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Vector3 } = ctx.THREE;\n\n  const root = new Group();\n\n  // ------- Plane (sprite) -------\n  const rect = { x: 0, y: 0, w: 512, h: 320 };\n  const aspect = rect.w / rect.h; // width / height\n  const geometry = new PlaneGeometry(aspect, 1, 1, 1);\n  const material = new MeshBasicNodeMaterial();\n  material.transparent = true;\n\n  const plane = new Mesh(geometry, material);\n  // billboard toward the active camera on each render\n  plane.onBeforeRender = (renderer, scene, camera) => {\n    plane.quaternion.copy(camera.quaternion);\n  };\n  root.add(plane);\n\n  // Load texture asynchronously; assignment happens when ready\n  let loadedTexture = null;\n  ctx.textureLoader\n    .loadTexture(config.imageUrl)\n    .then((tex) => {\n      loadedTexture = tex;\n      material.colorNode = texture(tex);\n      material.needsUpdate = true;\n    })\n    .catch(() => {\n      // texture failed – keep material empty\n    });\n\n  // ------- Text label (if any) -------\n  const items =\n    config.textContent ??\n    config.intent?.visualSpec?.textContent ??\n    [];\n\n  const textObjects = [];\n\n  for (const item of items) {\n    const opts = {\n      fontSize: item.typography?.fontSize || 39,\n      color: (config.visualSpec?.colors?.paper) || '#e8ecf2',\n      align: 'center',\n    };\n    const txt = ctx.fontAtlas.createText(item.text ?? '', opts);\n    // position slightly in front of the plane to avoid z‑fighting\n    txt.position.set(0, 0, 0.01);\n    root.add(txt);\n    textObjects.push(txt);\n  }\n\n  // ------- Cleanup ----------\n  root.userData.cleanup = () => {\n    // dispose material and geometry\n    material.dispose();\n    geometry.dispose();\n\n    // dispose loaded texture if present\n    if (loadedTexture && loadedTexture.dispose) {\n      loadedTexture.dispose();\n    }\n\n    // dispose any text objects (they may have internal cleanup)\n    for (const txt of textObjects) {\n      if (txt.userData && typeof txt.userData.cleanup === 'function') {\n        txt.userData.cleanup();\n      }\n      if (txt.geometry) txt.geometry.dispose();\n      if (txt.material) txt.material.dispose();\n    }\n\n    // kill any GSAP timelines (none expected here but defensive)\n    gsap.globalTimeline.clear();\n  };\n\n  // placeholder for event handlers (none required for this node)\n  root.userData.handlers = {};\n\n  return root;\n}\n"
+}

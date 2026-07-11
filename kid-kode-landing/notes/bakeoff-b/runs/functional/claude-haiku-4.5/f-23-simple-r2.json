@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-23-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 6307,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4372,
+    "completionTokens": 736
+  },
+  "costUsd": 0.008052,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, texture, mix, vec3 } from 'three/tsl';\nimport { Mesh, PlaneGeometry } from 'three/webgpu';\n\nexport default async function createNode(config, ctx) {\n  const group = new ctx.THREE.Group();\n  \n  // Create plane geometry (512x320 pixels → ~1.6:1 aspect)\n  // Atlas rect 0,0,512,320 suggests a card; scale to scene units\n  const width = 1.6;\n  const height = 1.0;\n  const geometry = new PlaneGeometry(width, height);\n  \n  // Create material with brushed metal texture\n  const material = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    side: ctx.THREE.FrontSide,\n    transparent: false,\n  });\n  \n  // Load brushed metal texture\n  const metalTexture = await ctx.textureLoader.loadTexture(config.imageUrl);\n  metalTexture.flipY = false;\n  \n  // Build shader: sample metal texture + add subtle grain overlay\n  const uvNode = uv();\n  const metalSample = texture(metalTexture, uvNode);\n  \n  // Grain: use time-independent noise pattern for static composition\n  const grainUv = uvNode.mul(8.0);\n  const grainPattern = mix(\n    vec3(1.0),\n    vec3(0.95),\n    grainUv.fract().length().mul(0.05)\n  );\n  \n  // Combine: metal texture × grain overlay for engineered surface\n  const finalColor = metalSample.mul(grainPattern);\n  \n  material.colorNode = finalColor;\n  \n  // Create mesh and position in scene\n  const mesh = new Mesh(geometry, material);\n  mesh.position.copy(config.scenePosition ?? { x: 0, y: -0.3, z: 0 });\n  \n  if (config.rotation) {\n    mesh.rotation.set(config.rotation.x ?? 0, config.rotation.y ?? 0, config.rotation.z ?? 0);\n  }\n  \n  if (config.scale) {\n    mesh.scale.set(config.scale.x ?? 1, config.scale.y ?? 1, config.scale.z ?? 1);\n  }\n  \n  group.add(mesh);\n  \n  // Store metadata for atlas region (atlas 0, rect 0,0,512,320)\n  group.userData.atlasRegion = {\n    atlas: 0,\n    rect: { x: 0, y: 0, w: 512, h: 320 },\n  };\n  \n  // Cleanup: dispose geometry, material, and texture\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    metalTexture.dispose();\n  };\n  \n  return group;\n}"
+}

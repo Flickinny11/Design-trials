@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-36-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 8405,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4444,
+    "completionTokens": 1267
+  },
+  "costUsd": 0.010779,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, vec4, mul, add } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // ─────────────────────────────────────────────────────────────────────────\n  // 1. BUILD GEOMETRY & MATERIAL\n  // ─────────────────────────────────────────────────────────────────────────\n  \n  const geometry = new THREE.PlaneGeometry(0.8, 0.24); // capsule proportions\n  \n  // Load ceramic grain texture\n  const material = new MeshBasicNodeMaterial({ color: 0xff2a38 });\n  \n  ctx.textureLoader.loadTexture('/prism-assets/chrome/ceramic-grain.map.png').then((tex) => {\n    material.colorNode = mul(\n      vec3(1.0, 0.16, 0.22), // accent red (#ff2a38)\n      add(vec3(0.8), mul(tex, 0.2)) // subtle texture overlay\n    );\n    material.needsUpdate = true;\n  });\n\n  const plane = new THREE.Mesh(geometry, material);\n  plane.position.copy(config.scenePosition ?? new THREE.Vector3(0, 1.6, 0));\n  if (config.rotation) plane.rotation.order = 'YXZ';\n  if (config.scale) plane.scale.copy(config.scale);\n\n  // ─────────────────────────────────────────────────────────────────────────\n  // 2. EDGE LIGHT (rim accent for focus state)\n  // ─────────────────────────────────────────────────────────────────────────\n  \n  const rimLight = new THREE.PointLight(0xff2a38, 0, 2.0);\n  rimLight.position.set(0.5, 0.12, 0.3);\n  rimLight.intensity = 0; // hidden by default\n  plane.add(rimLight);\n\n  // ─────────────────────────────────────────────────────────────────────────\n  // 3. INTERACTION HANDLERS\n  // ─────────────────────────────────────────────────────────────────────────\n  \n  let hoverTimeline = null;\n  let pressTimeline = null;\n\n  const handlers = {\n    hover: (e) => {\n      if (hoverTimeline) hoverTimeline.kill();\n      hoverTimeline = gsap.timeline();\n      \n      // rise-in: y +0.15 → 0, power3.out, 0.7s\n      hoverTimeline.to(plane.position, {\n        y: plane.position.y + 0.15,\n        duration: 0.7,\n        ease: 'power3.out'\n      }, 0);\n      \n      // rim light fade in\n      hoverTimeline.to(rimLight, {\n        intensity: 1.2,\n        duration: 0.5,\n        ease: 'power2.out'\n      }, 0);\n    },\n    unhover: () => {\n      if (hoverTimeline) hoverTimeline.kill();\n      hoverTimeline = gsap.timeline();\n      \n      hoverTimeline.to(plane.position, {\n        y: config.scenePosition?.y ?? 1.6,\n        duration: 0.6,\n        ease: 'power3.out'\n      }, 0);\n      \n      hoverTimeline.to(rimLight, {\n        intensity: 0,\n        duration: 0.4\n      }, 0);\n    },\n    click: () => {\n      if (pressTimeline) pressTimeline.kill();\n      pressTimeline = gsap.timeline();\n      \n      // press-down: scale 0.97, 120ms, back.out\n      pressTimeline.to(plane.scale, {\n        x: 0.97,\n        y: 0.97,\n        duration: 0.12,\n        ease: 'back.out'\n      }, 0);\n      \n      pressTimeline.to(plane.scale, {\n        x: 1.0,\n        y: 1.0,\n        duration: 0.3,\n        ease: 'power4.out'\n      }, 0.12);\n      \n      // emit navigate event\n      ctx.emit('navigate', { to: 'hub-collection' });\n    }\n  };\n\n  plane.userData.handlers = handlers;\n\n  // ─────────────────────────────────────────────────────────────────────────\n  // 4. CLEANUP\n  // ─────────────────────────────────────────────────────────────────────────\n  \n  plane.userData.cleanup = () => {\n    if (hoverTimeline) hoverTimeline.kill();\n    if (pressTimeline) pressTimeline.kill();\n    geometry.dispose();\n    material.dispose();\n  };\n\n  return plane;\n}\n```"
+}

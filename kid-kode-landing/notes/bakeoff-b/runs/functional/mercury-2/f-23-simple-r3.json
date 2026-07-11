@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-23-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 3013,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3526,
+    "completionTokens": 384
+  },
+  "costUsd": 0.0011695,
+  "billing": "metered",
+  "output": "import { Mesh, PlaneGeometry } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { primitives } from '@/primitives';\nimport { text } from '@/text';\n\nexport default function createNode(config, ctx) {\n  // Create geometry and material\n  const geometry = new PlaneGeometry(1, 1);\n  const material = new MeshBasicNodeMaterial({ map: null, toneMapped: true });\n\n  // Mesh that will be returned\n  const node = new Mesh(geometry, material);\n  node.userData.handlers = {};\n\n  // Load texture asynchronously and apply when ready\n  let loadedTexture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      loadedTexture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Apply any cinematic primitives listed in config (none for this node)\n  const primitiveInstances = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const fn = ctx.primitives[prim.name];\n      if (fn) {\n        const instance = fn(node, prim.params);\n        primitiveInstances.push(instance);\n      }\n    }\n  }\n\n  // Cleanup function\n  node.userData.cleanup = () => {\n    // Dispose primitives\n    for (const inst of primitiveInstances) {\n      if (inst && typeof inst.cleanup === 'function') {\n        inst.cleanup();\n      }\n    }\n    // Kill GSAP timelines if any were created (none in this node)\n    gsap.globalTimeline.clear();\n\n    // Dispose material & geometry\n    material.dispose();\n    geometry.dispose();\n    // Dispose texture\n    if (loadedTexture && typeof loadedTexture.dispose === 'function') {\n      loadedTexture.dispose();\n    }\n  };\n\n  return node;\n}"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-21-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 2704,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3636,
+    "completionTokens": 770
+  },
+  "costUsd": 0.0014865,
+  "billing": "metered",
+  "output": "import { Group, Mesh, PlaneGeometry, MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec2 } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport {} from '@/primitives';\nimport {} from '@/text';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {Array<{name:string,params:any,trigger:string}>} cinematicPrimitives\n * @property {string} [imageUrl]\n * @property {Array<{text:string,role:string,typography?:{fontSize?:number}}>} [textContent]\n * @property {Object} [intent]\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {any} THREE\n * @property {Object} textureLoader\n * @property {Object} glbLoader\n * @property {Object} [videoLoader]\n * @property {Object} fontAtlas\n * @property {Object} primitives\n * @property {Function} emit\n * @property {string} [tier]\n */\n\n/**\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // Apply cinematic primitives if any\n  const primitiveHandles = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const handler = ctx.primitives[prim.name]?.(group, prim.params);\n      if (handler) primitiveHandles.push(handler);\n    }\n  }\n\n  // Load texture if imageUrl provided\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      // Atlas region – using full texture (no offset) as spec gives region but we assume full\n      const region = { x: 0, y: 0, w: 512, h: 320 };\n      const aspect = region.w / region.h;\n\n      const geometry = new PlaneGeometry(aspect, 1);\n      // UV transformation to map the region (if needed)\n      const uvNode = uv()\n        .mul(vec2(region.w / tex.image.width, region.h / tex.image.height))\n        .add(vec2(region.x / tex.image.width, region.y / tex.image.height));\n\n      const material = new MeshBasicNodeMaterial({\n        map: tex,\n        transparent: true,\n        depthWrite: false,\n        uv: uvNode,\n      });\n\n      const mesh = new Mesh(geometry, material);\n      mesh.renderOrder = 1; // ensure it renders over backdrop if any\n      group.add(mesh);\n\n      // Billboard update handler (align to camera)\n      group.userData.handlers = group.userData.handlers || {};\n      group.userData.handlers.update = (delta, time) => {\n        if (ctx.camera) {\n          group.quaternion.copy(ctx.camera.quaternion);\n        }\n      };\n    });\n  }\n\n  // Attach cleanup\n  group.userData.cleanup = () => {\n    // Dispose primitives\n    for (const h of primitiveHandles) {\n      if (h.cleanup) h.cleanup();\n    }\n    // Dispose meshes and materials\n    group.traverse((obj) => {\n      if (obj.isMesh) {\n        if (obj.geometry) obj.geometry.dispose();\n        if (obj.material) {\n          if (Array.isArray(obj.material)) {\n            obj.material.forEach((m) => m.dispose());\n          } else {\n            obj.material.dispose();\n          }\n        }\n      }\n    });\n    // Kill any GSAP timelines (none in this node but safe)\n    if (gsap && gsap.globalTimeline) {\n      gsap.globalTimeline.clear();\n    }\n  };\n\n  return group;\n}"
+}

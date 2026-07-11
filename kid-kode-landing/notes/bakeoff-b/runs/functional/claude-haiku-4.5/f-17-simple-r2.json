@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-17-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 7799,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4385,
+    "completionTokens": 891
+  },
+  "costUsd": 0.00884,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // Build the group container\n  const group = new THREE.Group();\n\n  // Create plane geometry (unit quad, 2x1.25 aspect for 512x320 atlas region)\n  const geometry = new THREE.PlaneGeometry(2, 1.25, 1, 1);\n\n  // Load the brushed-metal texture asynchronously\n  const texturePromise = ctx.textureLoader.loadTexture(config.imageUrl);\n\n  // Create material with TSL nodes\n  const material = new MeshBasicNodeMaterial({\n    side: THREE.DoubleSide,\n    transparent: true,\n  });\n\n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Store timeline references for cleanup\n  const timelines = [];\n\n  // Setup texture once loaded, then create text layer\n  texturePromise.then((tex) => {\n    // Set the texture on the material\n    material.colorNode = texture(tex, uv());\n    material.needsUpdate = true;\n\n    // Create text overlay: \"Collection 2\" at headline size (39px = 0.195 scene units approx at fontSize 39)\n    const textObj = ctx.fontAtlas.createText('Collection 2', {\n      fontSize: 39,\n      color: '#e8ecf2', // paper color for contrast\n      align: 'center',\n    });\n\n    // Position text slightly forward on the z-axis to ensure it renders above the plane\n    textObj.position.z = 0.1;\n    group.add(textObj);\n  }).catch((err) => {\n    console.error('[Collection 2 Label] Texture load failed:', err);\n  });\n\n  // Apply scene position from config (adapter will handle this, but ensure it's set)\n  if (config.scenePosition) {\n    group.position.set(\n      config.scenePosition.x ?? 0,\n      config.scenePosition.y ?? 0,\n      config.scenePosition.z ?? 0\n    );\n  } else {\n    // Fallback to position from spec\n    group.position.set(0, 1, 0.06);\n  }\n\n  // Apply rotation (identity in this case)\n  if (config.rotation) {\n    group.rotation.order = 'YXZ';\n    group.rotation.set(\n      config.rotation.x ?? 0,\n      config.rotation.y ?? 0,\n      config.rotation.z ?? 0\n    );\n  }\n\n  // Apply scale\n  if (config.scale) {\n    group.scale.set(\n      config.scale.x ?? 1,\n      config.scale.y ?? 1,\n      config.scale.z ?? 1\n    );\n  }\n\n  // Setup userData handlers (no interactions specified, but structure for compatibility)\n  group.userData.handlers = {};\n\n  // Cleanup function\n  group.userData.cleanup = () => {\n    // Kill all active timelines\n    timelines.forEach((tl) => {\n      if (tl) tl.kill();\n    });\n\n    // Dispose geometry and material\n    geometry.dispose();\n    material.dispose();\n\n    // Dispose texture if it was loaded\n    texturePromise.then((tex) => {\n      tex.dispose();\n    }).catch(() => {\n      // Suppress error if texture load failed\n    });\n  };\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-12-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 3665,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3694,
+    "completionTokens": 791
+  },
+  "costUsd": 0.00151675,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { createText } from '@/text';\nimport { orbit, depthRotate, dissolveMorph, displacementTransition, parallaxScroll, magneticCursor, particleEmerge, flyThrough, kineticText } from '@/primitives';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Color } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Text handling (none for this node, but keep pattern)\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of textItems) {\n    const txt = ctx.fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize,\n      color: item.role === 'headline' ? '#e8ecf2' : '#e8ecf2',\n      align: 'left',\n    });\n    root.add(txt);\n  }\n\n  // Plane geometry based on atlas region (default 512x320)\n  const atlas = config.atlasRegion ?? { srcX: 0, srcY: 0, srcW: 512, srcH: 320 };\n  const aspect = atlas.srcW / atlas.srcH;\n  const planeWidth = 7 * aspect; // arbitrary scaling within hub frame\n  const planeHeight = 7;\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n\n  // Material – start without texture\n  const material = new MeshBasicNodeMaterial();\n  material.transparent = true;\n  material.depthWrite = false;\n\n  const mesh = new Mesh(geometry, material);\n  mesh.renderOrder = 1; // ensure it renders above backdrop if needed\n\n  // Billboard to camera\n  mesh.onBeforeRender = (_, __, camera) => {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  root.add(mesh);\n\n  // Load texture and apply UV transform for atlas region\n  let texture = null;\n  const texPromise = ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    texture = tex;\n    material.map = tex;\n    // After texture loads we can set offset/repeat based on atlas region\n    const texW = tex.image?.width ?? 1;\n    const texH = tex.image?.height ?? 1;\n    tex.offset.set(atlas.srcX / texW, atlas.srcY / texH);\n    tex.repeat.set(atlas.srcW / texW, atlas.srcH / texH);\n    tex.needsUpdate = true;\n  });\n\n  // Store references for cleanup\n  const cleanupRefs = [];\n\n  // Apply cinematic primitives if any\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const fn = ctx.primitives[prim.name];\n      if (typeof fn === 'function') {\n        const instance = fn(root, prim.params);\n        cleanupRefs.push(instance);\n      }\n    }\n  }\n\n  // UserData handlers (none for this node)\n  root.userData.handlers = {};\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Dispose geometry & material\n    geometry.dispose();\n    material.dispose();\n    // Dispose texture if loaded\n    if (texture) texture.dispose();\n    // Kill any GSAP timelines (none created here)\n    gsap.globalTimeline.clear();\n    // Cleanup primitives\n    for (const ref of cleanupRefs) {\n      if (ref && typeof ref.cleanup === 'function') ref.cleanup();\n    }\n    // Remove onBeforeRender\n    mesh.onBeforeRender = null;\n  };\n\n  // Ensure any async texture load does not break cleanup\n  root.userData._texPromise = texPromise;\n\n  return root;\n}"
+}

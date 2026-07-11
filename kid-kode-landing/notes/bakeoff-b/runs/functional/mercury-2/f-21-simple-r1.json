@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-21-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 3223,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3636,
+    "completionTokens": 649
+  },
+  "costUsd": 0.00139575,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, mul, add, vec2, texture as texNode } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport * as primitives from '@/primitives';\nimport * as text from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, DoubleSide } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Apply any cinematic primitives defined in config\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const { name, params } = prim;\n      if (ctx.primitives[name]) {\n        const instance = ctx.primitives[name](root, params);\n        // store for cleanup\n        (root.userData._primitiveInstances ??= []).push(instance);\n      }\n    }\n  }\n\n  // Determine atlas region (fallback to full texture)\n  const atlas = config.atlasRegion ?? { x: 0, y: 0, width: 512, height: 320 };\n  const aspect = atlas.width / atlas.height;\n\n  // Plane geometry sized to atlas region aspect ratio\n  const geometry = new PlaneGeometry(aspect, 1, 1, 1);\n\n  // Basic node material, will receive texture node later\n  const material = new MeshBasicNodeMaterial({\n    side: DoubleSide,\n    transparent: true,\n  });\n\n  // Mesh\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Load texture asynchronously; assign when ready\n  let loadedTexture = null;\n  ctx.textureLoader\n    .loadTexture(config.imageUrl)\n    .then((tex) => {\n      loadedTexture = tex;\n      // Build UV transform for atlas region\n      const uvNode = uv();\n      const texSize = vec2(tex.image.width, tex.image.height);\n      const regionSize = vec2(atlas.width, atlas.height);\n      const regionOffset = vec2(atlas.x, atlas.y);\n      const scaledUV = mul(uvNode, div(regionSize, texSize));\n      const offsetUV = add(scaledUV, div(regionOffset, texSize));\n      // Create texture node with transformed UVs\n      const mapNode = texNode(tex, offsetUV);\n      material.map = mapNode;\n      material.needsUpdate = true;\n    })\n    .catch(() => {\n      // texture loading failed – keep material empty\n    });\n\n  // Handlers placeholder (no interactions defined)\n  root.userData.handlers = {};\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Dispose primitives\n    if (root.userData._primitiveInstances) {\n      for (const inst of root.userData._primitiveInstances) {\n        if (inst.cleanup) inst.cleanup();\n      }\n    }\n    // Dispose geometry and material\n    geometry.dispose();\n    material.dispose();\n    // Dispose texture if loaded\n    if (loadedTexture) loadedTexture.dispose();\n    // Kill any GSAP timelines (none in this node)\n    gsap.globalTimeline.clear();\n  };\n\n  return root;\n}"
+}

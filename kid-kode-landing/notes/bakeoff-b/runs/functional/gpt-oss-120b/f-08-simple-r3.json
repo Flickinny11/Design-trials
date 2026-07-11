@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-08-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 12029,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3744,
+    "completionTokens": 1817
+  },
+  "costUsd": 0.0016518000000000001,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\n/**\n * @typedef {object} NodeConfig\n * @property {string} [imageUrl]\n * @property {any[]} [textContent]\n * @property {any} [intent]\n * @property {Record<string,string>} [colors]\n */\n\n/**\n * @typedef {object} NodeContext\n * @property {any} THREE\n * @property {object} textureLoader\n * @property {function(string):Promise<any>} textureLoader.loadTexture\n * @property {object} fontAtlas\n * @property {function(string,object):any} fontAtlas.createText\n * @property {function(string,any):any} emit\n * @property {string} [tier]\n */\n\n/**\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {import('three').Object3D}\n */\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // root container – the adapter will position/rotate/scale it later\n  const root = new Group();\n\n  // ---------- Textured Plane ----------\n  const planeWidth = 1.6; // derived from image aspect 512/320 ≈ 1.6\n  const planeHeight = 1.0;\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n  const material = new MeshBasicNodeMaterial({ transparent: true });\n  const plane = new Mesh(geometry, material);\n  root.add(plane);\n\n  /** @type {any|null} */\n  let loadedTexture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      loadedTexture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // ---------- Text Content ----------\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    const txt = ctx.fontAtlas.createText(item.text ?? '', {\n      fontSize: item.typography?.fontSize ?? 39,\n      color: config.colors?.paper ?? '#e8ecf2',\n      align: 'center',\n    });\n    // Slightly in front of the plane to avoid z‑fighting\n    txt.position.set(0, 0, 0.01);\n    root.add(txt);\n  }\n\n  // ---------- UserData & Cleanup ----------\n  root.userData.handlers = {};\n\n  // Keep track of any GSAP timelines we might create in the future\n  /** @type {any[]} */\n  const timelines = [];\n\n  root.userData.cleanup = () => {\n    // Dispose three.js resources\n    geometry.dispose();\n    material.dispose();\n    if (loadedTexture && typeof loadedTexture.dispose === 'function') {\n      loadedTexture.dispose();\n    }\n    // Kill GSAP timelines\n    timelines.forEach((tl) => {\n      if (tl && typeof tl.kill === 'function') tl.kill();\n    });\n    timelines.length = 0;\n  };\n\n  return root;\n}\n"
+}

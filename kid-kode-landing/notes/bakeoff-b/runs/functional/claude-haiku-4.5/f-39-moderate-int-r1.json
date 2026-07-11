@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-39-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 5120,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4471,
+    "completionTokens": 759
+  },
+  "costUsd": 0.008266,
+  "billing": "metered",
+  "output": "```javascript\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, Object3D } = ctx.THREE;\n  const group = new Group();\n  \n  let cleanup = () => {};\n  let loadedMesh = null;\n  let timelines = [];\n\n  const loadAndSetup = async () => {\n    try {\n      const gltf = await ctx.glbLoader.loadGLB(config.meshUrl);\n      loadedMesh = gltf.scene;\n      group.add(loadedMesh);\n\n      // Apply scene position from config\n      group.position.set(\n        config.scenePosition?.[0] ?? 0,\n        config.scenePosition?.[1] ?? 0,\n        config.scenePosition?.[2] ?? 0\n      );\n\n      // Setup interaction handlers\n      setupInteractions();\n    } catch (err) {\n      console.error('Failed to load divider mesh:', err);\n    }\n  };\n\n  const setupInteractions = () => {\n    let hoverTimeline = null;\n\n    const onHover = () => {\n      if (hoverTimeline) hoverTimeline.kill();\n      hoverTimeline = gsap.timeline();\n      timelines.push(hoverTimeline);\n      \n      // rise-in: subtle 0.15 scene units, power3.out, 0.7s\n      hoverTimeline.to(\n        group.position,\n        {\n          y: group.position.y + 0.15,\n          duration: 0.7,\n          ease: 'power3.out'\n        },\n        0\n      );\n    };\n\n    const onHoverOut = () => {\n      if (hoverTimeline) hoverTimeline.kill();\n      hoverTimeline = gsap.timeline();\n      timelines.push(hoverTimeline);\n      \n      // Return to original position\n      hoverTimeline.to(\n        group.position,\n        {\n          y: config.scenePosition?.[1] ?? 0,\n          duration: 0.7,\n          ease: 'power3.out'\n        },\n        0\n      );\n    };\n\n    const onClick = () => {\n      ctx.emit('hub-home.select', {});\n    };\n\n    group.userData.handlers = {\n      onHover,\n      onHoverOut,\n      onClick\n    };\n  };\n\n  // Perform async load\n  loadAndSetup();\n\n  // Setup cleanup\n  group.userData.cleanup = () => {\n    timelines.forEach(tl => tl.kill());\n    timelines = [];\n    \n    if (loadedMesh) {\n      loadedMesh.traverse(child => {\n        if (child.geometry) child.geometry.dispose();\n        if (child.material) {\n          if (Array.isArray(child.material)) {\n            child.material.forEach(m => m.dispose());\n          } else {\n            child.material.dispose();\n          }\n        }\n      });\n    }\n  };\n\n  return group;\n}\n```"
+}

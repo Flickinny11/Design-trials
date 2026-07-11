@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-22-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 10859,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3742,
+    "completionTokens": 1837
+  },
+  "costUsd": 0.0016635,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap'; // optional import for future timelines\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Determine aspect ratio from supplied image dimensions (512x320) if needed\n  const aspect = 512 / 320; // fallback constant based on spec\n  const geometry = new PlaneGeometry(aspect, 1);\n\n  // Basic material – color fallback to paper palette\n  const planeColor = (config?.intent?.visualSpec?.colors?.paper) ?? '#e8ecf2';\n  const material = new MeshBasicNodeMaterial({ color: planeColor });\n\n  // Create plane mesh\n  const plane = new Mesh(geometry, material);\n  root.add(plane);\n\n  // Load texture if an image URL is provided\n  if (config?.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Render any text content using the font atlas\n  const items =\n    config.textContent ??\n    config.intent?.visualSpec?.textContent ??\n    [];\n\n  for (const item of items) {\n    const text = typeof item === 'string' ? item : item.text ?? item.content ?? '';\n    const fontSize = item.typography?.fontSize ?? 39;\n    const color = (config?.intent?.visualSpec?.colors?.ink) ?? '#16161d';\n\n    const textObj = ctx.fontAtlas.createText(text, {\n      fontSize,\n      color,\n      align: 'center',\n    });\n\n    // Slight offset in front of the plane to avoid z‑fighting\n    textObj.position.set(0, 0, 0.01);\n    root.add(textObj);\n  }\n\n  // Apply cinematic primitives if any are listed (none in this spec but kept for completeness)\n  const primitiveHandles = [];\n  const primitives = config.cinematicPrimitives ?? [];\n  for (const prim of primitives) {\n    const handler = ctx.primitives[prim.name](root, prim.params);\n    primitiveHandles.push(handler);\n  }\n\n  // User data for cleanup and event handlers\n  root.userData.handlers = {};\n\n  root.userData.cleanup = () => {\n    // Dispose geometry and material\n    geometry.dispose();\n    material.dispose();\n\n    // Dispose texture if it was loaded\n    if (material.map) {\n      material.map.dispose();\n    }\n\n    // Cleanup any primitive resources\n    for (const h of primitiveHandles) {\n      if (h && typeof h.cleanup === 'function') {\n        h.cleanup();\n      }\n    }\n\n    // Kill any GSAP timelines that might have been created (none in this static node)\n    gsap.killTweensOf(root);\n  };\n\n  return root;\n}"
+}

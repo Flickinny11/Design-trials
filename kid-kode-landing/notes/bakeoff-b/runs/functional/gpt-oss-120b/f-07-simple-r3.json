@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-07-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 11128,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3729,
+    "completionTokens": 1450
+  },
+  "costUsd": 0.0014293499999999998,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container (position/rotation/scale will be applied by the adapter)\n  const root = new Group();\n\n  // Geometry – keep aspect ratio based on the source rectangle (512 × 320)\n  const aspect = 512 / 320; // 1.6\n  const geometry = new PlaneGeometry(aspect, 1);\n\n  // Unlit material; texture will be assigned asynchronously\n  const material = new MeshBasicNodeMaterial({ map: null, transparent: true });\n\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Load the texture synchronously (promise resolves later)\n  let loadedTexture = null;\n  const texPromise = ctx.textureLoader\n    .loadTexture(config.imageUrl)\n    .then((tex) => {\n      loadedTexture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    })\n    .catch(() => {\n      // texture load failure – keep material untextured\n    });\n\n  // Store any GSAP timelines for cleanup (none in this node but keep pattern)\n  const timelines = [];\n\n  // Handlers placeholder (no interactions specified)\n  root.userData.handlers = {};\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Dispose material and geometry\n    material.dispose();\n    geometry.dispose();\n\n    // Dispose texture if it was loaded\n    if (loadedTexture) {\n      loadedTexture.dispose();\n    }\n\n    // Kill any GSAP timelines that might have been added later\n    timelines.forEach((tl) => tl.kill());\n    timelines.length = 0;\n  };\n\n  // Apply cinematic primitives if any are declared (none for this spec)\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const primitive = ctx.primitives[prim.name];\n      if (primitive) {\n        const result = primitive(root, prim.params ?? {});\n        // keep reference for cleanup\n        if (result && typeof result.cleanup === 'function') {\n          timelines.push({ kill: result.cleanup });\n        }\n      }\n    }\n  }\n\n  return root;\n}"
+}

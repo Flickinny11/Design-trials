@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-09-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 2063,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3558,
+    "completionTokens": 344
+  },
+  "costUsd": 0.0011475,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { createText } from '@/text';\nimport { orbit, ' as orbitParams } from '@/primitives';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Atlas region dimensions\n  const REGION_WIDTH = 512;\n  const REGION_HEIGHT = 320;\n  const ASPECT = REGION_WIDTH / REGION_HEIGHT;\n\n  // Plane geometry matching the atlas region aspect ratio\n  const geometry = new PlaneGeometry(ASPECT, 1);\n  const material = new MeshBasicNodeMaterial();\n  const plane = new Mesh(geometry, material);\n  root.add(plane);\n\n  // Load texture asynchronously; material will be updated when ready\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // No primitives to apply for this node (empty list)\n  // Ensure userData structure exists for consistency\n  root.userData.handlers = {};\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Dispose geometry and material\n    geometry.dispose();\n    material.dispose();\n\n    // Dispose texture if it was set\n    if (material.map && material.map.dispose) {\n      material.map.dispose();\n    }\n\n    // No GSAP timelines were created for this node, but guard in case\n    if (root.userData._gsapTimeline) {\n      root.userData._gsapTimeline.kill();\n    }\n  };\n\n  return root;\n}"
+}

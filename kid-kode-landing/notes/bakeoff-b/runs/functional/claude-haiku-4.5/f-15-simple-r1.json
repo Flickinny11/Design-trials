@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-15-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 6441,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4397,
+    "completionTokens": 718
+  },
+  "costUsd": 0.007987,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, uniform } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // Create a plane geometry sized to atlas region aspect ratio (512×320 = 1.6:1)\n  const geometry = new THREE.PlaneGeometry(1.6, 1.0);\n\n  // Load the sprite texture\n  let material;\n  const texturePromise = ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n    // Normalize UV to atlas region: source (0,0,512,320) in a full atlas\n    // Assuming full atlas is 512×512, region is top-left corner\n    const uvOffset = new THREE.Vector2(0, 0.375); // y offset for 320px from 512 height\n    const uvScale = new THREE.Vector2(1.0, 0.625); // scale for 320/512 height\n    \n    texture.offset.copy(uvOffset);\n    texture.repeat.copy(uvScale);\n    texture.flipY = false;\n\n    material.map = texture;\n    material.needsUpdate = true;\n  });\n\n  // Create material with TSL nodes\n  const mapNode = uniform(null);\n  material = new MeshBasicNodeMaterial({\n    colorNode: mapNode,\n    transparent: true,\n    depthTest: true,\n    depthWrite: true,\n  });\n\n  // After texture loads, update the mapNode\n  texturePromise.then(() => {\n    // The material.map is set above; TSL nodes will read it\n    material.needsUpdate = true;\n  });\n\n  // Create the mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.set(-3.2, 1, 0.06);\n  mesh.rotation.set(0, 0, 0);\n  mesh.scale.set(1, 1, 1);\n\n  // Billboard toward camera (look at camera z-axis)\n  mesh.lookAt(0, 0, 10);\n\n  // Create the return group\n  const group = new THREE.Group();\n  group.add(mesh);\n\n  // Attach text label \"Collection 1\" above/beside the sprite\n  const textLabel = ctx.fontAtlas.createText('Collection 1', {\n    fontSize: 39,\n    color: '#e8ecf2',\n    align: 'center',\n  });\n  textLabel.position.set(0, 0.65, 0.01);\n  group.add(textLabel);\n\n  // Setup cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (material.map) {\n      material.map.dispose();\n    }\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

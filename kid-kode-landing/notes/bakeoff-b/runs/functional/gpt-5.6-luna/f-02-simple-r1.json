@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-5.6-luna",
+  "model": "openai/gpt-5.6-luna",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-02-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 709,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3693,
+    "completionTokens": 1978
+  },
+  "costUsd": 0.015561,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { mix, uv, vec3 } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Color } = ctx.THREE;\n  const root = new Group();\n  const owned = [];\n  const timelines = [];\n  let loadedTexture = null;\n\n  const backdropGeometry = new PlaneGeometry(7, 6);\n  const backdropMaterial = new MeshBasicNodeMaterial();\n  backdropMaterial.colorNode = mix(\n    vec3(0.043, 0.043, 0.063),\n    vec3(0.086, 0.086, 0.114),\n    uv().y\n  );\n\n  const backdrop = new Mesh(backdropGeometry, backdropMaterial);\n  backdrop.position.set(0, 0, -2.5);\n  root.add(backdrop);\n  owned.push(backdrop);\n\n  const surfaceGeometry = new PlaneGeometry(5.8, 1.35);\n  const surfaceMaterial = new MeshBasicNodeMaterial({\n    color: '#16161d',\n    transparent: true,\n    opacity: 0.96\n  });\n  const surface = new Mesh(surfaceGeometry, surfaceMaterial);\n  surface.position.set(0, 0, -0.35);\n  root.add(surface);\n  owned.push(surface);\n\n  const accentGeometry = new PlaneGeometry(0.055, 0.78);\n  const accentMaterial = new MeshBasicNodeMaterial({\n    color: '#ff2a38'\n  });\n  const accent = new Mesh(accentGeometry, accentMaterial);\n  accent.position.set(-2.7, 0, -0.18);\n  root.add(accent);\n  owned.push(accent);\n\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    const typography = item.typography ?? {};\n    const textObject = ctx.fontAtlas.createText(item.text, {\n      fontSize: typography.fontSize ?? 42,\n      color: '#e8ecf2',\n      align: 'left',\n      letterSpacingPx: 1.2,\n      maxWidthPx: 900\n    });\n\n    textObject.position.set(-2.35, -0.02, 0.05);\n    root.add(textObject);\n  }\n\n  if (config.imageUrl) {\n    const imageGeometry = new PlaneGeometry(1.65, 1.05);\n    const imageMaterial = new MeshBasicNodeMaterial({\n      color: '#e8ecf2',\n      transparent: true\n    });\n    const imageMesh = new Mesh(imageGeometry, imageMaterial);\n    imageMesh.position.set(2.0, 0, 0.02);\n    imageMesh.scale.set(0.001, 0.001, 0.001);\n    root.add(imageMesh);\n    owned.push(imageMesh);\n\n    ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n      loadedTexture = texture;\n      imageMaterial.map = texture;\n      imageMaterial.needsUpdate = true;\n\n      const entrance = gsap.timeline();\n      timelines.push(entrance);\n      entrance.to(imageMesh.scale, {\n        x: 1,\n        y: 1,\n        z: 1,\n        duration: 0.7,\n        ease: 'power3.out'\n      });\n    }).catch(() => {\n      imageMesh.visible = false;\n    });\n  }\n\n  const settle = gsap.timeline();\n  timelines.push(settle);\n  settle.fromTo(\n    surface.scale,\n    { x: 1.04, y: 1.04, z: 1.04 },\n    { x: 1, y: 1, z: 1, duration: 0.9, ease: 'power4.out' }\n  );\n\n  root.userData.handlers = {};\n  root.userData.cleanup = () => {\n    for (const timeline of timelines) timeline.kill();\n\n    for (const object of owned) {\n      if (object.geometry) object.geometry.dispose();\n\n      if (object.material) {\n        const materials = Array.isArray(object.material)\n          ? object.material\n          : [object.material];\n\n        for (const material of materials) {\n          material.dispose();\n        }\n      }\n\n      root.remove(object);\n    }\n\n    if (loadedTexture) {\n      loadedTexture.dispose();\n      loadedTexture = null;\n    }\n  };\n\n  return root;\n}"
+}

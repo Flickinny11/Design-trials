@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-5.6-luna",
+  "model": "openai/gpt-5.6-luna",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-25-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 256,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3681,
+    "completionTokens": 1915
+  },
+  "costUsd": 0.015171,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { mix, smoothstep, uv, vec3 } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, DoubleSide } = ctx.THREE;\n  const root = new Group();\n  const resources = [];\n  const timelines = [];\n  const primitiveResults = [];\n  let cleaned = false;\n\n  const cardWidth = 2.5;\n  const cardHeight = 1.5625;\n\n  const gradientMaterial = new MeshBasicNodeMaterial({\n    side: DoubleSide,\n    transparent: false,\n  });\n\n  const gradientT = smoothstep(0.0, 1.0, uv().y);\n  gradientMaterial.colorNode = mix(\n    vec3(0.043, 0.043, 0.063),\n    mix(\n      vec3(0.086, 0.086, 0.114),\n      vec3(0.91, 0.925, 0.949),\n      smoothstep(0.68, 1.0, gradientT)\n    ),\n    gradientT\n  );\n\n  const gradientGeometry = new PlaneGeometry(cardWidth + 0.08, cardHeight + 0.08);\n  const gradientPlane = new Mesh(gradientGeometry, gradientMaterial);\n  gradientPlane.position.z = -0.035;\n  root.add(gradientPlane);\n  resources.push(gradientGeometry, gradientMaterial);\n\n  const imageMaterial = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    side: DoubleSide,\n    transparent: false,\n  });\n\n  const imageGeometry = new PlaneGeometry(cardWidth, cardHeight);\n  const imagePlane = new Mesh(imageGeometry, imageMaterial);\n  imagePlane.position.z = 0;\n  root.add(imagePlane);\n  resources.push(imageGeometry, imageMaterial);\n\n  const accentMaterial = new MeshBasicNodeMaterial({\n    color: '#ff2a38',\n    side: DoubleSide,\n  });\n\n  const accentGeometry = new PlaneGeometry(0.026, cardHeight + 0.02);\n  const accentPlane = new Mesh(accentGeometry, accentMaterial);\n  accentPlane.position.set(-cardWidth * 0.5 - 0.035, 0, 0.012);\n  root.add(accentPlane);\n  resources.push(accentGeometry, accentMaterial);\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n      if (cleaned) {\n        texture.dispose?.();\n        return;\n      }\n\n      texture.colorSpace = ctx.THREE.SRGBColorSpace;\n      imageMaterial.map = texture;\n      imageMaterial.needsUpdate = true;\n      resources.push(texture);\n    }).catch(() => {});\n  }\n\n  for (const primitive of config.cinematicPrimitives ?? []) {\n    const handler = ctx.primitives?.[primitive.name];\n    if (typeof handler === 'function') {\n      const result = handler(root, primitive.params);\n      if (result) {\n        primitiveResults.push(result);\n        if (result.timeline) timelines.push(result.timeline);\n      }\n    }\n  }\n\n  const entrance = gsap.fromTo(\n    root.scale,\n    { x: 0.985, y: 0.985, z: 0.985 },\n    {\n      x: 1,\n      y: 1,\n      z: 1,\n      duration: 0.7,\n      ease: 'power3.out',\n      paused: true,\n    }\n  );\n  timelines.push(entrance);\n  entrance.play();\n\n  root.userData.handlers = {};\n  root.userData.cleanup = () => {\n    if (cleaned) return;\n    cleaned = true;\n\n    for (const timeline of timelines) {\n      timeline?.kill?.();\n    }\n\n    for (const result of primitiveResults) {\n      result?.cleanup?.();\n    }\n\n    for (const resource of resources) {\n      resource?.dispose?.();\n    }\n\n    root.traverse((object) => {\n      object.userData = object.userData || {};\n      object.userData.handlers = {};\n    });\n  };\n\n  return root;\n}"
+}

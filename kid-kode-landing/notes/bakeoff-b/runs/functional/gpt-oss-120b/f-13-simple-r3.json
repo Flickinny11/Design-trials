@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-13-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 6583,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3735,
+    "completionTokens": 1114
+  },
+  "costUsd": 0.0012286500000000002,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { createNode as primitiveCreateNode } from '@/primitives';\nimport { createText as textCreate } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n  root.name = config.name ?? 'CollectionNode';\n\n  // ---------- Plane ----------\n  const planeGeom = new PlaneGeometry(7, 6); // size arbitrary; will be scaled later if needed\n  const planeMat = new MeshBasicNodeMaterial({ map: null, color: 0xffffff });\n  const planeMesh = new Mesh(planeGeom, planeMat);\n  planeMesh.position.set(0, 0, 0);\n  root.add(planeMesh);\n\n  // Load texture asynchronously\n  let loadedTexture = null;\n  const texPromise = ctx.textureLoader\n    .loadTexture(config.imageUrl)\n    .then((tex) => {\n      loadedTexture = tex;\n      planeMat.map = tex;\n      planeMat.needsUpdate = true;\n    })\n    .catch(() => {\n      // texture load failure – keep material without map\n    });\n\n  // ---------- Text ----------\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    // Expect item.text and optionally typography.fontSize\n    const fontSize = item.typography?.fontSize ?? 96;\n    const textObj = ctx.fontAtlas.createText(item.text || '', {\n      fontSize,\n      color: config.visual?.colors?.paper || '#e8ecf2',\n      align: 'center',\n    });\n    // Position text slightly above plane\n    textObj.position.set(0, 0.8, 0.01);\n    root.add(textObj);\n  }\n\n  // ---------- Cinematic Primitives ----------\n  const primitiveInstances = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const fn = ctx.primitives[prim.name];\n      if (typeof fn === 'function') {\n        const instance = fn(root, prim.params ?? {});\n        primitiveInstances.push(instance);\n      }\n    }\n  }\n\n  // ---------- UserData ----------\n  root.userData.handlers = {}; // No interactions specified\n\n  root.userData.cleanup = () => {\n    // Dispose primitives\n    for (const inst of primitiveInstances) {\n      if (inst && typeof inst.cleanup === 'function') {\n        inst.cleanup();\n      }\n    }\n\n    // Dispose material and geometry\n    planeMat.dispose();\n    planeGeom.dispose();\n\n    // Dispose texture if loaded\n    if (loadedTexture && typeof loadedTexture.dispose === 'function') {\n      loadedTexture.dispose();\n    }\n\n    // Kill any GSAP timelines (none created here, but guard)\n    gsap.globalTimeline.clear();\n  };\n\n  // Return the prepared Object3D\n  return root;\n}"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-02-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 5148,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4382,
+    "completionTokens": 624
+  },
+  "costUsd": 0.007502,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // Build the backdrop stage: vertical gradient plane at z=-2.5\n  const stageGeo = new THREE.PlaneGeometry(7, 6);\n  const stageMat = new MeshBasicNodeMaterial({\n    color: 0x000000,\n  });\n  stageMat.colorNode = uv().y.mix(\n    new THREE.Color(0x0b0b10),\n    new THREE.Color(0x16161d)\n  );\n  const stage = new THREE.Mesh(stageGeo, stageMat);\n  stage.position.z = -2.5;\n  stage.renderOrder = 0;\n\n  // Root group for this node\n  const root = new THREE.Group();\n  root.add(stage);\n\n  // Load the hero image and create the textured plane\n  const geo = new THREE.PlaneGeometry(3.2, 2);\n  const mat = new MeshBasicNodeMaterial();\n\n  const plane = new THREE.Mesh(geo, mat);\n  plane.position.copy(\n    new THREE.Vector3(\n      config.scenePosition?.[0] ?? 0,\n      config.scenePosition?.[1] ?? 1.85,\n      config.scenePosition?.[2] ?? 0\n    )\n  );\n  plane.renderOrder = 10;\n\n  root.add(plane);\n\n  // Load texture and apply\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n      mat.map = texture;\n      mat.needsUpdate = true;\n    });\n  }\n\n  // Create and add the headline text\n  const headlineText = ctx.fontAtlas.createText('Atelier Noir — precise · luxury · technical', {\n    fontSize: 42,\n    color: '#e8ecf2',\n    align: 'center',\n  });\n  headlineText.position.set(0, -1.2, 0.1);\n  headlineText.renderOrder = 15;\n  root.add(headlineText);\n\n  // Cleanup function\n  root.userData.cleanup = () => {\n    geo.dispose();\n    mat.dispose();\n    stageMat.dispose();\n    stageGeo.dispose();\n  };\n\n  return root;\n}\n```"
+}

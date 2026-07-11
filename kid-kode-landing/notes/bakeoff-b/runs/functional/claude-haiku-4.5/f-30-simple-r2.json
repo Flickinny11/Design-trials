@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-30-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 4232,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4382,
+    "completionTokens": 426
+  },
+  "costUsd": 0.006512,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, texture } from 'three/tsl';\n\nexport default async function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // Create plane geometry matching atlas region aspect ratio (512x320 = 1.6:1)\n  const geometry = new THREE.PlaneGeometry(1.6, 1, 1, 1);\n\n  // Load the ceramic grain texture\n  const texMap = await ctx.textureLoader.loadTexture(config.imageUrl);\n  texMap.colorSpace = THREE.SRGBColorSpace;\n\n  // Calculate UV offset for atlas region (0, 0, 512, 320)\n  // Assuming full atlas is 512x512, region starts at (0,0) and is 512x320\n  const uvNode = uv();\n  const atlasUvNode = uvNode.mul(new THREE.Vector2(1, 320 / 512)).add(new THREE.Vector2(0, 0));\n\n  // Create material using TSL nodes\n  const material = new MeshBasicNodeMaterial({\n    colorNode: texture(texMap, atlasUvNode),\n    side: THREE.DoubleSide,\n  });\n\n  // Create mesh\n  const mesh = new THREE.Mesh(geometry, material);\n  mesh.position.copy(new THREE.Vector3(0, -0.3, 0));\n\n  // Create cleanup handler\n  const cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texMap.dispose();\n  };\n\n  // Attach handlers\n  mesh.userData.handlers = {};\n  mesh.userData.cleanup = cleanup;\n\n  return mesh;\n}\n```"
+}

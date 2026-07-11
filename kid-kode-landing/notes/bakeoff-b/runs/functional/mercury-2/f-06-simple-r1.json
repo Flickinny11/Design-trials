@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-06-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 4411,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3595,
+    "completionTokens": 576
+  },
+  "costUsd": 0.00133075,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n  const group = new Group();\n\n  // ---------- Plane (backdrop) ----------\n  const atlasRect = { x: 0, y: 0, width: 512, height: 320 };\n  const aspect = atlasRect.width / atlasRect.height; // 1.6\n  const planeGeom = new PlaneGeometry(aspect, 1);\n  const planeMat = new MeshBasicNodeMaterial();\n  const planeMesh = new Mesh(planeGeom, planeMat);\n  group.add(planeMesh);\n\n  // Load texture asynchronously, keep function synchronous\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      planeMat.map = texture(tex);\n      planeMat.needsUpdate = true;\n    });\n  }\n\n  // ---------- Text ----------\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const textColor = (config.intent?.visualSpec?.colors?.paper) ?? '#e8ecf2';\n  for (const item of items) {\n    const txt = ctx.fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize ?? 96,\n      color: textColor,\n      align: 'center',\n    });\n    // Position text slightly in front of the plane to avoid Z‑fight\n    txt.position.set(0, 0, 0.01);\n    group.add(txt);\n  }\n\n  // ---------- Cinematic Primitives ----------\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const primitive = ctx.primitives[prim.name];\n      if (primitive) {\n        const instance = primitive(group, prim.params);\n        // store for cleanup\n        if (!group.userData._primitiveInstances) group.userData._primitiveInstances = [];\n        group.userData._primitiveInstances.push(instance);\n      }\n    }\n  }\n\n  // ---------- Event Handlers ----------\n  group.userData.handlers = {};\n\n  // ---------- Cleanup ----------\n  const timelines = []; // any GSAP timelines would be pushed here\n  group.userData.cleanup = () => {\n    // dispose geometry & material\n    planeGeom.dispose();\n    planeMat.dispose();\n\n    // cleanup primitives\n    if (group.userData._primitiveInstances) {\n      for (const p of group.userData._primitiveInstances) {\n        if (p.cleanup) p.cleanup();\n      }\n    }\n\n    // kill GSAP timelines\n    for (const tl of timelines) tl.kill();\n  };\n\n  return group;\n}"
+}

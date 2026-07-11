@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-39-moderate-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 15069,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3824,
+    "completionTokens": 2183
+  },
+  "costUsd": 0.0018834000000000001,
+  "billing": "metered",
+  "output": "import { gsap } from 'gsap';\nimport { } from '@/primitives';\nimport { } from '@/text';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {string} [meshUrl]\n * @property {Array<{name:string,params:any}>} [cinematicPrimitives]\n * @property {Array<any>} [textContent]\n * @property {Array<any>} [intent]\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {any} THREE\n * @property {any} textureLoader\n * @property {any} glbLoader\n * @property {any} videoLoader\n * @property {any} fontAtlas\n * @property {Object<string,Function>} primitives\n * @property {Function} emit\n * @property {string} [tier]\n */\n\n/**\n * @param {NodeConfig} config\n * @param {NodeContext} ctx\n * @returns {import('three').Object3D}\n */\nexport default function createNode(config, ctx) {\n  const { Group } = ctx.THREE;\n\n  /** @type {import('three').Object3D} */\n  const root = new Group();\n\n  // Store resources to clean up later\n  const _timelines = [];\n  const _primitiveInstances = [];\n  let _gltfScene = null;\n\n  // Load GLB mesh (synchronous function, but loading is async)\n  if (config.meshUrl) {\n    ctx.glbLoader.loadGLB(config.meshUrl).then((gltf) => {\n      _gltfScene = gltf.scene;\n      root.add(_gltfScene);\n    });\n  }\n\n  // Apply cinematic primitives if any\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const primitiveFn = ctx.primitives[prim.name];\n      if (typeof primitiveFn === 'function') {\n        const instance = primitiveFn(root, prim.params);\n        if (instance) {\n          _primitiveInstances.push(instance);\n        }\n      }\n    }\n  }\n\n  // ---------- Interaction Handlers ----------\n  /** Hover handler – rise‑in effect */\n  const hoverTimeline = gsap.timeline({ paused: true });\n  hoverTimeline.to(\n    root.position,\n    {\n      y: '+=0.15',\n      duration: 0.7,\n      ease: 'power3.out',\n    }\n  );\n  _timelines.push(hoverTimeline);\n\n  root.userData.handlers = {};\n\n  root.userData.handlers.hover = (payload) => {\n    // Expect payload.type === 'enter' | 'leave'\n    if (payload && payload.type === 'leave') {\n      hoverTimeline.reverse();\n    } else {\n      hoverTimeline.play();\n    }\n  };\n\n  /** Click handler – press‑down then emit navigation event */\n  const clickHandler = () => {\n    const clickTl = gsap.timeline({\n      onComplete: () => {\n        ctx.emit('hub-home.select');\n      },\n    });\n    clickTl.to(\n      root.scale,\n      {\n        x: 0.97,\n        y: 0.97,\n        z: 0.97,\n        duration: 0.12,\n        ease: 'back.out(1.7)',\n      }\n    );\n    _timelines.push(clickTl);\n  };\n  root.userData.handlers.click = clickHandler;\n\n  // ---------- Cleanup ----------\n  const disposeObject = (obj) => {\n    if (obj.geometry) {\n      obj.geometry.dispose();\n    }\n    if (obj.material) {\n      if (Array.isArray(obj.material)) {\n        obj.material.forEach((m) => m && m.dispose && m.dispose());\n      } else {\n        obj.material.dispose();\n      }\n    }\n    if (obj.children) {\n      obj.children.forEach(disposeObject);\n    }\n  };\n\n  root.userData.cleanup = () => {\n    // Kill GSAP timelines\n    _timelines.forEach((tl) => tl.kill());\n\n    // Cleanup primitives\n    _primitiveInstances.forEach((inst) => {\n      if (inst && typeof inst.cleanup === 'function') {\n        inst.cleanup();\n      }\n    });\n\n    // Dispose GLTF scene geometry/materials\n    if (_gltfScene) {\n      disposeObject(_gltfScene);\n    }\n\n    // Remove all children from root\n    root.clear();\n  };\n\n  return root;\n}\n"
+}

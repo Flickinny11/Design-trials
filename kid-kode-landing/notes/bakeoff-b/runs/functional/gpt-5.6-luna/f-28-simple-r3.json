@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-5.6-luna",
+  "model": "openai/gpt-5.6-luna",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-28-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 264,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3682,
+    "completionTokens": 2094
+  },
+  "costUsd": 0.016246,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, smoothstep } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, BoxGeometry } = ctx.THREE;\n  const root = new Group();\n  const resources = [];\n  const primitiveResults = [];\n  let disposed = false;\n\n  const surface = vec3(0.043, 0.043, 0.063);\n  const ink = vec3(0.086, 0.086, 0.114);\n  const paper = vec3(0.910, 0.925, 0.949);\n  const accent = vec3(1.0, 0.165, 0.220);\n\n  const backdropMaterial = new MeshBasicNodeMaterial();\n  const backdropY = uv().y;\n  const backdropGradient = smoothstep(0.0, 1.0, backdropY);\n  backdropMaterial.colorNode = mix(\n    surface,\n    mix(ink, vec3(0.12, 0.12, 0.15), backdropGradient),\n    smoothstep(0.1, 0.9, backdropY)\n  );\n\n  const backdrop = new Mesh(new PlaneGeometry(7, 6), backdropMaterial);\n  backdrop.position.set(0, -0.15, -2.5);\n  root.add(backdrop);\n  resources.push(backdrop.geometry, backdrop.material);\n\n  const cardMaterial = new MeshBasicNodeMaterial({\n    color: '#e8ecf2'\n  });\n\n  const card = new Mesh(new PlaneGeometry(2.65, 1.66), cardMaterial);\n  card.position.set(0, 0.05, 0);\n  root.add(card);\n  resources.push(card.geometry, card.material);\n\n  const frameMaterial = new MeshBasicNodeMaterial({\n    color: '#16161d'\n  });\n\n  const frameTop = new Mesh(new BoxGeometry(2.78, 0.055, 0.08), frameMaterial);\n  const frameBottom = new Mesh(new BoxGeometry(2.78, 0.055, 0.08), frameMaterial);\n  const frameLeft = new Mesh(new BoxGeometry(0.055, 1.72, 0.08), frameMaterial);\n  const frameRight = new Mesh(new BoxGeometry(0.055, 1.72, 0.08), frameMaterial);\n\n  frameTop.position.set(0, 0.90, 0.08);\n  frameBottom.position.set(0, -0.80, 0.08);\n  frameLeft.position.set(-1.36, 0.05, 0.08);\n  frameRight.position.set(1.36, 0.05, 0.08);\n\n  root.add(frameTop, frameBottom, frameLeft, frameRight);\n  resources.push(frameMaterial, frameTop.geometry, frameBottom.geometry, frameLeft.geometry, frameRight.geometry);\n\n  const accentMaterial = new MeshBasicNodeMaterial({\n    color: '#ff2a38'\n  });\n\n  const accentBar = new Mesh(new BoxGeometry(0.48, 0.035, 0.06), accentMaterial);\n  accentBar.position.set(-0.92, -0.99, 0.14);\n  root.add(accentBar);\n  resources.push(accentBar.geometry, accentMaterial);\n\n  const foregroundMaterial = new MeshBasicNodeMaterial();\n  foregroundMaterial.colorNode = mix(\n    vec3(0.55, 0.56, 0.59),\n    paper,\n    smoothstep(0.0, 1.0, uv().y)\n  );\n\n  const foreground = new Mesh(new PlaneGeometry(0.34, 0.025), foregroundMaterial);\n  foreground.position.set(0.98, -0.99, 0.15);\n  root.add(foreground);\n  resources.push(foreground.geometry, foreground.material);\n\n  const imageUrl = config.imageUrl ?? config.intent?.visualSpec?.imageUrl;\n  if (imageUrl) {\n    ctx.textureLoader.loadTexture(imageUrl).then((texture) => {\n      if (disposed) {\n        texture.dispose?.();\n        return;\n      }\n      cardMaterial.map = texture;\n      cardMaterial.needsUpdate = true;\n      resources.push(texture);\n    }).catch(() => {});\n  }\n\n  const primitives = config.cinematicPrimitives ?? [];\n  for (const primitive of primitives) {\n    const result = ctx.primitives[primitive.name](root, primitive.params);\n    if (result) primitiveResults.push(result);\n  }\n\n  root.userData.handlers = {};\n  root.userData.cleanup = () => {\n    if (disposed) return;\n    disposed = true;\n\n    for (const result of primitiveResults) {\n      result?.timeline?.kill?.();\n      result?.cleanup?.();\n    }\n\n    for (const resource of resources) {\n      resource?.dispose?.();\n    }\n\n    root.clear();\n  };\n\n  return root;\n}"
+}

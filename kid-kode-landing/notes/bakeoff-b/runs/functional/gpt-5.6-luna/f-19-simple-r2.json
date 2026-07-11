@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-5.6-luna",
+  "model": "openai/gpt-5.6-luna",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-19-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 333,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3694,
+    "completionTokens": 1668
+  },
+  "costUsd": 0.013702,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { color, mix, uv } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n  const root = new Group();\n  const ownedGeometries = [];\n  const ownedMaterials = [];\n  const ownedTextures = [];\n  const timelines = [];\n  let disposed = false;\n\n  root.userData.handlers = {};\n\n  const makeMaterial = (options = {}) => {\n    const material = new MeshBasicNodeMaterial(options);\n    ownedMaterials.push(material);\n    return material;\n  };\n\n  const makePlane = (width, height, material, z = 0) => {\n    const geometry = new PlaneGeometry(width, height);\n    ownedGeometries.push(geometry);\n    const mesh = new Mesh(geometry, material);\n    mesh.position.z = z;\n    root.add(mesh);\n    return mesh;\n  };\n\n  const surfaceMaterial = makeMaterial();\n  surfaceMaterial.colorNode = mix(\n    color('#0b0b10'),\n    color('#16161d'),\n    uv().y\n  );\n\n  makePlane(3.45, 2.55, surfaceMaterial, -0.08);\n\n  const imageMaterial = makeMaterial({ color: '#e8ecf2' });\n  const imagePlane = makePlane(3.18, 1.99, imageMaterial, 0);\n\n  const accentMaterial = makeMaterial({ color: '#ff2a38' });\n  makePlane(0.08, 1.99, accentMaterial, 0.025);\n\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    const text = String(item.text ?? '');\n    const textObject = ctx.fontAtlas.createText(text, {\n      fontSize: item.typography?.fontSize ?? 39,\n      color: '#e8ecf2',\n      align: 'left'\n    });\n\n    textObject.position.set(-1.48, -1.12, 0.08);\n    root.add(textObject);\n  }\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n      if (disposed) {\n        texture.dispose?.();\n        return;\n      }\n      ownedTextures.push(texture);\n      imageMaterial.map = texture;\n      imageMaterial.needsUpdate = true;\n    });\n  }\n\n  root.userData.cleanup = () => {\n    if (disposed) return;\n    disposed = true;\n\n    for (const timeline of timelines) {\n      timeline.kill?.();\n    }\n\n    for (const geometry of ownedGeometries) {\n      geometry.dispose?.();\n    }\n\n    for (const material of ownedMaterials) {\n      material.dispose?.();\n    }\n\n    for (const texture of ownedTextures) {\n      texture.dispose?.();\n    }\n\n    root.userData.handlers = {};\n  };\n\n  return root;\n}"
+}

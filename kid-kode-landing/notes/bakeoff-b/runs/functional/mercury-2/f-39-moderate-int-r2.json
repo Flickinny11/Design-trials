@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-39-moderate-int",
+  "run": 2,
+  "ok": true,
+  "wallMs": 5897,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3763,
+    "completionTokens": 557
+  },
+  "costUsd": 0.0013585,
+  "billing": "metered",
+  "output": "import { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const root = new ctx.THREE.Group();\n\n  // Store timelines for cleanup\n  const timelines = [];\n\n  // Load GLB mesh if provided\n  if (config.meshUrl) {\n    ctx.glbLoader.loadGLB(config.meshUrl).then((gltf) => {\n      root.add(gltf.scene);\n    });\n  }\n\n  // Preserve original Y position for hover animation\n  let originalY = undefined;\n  function getOriginalY() {\n    if (originalY === undefined) originalY = root.position.y;\n    return originalY;\n  }\n\n  // Hover enter animation (rise-in)\n  function onHoverEnter() {\n    const targetY = getOriginalY() + 0.15;\n    const tl = gsap.timeline();\n    tl.to(root.position, { y: targetY, duration: 0.7, ease: 'power3.out' });\n    timelines.push(tl);\n  }\n\n  // Hover leave animation (return)\n  function onHoverLeave() {\n    const tl = gsap.timeline();\n    tl.to(root.position, { y: getOriginalY(), duration: 0.7, ease: 'power3.out' });\n    timelines.push(tl);\n  }\n\n  // Click handler (press-down + emit)\n  function onClick() {\n    const tl = gsap.timeline();\n    tl.to(root.scale, {\n      x: 0.97,\n      y: 0.97,\n      z: 0.97,\n      duration: 0.12,\n      ease: 'back.out(1.7)'\n    })\n      .to(root.scale, {\n        x: 1,\n        y: 1,\n        z: 1,\n        duration: 0.12,\n        ease: 'back.out(1.7)'\n      });\n    timelines.push(tl);\n    ctx.emit('hub-home.select');\n  }\n\n  // Attach handlers to userData\n  root.userData.handlers = {\n    hover: { enter: onHoverEnter, leave: onHoverLeave },\n    click: onClick\n  };\n\n  // Recursive dispose for cleanup\n  function disposeObject(obj) {\n    if (obj.geometry) obj.geometry.dispose();\n    if (obj.material) {\n      if (Array.isArray(obj.material)) {\n        obj.material.forEach((m) => m.dispose());\n      } else {\n        obj.material.dispose();\n      }\n    }\n    obj.children.forEach(disposeObject);\n  }\n\n  // Cleanup method\n  root.userData.cleanup = function () {\n    timelines.forEach((t) => t.kill());\n    disposeObject(root);\n  };\n\n  return root;\n}"
+}

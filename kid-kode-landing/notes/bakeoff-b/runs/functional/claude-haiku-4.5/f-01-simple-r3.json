@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-01-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 7123,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4382,
+    "completionTokens": 927
+  },
+  "costUsd": 0.009017,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  \n  // Extract text content with fallback chain\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const bodyItem = items.find(item => item.role === 'body') || items[0];\n  const textStr = bodyItem?.text ?? 'A machined-metal watch atelier landing with catalog, pricing, jo';\n  \n  // Parse colors from spec\n  const colors = config.colors ?? config.intent?.visualSpec?.colors ?? {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n  \n  const group = new THREE.Group();\n  \n  // Create backdrop plane (7x6 units) with engineered gradient\n  const backdropGeo = new THREE.PlaneGeometry(7, 6);\n  const gradStops = config.intent?.visualSpec?.gradientStops ?? [\n    { offset: 0, color: colors.surface },\n    { offset: 1, color: colors.ink }\n  ];\n  \n  const uvNode = uv();\n  const gradientColor = mix(\n    new THREE.Color(gradStops[0].color),\n    new THREE.Color(gradStops[1].color),\n    uvNode.y\n  );\n  \n  const backdropMat = new MeshBasicNodeMaterial({\n    colorNode: gradientColor,\n    transparent: true\n  });\n  \n  const backdrop = new THREE.Mesh(backdropGeo, backdropMat);\n  backdrop.position.z = -2.5;\n  group.add(backdrop);\n  \n  // Create main text element\n  const textOpts = {\n    fontSize: 31,\n    color: colors.paper,\n    align: 'left',\n    maxWidthPx: 480,\n    letterSpacingPx: 0\n  };\n  \n  const textMesh = ctx.fontAtlas.createText(textStr, textOpts);\n  textMesh.position.set(-2.8, 1.2, 0.1);\n  textMesh.scale.set(0.08, 0.08, 0.08); // Scene-unit scale for body text\n  group.add(textMesh);\n  \n  // Load and apply image texture if available\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then(texture => {\n      const planeGeo = new THREE.PlaneGeometry(3.5, 2.2);\n      const planeMat = new MeshBasicNodeMaterial({\n        map: texture,\n        transparent: true\n      });\n      const plane = new THREE.Mesh(planeGeo, planeMat);\n      plane.position.set(1.5, 0.5, 0.05);\n      group.add(plane);\n    });\n  }\n  \n  // Apply scene position\n  if (config.scenePosition) {\n    group.position.copy(config.scenePosition);\n  }\n  \n  // Setup cleanup\n  group.userData.cleanup = () => {\n    backdropGeo.dispose();\n    backdropMat.dispose();\n    gsap.killTweensOf(group);\n    gsap.killTweensOf(textMesh);\n  };\n  \n  // Attach empty handlers object for future interactivity\n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

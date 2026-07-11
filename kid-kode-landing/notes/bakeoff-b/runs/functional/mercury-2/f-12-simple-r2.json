@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-12-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 2810,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3549,
+    "completionTokens": 473
+  },
+  "costUsd": 0.001242,
+  "billing": "metered",
+  "output": "import { Group, Mesh, PlaneGeometry } from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport { createText } from '@/text';\nimport { orbit, depthRotate, dissolveMorph, displacementTransition, parallaxScroll, magneticCursor, particleEmerge, flyThrough, kineticText } from '@/primitives';\n\nexport default function createNode(config, ctx) {\n  const group = new ctx.THREE.Group();\n\n  // ---------- Textured Plane ----------\n  const imgUrl = config.imageUrl;\n  const geometry = new ctx.THREE.PlaneGeometry(1, 320 / 512);\n  const material = new ctx.THREE.MeshBasicNodeMaterial();\n  const mesh = new ctx.THREE.Mesh(geometry, material);\n  group.add(mesh);\n\n  // Load texture asynchronously\n  let texResource = null;\n  ctx.textureLoader\n    .loadTexture(imgUrl)\n    .then((tex) => {\n      texResource = tex;\n      material.mapNode = texture(tex);\n    })\n    .catch(() => {\n      // texture texture\n    });\n\n  // ---------- Text ----------\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const textObjects = [];\n\n  for (const item of items) {\n    const opts = {\n      fontSize: item.typography?.fontSize ?? 0.34,\n      color: (config.intent?.visualSpec?.colors?.paper) || '#e8ecf2',\n      align: 'center',\n    };\n    const txt = ctx.fontAtlas.createText(item.text, opts);\n    // Position text slightly above the plane\n    txt.position.set(0, 0, 0.01);\n    group.add(txt);\n    textObjects.push(txt);\n  }\n\n  // ---------- Handlers ----------\n  group.userData.handlers = {};\n\n  // ---------- Cleanup ----------\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (texResource) texResource.dispose();\n    for (const txt of textObjects) {\n      if (txt.parent) txt.parent.remove(txt);\n    }\n    // No GSAP timelines in this node, but kill any if present\n    if (group.userData._gsapTimelines) {\n      for (const tl of group.userData._gsapTimelines) tl.kill();\n    }\n  };\n\n  return group;\n}"
+}

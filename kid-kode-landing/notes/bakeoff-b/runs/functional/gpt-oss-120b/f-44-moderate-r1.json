@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-44-moderate",
+  "run": 1,
+  "ok": true,
+  "wallMs": 13203,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3807,
+    "completionTokens": 2083
+  },
+  "costUsd": 0.00182085,
+  "billing": "metered",
+  "output": "import { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group } = ctx.THREE;\n  const root = new Group();\n\n  // Store references for cleanup\n  const cleanupRefs = {\n    hoverTL: null,\n    clickTLs: [],\n    gltf: null,\n  };\n\n  // Load GLB mesh\n  ctx.glbLoader.loadGLB(config.meshUrl).then((gltf) => {\n    cleanupRefs.gltf = gltf;\n    const meshGroup = gltf.scene || gltf;\n    root.add(meshGroup);\n  });\n\n  // Hover lift (rise-in) animation\n  function startHover() {\n    if (cleanupRefs.hoverTL) cleanupRefs.hoverTL.kill();\n    cleanupRefs.hoverTL = gsap.to(root.position, {\n      y: 0.15,\n      duration: 0.25,\n      ease: 'power3.out',\n    });\n  }\n\n  function endHover() {\n    if (cleanupRefs.hoverTL) cleanupRefs.hoverTL.kill();\n    cleanupRefs.hoverTL = gsap.to(root.position, {\n      y: 0,\n      duration: 0.25,\n      ease: 'power3.out',\n    });\n  }\n\n  // Click press-down + emit\n  function onClick() {\n    ctx.emit('hub-home.select', {});\n    const tl = gsap.timeline();\n    tl.to(root.scale, {\n      x: 0.97,\n      y: 0.97,\n      z: 0.97,\n      duration: 0.12,\n      ease: 'back.out(1.7)',\n    })\n      .to(root.scale, {\n        x: 1,\n        y: 1,\n        z: 1,\n        duration: 0.12,\n        ease: 'power2.out',\n      });\n    cleanupRefs.clickTLs.push(tl);\n  }\n\n  // Attach interaction handlers\n  root.userData.handlers = {\n    hoverEnter: startHover,\n    hoverLeave: endHover,\n    click: onClick,\n  };\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    if (cleanupRefs.hoverTL) cleanupRefs.hoverTL.kill();\n    cleanupRefs.clickTLs.forEach((tl) => tl.kill());\n\n    if (cleanupRefs.gltf && cleanupRefs.gltf.scene) {\n      cleanupRefs.gltf.scene.traverse((obj) => {\n        if (obj.isMesh) {\n          obj.geometry?.dispose?.();\n          if (Array.isArray(obj.material)) {\n            obj.material.forEach((m) => m.dispose?.());\n          } else {\n            obj.material?.dispose?.();\n          }\n        }\n      });\n    }\n  };\n\n  // Apply any cinematic primitives (none in this spec, but loop for safety)\n  if (Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach((primitive) => {\n      const prim = ctx.primitives[primitive.name];\n      if (prim) {\n        const result = prim(root, primitive.params);\n        // Store cleanup for primitive\n        if (result && result.cleanup) {\n          const prevCleanup = root.userData.cleanup;\n          root.userData.cleanup = () => {\n            result.cleanup();\n            if (prevCleanup) prevCleanup();\n          };\n        }\n      }\n    });\n  }\n\n  return root;\n}\n"
+}

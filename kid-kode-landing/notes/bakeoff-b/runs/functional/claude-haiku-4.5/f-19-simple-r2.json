@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-19-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 6036,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4386,
+    "completionTokens": 751
+  },
+  "costUsd": 0.008141,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, color } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // ═══════════════════════════════════════════════════════════════════\n  // 1. ROOT GROUP & CLEANUP REGISTRY\n  // ═══════════════════════════════════════════════════════════════════\n  const root = new THREE.Group();\n  root.position.set(3.2, 1, 0.06);\n  root.rotation.order = 'XYZ';\n\n  const timelines = [];\n  const resources = [];\n\n  root.userData.cleanup = () => {\n    timelines.forEach((tl) => tl.kill());\n    resources.forEach((res) => {\n      if (res.dispose) res.dispose();\n    });\n  };\n\n  // ═══════════════════════════════════════════════════════════════════\n  // 2. PLANE GEOMETRY & MATERIAL\n  // ═══════════════════════════════════════════════════════════════════\n  const planeGeom = new THREE.PlaneGeometry(1.2, 0.75);\n  resources.push(planeGeom);\n\n  // Load the image texture\n  const imagePlane = new THREE.Mesh(\n    planeGeom,\n    new MeshBasicNodeMaterial({ color: 0xffffff })\n  );\n  resources.push(imagePlane.material);\n\n  ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n    texture.colorSpace = THREE.SRGBColorSpace;\n    imagePlane.material.colorNode = uv();\n    imagePlane.material.map = texture;\n    imagePlane.material.needsUpdate = true;\n  });\n\n  root.add(imagePlane);\n\n  // ═══════════════════════════════════════════════════════════════════\n  // 3. TEXT: \"Collection 3\" (headline)\n  // ═══════════════════════════════════════════════════════════════════\n  const textObject = ctx.fontAtlas.createText('Collection 3', {\n    fontSize: 39,\n    color: '#e8ecf2',\n    align: 'center',\n  });\n  textObject.position.z = 0.1;\n  textObject.position.y = -0.15;\n  root.add(textObject);\n\n  // ═══════════════════════════════════════════════════════════════════\n  // 4. STATIC COMPOSITION: NO INTERACTIVITY\n  // ═══════════════════════════════════════════════════════════════════\n  // This is a static card label — no cinematic primitives applied,\n  // no event handlers. The plane and text are rendered as a static\n  // composition within the collection section.\n\n  return root;\n}\n```"
+}

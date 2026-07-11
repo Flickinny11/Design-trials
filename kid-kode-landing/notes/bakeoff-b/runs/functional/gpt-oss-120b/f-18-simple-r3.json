@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-18-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 10086,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3744,
+    "completionTokens": 1618
+  },
+  "costUsd": 0.0015324000000000002,
+  "billing": "metered",
+  "output": "import { Mesh, Group, PlaneGeometry, Vector2 } from 'three/webgpu';\nimport { texture, uv } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport { /* no primitives needed */ } from '@/primitives';\nimport { /* no text needed */ } from '@/text';\n\n/**\n * @typedef {Object} NodeConfig\n * @property {string} [imageUrl]\n * @property {Object} [intent]\n * @property {Object} [visualSpec]\n * @property {Object} [visualSpec.colors]\n * @property {Array} [textContent]\n * @property {Array} [cinematicPrimitives]\n */\n\n/**\n * @typedef {Object} NodeContext\n * @property {any} THREE\n * @property {Object} textureLoader\n * @property {Function} emit\n * @property {Object} primitives\n * @property {Object} fontAtlas\n * @property {string} tier\n */\n\nexport default function createNode(config, ctx) {\n  const { Group: THREEGroup, Mesh: THREEMesh, PlaneGeometry: THREEPlaneGeometry } = ctx.THREE;\n\n  // Root container – the adapter will position/rotate/scale it.\n  const root = new THREEGroup();\n\n  // ---- Geometry -------------------------------------------------\n  // Atlas region (0,0,512,320) – use its aspect ratio.\n  const regionWidth = 512;\n  const regionHeight = 320;\n  const aspect = regionWidth / regionHeight;\n\n  const geometry = new PlaneGeometry(aspect, 1, 1, 1);\n  // Adjust UVs so that only the specified region is sampled.\n  // Assuming the full atlas texture size matches the region size (or larger),\n  // we compute UV scale & offset based on normalized coordinates.\n  // Since the region starts at (0,0) we only need to scale.\n  const uvScale = new Vector2(1 / (regionWidth / regionWidth), 1 / (regionHeight / regionHeight)); // identity\n  // In case the atlas is larger, you could compute real scale here.\n  // Here we simply keep default UVs because the region occupies the full texture.\n\n  const material = new ctx.THREE.MeshBasicNodeMaterial();\n  material.transparent = true;\n\n  // Load texture asynchronously; the node must be returned synchronously.\n  let loadedTexture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      loadedTexture = tex;\n      // Connect the texture to the material via a node.\n      material.mapNode = texture(tex);\n      // Force material update.\n      material.needsUpdate = true;\n    });\n  }\n\n  const plane = new THREEMesh(geometry, material);\n  // Ensure the plane always faces the camera (simple billboarding).\n  plane.onBeforeRender = (renderer, scene, camera) => {\n    plane.quaternion.copy(camera.quaternion);\n  };\n  root.add(plane);\n\n  // ---- No cinematic primitives to apply for this node ----\n  // Store any resources that need explicit disposal.\n  const disposables = {\n    geometry,\n    material,\n    texture: () => loadedTexture && loadedTexture.dispose(),\n  };\n\n  // ---- Cleanup --------------------------------------------------\n  root.userData.cleanup = () => {\n    // Dispose geometry and material.\n    disposables.geometry.dispose();\n    disposables.material.dispose();\n    disposables.texture();\n\n    // Kill any GSAP timelines that might have been created (none here, but safe).\n    gsap.globalTimeline.clear();\n  };\n\n  // ---- Event handlers placeholder --------------------------------\n  root.userData.handlers = {};\n\n  return root;\n}\n"
+}

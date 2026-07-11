@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-44-moderate",
+  "run": 2,
+  "ok": true,
+  "wallMs": 12685,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3807,
+    "completionTokens": 2048
+  },
+  "costUsd": 0.00179985,
+  "billing": "metered",
+  "output": "import { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group } = ctx.THREE;\n\n  // Root object for this UI element\n  const root = new Group();\n  root.name = config?.name ?? 'thumbnail-card';\n\n  // Store internal resources for cleanup\n  const resources = {\n    gltf: null,\n    hoverTimeline: null,\n  };\n\n  // Load the GLB mesh (materials are included in the asset)\n  if (config.meshUrl) {\n    ctx.glbLoader.loadGLB(config.meshUrl).then((gltf) => {\n      resources.gltf = gltf;\n      // Preserve original scaling/position from the GLB; adapter will handle placement\n      root.add(gltf.scene);\n    });\n  }\n\n  /* -------------------------------------------------\n   * Interaction: hover lift (rise‑in) and click emit\n   * ------------------------------------------------- */\n  // Hover lift – rise‑in 0.15 units, using the preset timing (≈0.7s, power3.out)\n  const hoverTimeline = gsap.timeline({ paused: true });\n  hoverTimeline.to(\n    root.position,\n    {\n      y: root.position.y + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    }\n  );\n  resources.hoverTimeline = hoverTimeline;\n\n  // Attach event handlers to userData\n  root.userData.handlers = {\n    // Expected to be called with a boolean: true → hover enter, false → hover leave\n    hover: (enter) => {\n      if (enter) {\n        hoverTimeline.play();\n      } else {\n        hoverTimeline.reverse();\n      }\n    },\n    click: () => {\n      // Emit the navigation/select event as specified\n      ctx.emit('hub-home.select');\n    },\n  };\n\n  // Cleanup routine – disposes GLTF resources and kills timelines\n  root.userData.cleanup = () => {\n    if (resources.hoverTimeline) {\n      resources.hoverTimeline.kill();\n      resources.hoverTimeline = null;\n    }\n\n    if (resources.gltf && resources.gltf.scene) {\n      resources.gltf.scene.traverse((obj) => {\n        if (obj.isMesh) {\n          if (obj.geometry) {\n            obj.geometry.dispose();\n          }\n          const mats = Array.isArray(obj.material) ? obj.material : [obj.material];\n          mats.forEach((mat) => {\n            if (!mat) return;\n            // Dispose textures used by the material\n            ['map', 'normalMap', 'roughnessMap', 'metalnessMap', 'envMap', 'aoMap', 'emissiveMap'].forEach((prop) => {\n              if (mat[prop]) {\n                mat[prop].dispose();\n              }\n            });\n            mat.dispose();\n          });\n        }\n      });\n    }\n  };\n\n  // No cinematic primitives to apply per spec\n  // (If any were present, they would be invoked via ctx.primitives here.)\n\n  return root;\n}"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-29-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 2087,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3581,
+    "completionTokens": 410
+  },
+  "costUsd": 0.00120275,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Color } = ctx.THREE;\n\n  const root = new Group();\n\n  // Plane geometry – size chosen to comfortably contain the headline text\n  const planeGeom = new PlaneGeometry(2, 0.5);\n  const planeMat = new MeshBasicNodeMaterial({\n    color: new Color('#0b0b10'), // surface color\n    // map will be set asynchronously\n  });\n\n  // Load brushed‑metal texture\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      planeMat.map = tex;\n      planeMat.needsUpdate = true;\n    });\n  }\n\n  const planeMesh = new Mesh(planeGeom, planeMat);\n  // Slightly offset the plane to avoid Z‑fighting with the text\n  planeMesh.position.set(0, 0, 0);\n  root.add(planeMesh);\n\n  // Text – headline role\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of textItems) {\n    const txt = ctx.fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize ?? 39,\n      color: '#16161d', // ink color\n      align: 'left',\n    });\n    // Position text slightly in front of the plane\n    txt.position.set(0, 0, 0.01);\n    root.add(txt);\n  }\n\n  // No interactive handlers for this node\n  root.userData.handlers = {};\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    planeGeom.dispose();\n    planeMat.dispose();\n    // Dispose any GSAP timelines that might have been created in the future\n    gsap.globalTimeline.clear();\n  };\n\n  return root;\n}"
+}

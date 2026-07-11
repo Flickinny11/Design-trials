@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-5.6-luna",
+  "model": "openai/gpt-5.6-luna",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-04-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 358,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3674,
+    "completionTokens": 2058
+  },
+  "costUsd": 0.016022,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, smoothstep } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const THREE = ctx.THREE;\n  const {\n    Group,\n    Mesh,\n    PlaneGeometry,\n    BoxGeometry,\n  } = THREE;\n\n  const root = new Group();\n  const resources = [];\n  const cleanupCallbacks = [];\n\n  const colors = {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10',\n  };\n\n  const makeBasic = (options = {}) => {\n    const material = new MeshBasicNodeMaterial(options);\n    resources.push(material);\n    return material;\n  };\n\n  const backdropGeometry = new PlaneGeometry(7, 6);\n  const backdropMaterial = makeBasic({ color: colors.surface });\n  backdropMaterial.colorNode = mix(\n    vec3(0.043, 0.043, 0.063),\n    mix(\n      vec3(0.086, 0.086, 0.114),\n      vec3(0.043, 0.043, 0.055),\n      smoothstep(0.1, 0.9, uv().x),\n    ),\n    smoothstep(0.0, 1.0, uv().y),\n  );\n\n  const backdrop = new Mesh(backdropGeometry, backdropMaterial);\n  backdrop.position.set(0, 2.85, -2.5);\n  root.add(backdrop);\n\n  const panelGeometry = new PlaneGeometry(2.8, 1.05);\n  const panelMaterial = makeBasic({ color: colors.ink });\n  const panel = new Mesh(panelGeometry, panelMaterial);\n  panel.position.set(0, 0, -0.08);\n  root.add(panel);\n\n  const imageGeometry = new PlaneGeometry(2.56, 0.81);\n  const imageMaterial = makeBasic({\n    color: colors.paper,\n    transparent: true,\n    opacity: 0.96,\n    depthWrite: false,\n  });\n  const imagePlane = new Mesh(imageGeometry, imageMaterial);\n  imagePlane.position.set(0, 0.04, 0.03);\n  root.add(imagePlane);\n\n  const topRailGeometry = new BoxGeometry(2.88, 0.045, 0.055);\n  const topRailMaterial = makeBasic({ color: colors.paper });\n  const topRail = new Mesh(topRailGeometry, topRailMaterial);\n  topRail.position.set(0, 0.555, 0.08);\n  root.add(topRail);\n\n  const bottomRailGeometry = new BoxGeometry(2.88, 0.045, 0.055);\n  const bottomRailMaterial = makeBasic({ color: colors.paper });\n  const bottomRail = new Mesh(bottomRailGeometry, bottomRailMaterial);\n  bottomRail.position.set(0, -0.555, 0.08);\n  root.add(bottomRail);\n\n  const accentGeometry = new BoxGeometry(0.085, 0.78, 0.075);\n  const accentMaterial = makeBasic({ color: colors.accent });\n  const accentRail = new Mesh(accentGeometry, accentMaterial);\n  accentRail.position.set(-1.405, 0.02, 0.12);\n  root.add(accentRail);\n\n  const cornerGeometry = new BoxGeometry(0.34, 0.045, 0.075);\n  const cornerMaterial = makeBasic({ color: colors.accent });\n  const cornerMark = new Mesh(cornerGeometry, cornerMaterial);\n  cornerMark.position.set(1.23, -0.37, 0.12);\n  root.add(cornerMark);\n\n  if (config.imageUrl && ctx.textureLoader?.loadTexture) {\n    ctx.textureLoader\n      .loadTexture(config.imageUrl)\n      .then((texture) => {\n        imageMaterial.map = texture;\n        imageMaterial.needsUpdate = true;\n      })\n      .catch(() => {});\n  }\n\n  const primitives = [];\n  for (const primitive of config.cinematicPrimitives ?? []) {\n    const factory = ctx.primitives?.[primitive.name];\n    if (typeof factory === 'function') {\n      const result = factory(root, primitive.params);\n      if (result?.cleanup) primitives.push(result);\n    }\n  }\n\n  root.userData.handlers = {};\n  root.userData.cleanup = () => {\n    for (const primitive of primitives) {\n      primitive.cleanup();\n    }\n    for (const callback of cleanupCallbacks) {\n      callback();\n    }\n    for (const child of root.children) {\n      if (child.geometry?.dispose) child.geometry.dispose();\n    }\n    for (const material of resources) {\n      material.dispose?.();\n    }\n  };\n\n  return root;\n}"
+}

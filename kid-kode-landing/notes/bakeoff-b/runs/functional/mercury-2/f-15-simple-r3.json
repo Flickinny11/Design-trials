@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-15-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 3088,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3650,
+    "completionTokens": 669
+  },
+  "costUsd": 0.00141425,
+  "billing": "metered",
+  "output": "import { Group, Mesh, PlaneGeometry, Vector3, MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { primitives } from '@/primitives';\nimport { text } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const root = new Group();\n  const disposables = [];\n\n  // Apply cinematic primitives if any\n  if (Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach((p) => {\n      const prim = ctx.primitives[p.name];\n      if (prim) {\n        const result = prim(root, p.params);\n        if (result?.cleanup) {\n          disposables.push(() => result.cleanup());\n        }\n        if (result?.timeline) {\n          disposables.push(() => result.timeline.kill());\n        }\n      }\n    });\n  }\n\n  // Texted plane based on atlas region (default 512x320)\n  const atlas = config.atlasRegion || { width: 512, height: 320 };\n  const aspect = atlas.width / atlas.height;\n  const planeWidth = aspect; // height = 1 unit\n  const planeHeight = 1;\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n  const material = new MeshBasicNodeMaterial();\n  material.transparent = true;\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Load texture asynchronously\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Cleanup geometry & material\n  disposables.push(() => {\n    geometry.dispose();\n    material.dispose();\n  });\n\n  // Create text objects\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  items.forEach((item) => {\n    const txt = ctx.fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize ?? 39,\n      color: config.intent?.visualSpec?.colors?.paper ?? '#e8ecf2',\n      align: 'left',\n    });\n    // Position text slightly above the plane\n    txt.position.set(0, planeHeight / 2 + 0.1, 0.01);\n    root.add(txt);\n    // Dispose text resources\n    disposables.push(() => {\n      if (txt.geometry) txt.geometry.dispose?.();\n      if (txt.material) txt.material.dispose?.();\n    });\n  });\n\n  // Billboard update handler (rotate around Y to face camera)\n  root.userData.handlers = {\n    update: (renderer, scene, camera) => {\n      const worldPos = new Vector3();\n      root.getWorldPosition(worldPos);\n      const camPos = camera.position.clone();\n      const dir = camPos.sub(worldPos).normalize();\n      const angle = Math.atan2(dir.x, dir.z);\n      root.rotation.set(0, angle, 0);\n    },\n  };\n\n  // Cleanup function\n  root.userData.cleanup = () => {\n    disposables.forEach((fn) => fn());\n    // Kill any GSAP timelines that might have been created elsewhere\n    gsap.globalTimeline.clear();\n  };\n\n  return root;\n}"
+}

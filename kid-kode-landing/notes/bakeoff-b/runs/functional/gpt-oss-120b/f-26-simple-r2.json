@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-26-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 6963,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3745,
+    "completionTokens": 1376
+  },
+  "costUsd": 0.0013873499999999999,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { createText as _unused } from '@/text'; // ensure alias exists, not used directly\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container (scenePosition will be applied by the adapter)\n  const root = new Group();\n\n  // ---------- Plane ----------\n  const geometry = new PlaneGeometry(7, 6); // size placeholder, can be adjusted as needed\n  const material = new MeshBasicNodeMaterial();\n  material.transparent = true;\n  material.opacity = 1;\n\n  const plane = new Mesh(geometry, material);\n  root.add(plane);\n\n  // Load texture if provided\n  let texture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      texture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // ---------- Text ----------\n  const textItems = config.textContent ??\n    config.intent?.visualSpec?.textContent ??\n    [];\n\n  const texts = [];\n\n  for (const item of textItems) {\n    const txt = ctx.fontAtlas.createText(item.text ?? '', {\n      fontSize: item.typography?.fontSize ?? 39,\n      color: config.visual?.colors?.paper ?? '#e8ecf2',\n      align: 'center',\n    });\n    // Position text slightly above the plane surface\n    txt.position.set(0, 0, 0.01);\n    root.add(txt);\n    texts.push(txt);\n  }\n\n  // ---------- Primitives ----------\n  // No cinematic primitives defined for this node, but keep placeholder\n  const primitiveHandles = [];\n\n  // ---------- Cleanup ----------\n  function cleanup() {\n    // Dispose geometry and material\n    geometry.dispose();\n    material.dispose();\n    if (texture) texture.dispose();\n\n    // Dispose any texts (they may hold their own resources)\n    for (const txt of texts) {\n      if (txt.geometry) txt.geometry.dispose?.();\n      if (txt.material) txt.material.dispose?.();\n    }\n\n    // Kill any GSAP timelines (none in this node, but safety)\n    gsap.globalTimeline.clear();\n\n    // Cleanup primitives (none for this node)\n    for (const ph of primitiveHandles) {\n      if (ph && typeof ph.cleanup === 'function') ph.cleanup();\n    }\n  }\n\n  // Attach handlers container (empty for this spec)\n  root.userData.handlers = {};\n\n  // Attach cleanup method\n  root.userData.cleanup = cleanup;\n\n  return root;\n}"
+}

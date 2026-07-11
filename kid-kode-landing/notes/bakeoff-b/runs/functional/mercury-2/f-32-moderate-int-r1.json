@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-32-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 1998,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3723,
+    "completionTokens": 457
+  },
+  "costUsd": 0.0012735,
+  "billing": "metered",
+  "output": "import { gsap } from 'gsap';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\n\nexport default function createNode(config, ctx) {\n  const { Group, PlaneGeometry, Vector3 } = ctx.THREE;\n\n  // Root object (already positioned by adapter)\n  const root = new Group();\n\n  // Geometry & material\n  const geometry = new PlaneGeometry(7, 6);\n  const material = new MeshBasicNodeMaterial({ color: 0xffffff });\n\n  const mesh = new ctx.THREE.Mesh(geometry, material);\n  root.add(mesh);\n\n  // Load texture async, assign when ready\n  const imageUrl = config.imageUrl ?? config.intent?.visualSpec?.imageUrl;\n  let texture = null;\n  if (imageUrl) {\n    ctx.textureLoader.loadTexture(imageUrl).then((tex) => {\n      texture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Preserve original Y for hover revert\n  const originalY = root.position.y;\n\n  // Store timelines for cleanup\n  const timelines = [];\n\n  // Event handlers\n  root.userData.handlers = {\n    hover: () => {\n      const tl = gsap.timeline();\n      tl.to(root.position, {\n        y: originalY + 0.15,\n        duration: 0.5,\n        ease: 'power3.out',\n      });\n      timelines.push(tl);\n    },\n    unhover: () => {\n      const tl = gsap.timeline();\n      tl.to(root.position, {\n        y: originalY,\n        duration: 0.5,\n        ease: 'power3.out',\n      });\n      timelines.push(tl);\n    },\n    click: () => {\n      ctx.emit('hub-journal.select');\n    },\n  };\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Dispose resources\n    geometry.dispose();\n    material.dispose();\n    if (texture) texture.dispose();\n\n    // Kill GSAP timelines\n    timelines.forEach((t) => t.kill());\n    timelines.length = 0;\n\n    // Remove handlers reference\n    delete root.userData.handlers;\n    delete root.userData.cleanup;\n  };\n\n  return root;\n}"
+}

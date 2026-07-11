@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-15-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 11902,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3756,
+    "completionTokens": 1711
+  },
+  "costUsd": 0.00159,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { } from '@/primitives';\nimport { } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, DoubleSide, Vector2 } = ctx.THREE;\n\n  // Container for the node\n  const container = new Group();\n\n  // Calculate plane size based on atlas region aspect ratio\n  // Atlas region: width 512, height 320 => aspect 1.6\n  const REGION_WIDTH = 512;\n  const REGION_HEIGHT = 320;\n  const aspect = REGION_WIDTH / REGION_HEIGHT;\n  const planeWidth = aspect; // 1 unit height\n  const planeHeight = 1;\n\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n  const material = new MeshBasicNodeMaterial({\n    side: DoubleSide,\n    transparent: true,\n    depthWrite: false,\n  });\n\n  const mesh = new Mesh(geometry, material);\n  container.add(mesh);\n\n  // Billboard: always face the camera\n  mesh.onBeforeRender = (renderer, scene, camera) => {\n    mesh.lookAt(camera.position);\n  };\n\n  // Load texture asynchronously\n  let loadedTexture = null;\n  const texPromise = ctx.textureLoader\n    .loadTexture(config.imageUrl)\n    .then((tex) => {\n      loadedTexture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n\n      // Optional: set UV offset/repeat if atlas is larger than region.\n      // Assume full texture corresponds to the region; otherwise adapt here.\n    })\n    .catch(() => {\n      // texture failed – keep material empty\n    });\n\n  // Text handling (headline)\n  const textItems = config.textContent ??\n    config.intent?.visualSpec?.textContent ??\n    [];\n\n  const textGroup = new Group();\n  for (const item of textItems) {\n    if (!item.text) continue;\n    const textObj = ctx.fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize ?? 39,\n      color: ctx.primitives['kinetic-text']?.defaultColor ?? '#e8ecf2',\n      align: 'center',\n    });\n    // Position the text slightly above the plane surface\n    textObj.position.set(0, 0, 0.01);\n    textGroup.add(textObj);\n  }\n  if (textGroup.children.length) {\n    container.add(textGroup);\n  }\n\n  // No cinematic primitives for this node\n  const primitiveHandlers = [];\n\n  // User data for handlers (none) and cleanup\n  container.userData.handlers = {};\n  container.userData.cleanup = () => {\n    // Dispose texture\n    if (loadedTexture) {\n      loadedTexture.dispose();\n      loadedTexture = null;\n    }\n    // Dispose material and geometry\n    material.dispose();\n    geometry.dispose();\n\n    // Kill any GSAP timelines (none in this node, but safe)\n    gsap.globalTimeline.getChildren().forEach((t) => t.kill());\n\n    // Cleanup primitives if any were added in future extensions\n    primitiveHandlers.forEach((h) => {\n      if (h && typeof h.cleanup === 'function') h.cleanup();\n    });\n\n    // Remove mesh from container\n    container.remove(mesh);\n    mesh.onBeforeRender = null;\n  };\n\n  return container;\n}"
+}

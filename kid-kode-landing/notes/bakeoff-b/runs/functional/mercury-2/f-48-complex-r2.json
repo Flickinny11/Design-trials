@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-48-complex",
+  "run": 2,
+  "ok": true,
+  "wallMs": 3820,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3649,
+    "completionTokens": 578
+  },
+  "costUsd": 0.00134575,
+  "billing": "metered",
+  "output": "import { gsap } from 'gsap';\nimport { MeshStandardNodeMaterial, MeshPhysicalNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, smoothstep, time, uniform } from 'three/tsl';\nimport * as primitives from '@/primitives';\nimport * as text from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, DirectionalLight, Vector3 } = ctx.THREE;\n\n  // Root object for this node\n  const root = new Group();\n\n  // Store references for cleanup\n  const activePrimitives = [];\n  let hoverTimeline = null;\n\n  // Load GLB mesh (async, but function stays synchronous)\n  if (config.meshUrl) {\n    ctx.glbLoader.loadGLB(config.meshUrl).then((gltf) => {\n      root.add(gltf.scene);\n    });\n  }\n\n  // Apply cinematic primitives listed in config\n  const primitivesList = config.cinematicPrimitives ?? [];\n  for (const p of primitivesList) {\n    const apply = ctx.primitives[p.name];\n    if (apply) {\n      const instance = apply(root, p.params);\n      activePrimitives.push(instance);\n    }\n  }\n\n  // Accent rim light (using spec accent color)\n  const rimLight = new DirectionalLight('#ff2a38', 0.8);\n  rimLight.position.set(0, 0, 1);\n  root.add(rimLight);\n\n  // Event handlers container\n  root.userData.handlers = {};\n\n  // Hover effect: subtle rise‑in (0.15 scene units)\n  root.userData.handlers.hover = () => {\n    if (hoverTimeline) hoverTimeline.kill();\n    hoverTimeline = gsap.timeline();\n    hoverTimeline.to(root.position, {\n      y: root.position.y + 0.15,\n      duration: 0.15,\n      ease: 'power2.out',\n    });\n  };\n\n  // Click effect: emit navigation event\n  root.userData.handlers.click = () => {\n    ctx.emit('hub-journal.select', {});\n  };\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Kill GSAP timelines\n    if (hoverTimeline) hoverTimeline.kill();\n\n    // Cleanup primitives\n    for (const p of activePrimitives) {\n      if (p.cleanup) p.cleanup();\n    }\n\n    // Dispose of GLB resources if they exist\n    // (Assumes GLTF loader attaches .scene with .traverse for disposal)\n    root.traverse((obj) => {\n      if (obj.isMesh && obj.geometry) obj.geometry.dispose();\n      if (obj.isMesh && obj.material) {\n        if (Array.isArray(obj.material)) {\n          obj.material.forEach((m) => m.dispose && m.dispose());\n        } else {\n          obj.material.dispose && obj.material.dispose();\n        }\n      }\n    });\n  };\n\n  return root;\n}"
+}

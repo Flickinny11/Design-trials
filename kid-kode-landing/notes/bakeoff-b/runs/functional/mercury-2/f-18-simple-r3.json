@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-18-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 2633,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3607,
+    "completionTokens": 383
+  },
+  "costUsd": 0.001189,
+  "billing": "metered",
+  "output": "import { Mesh, Mesh, MeshGeometry, MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport {} primitives } from '@/primitives';\nimport { text } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group } = ctx.THREE;\n\n  // Root object\n  const root = new Group();\n  root.userData.handlers = {};\n  const cleanupFns = [];\n\n  // Plane geometry based on atlas region (512x320 => 1.6:1 aspect)\n  const planeWidth = 1.6;\n  const planeHeight = 1;\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n  const material = new MeshBasicNodeMaterial();\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Load texture and apply via node\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = texture(tex);\n      material.needsUpdate = true;\n    });\n  }\n\n  // Apply cinematic primitives if any\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const fn = ctx.primitives[prim.name];\n      if (fn) {\n        const instance = fn(root, prim.params);\n        cleanupFns.push(() => {\n          if (instance && typeof instance.cleanup === 'function') instance.cleanup();\n        });\n      }\n    }\n  }\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Dispose material and geometry\n    material.dispose();\n    geometry.dispose();\n\n    // Kill any GSAP timelines stored\n    cleanupFns.forEach((fn) => fn());\n\n    // Clear handlers\n    root.userData.handlers = {};\n  };\n\n  return root;\n}"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-22-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 6386,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4389,
+    "completionTokens": 754
+  },
+  "costUsd": 0.008159,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, vec4, color } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // Create group for the pricing card label\n  const group = new THREE.Group();\n  group.position.set(-3.2, 1, 0.06);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Backdrop plane: engineered gradient surface with subtle grain\n  const backdropGeo = new THREE.PlaneGeometry(2.4, 0.5);\n  \n  // Create node-based material with gradient + grain\n  const uvNode = uv();\n  const gradientNode = mix(\n    color(config.intent?.visualSpec?.colors?.ink || '#16161d'),\n    color(config.intent?.visualSpec?.colors?.surface || '#0b0b10'),\n    uvNode.y\n  );\n  \n  // Subtle grain via noise-like modulation\n  const grainNode = mix(\n    vec3(0.98),\n    vec3(1.02),\n    vec4(Math.random() * 0.1)\n  );\n  \n  const backdropMat = new MeshBasicNodeMaterial({\n    colorNode: mix(gradientNode, grainNode, 0.08),\n    toneMapped: true,\n  });\n\n  const backdropMesh = new THREE.Mesh(backdropGeo, backdropMat);\n  backdropMesh.position.z = -0.01;\n  group.add(backdropMesh);\n\n  // Text label: \"Pricing 1\"\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const pricingLabel = textItems.find(item => item.text && item.text.includes('Pricing'));\n  \n  if (pricingLabel || textItems.length > 0) {\n    const labelText = pricingLabel?.text || 'Pricing 1';\n    const labelFontSize = pricingLabel?.typography?.fontSize || 39;\n    \n    const textMesh = ctx.fontAtlas.createText(labelText, {\n      fontSize: labelFontSize,\n      color: config.intent?.visualSpec?.colors?.paper || '#e8ecf2',\n      align: 'center',\n      maxWidthPx: 320,\n    });\n    \n    textMesh.position.set(0, 0, 0.02);\n    group.add(textMesh);\n  }\n\n  // Cleanup handler\n  group.userData.cleanup = () => {\n    backdropGeo.dispose();\n    backdropMat.dispose();\n    group.children.forEach(child => {\n      if (child.geometry) child.geometry.dispose();\n      if (child.material) child.material.dispose();\n    });\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-24-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 10938,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3755,
+    "completionTokens": 1934
+  },
+  "costUsd": 0.00172365,
+  "billing": "metered",
+  "output": "import { Group, Mesh, PlaneGeometry } from 'three/webgpu';\nimport { MeshBasicNodeMaterial, texture } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { __ } from '@/primitives';\nimport { __ as __text } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group: THREEGroup } = ctx.THREE;\n\n  // Root container\n  const root = new THREEGroup();\n\n  // Atlas region (fallback to whole texture)\n  const atlas = config.atlasRegion || { x: 0, y: 0, width: 512, height: 320 };\n  const aspect = atlas.width / atlas.height;\n\n  // Geometry sized to atlas aspect\n  const geometry = new PlaneGeometry(aspect, 1);\n\n  // Node material\n  const material = new MeshBasicNodeMaterial();\n\n  // Placeholder texture node (will be set once loaded)\n  let texNode = texture(null);\n  material.map = texNode;\n\n  // Load the texture asynchronously\n  let loadedTexture = null;\n  const texturePromise = ctx.textureLoader\n    .loadTexture(config.imageUrl)\n    .then((tex) => {\n      loadedTexture = tex;\n      texNode = texture(tex);\n      material.map = texNode;\n      material.needsUpdate = true;\n    })\n    .catch(() => {\n      // In case loading fails, keep material empty\n    });\n\n  // Mesh that billboards toward the camera\n  const mesh = new Mesh(geometry, material);\n  mesh.onBeforeRender = (renderer, scene, camera) => {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  root.add(mesh);\n\n  // Cleanup resources\n  root.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (loadedTexture) loadedTexture.dispose();\n    // No GSAP timelines for this node, but kill any just in case\n    gsap.killTweensOf(mesh);\n  };\n\n  // Empty handlers placeholder\n  root.userData.handlers = {};\n\n  return root;\n}"
+}

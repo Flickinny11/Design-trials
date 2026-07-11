@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-04-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 2327,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3503,
+    "completionTokens": 346
+  },
+  "costUsd": 0.00113525,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, mix, color } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport * as primitives from '@/primitives';\nimport * as text from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container for this node\n  const root = new Group();\n\n  // Plane geometry – size will be controlled by the adapter via scenePosition/scale\n  const geometry = new PlaneGeometry(1, 1);\n  const material = new MeshBasicNodeMaterial();\n\n  // Gradient color (ink → paper) based on vertical UV coordinate\n  const inkNode = color('#16161d');\n  const paperNode = color('#e8ecf2');\n  material.colorNode = mix(inkNode, paperNode, uv().y);\n\n  // Load texture asynchronously; assign when ready\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Event handlers placeholder (none defined for this node)\n  root.userData.handlers = {};\n\n  // Cleanup routine: dispose geometry, material, and any GSAP timelines\n  root.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    // No timelines were created, but ensure any future ones are killed\n    if (root.userData._timelines) {\n      root.userData._timelines.forEach((tl) => tl.kill());\n    }\n  };\n\n  return root;\n}"
+}

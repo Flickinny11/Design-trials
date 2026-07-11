@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-02-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 7013,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4382,
+    "completionTokens": 933
+  },
+  "costUsd": 0.009047,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, texture } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  \n  // Build the group to hold the plane and text\n  const group = new THREE.Group();\n  group.position.set(0, 1.85, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Create backdrop plane (~7x6 units at z=-2.5) with gradient\n  const backdropGeo = new THREE.PlaneGeometry(7, 6);\n  const gradientCanvas = document.createElement('canvas');\n  gradientCanvas.width = 1;\n  gradientCanvas.height = 256;\n  const ctx2d = gradientCanvas.getContext('2d');\n  \n  // Gradient from surface (#0b0b10) to ink (#16161d)\n  const grad = ctx2d.createLinearGradient(0, 0, 0, 256);\n  grad.addColorStop(0, '#0b0b10');\n  grad.addColorStop(1, '#16161d');\n  ctx2d.fillStyle = grad;\n  ctx2d.fillRect(0, 0, 1, 256);\n  \n  const gradTex = new THREE.CanvasTexture(gradientCanvas);\n  gradTex.magFilter = THREE.LinearFilter;\n  gradTex.minFilter = THREE.LinearFilter;\n  \n  const backdropMat = new THREE.MeshBasicMaterial({ map: gradTex });\n  const backdrop = new THREE.Mesh(backdropGeo, backdropMat);\n  backdrop.position.z = -2.5;\n  group.add(backdrop);\n\n  // Create the hero plane with the provided image\n  const planeGeo = new THREE.PlaneGeometry(3.5, 2.2);\n  let planeMat;\n  \n  // Load the image texture\n  ctx.textureLoader.loadTexture(config.imageUrl).then((imgTex) => {\n    imgTex.colorSpace = THREE.SRGBColorSpace;\n    imgTex.magFilter = THREE.LinearFilter;\n    imgTex.minFilter = THREE.LinearFilter;\n    planeMat.map = imgTex;\n    planeMat.needsUpdate = true;\n  });\n\n  planeMat = new THREE.MeshBasicMaterial({\n    color: 0xffffff,\n    transparent: true,\n    opacity: 1.0\n  });\n\n  const plane = new THREE.Mesh(planeGeo, planeMat);\n  plane.position.z = 0;\n  group.add(plane);\n\n  // Render the hero subhead text\n  // \"Atelier Noir — precise · luxury · technical\"\n  const headlineText = ctx.fontAtlas.createText('Atelier Noir — precise · luxury · technical', {\n    fontSize: 42,\n    color: '#e8ecf2',\n    align: 'center',\n    letterSpacingPx: 0\n  });\n  \n  headlineText.position.set(0, -1.4, 0.1);\n  group.add(headlineText);\n\n  // Setup cleanup\n  group.userData.cleanup = () => {\n    backdropGeo.dispose();\n    planeGeo.dispose();\n    backdropMat.dispose();\n    planeMat.dispose();\n    if (planeMat.map) planeMat.map.dispose();\n    gradTex.dispose();\n    gradientCanvas.remove();\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

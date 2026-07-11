@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-31-moderate-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 12872,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3807,
+    "completionTokens": 2180
+  },
+  "costUsd": 0.00187905,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { parallaxScroll } from '@/primitives';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // ------------------------------------------------------------------------\n  // Geometry & Material\n  // ------------------------------------------------------------------------\n  // Use aspect from the provided image (512x320) → 1.6:1\n  const aspect = 512 / 320;\n  const geometry = new PlaneGeometry(aspect, 1);\n  const material = new MeshBasicNodeMaterial({ transparent: true, depthWrite: false });\n\n  // Load texture asynchronously\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  const plane = new Mesh(geometry, material);\n  plane.castShadow = true;\n  root.add(plane);\n\n  // ------------------------------------------------------------------------\n  // Text content\n  // ------------------------------------------------------------------------\n  const items =\n    config.textContent ??\n    config.intent?.visualSpec?.textContent ??\n    [];\n\n  for (const item of items) {\n    const textObj = ctx.fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize ?? 39,\n      color: (config.visualSpec?.colors?.paper ?? '#e8ecf2'),\n      align: 'center',\n    });\n    // Slightly in front of the plane\n    textObj.position.set(0, 0, 0.01);\n    root.add(textObj);\n  }\n\n  // ------------------------------------------------------------------------\n  // Interaction handlers (hover & click)\n  // ------------------------------------------------------------------------\n  const hoverTL = gsap.timeline({ paused: true });\n  hoverTL.to(\n    plane.position,\n    {\n      y: plane.position.y + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    },\n  );\n\n  const pressTL = gsap.timeline({ paused: true });\n  pressTL.to(\n    plane.scale,\n    {\n      x: 0.97,\n      y: 0.97,\n      z: 0.97,\n      duration: 0.12,\n      ease: 'back.out',\n    },\n  );\n\n  root.userData.handlers = {\n    hover: () => hoverTL.play(0),\n    unhover: () => hoverTL.reverse(),\n    click: () => {\n      pressTL.restart();\n      ctx.emit('hub-journal.select', {});\n    },\n  };\n\n  // ------------------------------------------------------------------------\n  // Cinematic primitives\n  // ------------------------------------------------------------------------\n  const primitiveInstances = [];\n\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      if (prim.name && ctx.primitives[prim.name]) {\n        const inst = ctx.primitives[prim.name](root, prim.params ?? {});\n        primitiveInstances.push(inst);\n      }\n    }\n  }\n\n  // ------------------------------------------------------------------------\n  // Cleanup\n  // ------------------------------------------------------------------------\n  root.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    hoverTL.kill();\n    pressTL.kill();\n    for (const inst of primitiveInstances) {\n      if (inst && typeof inst.cleanup === 'function') {\n        inst.cleanup();\n      }\n    }\n  };\n\n  return root;\n}"
+}

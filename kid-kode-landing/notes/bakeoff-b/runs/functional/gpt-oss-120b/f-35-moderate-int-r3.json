@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-35-moderate-int",
+  "run": 3,
+  "ok": true,
+  "wallMs": 14691,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3841,
+    "completionTokens": 1976
+  },
+  "costUsd": 0.00176175,
+  "billing": "metered",
+  "output": "import { MeshStandardNodeMaterial } from 'three/webgpu';\nimport { texture, uv, mul } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport {} from '@/primitives';\nimport {} from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Vector3 } = ctx.THREE;\n\n  // Helper to safely get config values\n  const position = config.position ?? [-1.25, 1.6, 0];\n  const rotation = config.rotation ?? [0, 0, 0];\n  const scale = config.scale ?? [1, 1, 1];\n\n  const nodeGroup = new Group();\n  nodeGroup.position.set(...position);\n  nodeGroup.rotation.set(...rotation);\n  nodeGroup.scale.set(...scale);\n\n  // Geometry\n  const geometry = new PlaneGeometry(1, 1, 64, 64);\n\n  // Base material (placeholder until textures load)\n  const material = new MeshStandardNodeMaterial({\n    color: 0xffffff,\n    roughness: 0.7,\n    metalness: 0.0,\n    transparent: true,\n  });\n\n  const mesh = new Mesh(geometry, material);\n  nodeGroup.add(mesh);\n\n  // Load textures asynchronously\n  let colorTex = null;\n  let depthTex = null;\n\n  const disposables = [];\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      colorTex = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n      disposables.push(() => tex.dispose());\n    });\n  }\n\n  if (config.depthMapUrl) {\n    ctx.textureLoader.loadTexture(config.depthMapUrl).then((tex) => {\n      depthTex = tex;\n      // Build displacement node once depth texture is ready\n      const dispNode = mul(texture(depthTex), 0.15); // subtle displacement strength\n      material.displacementNode = dispNode;\n      material.needsUpdate = true;\n      disposables.push(() => tex.dispose());\n    });\n  }\n\n  // Parallax effect primitive (if exists)\n  const primitiveHandles = [];\n  if (ctx.primitives && ctx.primitives['parallax-scroll']) {\n    const ph = ctx.primitives['parallax-scroll'](nodeGroup, { intensity: 0.05 });\n    primitiveHandles.push(ph);\n  }\n\n  // Interaction timelines\n  const hoverTimeline = gsap.timeline({ paused: true });\n  hoverTimeline.to(\n    nodeGroup.position,\n    {\n      y: `+=0.15`,\n      duration: 0.7,\n      ease: 'power3.out',\n    }\n  );\n\n  // Handlers\n  const handlers = {\n    hoverEnter: () => {\n      hoverTimeline.play();\n    },\n    hoverLeave: () => {\n      hoverTimeline.reverse();\n    },\n    click: () => {\n      ctx.emit('hub-features.select');\n    },\n  };\n\n  nodeGroup.userData.handlers = handlers;\n\n  // Cleanup\n  nodeGroup.userData.cleanup = () => {\n    hoverTimeline.kill();\n    primitiveHandles.forEach((h) => {\n      if (h && typeof h.cleanup === 'function') h.cleanup();\n    });\n    disposables.forEach((fn) => fn());\n    geometry.dispose();\n    material.dispose();\n  };\n\n  return nodeGroup;\n}"
+}

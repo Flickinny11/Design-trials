@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-44-moderate",
+  "run": 1,
+  "ok": true,
+  "wallMs": 2503,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3720,
+    "completionTokens": 373
+  },
+  "costUsd": 0.00120975,
+  "billing": "metered",
+  "output": "import { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group } = ctx.THREE;\n  const root = new Group();\n\n  // Store timelines for cleanup\n  const _timelines = [];\n\n  // Load GLB mesh asynchronously and add to the group\n  if (config.meshUrl) {\n    ctx.glbLoader.loadGLB(config.meshUrl).then((gltf) => {\n      root.add(gltf.scene);\n    });\n  }\n\n  // ----- Interaction Handlers -----\n  root.userData.handlers = {};\n\n  // Hover lift (rise‑in) effect\n  const hoverTimeline = gsap.timeline({ paused: true });\n  hoverTimeline.to(\n    root.position,\n    {\n      y: root.position.y + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    }\n  );\n  _timelines.push(hoverTimeline);\n\n  root.userData.handlers.hover = {\n    enter: () => hoverTimeline.play(0),\n    leave: () => hoverTimeline.reverse(),\n  };\n\n  // Click emit\n  root.userData.handlers.click = {\n    click: () => ctx.emit('hub-home.select', {}),\n  };\n\n  // ----- Cleanup -----\n  root.userData.cleanup = () => {\n    // Kill GSAP timelines\n    _timelines.forEach((t) => t.kill());\n\n    // Dispose of GLTF resources if they were added\n    root.traverse((obj) => {\n      if (obj.isMesh) {\n        if (obj.geometry) obj.geometry.dispose();\n        const mat = obj.material;\n        if (Array.isArray(mat)) {\n          mat.forEach((m) => m.dispose());\n        } else if (mat) {\n          mat.dispose();\n        }\n      }\n    });\n  };\n\n  return root;\n}"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-30-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 4244,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3587,
+    "completionTokens": 355
+  },
+  "costUsd": 0.001163,
+  "billing": "metered",
+  "output": "import { Group, Mesh, PlaneGeometry, MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, texture as texNode } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport {} from '@/primitives';\nimport {} from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group: CGroup, Mesh: CMesh, PlaneGeometry: CPlaneGeometry, MeshBasicNodeMaterial: CMeshBasicNodeMaterial } = ctx.THREE;\n\n  // Create container\n  const container = new CGroup();\n\n  // Determine plane size from atlas region (512x320)\n  const aspect = 512 / 320;\n  const planeWidth = aspect;\n  const planeHeight = 1;\n\n  const geometry = new CPlaneGeometry(planeWidth, planeHeight);\n  const material = new CMeshBasicNodeMaterial();\n\n  const mesh = new CMesh(geometry, material);\n  container.add(mesh);\n\n  // Load texture if provided\n  let loadedTexture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      loadedTexture = tex;\n      const uvNode = uv();\n      material.mapNode = texNode(tex, uvNode);\n      material.needsUpdate = true;\n    });\n  }\n\n  // No primitives to apply\n  // No text content to render\n\n  // Event handlers placeholder\n  container.userData.handlers = {};\n\n  // Cleanup routine\n  container.userData.cleanup = () => {\n    // Dispose resources\n    if (loadedTexture) loadedTexture.dispose();\n    material.dispose();\n    geometry.dispose();\n    // Kill any GSAP timelines (none in this node)\n    gsap.globalTimeline.clear();\n  };\n\n  return container;\n}"
+}

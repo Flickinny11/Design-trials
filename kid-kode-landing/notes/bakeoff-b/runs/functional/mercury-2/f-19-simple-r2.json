@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-19-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 3080,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3565,
+    "completionTokens": 673
+  },
+  "costUsd": 0.001396,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport * as primitives from '@/primitives';\nimport * as textUtils from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container (position/rotation/scale applied by adapter)\n  const root = new Group();\n\n  // -------------------------------------------------\n  // 1. Textured plane (render mode: plane)\n  // -------------------------------------------------\n  const planeGeom = new PlaneGeometry(1, 1);\n  const planeMat = new MeshBasicNodeMaterial({ transparent: true });\n  const planeMesh = new Mesh(planeGeom, planeMat);\n  root.add(planeMesh);\n\n  // Load texture asynchronously, assign when ready\n  let loadedTexture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      loadedTexture = tex;\n      planeMat.map = tex;\n      planeMat.needsUpdate = true;\n    });\n  }\n\n  // -------------------------------------------------\n  // 2. Text content via fontAtlas\n  // -------------------------------------------------\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const textObjects = [];\n\n  for (const item of items) {\n    const txt = item.text ?? '';\n    const fontSize = item.typography?.fontSize ?? 39; // default from spec\n    const color = (config.intent?.visualSpec?.colors?.paper) || '#e8ecf2';\n    const textObj = ctx.fontAtlas.createText(txt, {\n      fontSize,\n      color,\n      align: 'center',\n    });\n    // Position text slightly in front of the plane to avoid Z‑fighting\n    textObj.position.set(0, 0, 0.01);\n    root.add(textObj);\n    textObjects.push(textObj);\n  }\n\n  // -------------------------------------------------\n  // 3. Cinematic primitives (none in this spec)\n  // -------------------------------------------------\n  const primitiveHandles = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const fn = ctx.primitives[prim.name];\n      if (typeof fn === 'function') {\n        const handle = fn(root, prim.params);\n        primitiveHandles.push(handle);\n      }\n    }\n  }\n\n  // -------------------------------------------------\n  // 4. Event handlers placeholder\n  // -------------------------------------------------\n  root.userData.handlers = {};\n\n  // -------------------------------------------------\n  // 5. Cleanup routine\n  // -------------------------------------------------\n  root.userData.cleanup = () => {\n    // Dispose geometry and material\n    planeGeom.dispose();\n    planeMat.dispose();\n\n    // Dispose loaded texture if any\n    if (loadedTexture && loadedTexture.dispose) {\n      loadedTexture.dispose();\n    }\n\n    // Dispose any text objects (their internal resources)\n    for (const txt of textObjects) {\n      if (txt.geometry) txt.geometry.dispose();\n      if (txt.material) txt.material.dispose();\n    }\n\n    // Cleanup primitives\n    for (const ph of primitiveHandles) {\n      if (ph && typeof ph.cleanup === 'function') ph.cleanup();\n    }\n\n    // Kill any GSAP timelines (none used here but defensive)\n    gsap.globalTimeline.clear();\n  };\n\n  return root;\n}"
+}

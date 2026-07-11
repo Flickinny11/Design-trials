@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-30-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 10708,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3742,
+    "completionTokens": 1772
+  },
+  "costUsd": 0.0016245,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, DoubleSide, Vector2 } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Determine plane size from atlas region (width:height = 512:320)\n  const aspect = 512 / 320;\n  const geometry = new PlaneGeometry(aspect, 1);\n\n  // Basic material; texture will be assigned asynchronously\n  const material = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    side: DoubleSide,\n    // Ensure node material uses UV coordinates (default is uv())\n    uvNode: uv(),\n  });\n\n  const mesh = new Mesh(geometry, material);\n  // No explicit interaction handlers for this static sprite\n  mesh.userData.handlers = {};\n\n  root.add(mesh);\n\n  // Load the texture and apply it when ready\n  ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    material.map = tex;\n    material.needsUpdate = true;\n  });\n\n  // Cleanup routine to dispose all allocated resources\n  root.userData.cleanup = () => {\n    // Dispose texture if it was set\n    if (material.map) {\n      material.map.dispose();\n    }\n    material.dispose();\n    geometry.dispose();\n    // Remove references\n    mesh.geometry = null;\n    mesh.material = null;\n    root.clear();\n  };\n\n  return root;\n}"
+}

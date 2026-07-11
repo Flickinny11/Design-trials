@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-26-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 3346,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3626,
+    "completionTokens": 565
+  },
+  "costUsd": 0.00133025,
+  "billing": "metered",
+  "output": "import { Group, Mesh, PlaneGeometry, MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { primitives } from '@/primitives';\nimport { text } from '@/text';\n\nexport default function createNode(config, ctx) {\n  // Root object\n  const root = new Group();\n  root.name = config.name || 'PricingCard3';\n\n  // Plane geometry – size based on image aspect (512:320 ≈ 1.6:1)\n  const planeWidth = 1.6;\n  const planeHeight = 1.0;\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n  const material = new MeshBasicNodeMaterial();\n  const plane = new Mesh(geometry, material);\n  root.add(plane);\n\n  // Load texture asynchronously, keep reference for cleanup\n  let texture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      texture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Create text objects from config\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const textObjects = [];\n  for (const item of textItems) {\n    const opts = {\n      fontSize: item.typography?.fontSize ?? 39,\n      color: (config.intent?.visualSpec?.colors?.paper) ?? '#e8ecf2',\n      align: 'center',\n    };\n    const txt = ctx.fontAtlas.createText(item.text, opts);\n    // Position text slightly in front of the plane\n    txt.position.set(0, 0, 0.01);\n    root.add(txt);\n    textObjects.push(txt);\n  }\n\n  // No cinematic primitives for this node, but keep placeholder for future\n  const primitiveHandles = [];\n\n  // Handlers container (none defined)\n  root.userData.handlers = {};\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Dispose primitives if any (none here)\n    for (const ph of primitiveHandles) {\n      if (ph && typeof ph.cleanup === 'function') ph.cleanup();\n    }\n\n    // Dispose texture\n    if (texture) {\n      texture.dispose();\n      texture = null;\n    }\n\n    // Dispose material & geometry\n    material.dispose();\n    geometry.dispose();\n\n    // Remove and dispose text objects\n    for (const txt of textObjects) {\n      if (txt.parent) txt.parent.remove(txt);\n    }\n    textObjects.length = 0;\n\n    // Kill any GSAP timelines (none used here)\n    gsap.globalTimeline.clear();\n\n    // Clear handlers\n    root.userData.handlers = {};\n  };\n\n  return root;\n}"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-19-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 11524,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3742,
+    "completionTokens": 2005
+  },
+  "costUsd": 0.0017643,
+  "billing": "metered",
+  "output": "import { Group, Mesh, PlaneGeometry, MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { createNode as _ } from '@/primitives'; // placeholder to ensure '@/primitives' is imported (no side‑effects)\n\n/**\n * @param {any} config\n * @param {any} ctx\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  const { Group: CGroup, Mesh: CMesh, PlaneGeometry: CPlaneGeometry, MeshBasicNodeMaterial: CMeshBasicNodeMaterial } = ctx.THREE;\n\n  // Root container (the adapter will apply position/rotation/scale)\n  const root = new CGroup();\n\n  // ---------- Plane ----------\n  const planeGeom = new CPlaneGeometry(1, 1);\n  const planeMat = new CMeshBasicNodeMaterial({ color: 0xffffff, map: null });\n  const planeMesh = new CMesh(planeGeom, planeMat);\n  root.add(planeMesh);\n\n  // Load texture asynchronously – function stays synchronous\n  const cleanup = { textures: [], primitives: [] };\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      planeMat.map = tex;\n      planeMat.needsUpdate = true;\n      cleanup.textures.push(tex);\n    });\n  }\n\n  // ---------- Text ----------\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  if (items.length) {\n    const textGroup = new CGroup();\n    for (const item of items) {\n      const txtOpts = {\n        fontSize: item.typography?.fontSize ?? 39,\n        color: '#e8ecf2', // paper color for headline\n        align: 'center',\n        maxWidthPx: undefined,\n        letterSpacingPx: undefined,\n      };\n      const txtObj = ctx.fontAtlas.createText(item.text ?? '', txtOpts);\n      textGroup.add(txtObj);\n    }\n    root.add(textGroup);\n  }\n\n  // ---------- Cinematic Primitives ----------\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      if (typeof ctx.primitives[prim.name] === 'function') {\n        const result = ctx.primitives[prim.name](root, prim.params);\n        if (result && typeof result.cleanup === 'function') {\n          cleanup.primitives.push(result);\n        }\n      }\n    }\n  }\n\n  // ---------- UserData & Cleanup ----------\n  root.userData.handlers = {};\n\n  root.userData.cleanup = () => {\n    // Dispose geometry & material\n    planeGeom.dispose();\n    planeMat.dispose();\n\n    // Dispose loaded textures\n    for (const tex of cleanup.textures) {\n      tex.dispose();\n    }\n\n    // Cleanup primitives and their timelines\n    for (const prim of cleanup.primitives) {\n      if (typeof prim.cleanup === 'function') prim.cleanup();\n    }\n\n    // Kill any GSAP timelines that might have been created elsewhere\n    gsap.globalTimeline.clear();\n  };\n\n  return root;\n}"
+}

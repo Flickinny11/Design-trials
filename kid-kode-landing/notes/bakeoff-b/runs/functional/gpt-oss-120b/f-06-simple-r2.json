@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-06-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 14984,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3750,
+    "completionTokens": 2402
+  },
+  "costUsd": 0.0020037,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport { } from '@/primitives';\nimport { } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, DoubleSide } = ctx.THREE;\n\n  // Root container – will be positioned by the adapter\n  const root = new Group();\n\n  // --- Geometry -------------------------------------------------------------\n  // Atlas region (fallback to full image size if not supplied)\n  const atlasRect = (config.atlas && config.atlas.sourceRect) || [0, 0, 512, 320];\n  const width = atlasRect[2];\n  const height = atlasRect[3];\n  const aspect = width / height;\n  const planeWidth = aspect; // 1 unit tall, width based on aspect\n  const planeHeight = 1;\n\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n\n  // --- Material --------------------------------------------------------------\n  const material = new MeshBasicNodeMaterial({\n    side: DoubleSide,\n    transparent: true,\n    alphaTest: 0.5,\n    // map will be assigned once the texture loads\n    map: null,\n  });\n\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // --- Billboard (face camera) ------------------------------------------------\n  const onBeforeRender = (renderer, scene, camera) => {\n    mesh.lookAt(camera.position);\n  };\n  mesh.onBeforeRender = onBeforeRender;\n\n  // --- Load texture -----------------------------------------------------------\n  let loadedTexture = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      loadedTexture = tex;\n      material.map = texture(tex);\n      material.needsUpdate = true;\n    });\n  }\n\n  // --- Text ---------------------------------------------------------------\n  const rawItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const items = Array.isArray(rawItems) ? rawItems : [{ text: rawItems }];\n\n  for (const item of items) {\n    const content = item.text ?? item.content ?? '';\n    if (!content) continue;\n\n    const txt = ctx.fontAtlas.createText(content, {\n      fontSize: (item.typography && item.typography.fontSize) || 96,\n      color: (config.visual && config.visual.colors && config.visual.colors.paper) || '#e8ecf2',\n      align: 'center',\n    });\n\n    // Position text slightly above the plane to avoid z‑fighting\n    txt.position.set(0, 0, 0.01);\n    mesh.add(txt);\n  }\n\n  // --- Cleanup --------------------------------------------------------------\n  root.userData.cleanup = () => {\n    // Dispose geometry and material\n    geometry.dispose();\n    material.dispose();\n\n    // Dispose loaded texture\n    if (loadedTexture) {\n      loadedTexture.dispose();\n      loadedTexture = null;\n    }\n\n    // Remove the before‑render hook\n    mesh.onBeforeRender = null;\n\n    // Kill any GSAP timelines that might have been created (none in this node)\n    gsap.killTweensOf(mesh);\n  };\n\n  // No interactive handlers required for this static node\n  root.userData.handlers = {};\n\n  return root;\n}"
+}

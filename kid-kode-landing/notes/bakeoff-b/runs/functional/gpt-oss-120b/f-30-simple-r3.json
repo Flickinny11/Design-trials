@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-30-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 13460,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3742,
+    "completionTokens": 2349
+  },
+  "costUsd": 0.0019706999999999997,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, texture } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Atlas region dimensions (source rect: 512 x 320)\n  const aspect = 512 / 320; // 1.6\n  const width = aspect; // keep height = 1 unit for simplicity\n  const height = 1;\n\n  // Geometry and material\n  const geometry = new PlaneGeometry(width, height);\n  const material = new MeshBasicNodeMaterial();\n\n  // Load texture (if provided)\n  const texturePromise = config.imageUrl\n    ? ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n        material.map = texture(tex, uv());\n        material.needsUpdate = true;\n        // Store reference for cleanup\n        root.userData._loadedTexture = tex;\n      })\n    : Promise.resolve();\n\n  // Mesh (billboard toward camera)\n  const mesh = new Mesh(geometry, material);\n  mesh.onBeforeRender = (_, __, camera) => {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n  root.add(mesh);\n\n  // No interactions; empty handler stub\n  root.userData.handlers = {};\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Dispose geometry and material\n    geometry.dispose();\n    material.dispose();\n\n    // Dispose loaded texture if any\n    if (root.userData._loadedTexture) {\n      root.userData._loadedTexture.dispose();\n      delete root.userData._loadedTexture;\n    }\n\n    // Kill any GSAP timelines that might have been created elsewhere\n    if (root.userData._timelines) {\n      root.userData._timelines.forEach((tl) => tl.kill());\n    }\n  };\n\n  // Store any timelines (none for this node but placeholder for future primitives)\n  root.userData._timelines = [];\n\n  return root;\n}"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-16-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 5677,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4372,
+    "completionTokens": 698
+  },
+  "costUsd": 0.007862,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, texture } from 'three/tsl';\n\nexport default async function createNode(config, ctx) {\n  const { Mesh, PlaneGeometry, Group } = ctx.THREE;\n\n  const group = new Group();\n  group.position.set(0, -0.3, 0);\n  group.rotation.set(0, 0, 0);\n  group.scale.set(1, 1, 1);\n\n  // Geometry: 512px / 320px ≈ 1.6:1 aspect\n  const aspect = 512 / 320;\n  const height = 2.0;\n  const width = height * aspect;\n  const geometry = new PlaneGeometry(width, height, 1, 1);\n\n  // Load the image\n  const imageUrl = config.imageUrl || '/prism-mock/home/nodes/orb-decor.png';\n  let imageTex = null;\n\n  try {\n    imageTex = await ctx.textureLoader.loadTexture(imageUrl);\n    imageTex.colorSpace = 'srgb';\n  } catch (err) {\n    console.warn('Failed to load image texture:', err);\n  }\n\n  // TSL material with engineered grain overlay\n  const uvNode = uv();\n\n  // Grain pattern (subtle procedural noise simulation via sin/cos modulation)\n  const grainAmount = 0.03;\n  const grain = mix(\n    vec3(1.0),\n    vec3(\n      Math.sin(uvNode.x * 50.0 + uvNode.y * 30.0) * 0.5 + 0.5,\n      Math.cos(uvNode.x * 40.0 + uvNode.y * 40.0) * 0.5 + 0.5,\n      Math.sin((uvNode.x + uvNode.y) * 35.0) * 0.5 + 0.5\n    ),\n    grainAmount\n  );\n\n  let colorNode = imageTex ? texture(imageTex, uvNode) : vec3(0.1, 0.1, 0.1);\n  colorNode = mix(colorNode, grain, grainAmount);\n\n  const material = new MeshBasicNodeMaterial({\n    colorNode,\n    transparent: true,\n    side: 2, // DoubleSide\n  });\n\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  // Cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (imageTex) {\n      imageTex.dispose();\n    }\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

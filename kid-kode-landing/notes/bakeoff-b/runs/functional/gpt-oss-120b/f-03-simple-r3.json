@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-03-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 7794,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3737,
+    "completionTokens": 1276
+  },
+  "costUsd": 0.0013261500000000001,
+  "billing": "metered",
+  "output": "import { Mesh, PlaneGeometry, Group } from 'three/webgpu';\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { } from '@/primitives';\nimport { } from '@/text';\n\n/**\n * @param {any} config\n * @param {any} ctx\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  // Fallback config handling\n  const imageUrl = config.imageUrl ?? (config.assets && config.assets.imageUrl);\n  // Atlas region – defaults to full texture if not provided\n  const atlas = config.atlasRegion || { x: 0, y: 0, width: 512, height: 320 };\n  const aspect = atlas.width / atlas.height;\n\n  // Root container\n  const root = new Group();\n\n  // Geometry sized to the atlas aspect ratio\n  const geometry = new PlaneGeometry(aspect, 1, 1, 1);\n  const material = new MeshBasicNodeMaterial();\n  const mesh = new Mesh(geometry, material);\n  // Ensure the plane does not receive shadows (sprite‑like)\n  mesh.castShadow = false;\n  mesh.receiveShadow = false;\n  root.add(mesh);\n\n  // Billboard: orient toward the active camera each frame\n  mesh.onBeforeRender = (_, __, camera) => {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  // Load texture asynchronously and assign when ready\n  let loadedTexture = null;\n  if (imageUrl) {\n    ctx.textureLoader.loadTexture(imageUrl).then((tex) => {\n      loadedTexture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // User data for event handlers (none for this node)\n  root.userData.handlers = {};\n\n  // Keep track of GSAP timelines for cleanup (none created here)\n  const timelines = [];\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Dispose geometry\n    geometry.dispose();\n    // Dispose material\n    material.dispose();\n    // Dispose texture if we loaded one\n    if (loadedTexture && loadedTexture.dispose) {\n      loadedTexture.dispose();\n    }\n    // Kill any GSAP timelines\n    timelines.forEach((tl) => tl.kill());\n  };\n\n  return root;\n}"
+}

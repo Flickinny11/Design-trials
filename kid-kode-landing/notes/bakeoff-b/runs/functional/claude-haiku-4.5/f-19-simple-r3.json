@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-19-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 8563,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4386,
+    "completionTokens": 1090
+  },
+  "costUsd": 0.009836,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, texture, mul, add, vec3 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Vector3 } = ctx.THREE;\n\n  const group = new Group();\n  group.name = 'hub-collection-card-3-label';\n\n  // ============================================================================\n  // 1. BUILD STAGE BACKDROP (gradient surface, ~7x6 units at z=-2.5)\n  // ============================================================================\n  const stageGeo = new PlaneGeometry(7, 6);\n  const colors = config.intent?.visualSpec?.colors || {\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    surface: '#0b0b10'\n  };\n\n  // Engineered vertical gradient: surface (dark bottom) -> paper (light top)\n  const gradientStops = [\n    { position: 0, color: colors.surface },\n    { position: 1, color: colors.paper }\n  };\n\n  const stageUvNode = uv();\n  const gradientNode = stageUvNode.y; // vertical gradient (0 at bottom, 1 at top)\n\n  // Smooth interpolation between gradient stops\n  const color0 = vec3(0.043, 0.043, 0.063); // #0b0b10 (surface)\n  const color1 = vec3(0.91, 0.925, 0.949); // #e8ecf2 (paper)\n  const stageColorNode = add(\n    mul(color0, add(1, mul(gradientNode, -1))),\n    mul(color1, gradientNode)\n  );\n\n  const stageMat = new MeshBasicNodeMaterial({\n    colorNode: stageColorNode,\n    side: 1 // DoubleSide\n  });\n  const stagePlane = new Mesh(stageGeo, stageMat);\n  stagePlane.position.z = -2.5;\n  stagePlane.renderOrder = -10;\n  group.add(stagePlane);\n\n  // ============================================================================\n  // 2. LOAD IMAGE & CREATE CARD PLANE\n  // ============================================================================\n  const cardGeo = new PlaneGeometry(2.4, 1.5);\n  let cardMat = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    transparent: true,\n    side: 1\n  });\n  const cardMesh = new Mesh(cardGeo, cardMat);\n\n  // Load texture asynchronously\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      cardMat.colorNode = texture(tex);\n      cardMat.needsUpdate = true;\n    });\n  }\n\n  cardMesh.position.copy(new Vector3(3.2, 1, 0.06));\n  cardMesh.renderOrder = 10;\n  group.add(cardMesh);\n\n  // ============================================================================\n  // 3. RENDER TEXT: \"Collection 3\" (headline, 39px 400)\n  // ============================================================================\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const headlineItem = textItems.find((item) => item.role === 'headline');\n\n  if (headlineItem) {\n    const textContent = headlineItem.text || 'Collection 3';\n    const fontSize = headlineItem.typography?.fontSize || 39;\n\n    const headlineText = ctx.fontAtlas.createText(textContent, {\n      fontSize: fontSize,\n      color: colors.ink, // #16161d\n      align: 'center',\n      letterSpacingPx: 2\n    });\n\n    headlineText.position.set(3.2, 1, 0.1);\n    headlineText.renderOrder = 15;\n    group.add(headlineText);\n  }\n\n  // ============================================================================\n  // 4. CLEANUP\n  // ============================================================================\n  group.userData.cleanup = () => {\n    stageGeo.dispose();\n    stageMat.dispose();\n    cardGeo.dispose();\n    cardMat.dispose();\n  };\n\n  return group;\n}\n```"
+}

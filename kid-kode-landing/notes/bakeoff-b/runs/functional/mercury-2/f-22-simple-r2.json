@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-22-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 3060,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3680,
+    "completionTokens": 375
+  },
+  "costUsd": 0.00120125,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { Group, Mesh, PlaneGeometry } from 'three';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new Group();\n\n  // --------- Plane Mesh ----------\n  const geometry = new PlaneGeometry(1, 1);\n  const material = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    transparent: true,\n    map: null,\n  });\n  const mesh = new Mesh(geometry, material);\n  group.add(mesh);\n\n  // Load texture asynchronously\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // --------- Text ----------\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    const txt = ctx.fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize ?? 39,\n      color: '#e8ecf2',\n      align: 'left',\n    });\n    group.add(txt);\n  }\n\n  // --------- User Data ----------\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    // Dispose material and geometry\n    if (material.map) material.map.dispose();\n    material.dispose();\n    geometry.dispose();\n\n    // Dispose any text resources\n    group.traverse((obj) => {\n      if (obj.isMesh) {\n        obj.geometry?.dispose();\n        obj.material?.dispose?.();\n      }\n    });\n\n    // Kill GSAP timelines (none in this node but safe)\n    gsap.globalTimeline.clear();\n  };\n\n  return group;\n}"
+}

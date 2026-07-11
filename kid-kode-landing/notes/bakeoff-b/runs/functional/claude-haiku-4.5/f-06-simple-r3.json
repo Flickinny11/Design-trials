@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-06-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 7999,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4391,
+    "completionTokens": 774
+  },
+  "costUsd": 0.008261,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, mix, vec3 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // Create group for the billboard plane\n  const group = new THREE.Group();\n\n  // Atlas region dimensions (512x320 from spec)\n  const atlasWidth = 512;\n  const atlasHeight = 320;\n  const aspectRatio = atlasWidth / atlasHeight;\n\n  // Create plane geometry sized to atlas aspect ratio\n  // Use a reasonable scene unit size (headline context ~2.5 units wide)\n  const planeWidth = 2.5;\n  const planeHeight = planeWidth / aspectRatio;\n\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  // Load the ceramic grain texture\n  ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n    // Configure texture for the atlas region\n    texture.flipY = false;\n\n    // Adjust UV coordinates for atlas region (top-left 512x320 of a larger atlas)\n    // Assuming a standard atlas layout; offset is 0,0 so no UV offset needed\n    const uvAttribute = geometry.getAttribute('uv');\n    // Atlas region: (0, 0, 512, 320) — if atlas is 2048x2048, that's (0,0) to (0.25, 0.15625)\n    // For now, assume full texture use since only region specified is entire source\n    uvAttribute.needsUpdate = true;\n\n    // Create material with texture node\n    const material = new MeshBasicNodeMaterial({\n      colorNode: texture,\n      side: THREE.DoubleSide,\n      transparent: true,\n      depthTest: true,\n      depthWrite: true,\n    });\n\n    const plane = new THREE.Mesh(geometry, material);\n\n    // Billboard toward camera (will be handled by adapter positioning)\n    plane.castShadow = false;\n    plane.receiveShadow = false;\n\n    group.add(plane);\n  });\n\n  // Create headline text via fontAtlas\n  // \"Features\" as a display-size headline (96px → scene scale ~0.34 em height per spec)\n  // Display role, serif (Lora), 400 weight, paper color (#e8ecf2)\n  const textObj = ctx.fontAtlas.createText('Features', {\n    fontSize: 96,\n    color: '#e8ecf2',\n    align: 'center',\n  });\n\n  // Position text below the textured plane\n  textObj.position.y = -planeHeight / 2 - 0.4;\n  textObj.position.z = 0.01; // Slight z offset to sit in front\n\n  group.add(textObj);\n\n  // Setup cleanup\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    // Material and texture are disposed by Three.js when group is removed\n    // GSAP timelines: none active for this static node\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-12-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 8074,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4398,
+    "completionTokens": 915
+  },
+  "costUsd": 0.008973,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec2 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  \n  // ============================================================================\n  // 1. LOAD TEXTURE\n  // ============================================================================\n  const texturePromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  \n  // ============================================================================\n  // 2. CREATE TEXT\n  // ============================================================================\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const textItem = textItems.find(item => item.role === 'headline') || textItems[0];\n  const textContent = textItem?.text || 'Features 3';\n  \n  const textMesh = ctx.fontAtlas.createText(textContent, {\n    fontSize: 39,\n    color: '#16161d',\n    align: 'center',\n  });\n  \n  // ============================================================================\n  // 3. CREATE SPRITE PLANE\n  // ============================================================================\n  // Atlas region: 512x320 = 1.6:1 aspect ratio\n  const atlasAspect = 512 / 320;\n  const planeWidth = 1.6;\n  const planeHeight = 1.0;\n  \n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n  \n  // UV offset for atlas region (0, 0, 512, 320 within a larger atlas)\n  // Assuming single-atlas region at top-left (no offset needed if single texture)\n  const uvAttr = geometry.getAttribute('uv');\n  // Texture coordinates: region starts at (0, 0) and spans (512, 320)\n  // If this is the entire texture, UVs remain [0,1] x [0,1]\n  // If atlas is larger, compute: offsetX = 0/atlasWidth, offsetY = 0/atlasHeight, scaleX = 512/atlasWidth, scaleY = 320/atlasHeight\n  // For now, assume the provided texture is pre-cropped to region\n  \n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n  });\n  \n  // Set up material with texture node\n  texturePromise.then((texture) => {\n    texture.colorSpace = THREE.SRGBColorSpace;\n    const uvNode = uv();\n    material.colorNode = uvNode.mul(vec2(texture)).sample(texture);\n    material.map = texture;\n    material.needsUpdate = true;\n  }).catch((err) => {\n    console.error('Texture load failed:', err);\n    material.color.setHex(0x16161d);\n  });\n  \n  const plane = new THREE.Mesh(geometry, material);\n  plane.position.z = 0.01; // Slight z-offset for layering\n  \n  // ============================================================================\n  // 4. ASSEMBLE GROUP\n  // ============================================================================\n  const group = new THREE.Group();\n  group.add(plane);\n  group.add(textMesh);\n  \n  // Position text overlay (centered on plane)\n  textMesh.position.z = 0.02;\n  textMesh.position.y = -0.15;\n  \n  // ============================================================================\n  // 5. CLEANUP\n  // ============================================================================\n  group.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    texturePromise.then((tex) => tex.dispose()).catch(() => {});\n  };\n  \n  group.userData.handlers = {};\n  \n  return group;\n}\n```"
+}

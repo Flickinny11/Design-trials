@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-45-moderate",
+  "run": 3,
+  "ok": true,
+  "wallMs": 17990,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3827,
+    "completionTokens": 2284
+  },
+  "costUsd": 0.00194445,
+  "billing": "metered",
+  "output": "import { MeshStandardNodeMaterial } from 'three/webgpu';\nimport { texture, mul, float } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Color } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n\n  // Geometry: thin rule\n  const geometry = new PlaneGeometry(2, 0.1, 64, 64);\n\n  // Node material\n  const material = new MeshStandardNodeMaterial();\n  material.color = new Color(\n    (config.intent?.visualSpec?.colors?.paper) ??\n      '#e8ecf2'\n  );\n\n  // Texture nodes (values will be set asynchronously)\n  const colorMapNode = texture();\n  const depthMapNode = texture();\n\n  // Assign nodes to material\n  material.mapNode = colorMapNode;\n  // Subtle displacement\n  material.displacementNode = mul(depthMapNode, float(0.04));\n\n  // Mesh\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Async texture loading\n  const loadedTextures = [];\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      colorMapNode.value = tex;\n      loadedTextures.push(tex);\n      material.needsUpdate = true;\n    });\n  }\n  if (config.depthMapUrl) {\n    ctx.textureLoader.loadTexture(config.depthMapUrl).then((tex) => {\n      depthMapNode.value = tex;\n      loadedTextures.push(tex);\n      material.needsUpdate = true;\n    });\n  }\n\n  // Hover rise‑in animation (0.15 scene units)\n  const hoverTl = gsap.timeline({ paused: true });\n  hoverTl.to(\n    mesh.position,\n    { y: '+=0.15', duration: 0.7, ease: 'power3.out' }\n  );\n\n  // Click handler emits navigation event\n  const onClick = () => {\n    ctx.emit('hub-features.select', {});\n  };\n\n  // User‑data handlers\n  root.userData.handlers = {\n    hover: () => hoverTl.play(),\n    hoverout: () => hoverTl.reverse(),\n    click: onClick,\n  };\n\n  // Apply parallax primitive if available\n  const primitiveRefs = [];\n  if (ctx.primitives && ctx.primitives['parallax-scroll']) {\n    const prim = ctx.primitives['parallax-scroll'](mesh, {\n      intensity: 0.15,\n    });\n    primitiveRefs.push(prim);\n  }\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    hoverTl.kill();\n    primitiveRefs.forEach((p) => p.cleanup && p.cleanup());\n    geometry.dispose();\n    material.dispose();\n    // Textures are cached; dispose if they were created uniquely\n    loadedTextures.forEach((tex) => {\n      if (tex && tex.dispose) tex.dispose();\n    });\n  };\n\n  return root;\n}"
+}

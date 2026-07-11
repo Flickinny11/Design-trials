@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-37-moderate-int",
+  "run": 1,
+  "ok": true,
+  "wallMs": 6710,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4456,
+    "completionTokens": 1007
+  },
+  "costUsd": 0.009491,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, mix, uniform } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Vector3, Quaternion } = ctx.THREE;\n\n  const group = new Group();\n  group.userData.handlers = {};\n  const cleanupFns = [];\n\n  // ========== STAGE BACKDROP ==========\n  const backdropGeom = new PlaneGeometry(7, 6);\n  const backdropMat = new MeshBasicNodeMaterial({\n    color: 0x0b0b10,\n  });\n  const backdrop = new Mesh(backdropGeom, backdropMat);\n  backdrop.position.z = -2.5;\n  backdrop.renderOrder = 0;\n  group.add(backdrop);\n\n  // ========== QUOTE PANEL PLANE ==========\n  const planeGeom = new PlaneGeometry(3, 2);\n  const planeMat = new MeshBasicNodeMaterial({\n    color: 0xe8ecf2,\n  });\n\n  // Load the feature card image and apply as texture\n  const imagePromise = ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    planeMat.map = tex;\n    planeMat.needsUpdate = true;\n  });\n\n  const plane = new Mesh(planeGeom, planeMat);\n  plane.position.copy(new Vector3(1.25, 1.6, 0));\n  plane.renderOrder = 10;\n  group.add(plane);\n\n  // ========== PARALLAX SCROLL PRIMITIVE ==========\n  let primitiveResult = null;\n  if (config.cinematicPrimitives && config.cinematicPrimitives.length > 0) {\n    const parallaxCfg = config.cinematicPrimitives.find((p) => p.name === 'parallax-scroll');\n    if (parallaxCfg) {\n      primitiveResult = ctx.primitives['parallax-scroll'](plane, parallaxCfg.params || { intensity: 0.25 });\n      if (primitiveResult && primitiveResult.cleanup) {\n        cleanupFns.push(() => primitiveResult.cleanup());\n      }\n    }\n  }\n\n  // ========== INTERACTION: HOVER (rise-in) ==========\n  const hoverTimeline = gsap.timeline({ paused: true });\n  hoverTimeline.to(\n    plane.position,\n    {\n      y: plane.position.y + 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    },\n    0\n  );\n\n  group.userData.handlers.pointerEnter = () => {\n    hoverTimeline.play();\n  };\n\n  group.userData.handlers.pointerLeave = () => {\n    hoverTimeline.reverse();\n  };\n\n  // ========== INTERACTION: CLICK (press-down + emit) ==========\n  const pressTimeline = gsap.timeline({ paused: true });\n  pressTimeline.to(\n    plane.scale,\n    {\n      x: 0.97,\n      y: 0.97,\n      duration: 0.12,\n      ease: 'back.out',\n    },\n    0\n  );\n\n  group.userData.handlers.click = () => {\n    pressTimeline.restart();\n    // Emit navigation event for pricing selection\n    ctx.emit('hub-pricing.select', { source: 'quote-panel' });\n  };\n\n  // ========== CLEANUP ==========\n  group.userData.cleanup = () => {\n    hoverTimeline.kill();\n    pressTimeline.kill();\n    cleanupFns.forEach((fn) => fn());\n    planeMat.dispose();\n    planeGeom.dispose();\n    backdropMat.dispose();\n    backdropGeom.dispose();\n  };\n\n  return group;\n}\n```"
+}

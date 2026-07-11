@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-24-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 7548,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4398,
+    "completionTokens": 909
+  },
+  "costUsd": 0.008943,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec2 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // Extract text content\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const textItem = items.find((item) => item.role === 'headline') || items[0];\n  const textContent = textItem?.text ?? 'Pricing 2';\n\n  // Atlas region dimensions (from spec)\n  const atlasWidth = 512;\n  const atlasHeight = 320;\n  const aspectRatio = atlasWidth / atlasHeight;\n\n  // Create plane geometry sized to aspect ratio\n  // Use a small scale to fit in scene; adjust height to control visibility\n  const planeWidth = aspectRatio * 1.2; // 1.92 units wide\n  const planeHeight = 1.2; // 1.2 units tall\n  const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);\n\n  // Load the ceramic grain texture\n  const group = new THREE.Group();\n  const timeline = [];\n  const cleanupFns = [];\n\n  ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n    // Configure texture for atlas region\n    texture.magFilter = THREE.LinearFilter;\n    texture.minFilter = THREE.LinearMipMapLinearFilter;\n    texture.flipY = false;\n\n    // UV offset for atlas region (0, 0, 512, 320) in a larger atlas\n    // Assuming atlas is 2048x2048 or similar; adjust if needed\n    const uvOffset = new THREE.Vector2(0, 0); // top-left\n    const uvScale = new THREE.Vector2(1, 1); // full region\n\n    texture.offset.copy(uvOffset);\n    texture.repeat.copy(uvScale);\n\n    // Create material with TSL nodes for flexibility\n    const material = new MeshBasicNodeMaterial({\n      map: texture,\n      color: 0xffffff,\n      transparent: true,\n      side: THREE.DoubleSide,\n      toneMapped: false,\n    });\n\n    // Create mesh\n    const mesh = new THREE.Mesh(geometry, material);\n    mesh.castShadow = false;\n    mesh.receiveShadow = false;\n\n    // Billboard toward camera (always face forward)\n    mesh.position.copy(config.scenePosition || new THREE.Vector3(0, 1, 0.06));\n    mesh.quaternion.setFromEuler(\n      new THREE.Euler(0, 0, 0, 'XYZ')\n    );\n\n    group.add(mesh);\n\n    // Render text label on top\n    if (textContent && ctx.fontAtlas) {\n      const textMesh = ctx.fontAtlas.createText(textContent, {\n        fontSize: 39,\n        color: '#16161d', // ink\n        align: 'center',\n        letterSpacingPx: 0,\n      });\n\n      if (textMesh) {\n        textMesh.position.z = 0.1; // Slight offset forward\n        textMesh.scale.set(0.85, 0.85, 1); // Scale down to fit card\n        group.add(textMesh);\n      }\n    }\n  });\n\n  // Setup cleanup\n  group.userData.cleanup = () => {\n    timeline.forEach((t) => t.kill());\n    cleanupFns.forEach((fn) => fn());\n    geometry.dispose();\n  };\n\n  group.userData.handlers = {};\n\n  return group;\n}\n```"
+}

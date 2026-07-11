@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-5.6-luna",
+  "model": "openai/gpt-5.6-luna",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-14-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 395,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3684,
+    "completionTokens": 2380
+  },
+  "costUsd": 0.017964,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { mix, smoothstep, uv, vec3 } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n  const root = new Group();\n  const ownedGeometries = [];\n  const ownedMaterials = [];\n  const ownedTextures = [];\n  const timelines = [];\n  let disposed = false;\n\n  const makeBasicMaterial = (options = {}) => {\n    const material = new MeshBasicNodeMaterial(options);\n    ownedMaterials.push(material);\n    return material;\n  };\n\n  const makePlane = (width, height, material, x = 0, y = 0, z = 0) => {\n    const geometry = new PlaneGeometry(width, height);\n    ownedGeometries.push(geometry);\n\n    const mesh = new Mesh(geometry, material);\n    mesh.position.set(x, y, z);\n    root.add(mesh);\n    return mesh;\n  };\n\n  const backdropMaterial = makeBasicMaterial();\n  backdropMaterial.colorNode = mix(\n    vec3(0.043, 0.043, 0.063),\n    mix(\n      vec3(0.086, 0.086, 0.114),\n      vec3(0.02, 0.02, 0.031),\n      smoothstep(0.42, 1.0, uv().y)\n    ),\n    smoothstep(0.0, 1.0, uv().y)\n  );\n  makePlane(7.2, 6.0, backdropMaterial, 0, 0, -2.5);\n\n  const shadowMaterial = makeBasicMaterial({\n    color: '#050509',\n    transparent: true,\n    opacity: 0.46\n  });\n  makePlane(2.95, 1.92, shadowMaterial, 0.08, -0.08, -0.16);\n\n  const backingMaterial = makeBasicMaterial({\n    color: '#16161d'\n  });\n  makePlane(2.7, 1.78, backingMaterial, 0, 0, -0.08);\n\n  const imageMaterial = makeBasicMaterial({\n    color: '#e8ecf2'\n  });\n  const imageMesh = makePlane(2.5, 1.5625, imageMaterial, 0, 0.02, 0.08);\n\n  const accentMaterial = makeBasicMaterial({\n    color: '#ff2a38'\n  });\n  makePlane(0.045, 1.18, accentMaterial, 1.31, 0.02, 0.18);\n  makePlane(0.72, 0.045, accentMaterial, 0.93, -0.79, 0.18);\n\n  const paperMaterial = makeBasicMaterial({\n    color: '#e8ecf2',\n    transparent: true,\n    opacity: 0.78\n  });\n  makePlane(0.42, 0.025, paperMaterial, -1.02, 0.82, 0.18);\n\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((texture) => {\n      if (disposed) {\n        texture.dispose();\n        return;\n      }\n\n      ownedTextures.push(texture);\n      if (ctx.THREE.SRGBColorSpace) texture.colorSpace = ctx.THREE.SRGBColorSpace;\n      imageMaterial.map = texture;\n      imageMaterial.needsUpdate = true;\n    }).catch(() => {});\n  }\n\n  root.userData.handlers = {};\n  root.userData.cleanup = () => {\n    if (disposed) return;\n    disposed = true;\n\n    for (const timeline of timelines) {\n      if (timeline && typeof timeline.kill === 'function') timeline.kill();\n    }\n\n    for (const texture of ownedTextures) texture.dispose();\n    for (const material of ownedMaterials) material.dispose();\n    for (const geometry of ownedGeometries) geometry.dispose();\n\n    root.userData.handlers = {};\n  };\n\n  return root;\n}"
+}

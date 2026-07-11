@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-21-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 11487,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3744,
+    "completionTokens": 2147
+  },
+  "costUsd": 0.0018498000000000002,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { texture } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport { } from '@/primitives';\nimport { } from '@/text';\n\n/**\n * @param {Object} config\n * @param {Object} ctx\n * @returns {THREE.Object3D}\n */\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container (position/rotation/scale will be applied by the adapter)\n  const root = new Group();\n\n  // Determine the atlas region – fallback to full texture if not provided\n  const atlasInfo = config.atlas ?? {};\n  const srcRect = atlasInfo.sourceRect ?? { x: 0, y: 0, width: 512, height: 320 };\n  const atlasSize = atlasInfo.atlasSize ?? { width: srcRect.width, height: srcRect.height };\n\n  const aspect = srcRect.width / srcRect.height;\n  const planeWidth = 1 * aspect; // arbitrary unit height = 1\n  const planeHeight = 1;\n\n  // Geometry\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n  geometry.rotateX(-Math.PI / 2); // align plane upright (optional, depends on camera)\n\n  // Basic node material (transparent sprite)\n  const material = new MeshBasicNodeMaterial({\n    transparent: true,\n    depthTest: true,\n    depthWrite: false,\n  });\n\n  // Mesh\n  const mesh = new Mesh(geometry, material);\n  mesh.frustumCulled = false; // ensures visibility even when tiny\n\n  // Billboard – always face the camera\n  mesh.onBeforeRender = (_, __, camera) => {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n\n  root.add(mesh);\n\n  // Load texture asynchronously (function stays synchronous)\n  let textureNode = null;\n  const texPromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  texPromise.then((tex) => {\n    // Apply UV offset/repeat if an atlas region is defined\n    if (atlasInfo && atlasInfo.sourceRect && atlasInfo.atlasSize) {\n      const u = srcRect.x / atlasSize.width;\n      const v = srcRect.y / atlasSize.height;\n      const uScale = srcRect.width / atlasSize.width;\n      const vScale = srcRect.height / atlasSize.height;\n      tex.offset.set(u, v);\n      tex.repeat.set(uScale, vScale);\n    }\n\n    textureNode = texture(tex);\n    material.mapNode = textureNode;\n    material.needsUpdate = true;\n  });\n\n  // No cinematic primitives to apply – placeholder for future extensions\n  // (if config.cinematicPrimitives existed we would iterate here)\n\n  // Event handlers placeholder (none defined in spec)\n  root.userData.handlers = {};\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n\n    // Dispose the loaded texture if it was created\n    if (textureNode && textureNode.value) {\n      textureNode.value.dispose();\n    }\n\n    // Kill any GSAP timelines that might have been created elsewhere\n    gsap.globalTimeline.clear();\n  };\n\n  return root;\n}"
+}

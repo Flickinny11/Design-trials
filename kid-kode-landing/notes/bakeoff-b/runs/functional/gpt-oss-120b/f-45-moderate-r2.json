@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-45-moderate",
+  "run": 2,
+  "ok": true,
+  "wallMs": 14626,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3827,
+    "completionTokens": 2705
+  },
+  "costUsd": 0.0021970500000000003,
+  "billing": "metered",
+  "output": "import { MeshStandardNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { } from '@/primitives';\nimport { } from '@/text';\nimport { } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Color } = ctx.THREE;\n\n  const root = new Group();\n\n  // Plane geometry with sufficient tessellation for displacement\n  const geometry = new PlaneGeometry(1, 1, 64, 64);\n  const material = new MeshStandardNodeMaterial();\n  material.color = new Color('#16161d'); // base ink color\n  material.transparent = false;\n  material.displacementScale = 0.08; // subtle depth\n\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // Load diffuse texture\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Load depth map for displacement\n  if (config.depthMapUrl) {\n    ctx.textureLoader.loadTexture(config.depthMapUrl).then((tex) => {\n      material.displacementMap = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // Apply parallax primitive if available\n  const primitiveInstances = [];\n  const parallaxFn = ctx.primitives?.['parallax-scroll'];\n  if (parallaxFn) {\n    const p = parallaxFn(root, {});\n    primitiveInstances.push(p);\n  }\n\n  // Interaction timelines storage\n  const timelines = [];\n\n  // Hover rise‑in effect\n  const hoverEnter = () => {\n    const tl = gsap.to(mesh.position, {\n      y: 0.15,\n      duration: 0.7,\n      ease: 'power3.out',\n    });\n    timelines.push(tl);\n  };\n\n  const hoverLeave = () => {\n    const tl = gsap.to(mesh.position, {\n      y: 0,\n      duration: 0.5,\n      ease: 'power2.out',\n    });\n    timelines.push(tl);\n  };\n\n  // Click press‑down and emit navigation event\n  const onClick = () => {\n    const press = gsap.to(mesh.scale, {\n      x: 0.97,\n      y: 0.97,\n      z: 0.97,\n      duration: 0.12,\n      ease: 'back.out',\n      onComplete: () => {\n        const release = gsap.to(mesh.scale, {\n          x: 1,\n          y: 1,\n          z: 1,\n          duration: 0.2,\n          ease: 'power2.out',\n        });\n        timelines.push(release);\n      },\n    });\n    timelines.push(press);\n    ctx.emit('hub-features.select', {});\n  };\n\n  // Attach handlers\n  root.userData.handlers = {\n    hover: {\n      enter: hoverEnter,\n      leave: hoverLeave,\n    },\n    click: onClick,\n  };\n\n  // Cleanup routine\n  root.userData.cleanup = () => {\n    // Dispose geometry and material\n    geometry.dispose();\n    material.dispose();\n\n    // Kill GSAP timelines\n    timelines.forEach((tl) => {\n      if (tl && tl.kill) tl.kill();\n    });\n\n    // Cleanup primitive instances\n    primitiveInstances.forEach((inst) => {\n      if (inst && typeof inst.cleanup === 'function') {\n        inst.cleanup();\n      }\n    });\n  };\n\n  return root;\n}\n"
+}

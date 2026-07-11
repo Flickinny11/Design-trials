@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-13-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 4891,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3557,
+    "completionTokens": 516
+  },
+  "costUsd": 0.00127625,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // root container\n  const root = new Group();\n\n  // textured plane\n  const planeWidth = 1.6; // based on 512x320 aspect\n  const planeHeight = 1.0;\n  const geometry = new PlaneGeometry(planeWidth, planeHeight);\n  const material = new MeshBasicNodeMaterial({\n    color: 0xffffff,\n    map: null,\n    transparent: true,\n  });\n  const mesh = new Mesh(geometry, material);\n  root.add(mesh);\n\n  // async texture load (sync function)\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n  }\n\n  // text content\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    const txtOpts = {\n      fontSize: item.typography?.fontSize ?? 96,\n      color: (config.intent?.visualSpec?.colors?.paper) || '#e8ecf2',\n      align: 'center',\n    };\n    const txtObj = ctx.fontAtlas.createText(item.text, txtOpts);\n    root.add(txtObj);\n  }\n\n  // cinematic primitives\n  const primitiveInstances = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const instance = ctx.primitives[prim.name](root, prim.params);\n      primitiveInstances.push(instance);\n    }\n  }\n\n  // event handlers placeholder\n  root.userData.handlers = {};\n\n  // cleanup routine\n  root.userData.cleanup = () => {\n    // dispose geometry & material\n    geometry.dispose();\n    material.dispose();\n    if (material.map) material.map.dispose();\n\n    // primitive cleanups\n    for (const inst of primitiveInstances) {\n      if (inst && typeof inst.cleanup === 'function') inst.cleanup();\n    }\n\n    // dispose any child text objects that expose cleanup\n    for (const child of root.children) {\n      if (child.userData && typeof child.userData.cleanup === 'function') {\n        child.userData.cleanup();\n      }\n    }\n\n    // kill any GSAP timelines (none in this node but safe)\n    gsap.globalTimeline.clear();\n  };\n\n  return root;\n}"
+}

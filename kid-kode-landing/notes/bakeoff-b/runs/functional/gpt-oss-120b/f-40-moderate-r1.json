@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-40-moderate",
+  "run": 1,
+  "ok": true,
+  "wallMs": 12000,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3842,
+    "completionTokens": 1729
+  },
+  "costUsd": 0.0016136999999999998,
+  "billing": "metered",
+  "output": "import { MeshStandardNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { } from '@/primitives';\nimport { } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // Root container\n  const root = new Group();\n  root.name = config?.name ?? 'stat-tile-feature';\n  root.userData = {\n    handlers: {},\n    cleanup: () => {}\n  };\n\n  // Geometry\n  const geometry = new PlaneGeometry(2, 2, 64, 64); // size will be scaled later via parent transform\n  // Material with placeholders\n  const material = new MeshStandardNodeMaterial({\n    color: 0xffffff,\n    metalness: 0.0,\n    roughness: 0.6,\n    depthWrite: true\n  });\n\n  const plane = new Mesh(geometry, material);\n  plane.castShadow = true;\n  plane.receiveShadow = true;\n  root.add(plane);\n\n  // Load textures asynchronously\n  const texturePromises = [];\n\n  if (config.imageUrl) {\n    const imgPromise = ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      material.map = tex;\n      material.needsUpdate = true;\n    });\n    texturePromises.push(imgPromise);\n  }\n\n  if (config.depthMapUrl) {\n    const depthPromise = ctx.textureLoader.loadTexture(config.depthMapUrl).then((tex) => {\n      material.displacementMap = tex;\n      material.displacementScale = 0.2; // subtle displacement\n      material.needsUpdate = true;\n    });\n    texturePromises.push(depthPromise);\n  }\n\n  // Interaction timelines storage\n  const timelines = [];\n\n  // Hover rise‑in effect (subtle, 0.15 scene units)\n  const hoverEnter = () => {\n    const tl = gsap.timeline({ defaults: { duration: 0.7, ease: 'power3.out' } });\n    tl.to(plane.position, { y: plane.position.y + 0.15 });\n    timelines.push(tl);\n  };\n\n  const hoverLeave = () => {\n    const tl = gsap.timeline({ defaults: { duration: 0.5, ease: 'power2.in' } });\n    tl.to(plane.position, { y: plane.position.y - 0.15 });\n    timelines.push(tl);\n  };\n\n  // Click emit\n  const onClick = () => {\n    ctx.emit('hub-features.select');\n  };\n\n  // Register handlers\n  root.userData.handlers.hoverEnter = hoverEnter;\n  root.userData.handlers.hoverLeave = hoverLeave;\n  root.userData.handlers.click = onClick;\n\n  // Apply cinematic primitives\n  const primitiveInstances = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const fn = ctx.primitives[prim.name];\n      if (fn) {\n        const instance = fn(root, prim.params ?? {});\n        primitiveInstances.push(instance);\n      }\n    }\n  }\n\n  // Cleanup implementation\n  root.userData.cleanup = () => {\n    // kill GSAP timelines\n    for (const tl of timelines) {\n      tl.kill();\n    }\n    // dispose primitive resources\n    for (const inst of primitiveInstances) {\n      if (inst && typeof inst.cleanup === 'function') {\n        inst.cleanup();\n      }\n    }\n    // dispose Three.js resources\n    if (material.map) material.map.dispose();\n    if (material.displacementMap) material.displacementMap.dispose();\n    material.dispose();\n    geometry.dispose();\n  };\n\n  // Ensure cleanup runs after texture promises settle (optional safety)\n  Promise.all(texturePromises).catch(() => { /* ignore texture load errors */ });\n\n  return root;\n}"
+}

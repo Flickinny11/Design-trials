@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-5.6-luna",
+  "model": "openai/gpt-5.6-luna",
+  "route": "openrouter",
+  "role": "contestant",
+  "caseId": "f-16-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 263,
+  "finishReason": "stop",
+  "maxTokens": 16384,
+  "usage": {
+    "promptTokens": 3680,
+    "completionTokens": 1927
+  },
+  "costUsd": 0.015242,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { color, mix, smoothstep, uv } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, BoxGeometry } = ctx.THREE;\n  const root = new Group();\n  const resources = [];\n  const primitiveResults = [];\n  let disposed = false;\n\n  const makeMaterial = (nodeColor, transparent = false) => {\n    const material = new MeshBasicNodeMaterial({\n      transparent,\n      depthWrite: !transparent\n    });\n    material.colorNode = color(nodeColor);\n    return material;\n  };\n\n  const backdropMaterial = new MeshBasicNodeMaterial();\n  const backdropUv = uv();\n  backdropMaterial.colorNode = mix(\n    color('#0b0b10'),\n    color('#16161d'),\n    smoothstep(0.05, 0.95, backdropUv.y)\n  );\n\n  const backdrop = new Mesh(new PlaneGeometry(7, 6), backdropMaterial);\n  backdrop.position.set(0, 0, -2.5);\n  backdrop.userData.kriptikOwned = true;\n  root.add(backdrop);\n  resources.push(backdrop.geometry, backdrop.material);\n\n  const surfaceMaterial = makeMaterial('#0b0b10');\n  const surface = new Mesh(new PlaneGeometry(3.65, 2.35), surfaceMaterial);\n  surface.position.set(0, 0, -0.08);\n  surface.userData.kriptikOwned = true;\n  root.add(surface);\n  resources.push(surface.geometry, surface.material);\n\n  const imageMaterial = new MeshBasicNodeMaterial({\n    transparent: true,\n    depthWrite: true\n  });\n  const image = new Mesh(new PlaneGeometry(3.5, 2.1875), imageMaterial);\n  image.position.set(0, 0, 0.02);\n  image.userData.kriptikOwned = true;\n  root.add(image);\n  resources.push(image.geometry, image.material);\n\n  const accentMaterial = makeMaterial('#ff2a38');\n  const accentBars = [\n    { x: -1.72, y: 1.08, w: 0.36, h: 0.025 },\n    { x: 1.52, y: -1.08, w: 0.56, h: 0.025 },\n    { x: -1.74, y: -0.88, w: 0.025, h: 0.28 }\n  ];\n\n  for (const bar of accentBars) {\n    const accent = new Mesh(\n      new BoxGeometry(bar.w, bar.h, 0.025),\n      accentMaterial\n    );\n    accent.position.set(bar.x, bar.y, 0.08);\n    accent.userData.kriptikOwned = true;\n    root.add(accent);\n    resources.push(accent.geometry);\n  }\n  resources.push(accentMaterial);\n\n  const imageUrl = config.imageUrl ?? config.intent?.visualSpec?.imageUrl;\n  if (imageUrl) {\n    ctx.textureLoader.loadTexture(imageUrl).then((texture) => {\n      if (disposed) {\n        texture.dispose?.();\n        return;\n      }\n\n      texture.colorSpace = ctx.THREE.SRGBColorSpace;\n      imageMaterial.map = texture;\n      imageMaterial.colorNode = color('#e8ecf2');\n      imageMaterial.needsUpdate = true;\n      resources.push(texture);\n    });\n  }\n\n  const primitives = config.cinematicPrimitives ?? [];\n  for (const primitive of primitives) {\n    const handler = ctx.primitives?.[primitive.name];\n    if (typeof handler === 'function') {\n      const result = handler(root, primitive.params);\n      if (result) primitiveResults.push(result);\n    }\n  }\n\n  root.userData.handlers = {};\n  root.userData.cleanup = () => {\n    if (disposed) return;\n    disposed = true;\n\n    for (const result of primitiveResults) {\n      result.timeline?.kill?.();\n      result.cleanup?.();\n    }\n\n    for (const resource of resources) {\n      resource?.dispose?.();\n    }\n\n    root.traverse((object) => {\n      object.userData = object.userData || {};\n    });\n  };\n\n  return root;\n}"
+}

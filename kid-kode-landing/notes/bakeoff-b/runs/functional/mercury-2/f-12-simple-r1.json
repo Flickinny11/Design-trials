@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "role": "contestant",
+  "caseId": "f-12-simple",
+  "run": 1,
+  "ok": true,
+  "wallMs": 5703,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3557,
+    "completionTokens": 689
+  },
+  "costUsd": 0.001406,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial, PlaneGeometry } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport {} from '@/primitives';\nimport {} from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh } = ctx.THREE;\n  const node = new Group();\n\n  // Position, rotation, scale are applied by the adapter; we only set defaults.\n  node.position.set(0, 0, 0);\n  node.rotation.set(0, 0, 0);\n  node.scale.set(1, 1, 1);\n\n  // ---------- Geometry & Material ----------\n  const aspect = 512 / 320; // width / height of atlas region\n  const geometry = new PlaneGeometry(aspect, 1);\n  const material = new MeshBasicNodeMaterial();\n  material.transparent = true;\n  material.depthWrite = false;\n\n  // ---------- Texture Loading ----------\n  let loadedTexture = null;\n  const texPromise = ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    loadedTexture = tex;\n    material.map = tex;\n    // Atlas region is at (0,0) with size 512x320; adjust UV repeat to show only that region.\n    if (tex.image) {\n      const imgW = tex.image.width;\n      const imgH = tex.image.height;\n      tex.repeat.set(512 / imgW, 320 / imgH);\n      tex.offset.set(0, 0);\n      tex.needsUpdate = true;\n    }\n    material.needsUpdate = true;\n  });\n\n  // ---------- Mesh ----------\n  const mesh = new Mesh(geometry, material);\n  // Simple billboard: copy camera quaternion each frame.\n  mesh.onBeforeRender = (_, __, camera) => {\n    mesh.quaternion.copy(camera.quaternion);\n  };\n  node.add(mesh);\n\n  // ---------- Text Content ----------\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of items) {\n    const txt = ctx.fontAtlas.createText(item.text, {\n      fontSize: item.typography?.fontSize ?? 39,\n      color: config.intent?.visualSpec?.colors?.paper ?? '#e8ecf2',\n      align: 'center',\n    });\n    // Center text on the plane, slightly in front to avoid z‑fighting.\n    txt.position.set(0, 0, 0.01);\n    node.add(txt);\n  }\n\n  // ---------- Cinematic Primitives ----------\n  const primitiveCleanups = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const fn = ctx.primitives?.[prim.name];\n      if (fn) {\n        const result = fn(node, prim.params ?? {});\n        if (result?.cleanup) primitiveCleanups.push(result.cleanup);\n        // Store timeline if present for later kill.\n        if (result?.timeline) primitiveCleanups.push(() => result.timeline.kill());\n      }\n    }\n  }\n\n  // ---------- User Data & Cleanup ----------\n  node.userData.handlers = {};\n\n  node.userData.cleanup = () => {\n    geometry.dispose();\n    material.dispose();\n    if (loadedTexture) loadedTexture.dispose();\n    // Kill any GSAP timelines that might have been created elsewhere.\n    gsap.globalTimeline.clear();\n    // Run primitive cleanups.\n    for (const clean of primitiveCleanups) clean();\n  };\n\n  return node;\n}"
+}

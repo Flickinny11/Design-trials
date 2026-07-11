@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4-5",
+  "route": "deepinfra",
+  "role": "contestant",
+  "caseId": "f-02-simple",
+  "run": 2,
+  "ok": true,
+  "wallMs": 8026,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 4382,
+    "completionTokens": 1082
+  },
+  "costUsd": 0.009792,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec3, color } from 'three/tsl';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n\n  // Build the backdrop gradient plane\n  const backdropGeom = new THREE.PlaneGeometry(7, 6);\n  const gradientCanvas = document.createElement('canvas');\n  gradientCanvas.width = 512;\n  gradientCanvas.height = 512;\n  const gradCtx = gradientCanvas.getContext('2d');\n\n  // Vertical gradient: surface (#0b0b10) at top to ink (#16161d) at bottom\n  const grad = gradCtx.createLinearGradient(0, 0, 0, 512);\n  grad.addColorStop(0, '#0b0b10');\n  grad.addColorStop(1, '#16161d');\n  gradCtx.fillStyle = grad;\n  gradCtx.fillRect(0, 0, 512, 512);\n\n  // Add subtle grain\n  const imgData = gradCtx.getImageData(0, 0, 512, 512);\n  const data = imgData.data;\n  for (let i = 0; i < data.length; i += 4) {\n    const grain = (Math.random() - 0.5) * 8;\n    data[i] += grain;\n    data[i + 1] += grain;\n    data[i + 2] += grain;\n  }\n  gradCtx.putImageData(imgData, 0, 0);\n\n  const backdropTex = new THREE.CanvasTexture(gradientCanvas);\n  const backdropMat = new MeshBasicNodeMaterial();\n  backdropMat.colorNode = uv().mul(color(0xffffff));\n  backdropMat.map = backdropTex;\n  const backdrop = new THREE.Mesh(backdropGeom, backdropMat);\n  backdrop.position.z = -2.5;\n\n  // Main hero subhead plane with image\n  const planeGeom = new THREE.PlaneGeometry(4, 2.5);\n  const planeMat = new MeshBasicNodeMaterial();\n\n  const container = new THREE.Group();\n  container.position.copy(new THREE.Vector3(config.scenePosition?.x ?? 0, config.scenePosition?.y ?? 1.85, config.scenePosition?.z ?? 0));\n\n  // Load and apply the image texture\n  ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    tex.colorSpace = THREE.SRGBColorSpace;\n    planeMat.map = tex;\n    planeMat.needsUpdate = true;\n  });\n\n  const plane = new THREE.Mesh(planeGeom, planeMat);\n  plane.position.z = 0;\n\n  // Create text from config\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  let textGroup = null;\n\n  if (textItems.length > 0) {\n    textGroup = new THREE.Group();\n    let yOffset = 0.8;\n\n    for (const item of textItems) {\n      const fontSize = item.typography?.fontSize ?? 42;\n      const textContent = String(item.text || '');\n      const textColor = item.typography?.color || '#e8ecf2';\n\n      const textMesh = ctx.fontAtlas.createText(textContent, {\n        fontSize,\n        color: textColor,\n        align: 'center',\n        maxWidthPx: 500,\n        letterSpacingPx: item.typography?.letterSpacing ?? 0,\n      });\n\n      textMesh.position.y = yOffset;\n      textMesh.position.z = 0.1;\n      textGroup.add(textMesh);\n      yOffset -= 0.5;\n    }\n\n    container.add(textGroup);\n  }\n\n  container.add(backdrop);\n  container.add(plane);\n\n  // Cleanup handler\n  container.userData.cleanup = () => {\n    backdropGeom.dispose();\n    planeGeom.dispose();\n    backdropMat.dispose();\n    planeMat.dispose();\n    if (backdropTex) backdropTex.dispose();\n  };\n\n  return container;\n}\n```"
+}

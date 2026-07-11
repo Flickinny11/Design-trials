@@ -1,0 +1,20 @@
+{
+  "axis": "functional",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "role": "contestant",
+  "caseId": "f-05-simple",
+  "run": 3,
+  "ok": true,
+  "wallMs": 6969,
+  "finishReason": "stop",
+  "maxTokens": 8192,
+  "usage": {
+    "promptTokens": 3731,
+    "completionTokens": 1213
+  },
+  "costUsd": 0.0012874499999999999,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { /* primitives are imported for side‑effects only */ } from '@/primitives';\nimport { /* text utilities are imported for side‑effects only */ } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n\n  // root container\n  const root = new Group();\n\n  // ----- plane geometry & material -----\n  const geometry = new PlaneGeometry(1.5, 0.94); // approximate 512×320 aspect\n  const material = new MeshBasicNodeMaterial();\n  material.transparent = true;\n  material.depthWrite = false;\n\n  const plane = new Mesh(geometry, material);\n  root.add(plane);\n\n  // Load texture asynchronously, keep reference for cleanup\n  let texture = null;\n  const texPromise = ctx.textureLoader\n    .loadTexture(config.imageUrl)\n    .then((tex) => {\n      texture = tex;\n      material.map = tex;\n      material.needsUpdate = true;\n    })\n    .catch(() => {\n      // fail silently – material will stay untextured\n    });\n\n  // ----- text label -----\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of textItems) {\n    const txt = ctx.fontAtlas.createText(item.text || item.content || '', {\n      fontSize: item.typography?.fontSize ?? 42,\n      color: config.visual?.colors?.paper ?? '#e8ecf2',\n      align: 'center',\n    });\n    // slightly in front of the plane\n    txt.position.set(0, 0, 0.01);\n    root.add(txt);\n  }\n\n  // ----- userData handlers & cleanup -----\n  root.userData.handlers = {};\n\n  const timelines = []; // store any GSAP timelines (none for this node)\n\n  root.userData.cleanup = () => {\n    // dispose material & geometry\n    material.dispose();\n    geometry.dispose();\n\n    // dispose loaded texture\n    if (texture) texture.dispose();\n\n    // kill any GSAP timelines\n    timelines.forEach((t) => t.kill());\n\n    // clear handlers reference\n    root.userData.handlers = {};\n  };\n\n  // expose promise for potential external waiting (optional)\n  root.userData._texturePromise = texPromise;\n\n  return root;\n}"
+}
