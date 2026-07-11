@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/claude-sonnet-5/v-18-nav-dock-r2",
+  "contestant": "claude-sonnet-5",
+  "caseId": "v-18-nav-dock",
+  "run": 2,
+  "capturedAt": "2026-07-11T03:58:17.286Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 13,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/claude-sonnet-5/v-18-nav-dock-r2"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

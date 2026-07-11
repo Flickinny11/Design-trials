@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/claude-opus-4.8/v-11-gradient-cta-r1",
+  "contestant": "claude-opus-4.8",
+  "caseId": "v-11-gradient-cta",
+  "run": 1,
+  "capturedAt": "2026-07-11T03:54:37.272Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 5,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/claude-opus-4.8/v-11-gradient-cta-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

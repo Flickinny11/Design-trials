@@ -1,0 +1,44 @@
+{
+  "computedAt": "2026-07-11T06:51:23.477Z",
+  "groundTruthSelfDisagreement": {
+    "meanAbsScoreDelta": 2.5,
+    "maxAbsScoreDelta": 14,
+    "rendersWithDefectDisagreement": 29
+  },
+  "positivesInGoldenSet": 29,
+  "critics": {
+    "claude-haiku-4.5": {
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "judgedRenders": 30,
+      "parseFailures": 0,
+      "rankCorrelation": 0.8089778495794466,
+      "mustFixDetectionRate": 0.9655172413793104,
+      "seededBadDetectionRate": 1,
+      "meanCostPerCritiqueUsd": 0.04054547666666667,
+      "p50LatencyMs": 28680
+    },
+    "claude-sonnet-5": {
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "judgedRenders": 30,
+      "parseFailures": 0,
+      "rankCorrelation": 0.8270185061455494,
+      "mustFixDetectionRate": 1,
+      "seededBadDetectionRate": 1,
+      "meanCostPerCritiqueUsd": 0.21822759999999997,
+      "p50LatencyMs": 25039
+    },
+    "gemini-3.5-flash": {
+      "blocked": "UNREACHABLE (I-BB5): sole keyed vision route (DeepInfra) hit the second mid-wave 402 funding boundary (~23:05 CDT 2026-07-10, probes/deepinfra-402-check.json) and was re-probed 402 at critic-launch time 2026-07-11 (probes/d4-critic-reachability.json). OpenRouter (its other vision route) hit the first 402 boundary (~21:55 CDT). Zero critic verdicts generated — never extrapolated."
+    },
+    "qwen3.7-plus": {
+      "blocked": "UNREACHABLE (I-BB5): OpenRouter-only lane; blocked at the first mid-wave 402 funding boundary (~21:55 CDT 2026-07-10, probes/openrouter-refund-check.json) and re-probed 402 at critic-launch time 2026-07-11 (probes/d4-critic-reachability.json). Not hosted on any other keyed vision route. Zero critic verdicts generated — never extrapolated."
+    }
+  },
+  "selection": {
+    "selected": null,
+    "rule": "cheapest with rank correlation >= 0.85 AND MUST-FIX detection >= 90%",
+    "verdict": "UNFILLED — no candidate qualifies; escalation-tier critique stays on Fable/Opus"
+  }
+}

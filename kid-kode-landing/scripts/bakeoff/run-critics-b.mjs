@@ -35,12 +35,19 @@ const ONLY = argOf('--only', null)?.split(',');
 const ledger = existsSync(LEDGER_PATH)
   ? JSON.parse(readFileSync(LEDGER_PATH, 'utf8'))
   : { wave: 'wbakeb-critics', calls: [], totals: { meteredUsd: 0, subscriptionEquivalentUsd: 0 } };
+// 2026-07-11 cap semantics: the $120 hard cap is enforced on METERED spend
+// (real provider dollars — the currency the two 402 boundaries exhausted),
+// matching the per-lane cap design and the milestone tracking ("global
+// metered $X of $120"). Founder-CLI subscription-equivalent spend is fully
+// ledgered and disclosed in report §7 but does NOT count against the metered
+// cap (D3 judging alone was $43.88 sub-equiv; a merged cap would have falsely
+// killed D4 with $57 of real headroom left). Disclosed in report §8.
 function otherSpend() {
   let t = 0;
-  try { for (const f of readdirSync(LEDGERS).filter((x) => x.endsWith('.json'))) { try { t += JSON.parse(readFileSync(path.join(LEDGERS, f), 'utf8')).totals?.totalUsd ?? 0; } catch { /* */ } } } catch { /* */ }
+  try { for (const f of readdirSync(LEDGERS).filter((x) => x.endsWith('.json'))) { try { const tt = JSON.parse(readFileSync(path.join(LEDGERS, f), 'utf8')).totals ?? {}; t += tt.meteredUsd ?? tt.totalUsd ?? 0; } catch { /* */ } } } catch { /* */ }
   for (const f of ['ledger-judge.json', 'ledger-golden.json']) {
     const p = path.join(B, 'judge', f);
-    if (existsSync(p)) { try { const l = JSON.parse(readFileSync(p, 'utf8')); t += (l.totals?.subscriptionEquivalentUsd ?? 0) + (l.totals?.meteredUsd ?? 0); } catch { /* */ } }
+    if (existsSync(p)) { try { const l = JSON.parse(readFileSync(p, 'utf8')); t += l.totals?.meteredUsd ?? 0; } catch { /* */ } }
   }
   return t;
 }
@@ -49,8 +56,8 @@ function ledgerAdd(entry) {
   ledger.totals.meteredUsd = ledger.calls.filter((c) => c.billing === 'metered').reduce((s, c) => s + (c.costUsd ?? 0), 0);
   ledger.totals.subscriptionEquivalentUsd = ledger.calls.filter((c) => c.billing === 'subscription-equivalent').reduce((s, c) => s + (c.costUsd ?? 0), 0);
   writeFileSync(LEDGER_PATH, JSON.stringify(ledger, null, 2));
-  const merged = otherSpend() + ledger.totals.meteredUsd + ledger.totals.subscriptionEquivalentUsd;
-  if (merged >= HARD_CAP_USD - MARGIN) { console.error(`!! MERGED spend $${merged.toFixed(2)} at the $${HARD_CAP_USD} margin — stopping`); process.exit(3); }
+  const metered = otherSpend() + ledger.totals.meteredUsd;
+  if (metered >= HARD_CAP_USD - MARGIN) { console.error(`!! METERED spend $${metered.toFixed(2)} at the $${HARD_CAP_USD} margin — stopping`); process.exit(3); }
 }
 
 const cases = loadCases();

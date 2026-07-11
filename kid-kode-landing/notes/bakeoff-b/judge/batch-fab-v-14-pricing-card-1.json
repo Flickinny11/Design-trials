@@ -1,0 +1,59 @@
+{
+  "label": "batch-fab-v-14-pricing-card-1",
+  "judgedAt": "2026-07-11T04:10:38.620Z",
+  "judgeModel": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-14-pricing-card-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-14-pricing-card-1/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-14-pricing-card-1/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-14-pricing-card-1/F4.jpg"
+    }
+  ],
+  "mappingFile": "notes/bakeoff-b/judge/blind/batch-fab-v-14-pricing-card-1/mapping.json",
+  "costUsd": 0.516863,
+  "durationApiMs": 36170,
+  "wallMs": 38823,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 14260,
+    "cache_read_input_tokens": 81960,
+    "output_tokens": 2289,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14260,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1555,
+        "cache_read_input_tokens": 43757,
+        "cache_creation_input_tokens": 8706,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8706
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":20,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card — no tier name, price figure, or feature text anywhere\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"right half — giant garbled white shape occludes the card\"},{\"defect\":\"FLAT_VOID\",\"region\":\"left third background field\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"upper-right quadrant white letterform fragment\"}],\"notes\":\"Card skeleton and red CTA exist but zero typography; massive white blob destroys composition.\"},{\"frame\":\"F2\",\"score\":22,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card — tier name, price, and feature text all absent\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"right half and top-center — overlapping white and gray slabs cover the card\"},{\"defect\":\"GARBLED_TEXT\",\"region\":\"header strip top edge — noisy tick artifacts instead of type\"},{\"defect\":\"FLAT_VOID\",\"region\":\"left background field\"}],\"notes\":\"Slightly clearer row rhythm than F1, but still textless and buried under stray geometry.\"},{\"frame\":\"F3\",\"score\":5,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame — uniform near-black\"}],\"notes\":\"Empty frame; nothing rendered.\"},{\"frame\":\"F4\",\"score\":24,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card — no tier name, price figure, or feature copy\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper-left and right — huge white slabs slice through the card\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"top edge — header strip detached and floating above card plane\"},{\"defect\":\"FLAT_VOID\",\"region\":\"lower-left background field\"}],\"notes\":\"Best row rhythm and CTA of the batch, but detached header, no type, and intrusive white geometry.\"}]}"
+}

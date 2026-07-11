@@ -1,0 +1,21 @@
+{
+  "bundle": "wbakeb-seam/claude-haiku-4.5/s-12",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "s-12",
+  "run": 1,
+  "capturedAt": "2026-07-11T06:42:33.436Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "wbakeb-seam/claude-haiku-4.5/s-12",
+    "moduleRuntimeError": "TypeError: THREE.RoundedBoxGeometry is not a constructor"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

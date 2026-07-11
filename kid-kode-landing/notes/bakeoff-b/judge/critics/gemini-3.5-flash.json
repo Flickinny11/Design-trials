@@ -1,0 +1,7 @@
+{
+  "candidate": "gemini-3.5-flash",
+  "route": "deepinfra",
+  "model": "google/gemini-3.5-flash",
+  "blocked": "UNREACHABLE (I-BB5): sole keyed vision route (DeepInfra) hit the second mid-wave 402 funding boundary (~23:05 CDT 2026-07-10, probes/deepinfra-402-check.json) and was re-probed 402 at critic-launch time 2026-07-11 (probes/d4-critic-reachability.json). OpenRouter (its other vision route) hit the first 402 boundary (~21:55 CDT). Zero critic verdicts generated — never extrapolated.",
+  "verdicts": []
+}

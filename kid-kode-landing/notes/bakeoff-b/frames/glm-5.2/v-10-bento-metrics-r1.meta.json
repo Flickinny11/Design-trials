@@ -1,0 +1,24 @@
+{
+  "bundle": "wbakeb/glm-5.2/v-10-bento-metrics-r1",
+  "contestant": "glm-5.2",
+  "caseId": "v-10-bento-metrics",
+  "run": 1,
+  "capturedAt": "2026-07-11T02:56:01.912Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 14,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/glm-5.2/v-10-bento-metrics-r1"
+  },
+  "consoleErrors": [
+    "THREE.THREE.WebGLProgram: Shader Error 0 - VALIDATE_STATUS false\n\nProgram Info Log: Fragment shader is not compiled.\n\u0000\n\nFRAGMENT\n\nERROR: 0:91: 'NaN' : undeclared identifier\nERROR: 0:91: '.0' : syntax error\n\u0000\n\n  86: void main() {\n  87: \n  88: \t// flow\n  89: \t// code\n  90: \n> 91: \tDiffuseColor = vec4(",
+    "THREE.THREE.WebGLProgram: Shader Error 1282 - VALIDATE_STATUS false\n\nProgram Info Log: Fragment shader is not compiled.\n\u0000\n\nFRAGMENT\n\nERROR: 0:940: 'NaN' : undeclared identifier\nERROR: 0:940: '.0' : syntax error\n\u0000\n\n  935: \t// flow\n  936: \t// code\n  937: \n  938: \tnodeVar0 = ( ( nodeVarying6.x + nodeVa",
+    "THREE.THREE.WebGLProgram: Shader Error 1282 - VALIDATE_STATUS false\n\nProgram Info Log: Fragment shader is not compiled.\n\u0000\n\nFRAGMENT\n\nERROR: 0:90: 'NaN' : undeclared identifier\nERROR: 0:90: '.0' : syntax error\n\u0000\n\n  85: void main() {\n  86: \n  87: \t// flow\n  88: \t// code\n  89: \n> 90: \tDiffuseColor = ve"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

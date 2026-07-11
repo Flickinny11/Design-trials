@@ -1,0 +1,21 @@
+{
+  "bundle": "wbakeb/kimi-k2.7-code/v-08-orrery-mechanism-r1",
+  "contestant": "kimi-k2.7-code",
+  "caseId": "v-08-orrery-mechanism",
+  "run": 1,
+  "capturedAt": "2026-07-11T03:58:55.071Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/kimi-k2.7-code/v-08-orrery-mechanism-r1",
+    "moduleRuntimeError": "TypeError: (0 , import_tsl.subtract) is not a function"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

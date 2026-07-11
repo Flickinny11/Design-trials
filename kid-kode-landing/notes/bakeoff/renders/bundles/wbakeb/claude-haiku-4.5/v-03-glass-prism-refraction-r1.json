@@ -1,0 +1,181 @@
+{
+  "id": "wbakeb/claude-haiku-4.5/v-03-glass-prism-refraction-r1",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-03-glass-prism-refraction",
+  "run": 1,
+  "node": {
+    "nodeId": "v-03-glass-prism-refraction",
+    "subtype": "glass-prism",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Glass prism refraction — A dispersive glass prism over a dark scene: iridescence, back rim light, emissive core — never flat glassmorphism.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "Light, machined.",
+            "role": "headline",
+            "typography": {
+              "fontSize": 68,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "SAPPHIRE OVER DIAL / ZERO DISTORTION",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#101017",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 0.6,
+              "hex": "#12121a"
+            },
+            {
+              "at": 1,
+              "hex": "#16161d"
+            }
+          ]
+        },
+        "typography": {
+          "headline": {
+            "family": "Lora",
+            "fontSize": 68,
+            "fontWeight": 600,
+            "letterSpacing": -0.005,
+            "lineHeight": 1.1
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Triangular prism: equilateral cross-section 1.2 units per side, length 1.8 units, axis horizontal, rotated 12 deg on z and 20 deg on y, centered at origin. Material: MeshPhysicalMaterial transmission 1.0, thickness 0.9, ior 1.55, TSL dispersion pass splitting refraction by 0.18 across RGB, iridescence 1.0, iridescenceIOR 1.3, iridescenceThicknessRange [120,480] nm, roughness 0.08, clearcoat 0.25, clearcoatRoughness 0.1, attenuationColor #e8ecf2 attenuationDistance 2.5. Emissive core: 0.35-unit octahedron inside the prism, color #ff2a38, emissive #ff2a38 intensity 2.2 (kept under the 2.5 AgX red-clip ceiling). Back rim: strong cool directional from behind-left so both long edges carry a bright rim line. Caustic streak: 2.4 x 0.5-unit plane on the floor at y=-1.1 with an engineered linear gradient of dispersed stops (#ff2a38 at 0.2, #e8ecf2 at 0.5, #9fb0c4 at 0.8) at opacity 0.35, elongating 8 percent when the prism tilts. Hover depth-rotate: up to 10 deg toward cursor over 350ms cubic-bezier(0.215,0.61,0.355,1); release weighted-settle 1.04 to 1.0 over 900ms cubic-bezier(0.165,0.84,0.44,1). Headline baseline 1.75 units (7x base) below center, caption 0.5 units below it. Never flat glassmorphism: no frosted planes, no uniform white borders."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "mesh",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "depth-rotate",
+        "trigger": "hover",
+        "params": {
+          "maxDeg": 10
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0.4,
+        0.3,
+        4.6
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 45
+    },
+    "lights": [
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 2,
+        "position": [
+          -2,
+          3,
+          -4
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#cdd6e4",
+        "intensity": 0.9,
+        "position": [
+          2.5,
+          2,
+          3
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 1.4,
+        "position": [
+          0,
+          0,
+          0.2
+        ]
+      },
+      {
+        "type": "ambient",
+        "color": "#2a2e38",
+        "intensity": 0.25
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Prism tilts up to 10 deg toward the cursor on hover and settles with weighted overshoot; the dispersed caustic streak on the floor elongates as it tilts."
+  },
+  "parsed": true,
+  "fenced": true,
+  "depGate": {
+    "sources": [
+      "gsap",
+      "three/webgpu",
+      "three/tsl"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_gsap = require(\"gsap\");\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nfunction createNode(config, ctx) {\n  const { THREE } = ctx;\n  const group = new THREE.Group();\n  const backdropGeom = new THREE.PlaneGeometry(7, 6);\n  const backdropMat = new import_webgpu.MeshStandardNodeMaterial();\n  const gradientStops = config.intent?.visualSpec?.colors?.gradientStops ?? [\n    { at: 0, hex: \"#0b0b10\" },\n    { at: 0.6, hex: \"#12121a\" },\n    { at: 1, hex: \"#16161d\" }\n  ];\n  const vUv = (0, import_tsl.varying)((0, import_tsl.uv)());\n  const gradCol = (0, import_tsl.uniform)(new THREE.Vector3(0.067, 0.067, 0.063));\n  const mid = (0, import_tsl.uniform)(new THREE.Vector3(0.071, 0.071, 0.102));\n  const top = (0, import_tsl.uniform)(new THREE.Vector3(0.086, 0.086, 0.114));\n  const yNorm = (0, import_tsl.smoothstep)(0, 1, vUv.y);\n  const colNode = (0, import_tsl.mix)(gradCol, mid, (0, import_tsl.smoothstep)(0, 0.6, yNorm)).mix(top, (0, import_tsl.smoothstep)(0.6, 1, yNorm));\n  backdropMat.colorNode = colNode;\n  backdropMat.emissiveIntensity = 0;\n  const backdrop = new THREE.Mesh(backdropGeom, backdropMat);\n  backdrop.position.z = -2.5;\n  group.add(backdrop);\n  const keyLight = new THREE.DirectionalLight(16777215, 1.2);\n  keyLight.position.set(1.5, 2, 1.8);\n  keyLight.castShadow = true;\n  group.add(keyLight);\n  const rimLight = new THREE.DirectionalLight(11059156, 0.9);\n  rimLight.position.set(-1.8, 1.2, -2);\n  group.add(rimLight);\n  const ambientLight = new THREE.AmbientLight(16777215, 0.6);\n  group.add(ambientLight);\n  const prismGroup = new THREE.Group();\n  const prismGeom = new THREE.BufferGeometry();\n  const sideLen = 1.2;\n  const prismLen = 1.8;\n  const h = sideLen * Math.sqrt(3) / 2;\n  const triVerts = [\n    new THREE.Vector3(0, h * (2 / 3), 0),\n    // top\n    new THREE.Vector3(-sideLen / 2, -h / 3, 0),\n    // bottom-left\n    new THREE.Vector3(sideLen / 2, -h / 3, 0)\n    // bottom-right\n  ];\n  const verts = [];\n  const indices = [];\n  const z0 = -prismLen / 2;\n  verts.push(...triVerts[0].toArray(), z0);\n  verts.push(...triVerts[1].toArray(), z0);\n  verts.push(...triVerts[2].toArray(), z0);\n  const z1 = prismLen / 2;\n  verts.push(...triVerts[0].toArray(), z1);\n  verts.push(...triVerts[1].toArray(), z1);\n  verts.push(...triVerts[2].toArray(), z1);\n  indices.push(0, 1, 2);\n  indices.push(5, 4, 3);\n  indices.push(0, 3, 4, 0, 4, 1);\n  indices.push(0, 2, 5, 0, 5, 3);\n  indices.push(1, 4, 5, 1, 5, 2);\n  prismGeom.setAttribute(\"position\", new THREE.BufferAttribute(new Float32Array(verts), 3));\n  prismGeom.setIndex(new THREE.BufferAttribute(new Uint32Array(indices), 1));\n  prismGeom.computeVertexNormals();\n  const prismMat = new import_webgpu.MeshPhysicalNodeMaterial();\n  prismMat.transmission = 1;\n  prismMat.thickness = 0.9;\n  prismMat.ior = 1.55;\n  prismMat.roughness = 0.08;\n  prismMat.clearcoat = 0.25;\n  prismMat.clearcoatRoughness = 0.1;\n  prismMat.iridescence = 1;\n  prismMat.iridescenceIOR = 1.3;\n  prismMat.iridescenceThicknessRange = [120, 480];\n  prismMat.attenuationColor = new THREE.Color(\"#e8ecf2\");\n  prismMat.attenuationDistance = 2.5;\n  prismMat.color = new THREE.Color(\"#e8ecf2\");\n  prismMat.opacity = 0.92;\n  prismMat.transparent = true;\n  const prism = new THREE.Mesh(prismGeom, prismMat);\n  prism.rotation.z = THREE.MathUtils.degToRad(12);\n  prism.rotation.y = THREE.MathUtils.degToRad(20);\n  prismGroup.add(prism);\n  const coreGeom = new THREE.OctahedronGeometry(0.35, 3);\n  const coreMat = new import_webgpu.MeshStandardNodeMaterial();\n  coreMat.color = new THREE.Color(\"#ff2a38\");\n  coreMat.emissive = new THREE.Color(\"#ff2a38\");\n  coreMat.emissiveIntensity = 2.2;\n  coreMat.metalness = 0;\n  coreMat.roughness = 0.3;\n  const core = new THREE.Mesh(coreGeom, coreMat);\n  core.castShadow = true;\n  prismGroup.add(core);\n  prismGroup.position.set(0, 0.2, 0);\n  group.add(prismGroup);\n  const causticGeom = new THREE.PlaneGeometry(2.4, 0.5);\n  const causticMat = new import_webgpu.MeshStandardNodeMaterial();\n  const col1 = (0, import_tsl.uniform)(new THREE.Vector3(1, 0.165, 0.22));\n  const col2 = (0, import_tsl.uniform)(new THREE.Vector3(0.91, 0.925, 0.949));\n  const col3 = (0, import_tsl.uniform)(new THREE.Vector3(0.624, 0.69, 0.768));\n  const causticUv = (0, import_tsl.varying)((0, import_tsl.uv)());\n  const causticGrad = (0, import_tsl.mix)(\n    col1,\n    col2,\n    (0, import_tsl.smoothstep)(0, 0.5, causticUv.x)\n  ).mix(col3, (0, import_tsl.smoothstep)(0.5, 1, causticUv.x));\n  causticMat.colorNode = causticGrad;\n  causticMat.emissiveIntensity = 0;\n  causticMat.transparent = true;\n  causticMat.opacity = 0.35;\n  causticMat.side = THREE.DoubleSide;\n  const caustic = new THREE.Mesh(causticGeom, causticMat);\n  caustic.position.set(0, -1.1, -0.1);\n  caustic.rotation.x = THREE.MathUtils.degToRad(-90);\n  caustic.scale.x = 1;\n  group.add(caustic);\n  const headlineText = ctx.fontAtlas.createText(\"Light, machined.\", {\n    fontSize: 68,\n    color: \"#e8ecf2\",\n    align: \"center\",\n    letterSpacingPx: -0.34\n  });\n  headlineText.position.set(0, -1.75, 0.5);\n  group.add(headlineText);\n  const captionText = ctx.fontAtlas.createText(\"SAPPHIRE OVER DIAL / ZERO DISTORTION\", {\n    fontSize: 18,\n    color: \"#a8bfd4\",\n    align: \"center\",\n    letterSpacingPx: 1.44\n  });\n  captionText.position.set(0, -2.25, 0.5);\n  group.add(captionText);\n  let rotTimeline = null;\n  const cleanup = () => {\n    if (rotTimeline) rotTimeline.kill();\n  };\n  const onHoverStart = (evt) => {\n    if (rotTimeline) rotTimeline.kill();\n    const mouseX = evt.clientX / window.innerWidth;\n    const mouseY = evt.clientY / window.innerHeight;\n    const targetRotX = (mouseY - 0.5) * THREE.MathUtils.degToRad(10);\n    const targetRotY = (mouseX - 0.5) * THREE.MathUtils.degToRad(10);\n    rotTimeline = import_gsap.gsap.to(prismGroup.rotation, {\n      x: targetRotX,\n      y: prismGroup.rotation.y + targetRotY,\n      duration: 0.35,\n      ease: \"cubic-bezier(0.215,0.61,0.355,1)\"\n    });\n    import_gsap.gsap.to(caustic.scale, {\n      x: 1.08,\n      duration: 0.35,\n      ease: \"power2.out\"\n    });\n  };\n  const onHoverEnd = () => {\n    if (rotTimeline) rotTimeline.kill();\n    rotTimeline = import_gsap.gsap.to(prismGroup.rotation, {\n      x: 0,\n      y: THREE.MathUtils.degToRad(20),\n      duration: 0.9,\n      ease: \"cubic-bezier(0.165,0.84,0.44,1)\",\n      overwrite: false\n    });\n    import_gsap.gsap.to(caustic.scale, {\n      x: 1,\n      duration: 0.9,\n      ease: \"power4.out\"\n    });\n  };\n  group.userData = {\n    handlers: {\n      \"hover:start\": onHoverStart,\n      \"hover:end\": onHoverEnd\n    },\n    cleanup\n  };\n  return group;\n}\n",
+  "transformError": null
+}

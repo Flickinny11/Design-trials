@@ -1,0 +1,51 @@
+{
+  "label": "batch-op-v-05-pedestal-material-study-1",
+  "judgedAt": "2026-07-11T04:18:15.344Z",
+  "judgeModel": "claude-opus-4-8",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-op-v-05-pedestal-material-study-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-op-v-05-pedestal-material-study-1/F2.jpg"
+    }
+  ],
+  "mappingFile": "notes/bakeoff-b/judge/blind/batch-op-v-05-pedestal-material-study-1/mapping.json",
+  "costUsd": 0.247098,
+  "durationApiMs": 38657,
+  "wallMs": 41310,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 12135,
+    "cache_read_input_tokens": 78528,
+    "output_tokens": 2727,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12135,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 2250,
+        "cache_read_input_tokens": 41630,
+        "cache_creation_input_tokens": 7403,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7403
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 22, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center torus-knot — matte white plastic, no brushed-metal PBR, no metalness/clearcoat/anisotropy\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center knot and pedestal — flat fills, no real light response\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"center — pedestal floats over a glowing white orb, ungrounded\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"right half of background — pure black\" }, { \"defect\": \"LOW_CONTRAST\", \"region\": \"left half — blown-out white blob field\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"whole frame — no signal red accent, black/white only\" } ], \"notes\": \"Matte white clay knot, not brushed metal; floating pedestal over orb; blown-white vs black voids; no red. Off-spec and broken.\" }, { \"frame\": \"F2\", \"score\": 30, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center torus-knot — flat white matte, no brushed-metal PBR/anisotropy/clearcoat\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center knot — uniform white, no directional metallic response\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"upper-right background — black void\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"muddy brown floor and no red accent anywhere\" }, { \"defect\": \"LOW_CONTRAST\", \"region\": \"left field — blown-out white backdrop\" } ], \"notes\": \"Grounded pedestal is slight improvement, but knot is flat white plastic not brushed metal; dead lighting, muddy floor, black void, no red accent.\" } ] }"
+}

@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/claude-fable-5/v-05-pedestal-material-study-r1",
+  "contestant": "claude-fable-5",
+  "caseId": "v-05-pedestal-material-study",
+  "run": 1,
+  "capturedAt": "2026-07-11T03:51:36.066Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 8,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/claude-fable-5/v-05-pedestal-material-study-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

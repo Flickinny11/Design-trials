@@ -1,0 +1,58 @@
+{
+  "label": "ground-truth-pass2-batch1",
+  "model": "claude-fable-5",
+  "frames": [
+    {
+      "label": "F1",
+      "goldenId": "g-01"
+    },
+    {
+      "label": "F2",
+      "goldenId": "g-02"
+    },
+    {
+      "label": "F3",
+      "goldenId": "g-03"
+    },
+    {
+      "label": "F4",
+      "goldenId": "g-04"
+    },
+    {
+      "label": "F5",
+      "goldenId": "g-05"
+    }
+  ],
+  "costUsd": 0.5573170000000001,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 15359,
+    "cache_read_input_tokens": 82459,
+    "output_tokens": 2641,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15359,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1830,
+        "cache_read_input_tokens": 44256,
+        "cache_creation_input_tokens": 9306,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9306
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 3, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center (torus knot and pedestal absent)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"entire frame\" } ], \"notes\": \"Near-black empty frame. No pedestal, knot, material, or lighting rendered.\" }, { \"frame\": \"F2\", \"score\": 3, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center (glass prism, dispersion, rim light absent)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"entire frame\" } ], \"notes\": \"Fully black frame. No prism, refraction, iridescence, or emissive core present.\" }, { \"frame\": \"F3\", \"score\": 8, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame (near-empty)\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center panel (gradient, grid, ghost preview, copy, accent action absent)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"center card (bare white square only)\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"entire frame\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card (tiny vs 3.2x2.2 panel spec)\" } ], \"notes\": \"Single flat white square on void. Violates DL16 it was meant to demonstrate.\" }, { \"frame\": \"F4\", \"score\": 8, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame (near-empty)\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center (wordmark, link columns, legal line, hairlines, accent bar absent)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"center (square instead of 6.8-wide footer band)\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"entire frame\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card\" } ], \"notes\": \"Flat white square on void; no footer structure, type, or hairline rules rendered.\" }, { \"frame\": \"F5\", \"score\": 10, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center (five filmstrip cards, photos, recession absent)\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center icon (blue layered glyph)\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center icon (no red/black/white discipline)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center icon (flat fills, no light response)\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center icon (tiny vs full carousel)\" } ], \"notes\": \"Single small blue layers icon on void; no carousel, plus automatic blue-drift MUST-FIX.\" } ] }"
+}

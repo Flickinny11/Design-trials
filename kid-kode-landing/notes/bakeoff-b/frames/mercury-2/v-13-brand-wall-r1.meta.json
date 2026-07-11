@@ -1,0 +1,21 @@
+{
+  "bundle": "wbakeb/mercury-2/v-13-brand-wall-r1",
+  "contestant": "mercury-2",
+  "caseId": "v-13-brand-wall",
+  "run": 1,
+  "capturedAt": "2026-07-11T03:01:14.020Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/mercury-2/v-13-brand-wall-r1",
+    "moduleRuntimeError": "TypeError: Class constructor Vector3 cannot be invoked without 'new'"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

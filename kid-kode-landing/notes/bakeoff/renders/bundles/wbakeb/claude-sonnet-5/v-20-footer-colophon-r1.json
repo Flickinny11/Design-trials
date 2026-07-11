@@ -1,0 +1,280 @@
+{
+  "id": "wbakeb/claude-sonnet-5/v-20-footer-colophon-r1",
+  "contestant": "claude-sonnet-5",
+  "caseId": "v-20-footer-colophon",
+  "run": 1,
+  "node": {
+    "nodeId": "v-20-footer-colophon",
+    "subtype": "footer",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Footer colophon — A footer colophon with type-scale discipline: wordmark, three link columns, legal line, hairline rules.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "NOVA ATELIER",
+            "role": "wordmark",
+            "typography": {
+              "fontSize": 34,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "ATELIER",
+            "role": "column-header",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Features",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Collection",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Pricing",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "COMPANY",
+            "role": "column-header",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Journal",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Visit the Atelier",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Contact",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "LEGAL",
+            "role": "column-header",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Privacy",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Terms",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Warranty",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "(c) 2026 Nova Atelier. All rights reserved. Machined in Geneva.",
+            "role": "legal",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#101015",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#121218"
+            },
+            {
+              "at": 1,
+              "hex": "#0b0b10"
+            }
+          ]
+        },
+        "typography": {
+          "wordmark": {
+            "family": "Lora",
+            "fontSize": 34,
+            "fontWeight": 600,
+            "letterSpacing": 0.02,
+            "lineHeight": 1
+          },
+          "column-header": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.2
+          },
+          "link": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.8
+          },
+          "legal": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 400,
+            "letterSpacing": 0.04,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Footer band 6.8w x 2.0h scene units, albedo vertical ramp #121218 (at 0.0) -> #0b0b10 (at 1.0), roughness 0.6, metalness 0.2, top edge carrying a full-width 0.006-unit hairline rule #23232b; layout on a 0.25-unit baseline grid: wordmark block occupies the left 2.0 units with the wordmark and a 0.3w x 0.02h accent bar #ff2a38 emissive 1.4 beneath it; three link columns each 1.2w with 0.375-unit gutters (1.5x base) to the right, each column led by a header then three links at 1.8 line height; legal line spans the full width 0.375 above the bottom edge, separated by a second 0.006-unit hairline #23232b with 0.25 clearance above and below; link hover color #e8ecf2 -> #ff2a38 over 140ms cubic-bezier(0.25,0.46,0.45,0.94) with translateZ 0 -> 0.02; mount is a single fade-up of the whole band opacity 0 -> 1 and y +0.2 -> 0 over 500ms cubic-bezier(0.25,0.46,0.45,0.94), no per-item stagger, the colophon arrives as one set object; the key light grazes from upper left so the hairline rules pick up a faint specular edge, reading etched rather than drawn."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        -0.05,
+        5.2
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.4
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1,
+        "position": [
+          -3,
+          3,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.4,
+        "position": [
+          2.4,
+          -0.8,
+          -1
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#7f8896",
+        "intensity": 0.25,
+        "position": [
+          3,
+          0.5,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "The whole colophon fades up once as a single object; hovered links shift to accent red and lift 0.02 units.",
+    "contrastMinimum": "4.5:1 links and legal on band ramp; 3:1 wordmark minimum"
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const THREE = ctx.THREE;\n  const { Group, Mesh, PlaneGeometry, DirectionalLight, Color } = THREE;\n  const visualSpec = config.intent?.visualSpec ?? {};\n  const colors = visualSpec.colors ?? {\n    background: \"#0b0b10\",\n    surface: \"#101015\",\n    ink: \"#16161d\",\n    paper: \"#e8ecf2\",\n    accent: \"#ff2a38\",\n    gradientStops: [{ at: 0, hex: \"#121218\" }, { at: 1, hex: \"#0b0b10\" }]\n  };\n  const typography = visualSpec.typography ?? {\n    wordmark: { fontSize: 34, letterSpacing: 0.02 },\n    \"column-header\": { fontSize: 9, letterSpacing: 0.12 },\n    link: { fontSize: 13, letterSpacing: 0 },\n    legal: { fontSize: 9, letterSpacing: 0.04 }\n  };\n  const items = config.textContent ?? visualSpec.textContent ?? [];\n  const wordmarkText = items.find((i) => i.role === \"wordmark\")?.text ?? \"NOVA ATELIER\";\n  const headerTexts = items.filter((i) => i.role === \"column-header\").map((i) => i.text);\n  const linkTexts = items.filter((i) => i.role === \"link\").map((i) => i.text);\n  const legalText = items.find((i) => i.role === \"legal\")?.text ?? \"(c) 2026 Nova Atelier. All rights reserved. Machined in Geneva.\";\n  const headers = headerTexts.length === 3 ? headerTexts : [\"ATELIER\", \"COMPANY\", \"LEGAL\"];\n  const columnLinks = [\n    linkTexts.slice(0, 3).length === 3 ? linkTexts.slice(0, 3) : [\"Features\", \"Collection\", \"Pricing\"],\n    linkTexts.slice(3, 6).length === 3 ? linkTexts.slice(3, 6) : [\"Journal\", \"Visit the Atelier\", \"Contact\"],\n    linkTexts.slice(6, 9).length === 3 ? linkTexts.slice(6, 9) : [\"Privacy\", \"Terms\", \"Warranty\"]\n  ];\n  const group = new Group();\n  group.name = \"footer-colophon\";\n  const disposables = [];\n  const primitiveHandles = [];\n  const textObjects = [];\n  const bandW = 6.8;\n  const bandH = 2;\n  const gradientStops = colors.gradientStops ?? [{ at: 0, hex: \"#121218\" }, { at: 1, hex: \"#0b0b10\" }];\n  const topHex = gradientStops[0]?.hex ?? \"#121218\";\n  const bottomHex = gradientStops[gradientStops.length - 1]?.hex ?? \"#0b0b10\";\n  const bandGeo = new PlaneGeometry(bandW, bandH, 1, 1);\n  const bandMat = new import_webgpu.MeshStandardNodeMaterial({ roughness: 0.6, metalness: 0.2 });\n  bandMat.transparent = true;\n  bandMat.opacity = 0;\n  bandMat.colorNode = (0, import_tsl.mix)((0, import_tsl.color)(bottomHex), (0, import_tsl.color)(topHex), (0, import_tsl.uv)().y);\n  const bandMesh = new Mesh(bandGeo, bandMat);\n  bandMesh.position.set(0, 0, 0);\n  group.add(bandMesh);\n  disposables.push(bandGeo, bandMat);\n  function makeHairline(y, width) {\n    const geo = new PlaneGeometry(width, 6e-3, 1, 1);\n    const mat = new import_webgpu.MeshStandardNodeMaterial({ roughness: 0.4, metalness: 0.55 });\n    mat.transparent = true;\n    mat.opacity = 0;\n    mat.colorNode = (0, import_tsl.color)(\"#23232b\");\n    const mesh = new Mesh(geo, mat);\n    mesh.position.set(0, y, 2e-3);\n    group.add(mesh);\n    disposables.push(geo, mat);\n    return mesh;\n  }\n  const hairlineTop = makeHairline(bandH / 2 - 3e-3, bandW);\n  const hairlineLegal = makeHairline(-0.375, bandW);\n  const accentGeo = new PlaneGeometry(0.3, 0.02, 1, 1);\n  const accentMat = new import_webgpu.MeshStandardNodeMaterial({ roughness: 0.5, metalness: 0.3 });\n  accentMat.transparent = true;\n  accentMat.opacity = 0;\n  accentMat.colorNode = (0, import_tsl.color)(colors.accent);\n  accentMat.emissiveNode = (0, import_tsl.color)(colors.accent).mul(1.4);\n  const accentMesh = new Mesh(accentGeo, accentMat);\n  const wordmarkBlockLeft = -bandW / 2;\n  accentMesh.position.set(wordmarkBlockLeft + 0.15, 0.28, 2e-3);\n  group.add(accentMesh);\n  disposables.push(accentGeo, accentMat);\n  const rimLight = new DirectionalLight(new Color(colors.paper), 0.7);\n  rimLight.position.set(3, -1.5, 3);\n  group.add(rimLight);\n  const TEXT_SCALE = 0.01;\n  function addText(str, opts, x, y, z = 3e-3) {\n    const textObj = ctx.fontAtlas.createText(str, opts);\n    textObj.scale.setScalar(TEXT_SCALE);\n    textObj.position.set(x, y, z);\n    group.add(textObj);\n    textObjects.push(textObj);\n    return textObj;\n  }\n  const wordmarkTypo = typography.wordmark ?? { fontSize: 34, letterSpacing: 0.02 };\n  addText(wordmarkText, {\n    fontSize: wordmarkTypo.fontSize ?? 34,\n    color: colors.paper,\n    align: \"left\",\n    letterSpacingPx: (wordmarkTypo.fontSize ?? 34) * (wordmarkTypo.letterSpacing ?? 0.02)\n  }, wordmarkBlockLeft, 0.55);\n  const colHeaderTypo = typography[\"column-header\"] ?? { fontSize: 9, letterSpacing: 0.12 };\n  const linkTypo = typography.link ?? { fontSize: 13, letterSpacing: 0 };\n  const gutter = 0.375;\n  const colWidth = 1.2;\n  const wordmarkBlockWidth = 2;\n  const col1X = wordmarkBlockLeft + wordmarkBlockWidth + gutter;\n  const colXs = [col1X, col1X + colWidth + gutter, col1X + 2 * (colWidth + gutter)];\n  const linkMeshRegistry = [];\n  for (let c = 0; c < 3; c += 1) {\n    const x = colXs[c];\n    addText(headers[c], {\n      fontSize: colHeaderTypo.fontSize ?? 9,\n      color: colors.paper,\n      align: \"left\",\n      letterSpacingPx: (colHeaderTypo.fontSize ?? 9) * (colHeaderTypo.letterSpacing ?? 0.12)\n    }, x, 0.62);\n    const linkYs = [0.32, 0.08, -0.16];\n    for (let r = 0; r < 3; r += 1) {\n      const linkObj = addText(columnLinks[c][r], {\n        fontSize: linkTypo.fontSize ?? 13,\n        color: colors.paper,\n        align: \"left\",\n        letterSpacingPx: (linkTypo.fontSize ?? 13) * (linkTypo.letterSpacing ?? 0)\n      }, x, linkYs[r]);\n      linkMeshRegistry.push(linkObj);\n    }\n  }\n  const legalTypo = typography.legal ?? { fontSize: 9, letterSpacing: 0.04 };\n  addText(legalText, {\n    fontSize: legalTypo.fontSize ?? 9,\n    color: colors.paper,\n    align: \"center\",\n    letterSpacingPx: (legalTypo.fontSize ?? 9) * (legalTypo.letterSpacing ?? 0.04)\n  }, 0, -0.625);\n  for (const prim of config.cinematicPrimitives ?? []) {\n    const fn = ctx.primitives?.[prim.name];\n    if (typeof fn === \"function\") {\n      const handle = fn(group, prim.params ?? {});\n      if (handle) primitiveHandles.push(handle);\n    }\n  }\n  function collectMaterials(obj, out) {\n    obj.traverse?.((child) => {\n      if (child.material) {\n        const mats = Array.isArray(child.material) ? child.material : [child.material];\n        for (const m of mats) {\n          if (m) {\n            m.transparent = true;\n            out.push(m);\n          }\n        }\n      }\n    });\n  }\n  const fadeMaterials = [bandMat, accentMat, hairlineTop.material, hairlineLegal.material];\n  for (const t of textObjects) collectMaterials(t, fadeMaterials);\n  for (const m of fadeMaterials) {\n    if (typeof m.opacity === \"number\") m.opacity = 0;\n  }\n  group.position.y += 0.2;\n  const opacityProxy = { v: 0 };\n  const tl = import_gsap.gsap.timeline();\n  tl.to(group.position, { y: group.position.y - 0.2, duration: 0.5, ease: \"power2.out\" }, 0);\n  tl.to(opacityProxy, {\n    v: 1,\n    duration: 0.5,\n    ease: \"power2.out\",\n    onUpdate: () => {\n      for (const m of fadeMaterials) {\n        if (typeof m.opacity === \"number\") {\n          m.opacity = opacityProxy.v;\n          m.needsUpdate = true;\n        }\n      }\n    }\n  }, 0);\n  function tweenLinkColor(linkObj, hex) {\n    linkObj.traverse?.((child) => {\n      if (child.material && child.material.color) {\n        import_gsap.gsap.to(child.material.color, {\n          r: new Color(hex).r,\n          g: new Color(hex).g,\n          b: new Color(hex).b,\n          duration: 0.14,\n          ease: \"power2.out\"\n        });\n      }\n    });\n  }\n  group.userData.handlers = {\n    onPointerOver: (evt) => {\n      const target = evt?.object ?? evt;\n      if (linkMeshRegistry.includes(target)) {\n        tweenLinkColor(target, colors.accent);\n        import_gsap.gsap.to(target.position, { z: 0.02, duration: 0.14, ease: \"power2.out\" });\n      }\n    },\n    onPointerOut: (evt) => {\n      const target = evt?.object ?? evt;\n      if (linkMeshRegistry.includes(target)) {\n        tweenLinkColor(target, colors.paper);\n        import_gsap.gsap.to(target.position, { z: 3e-3, duration: 0.14, ease: \"power2.out\" });\n      }\n    }\n  };\n  group.userData.cleanup = () => {\n    tl.kill();\n    for (const handle of primitiveHandles) {\n      try {\n        handle.cleanup?.();\n      } catch (e) {\n      }\n    }\n    for (const geoOrMat of disposables) {\n      geoOrMat?.dispose?.();\n    }\n    for (const t of textObjects) {\n      t.traverse?.((child) => {\n        child.geometry?.dispose?.();\n        const mats = Array.isArray(child.material) ? child.material : [child.material];\n        for (const m of mats) m?.dispose?.();\n      });\n      group.remove(t);\n    }\n    group.remove(rimLight);\n    group.remove(bandMesh, hairlineTop, hairlineLegal, accentMesh);\n  };\n  return group;\n}\n",
+  "transformError": null
+}

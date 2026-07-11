@@ -1,0 +1,364 @@
+{
+  "verdicts": [
+    {
+      "executor": "mercury-2",
+      "seamId": "s-07",
+      "fixed": false,
+      "regionNowShows": "empty near-black gradient plate — no hero type, kicker, or accent rule rendered at all",
+      "notes": "The oversized cropped glyphs are gone, but AFTER is a blank frame: all type is missing from the region (and the whole plate). Replacing illegible-oversized with absent content is an equal-or-worse defect in the same region.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.30698200000000003
+    },
+    {
+      "executor": "claude-haiku-4.5",
+      "seamId": "s-09",
+      "fixed": false,
+      "regionNowShows": "Red circle is pulled back to the upper-left corner clear of the cards, but the large white slab still descends into the card row, its bottom edge cutting through the second and third cards at their icon discs; a new dark column also overlaps card one.",
+      "notes": "The collision named in the defect persists: the white slab still overlaps cards 2 and 3 essentially as before, so composition in the upper half remains broken despite the red circle retreat.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.335086
+    },
+    {
+      "executor": "claude-haiku-4.5",
+      "seamId": "s-15",
+      "fixed": false,
+      "regionNowShows": "Button is now the correct vivid red (#ff2a38-like) with dark ink label, but it has shifted left/down and overlaps the ghost wireframe preview card",
+      "notes": "OFF_PALETTE itself is resolved (pink -> spec accent red), but the button was repositioned and now collides with the ghost preview, introducing an equal-severity overlap/misalignment defect in the same region.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.34663900000000003
+    },
+    {
+      "executor": "claude-haiku-4.5",
+      "seamId": "s-16",
+      "fixed": false,
+      "regionNowShows": "same dark card with header strip, hairline rules, and a red CTA bar (slightly wider); still no tier name, price figure, or feature text",
+      "notes": "AFTER is nearly identical to BEFORE — the only visible change is the accent CTA bar extending slightly further right. No typography or spec content was added, so the MISSING_SPEC_ELEMENT defect remains.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.306057
+    },
+    {
+      "executor": "claude-haiku-4.5",
+      "seamId": "s-17",
+      "fixed": false,
+      "regionNowShows": "Pill darkened slightly to a mid slate-gray, but still far lighter than the specified #1b1b23->#101015 ramp; upper background field remains light gray instead of #0b0b10",
+      "notes": "Marginal darkening only; both pill and background field remain clearly off-palette, so the OFF_PALETTE defect persists.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.31731699999999996
+    },
+    {
+      "executor": "mercury-2",
+      "seamId": "s-03",
+      "fixed": false,
+      "regionNowShows": "Still blown-out white blobs on black; one small white card plus a second faint white rectangle at right — no dark background, no five distinct photo-textured plates",
+      "notes": "AFTER remains effectively a blank/overexposed render. Adding one extra untextured white rectangle does not resolve BLANK_RENDER; the frame still shows no recognizable 3D filmstrip, textures, or specified #0b0b10 background.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.322624
+    },
+    {
+      "executor": "claude-haiku-4.5",
+      "seamId": "s-03",
+      "fixed": false,
+      "regionNowShows": "same near-empty frame: blown-out white blobs, one tiny card (now gray instead of white) with a red underline — no five-card filmstrip, no photo textures, no dark #0b0b10 background",
+      "notes": "AFTER only changes the lone card's fill from white to gray; the BLANK_RENDER defect persists — no carousel, no distinct plates, no perspective strip rendered.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.30662
+    },
+    {
+      "executor": "claude-haiku-4.5",
+      "seamId": "s-10",
+      "fixed": false,
+      "regionNowShows": "Same large out-of-focus gray blob still filling the upper half; only the rail band below it got slightly lighter/more opaque",
+      "notes": "AFTER is nearly identical to BEFORE in the flagged region — the formless blurred gray mass still dominates the top of the frame with no resolved dock geometry (no five entries, no machined rail detail). BROKEN_COMPOSITION persists.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.31073700000000004
+    },
+    {
+      "executor": "mercury-2",
+      "seamId": "s-16",
+      "fixed": false,
+      "regionNowShows": "Same dark card with header strip, faint hairline rules, and red accent bar — still no tier name, price figure, or feature text",
+      "notes": "AFTER is visually near-identical to BEFORE in the center-card region; no typographic content (tier name, price, per-month caption, feature rows) was added, so MISSING_SPEC_ELEMENT persists.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.30772700000000003
+    },
+    {
+      "executor": "mercury-2",
+      "seamId": "s-06",
+      "fixed": false,
+      "regionNowShows": "Same chaotic frame-filling blown-out white shapes; no legible 3x2 tile grid, camera/scale still broken",
+      "notes": "AFTER appears pixel-identical to BEFORE — oversized blurred wordmark fragments dominate the frame, tiles unreadable, composition unchanged. Defect not addressed.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.30279599999999995
+    },
+    {
+      "executor": "claude-haiku-4.5",
+      "seamId": "s-18",
+      "fixed": false,
+      "regionNowShows": "washed-out light gradient panels over dark background; still no MSDF type glyphs and no #ff2a38 accent underline anywhere",
+      "notes": "AFTER contains no headline text or accent element; the missing spec elements remain absent, and the frame is now additionally blown out to near-white, contradicting the dark #0b0b10 palette.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.301842
+    },
+    {
+      "executor": "mercury-2",
+      "seamId": "s-11",
+      "fixed": false,
+      "regionNowShows": "A large opaque all-black rectangle still covers the left-center quadrant, occluding the ghost wireframe card just as in BEFORE",
+      "notes": "AFTER is nearly identical to BEFORE in the anchored region; the void black element remains (same size/position, still clipping the ghost preview outline and circle). Defect not remediated.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.315154
+    },
+    {
+      "executor": "claude-haiku-4.5",
+      "seamId": "s-05",
+      "fixed": false,
+      "regionNowShows": "Six tiles still blank — no wordmarks on any tile, no kicker text above the grid; large blurred light shapes now partially occlude the tile wall",
+      "notes": "The missing spec elements (monochrome #e8ecf2 wordmarks per tile, kicker above grid) are still absent in AFTER; the region is arguably worse due to new occluding artifacts over the tiles",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.30886100000000005
+    },
+    {
+      "executor": "claude-haiku-4.5",
+      "seamId": "s-11",
+      "fixed": false,
+      "regionNowShows": "Same solid all-black rectangle still covering the left-center quadrant, obscuring the left half of the ghost wireframe watch-card",
+      "notes": "AFTER is nearly identical to BEFORE in that region; the featureless black block persists (perhaps trimmed a few px) and the panel gradient/grid is still occluded there.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.31151
+    },
+    {
+      "executor": "mercury-2",
+      "seamId": "s-05",
+      "fixed": false,
+      "regionNowShows": "Six blank machined tiles, visually identical to BEFORE — no wordmarks on any tile, no kicker above the grid",
+      "notes": "AFTER is indistinguishable from BEFORE in the anchored region; the missing brand wordmarks and kicker were not added.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.303114
+    },
+    {
+      "executor": "claude-haiku-4.5",
+      "seamId": "s-07",
+      "fixed": false,
+      "regionNowShows": "Still a single massively oversized white glyph fragment cropped at the top and right edges — no legible hero lines, no kicker text visible",
+      "notes": "AFTER merely repositions/reshapes the giant cropped letterform; type remains scaled far beyond the spec (em height should be ~0.62 units on a 7x5.5 plate) and is still illegible, so the SCALE_ERROR persists.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.313046
+    },
+    {
+      "executor": "claude-haiku-4.5",
+      "seamId": "s-06",
+      "fixed": false,
+      "regionNowShows": "Frame still dominated by one enormous blurred white wordmark shape overflowing the canvas; the 3x2 machined-tile grid is barely visible beneath it, no legible brand-mark wall",
+      "notes": "AFTER is equal or worse: the oversized white mark covers even more of the frame than BEFORE, tiles remain occluded and composition is still broken at full-frame scale",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.316056
+    },
+    {
+      "executor": "mercury-2",
+      "seamId": "s-09",
+      "fixed": false,
+      "regionNowShows": "Unchanged: blurred red circle (upper left), white slab, and red wedge (upper right) still overlap and occlude the three-card row",
+      "notes": "AFTER is visually identical to BEFORE in the flagged region — the colliding foreground shapes remain over the triptych; no composition change detected.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.304202
+    },
+    {
+      "executor": "claude-haiku-4.5",
+      "seamId": "s-04",
+      "fixed": false,
+      "regionNowShows": "A gray rectangular plate/backing panel added behind the same abstract blurred shapes",
+      "notes": "AFTER adds a plate-like surface framing the content, but the frame still shows no photographic imagery, no filmic grade, no caption block, and no red accent — the photo hero composite spec element remains missing, only a placeholder plate appeared.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.35550299999999996
+    },
+    {
+      "executor": "claude-haiku-4.5",
+      "seamId": "s-14",
+      "fixed": false,
+      "regionNowShows": "Same large blurred white blobs still dominate the entire frame; only two faint dark tile edges now peek out at bottom-center",
+      "notes": "AFTER is nearly identical to BEFORE — the bento grid remains occluded/absent behind out-of-focus white masses, so BROKEN_COMPOSITION persists across the field. The barely-visible slab corners at the bottom do not restore a readable 2x2 composition.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.314853
+    },
+    {
+      "executor": "mercury-2",
+      "seamId": "s-10",
+      "fixed": false,
+      "regionNowShows": "featureless black void with the top of a flat, untextured white square intruding at center",
+      "notes": "The gray blob is gone, but the render collapsed: no dock, rail, entries, or materials remain. The upper half traded a formless gray blob for blank black plus a raw white placeholder square — an equal-or-worse BROKEN_COMPOSITION defect in the same region.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.311275
+    },
+    {
+      "executor": "mercury-2",
+      "seamId": "s-02",
+      "fixed": false,
+      "regionNowShows": "Same flat sans-serif headline, now partially occluded by a large opaque gray rectangle (likely a failed MSDF/plane render); still no red accent underline, no serif Lora glyphs, no 3D depth",
+      "notes": "Defect not fixed and region regressed: none of the missing spec elements (Lora 600 MSDF type, red #ff2a38 underline, per-word z-depth) appear, and a broken gray plane now covers most of the headline text.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.320056
+    },
+    {
+      "executor": "mercury-2",
+      "seamId": "s-19",
+      "fixed": false,
+      "regionNowShows": "entirely blank near-black frame — no panel, grid, ghost preview, copy, or accent visible",
+      "notes": "White square is gone but nothing replaced it; spec's gradient panel, hairline grid, wireframe ghost, and accent action are all absent. BLANK_RENDER persists in an equal-or-worse form (fully void frame).",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.308464
+    },
+    {
+      "executor": "mercury-2",
+      "seamId": "s-04",
+      "fixed": false,
+      "regionNowShows": "Same abstract flat shapes as BEFORE — blurred white glyph-like forms and gray rectangles on near-black; no photographic plate, no filmic grade, no caption block, no red accent",
+      "notes": "AFTER appears visually identical to BEFORE; the specified photo hero composite (image/depth plate, caption, accent) is still absent from the frame",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.310357
+    },
+    {
+      "executor": "claude-haiku-4.5",
+      "seamId": "s-08",
+      "fixed": false,
+      "regionNowShows": "three dots still desaturated salmon/pink (~#f75f72), visibly lighter than the vivid #ff2a38 red shapes elsewhere in frame",
+      "notes": "BEFORE and AFTER appear pixel-identical in the dot region; the dots have not been shifted to the accent red, so the OFF_PALETTE defect persists.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.30734799999999995
+    },
+    {
+      "executor": "mercury-2",
+      "seamId": "s-13",
+      "fixed": true,
+      "regionNowShows": "lit graded floor/back-wall surface with depth",
+      "notes": "BEFORE lower half was a flat near-black void; AFTER shows a shaded ground plane and gradient walls, giving the region tonal variation and depth. No new equal-or-worse defect introduced.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.625831
+    },
+    {
+      "executor": "claude-haiku-4.5",
+      "seamId": "s-01",
+      "fixed": true,
+      "regionNowShows": "A tilted dark glass prism standing on a lit surface with a red refracted/caustic streak, against a dark background — a real render with visible geometry and lighting",
+      "notes": "BEFORE was a uniformly blank near-black frame; AFTER renders actual scene content. The prism reads dark and the floor plane is much brighter than the spec's dark-scene palette, but those are lesser quality issues, not a blank render or an equal-or-worse replacement defect.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.313968
+    },
+    {
+      "executor": "claude-haiku-4.5",
+      "seamId": "s-19",
+      "fixed": true,
+      "regionNowShows": "Dark empty-state panel with hairline grid, wireframe watch-card ghost preview with dial, and red accent action bar",
+      "notes": "BLANK_RENDER resolved — the lone white square on flat black is replaced by the spec'd rich empty state (gradient panel, 0.25-pitch grid, ghost outline, #ff2a38 accent). Residual stray shapes remain (large white disc top-right, soft gray blur strip overlapping the ghost dial at left), but these are lesser artifacts, not an equal-or-worse blank/void in the region.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.32477300000000003
+    },
+    {
+      "executor": "claude-haiku-4.5",
+      "seamId": "s-13",
+      "fixed": false,
+      "regionNowShows": "unchanged flat black void with a small detached gray floor quad",
+      "notes": "AFTER is virtually identical to BEFORE in the lower half — no gradient stops (#0b0b10→#101017→#16161d), lighting falloff, or environmental depth was added; the background remains an empty flat void.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.302879
+    },
+    {
+      "executor": "mercury-2",
+      "seamId": "s-14",
+      "fixed": false,
+      "regionNowShows": "Same huge blurred white blobs still covering most of the frame; only faint dark slab edges with a gutter now peek through at the bottom",
+      "notes": "AFTER is nearly identical to BEFORE — the out-of-focus white masses still dominate the field and no legible 2x2 bento of dark machined tiles is visible, so BROKEN_COMPOSITION persists.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.31117300000000003
+    },
+    {
+      "executor": "claude-haiku-4.5",
+      "seamId": "s-02",
+      "fixed": false,
+      "regionNowShows": "Same flat sans-serif headline; a plain gray rectangular panel added below the subhead — no red #ff2a38 underline, no serif (Lora) glyphs, no per-word z-depth/parallax",
+      "notes": "AFTER is nearly identical to BEFORE. The only change is a flat gray box behind/below the tagline, which is not the specified red accent underline and adds no 3D depth; the wrong sans font persists. Defect remains, arguably with a new stray element in the same region.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.31143199999999993
+    },
+    {
+      "executor": "mercury-2",
+      "seamId": "s-18",
+      "fixed": false,
+      "regionNowShows": "Uniform near-black background (#0b0b10) with nothing rendered — no headline glyphs, no accent underline",
+      "notes": "AFTER is a completely empty frame. The stray white rectangle/glow from BEFORE is gone, but the spec elements (MSDF Lora headline, accent underline) are still entirely absent, so MISSING_SPEC_ELEMENT persists.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.30394
+    },
+    {
+      "executor": "mercury-2",
+      "seamId": "s-20",
+      "fixed": true,
+      "regionNowShows": "uniform very dark near-black field (~#0b0b10), on palette",
+      "notes": "Background is no longer light near-white; it now matches the spec's dark #0b0b10. Caveat (out of scope): the entire frame is now dark — the prism/scene content is no longer visible, but the background region itself has no new defect.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.31
+    },
+    {
+      "executor": "claude-haiku-4.5",
+      "seamId": "s-20",
+      "fixed": false,
+      "regionNowShows": "Background field is still light near-white (pale lavender-white), identical to BEFORE; only the prism's internal coloring changed.",
+      "notes": "The OFF_PALETTE defect persists — the scene background was not changed to the spec's dark #0b0b10; the dark wedge in the top-left corner remains the only dark area.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.30319399999999996
+    },
+    {
+      "executor": "mercury-2",
+      "seamId": "s-15",
+      "fixed": false,
+      "regionNowShows": "blank dark background — entire panel, button, and all content failed to render",
+      "notes": "BEFORE had an off-palette pink button (spec accent is #ff2a38 red). AFTER is a completely empty black frame; the accent button no longer exists, replaced by a render failure — an equal-or-worse defect in the same region.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.302384
+    },
+    {
+      "executor": "mercury-2",
+      "seamId": "s-01",
+      "fixed": false,
+      "regionNowShows": "Still a uniformly near-black empty frame — no prism, iridescence, rim light, or emissive core visible",
+      "notes": "AFTER is visually identical to BEFORE; the BLANK_RENDER defect persists across the entire frame.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.300002
+    },
+    {
+      "executor": "mercury-2",
+      "seamId": "s-12",
+      "fixed": false,
+      "regionNowShows": "Unchanged flat white square on black background; no navigation dock, rail, or entries rendered",
+      "notes": "AFTER is visually identical to BEFORE — the blank/placeholder render persists; none of the spec's dock geometry, brushed-metal rail, or five entries appear.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.300203
+    },
+    {
+      "executor": "mercury-2",
+      "seamId": "s-08",
+      "fixed": false,
+      "regionNowShows": "empty dark background — dots and all scene content gone; frame appears unrendered/blank",
+      "notes": "AFTER is a solid near-black frame (~#0b0b10). The salmon dots weren't recolored to #ff2a38 — they vanished along with the cards, which is an equal-or-worse defect in the same region (likely a render failure).",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.301851
+    },
+    {
+      "executor": "claude-haiku-4.5",
+      "seamId": "s-12",
+      "fixed": false,
+      "regionNowShows": "Unchanged plain white square on a black background — identical to BEFORE",
+      "notes": "AFTER still shows no navigation dock, rail, entries, or PBR material; the frame remains a blank/placeholder render, so BLANK_RENDER is not fixed.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.30076800000000004
+    },
+    {
+      "executor": "mercury-2",
+      "seamId": "s-17",
+      "fixed": false,
+      "regionNowShows": "Center pill still mid-gray/lavender, upper background field still light blue-gray",
+      "notes": "AFTER is nearly identical to BEFORE; rail should be dark charcoal ramp #1b1b23->#101015 and field #0b0b10, but both remain far lighter and cooler than palette. OFF_PALETTE persists.",
+      "judgeModel": "claude-fable-5",
+      "costUsd": 0.312807
+    }
+  ]
+}

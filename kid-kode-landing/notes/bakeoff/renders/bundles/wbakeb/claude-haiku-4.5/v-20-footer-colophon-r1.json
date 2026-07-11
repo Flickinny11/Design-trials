@@ -1,0 +1,280 @@
+{
+  "id": "wbakeb/claude-haiku-4.5/v-20-footer-colophon-r1",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-20-footer-colophon",
+  "run": 1,
+  "node": {
+    "nodeId": "v-20-footer-colophon",
+    "subtype": "footer",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Footer colophon — A footer colophon with type-scale discipline: wordmark, three link columns, legal line, hairline rules.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "NOVA ATELIER",
+            "role": "wordmark",
+            "typography": {
+              "fontSize": 34,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "ATELIER",
+            "role": "column-header",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Features",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Collection",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Pricing",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "COMPANY",
+            "role": "column-header",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Journal",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Visit the Atelier",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Contact",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "LEGAL",
+            "role": "column-header",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Privacy",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Terms",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Warranty",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "(c) 2026 Nova Atelier. All rights reserved. Machined in Geneva.",
+            "role": "legal",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#101015",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#121218"
+            },
+            {
+              "at": 1,
+              "hex": "#0b0b10"
+            }
+          ]
+        },
+        "typography": {
+          "wordmark": {
+            "family": "Lora",
+            "fontSize": 34,
+            "fontWeight": 600,
+            "letterSpacing": 0.02,
+            "lineHeight": 1
+          },
+          "column-header": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.2
+          },
+          "link": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.8
+          },
+          "legal": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 400,
+            "letterSpacing": 0.04,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Footer band 6.8w x 2.0h scene units, albedo vertical ramp #121218 (at 0.0) -> #0b0b10 (at 1.0), roughness 0.6, metalness 0.2, top edge carrying a full-width 0.006-unit hairline rule #23232b; layout on a 0.25-unit baseline grid: wordmark block occupies the left 2.0 units with the wordmark and a 0.3w x 0.02h accent bar #ff2a38 emissive 1.4 beneath it; three link columns each 1.2w with 0.375-unit gutters (1.5x base) to the right, each column led by a header then three links at 1.8 line height; legal line spans the full width 0.375 above the bottom edge, separated by a second 0.006-unit hairline #23232b with 0.25 clearance above and below; link hover color #e8ecf2 -> #ff2a38 over 140ms cubic-bezier(0.25,0.46,0.45,0.94) with translateZ 0 -> 0.02; mount is a single fade-up of the whole band opacity 0 -> 1 and y +0.2 -> 0 over 500ms cubic-bezier(0.25,0.46,0.45,0.94), no per-item stagger, the colophon arrives as one set object; the key light grazes from upper left so the hairline rules pick up a faint specular edge, reading etched rather than drawn."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        -0.05,
+        5.2
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.4
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1,
+        "position": [
+          -3,
+          3,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.4,
+        "position": [
+          2.4,
+          -0.8,
+          -1
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#7f8896",
+        "intensity": 0.25,
+        "position": [
+          3,
+          0.5,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "The whole colophon fades up once as a single object; hovered links shift to accent red and lift 0.02 units.",
+    "contrastMinimum": "4.5:1 links and legal on band ramp; 3:1 wordmark minimum"
+  },
+  "parsed": true,
+  "fenced": true,
+  "depGate": {
+    "sources": [
+      "gsap",
+      "three/webgpu",
+      "three/tsl"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_gsap = require(\"gsap\");\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nfunction createNode(config, ctx) {\n  const { THREE } = ctx;\n  const root = new THREE.Group();\n  root.name = \"footer-colophon\";\n  const stageGeom = new THREE.PlaneGeometry(6.8, 2);\n  const stageMat = new import_webgpu.MeshStandardNodeMaterial();\n  const colorTop = (0, import_tsl.vec3)(0.071, 0.071, 0.098);\n  const colorBottom = (0, import_tsl.vec3)(0.043, 0.043, 0.063);\n  const gradientNode = (0, import_tsl.mix)(colorTop, colorBottom, (0, import_tsl.uv)().y);\n  stageMat.colorNode = gradientNode;\n  stageMat.roughnessNode = (0, import_tsl.float)(0.6);\n  stageMat.metalnessNode = (0, import_tsl.float)(0.2);\n  stageMat.emissiveNode = (0, import_tsl.vec3)(0, 0, 0);\n  const stagePlane = new THREE.Mesh(stageGeom, stageMat);\n  stagePlane.position.z = 0;\n  root.add(stagePlane);\n  const topRuleGeom = new THREE.PlaneGeometry(6.8, 6e-3);\n  const ruleMat = new import_webgpu.MeshStandardNodeMaterial();\n  ruleMat.colorNode = (0, import_tsl.vec3)(0.137, 0.137, 0.173);\n  ruleMat.emissiveNode = (0, import_tsl.vec3)(0.137, 0.137, 0.173);\n  ruleMat.emissiveIntensity = 0.8;\n  ruleMat.roughnessNode = (0, import_tsl.float)(0.3);\n  ruleMat.metalnessNode = (0, import_tsl.float)(0.4);\n  const topRule = new THREE.Mesh(topRuleGeom, ruleMat);\n  topRule.position.z = 0.01;\n  topRule.position.y = 1 - 3e-3;\n  root.add(topRule);\n  const bottomRule = new THREE.Mesh(topRuleGeom, ruleMat.clone());\n  bottomRule.position.z = 0.01;\n  bottomRule.position.y = -1 + 0.375 + 3e-3;\n  root.add(bottomRule);\n  const wordmarkGroup = new THREE.Group();\n  wordmarkGroup.position.x = -3.4;\n  wordmarkGroup.position.y = 0.3;\n  const wordmarkText = ctx.fontAtlas.createText(\"NOVA ATELIER\", {\n    fontSize: 34,\n    color: \"#e8ecf2\",\n    align: \"left\"\n  });\n  wordmarkText.position.y = 0.3;\n  wordmarkText.position.z = 0.02;\n  wordmarkGroup.add(wordmarkText);\n  const accentBarGeom = new THREE.PlaneGeometry(0.3, 0.02);\n  const accentMat = new import_webgpu.MeshStandardNodeMaterial();\n  accentMat.colorNode = (0, import_tsl.vec3)(1, 0.165, 0.22);\n  accentMat.emissiveNode = (0, import_tsl.vec3)(1, 0.165, 0.22);\n  accentMat.emissiveIntensity = 1.4;\n  accentMat.roughnessNode = (0, import_tsl.float)(0.2);\n  accentMat.metalnessNode = (0, import_tsl.float)(0.7);\n  const accentBar = new THREE.Mesh(accentBarGeom, accentMat);\n  accentBar.position.y = 0;\n  accentBar.position.z = 0.02;\n  wordmarkGroup.add(accentBar);\n  root.add(wordmarkGroup);\n  const columnData = [\n    { header: \"ATELIER\", links: [\"Features\", \"Collection\", \"Pricing\"] },\n    { header: \"COMPANY\", links: [\"Journal\", \"Visit the Atelier\", \"Contact\"] },\n    { header: \"LEGAL\", links: [\"Privacy\", \"Terms\", \"Warranty\"] }\n  ];\n  const columnWidth = 1.2;\n  const gutter = 0.375;\n  const startX = -3.4 + 2 + gutter;\n  columnData.forEach((col, colIdx) => {\n    const columnGroup = new THREE.Group();\n    columnGroup.position.x = startX + (columnWidth + gutter) * colIdx;\n    columnGroup.position.y = 0.4;\n    const headerText = ctx.fontAtlas.createText(col.header, {\n      fontSize: 9,\n      color: \"#b8bcc8\",\n      align: \"left\"\n    });\n    headerText.position.y = 0.25;\n    headerText.position.z = 0.02;\n    columnGroup.add(headerText);\n    col.links.forEach((linkText, linkIdx) => {\n      const link = ctx.fontAtlas.createText(linkText, {\n        fontSize: 13,\n        color: \"#e8ecf2\",\n        align: \"left\"\n      });\n      link.position.y = 0.25 - 0.234 * (linkIdx + 1);\n      link.position.z = 0.02;\n      link.userData.isInteractive = true;\n      link.userData.handlers = link.userData.handlers || {};\n      const originalColor = \"#e8ecf2\";\n      const hoverColor = \"#ff2a38\";\n      let hoverTimeline = null;\n      link.userData.handlers.onHover = () => {\n        if (hoverTimeline) hoverTimeline.kill();\n        hoverTimeline = import_gsap.gsap.to(link.position, {\n          z: 0.04,\n          duration: 0.14,\n          ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n        });\n        import_gsap.gsap.to(link.material, {\n          emissiveIntensity: 1,\n          duration: 0.14\n        }, 0);\n      };\n      link.userData.handlers.onUnhover = () => {\n        if (hoverTimeline) hoverTimeline.kill();\n        hoverTimeline = import_gsap.gsap.to(link.position, {\n          z: 0.02,\n          duration: 0.14,\n          ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n        });\n        import_gsap.gsap.to(link.material, {\n          emissiveIntensity: 0,\n          duration: 0.14\n        }, 0);\n      };\n      columnGroup.add(link);\n    });\n    root.add(columnGroup);\n  });\n  const legalText = ctx.fontAtlas.createText(\n    \"(c) 2026 Nova Atelier. All rights reserved. Machined in Geneva.\",\n    {\n      fontSize: 9,\n      color: \"#9a9daa\",\n      align: \"left\",\n      maxWidthPx: 1200\n    }\n  );\n  legalText.position.x = -3.3;\n  legalText.position.y = -1 + 0.375 - 0.125;\n  legalText.position.z = 0.02;\n  root.add(legalText);\n  root.position.y = 0.2;\n  root.material = root.children.map((c) => c.material);\n  root.userData.animationTimeline = import_gsap.gsap.timeline();\n  root.userData.animationTimeline.to(root.position, {\n    y: 0,\n    duration: 0.5,\n    ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n  }, 0);\n  root.userData.animationTimeline.to(root, {\n    opacity: 1,\n    duration: 0.5,\n    ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n  }, 0);\n  root.userData.cleanup = () => {\n    if (root.userData.animationTimeline) {\n      root.userData.animationTimeline.kill();\n    }\n    stageMat.dispose();\n    ruleMat.dispose();\n    accentMat.dispose();\n    stageGeom.dispose();\n    topRuleGeom.dispose();\n    accentBarGeom.dispose();\n  };\n  return root;\n}\n",
+  "transformError": null
+}

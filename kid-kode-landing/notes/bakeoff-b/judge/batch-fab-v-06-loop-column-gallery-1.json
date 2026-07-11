@@ -1,0 +1,63 @@
+{
+  "label": "batch-fab-v-06-loop-column-gallery-1",
+  "judgedAt": "2026-07-11T04:03:49.691Z",
+  "judgeModel": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-06-loop-column-gallery-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-06-loop-column-gallery-1/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-06-loop-column-gallery-1/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-06-loop-column-gallery-1/F4.jpg"
+    },
+    {
+      "label": "F5",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-06-loop-column-gallery-1/F5.jpg"
+    }
+  ],
+  "mappingFile": "notes/bakeoff-b/judge/blind/batch-fab-v-06-loop-column-gallery-1/mapping.json",
+  "costUsd": 0.565507,
+  "durationApiMs": 44156,
+  "wallMs": 46467,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 15408,
+    "cache_read_input_tokens": 82434,
+    "output_tokens": 2787,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15408,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1902,
+        "cache_read_input_tokens": 44231,
+        "cache_creation_input_tokens": 9380,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9380
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":34,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"plate column right-of-center — plates are flat gray fills, no photographic textures\"},{\"defect\":\"FLAT_VOID\",\"region\":\"left half background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"all three visible plates — flat lavender-gray, no light response\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"top edge — title and first plate clipped\"}],\"notes\":\"Legible typography and red edge accent, but plates read as blank gray cards, not photographs; background is a void.\"},{\"frame\":\"F2\",\"score\":3,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"}],\"notes\":\"Frame is entirely near-black; nothing rendered.\"},{\"frame\":\"F3\",\"score\":42,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center-right plates — identical duplicated render, not six distinct filmic photographs\"},{\"defect\":\"FLAT_VOID\",\"region\":\"right third and lower background field\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"left edge — stray flat white wedge artifact\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"plate imagery — cool blue cast drifting from red/black/white discipline\"}],\"notes\":\"Plates carry imagery with framing and red accent, but textures are duplicated, blue-drifted, and no spec typography.\"},{\"frame\":\"F4\",\"score\":14,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"plate column — plates are blown-out blank white, textures absent\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper-right quadrant — huge amorphous white blob occluding column\"},{\"defect\":\"FLAT_VOID\",\"region\":\"left half background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"all plates — pure white fills, no material response\"}],\"notes\":\"Textures failed to load; plates render as white voids beneath a formless blown-out blob.\"},{\"frame\":\"F5\",\"score\":15,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"plate column center — plates blank white, no photographs\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper-right quadrant — giant white arc blob dominating frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"left half background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"all plates — flat white fills\"}],\"notes\":\"Same failure as F4: blank white plates, intrusive white arc, void background; red edge sliver only spec trace.\"}]}"
+}

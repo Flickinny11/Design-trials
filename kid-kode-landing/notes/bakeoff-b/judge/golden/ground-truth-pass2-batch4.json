@@ -1,0 +1,58 @@
+{
+  "label": "ground-truth-pass2-batch4",
+  "model": "claude-fable-5",
+  "frames": [
+    {
+      "label": "F1",
+      "goldenId": "g-16"
+    },
+    {
+      "label": "F2",
+      "goldenId": "g-17"
+    },
+    {
+      "label": "F3",
+      "goldenId": "g-18"
+    },
+    {
+      "label": "F4",
+      "goldenId": "g-19"
+    },
+    {
+      "label": "F5",
+      "goldenId": "g-20"
+    }
+  ],
+  "costUsd": 0.646251,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 15389,
+    "cache_read_input_tokens": 82485,
+    "output_tokens": 4407,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15389,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 3592,
+        "cache_read_input_tokens": 44282,
+        "cache_creation_input_tokens": 9310,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9310
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":22,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center rail — no five entries, icons, or active state\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center rail — no red accent anywhere\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center rail spans full frame edge-to-edge instead of floating 3.6-unit dock\"},{\"defect\":\"FLAT_VOID\",\"region\":\"upper and lower background fields\"}],\"notes\":\"Rail gradient and top specular edge read metallic, but dock is empty: no entries, no active state, no accent.\"},{\"frame\":\"F2\",\"score\":18,\"mustFix\":[{\"defect\":\"OFF_PALETTE\",\"region\":\"background field — white/light, violates dark-first spec #0b0b10\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center prism — no transmission, refraction, or emissive core; reads opaque faceted metal\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper-left quadrant — detached black shadow wedge\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"lower dish — flat red-to-black band, no dispersion caustics\"}],\"notes\":\"Inverted palette; prism is opaque paper-plane facets with token iridescent streaks, no glass physics.\"},{\"frame\":\"F3\",\"score\":26,\"mustFix\":[{\"defect\":\"OFF_PALETTE\",\"region\":\"center gears — matte white plastic, not machined-steel PBR\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"right edge — white streak and scattered garbled artifacts\"},{\"defect\":\"FLAT_VOID\",\"region\":\"left background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center gears — no anisotropy or clearcoat response\"}],\"notes\":\"Gear geometry and red jewel pivot present, but material is toy plastic and right side is corrupted.\"},{\"frame\":\"F4\",\"score\":30,\"mustFix\":[{\"defect\":\"OFF_PALETTE\",\"region\":\"upper-left background panel — bright white field, dark-first violated\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center torus knot — flat emissive white, no brushed-metal anisotropy or roughness map\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper-left quadrant — amorphous black blob in white panel\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"whole frame — no accent red\"}],\"notes\":\"Correct knot-on-pedestal staging with contact shadow and rim speckle, but material study itself fails completely.\"},{\"frame\":\"F5\",\"score\":38,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"all three cells — no stat content, numerals, or labels\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper-right quadrant — giant blurred clipped glyph overrunning tiles\"},{\"defect\":\"FLAT_VOID\",\"region\":\"left and bottom background margins\"},{\"defect\":\"LOW_CONTRAST\",\"region\":\"right column secondary cells against background\"}],\"notes\":\"Layout matches dominant-left bento and red accents hold palette, but tiles are empty slabs under a garbled mega-glyph.\"}]}"
+}

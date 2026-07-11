@@ -1,0 +1,306 @@
+{
+  "builtAt": "2026-07-11T04:30:32.720Z",
+  "method": "24 D3-judged bakeoff-b renders sampled evenly across the score distribution (case cap 3, contestant cap 3, W-BAKE v2 outward-quantile sampler) + 6 seeded known-bad renders reused from W-BAKE (same harness, deliberate Design-Law violations); all downscaled to identical 800px JPEGs for every D4 participant",
+  "entries": [
+    {
+      "goldenId": "g-01",
+      "bundleId": "wbakeb/gpt-oss-120b/v-05-pedestal-material-study-r2",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-05-pedestal-material-study",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 3,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-01.jpg"
+    },
+    {
+      "goldenId": "g-02",
+      "bundleId": "wbakeb/mercury-2/v-03-glass-prism-refraction-r2",
+      "contestant": "mercury-2",
+      "caseId": "v-03-glass-prism-refraction",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 5,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-02.jpg"
+    },
+    {
+      "goldenId": "g-03",
+      "bundleId": "wbakeb/mercury-2/v-19-empty-state-r1",
+      "contestant": "mercury-2",
+      "caseId": "v-19-empty-state",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 5,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-03.jpg"
+    },
+    {
+      "goldenId": "g-04",
+      "bundleId": "wbakeb/mercury-2/v-20-footer-colophon-r1",
+      "contestant": "mercury-2",
+      "caseId": "v-20-footer-colophon",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 7,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-04.jpg"
+    },
+    {
+      "goldenId": "g-05",
+      "bundleId": "wbakeb/deepseek-v4-flash/v-07-filmstrip-carousel-r1",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "v-07-filmstrip-carousel",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 8,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-05.jpg"
+    },
+    {
+      "goldenId": "g-06",
+      "bundleId": "wbakeb/claude-sonnet-5/v-13-brand-wall-r2",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-13-brand-wall",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 8,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-06.jpg"
+    },
+    {
+      "goldenId": "g-07",
+      "bundleId": "wbakeb/gpt-oss-120b/v-04-kinetic-type-headline-r2",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-04-kinetic-type-headline",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 10,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-07.jpg"
+    },
+    {
+      "goldenId": "g-08",
+      "bundleId": "wbakeb/deepseek-v4-flash/v-16-feature-triptych-r1",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "v-16-feature-triptych",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 11,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-08.jpg"
+    },
+    {
+      "goldenId": "g-09",
+      "bundleId": "wbakeb/claude-opus-4.8/v-01-orbit-product-hero-r2",
+      "contestant": "claude-opus-4.8",
+      "caseId": "v-01-orbit-product-hero",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 12,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-09.jpg"
+    },
+    {
+      "goldenId": "g-10",
+      "bundleId": "wbakeb/gemini-3.5-flash/v-08-orrery-mechanism-r2",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "v-08-orrery-mechanism",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 13,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-10.jpg"
+    },
+    {
+      "goldenId": "g-11",
+      "bundleId": "wbakeb/claude-haiku-4.5/v-12-photo-hero-composite-r1",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-12-photo-hero-composite",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 14,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-11.jpg"
+    },
+    {
+      "goldenId": "g-12",
+      "bundleId": "wbakeb/gpt-oss-120b/v-17-data-ribbon-r2",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-17-data-ribbon",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 15,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-12.jpg"
+    },
+    {
+      "goldenId": "g-13",
+      "bundleId": "wbakeb/claude-sonnet-5/v-02-particle-constellation-r2",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-02-particle-constellation",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 16,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-13.jpg"
+    },
+    {
+      "goldenId": "g-14",
+      "bundleId": "wbakeb/glm-5.2/v-06-loop-column-gallery-r1",
+      "contestant": "glm-5.2",
+      "caseId": "v-06-loop-column-gallery",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 18,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-14.jpg"
+    },
+    {
+      "goldenId": "g-15",
+      "bundleId": "wbakeb/claude-opus-4.8/v-14-pricing-card-r1",
+      "contestant": "claude-opus-4.8",
+      "caseId": "v-14-pricing-card",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 20,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-15.jpg"
+    },
+    {
+      "goldenId": "g-16",
+      "bundleId": "wbakeb/claude-opus-4.8/v-18-nav-dock-r1",
+      "contestant": "claude-opus-4.8",
+      "caseId": "v-18-nav-dock",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 22,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-16.jpg"
+    },
+    {
+      "goldenId": "g-17",
+      "bundleId": "wbakeb/claude-sonnet-5/v-03-glass-prism-refraction-r2",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-03-glass-prism-refraction",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 26,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-17.jpg"
+    },
+    {
+      "goldenId": "g-18",
+      "bundleId": "wbakeb/claude-fable-5/v-08-orrery-mechanism-r1",
+      "contestant": "claude-fable-5",
+      "caseId": "v-08-orrery-mechanism",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 28,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-18.jpg"
+    },
+    {
+      "goldenId": "g-19",
+      "bundleId": "wbakeb/claude-fable-5/v-05-pedestal-material-study-r1",
+      "contestant": "claude-fable-5",
+      "caseId": "v-05-pedestal-material-study",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 30,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-19.jpg"
+    },
+    {
+      "goldenId": "g-20",
+      "bundleId": "wbakeb/claude-haiku-4.5/v-10-bento-metrics-r1",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-10-bento-metrics",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 34,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-20.jpg"
+    },
+    {
+      "goldenId": "g-21",
+      "bundleId": "wbakeb/claude-fable-5/v-09-editorial-oversized-type-r1",
+      "contestant": "claude-fable-5",
+      "caseId": "v-09-editorial-oversized-type",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 37,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-21.jpg"
+    },
+    {
+      "goldenId": "g-22",
+      "bundleId": "wbakeb/gemini-3.5-flash/v-19-empty-state-r1",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "v-19-empty-state",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 44,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-22.jpg"
+    },
+    {
+      "goldenId": "g-23",
+      "bundleId": "wbakeb/claude-haiku-4.5/v-08-orrery-mechanism-r1",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-08-orrery-mechanism",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 55,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-23.jpg"
+    },
+    {
+      "goldenId": "g-24",
+      "bundleId": "wbakeb/kimi-k2.7-code/v-09-editorial-oversized-type-r2",
+      "contestant": "kimi-k2.7-code",
+      "caseId": "v-09-editorial-oversized-type",
+      "seeded": false,
+      "seededDefect": null,
+      "d3Score": 74,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-24.jpg"
+    },
+    {
+      "goldenId": "g-25",
+      "bundleId": "seeded-bad/bad-1-flat-void-r1",
+      "contestant": "seeded-bad",
+      "caseId": "bad-1-flat-void",
+      "seeded": true,
+      "seededDefect": "bad-1-flat-void",
+      "d3Score": null,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-25.jpg"
+    },
+    {
+      "goldenId": "g-26",
+      "bundleId": "seeded-bad/bad-2-all-black-button-r1",
+      "contestant": "seeded-bad",
+      "caseId": "bad-2-all-black-button",
+      "seeded": true,
+      "seededDefect": "bad-2-all-black-button",
+      "d3Score": null,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-26.jpg"
+    },
+    {
+      "goldenId": "g-27",
+      "bundleId": "seeded-bad/bad-3-default-blue-r1",
+      "contestant": "seeded-bad",
+      "caseId": "bad-3-default-blue",
+      "seeded": true,
+      "seededDefect": "bad-3-default-blue",
+      "d3Score": null,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-27.jpg"
+    },
+    {
+      "goldenId": "g-28",
+      "bundleId": "seeded-bad/bad-4-dead-lighting-r1",
+      "contestant": "seeded-bad",
+      "caseId": "bad-4-dead-lighting",
+      "seeded": true,
+      "seededDefect": "bad-4-dead-lighting",
+      "d3Score": null,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-28.jpg"
+    },
+    {
+      "goldenId": "g-29",
+      "bundleId": "seeded-bad/bad-5-broken-composition-r1",
+      "contestant": "seeded-bad",
+      "caseId": "bad-5-broken-composition",
+      "seeded": true,
+      "seededDefect": "bad-5-broken-composition",
+      "d3Score": null,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-29.jpg"
+    },
+    {
+      "goldenId": "g-30",
+      "bundleId": "seeded-bad/bad-6-garbled-text-r1",
+      "contestant": "seeded-bad",
+      "caseId": "bad-6-garbled-text",
+      "seeded": true,
+      "seededDefect": "bad-6-garbled-text",
+      "d3Score": null,
+      "frame": "notes/bakeoff-b/judge/golden/frames/g-30.jpg"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "bundle": "wbakeb/mercury-2/v-01-orbit-product-hero-r1",
+  "contestant": "mercury-2",
+  "caseId": "v-01-orbit-product-hero",
+  "run": 1,
+  "capturedAt": "2026-07-11T02:59:29.608Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/mercury-2/v-01-orbit-product-hero-r1",
+    "moduleRuntimeError": "ReferenceError: sub is not defined"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

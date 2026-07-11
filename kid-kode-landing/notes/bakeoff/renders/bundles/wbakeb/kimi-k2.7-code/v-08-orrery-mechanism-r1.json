@@ -1,0 +1,192 @@
+{
+  "id": "wbakeb/kimi-k2.7-code/v-08-orrery-mechanism-r1",
+  "contestant": "kimi-k2.7-code",
+  "caseId": "v-08-orrery-mechanism",
+  "run": 1,
+  "node": {
+    "nodeId": "v-08-orrery-mechanism",
+    "subtype": "mechanism",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Orrery mechanism — A machined gear mechanism with metallic PBR, slow meshing rotation, and a jewel accent pivot.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "The going train",
+            "role": "headline",
+            "typography": {
+              "fontSize": 68,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "34 COMPONENTS / HAND-FINISHED",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 0.65,
+              "hex": "#101017"
+            },
+            {
+              "at": 1,
+              "hex": "#16161d"
+            }
+          ]
+        },
+        "typography": {
+          "headline": {
+            "family": "Lora",
+            "fontSize": 68,
+            "fontWeight": 600,
+            "letterSpacing": -0.005,
+            "lineHeight": 1.1
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Primary gear (/prism-mock/orrery/meshes/gear-a.glb) normalized to 1.6-unit diameter, centered at origin in the xy plane; secondary gear instance scaled to 0.9-unit diameter at [1.15, 0.35, -0.1], tooth-meshed at ratio 16:9 (primary 0.08 rad/s, secondary -0.142 rad/s, phase-locked so teeth never intersect). Gear material: machined steel roughness 0.5, metalness 0.55, clearcoat 0.2, clearcoatRoughness 0.3, anisotropy 0.7 oriented radially so spokes catch light as they turn. Jewel pivot: 0.12-unit-radius sphere at the primary hub, MeshPhysicalMaterial color #ff2a38, transmission 0.6, ior 1.76, emissive #ff2a38 intensity 1.8. Arbor shafts: 0.05-radius ink #16161d cylinders through both hubs, z-length 0.8. Contact shadow ellipse 2.6 x 1.2 units at y=-1.2, opacity 0.5. Backdrop plane 7 x 6 at z=-3 with the radial gradient stops; linear fog #0b0b10 near 5 far 11 for depth hint. Time-trigger orbit: camera drifts on radius 0.2 at 0.08 rad/s. Headline baseline at y=-1.7, caption at y=-2.1 on the 0.25-unit rhythm."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "mesh",
+    "depthMapUrl": null,
+    "meshUrl": "/prism-mock/orrery/meshes/gear-a.glb",
+    "cinematicPrimitives": [
+      {
+        "name": "orbit",
+        "trigger": "time",
+        "params": {
+          "speed": 0.08,
+          "radius": 0.2
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0.6,
+        0.5,
+        3.8
+      ],
+      "lookAt": [
+        0.3,
+        0.1,
+        0
+      ],
+      "fov": 45
+    },
+    "lights": [
+      {
+        "type": "directional",
+        "color": "#f2f4f8",
+        "intensity": 1.3,
+        "position": [
+          2,
+          3,
+          2.5
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#7e8aa0",
+        "intensity": 0.35,
+        "position": [
+          -2.5,
+          0.5,
+          1.5
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 1,
+        "position": [
+          -1,
+          2.5,
+          -2.5
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 1.2,
+        "position": [
+          0,
+          0,
+          0.6
+        ]
+      },
+      {
+        "type": "ambient",
+        "color": "#2a2e38",
+        "intensity": 0.25
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Both gears rotate in phase-locked mesh (0.08 and -0.142 rad/s) while the camera drifts on a 0.2-unit orbit; the ruby pivot glints as spokes sweep the key light."
+  },
+  "parsed": true,
+  "fenced": true,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nvar import_webgpu2 = require(\"three/webgpu\");\nfunction createNode(config, ctx) {\n  const root = new ctx.THREE.Group();\n  root.name = \"orrery-node\";\n  const THREE = ctx.THREE;\n  const palette = config.intent?.visualSpec?.colors ?? config.colors ?? {};\n  const ink = new import_webgpu2.Color(palette.ink ?? \"#16161d\");\n  const paper = new import_webgpu2.Color(palette.paper ?? \"#e8ecf2\");\n  const accent = new import_webgpu2.Color(palette.accent ?? \"#ff2a38\");\n  const timelines = [];\n  const cleanups = [];\n  const bgGeo = new import_webgpu2.PlaneGeometry(7, 6, 1, 1);\n  const stops = palette.gradientStops ?? [\n    { at: 0, hex: \"#0b0b10\" },\n    { at: 0.65, hex: \"#101017\" },\n    { at: 1, hex: \"#16161d\" }\n  ];\n  const c0 = new import_webgpu2.Color(stops[0].hex);\n  const c1 = new import_webgpu2.Color(stops[1].hex);\n  const c2 = new import_webgpu2.Color(stops[2].hex);\n  const uvCenter = (0, import_tsl.subtract)((0, import_tsl.uv)(), (0, import_tsl.vec3)(0.5, 0.5, 0));\n  const d = (0, import_tsl.length)(uvCenter.xy);\n  const gradientColor = (0, import_tsl.mix)(\n    (0, import_tsl.mix)((0, import_tsl.color)(c0), (0, import_tsl.color)(c1), (0, import_tsl.smoothstep)((0, import_tsl.float)(stops[0].at), (0, import_tsl.float)(stops[1].at), d)),\n    (0, import_tsl.color)(c2),\n    (0, import_tsl.smoothstep)((0, import_tsl.float)(stops[1].at), (0, import_tsl.float)(stops[2].at), d)\n  );\n  const bgMat = new import_webgpu.MeshBasicNodeMaterial({\n    colorNode: gradientColor,\n    transparent: false,\n    side: THREE.DoubleSide\n  });\n  const backdrop = new import_webgpu2.Mesh(bgGeo, bgMat);\n  backdrop.position.set(0, 0, -3);\n  root.add(backdrop);\n  const hazeGeo = new import_webgpu2.PlaneGeometry(14, 12);\n  const hazeColor = (0, import_tsl.color)(new import_webgpu2.Color(palette.background ?? \"#0b0b10\"));\n  const fogColorNode = (0, import_tsl.vec4)(hazeColor, (0, import_tsl.smoothstep)(0.4, 0.9, d));\n  const hazeMat = new import_webgpu.MeshBasicNodeMaterial({\n    colorNode: hazeColor,\n    transparent: true,\n    opacity: 0,\n    depthWrite: false\n  });\n  const haze = new import_webgpu2.Mesh(hazeGeo, hazeMat);\n  haze.position.set(0, 0, -2.95);\n  haze.visible = false;\n  root.add(haze);\n  const attemptFog = (scene) => {\n    if (!scene || scene.fog || !THREE.Fog) return;\n    scene.fog = new THREE.Fog(new import_webgpu2.Color(palette.background ?? \"#0b0b10\"), 5, 11);\n    root.userData.__installedFog = true;\n  };\n  if (root.parent) attemptFog(root.parent);\n  root.addEventListener(\"added\", (e) => {\n    let scene = root.parent;\n    while (scene && scene.type !== \"Scene\" && scene.parent) scene = scene.parent;\n    attemptFog(scene);\n  });\n  const gearGroup = new THREE.Group();\n  root.add(gearGroup);\n  let primaryGear = null;\n  let secondaryGear = null;\n  const setupGears = (gltf) => {\n    const src = gltf.scene ?? gltf;\n    src.traverse((o) => {\n      if (o.isMesh) {\n        o.castShadow = true;\n        o.receiveShadow = true;\n        const mat = new import_webgpu.MeshPhysicalNodeMaterial({\n          color: o.material?.color ?? new import_webgpu2.Color(10265519),\n          roughness: 0.5,\n          metalness: 0.55,\n          clearcoat: 0.2,\n          clearcoatRoughness: 0.3,\n          anisotropy: 0.7,\n          anisotropyRotation: Math.PI / 2\n        });\n        if (o.geometry) {\n          mat.depthTest = true;\n          mat.depthWrite = true;\n        }\n        o.material = mat;\n      }\n    });\n    primaryGear = src.clone(true);\n    const primaryBox = new THREE.Box3().setFromObject(primaryGear);\n    const primarySize = new THREE.Vector3();\n    primaryBox.getSize(primarySize);\n    const maxDim = Math.max(primarySize.x, primarySize.y, primarySize.z);\n    const desiredDiameter = 1.6;\n    const primaryScale = desiredDiameter / maxDim;\n    primaryGear.scale.setScalar(primaryScale);\n    primaryGear.position.set(0, 0, 0);\n    gearGroup.add(primaryGear);\n    secondaryGear = src.clone(true);\n    const secondaryScale = 0.9 / maxDim;\n    secondaryGear.scale.setScalar(secondaryScale);\n    secondaryGear.position.set(1.15, 0.35, -0.1);\n    secondaryGear.rotation.z = 0.11;\n    gearGroup.add(secondaryGear);\n    startGearMotion();\n  };\n  const startGearMotion = () => {\n    if (!primaryGear || !secondaryGear) return;\n    const primarySpeed = 0.08;\n    const secondarySpeed = -0.142;\n    const primaryDur = Math.PI * 2 / primarySpeed;\n    const secondaryDur = Math.PI * 2 / Math.abs(secondarySpeed);\n    const t1 = import_gsap.gsap.to(primaryGear.rotation, {\n      z: `+=${Math.PI * 2}`,\n      duration: primaryDur,\n      ease: \"none\",\n      repeat: -1\n    });\n    const t2 = import_gsap.gsap.to(secondaryGear.rotation, {\n      z: `-=${Math.PI * 2}`,\n      duration: secondaryDur,\n      ease: \"none\",\n      repeat: -1\n    });\n    timelines.push(t1, t2);\n    cleanups.push(() => {\n      t1.kill();\n      t2.kill();\n    });\n  };\n  if (config.meshUrl) {\n    ctx.glbLoader.loadGLB(config.meshUrl).then(setupGears).catch(() => {\n    });\n  }\n  const jewelGeo = new import_webgpu2.SphereGeometry(0.12, 64, 48);\n  const jewelMat = new import_webgpu.MeshPhysicalNodeMaterial({\n    color: accent,\n    transmission: 0.6,\n    ior: 1.76,\n    emissive: accent,\n    emissiveIntensity: 1.8,\n    roughness: 0.15,\n    metalness: 0,\n    thickness: 0.12\n  });\n  const jewel = new import_webgpu2.Mesh(jewelGeo, jewelMat);\n  jewel.position.set(0, 0, 0.06);\n  root.add(jewel);\n  const arborGeo = new import_webgpu2.CylinderGeometry(0.05, 0.05, 0.8, 32);\n  const arborMat = new import_webgpu.MeshPhysicalNodeMaterial({\n    color: ink,\n    roughness: 0.6,\n    metalness: 0.35\n  });\n  const primaryArbor = new import_webgpu2.Mesh(arborGeo, arborMat);\n  primaryArbor.rotation.x = Math.PI / 2;\n  primaryArbor.position.set(0, 0, 0);\n  root.add(primaryArbor);\n  const secondaryArbor = new import_webgpu2.Mesh(arborGeo, arborMat);\n  secondaryArbor.rotation.x = Math.PI / 2;\n  secondaryArbor.position.set(1.15, 0.35, 0);\n  root.add(secondaryArbor);\n  const shadowGeo = new import_webgpu2.CircleGeometry(1, 64);\n  const shadowAlpha = (0, import_tsl.smoothstep)(0.35, 1, (0, import_tsl.length)((0, import_tsl.subtract)((0, import_tsl.uv)(), (0, import_tsl.vec3)(0.5, 0.5, 0)).xy)).oneMinus();\n  const shadowColor = (0, import_tsl.vec4)((0, import_tsl.vec3)(0), shadowAlpha.mul(0.5));\n  const shadowMat = new import_webgpu.MeshBasicNodeMaterial({\n    colorNode: shadowColor,\n    transparent: true,\n    depthWrite: false\n  });\n  const shadow = new import_webgpu2.Mesh(shadowGeo, shadowMat);\n  shadow.scale.set(2.6, 1.2, 1);\n  shadow.rotation.x = -Math.PI / 2;\n  shadow.position.set(0.55, -1.2, -0.15);\n  root.add(shadow);\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const headlineStr = textItems.find((i) => i.role === \"headline\")?.text || \"The going train\";\n  const captionStr = textItems.find((i) => i.role === \"caption\")?.text || \"34 COMPONENTS / HAND-FINISHED\";\n  if (ctx.fontAtlas) {\n    const headline = ctx.fontAtlas.createText(headlineStr, {\n      fontSize: 0.34,\n      color: paper,\n      align: \"center\",\n      maxWidthPx: 512,\n      letterSpacingPx: 0\n    });\n    headline.position.set(0, -1.7, 0.25);\n    root.add(headline);\n    const caption = ctx.fontAtlas.createText(captionStr, {\n      fontSize: 0.09,\n      color: paper,\n      align: \"center\",\n      maxWidthPx: 512,\n      letterSpacingPx: 2\n    });\n    caption.position.set(0, -2.1, 0.25);\n    root.add(caption);\n    headline.material.opacity = caption.material.opacity = 0;\n    headline.material.transparent = true;\n    caption.material.transparent = true;\n    headline.position.y -= 0.2;\n    caption.position.y -= 0.15;\n    const tEntrance = import_gsap.gsap.timeline({ delay: 0.15 });\n    tEntrance.to(headline.position, { y: -1.7, duration: 0.7, ease: \"power3.out\" }, 0);\n    tEntrance.to(headline.material, { opacity: 1, duration: 0.6, ease: \"power2.out\" }, 0);\n    tEntrance.to(caption.position, { y: -2.1, duration: 0.7, ease: \"power3.out\" }, 0.12);\n    tEntrance.to(caption.material, { opacity: 1, duration: 0.6, ease: \"power2.out\" }, 0.12);\n    timelines.push(tEntrance);\n    cleanups.push(() => tEntrance.kill());\n  }\n  const ambient = new THREE.AmbientLight(paper, 0.35);\n  root.add(ambient);\n  const key = new THREE.PointLight(paper, 1.2, 20);\n  key.position.set(-1.6, 2.4, 2.2);\n  root.add(key);\n  const rim = new THREE.PointLight(accent, 0.9, 16);\n  rim.position.set(2.2, 1.2, -1.2);\n  root.add(rim);\n  const fill = new THREE.DirectionalLight(paper, 0.45);\n  fill.position.set(0, -1.5, 3);\n  root.add(fill);\n  const primList = config.cinematicPrimitives ?? [];\n  for (const prim of primList) {\n    if (!ctx.primitives?.[prim.name]) continue;\n    const r = ctx.primitives[prim.name](root, prim.params ?? {});\n    if (r?.cleanup) {\n      cleanups.push(r.cleanup.bind(r));\n    }\n    if (r?.timeline) {\n      timelines.push(r.timeline);\n      cleanups.push(() => r.timeline.kill());\n    }\n  }\n  root.scale.setScalar(0.96);\n  root.material = { opacity: 0 };\n  const tRoot = import_gsap.gsap.to(root.scale, { x: 1, y: 1, z: 1, duration: 0.9, ease: \"power4.out\" });\n  timelines.push(tRoot);\n  cleanups.push(() => tRoot.kill());\n  root.userData.handlers = {\n    pointerenter: () => {\n    },\n    pointerleave: () => {\n    },\n    click: () => {\n    }\n  };\n  root.userData.cleanup = () => {\n    for (const fn of cleanups) {\n      try {\n        fn();\n      } catch (e) {\n      }\n    }\n    timelines.forEach((tl) => {\n      try {\n        tl.kill();\n      } catch (e) {\n      }\n    });\n    root.traverse((o) => {\n      if (o.isMesh) {\n        if (o.geometry) o.geometry.dispose();\n        if (Array.isArray(o.material)) o.material.forEach((m) => m.dispose());\n        else if (o.material) o.material.dispose();\n      }\n    });\n    if (root.userData.__installedFog && root.parent && root.parent.fog) {\n      root.parent.fog = null;\n    }\n  };\n  return root;\n}\n",
+  "transformError": null
+}

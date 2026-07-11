@@ -1,0 +1,21 @@
+{
+  "bundle": "wbakeb/claude-sonnet-5/v-02-particle-constellation-r2",
+  "contestant": "claude-sonnet-5",
+  "caseId": "v-02-particle-constellation",
+  "run": 2,
+  "capturedAt": "2026-07-11T03:56:10.856Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/claude-sonnet-5/v-02-particle-constellation-r2",
+    "moduleRuntimeError": "Error: vec3 fallback should never be invoked"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

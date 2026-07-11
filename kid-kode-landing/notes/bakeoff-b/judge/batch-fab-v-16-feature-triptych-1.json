@@ -1,0 +1,59 @@
+{
+  "label": "batch-fab-v-16-feature-triptych-1",
+  "judgedAt": "2026-07-11T04:11:59.938Z",
+  "judgeModel": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-16-feature-triptych-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-16-feature-triptych-1/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-16-feature-triptych-1/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-16-feature-triptych-1/F4.jpg"
+    }
+  ],
+  "mappingFile": "notes/bakeoff-b/judge/blind/batch-fab-v-16-feature-triptych-1/mapping.json",
+  "costUsd": 0.487606,
+  "durationApiMs": 28070,
+  "wallMs": 30705,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 14326,
+    "cache_read_input_tokens": 82020,
+    "output_tokens": 1675,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14326,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 935,
+        "cache_read_input_tokens": 43817,
+        "cache_creation_input_tokens": 8712,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8712
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":3,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"}],\"notes\":\"Uniform near-black frame; nothing rendered.\"},{\"frame\":\"F2\",\"score\":3,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"}],\"notes\":\"Uniform near-black frame; nothing rendered.\"},{\"frame\":\"F3\",\"score\":10,\"mustFix\":[{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper two-thirds\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"icon dots on cards\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"card faces\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"lower black field\"},{\"defect\":\"FLAT_VOID\",\"region\":\"bottom band\"}],\"notes\":\"Blown-out white blob swallows the triptych; gray icons instead of red; no titles, borders, or hairlines; cards clipped.\"},{\"frame\":\"F4\",\"score\":16,\"mustFix\":[{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper two-thirds\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"card faces\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"card surfaces\"},{\"defect\":\"FLAT_VOID\",\"region\":\"bottom band\"}],\"notes\":\"Red glyph dots hit accent spec, but the same blown white mass buries cards; no type hierarchy, borders, or material response.\"}]}"
+}

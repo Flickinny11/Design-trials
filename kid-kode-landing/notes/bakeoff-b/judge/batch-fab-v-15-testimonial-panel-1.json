@@ -1,0 +1,59 @@
+{
+  "label": "batch-fab-v-15-testimonial-panel-1",
+  "judgedAt": "2026-07-11T04:11:29.202Z",
+  "judgeModel": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-15-testimonial-panel-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-15-testimonial-panel-1/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-15-testimonial-panel-1/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-15-testimonial-panel-1/F4.jpg"
+    }
+  ],
+  "mappingFile": "notes/bakeoff-b/judge/blind/batch-fab-v-15-testimonial-panel-1/mapping.json",
+  "costUsd": 0.576846,
+  "durationApiMs": 50368,
+  "wallMs": 50541,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 14328,
+    "cache_read_input_tokens": 81988,
+    "output_tokens": 3460,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14328,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 2686,
+        "cache_read_input_tokens": 43785,
+        "cache_creation_input_tokens": 8746,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8746
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":14,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card — no quote text or attribution line\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"upper-right quadrant — giant quotation glyph is gray, not #ff2a38\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center-left of panel — accent mark is a tiny dash, not 0.62-unit glyph\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper-right quadrant — glyph clipped and floating over panel edge\"},{\"defect\":\"FLAT_VOID\",\"region\":\"center card — large empty washed-gray expanse\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card — flat frosted fill, no material light response\"}],\"notes\":\"Panel void of all typography; oversized mark rendered as gray clipped blob; pink tick off-accent. Broken render of spec.\"},{\"frame\":\"F2\",\"score\":17,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card — no quote text or attribution line\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"center-right — giant quotation glyph is gray/white, not #ff2a38\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"lower-left of panel — accent mark reduced to tiny pink dash\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"right half — blurred glyph smears across and past panel bounds\"},{\"defect\":\"FLAT_VOID\",\"region\":\"lower-left quadrant of panel — empty gradient field\"}],\"notes\":\"Faint top-left specular is the only material cue; otherwise textless glassmorphic slab with off-palette gray glyph.\"},{\"frame\":\"F3\",\"score\":20,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card — no quote text or attribution line\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"right half — oversized quotation glyph gray/white instead of accent red\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"lower-left of panel — quote mark is a tiny red tick, spec calls for 0.62-unit glyph top-left\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"right edge — glyph bleeds off-frame over panel\"},{\"defect\":\"FLAT_VOID\",\"region\":\"center-left of panel — empty expanse\"}],\"notes\":\"Best red fidelity of batch and cleanest panel edges, but still textless with off-palette giant glyph. Spec unmet.\"},{\"frame\":\"F4\",\"score\":13,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center card — no quote text or attribution line\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"upper-right quadrant — huge white/gray blurred mass, not accent red\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"lower-left of panel — accent mark shrunk to tiny pink dash\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper-right quadrant — formless blurred blob overwhelms composition\"},{\"defect\":\"FLAT_VOID\",\"region\":\"center card — flat empty gray field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card — no gradient direction or edge light response\"}],\"notes\":\"Weakest frame: glyph collapsed into blurred void-white blob, panel flat and dead, zero typography rendered.\"}]}"
+}

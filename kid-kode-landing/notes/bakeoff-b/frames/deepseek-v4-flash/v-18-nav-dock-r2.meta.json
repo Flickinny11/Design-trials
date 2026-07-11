@@ -1,0 +1,22 @@
+{
+  "bundle": "wbakeb/deepseek-v4-flash/v-18-nav-dock-r2",
+  "contestant": "deepseek-v4-flash",
+  "caseId": "v-18-nav-dock",
+  "run": 2,
+  "capturedAt": "2026-07-11T02:54:42.299Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 13,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/deepseek-v4-flash/v-18-nav-dock-r2"
+  },
+  "consoleErrors": [
+    "THREE.THREE.WebGLProgram: Shader Error 0 - VALIDATE_STATUS false\n\nProgram Info Log: Fragment shader is not compiled.\n\u0000\n\nFRAGMENT\n\nERROR: 0:84: 'NaN' : undeclared identifier\nERROR: 0:84: '.0' : syntax error\n\u0000\n\n  79: \n  80: \t// flow\n  81: \t// code\n  82: \n  83: \tDiffuseColor = vec4( vec3( 0.0, 0.0, 0.0"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

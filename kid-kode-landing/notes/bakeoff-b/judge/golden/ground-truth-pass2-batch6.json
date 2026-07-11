@@ -1,0 +1,58 @@
+{
+  "label": "ground-truth-pass2-batch6",
+  "model": "claude-fable-5",
+  "frames": [
+    {
+      "label": "F1",
+      "goldenId": "g-26"
+    },
+    {
+      "label": "F2",
+      "goldenId": "g-27"
+    },
+    {
+      "label": "F3",
+      "goldenId": "g-28"
+    },
+    {
+      "label": "F4",
+      "goldenId": "g-29"
+    },
+    {
+      "label": "F5",
+      "goldenId": "g-30"
+    }
+  ],
+  "costUsd": 0.43249999999999994,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 9309,
+    "cache_read_input_tokens": 84782,
+    "output_tokens": 2547,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 9309,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1733,
+        "cache_read_input_tokens": 42391,
+        "cache_creation_input_tokens": 9309,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9309
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"ALL_BLACK_ELEMENT\", \"region\": \"center card\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"LOW_CONTRAST\", \"region\": \"center card\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"entire frame\" } ], \"notes\": \"Near-black frame; only a barely-visible dark rectangle. Effectively unrendered content.\" }, { \"frame\": \"F2\", \"score\": 18, \"mustFix\": [ { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"top header bar and lower button\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"center of white card\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"entire card\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center card\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center card (no text or content)\" } ], \"notes\": \"Wireframe-grade blue/white card, flat fills, huge empty body. Automatic palette MUST-FIX.\" }, { \"frame\": \"F3\", \"score\": 26, \"mustFix\": [ { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center cube and pedestal\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center cube (untextured gray)\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame (no signal red, no content)\" } ], \"notes\": \"Untextured gray primitive on black void; ambient flat shading, no materiality or composition intent.\" }, { \"frame\": \"F4\", \"score\": 4, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"entire frame\" }, { \"defect\": \"ALL_BLACK_ELEMENT\", \"region\": \"lower-right corner shape\" }, { \"defect\": \"LOW_CONTRAST\", \"region\": \"lower-right quadrant\" } ], \"notes\": \"Black void with one faint dark triangle lower-right. Effectively blank.\" }, { \"frame\": \"F5\", \"score\": 16, \"mustFix\": [ { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"center band of jagged white blocks\" }, { \"defect\": \"GARBLED_TEXT\", \"region\": \"center band (illegible glyph-like shards)\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"surrounding background field\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"white shards (flat fills)\" } ], \"notes\": \"Dark-first but center is garbled white debris, flat fills, empty surround; no red signal accent.\" } ] }"
+}

@@ -1,0 +1,173 @@
+{
+  "wave": "wbakeb-seam",
+  "executor": "claude-haiku-4.5",
+  "route": "claude-cli",
+  "model": "claude-haiku-4-5-20251001",
+  "calls": [
+    {
+      "seamId": "s-01",
+      "promptTokens": 10,
+      "completionTokens": 5739,
+      "costUsd": 0.028705,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T04:33:05.321Z"
+    },
+    {
+      "seamId": "s-02",
+      "promptTokens": 10,
+      "completionTokens": 14384,
+      "costUsd": 0.07193,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T04:35:15.911Z"
+    },
+    {
+      "seamId": "s-03",
+      "promptTokens": 10,
+      "completionTokens": 6775,
+      "costUsd": 0.033885000000000005,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:17:08.367Z"
+    },
+    {
+      "seamId": "s-04",
+      "promptTokens": 10,
+      "completionTokens": 12432,
+      "costUsd": 0.06217,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:19:09.283Z"
+    },
+    {
+      "seamId": "s-05",
+      "promptTokens": 10,
+      "completionTokens": 7084,
+      "costUsd": 0.03543,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:20:23.616Z"
+    },
+    {
+      "seamId": "s-06",
+      "promptTokens": 10,
+      "completionTokens": 7439,
+      "costUsd": 0.037205,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:21:12.676Z"
+    },
+    {
+      "seamId": "s-07",
+      "promptTokens": 10,
+      "completionTokens": 10793,
+      "costUsd": 0.053975,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:23:07.175Z"
+    },
+    {
+      "seamId": "s-08",
+      "promptTokens": 10,
+      "completionTokens": 3612,
+      "costUsd": 0.01807,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:23:45.483Z"
+    },
+    {
+      "seamId": "s-09",
+      "promptTokens": 10,
+      "completionTokens": 9895,
+      "costUsd": 0.049485,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:24:49.993Z"
+    },
+    {
+      "seamId": "s-10",
+      "promptTokens": 10,
+      "completionTokens": 5739,
+      "costUsd": 0.028705,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:25:49.197Z"
+    },
+    {
+      "seamId": "s-11",
+      "promptTokens": 10,
+      "completionTokens": 13674,
+      "costUsd": 0.06838,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:28:08.053Z"
+    },
+    {
+      "seamId": "s-12",
+      "promptTokens": 10,
+      "completionTokens": 9790,
+      "costUsd": 0.048960000000000004,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:29:35.630Z"
+    },
+    {
+      "seamId": "s-13",
+      "promptTokens": 10,
+      "completionTokens": 5508,
+      "costUsd": 0.027549999999999998,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:30:32.224Z"
+    },
+    {
+      "seamId": "s-14",
+      "promptTokens": 10,
+      "completionTokens": 5657,
+      "costUsd": 0.028294999999999997,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:31:29.683Z"
+    },
+    {
+      "seamId": "s-15",
+      "promptTokens": 10,
+      "completionTokens": 9921,
+      "costUsd": 0.049615,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:33:08.857Z"
+    },
+    {
+      "seamId": "s-16",
+      "promptTokens": 10,
+      "completionTokens": 8233,
+      "costUsd": 0.04117500000000001,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:34:33.879Z"
+    },
+    {
+      "seamId": "s-17",
+      "promptTokens": 10,
+      "completionTokens": 8959,
+      "costUsd": 0.044805000000000005,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:36:08.136Z"
+    },
+    {
+      "seamId": "s-18",
+      "promptTokens": 10,
+      "completionTokens": 6604,
+      "costUsd": 0.033030000000000004,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:37:14.215Z"
+    },
+    {
+      "seamId": "s-19",
+      "promptTokens": 10,
+      "completionTokens": 5052,
+      "costUsd": 0.02527,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:38:06.692Z"
+    },
+    {
+      "seamId": "s-20",
+      "promptTokens": 10,
+      "completionTokens": 11561,
+      "costUsd": 0.057815000000000005,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:40:02.001Z"
+    }
+  ],
+  "totals": {
+    "meteredUsd": 0,
+    "subscriptionEquivalentUsd": 0.844455,
+    "totalUsd": 0
+  }
+}

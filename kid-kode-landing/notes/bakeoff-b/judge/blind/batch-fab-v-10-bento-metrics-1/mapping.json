@@ -1,0 +1,32 @@
+[
+  {
+    "label": "F1",
+    "bundleId": "wbakeb/claude-opus-4.8/v-10-bento-metrics-r1",
+    "contestant": "claude-opus-4.8",
+    "source": "notes/bakeoff-b/frames/claude-opus-4.8/v-10-bento-metrics-r1.png"
+  },
+  {
+    "label": "F2",
+    "bundleId": "wbakeb/kimi-k2.7-code/v-10-bento-metrics-r1",
+    "contestant": "kimi-k2.7-code",
+    "source": "notes/bakeoff-b/frames/kimi-k2.7-code/v-10-bento-metrics-r1.png"
+  },
+  {
+    "label": "F3",
+    "bundleId": "wbakeb/claude-opus-4.8/v-10-bento-metrics-r2",
+    "contestant": "claude-opus-4.8",
+    "source": "notes/bakeoff-b/frames/claude-opus-4.8/v-10-bento-metrics-r2.png"
+  },
+  {
+    "label": "F4",
+    "bundleId": "wbakeb/claude-sonnet-5/v-10-bento-metrics-r1",
+    "contestant": "claude-sonnet-5",
+    "source": "notes/bakeoff-b/frames/claude-sonnet-5/v-10-bento-metrics-r1.png"
+  },
+  {
+    "label": "F5",
+    "bundleId": "wbakeb/claude-sonnet-5/v-10-bento-metrics-r2",
+    "contestant": "claude-sonnet-5",
+    "source": "notes/bakeoff-b/frames/claude-sonnet-5/v-10-bento-metrics-r2.png"
+  }
+]

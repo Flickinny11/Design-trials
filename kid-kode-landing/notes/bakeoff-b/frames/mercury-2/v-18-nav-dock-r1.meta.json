@@ -1,0 +1,21 @@
+{
+  "bundle": "wbakeb/mercury-2/v-18-nav-dock-r1",
+  "contestant": "mercury-2",
+  "caseId": "v-18-nav-dock",
+  "run": 1,
+  "capturedAt": "2026-07-11T03:01:53.185Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/mercury-2/v-18-nav-dock-r1",
+    "moduleRuntimeError": "TypeError: Cannot set properties of undefined (setting 'press')"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

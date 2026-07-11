@@ -1,0 +1,22 @@
+{
+  "bundle": "wbakeb/gpt-oss-120b/v-15-testimonial-panel-r1",
+  "contestant": "gpt-oss-120b",
+  "caseId": "v-15-testimonial-panel",
+  "run": 1,
+  "capturedAt": "2026-07-11T02:58:37.400Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 5,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/gpt-oss-120b/v-15-testimonial-panel-r1"
+  },
+  "consoleErrors": [
+    "THREE.THREE.WebGLProgram: Shader Error 0 - VALIDATE_STATUS false\n\nProgram Info Log: Fragment shader is not compiled.\n\u0000\n\nFRAGMENT\n\nERROR: 0:725: 'NaN' : undeclared identifier\nERROR: 0:725: '.0' : syntax error\n\u0000\n\n  720: void main() {\n  721: \n  722: \t// flow\n  723: \t// code\n  724: \n> 725: \tDiffuseColor"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

@@ -1,0 +1,59 @@
+{
+  "label": "batch-fab-v-20-footer-colophon-1",
+  "judgedAt": "2026-07-11T04:15:12.020Z",
+  "judgeModel": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-20-footer-colophon-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-20-footer-colophon-1/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-20-footer-colophon-1/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-20-footer-colophon-1/F4.jpg"
+    }
+  ],
+  "mappingFile": "notes/bakeoff-b/judge/blind/batch-fab-v-20-footer-colophon-1/mapping.json",
+  "costUsd": 0.548186,
+  "durationApiMs": 44606,
+  "wallMs": 47399,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 14321,
+    "cache_read_input_tokens": 82000,
+    "output_tokens": 2889,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14321,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 2134,
+        "cache_read_input_tokens": 43797,
+        "cache_creation_input_tokens": 8727,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8727
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 8, \"mustFix\": [ { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"right two-thirds, giant overlapping glyph fragments\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"oversized parenthesis/ring glyphs spanning full frame\" }, { \"defect\": \"GARBLED_TEXT\", \"region\": \"center-right glyph cluster, unreadable\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"footer band — no wordmark, link columns, or legal line\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"left and lower black field\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"flat mid-gray glyph fills, background field\" } ], \"notes\": \"Footer band exists only as a gray smear under colossal broken glyphs; no legible content, only the accent tick survives.\" }, { \"frame\": \"F2\", \"score\": 7, \"mustFix\": [ { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"center and right, colliding oversized glyph fragments\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"glyph forms many times the band height, full frame\" }, { \"defect\": \"GARBLED_TEXT\", \"region\": \"center-right, no readable characters\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"band — wordmark, three link columns, legal line all absent\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"left third and bottom black field\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"flat gray fills and white blob, upper-right quadrant\" } ], \"notes\": \"Same failure as F1: band rendered but content replaced by garbled monumental glyphs; spec layout entirely missing.\" }, { \"frame\": \"F3\", \"score\": 62, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"left wordmark block — accent bar present but no wordmark\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center band ramp reads mid-gray, far lighter than spec ink surfaces\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"band top edge — full-width hairline rule not visible\" } ], \"notes\": \"Legible colophon: three columns, legal line, hairline, accent bar. Loses points for absent wordmark and washed-out band.\" }, { \"frame\": \"F4\", \"score\": 7, \"mustFix\": [ { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"full frame, giant sliced glyph fragments over band\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"parenthesis/ring forms exceeding frame height\" }, { \"defect\": \"GARBLED_TEXT\", \"region\": \"center-right, no legible characters anywhere\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"band — wordmark, link columns, legal line all absent\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"lower-left black field\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"flat gray/white glyph fills, upper half\" } ], \"notes\": \"Band and accent tick render, but zero spec content; frame dominated by broken oversized glyph debris.\" } ] }"
+}

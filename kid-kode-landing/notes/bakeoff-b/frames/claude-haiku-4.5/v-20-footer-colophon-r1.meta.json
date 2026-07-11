@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/claude-haiku-4.5/v-20-footer-colophon-r1",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-20-footer-colophon",
+  "run": 1,
+  "capturedAt": "2026-07-11T02:52:12.456Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 18,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/claude-haiku-4.5/v-20-footer-colophon-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

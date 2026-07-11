@@ -1,0 +1,21 @@
+{
+  "bundle": "wbakeb/gpt-oss-120b/v-15-testimonial-panel-r2",
+  "contestant": "gpt-oss-120b",
+  "caseId": "v-15-testimonial-panel",
+  "run": 2,
+  "capturedAt": "2026-07-11T02:58:42.009Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/gpt-oss-120b/v-15-testimonial-panel-r2",
+    "moduleRuntimeError": "ReferenceError: min is not defined"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

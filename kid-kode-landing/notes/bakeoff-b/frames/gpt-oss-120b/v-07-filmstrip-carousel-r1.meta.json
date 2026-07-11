@@ -1,0 +1,22 @@
+{
+  "bundle": "wbakeb/gpt-oss-120b/v-07-filmstrip-carousel-r1",
+  "contestant": "gpt-oss-120b",
+  "caseId": "v-07-filmstrip-carousel",
+  "run": 1,
+  "capturedAt": "2026-07-11T02:57:30.080Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 19,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/gpt-oss-120b/v-07-filmstrip-carousel-r1"
+  },
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

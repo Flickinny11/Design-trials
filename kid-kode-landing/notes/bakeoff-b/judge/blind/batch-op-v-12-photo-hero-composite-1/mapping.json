@@ -1,0 +1,14 @@
+[
+  {
+    "label": "F1",
+    "bundleId": "wbakeb/claude-fable-5/v-12-photo-hero-composite-r1",
+    "contestant": "claude-fable-5",
+    "source": "notes/bakeoff-b/frames/claude-fable-5/v-12-photo-hero-composite-r1.png"
+  },
+  {
+    "label": "F2",
+    "bundleId": "wbakeb/claude-fable-5/v-12-photo-hero-composite-r2",
+    "contestant": "claude-fable-5",
+    "source": "notes/bakeoff-b/frames/claude-fable-5/v-12-photo-hero-composite-r2.png"
+  }
+]

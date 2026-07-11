@@ -1,0 +1,2101 @@
+{
+  "judgedBy": "claude-fable-5, two independent passes (same rubric.mjs prompt as all critics)",
+  "selfDisagreement": {
+    "meanAbsScoreDelta": 2.5,
+    "maxAbsScoreDelta": 14,
+    "rendersWithDefectDisagreement": 29
+  },
+  "rows": [
+    {
+      "goldenId": "g-01",
+      "bundleId": "wbakeb/gpt-oss-120b/v-05-pedestal-material-study-r2",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-05-pedestal-material-study",
+      "pass1": {
+        "score": 3,
+        "mustFix": [
+          {
+            "defect": "BLANK_RENDER",
+            "region": "entire frame"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "entire frame — no torus knot, pedestal, or lighting rendered"
+          }
+        ],
+        "notes": "Near-black void; no pedestal, knot, or material study rendered at all."
+      },
+      "pass2": {
+        "score": 3,
+        "mustFix": [
+          {
+            "defect": "BLANK_RENDER",
+            "region": "entire frame"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "center (torus knot and pedestal absent)"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "background field"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "entire frame"
+          }
+        ],
+        "notes": "Near-black empty frame. No pedestal, knot, material, or lighting rendered."
+      },
+      "finalScore": 3,
+      "mustFixUnion": [
+        "BLANK_RENDER",
+        "MISSING_SPEC_ELEMENT",
+        "FLAT_VOID",
+        "DEAD_LIGHTING"
+      ],
+      "mustFixBothPasses": [
+        "BLANK_RENDER",
+        "MISSING_SPEC_ELEMENT"
+      ],
+      "scoreDisagreement": 0,
+      "defectDisagreement": [
+        "FLAT_VOID",
+        "DEAD_LIGHTING"
+      ]
+    },
+    {
+      "goldenId": "g-02",
+      "bundleId": "wbakeb/mercury-2/v-03-glass-prism-refraction-r2",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-03-glass-prism-refraction",
+      "pass1": {
+        "score": 3,
+        "mustFix": [
+          {
+            "defect": "BLANK_RENDER",
+            "region": "entire frame"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "entire frame — no prism, refraction, rim light, or emissive core"
+          }
+        ],
+        "notes": "Uniform near-black frame; the prism scene never rendered."
+      },
+      "pass2": {
+        "score": 3,
+        "mustFix": [
+          {
+            "defect": "BLANK_RENDER",
+            "region": "entire frame"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "center (glass prism, dispersion, rim light absent)"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "background field"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "entire frame"
+          }
+        ],
+        "notes": "Fully black frame. No prism, refraction, iridescence, or emissive core present."
+      },
+      "finalScore": 3,
+      "mustFixUnion": [
+        "BLANK_RENDER",
+        "MISSING_SPEC_ELEMENT",
+        "FLAT_VOID",
+        "DEAD_LIGHTING"
+      ],
+      "mustFixBothPasses": [
+        "BLANK_RENDER",
+        "MISSING_SPEC_ELEMENT"
+      ],
+      "scoreDisagreement": 0,
+      "defectDisagreement": [
+        "FLAT_VOID",
+        "DEAD_LIGHTING"
+      ]
+    },
+    {
+      "goldenId": "g-03",
+      "bundleId": "wbakeb/mercury-2/v-19-empty-state-r1",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-19-empty-state",
+      "pass1": {
+        "score": 8,
+        "mustFix": [
+          {
+            "defect": "FLAT_VOID",
+            "region": "background field — flat black, no gradient or hairline grid"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "center card — no ghost preview, guidance copy, accent action, or border"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "center card — flat untextured white fill"
+          },
+          {
+            "defect": "SCALE_ERROR",
+            "region": "center card — tiny square vs 3.2x2.2 panel spec"
+          }
+        ],
+        "notes": "Only a flat white square in a void; every DL16 richness element absent."
+      },
+      "pass2": {
+        "score": 8,
+        "mustFix": [
+          {
+            "defect": "BLANK_RENDER",
+            "region": "entire frame (near-empty)"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "center panel (gradient, grid, ghost preview, copy, accent action absent)"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "background field"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "center card (bare white square only)"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "entire frame"
+          },
+          {
+            "defect": "SCALE_ERROR",
+            "region": "center card (tiny vs 3.2x2.2 panel spec)"
+          }
+        ],
+        "notes": "Single flat white square on void. Violates DL16 it was meant to demonstrate."
+      },
+      "finalScore": 8,
+      "mustFixUnion": [
+        "FLAT_VOID",
+        "MISSING_SPEC_ELEMENT",
+        "DEAD_LIGHTING",
+        "SCALE_ERROR",
+        "BLANK_RENDER",
+        "BROKEN_COMPOSITION"
+      ],
+      "mustFixBothPasses": [
+        "FLAT_VOID",
+        "MISSING_SPEC_ELEMENT",
+        "DEAD_LIGHTING",
+        "SCALE_ERROR"
+      ],
+      "scoreDisagreement": 0,
+      "defectDisagreement": [
+        "BLANK_RENDER",
+        "BROKEN_COMPOSITION"
+      ]
+    },
+    {
+      "goldenId": "g-04",
+      "bundleId": "wbakeb/mercury-2/v-20-footer-colophon-r1",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-20-footer-colophon",
+      "pass1": {
+        "score": 7,
+        "mustFix": [
+          {
+            "defect": "FLAT_VOID",
+            "region": "background field — no albedo ramp or hairline rules"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "entire frame — no wordmark, link columns, legal line, or accent bar"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "center square — flat fill, no material response"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "center square — 6.8-wide footer band rendered as a centered stamp"
+          }
+        ],
+        "notes": "Footer spec entirely unrendered; lone flat white square in black void."
+      },
+      "pass2": {
+        "score": 8,
+        "mustFix": [
+          {
+            "defect": "BLANK_RENDER",
+            "region": "entire frame (near-empty)"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "center (wordmark, link columns, legal line, hairlines, accent bar absent)"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "background field"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "center (square instead of 6.8-wide footer band)"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "entire frame"
+          },
+          {
+            "defect": "SCALE_ERROR",
+            "region": "center card"
+          }
+        ],
+        "notes": "Flat white square on void; no footer structure, type, or hairline rules rendered."
+      },
+      "finalScore": 7.5,
+      "mustFixUnion": [
+        "FLAT_VOID",
+        "MISSING_SPEC_ELEMENT",
+        "DEAD_LIGHTING",
+        "BROKEN_COMPOSITION",
+        "BLANK_RENDER",
+        "SCALE_ERROR"
+      ],
+      "mustFixBothPasses": [
+        "FLAT_VOID",
+        "MISSING_SPEC_ELEMENT",
+        "DEAD_LIGHTING",
+        "BROKEN_COMPOSITION"
+      ],
+      "scoreDisagreement": 1,
+      "defectDisagreement": [
+        "BLANK_RENDER",
+        "SCALE_ERROR"
+      ]
+    },
+    {
+      "goldenId": "g-05",
+      "bundleId": "wbakeb/deepseek-v4-flash/v-07-filmstrip-carousel-r1",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-07-filmstrip-carousel",
+      "pass1": {
+        "score": 7,
+        "mustFix": [
+          {
+            "defect": "DEFAULT_BLUE_DRIFT",
+            "region": "center icon — blue/violet layered-stack element, off the red/black/white palette"
+          },
+          {
+            "defect": "OFF_PALETTE",
+            "region": "center icon"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "entire frame — no five-card filmstrip, photographs, bevels, or focused card"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "background field"
+          },
+          {
+            "defect": "SCALE_ERROR",
+            "region": "center icon — tiny stamp instead of full carousel"
+          }
+        ],
+        "notes": "Single flat blue stack icon in a void; carousel absent, automatic blue-drift MUST-FIX."
+      },
+      "pass2": {
+        "score": 10,
+        "mustFix": [
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "center (five filmstrip cards, photos, recession absent)"
+          },
+          {
+            "defect": "DEFAULT_BLUE_DRIFT",
+            "region": "center icon (blue layered glyph)"
+          },
+          {
+            "defect": "OFF_PALETTE",
+            "region": "center icon (no red/black/white discipline)"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "background field"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "center icon (flat fills, no light response)"
+          },
+          {
+            "defect": "SCALE_ERROR",
+            "region": "center icon (tiny vs full carousel)"
+          }
+        ],
+        "notes": "Single small blue layers icon on void; no carousel, plus automatic blue-drift MUST-FIX."
+      },
+      "finalScore": 8.5,
+      "mustFixUnion": [
+        "DEFAULT_BLUE_DRIFT",
+        "OFF_PALETTE",
+        "MISSING_SPEC_ELEMENT",
+        "FLAT_VOID",
+        "SCALE_ERROR",
+        "DEAD_LIGHTING"
+      ],
+      "mustFixBothPasses": [
+        "DEFAULT_BLUE_DRIFT",
+        "OFF_PALETTE",
+        "MISSING_SPEC_ELEMENT",
+        "FLAT_VOID",
+        "SCALE_ERROR"
+      ],
+      "scoreDisagreement": 3,
+      "defectDisagreement": [
+        "DEAD_LIGHTING"
+      ]
+    },
+    {
+      "goldenId": "g-06",
+      "bundleId": "wbakeb/claude-sonnet-5/v-13-brand-wall-r2",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-13-brand-wall",
+      "pass1": {
+        "score": 10,
+        "mustFix": [
+          {
+            "defect": "SCALE_ERROR",
+            "region": "full frame — giant blurred white forms"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "center — no 3x2 tile grid or wordmarks"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "full frame"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "lower third black band"
+          }
+        ],
+        "notes": "Massively overscaled blurry white shapes; no machined tiles, no brand marks; only a stray red tick survives."
+      },
+      "pass2": {
+        "score": 8,
+        "mustFix": [
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "entire frame"
+          },
+          {
+            "defect": "SCALE_ERROR",
+            "region": "upper two-thirds, giant blurred white shapes"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "center — no 3x2 machined tile grid or readable wordmarks"
+          },
+          {
+            "defect": "OFF_PALETTE",
+            "region": "upper field, massive white fills instead of ink tiles"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "all surfaces, no brushed-metal response"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "lower-third black band"
+          }
+        ],
+        "notes": "Enormous garbled white shapes replace the tile wall; only the red kicker rule survives. Unrecognizable versus spec."
+      },
+      "finalScore": 9,
+      "mustFixUnion": [
+        "SCALE_ERROR",
+        "MISSING_SPEC_ELEMENT",
+        "BROKEN_COMPOSITION",
+        "FLAT_VOID",
+        "OFF_PALETTE",
+        "DEAD_LIGHTING"
+      ],
+      "mustFixBothPasses": [
+        "SCALE_ERROR",
+        "MISSING_SPEC_ELEMENT",
+        "BROKEN_COMPOSITION",
+        "FLAT_VOID"
+      ],
+      "scoreDisagreement": 2,
+      "defectDisagreement": [
+        "OFF_PALETTE",
+        "DEAD_LIGHTING"
+      ]
+    },
+    {
+      "goldenId": "g-07",
+      "bundleId": "wbakeb/gpt-oss-120b/v-04-kinetic-type-headline-r2",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-04-kinetic-type-headline",
+      "pass1": {
+        "score": 7,
+        "mustFix": [
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "center — no headline glyphs rendered"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "background field, right and top"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "center-right untextured white quad"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "center card — raw gradient fill"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "below headline — no accent underline"
+          }
+        ],
+        "notes": "MSDF text failed to render; a blank gradient quad and stray cone on black void. No type, no accent."
+      },
+      "pass2": {
+        "score": 5,
+        "mustFix": [
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "center — no MSDF headline glyphs at all"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "center gradient rectangle and upper-left white wedge"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "background field, flat black"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "entire frame"
+          },
+          {
+            "defect": "SCALE_ERROR",
+            "region": "center white slab dominating frame"
+          }
+        ],
+        "notes": "No type rendered — just a white-to-gray slab on black void. Core spec element entirely absent."
+      },
+      "finalScore": 6,
+      "mustFixUnion": [
+        "MISSING_SPEC_ELEMENT",
+        "FLAT_VOID",
+        "BROKEN_COMPOSITION",
+        "DEAD_LIGHTING",
+        "SCALE_ERROR"
+      ],
+      "mustFixBothPasses": [
+        "MISSING_SPEC_ELEMENT",
+        "FLAT_VOID",
+        "BROKEN_COMPOSITION",
+        "DEAD_LIGHTING"
+      ],
+      "scoreDisagreement": 2,
+      "defectDisagreement": [
+        "SCALE_ERROR"
+      ]
+    },
+    {
+      "goldenId": "g-08",
+      "bundleId": "wbakeb/deepseek-v4-flash/v-16-feature-triptych-r1",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-16-feature-triptych",
+      "pass1": {
+        "score": 9,
+        "mustFix": [
+          {
+            "defect": "SCALE_ERROR",
+            "region": "upper half — enormous pink mass"
+          },
+          {
+            "defect": "OFF_PALETTE",
+            "region": "upper half — salmon pink, not #ff2a38 signal red"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "center row — card titles, body, icon discs absent"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "full frame"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "bottom third black field"
+          }
+        ],
+        "notes": "Accent element blown up to half the frame in off-palette pink; cards buried, no hierarchy or content."
+      },
+      "pass2": {
+        "score": 9,
+        "mustFix": [
+          {
+            "defect": "OFF_PALETTE",
+            "region": "upper-half salmon-pink flood, accent used as field not signal"
+          },
+          {
+            "defect": "SCALE_ERROR",
+            "region": "upper half, blob dwarfs card row"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "mid-band white wavy smear over cards"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "three cards — no icon discs, titles, or body text"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "lower-third black band"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "gray card fragments, flat fills"
+          }
+        ],
+        "notes": "Desaturated pink flood violates red discipline; cards are bare gray stubs with no content or materiality."
+      },
+      "finalScore": 9,
+      "mustFixUnion": [
+        "SCALE_ERROR",
+        "OFF_PALETTE",
+        "MISSING_SPEC_ELEMENT",
+        "BROKEN_COMPOSITION",
+        "FLAT_VOID",
+        "DEAD_LIGHTING"
+      ],
+      "mustFixBothPasses": [
+        "SCALE_ERROR",
+        "OFF_PALETTE",
+        "MISSING_SPEC_ELEMENT",
+        "BROKEN_COMPOSITION",
+        "FLAT_VOID"
+      ],
+      "scoreDisagreement": 0,
+      "defectDisagreement": [
+        "DEAD_LIGHTING"
+      ]
+    },
+    {
+      "goldenId": "g-09",
+      "bundleId": "wbakeb/claude-opus-4.8/v-01-orbit-product-hero-r2",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-01-orbit-product-hero",
+      "pass1": {
+        "score": 20,
+        "mustFix": [
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "watch body — flat unlit white, no brushed-metal response"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "upper-right — watch floating and cropped, not seated on plinth"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "scene — no red accent signal light"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "right half background"
+          },
+          {
+            "defect": "OFF_PALETTE",
+            "region": "left edge — raw white light-card geometry visible"
+          }
+        ],
+        "notes": "Watch and plinth exist but materials are clay-white, watch levitates cropped off-frame; lighting rig geometry visible."
+      },
+      "pass2": {
+        "score": 18,
+        "mustFix": [
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "watch body, blown-out white clay with no brushed-metal PBR"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "upper-right — watch floats detached above plinth, cropped at top"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "scene-wide — no accent signal light, no red anywhere"
+          },
+          {
+            "defect": "OFF_PALETTE",
+            "region": "center plinth, mid-gray flat instead of near-black gradient"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "right background field"
+          },
+          {
+            "defect": "SCALE_ERROR",
+            "region": "left edge, oversized blurred white light plane"
+          }
+        ],
+        "notes": "Right elements exist but watch is untextured white, floating off its plinth; lighting and accent entirely unresolved."
+      },
+      "finalScore": 19,
+      "mustFixUnion": [
+        "DEAD_LIGHTING",
+        "BROKEN_COMPOSITION",
+        "MISSING_SPEC_ELEMENT",
+        "FLAT_VOID",
+        "OFF_PALETTE",
+        "SCALE_ERROR"
+      ],
+      "mustFixBothPasses": [
+        "DEAD_LIGHTING",
+        "BROKEN_COMPOSITION",
+        "MISSING_SPEC_ELEMENT",
+        "FLAT_VOID",
+        "OFF_PALETTE"
+      ],
+      "scoreDisagreement": 2,
+      "defectDisagreement": [
+        "SCALE_ERROR"
+      ]
+    },
+    {
+      "goldenId": "g-10",
+      "bundleId": "wbakeb/gemini-3.5-flash/v-08-orrery-mechanism-r2",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-08-orrery-mechanism",
+      "pass1": {
+        "score": 13,
+        "mustFix": [
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "right of center — secondary meshed gear absent"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "gear pivot — no jewel accent"
+          },
+          {
+            "defect": "OFF_PALETTE",
+            "region": "center-left gear — brass/gold, not machined steel; no accent red"
+          },
+          {
+            "defect": "SCALE_ERROR",
+            "region": "center-left — gear far too small in frame"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "background field — pure black, no gradient"
+          }
+        ],
+        "notes": "Single undersized brass gear adrift in a black void; no meshing pair, no jewel pivot, no engineered backdrop."
+      },
+      "pass2": {
+        "score": 14,
+        "mustFix": [
+          {
+            "defect": "SCALE_ERROR",
+            "region": "upper-center — gear tiny relative to frame"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "background field, pure flat black with no gradient"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "right of primary — no secondary meshed gear, no jewel accent pivot"
+          },
+          {
+            "defect": "OFF_PALETTE",
+            "region": "gear body, brass-gold instead of machined steel and palette"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "gear off-center, not at origin"
+          }
+        ],
+        "notes": "Single undersized brass gear adrift in a void; secondary gear, accent jewel, steel material, and background all missing."
+      },
+      "finalScore": 13.5,
+      "mustFixUnion": [
+        "MISSING_SPEC_ELEMENT",
+        "OFF_PALETTE",
+        "SCALE_ERROR",
+        "FLAT_VOID",
+        "BROKEN_COMPOSITION"
+      ],
+      "mustFixBothPasses": [
+        "MISSING_SPEC_ELEMENT",
+        "OFF_PALETTE",
+        "SCALE_ERROR",
+        "FLAT_VOID"
+      ],
+      "scoreDisagreement": 1,
+      "defectDisagreement": [
+        "BROKEN_COMPOSITION"
+      ]
+    },
+    {
+      "goldenId": "g-11",
+      "bundleId": "wbakeb/claude-haiku-4.5/v-12-photo-hero-composite-r1",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-12-photo-hero-composite",
+      "pass1": {
+        "score": 10,
+        "mustFix": [
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "entire frame — no photo plate, no subject, no caption block"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "upper-right quadrant — giant blurred white glyph fragment"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "left half background field"
+          },
+          {
+            "defect": "SCALE_ERROR",
+            "region": "center-right — letterform blown far past frame"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "black rectangles, center-left"
+          }
+        ],
+        "notes": "No photographic hero at all; a cropped blurred letterform over black voids. Only spec trace is one red hairline."
+      },
+      "pass2": {
+        "score": 14,
+        "mustFix": [
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "entire frame — no photo plate, subject, or caption block"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "upper-right quadrant — giant blurred glyph cropped off-canvas"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "left half background field"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "center white glyph mass — flat blurred fill, no materiality"
+          }
+        ],
+        "notes": "No photographic hero at all; a blurred oversized glyph fragment replaces the entire spec. Palette present but content absent."
+      },
+      "finalScore": 12,
+      "mustFixUnion": [
+        "MISSING_SPEC_ELEMENT",
+        "BROKEN_COMPOSITION",
+        "FLAT_VOID",
+        "SCALE_ERROR",
+        "DEAD_LIGHTING"
+      ],
+      "mustFixBothPasses": [
+        "MISSING_SPEC_ELEMENT",
+        "BROKEN_COMPOSITION",
+        "FLAT_VOID",
+        "DEAD_LIGHTING"
+      ],
+      "scoreDisagreement": 4,
+      "defectDisagreement": [
+        "SCALE_ERROR"
+      ]
+    },
+    {
+      "goldenId": "g-12",
+      "bundleId": "wbakeb/gpt-oss-120b/v-17-data-ribbon-r2",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-17-data-ribbon",
+      "pass1": {
+        "score": 20,
+        "mustFix": [
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "center ribbon — no mono ticker figures, only one accent tick"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "background field and large gray square behind ribbon"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "ribbon plane, center — flat fill, no hairlines or material response"
+          },
+          {
+            "defect": "LOW_CONTRAST",
+            "region": "gray square vs background, center"
+          }
+        ],
+        "notes": "Ribbon geometry and one red tick exist, but zero data content; off-spec soft gray square dominates a dead field."
+      },
+      "pass2": {
+        "score": 20,
+        "mustFix": [
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "ribbon band — no mono ticker figures, only one accent tick"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "center — large unexplained gray gradient square behind ribbon"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "ribbon plane — flat fill, no roughness/metal response"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "outer background field"
+          }
+        ],
+        "notes": "Ribbon geometry and one red tick exist, but zero data content; empty band fails the spec's core purpose."
+      },
+      "finalScore": 20,
+      "mustFixUnion": [
+        "MISSING_SPEC_ELEMENT",
+        "FLAT_VOID",
+        "DEAD_LIGHTING",
+        "LOW_CONTRAST",
+        "BROKEN_COMPOSITION"
+      ],
+      "mustFixBothPasses": [
+        "MISSING_SPEC_ELEMENT",
+        "FLAT_VOID",
+        "DEAD_LIGHTING"
+      ],
+      "scoreDisagreement": 0,
+      "defectDisagreement": [
+        "LOW_CONTRAST",
+        "BROKEN_COMPOSITION"
+      ]
+    },
+    {
+      "goldenId": "g-13",
+      "bundleId": "wbakeb/claude-sonnet-5/v-02-particle-constellation-r2",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-02-particle-constellation",
+      "pass1": {
+        "score": 14,
+        "mustFix": [
+          {
+            "defect": "SCALE_ERROR",
+            "region": "center — constellation compressed into a tiny dense square, not a 6x4x5 shell"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "center — no red accent core instances visible"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "entire surrounding background field"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "center — uniform noise patch, no depth falloff or drift structure"
+          }
+        ],
+        "notes": "Particles render as a postage-stamp noise square; no ellipsoidal depth, no accent core, frame is 95% void."
+      },
+      "pass2": {
+        "score": 10,
+        "mustFix": [
+          {
+            "defect": "BLANK_RENDER",
+            "region": "entire frame — near-empty black field"
+          },
+          {
+            "defect": "SCALE_ERROR",
+            "region": "center — starfield collapsed into tiny dense patch"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "center — no red accent core visible"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "entire background field"
+          }
+        ],
+        "notes": "Constellation collapsed to a postage-stamp speck cluster; no accent core, no depth falloff, frame effectively void."
+      },
+      "finalScore": 12,
+      "mustFixUnion": [
+        "SCALE_ERROR",
+        "MISSING_SPEC_ELEMENT",
+        "FLAT_VOID",
+        "BROKEN_COMPOSITION",
+        "BLANK_RENDER"
+      ],
+      "mustFixBothPasses": [
+        "SCALE_ERROR",
+        "MISSING_SPEC_ELEMENT",
+        "FLAT_VOID"
+      ],
+      "scoreDisagreement": 4,
+      "defectDisagreement": [
+        "BROKEN_COMPOSITION",
+        "BLANK_RENDER"
+      ]
+    },
+    {
+      "goldenId": "g-14",
+      "bundleId": "wbakeb/glm-5.2/v-06-loop-column-gallery-r1",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-06-loop-column-gallery",
+      "pass1": {
+        "score": 15,
+        "mustFix": [
+          {
+            "defect": "FLAT_VOID",
+            "region": "upper-right — huge blown-out featureless white block"
+          },
+          {
+            "defect": "ALL_BLACK_ELEMENT",
+            "region": "left-third plate — near-black void, not a photograph"
+          },
+          {
+            "defect": "DEFAULT_BLUE_DRIFT",
+            "region": "center and lower-center plates — blue/purple glow content"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "column — plates lack distinct filmic photographs and frames"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "overall — column rhythm unreadable"
+          }
+        ],
+        "notes": "Plates read as voids or blue UI glows, not graded photographs; overexposed white slab wrecks the composition."
+      },
+      "pass2": {
+        "score": 15,
+        "mustFix": [
+          {
+            "defect": "DEFAULT_BLUE_DRIFT",
+            "region": "center and lower-center plates — blue/purple glowing imagery"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "upper-right — blown flat-white plate with no image content"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "column — only ~3 plates visible, none photographic"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "left half — black empty panel"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "full frame — column misaligned, plates cropped"
+          }
+        ],
+        "notes": "No filmic photographs; blue-drift renders and a blown white plate. Automatic MUST-FIX palette violation plus voids."
+      },
+      "finalScore": 15,
+      "mustFixUnion": [
+        "FLAT_VOID",
+        "ALL_BLACK_ELEMENT",
+        "DEFAULT_BLUE_DRIFT",
+        "MISSING_SPEC_ELEMENT",
+        "BROKEN_COMPOSITION"
+      ],
+      "mustFixBothPasses": [
+        "FLAT_VOID",
+        "DEFAULT_BLUE_DRIFT",
+        "MISSING_SPEC_ELEMENT",
+        "BROKEN_COMPOSITION"
+      ],
+      "scoreDisagreement": 0,
+      "defectDisagreement": [
+        "ALL_BLACK_ELEMENT"
+      ]
+    },
+    {
+      "goldenId": "g-15",
+      "bundleId": "wbakeb/claude-opus-4.8/v-14-pricing-card-r1",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-14-pricing-card",
+      "pass1": {
+        "score": 28,
+        "mustFix": [
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "card interior — no tier name, price figure, or feature text anywhere"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "right half — giant blurred white glyph intruding over the card"
+          },
+          {
+            "defect": "SCALE_ERROR",
+            "region": "right half — foreign letterform far beyond spec scale"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "lower-left background field"
+          }
+        ],
+        "notes": "Best of set: machined header strip, hairline rows, and accent CTA bar present, but all typography missing and an intruder glyph dominates."
+      },
+      "pass2": {
+        "score": 32,
+        "mustFix": [
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "card interior — no tier name, price figure, or feature text"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "right half — giant blurred glyph occluding the card"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "left background field"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "upper-right glyph mass — flat blurred white fill"
+          }
+        ],
+        "notes": "Card structure, machined header, and physical red CTA read correctly, but all typography missing and composition wrecked by intruding blurred glyph."
+      },
+      "finalScore": 30,
+      "mustFixUnion": [
+        "MISSING_SPEC_ELEMENT",
+        "BROKEN_COMPOSITION",
+        "SCALE_ERROR",
+        "FLAT_VOID",
+        "DEAD_LIGHTING"
+      ],
+      "mustFixBothPasses": [
+        "MISSING_SPEC_ELEMENT",
+        "BROKEN_COMPOSITION",
+        "FLAT_VOID"
+      ],
+      "scoreDisagreement": 4,
+      "defectDisagreement": [
+        "SCALE_ERROR",
+        "DEAD_LIGHTING"
+      ]
+    },
+    {
+      "goldenId": "g-16",
+      "bundleId": "wbakeb/claude-opus-4.8/v-18-nav-dock-r1",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-18-nav-dock",
+      "pass1": {
+        "score": 22,
+        "mustFix": [
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "center rail — all five nav entries, active state, and accent are absent"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "upper background field"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "lower background field"
+          },
+          {
+            "defect": "LOW_CONTRAST",
+            "region": "background banding behind rail"
+          }
+        ],
+        "notes": "Rail slab renders with decent gradient and edge light, but the dock has zero entries; frame is mostly empty ink."
+      },
+      "pass2": {
+        "score": 22,
+        "mustFix": [
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "center rail — no five entries, icons, or active state"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "center rail — no red accent anywhere"
+          },
+          {
+            "defect": "SCALE_ERROR",
+            "region": "center rail spans full frame edge-to-edge instead of floating 3.6-unit dock"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "upper and lower background fields"
+          }
+        ],
+        "notes": "Rail gradient and top specular edge read metallic, but dock is empty: no entries, no active state, no accent."
+      },
+      "finalScore": 22,
+      "mustFixUnion": [
+        "MISSING_SPEC_ELEMENT",
+        "FLAT_VOID",
+        "LOW_CONTRAST",
+        "SCALE_ERROR"
+      ],
+      "mustFixBothPasses": [
+        "MISSING_SPEC_ELEMENT",
+        "FLAT_VOID"
+      ],
+      "scoreDisagreement": 0,
+      "defectDisagreement": [
+        "LOW_CONTRAST",
+        "SCALE_ERROR"
+      ]
+    },
+    {
+      "goldenId": "g-17",
+      "bundleId": "wbakeb/claude-sonnet-5/v-03-glass-prism-refraction-r2",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-03-glass-prism-refraction",
+      "pass1": {
+        "score": 31,
+        "mustFix": [
+          {
+            "defect": "OFF_PALETTE",
+            "region": "background field — near-white, violates dark-first spec background #0b0b10"
+          },
+          {
+            "defect": "ALL_BLACK_ELEMENT",
+            "region": "lower-center dish/shadow object"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "upper-left hard black wedge and detached floating dish"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "prism faces — flat facets, no transmission or back rim light"
+          }
+        ],
+        "notes": "Prism shows iridescent streaks but reads opaque; light background inverts palette; composition incoherent."
+      },
+      "pass2": {
+        "score": 18,
+        "mustFix": [
+          {
+            "defect": "OFF_PALETTE",
+            "region": "background field — white/light, violates dark-first spec #0b0b10"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "center prism — no transmission, refraction, or emissive core; reads opaque faceted metal"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "upper-left quadrant — detached black shadow wedge"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "lower dish — flat red-to-black band, no dispersion caustics"
+          }
+        ],
+        "notes": "Inverted palette; prism is opaque paper-plane facets with token iridescent streaks, no glass physics."
+      },
+      "finalScore": 24.5,
+      "mustFixUnion": [
+        "OFF_PALETTE",
+        "ALL_BLACK_ELEMENT",
+        "BROKEN_COMPOSITION",
+        "DEAD_LIGHTING",
+        "MISSING_SPEC_ELEMENT"
+      ],
+      "mustFixBothPasses": [
+        "OFF_PALETTE",
+        "BROKEN_COMPOSITION",
+        "DEAD_LIGHTING"
+      ],
+      "scoreDisagreement": 13,
+      "defectDisagreement": [
+        "ALL_BLACK_ELEMENT",
+        "MISSING_SPEC_ELEMENT"
+      ]
+    },
+    {
+      "goldenId": "g-18",
+      "bundleId": "wbakeb/claude-fable-5/v-08-orrery-mechanism-r1",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-08-orrery-mechanism",
+      "pass1": {
+        "score": 27,
+        "mustFix": [
+          {
+            "defect": "OFF_PALETTE",
+            "region": "gear assembly — flat white plastic, not machined steel PBR"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "gears — no anisotropy, metalness, or specular response"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "right edge — garbled white streaked panel and artifacts"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "left half background"
+          },
+          {
+            "defect": "SCALE_ERROR",
+            "region": "secondary gear — not tooth-meshed at specified position"
+          }
+        ],
+        "notes": "Red jewel pivot present, but gears are toy-white, right side garbled, and half the frame is void."
+      },
+      "pass2": {
+        "score": 26,
+        "mustFix": [
+          {
+            "defect": "OFF_PALETTE",
+            "region": "center gears — matte white plastic, not machined-steel PBR"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "right edge — white streak and scattered garbled artifacts"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "left background field"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "center gears — no anisotropy or clearcoat response"
+          }
+        ],
+        "notes": "Gear geometry and red jewel pivot present, but material is toy plastic and right side is corrupted."
+      },
+      "finalScore": 26.5,
+      "mustFixUnion": [
+        "OFF_PALETTE",
+        "DEAD_LIGHTING",
+        "BROKEN_COMPOSITION",
+        "FLAT_VOID",
+        "SCALE_ERROR"
+      ],
+      "mustFixBothPasses": [
+        "OFF_PALETTE",
+        "DEAD_LIGHTING",
+        "BROKEN_COMPOSITION",
+        "FLAT_VOID"
+      ],
+      "scoreDisagreement": 1,
+      "defectDisagreement": [
+        "SCALE_ERROR"
+      ]
+    },
+    {
+      "goldenId": "g-19",
+      "bundleId": "wbakeb/claude-fable-5/v-05-pedestal-material-study-r1",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-05-pedestal-material-study",
+      "pass1": {
+        "score": 33,
+        "mustFix": [
+          {
+            "defect": "OFF_PALETTE",
+            "region": "background field — light gray, violates dark scene spec"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "torus knot — glowing white emissive blob, not brushed-metal PBR"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "knot surface — no roughness map, anisotropy, or imperfection pass"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "upper-left quadrant — undefined black blob"
+          },
+          {
+            "defect": "SCALE_ERROR",
+            "region": "knot geometry — lumpy low-segment tube vs 220x36 spec"
+          }
+        ],
+        "notes": "Pedestal and contact shading are passable; knot material and palette are wholly wrong."
+      },
+      "pass2": {
+        "score": 30,
+        "mustFix": [
+          {
+            "defect": "OFF_PALETTE",
+            "region": "upper-left background panel — bright white field, dark-first violated"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "center torus knot — flat emissive white, no brushed-metal anisotropy or roughness map"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "upper-left quadrant — amorphous black blob in white panel"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "whole frame — no accent red"
+          }
+        ],
+        "notes": "Correct knot-on-pedestal staging with contact shadow and rim speckle, but material study itself fails completely."
+      },
+      "finalScore": 31.5,
+      "mustFixUnion": [
+        "OFF_PALETTE",
+        "DEAD_LIGHTING",
+        "MISSING_SPEC_ELEMENT",
+        "BROKEN_COMPOSITION",
+        "SCALE_ERROR"
+      ],
+      "mustFixBothPasses": [
+        "OFF_PALETTE",
+        "DEAD_LIGHTING",
+        "MISSING_SPEC_ELEMENT",
+        "BROKEN_COMPOSITION"
+      ],
+      "scoreDisagreement": 3,
+      "defectDisagreement": [
+        "SCALE_ERROR"
+      ]
+    },
+    {
+      "goldenId": "g-20",
+      "bundleId": "wbakeb/claude-haiku-4.5/v-10-bento-metrics-r1",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-10-bento-metrics",
+      "pass1": {
+        "score": 36,
+        "mustFix": [
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "top and right — giant garbled white glyph fragment overlapping grid"
+          },
+          {
+            "defect": "GARBLED_TEXT",
+            "region": "upper-right quadrant — malformed oversized character"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "all cells — no stat values, labels, or metric content"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "cell interiors — empty gray slabs below accent ticks"
+          },
+          {
+            "defect": "LOW_CONTRAST",
+            "region": "right-column secondary cells against background"
+          }
+        ],
+        "notes": "Bento proportions and red accent ticks match spec, but tiles are contentless and a garbled glyph wrecks composition."
+      },
+      "pass2": {
+        "score": 38,
+        "mustFix": [
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "all three cells — no stat content, numerals, or labels"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "upper-right quadrant — giant blurred clipped glyph overrunning tiles"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "left and bottom background margins"
+          },
+          {
+            "defect": "LOW_CONTRAST",
+            "region": "right column secondary cells against background"
+          }
+        ],
+        "notes": "Layout matches dominant-left bento and red accents hold palette, but tiles are empty slabs under a garbled mega-glyph."
+      },
+      "finalScore": 37,
+      "mustFixUnion": [
+        "BROKEN_COMPOSITION",
+        "GARBLED_TEXT",
+        "MISSING_SPEC_ELEMENT",
+        "FLAT_VOID",
+        "LOW_CONTRAST"
+      ],
+      "mustFixBothPasses": [
+        "BROKEN_COMPOSITION",
+        "MISSING_SPEC_ELEMENT",
+        "FLAT_VOID",
+        "LOW_CONTRAST"
+      ],
+      "scoreDisagreement": 2,
+      "defectDisagreement": [
+        "GARBLED_TEXT"
+      ]
+    },
+    {
+      "goldenId": "g-21",
+      "bundleId": "wbakeb/claude-fable-5/v-09-editorial-oversized-type-r1",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-09-editorial-oversized-type",
+      "pass1": {
+        "score": 16,
+        "mustFix": [
+          {
+            "defect": "SCALE_ERROR",
+            "region": "full frame — letterforms cropped far past legibility"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "right two-thirds"
+          },
+          {
+            "defect": "GARBLED_TEXT",
+            "region": "center and right — no readable hero or kicker"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "upper-left quadrant — kicker line absent"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "far-left black column"
+          }
+        ],
+        "notes": "Hero type zoomed into abstract cropped blobs with soft blur edges; only the red rule survives. Composition unusable."
+      },
+      "pass2": {
+        "score": 14,
+        "mustFix": [
+          {
+            "defect": "SCALE_ERROR",
+            "region": "center and right half — letterforms zoomed far past legibility"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "full frame — cropped glyph fragments, no readable headline"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "upper-left quadrant — kicker line absent"
+          },
+          {
+            "defect": "GARBLED_TEXT",
+            "region": "center — type reads as abstract blocks with soft-blurred edges"
+          }
+        ],
+        "notes": "Grain and red rule exist, but headline is an illegible cropped fragment; blur on glyph edges violates engineered precision."
+      },
+      "finalScore": 15,
+      "mustFixUnion": [
+        "SCALE_ERROR",
+        "BROKEN_COMPOSITION",
+        "GARBLED_TEXT",
+        "MISSING_SPEC_ELEMENT",
+        "FLAT_VOID"
+      ],
+      "mustFixBothPasses": [
+        "SCALE_ERROR",
+        "BROKEN_COMPOSITION",
+        "GARBLED_TEXT",
+        "MISSING_SPEC_ELEMENT"
+      ],
+      "scoreDisagreement": 2,
+      "defectDisagreement": [
+        "FLAT_VOID"
+      ]
+    },
+    {
+      "goldenId": "g-22",
+      "bundleId": "wbakeb/gemini-3.5-flash/v-19-empty-state-r1",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-19-empty-state",
+      "pass1": {
+        "score": 54,
+        "mustFix": [
+          {
+            "defect": "OFF_PALETTE",
+            "region": "center-right accent button — pink/salmon, not #ff2a38 signal red"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "right edge — guidance copy clipped mid-word"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "accent button — flat fill, no physical read (DL12)"
+          }
+        ],
+        "notes": "Structure follows DL16 well: grid, ghost watch-card, copy, action. Pink drift and clipped text hold it back."
+      },
+      "pass2": {
+        "score": 48,
+        "mustFix": [
+          {
+            "defect": "OFF_PALETTE",
+            "region": "center-right button — accent is salmon pink, not signal red #ff2a38"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "center-right — guidance copy clipped at panel/frame edge"
+          },
+          {
+            "defect": "OFF_PALETTE",
+            "region": "center panel — surface renders light gray, far above spec ink values"
+          }
+        ],
+        "notes": "All DL16 elements present (grid, ghost card, copy, action) but pink accent drift, clipped copy, washed-out panel."
+      },
+      "finalScore": 51,
+      "mustFixUnion": [
+        "OFF_PALETTE",
+        "BROKEN_COMPOSITION",
+        "DEAD_LIGHTING"
+      ],
+      "mustFixBothPasses": [
+        "OFF_PALETTE",
+        "BROKEN_COMPOSITION"
+      ],
+      "scoreDisagreement": 6,
+      "defectDisagreement": [
+        "DEAD_LIGHTING"
+      ]
+    },
+    {
+      "goldenId": "g-23",
+      "bundleId": "wbakeb/claude-haiku-4.5/v-08-orrery-mechanism-r1",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-08-orrery-mechanism",
+      "pass1": {
+        "score": 44,
+        "mustFix": [
+          {
+            "defect": "FLAT_VOID",
+            "region": "background field — flat black, no engineered gradient"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "lower-center floor plane — flat gray polygon, no light response"
+          },
+          {
+            "defect": "OFF_PALETTE",
+            "region": "both gears — antique brass/gold instead of machined steel"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "primary gear hub — no jewel accent pivot"
+          }
+        ],
+        "notes": "Gear PBR itself is credible, but wrong material, dead floor plane, void backdrop, and missing red jewel pivot."
+      },
+      "pass2": {
+        "score": 30,
+        "mustFix": [
+          {
+            "defect": "FLAT_VOID",
+            "region": "background field — pure unlit black, spec gradient missing"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "full frame — gears crammed at top edge, orphaned gray quad at bottom"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "lower-center — flat unshaded gray floor plane"
+          },
+          {
+            "defect": "OFF_PALETTE",
+            "region": "center gears — aged warm brass instead of machined steel material"
+          }
+        ],
+        "notes": "Gears mesh plausibly with faint red pivot glow, but staging, background, and material all miss spec."
+      },
+      "finalScore": 37,
+      "mustFixUnion": [
+        "FLAT_VOID",
+        "DEAD_LIGHTING",
+        "OFF_PALETTE",
+        "MISSING_SPEC_ELEMENT",
+        "BROKEN_COMPOSITION"
+      ],
+      "mustFixBothPasses": [
+        "FLAT_VOID",
+        "DEAD_LIGHTING",
+        "OFF_PALETTE"
+      ],
+      "scoreDisagreement": 14,
+      "defectDisagreement": [
+        "MISSING_SPEC_ELEMENT",
+        "BROKEN_COMPOSITION"
+      ]
+    },
+    {
+      "goldenId": "g-24",
+      "bundleId": "wbakeb/kimi-k2.7-code/v-09-editorial-oversized-type-r2",
+      "seeded": false,
+      "seededDefect": null,
+      "caseId": "v-09-editorial-oversized-type",
+      "pass1": {
+        "score": 74,
+        "mustFix": [
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "hero headline — sans-serif substituted for specified Lora serif"
+          }
+        ],
+        "notes": "Strong hierarchy: kicker, stacked hero, red rule, grain, footer meta. Typeface deviation and modest hero scale cap it."
+      },
+      "pass2": {
+        "score": 74,
+        "mustFix": [],
+        "notes": "Disciplined layout: kicker, stacked hero, red rule, grain plate. Hero set in sans, not spec Lora serif; slightly undersized."
+      },
+      "finalScore": 74,
+      "mustFixUnion": [
+        "MISSING_SPEC_ELEMENT"
+      ],
+      "mustFixBothPasses": [],
+      "scoreDisagreement": 0,
+      "defectDisagreement": [
+        "MISSING_SPEC_ELEMENT"
+      ]
+    },
+    {
+      "goldenId": "g-25",
+      "bundleId": "seeded-bad/bad-1-flat-void-r1",
+      "seeded": true,
+      "seededDefect": "bad-1-flat-void",
+      "caseId": "bad-1-flat-void",
+      "pass1": {
+        "score": 4,
+        "mustFix": [
+          {
+            "defect": "BLANK_RENDER",
+            "region": "entire frame"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "entire frame"
+          }
+        ],
+        "notes": "Uniform near-black frame with no content rendered."
+      },
+      "pass2": {
+        "score": 3,
+        "mustFix": [
+          {
+            "defect": "BLANK_RENDER",
+            "region": "full frame — uniform near-black, no content"
+          }
+        ],
+        "notes": "Empty near-black frame; nothing rendered."
+      },
+      "finalScore": 3.5,
+      "mustFixUnion": [
+        "BLANK_RENDER",
+        "FLAT_VOID"
+      ],
+      "mustFixBothPasses": [
+        "BLANK_RENDER"
+      ],
+      "scoreDisagreement": 1,
+      "defectDisagreement": [
+        "FLAT_VOID"
+      ]
+    },
+    {
+      "goldenId": "g-26",
+      "bundleId": "seeded-bad/bad-2-all-black-button-r1",
+      "seeded": true,
+      "seededDefect": "bad-2-all-black-button",
+      "caseId": "bad-2-all-black-button",
+      "pass1": {
+        "score": 6,
+        "mustFix": [
+          {
+            "defect": "BLANK_RENDER",
+            "region": "entire frame"
+          },
+          {
+            "defect": "ALL_BLACK_ELEMENT",
+            "region": "center card"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "background field"
+          },
+          {
+            "defect": "LOW_CONTRAST",
+            "region": "center card"
+          }
+        ],
+        "notes": "Near-black frame; only a barely-visible black-on-black rectangle. Unreadable, unlit, effectively void."
+      },
+      "pass2": {
+        "score": 6,
+        "mustFix": [
+          {
+            "defect": "BLANK_RENDER",
+            "region": "entire frame"
+          },
+          {
+            "defect": "ALL_BLACK_ELEMENT",
+            "region": "center card"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "background field"
+          },
+          {
+            "defect": "LOW_CONTRAST",
+            "region": "center card"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "entire frame"
+          }
+        ],
+        "notes": "Near-black frame; only a barely-visible dark rectangle. Effectively unrendered content."
+      },
+      "finalScore": 6,
+      "mustFixUnion": [
+        "BLANK_RENDER",
+        "ALL_BLACK_ELEMENT",
+        "FLAT_VOID",
+        "LOW_CONTRAST",
+        "DEAD_LIGHTING"
+      ],
+      "mustFixBothPasses": [
+        "BLANK_RENDER",
+        "ALL_BLACK_ELEMENT",
+        "FLAT_VOID",
+        "LOW_CONTRAST"
+      ],
+      "scoreDisagreement": 0,
+      "defectDisagreement": [
+        "DEAD_LIGHTING"
+      ]
+    },
+    {
+      "goldenId": "g-27",
+      "bundleId": "seeded-bad/bad-3-default-blue-r1",
+      "seeded": true,
+      "seededDefect": "bad-3-default-blue",
+      "caseId": "bad-3-default-blue",
+      "pass1": {
+        "score": 14,
+        "mustFix": [
+          {
+            "defect": "DEFAULT_BLUE_DRIFT",
+            "region": "card header and lower button"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "background field"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "center card"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "center card body (no text/content)"
+          }
+        ],
+        "notes": "Unstyled wireframe: flat white card, default-blue bars, zero content, no red, no light response."
+      },
+      "pass2": {
+        "score": 18,
+        "mustFix": [
+          {
+            "defect": "DEFAULT_BLUE_DRIFT",
+            "region": "top header bar and lower button"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "center of white card"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "entire card"
+          },
+          {
+            "defect": "OFF_PALETTE",
+            "region": "center card"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "center card (no text or content)"
+          }
+        ],
+        "notes": "Wireframe-grade blue/white card, flat fills, huge empty body. Automatic palette MUST-FIX."
+      },
+      "finalScore": 16,
+      "mustFixUnion": [
+        "DEFAULT_BLUE_DRIFT",
+        "FLAT_VOID",
+        "DEAD_LIGHTING",
+        "MISSING_SPEC_ELEMENT",
+        "OFF_PALETTE"
+      ],
+      "mustFixBothPasses": [
+        "DEFAULT_BLUE_DRIFT",
+        "FLAT_VOID",
+        "DEAD_LIGHTING",
+        "MISSING_SPEC_ELEMENT"
+      ],
+      "scoreDisagreement": 4,
+      "defectDisagreement": [
+        "OFF_PALETTE"
+      ]
+    },
+    {
+      "goldenId": "g-28",
+      "bundleId": "seeded-bad/bad-4-dead-lighting-r1",
+      "seeded": true,
+      "seededDefect": "bad-4-dead-lighting",
+      "caseId": "bad-4-dead-lighting",
+      "pass1": {
+        "score": 28,
+        "mustFix": [
+          {
+            "defect": "FLAT_VOID",
+            "region": "background field"
+          },
+          {
+            "defect": "OFF_PALETTE",
+            "region": "gray cube and podium (no signal red)"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "cube faces (flat untextured shading, no shadows)"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "entire frame (no typography or UI)"
+          }
+        ],
+        "notes": "Bare untextured 3D primitive on void; minimal face shading only, no shadows, no palette, no composition."
+      },
+      "pass2": {
+        "score": 26,
+        "mustFix": [
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "center cube and pedestal"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "background field"
+          },
+          {
+            "defect": "OFF_PALETTE",
+            "region": "center cube (untextured gray)"
+          },
+          {
+            "defect": "MISSING_SPEC_ELEMENT",
+            "region": "entire frame (no signal red, no content)"
+          }
+        ],
+        "notes": "Untextured gray primitive on black void; ambient flat shading, no materiality or composition intent."
+      },
+      "finalScore": 27,
+      "mustFixUnion": [
+        "FLAT_VOID",
+        "OFF_PALETTE",
+        "DEAD_LIGHTING",
+        "MISSING_SPEC_ELEMENT"
+      ],
+      "mustFixBothPasses": [
+        "FLAT_VOID",
+        "OFF_PALETTE",
+        "DEAD_LIGHTING",
+        "MISSING_SPEC_ELEMENT"
+      ],
+      "scoreDisagreement": 2,
+      "defectDisagreement": []
+    },
+    {
+      "goldenId": "g-29",
+      "bundleId": "seeded-bad/bad-5-broken-composition-r1",
+      "seeded": true,
+      "seededDefect": "bad-5-broken-composition",
+      "caseId": "bad-5-broken-composition",
+      "pass1": {
+        "score": 5,
+        "mustFix": [
+          {
+            "defect": "BLANK_RENDER",
+            "region": "entire frame"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "background field"
+          },
+          {
+            "defect": "LOW_CONTRAST",
+            "region": "lower-right corner faint triangles"
+          }
+        ],
+        "notes": "Essentially empty black frame; only faint dark facets in lower-right corner. Void."
+      },
+      "pass2": {
+        "score": 4,
+        "mustFix": [
+          {
+            "defect": "BLANK_RENDER",
+            "region": "entire frame"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "entire frame"
+          },
+          {
+            "defect": "ALL_BLACK_ELEMENT",
+            "region": "lower-right corner shape"
+          },
+          {
+            "defect": "LOW_CONTRAST",
+            "region": "lower-right quadrant"
+          }
+        ],
+        "notes": "Black void with one faint dark triangle lower-right. Effectively blank."
+      },
+      "finalScore": 4.5,
+      "mustFixUnion": [
+        "BLANK_RENDER",
+        "FLAT_VOID",
+        "LOW_CONTRAST",
+        "ALL_BLACK_ELEMENT"
+      ],
+      "mustFixBothPasses": [
+        "BLANK_RENDER",
+        "FLAT_VOID",
+        "LOW_CONTRAST"
+      ],
+      "scoreDisagreement": 1,
+      "defectDisagreement": [
+        "ALL_BLACK_ELEMENT"
+      ]
+    },
+    {
+      "goldenId": "g-30",
+      "bundleId": "seeded-bad/bad-6-garbled-text-r1",
+      "seeded": true,
+      "seededDefect": "bad-6-garbled-text",
+      "caseId": "bad-6-garbled-text",
+      "pass1": {
+        "score": 13,
+        "mustFix": [
+          {
+            "defect": "GARBLED_TEXT",
+            "region": "center band of white shards"
+          },
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "center panel"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "background field and panel"
+          },
+          {
+            "defect": "OFF_PALETTE",
+            "region": "entire frame (no signal red)"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "white fragments (flat fills)"
+          }
+        ],
+        "notes": "Illegible white fragments resembling shattered glyphs on flat dark panel; no lighting, palette, or intent."
+      },
+      "pass2": {
+        "score": 16,
+        "mustFix": [
+          {
+            "defect": "BROKEN_COMPOSITION",
+            "region": "center band of jagged white blocks"
+          },
+          {
+            "defect": "GARBLED_TEXT",
+            "region": "center band (illegible glyph-like shards)"
+          },
+          {
+            "defect": "FLAT_VOID",
+            "region": "surrounding background field"
+          },
+          {
+            "defect": "DEAD_LIGHTING",
+            "region": "white shards (flat fills)"
+          }
+        ],
+        "notes": "Dark-first but center is garbled white debris, flat fills, empty surround; no red signal accent."
+      },
+      "finalScore": 14.5,
+      "mustFixUnion": [
+        "GARBLED_TEXT",
+        "BROKEN_COMPOSITION",
+        "FLAT_VOID",
+        "OFF_PALETTE",
+        "DEAD_LIGHTING"
+      ],
+      "mustFixBothPasses": [
+        "GARBLED_TEXT",
+        "BROKEN_COMPOSITION",
+        "FLAT_VOID",
+        "DEAD_LIGHTING"
+      ],
+      "scoreDisagreement": 3,
+      "defectDisagreement": [
+        "OFF_PALETTE"
+      ]
+    }
+  ]
+}

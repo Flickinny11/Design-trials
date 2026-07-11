@@ -1,0 +1,178 @@
+{
+  "id": "wbakeb/glm-5.2/v-05-pedestal-material-study-r1",
+  "contestant": "glm-5.2",
+  "caseId": "v-05-pedestal-material-study",
+  "run": 1,
+  "node": {
+    "nodeId": "v-05-pedestal-material-study",
+    "subtype": "material-pedestal",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": "/prism-assets/chrome/brushed-metal.map.png"
+    },
+    "intent": {
+      "caption": "Pedestal material study — A cinematic-floor pedestal with a torus-knot material study: brushed metal PBR, contact shadow, imperfection pass.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "Material study 03",
+            "role": "headline",
+            "typography": {
+              "fontSize": 68,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "GRADE 5 TITANIUM / BRUSHED AT 1200 GRIT",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 0.7,
+              "hex": "#101017"
+            },
+            {
+              "at": 1,
+              "hex": "#16161d"
+            }
+          ]
+        },
+        "typography": {
+          "headline": {
+            "family": "Lora",
+            "fontSize": 68,
+            "fontWeight": 600,
+            "letterSpacing": -0.005,
+            "lineHeight": 1.1
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Torus knot (radius 0.7, tube 0.22, 220 x 36 segments) centered at [0,0.4,0] above a cylindrical pedestal radius 1.1, height 0.5, top face at y=-0.35. Knot material: brushed-metal PBR, roughnessMap /prism-assets/chrome/brushed-metal.map.png injected with center 0.9 (map multiplies, swap-proof), base roughness 0.55, metalness 0.55, clearcoat 0.22, clearcoatRoughness 0.35, anisotropy 0.9 rotated 90 deg to the tube direction. Imperfection pass: scratch-noise normal map at strength 0.15, plus 2 percent value jitter on roughness so highlights break up. Pedestal: #14141a, roughness 0.7, metalness 0.35, 0.03-unit chamfered top edge catching the key light. Contact shadow: radial gradient plane radius 1.5 units at y=-0.36, center opacity 0.6 falling to 0 over 0.4 units. Environment: neutral studio PMREM IBL at intensity 0.7 so the brushed anisotropy streaks read. Backdrop 7 x 6-unit plane at z=-3 with the vertical gradient stops. Orbit on load: knot rotates about y at 0.1 rad/s, camera drifts on radius 0.4; caption baseline 1.6 units below center, headline 1.2 units below center on the 0.25-unit rhythm."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "mesh",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "orbit",
+        "trigger": "load",
+        "params": {
+          "speed": 0.1,
+          "radius": 0.4
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        1.6,
+        0.9,
+        4.2
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 45
+    },
+    "lights": [
+      {
+        "type": "directional",
+        "color": "#f2f4f8",
+        "intensity": 1.5,
+        "position": [
+          2.5,
+          3.5,
+          2
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#8f9ab0",
+        "intensity": 0.4,
+        "position": [
+          -3,
+          1,
+          2
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.9,
+        "position": [
+          -1.5,
+          2,
+          -3
+        ]
+      },
+      {
+        "type": "ambient",
+        "color": "#2a2e38",
+        "intensity": 0.3
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "The torus knot rotates slowly (0.1 rad/s) while the camera drifts on a 0.4-unit orbit; brushed highlights sweep across the anisotropic surface."
+  },
+  "parsed": false,
+  "fenced": false,
+  "depGate": {
+    "sources": [],
+    "violations": []
+  },
+  "cjs": null,
+  "transformError": null
+}

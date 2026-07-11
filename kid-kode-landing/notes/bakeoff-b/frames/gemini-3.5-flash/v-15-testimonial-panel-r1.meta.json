@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/gemini-3.5-flash/v-15-testimonial-panel-r1",
+  "contestant": "gemini-3.5-flash",
+  "caseId": "v-15-testimonial-panel",
+  "run": 1,
+  "capturedAt": "2026-07-11T03:34:11.115Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 8,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/gemini-3.5-flash/v-15-testimonial-panel-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

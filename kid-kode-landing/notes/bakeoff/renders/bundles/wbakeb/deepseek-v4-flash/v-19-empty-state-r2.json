@@ -1,0 +1,185 @@
+{
+  "id": "wbakeb/deepseek-v4-flash/v-19-empty-state-r2",
+  "contestant": "deepseek-v4-flash",
+  "caseId": "v-19-empty-state",
+  "run": 2,
+  "node": {
+    "nodeId": "v-19-empty-state",
+    "subtype": "empty-state",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Rich empty state — An empty-state panel that is rich, never void (DL16): guidance copy, ghost preview, one accent action.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "Your ledger is empty.",
+            "role": "headline",
+            "typography": {
+              "fontSize": 34,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Commissioned pieces and saved references will appear here once you begin.",
+            "role": "body",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "BROWSE THE COLLECTION",
+            "role": "cta-label",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#16161d",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#14141a"
+            },
+            {
+              "at": 1,
+              "hex": "#0b0b10"
+            }
+          ]
+        },
+        "typography": {
+          "headline": {
+            "family": "Lora",
+            "fontSize": 34,
+            "fontWeight": 600,
+            "letterSpacing": -0.01,
+            "lineHeight": 1.15
+          },
+          "body": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.5
+          },
+          "cta-label": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 700,
+            "letterSpacing": 0.08,
+            "lineHeight": 1
+          }
+        },
+        "effects": "Panel 3.2w x 2.2h scene units, corner radius 0.06, filled with a radial engineered gradient #14141a (at 0.0, center) -> #0b0b10 (at 1.0, edges) plus a hairline grid at 0.25-unit pitch (1x base) in #e8ecf2 at 6 percent opacity so the region is never void; 0.006-unit hairline border #26262f; ghost preview at left of center: a wireframe watch-card outline 1.1w x 1.4h drawn in 0.008-unit strokes of #e8ecf2 at 30 percent opacity containing a ghost dial circle 0.55 diameter and two ghost text bars 0.7w x 0.06h at 22 percent; ghost group breathes opacity 0.24 -> 0.34 over 2400ms cubic-bezier(0.445,0.05,0.55,0.95) yoyo repeat; copy column right of the ghost with 0.5-unit padding (2x base), headline then body on a 0.25 baseline rhythm; accent CTA 1.5w x 0.36h below the body, vertical gradient #ff4450 -> #c1121f, ink label, edge emissive #ff2a38 intensity 1.5, press scale 1.0 -> 0.97 over 120ms cubic-bezier(0.175,0.885,0.32,1.275); mount fade-up opacity 0 -> 1 and y +0.2 -> 0 over 500ms cubic-bezier(0.25,0.46,0.45,0.94); the key light grazes the panel so the hairline grid catches faint specular structure, keeping depth in an intentionally empty region."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        4.2
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 45
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.4
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1,
+        "position": [
+          2.5,
+          2.5,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.45,
+        "position": [
+          -1.8,
+          -0.8,
+          -1
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#7f8896",
+        "intensity": 0.3,
+        "position": [
+          -3,
+          1,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "The ghost watch-card outline breathes between 24 and 34 percent opacity on a 2.4s cycle; the CTA compresses on press; everything else is still.",
+    "contrastMinimum": "4.5:1 body on radial gradient center; 4.8:1 ink CTA label on accent"
+  },
+  "parsed": true,
+  "fenced": true,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod2) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod2);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const group = new import_webgpu.Group();\n  const PW = 3.2;\n  const PH = 2.2;\n  const CORNER = 0.06;\n  const BORDER = 6e-3;\n  const GRID_PITCH = 0.25;\n  const GRID_LINE_W = 4e-3;\n  const MAX_DIST = Math.sqrt((PW / 2) ** 2 + (PH / 2) ** 2);\n  function sdRoundRect(p, size, r) {\n    const d2 = (0, import_tsl.abs)(p) - size + r;\n    const dm = max(d2, (0, import_tsl.vec2)(0));\n    return (0, import_tsl.length)(dm) + min(max(d2.x, d2.y), 0) - r;\n  }\n  const pos = (0, import_tsl.vec2)(\n    (0, import_tsl.mix)((0, import_tsl.float)(-PW / 2), (0, import_tsl.float)(PW / 2), import_tsl.uv.x),\n    (0, import_tsl.mix)((0, import_tsl.float)(-PH / 2), (0, import_tsl.float)(PH / 2), import_tsl.uv.y)\n  );\n  const gradT = (0, import_tsl.clamp)((0, import_tsl.length)(pos) / (0, import_tsl.float)(MAX_DIST), 0, 1);\n  const c1 = (0, import_tsl.vec3)(0.078, 0.078, 0.102);\n  const c2 = (0, import_tsl.vec3)(0.043, 0.043, 0.063);\n  const gradColor = (0, import_tsl.mix)(c1, c2, gradT);\n  const distX = min((0, import_tsl.abs)((0, import_tsl.mod)(pos.x, (0, import_tsl.float)(GRID_PITCH))), (0, import_tsl.abs)((0, import_tsl.mod)(pos.x, (0, import_tsl.float)(GRID_PITCH)) - (0, import_tsl.float)(GRID_PITCH)));\n  const distY = min((0, import_tsl.abs)((0, import_tsl.mod)(pos.y, (0, import_tsl.float)(GRID_PITCH))), (0, import_tsl.abs)((0, import_tsl.mod)(pos.y, (0, import_tsl.float)(GRID_PITCH)) - (0, import_tsl.float)(GRID_PITCH)));\n  const gridLineX = 1 - (0, import_tsl.smoothstep)(0, (0, import_tsl.float)(GRID_LINE_W), distX);\n  const gridLineY = 1 - (0, import_tsl.smoothstep)(0, (0, import_tsl.float)(GRID_LINE_W), distY);\n  const gridLine = max(gridLineX, gridLineY);\n  const gridCol = (0, import_tsl.vec3)(0.909, 0.925, 0.949);\n  const gridAlpha = gridLine * 0.06;\n  const insideColor = gradColor * (1 - gridAlpha) + gridCol * gridAlpha;\n  const halfSize = (0, import_tsl.vec2)((0, import_tsl.float)(PW / 2 - CORNER), (0, import_tsl.float)(PH / 2 - CORNER));\n  const d = sdRoundRect(pos, halfSize, (0, import_tsl.float)(CORNER));\n  const inside = (0, import_tsl.float)(d < 0);\n  const borderDist = (0, import_tsl.abs)(d);\n  const borderLine = 1 - (0, import_tsl.smoothstep)(0, (0, import_tsl.float)(BORDER / 2), borderDist);\n  const borderCol = (0, import_tsl.vec3)(0.149, 0.149, 0.184);\n  const finalColor = (0, import_tsl.mix)(insideColor, borderCol, borderLine);\n  const alpha = inside + borderLine;\n  const panelMat = new import_webgpu.MeshBasicNodeMaterial();\n  panelMat.colorNode = (0, import_tsl.vec4)(finalColor, alpha);\n  panelMat.transparent = true;\n  panelMat.side = 2;\n  const panelGeo = new import_webgpu.PlaneGeometry(PW, PH);\n  const panelMesh = new import_webgpu.Mesh(panelGeo, panelMat);\n  group.add(panelMesh);\n  const ghostGroup = new import_webgpu.Group();\n  ghostGroup.position.set(-0.6, 0.2, 0);\n  group.add(ghostGroup);\n  const ghostMat = new import_webgpu.LineBasicMaterial({ color: 15265010, transparent: true, opacity: 0.3 });\n  const ghostMatDim = new import_webgpu.LineBasicMaterial({ color: 15265010, transparent: true, opacity: 0.22 });\n  const cardW = 1.1, cardH = 1.4, cardR = 0.04;\n  const corners = [\n    { cx: cardW / 2 - cardR, cy: cardH / 2 - cardR, start: 0, end: Math.PI / 2 },\n    { cx: -cardW / 2 + cardR, cy: cardH / 2 - cardR, start: Math.PI / 2, end: Math.PI },\n    { cx: -cardW / 2 + cardR, cy: -cardH / 2 + cardR, start: Math.PI, end: 3 * Math.PI / 2 },\n    { cx: cardW / 2 - cardR, cy: -cardH / 2 + cardR, start: 3 * Math.PI / 2, end: 2 * Math.PI }\n  ];\n  const cardPts = [];\n  corners.forEach((c) => {\n    for (let i = 0; i <= 6; i++) {\n      const a = c.start + (c.end - c.start) * (i / 6);\n      cardPts.push(new import_webgpu.Vector3(c.cx + cardR * Math.cos(a), c.cy + cardR * Math.sin(a), 0));\n    }\n  });\n  const cardGeo = new import_webgpu.BufferGeometry().setFromPoints(cardPts);\n  const cardLine = new import_webgpu.LineLoop(cardGeo, ghostMat);\n  ghostGroup.add(cardLine);\n  const dialRadius = 0.275;\n  const dialGeo = new import_webgpu.CircleGeometry(dialRadius, 24);\n  const dialLine = new import_webgpu.LineLoop(dialGeo, ghostMat);\n  dialLine.position.set(0, 0.1, 0);\n  ghostGroup.add(dialLine);\n  const barW = 0.7, barH = 0.06;\n  const barY1 = -0.3, barY2 = -0.5;\n  const makeBar = (y) => {\n    const pts = [\n      [-barW / 2, y],\n      [barW / 2, y],\n      [barW / 2, y + barH],\n      [-barW / 2, y + barH],\n      [-barW / 2, y]\n    ].map((p) => new import_webgpu.Vector3(p[0], p[1], 0));\n    const g = new import_webgpu.BufferGeometry().setFromPoints(pts);\n    return new import_webgpu.LineLoop(g, ghostMatDim);\n  };\n  ghostGroup.add(makeBar(barY1));\n  ghostGroup.add(makeBar(barY2));\n  const copyGroup = new import_webgpu.Group();\n  copyGroup.position.set(0.6, 0, 0);\n  group.add(copyGroup);\n  const headline = ctx.fontAtlas.createText(\"Your ledger is empty.\", {\n    fontSize: 34,\n    color: \"#e8ecf2\",\n    align: \"left\",\n    maxWidthPx: 400\n  });\n  headline.position.set(0, 0.2, 0);\n  copyGroup.add(headline);\n  const body1 = ctx.fontAtlas.createText(\"Commissioned pieces and saved references\", {\n    fontSize: 13,\n    color: \"#e8ecf2\",\n    align: \"left\",\n    maxWidthPx: 300\n  });\n  body1.position.set(0, -0.05, 0);\n  copyGroup.add(body1);\n  const body2 = ctx.fontAtlas.createText(\"will appear here once you begin.\", {\n    fontSize: 13,\n    color: \"#e8ecf2\",\n    align: \"left\",\n    maxWidthPx: 300\n  });\n  body2.position.set(0, -0.15, 0);\n  copyGroup.add(body2);\n  const btnGroup = new import_webgpu.Group();\n  btnGroup.position.set(0.6, -0.7, 0);\n  group.add(btnGroup);\n  const btnW = 1.5, btnH = 0.36, btnR = 0.03;\n  const btnPos = (0, import_tsl.vec2)(\n    (0, import_tsl.mix)((0, import_tsl.float)(-btnW / 2), (0, import_tsl.float)(btnW / 2), import_tsl.uv.x),\n    (0, import_tsl.mix)((0, import_tsl.float)(-btnH / 2), (0, import_tsl.float)(btnH / 2), import_tsl.uv.y)\n  );\n  const btnSDF = sdRoundRect(btnPos, (0, import_tsl.vec2)(btnW / 2 - btnR, btnH / 2 - btnR), (0, import_tsl.float)(btnR));\n  const btnInside = (0, import_tsl.float)(btnSDF < 0);\n  const btnGradT = (btnPos.y + btnH / 2) / btnH;\n  const btnTop = (0, import_tsl.vec3)(1, 0.267, 0.314);\n  const btnBot = (0, import_tsl.vec3)(0.757, 0.071, 0.122);\n  const btnGrad = (0, import_tsl.mix)(btnBot, btnTop, btnGradT);\n  const btnBorderDist = (0, import_tsl.abs)(btnSDF);\n  const btnEdge = 1 - (0, import_tsl.smoothstep)(0, (0, import_tsl.float)(8e-3), btnBorderDist);\n  const emissiveColor = (0, import_tsl.vec3)(1, 0.165, 0.22);\n  const emission = btnEdge * 1.5;\n  const btnMat = new import_webgpu.MeshStandardNodeMaterial();\n  btnMat.colorNode = btnGrad;\n  btnMat.emissiveNode = emissiveColor * emission;\n  btnMat.transparent = true;\n  const btnGeo = new import_webgpu.PlaneGeometry(btnW, btnH);\n  const btnMesh = new import_webgpu.Mesh(btnGeo, btnMat);\n  btnGroup.add(btnMesh);\n  const btnLabel = ctx.fontAtlas.createText(\"BROWSE THE COLLECTION\", {\n    fontSize: 13,\n    color: \"#16161d\",\n    align: \"center\",\n    letterSpacingPx: 1.04\n  });\n  btnLabel.position.set(0, 0, 1e-3);\n  btnGroup.add(btnLabel);\n  const ghostMats = [ghostMat, ghostMatDim, ...ghostGroup.children.map((c) => c.material)];\n  const breathProxy = { opacity: 0.24 };\n  const breathTL = import_gsap.gsap.to(breathProxy, {\n    duration: 2.4,\n    opacity: 0.34,\n    yoyo: true,\n    repeat: -1,\n    ease: \"cubic-bezier(0.445,0.05,0.55,0.95)\",\n    onUpdate: () => {\n      ghostMats.forEach((m) => {\n        if (m && m.opacity !== void 0) m.opacity = breathProxy.opacity;\n      });\n    }\n  });\n  const mountTL = import_gsap.gsap.fromTo(\n    group,\n    { opacity: 0, y: 0.2 },\n    { opacity: 1, y: 0, duration: 0.5, ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\", delay: 0.1 }\n  );\n  btnGroup.userData.handlers = {\n    mouseenter: () => {\n      import_gsap.gsap.to(btnGroup, {\n        scale: 0.97,\n        duration: 0.12,\n        ease: \"cubic-bezier(0.175,0.885,0.32,1.275)\"\n      });\n    },\n    mouseleave: () => {\n      import_gsap.gsap.to(btnGroup, { scale: 1, duration: 0.12, ease: \"back.out(1.7)\" });\n    }\n  };\n  group.userData.cleanup = () => {\n    mountTL.kill();\n    breathTL.kill();\n    delete btnGroup.userData.handlers;\n    [panelMesh, btnMesh, cardLine, dialLine].concat(ghostGroup.children.filter((c) => c.isLine || c.isLineLoop)).concat([headline, body1, body2, btnLabel]).forEach((obj) => {\n      if (obj.geometry) obj.geometry.dispose();\n      if (obj.material) obj.material.dispose();\n    });\n    cardGeo.dispose();\n    dialGeo.dispose();\n    ghostGroup.children.forEach((child) => {\n      if (child.isLineLoop && child.geometry !== cardGeo && child.geometry !== dialGeo) {\n        child.geometry.dispose();\n      }\n    });\n  };\n  return group;\n}\n",
+  "transformError": null
+}

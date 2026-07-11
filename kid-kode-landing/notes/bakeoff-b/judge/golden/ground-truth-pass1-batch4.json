@@ -1,0 +1,58 @@
+{
+  "label": "ground-truth-pass1-batch4",
+  "model": "claude-fable-5",
+  "frames": [
+    {
+      "label": "F1",
+      "goldenId": "g-16"
+    },
+    {
+      "label": "F2",
+      "goldenId": "g-17"
+    },
+    {
+      "label": "F3",
+      "goldenId": "g-18"
+    },
+    {
+      "label": "F4",
+      "goldenId": "g-19"
+    },
+    {
+      "label": "F5",
+      "goldenId": "g-20"
+    }
+  ],
+  "costUsd": 0.617831,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 15380,
+    "cache_read_input_tokens": 82485,
+    "output_tokens": 3842,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15380,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 3036,
+        "cache_read_input_tokens": 44282,
+        "cache_creation_input_tokens": 9301,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9301
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":22,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center rail — all five nav entries, active state, and accent are absent\"},{\"defect\":\"FLAT_VOID\",\"region\":\"upper background field\"},{\"defect\":\"FLAT_VOID\",\"region\":\"lower background field\"},{\"defect\":\"LOW_CONTRAST\",\"region\":\"background banding behind rail\"}],\"notes\":\"Rail slab renders with decent gradient and edge light, but the dock has zero entries; frame is mostly empty ink.\"},{\"frame\":\"F2\",\"score\":31,\"mustFix\":[{\"defect\":\"OFF_PALETTE\",\"region\":\"background field — near-white, violates dark-first spec background #0b0b10\"},{\"defect\":\"ALL_BLACK_ELEMENT\",\"region\":\"lower-center dish/shadow object\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper-left hard black wedge and detached floating dish\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"prism faces — flat facets, no transmission or back rim light\"}],\"notes\":\"Prism shows iridescent streaks but reads opaque; light background inverts palette; composition incoherent.\"},{\"frame\":\"F3\",\"score\":27,\"mustFix\":[{\"defect\":\"OFF_PALETTE\",\"region\":\"gear assembly — flat white plastic, not machined steel PBR\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"gears — no anisotropy, metalness, or specular response\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"right edge — garbled white streaked panel and artifacts\"},{\"defect\":\"FLAT_VOID\",\"region\":\"left half background\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"secondary gear — not tooth-meshed at specified position\"}],\"notes\":\"Red jewel pivot present, but gears are toy-white, right side garbled, and half the frame is void.\"},{\"frame\":\"F4\",\"score\":33,\"mustFix\":[{\"defect\":\"OFF_PALETTE\",\"region\":\"background field — light gray, violates dark scene spec\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"torus knot — glowing white emissive blob, not brushed-metal PBR\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"knot surface — no roughness map, anisotropy, or imperfection pass\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper-left quadrant — undefined black blob\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"knot geometry — lumpy low-segment tube vs 220x36 spec\"}],\"notes\":\"Pedestal and contact shading are passable; knot material and palette are wholly wrong.\"},{\"frame\":\"F5\",\"score\":36,\"mustFix\":[{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"top and right — giant garbled white glyph fragment overlapping grid\"},{\"defect\":\"GARBLED_TEXT\",\"region\":\"upper-right quadrant — malformed oversized character\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"all cells — no stat values, labels, or metric content\"},{\"defect\":\"FLAT_VOID\",\"region\":\"cell interiors — empty gray slabs below accent ticks\"},{\"defect\":\"LOW_CONTRAST\",\"region\":\"right-column secondary cells against background\"}],\"notes\":\"Bento proportions and red accent ticks match spec, but tiles are contentless and a garbled glyph wrecks composition.\"}]}"
+}

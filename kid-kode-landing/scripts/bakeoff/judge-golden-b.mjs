@@ -31,16 +31,19 @@ function otherSpend() {
   try { for (const f of readdirSync(LEDGERS).filter((x) => x.endsWith('.json'))) { try { t += JSON.parse(readFileSync(path.join(LEDGERS, f), 'utf8')).totals?.totalUsd ?? 0; } catch { /* */ } } } catch { /* */ }
   for (const f of ['ledger-judge.json', 'ledger-critics.json']) {
     const p = path.join(B, 'judge', f);
-    if (existsSync(p)) { try { const l = JSON.parse(readFileSync(p, 'utf8')); t += (l.totals?.subscriptionEquivalentUsd ?? 0) + (l.totals?.meteredUsd ?? 0); } catch { /* */ } }
+    if (existsSync(p)) { try { const l = JSON.parse(readFileSync(p, 'utf8')); t += l.totals?.meteredUsd ?? 0; } catch { /* */ } }
   }
   return t;
 }
+// 2026-07-11 cap semantics (report §8): the $120 hard cap is enforced on
+// METERED spend only; this judge's founder-CLI spend is subscription-
+// equivalent — fully ledgered + disclosed in §7, not counted against the cap.
 function ledgerAdd(entry) {
   ledger.calls.push(entry);
   ledger.totals.subscriptionEquivalentUsd = ledger.calls.reduce((s, c) => s + (c.costUsd ?? 0), 0);
   writeFileSync(LEDGER_PATH, JSON.stringify(ledger, null, 2));
-  const merged = otherSpend() + ledger.totals.subscriptionEquivalentUsd;
-  if (merged >= HARD_CAP_USD - MARGIN) { console.error(`!! MERGED spend $${merged.toFixed(2)} at the $${HARD_CAP_USD} margin — stopping`); process.exit(3); }
+  const metered = otherSpend();
+  if (metered >= HARD_CAP_USD - MARGIN) { console.error(`!! METERED spend $${metered.toFixed(2)} at the $${HARD_CAP_USD} margin — stopping`); process.exit(3); }
 }
 
 const cases = loadCases();

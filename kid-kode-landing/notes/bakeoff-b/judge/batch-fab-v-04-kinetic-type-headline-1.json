@@ -1,0 +1,59 @@
+{
+  "label": "batch-fab-v-04-kinetic-type-headline-1",
+  "judgedAt": "2026-07-11T04:02:09.822Z",
+  "judgeModel": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-04-kinetic-type-headline-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-04-kinetic-type-headline-1/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-04-kinetic-type-headline-1/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-04-kinetic-type-headline-1/F4.jpg"
+    }
+  ],
+  "mappingFile": "notes/bakeoff-b/judge/blind/batch-fab-v-04-kinetic-type-headline-1/mapping.json",
+  "costUsd": 0.45554599999999995,
+  "durationApiMs": 46000,
+  "wallMs": 48720,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 8738,
+    "cache_read_input_tokens": 87786,
+    "output_tokens": 3152,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8738,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 2386,
+        "cache_read_input_tokens": 43893,
+        "cache_creation_input_tokens": 8738,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8738
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":13,\"mustFix\":[{\"defect\":\"SCALE_ERROR\",\"region\":\"full frame — glyphs rendered enormous, only blurred fragments visible\"},{\"defect\":\"GARBLED_TEXT\",\"region\":\"upper-right white blob and upper-left red arc\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no readable headline line or underline\"},{\"defect\":\"FLAT_VOID\",\"region\":\"lower half black field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"white glyph mass — soft blur, no material light response\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"whole frame\"}],\"notes\":\"Camera/scale catastrophically wrong; MSDF glyphs read as amorphous blobs, headline unreadable. Accent red present but meaningless.\"},{\"frame\":\"F2\",\"score\":11,\"mustFix\":[{\"defect\":\"SCALE_ERROR\",\"region\":\"upper-right — single glyph blob fills most of frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no headline text, only stray underline\"},{\"defect\":\"LOW_CONTRAST\",\"region\":\"pink underline washed out against white blob\"},{\"defect\":\"FLAT_VOID\",\"region\":\"left and lower black field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"white mass — flat blurred fill\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"whole frame\"}],\"notes\":\"One oversized blurred glyph and a floating faded underline; no legible type, composition broken.\"},{\"frame\":\"F3\",\"score\":7,\"mustFix\":[{\"defect\":\"FLAT_VOID\",\"region\":\"center and lower two-thirds — empty noisy black field\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"whole frame — no headline, no accent underline, no red anywhere\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"upper-left and right white blobs — glyph fragments at extreme zoom\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"white fragments — featureless blur\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"whole frame\"}],\"notes\":\"Near-void frame; two blurred white fragments on empty black, zero accent, zero readable content.\"},{\"frame\":\"F4\",\"score\":11,\"mustFix\":[{\"defect\":\"SCALE_ERROR\",\"region\":\"full frame — glyph fragments massively oversized\"},{\"defect\":\"GARBLED_TEXT\",\"region\":\"top edge and center white masses — unreadable letterforms\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no legible one-line headline\"},{\"defect\":\"LOW_CONTRAST\",\"region\":\"tiny faded pink dash center-left\"},{\"defect\":\"FLAT_VOID\",\"region\":\"lower-left black field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"white glyph masses — flat blurred fills\"}],\"notes\":\"Zoomed-in glyph fragments, vestigial underline dash; nothing legible, spec headline absent.\"}]}"
+}

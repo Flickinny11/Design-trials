@@ -1,0 +1,21 @@
+{
+  "bundle": "wbakeb/gemini-3.5-flash/v-11-gradient-cta-r2",
+  "contestant": "gemini-3.5-flash",
+  "caseId": "v-11-gradient-cta",
+  "run": 2,
+  "capturedAt": "2026-07-11T03:33:48.058Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/gemini-3.5-flash/v-11-gradient-cta-r2",
+    "moduleRuntimeError": "TypeError: (0 , import_webgpu.uniform) is not a function"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

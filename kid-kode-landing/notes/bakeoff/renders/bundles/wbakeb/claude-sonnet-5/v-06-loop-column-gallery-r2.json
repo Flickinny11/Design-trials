@@ -1,0 +1,207 @@
+{
+  "id": "wbakeb/claude-sonnet-5/v-06-loop-column-gallery-r2",
+  "contestant": "claude-sonnet-5",
+  "caseId": "v-06-loop-column-gallery",
+  "run": 2,
+  "node": {
+    "nodeId": "v-06-loop-column-gallery",
+    "subtype": "loop-column",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": "/prism-mock/home/nodes/feature-card.png"
+    },
+    "intent": {
+      "caption": "Loop column gallery — A vertical loop column of distinct image plates cycling with weighted motion; plates read as photographs, not voids.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "Inside the atelier",
+            "role": "headline",
+            "typography": {
+              "fontSize": 68,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "DIAL ROOM",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "ESCAPEMENT BENCH",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "CNC HALL",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "FINISHING LAB",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "ARCHIVE VAULT",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "ASSEMBLY LINE ONE",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 1,
+              "hex": "#14141a"
+            }
+          ]
+        },
+        "typography": {
+          "headline": {
+            "family": "Lora",
+            "fontSize": 68,
+            "fontWeight": 600,
+            "letterSpacing": -0.005,
+            "lineHeight": 1.1
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Six image plates, each 1.9 x 1.2 units (16:10), stacked vertically at 1.5-unit pitch (6x base 0.25), column offset x=+0.9, looping seamlessly modulo 9.0 units. Each plate carries a DISTINCT filmic-graded photograph texture (base /prism-mock/home/nodes/feature-card.png plus five distinct crops/variants, subtle vignette baked, never near-black voids). Plate material: map, roughness 0.6, metalness 0.1, clearcoat 0.1; each plate framed by a 0.03-unit machined ink #16161d bevel with a brushed edge highlight (roughness 0.5, metalness 0.5). Scroll drives column y at 1.5 units per viewport scroll with weighted inertia (damping 0.12), stopping with weighted-settle over 900ms cubic-bezier(0.165,0.84,0.44,1). fly-through on scroll: camera dollies 2.5 units deeper in z across the full scroll range. The plate nearest y=0 is focused: scale 1.0 to 1.06 over 350ms cubic-bezier(0.215,0.61,0.355,1), left edge lit by a #ff2a38 accent strip 0.03 units wide at emissive 1.4, its caption fading up at x=-1.6. Headline column-header pinned at [-1.6, 1.9, 0]."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "fly-through",
+        "trigger": "scroll",
+        "params": {
+          "depthUnits": 2.5
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0.9,
+        0,
+        5
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#3a3f4a",
+        "intensity": 0.5
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 1,
+        "position": [
+          2,
+          2.5,
+          3
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.8,
+        "position": [
+          -1.2,
+          0,
+          1.5
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "The plate column scrolls vertically in a seamless loop with weighted inertia and settle; the camera pushes 2.5 units deeper across the scroll range while the focused plate scales to 1.06."
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nconst PALETTE = {\n  background: \"#0b0b10\",\n  surface: \"#14141a\",\n  ink: \"#16161d\",\n  paper: \"#e8ecf2\",\n  accent: \"#ff2a38\"\n};\nconst PLATE_W = 1.9;\nconst PLATE_H = 1.2;\nconst PITCH = 1.5;\nconst COUNT = 6;\nconst LOOP_RANGE = PITCH * COUNT;\nconst COLUMN_X = 0.9;\nconst CAPTION_LOCAL_X = -1.6 - COLUMN_X;\nfunction wrap(v, min, max) {\n  const range = max - min;\n  let r = (v - min) % range;\n  if (r < 0) r += range;\n  return r + min;\n}\nfunction setOpacity(obj, opacity) {\n  if (!obj) return;\n  obj.traverse((child) => {\n    if (child.material) {\n      const mats = Array.isArray(child.material) ? child.material : [child.material];\n      mats.forEach((m) => {\n        if (!m) return;\n        m.transparent = true;\n        m.opacity = opacity;\n        m.needsUpdate = true;\n      });\n    }\n  });\n}\nfunction disposeObject(obj) {\n  if (!obj) return;\n  obj.traverse((child) => {\n    if (child.geometry) child.geometry.dispose();\n    if (child.material) {\n      const mats = Array.isArray(child.material) ? child.material : [child.material];\n      mats.forEach((m) => {\n        if (m.map) m.map.dispose();\n        if (m.dispose) m.dispose();\n      });\n    }\n  });\n}\nfunction createNode(config, ctx) {\n  const { THREE } = ctx;\n  const visualSpec = config.intent?.visualSpec ?? {};\n  const colors = { ...PALETTE, ...visualSpec.colors ?? config.colors ?? {} };\n  const gradientStops = colors.gradientStops ?? [\n    { at: 0, hex: colors.background },\n    { at: 1, hex: colors.surface }\n  ];\n  const stopA = gradientStops[0]?.hex ?? colors.background;\n  const stopB = gradientStops[gradientStops.length - 1]?.hex ?? colors.surface;\n  const items = config.textContent ?? visualSpec.textContent ?? [];\n  const headlineItem = items.find((it) => it.role === \"headline\");\n  const captionItems = items.filter((it) => it.role === \"caption\");\n  const headlineText = headlineItem?.text ?? \"Inside the atelier\";\n  const captionTexts = [];\n  for (let i = 0; i < COUNT; i++) {\n    captionTexts.push(captionItems[i]?.text ?? \"\");\n  }\n  const root = new import_webgpu.Group();\n  root.name = \"loop-column-gallery\";\n  const backdropGeo = new import_webgpu.PlaneGeometry(7, 6);\n  const backdropMat = new import_webgpu.MeshBasicNodeMaterial({ side: import_webgpu.DoubleSide });\n  backdropMat.colorNode = (0, import_tsl.mix)((0, import_tsl.color)(stopA), (0, import_tsl.color)(stopB), (0, import_tsl.uv)().y);\n  const backdrop = new import_webgpu.Mesh(backdropGeo, backdropMat);\n  backdrop.position.set(0, 0, -2.5);\n  root.add(backdrop);\n  const rimLight = new import_webgpu.DirectionalLight(new import_webgpu.Color(colors.accent), 0.7);\n  rimLight.position.set(-2.2, 1.2, 2.4);\n  root.add(rimLight);\n  const fillLight = new import_webgpu.DirectionalLight(new import_webgpu.Color(colors.paper), 0.5);\n  fillLight.position.set(2, 0.6, 1.8);\n  root.add(fillLight);\n  const headline = ctx.fontAtlas.createText(headlineText, {\n    fontSize: 68,\n    color: colors.paper,\n    align: \"left\"\n  });\n  headline.position.set(-1.6, 1.9, 0);\n  root.add(headline);\n  const columnGroup = new import_webgpu.Group();\n  columnGroup.position.set(COLUMN_X, 0, 0);\n  root.add(columnGroup);\n  const baseTexturePromise = ctx.textureLoader.loadTexture(config.imageUrl);\n  const plateGroups = [];\n  const plateMeshes = [];\n  const captionGroups = [];\n  const clonedTextures = [];\n  for (let i = 0; i < COUNT; i++) {\n    const plateGroup = new import_webgpu.Group();\n    const baseY = (i - (COUNT - 1) / 2) * PITCH;\n    plateGroup.userData.baseY = baseY;\n    plateGroup.position.y = baseY;\n    columnGroup.add(plateGroup);\n    plateGroups.push(plateGroup);\n    const frameGeo = new import_webgpu.BoxGeometry(PLATE_W + 0.06, PLATE_H + 0.06, 0.03);\n    const frameMat = new import_webgpu.MeshPhysicalNodeMaterial({\n      color: new import_webgpu.Color(colors.ink),\n      roughness: 0.5,\n      metalness: 0.5,\n      clearcoat: 0.1\n    });\n    const frame = new import_webgpu.Mesh(frameGeo, frameMat);\n    frame.position.z = -0.02;\n    plateGroup.add(frame);\n    const plateGeo = new import_webgpu.PlaneGeometry(PLATE_W, PLATE_H);\n    const plateMat = new import_webgpu.MeshPhysicalNodeMaterial({\n      roughness: 0.6,\n      metalness: 0.1,\n      clearcoat: 0.1,\n      color: new import_webgpu.Color().setScalar(0.92 + i % 3 * 0.03)\n    });\n    const plate = new import_webgpu.Mesh(plateGeo, plateMat);\n    plate.position.z = 0;\n    plateGroup.add(plate);\n    plateMeshes.push(plate);\n    const captionGroup = new import_webgpu.Group();\n    captionGroup.position.set(CAPTION_LOCAL_X, 0, 0.1);\n    const captionText = ctx.fontAtlas.createText(captionTexts[i] || \"\", {\n      fontSize: 18,\n      color: colors.paper,\n      align: \"left\",\n      letterSpacingPx: 1.5\n    });\n    captionGroup.add(captionText);\n    setOpacity(captionGroup, 0);\n    plateGroup.add(captionGroup);\n    captionGroups.push(captionGroup);\n  }\n  baseTexturePromise.then((tex) => {\n    for (let i = 0; i < COUNT; i++) {\n      const cloned = tex.clone();\n      cloned.needsUpdate = true;\n      cloned.wrapS = import_webgpu.RepeatWrapping;\n      cloned.wrapT = import_webgpu.RepeatWrapping;\n      cloned.repeat.set(1, 1);\n      cloned.offset.set(i % 3 * 0.06, Math.floor(i / 3) * 0.05);\n      clonedTextures.push(cloned);\n      plateMeshes[i].material.map = cloned;\n      plateMeshes[i].material.needsUpdate = true;\n    }\n  });\n  const accentGeo = new import_webgpu.BoxGeometry(0.03, PLATE_H, 0.02);\n  const accentMat = new import_webgpu.MeshStandardNodeMaterial({\n    color: new import_webgpu.Color(colors.accent),\n    emissive: new import_webgpu.Color(colors.accent),\n    emissiveIntensity: 1.4,\n    roughness: 0.4,\n    metalness: 0.2\n  });\n  const accentStrip = new import_webgpu.Mesh(accentGeo, accentMat);\n  accentStrip.position.set(COLUMN_X - PLATE_W / 2 - 0.02, 0, 0.05);\n  root.add(accentStrip);\n  let scrollTarget = 0;\n  let scrollCurrent = 0;\n  let focusedIndex = -1;\n  let settleTimer = null;\n  const activeTweens = [];\n  function applyFocusTransition(newFocus, wrappedYs) {\n    if (newFocus === focusedIndex) return;\n    const prevFocus = focusedIndex;\n    focusedIndex = newFocus;\n    if (prevFocus >= 0) {\n      const t1 = import_gsap.gsap.to(plateGroups[prevFocus].scale, {\n        x: 1,\n        y: 1,\n        z: 1,\n        duration: 0.35,\n        ease: \"power2.out\"\n      });\n      const capMat = [];\n      captionGroups[prevFocus].traverse((c) => c.material && capMat.push(c.material));\n      const t2 = import_gsap.gsap.to(capMat, { opacity: 0, duration: 0.3, ease: \"power2.out\" });\n      activeTweens.push(t1, t2);\n    }\n    const t3 = import_gsap.gsap.to(plateGroups[newFocus].scale, {\n      x: 1.06,\n      y: 1.06,\n      z: 1.06,\n      duration: 0.35,\n      ease: \"power2.out\"\n    });\n    const capMat2 = [];\n    captionGroups[newFocus].traverse((c) => c.material && capMat2.push(c.material));\n    capMat2.forEach((m) => {\n      m.transparent = true;\n    });\n    const t4 = import_gsap.gsap.to(capMat2, { opacity: 1, duration: 0.5, ease: \"power2.out\" });\n    activeTweens.push(t3, t4);\n  }\n  function update() {\n    scrollCurrent += (scrollTarget - scrollCurrent) * 0.12;\n    const wrappedYs = [];\n    let bestIdx = 0;\n    let bestDist = Infinity;\n    for (let i = 0; i < COUNT; i++) {\n      const w = wrap(plateGroups[i].userData.baseY - scrollCurrent, -LOOP_RANGE / 2, LOOP_RANGE / 2);\n      plateGroups[i].position.y = w;\n      wrappedYs.push(w);\n      const dist = Math.abs(w);\n      if (dist < bestDist) {\n        bestDist = dist;\n        bestIdx = i;\n      }\n    }\n    applyFocusTransition(bestIdx, wrappedYs);\n    accentStrip.position.y = wrappedYs[focusedIndex] ?? 0;\n  }\n  update();\n  import_gsap.gsap.ticker.add(update);\n  const primitiveResults = [];\n  const cinematicPrimitives = config.cinematicPrimitives ?? [];\n  for (const primitive of cinematicPrimitives) {\n    const applyFn = ctx.primitives?.[primitive.name];\n    if (typeof applyFn === \"function\") {\n      const result = applyFn(root, primitive.params ?? {});\n      if (result) primitiveResults.push(result);\n    }\n  }\n  root.userData.handlers = {\n    scroll: (payload) => {\n      const delta = typeof payload === \"number\" ? payload : payload?.delta ?? payload?.deltaY ?? payload?.deltaScroll ?? 0;\n      scrollTarget += delta * 1.5;\n      if (settleTimer) clearTimeout(settleTimer);\n      settleTimer = setTimeout(() => {\n        scrollTarget = Math.round(scrollTarget / PITCH) * PITCH;\n      }, 220);\n    }\n  };\n  root.userData.cleanup = () => {\n    import_gsap.gsap.ticker.remove(update);\n    if (settleTimer) clearTimeout(settleTimer);\n    activeTweens.forEach((t) => t.kill());\n    import_gsap.gsap.killTweensOf(plateGroups.map((g) => g.scale));\n    captionGroups.forEach((cg) => {\n      cg.traverse((c) => {\n        if (c.material) import_gsap.gsap.killTweensOf(c.material);\n      });\n    });\n    primitiveResults.forEach((r) => {\n      try {\n        r.timeline && r.timeline.kill();\n        r.cleanup && r.cleanup();\n      } catch (e) {\n      }\n    });\n    clonedTextures.forEach((t) => t.dispose());\n    disposeObject(root);\n  };\n  return root;\n}\n",
+  "transformError": null
+}

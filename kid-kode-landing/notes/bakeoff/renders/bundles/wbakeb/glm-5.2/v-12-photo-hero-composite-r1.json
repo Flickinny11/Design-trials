@@ -1,0 +1,194 @@
+{
+  "id": "wbakeb/glm-5.2/v-12-photo-hero-composite-r1",
+  "contestant": "glm-5.2",
+  "caseId": "v-12-photo-hero-composite",
+  "run": 1,
+  "node": {
+    "nodeId": "v-12-photo-hero-composite",
+    "subtype": "layered-photo-hero",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": "/prism-mock/home/nodes/parallax-stack.png"
+    },
+    "intent": {
+      "caption": "Photo hero composite — A layered photographic hero plate with filmic grade, foreground subject separation, and caption block.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "NOVA ATELIER / GENEVA",
+            "role": "kicker",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Time, Machined.",
+            "role": "headline",
+            "typography": {
+              "fontSize": 34,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Every case begins as a single billet of 904L steel.",
+            "role": "body",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "CALIBRE NA-01 / 72 HOUR RESERVE",
+            "role": "caption",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#16161d",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0.45,
+              "hex": "#0b0b1000"
+            },
+            {
+              "at": 1,
+              "hex": "#0b0b10eb"
+            }
+          ]
+        },
+        "typography": {
+          "kicker": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.2
+          },
+          "headline": {
+            "family": "Lora",
+            "fontSize": 34,
+            "fontWeight": 600,
+            "letterSpacing": -0.01,
+            "lineHeight": 1.1
+          },
+          "body": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.5
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 400,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Layered photo plate 4.0w x 2.5h scene units on parallax-plane using the provided imageUrl and depthMapUrl, depth-displacement amplitude 0.18 scene units, parallax-scroll intensity 0.35 bound to scroll; filmic grade baked into the plate treatment: blacks lifted to #0d0d12, highlights shouldered toward #e8ecf2, midtone contrast plus 12 percent, global desaturation minus 8 percent with the red channel preserved so the accent stays pure; foreground subject separated by the depth map with a 0.02-unit rim of key light along its silhouette; bottom scrim gradient #0b0b1000 (at 0.45) -> #0b0b10eb (at 1.0) seats the caption block; caption block anchored bottom-left with 0.5-unit padding (2x base unit), kicker then headline then body stacked on a 0.25-unit baseline rhythm; accent hairline bar 0.75w x 0.02h in #ff2a38 emissive intensity 1.8 sits between headline and body; plate mount opacity 0 -> 1 over 500ms cubic-bezier(0.25,0.46,0.45,0.94); caption block rise-in y +0.4 -> 0 over 700ms cubic-bezier(0.215,0.61,0.355,1) starting 120ms after the plate; scroll shifts depth layers up to plus and minus 0.14 units against the camera so near layers overtake far layers with true occlusion."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "parallax-plane",
+    "depthMapUrl": "/prism-mock/home/nodes/parallax-stack.depth.png",
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "parallax-scroll",
+        "trigger": "scroll",
+        "params": {
+          "intensity": 0.35
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        4.8
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#c3c9d4",
+        "intensity": 0.5
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 0.9,
+        "position": [
+          3,
+          2,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.5,
+        "position": [
+          -2.2,
+          -1,
+          1.5
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Depth layers parallax against scroll at 0.35 intensity while the caption block rises in once and stays fixed.",
+    "contrastMinimum": "4.5:1 body text on the scrim region; 3:1 headline on graded plate"
+  },
+  "parsed": false,
+  "fenced": true,
+  "depGate": {
+    "sources": [],
+    "violations": []
+  },
+  "cjs": null,
+  "transformError": null
+}

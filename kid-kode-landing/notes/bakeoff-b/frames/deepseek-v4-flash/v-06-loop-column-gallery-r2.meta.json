@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/deepseek-v4-flash/v-06-loop-column-gallery-r2",
+  "contestant": "deepseek-v4-flash",
+  "caseId": "v-06-loop-column-gallery",
+  "run": 2,
+  "capturedAt": "2026-07-11T02:53:08.719Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 25,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/deepseek-v4-flash/v-06-loop-column-gallery-r2"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

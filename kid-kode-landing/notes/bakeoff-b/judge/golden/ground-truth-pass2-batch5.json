@@ -1,0 +1,58 @@
+{
+  "label": "ground-truth-pass2-batch5",
+  "model": "claude-fable-5",
+  "frames": [
+    {
+      "label": "F1",
+      "goldenId": "g-21"
+    },
+    {
+      "label": "F2",
+      "goldenId": "g-22"
+    },
+    {
+      "label": "F3",
+      "goldenId": "g-23"
+    },
+    {
+      "label": "F4",
+      "goldenId": "g-24"
+    },
+    {
+      "label": "F5",
+      "goldenId": "g-25"
+    }
+  ],
+  "costUsd": 0.6127469999999999,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 15002,
+    "cache_read_input_tokens": 82090,
+    "output_tokens": 3906,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15002,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 3083,
+        "cache_read_input_tokens": 43887,
+        "cache_creation_input_tokens": 9318,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9318
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 14, \"mustFix\": [ { \"defect\": \"SCALE_ERROR\", \"region\": \"center and right half — letterforms zoomed far past legibility\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"full frame — cropped glyph fragments, no readable headline\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"upper-left quadrant — kicker line absent\" }, { \"defect\": \"GARBLED_TEXT\", \"region\": \"center — type reads as abstract blocks with soft-blurred edges\" } ], \"notes\": \"Grain and red rule exist, but headline is an illegible cropped fragment; blur on glyph edges violates engineered precision.\" }, { \"frame\": \"F2\", \"score\": 48, \"mustFix\": [ { \"defect\": \"OFF_PALETTE\", \"region\": \"center-right button — accent is salmon pink, not signal red #ff2a38\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"center-right — guidance copy clipped at panel/frame edge\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center panel — surface renders light gray, far above spec ink values\" } ], \"notes\": \"All DL16 elements present (grid, ghost card, copy, action) but pink accent drift, clipped copy, washed-out panel.\" }, { \"frame\": \"F3\", \"score\": 30, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"background field — pure unlit black, spec gradient missing\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"full frame — gears crammed at top edge, orphaned gray quad at bottom\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"lower-center — flat unshaded gray floor plane\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center gears — aged warm brass instead of machined steel material\" } ], \"notes\": \"Gears mesh plausibly with faint red pivot glow, but staging, background, and material all miss spec.\" }, { \"frame\": \"F4\", \"score\": 74, \"mustFix\": [], \"notes\": \"Disciplined layout: kicker, stacked hero, red rule, grain plate. Hero set in sans, not spec Lora serif; slightly undersized.\" }, { \"frame\": \"F5\", \"score\": 3, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame — uniform near-black, no content\" } ], \"notes\": \"Empty near-black frame; nothing rendered.\" } ] }"
+}

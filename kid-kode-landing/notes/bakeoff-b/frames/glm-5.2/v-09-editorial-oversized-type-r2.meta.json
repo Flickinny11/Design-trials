@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/glm-5.2/v-09-editorial-oversized-type-r2",
+  "contestant": "glm-5.2",
+  "caseId": "v-09-editorial-oversized-type",
+  "run": 2,
+  "capturedAt": "2026-07-11T02:55:58.629Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 9,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/glm-5.2/v-09-editorial-oversized-type-r2"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

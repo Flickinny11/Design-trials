@@ -1,0 +1,214 @@
+{
+  "id": "wbakeb/glm-5.2/v-07-filmstrip-carousel-r2",
+  "contestant": "glm-5.2",
+  "caseId": "v-07-filmstrip-carousel",
+  "run": 2,
+  "node": {
+    "nodeId": "v-07-filmstrip-carousel",
+    "subtype": "carousel-3d",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": "/prism-mock/home/nodes/parallax-stack.png"
+    },
+    "intent": {
+      "caption": "Filmstrip 3D carousel — An angled 3D filmstrip of image cards with perspective recession and one focused card; distinct plates, no echo.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "The collection",
+            "role": "headline",
+            "typography": {
+              "fontSize": 68,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Five calibres. One discipline.",
+            "role": "body",
+            "typography": {
+              "fontSize": 26,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "NA-01 MERIDIAN",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "NA-02 NOCTURNE",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "NA-03 SIGNAL",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "NA-04 VANTAGE",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "NA-05 ARCHIVE",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 700
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 1,
+              "hex": "#12121a"
+            }
+          ]
+        },
+        "typography": {
+          "headline": {
+            "family": "Lora",
+            "fontSize": 68,
+            "fontWeight": 600,
+            "letterSpacing": -0.005,
+            "lineHeight": 1.1
+          },
+          "body": {
+            "family": "JetBrains Mono",
+            "fontSize": 26,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.5
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 700,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Five cards, each 1.6 x 1.0 units, arranged along x at 1.85-unit pitch, whole strip rotated -18 deg on y so cards recede to the right with perspective. Each card carries a DISTINCT photograph texture (base /prism-mock/home/nodes/parallax-stack.png plus four distinct variants; no repeated subject, no echo). Card material: map, roughness 0.55, metalness 0.2, clearcoat 0.15, framed by a 0.025-unit machined ink #16161d bevel. Focused card at x=0 counter-rotates to face the camera dead-on at scale 1.0; non-focused cards scale 0.92 with opacity falling 1.0 to 0.55 by distance. parallax-scroll intensity 0.5: strip translates x by 0.5 units per scroll unit while card textures counter-shift UV +/-0.04 for internal parallax. Snap-to-card on scroll end: weighted-settle 900ms cubic-bezier(0.165,0.84,0.44,1), overshoot 1.04 to 1.0. Focused card gets a #ff2a38 underline bar 1.6 x 0.035 units at emissive 1.3 plus its caption below; headline pinned at [-2.6, 1.5, 0]; body line at [-2.6, -1.5, 0]. All spacing on the 0.25-unit rhythm."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "parallax-scroll",
+        "trigger": "scroll",
+        "params": {
+          "intensity": 0.5
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0.4,
+        0.15,
+        4.8
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 48
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#3a3f4a",
+        "intensity": 0.45
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 1.1,
+        "position": [
+          2.5,
+          3,
+          2.5
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#8f9ab0",
+        "intensity": 0.4,
+        "position": [
+          -2,
+          1,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Scroll slides the angled filmstrip along x with 0.5 intensity parallax and UV counter-shift; on release the strip snaps to the nearest card with weighted overshoot and the red underline transfers to the newly focused card."
+  },
+  "parsed": true,
+  "fenced": true,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const THREE = ctx.THREE;\n  const group = new THREE.Group();\n  group.name = \"filmstrip-carousel\";\n  const colors = config.intent?.visualSpec?.colors ?? {\n    background: \"#0b0b10\",\n    surface: \"#14141a\",\n    ink: \"#16161d\",\n    paper: \"#e8ecf2\",\n    accent: \"#ff2a38\",\n    gradientStops: [{ at: 0, hex: \"#0b0b10\" }, { at: 1, hex: \"#12121a\" }]\n  };\n  const gradStops = colors.gradientStops ?? [{ at: 0, hex: \"#0b0b10\" }, { at: 1, hex: \"#12121a\" }];\n  const c0 = new THREE.Color(gradStops[0].hex);\n  const c1 = new THREE.Color(gradStops[gradStops.length - 1].hex);\n  const bgGeo = new THREE.PlaneGeometry(7, 6);\n  const bgMat = new import_webgpu.MeshBasicNodeMaterial({\n    transparent: true,\n    side: THREE.DoubleSide\n  });\n  bgMat.colorNode = (0, import_tsl.mix)((0, import_tsl.vec3)(c0.r, c0.g, c0.b), (0, import_tsl.vec3)(c1.r, c1.g, c1.b), (0, import_tsl.uv)().y);\n  const bgPlane = new THREE.Mesh(bgGeo, bgMat);\n  bgPlane.position.set(0, 0, -2.5);\n  group.add(bgPlane);\n  const ambient = new import_webgpu.AmbientLight(16777215, 0.6);\n  group.add(ambient);\n  const key = new import_webgpu.DirectionalLight(15265010, 1.2);\n  key.position.set(2.5, 2.5, 3.5);\n  group.add(key);\n  const rim = new import_webgpu.DirectionalLight(new THREE.Color(colors.accent), 0.8);\n  rim.position.set(-3, -1.5, -2);\n  group.add(rim);\n  const stripGroup = new THREE.Group();\n  stripGroup.rotation.y = THREE.MathUtils.degToRad(-18);\n  group.add(stripGroup);\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const headlineItem = textItems.find((t) => t.role === \"headline\") || { text: \"The collection\" };\n  const bodyItem = textItems.find((t) => t.role === \"body\") || { text: \"Five calibres. One discipline.\" };\n  const captionItems = textItems.filter((t) => t.role === \"caption\");\n  const captions = captionItems.length >= 5 ? captionItems.slice(0, 5) : [\n    { text: \"NA-01 MERIDIAN\" },\n    { text: \"NA-02 NOCTURNE\" },\n    { text: \"NA-03 SIGNAL\" },\n    { text: \"NA-04 VANTAGE\" },\n    { text: \"NA-05 ARCHIVE\" }\n  ];\n  const cardWidth = 1.6;\n  const cardHeight = 1;\n  const pitch = 1.85;\n  const focusIndex = 2;\n  const cards = [];\n  const bevels = [];\n  const captionsObjs = [];\n  const cardCleanups = [];\n  let sharedTexture = null;\n  ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    sharedTexture = tex;\n    tex.colorSpace = THREE.SRGBColorSpace;\n    tex.minFilter = THREE.LinearMipmapLinearFilter;\n    tex.magFilter = THREE.LinearFilter;\n    tex.wrapS = THREE.ClampToEdgeWrapping;\n    tex.wrapT = THREE.ClampToEdgeWrapping;\n    cards.forEach((entry, i) => {\n      const mat = entry.mesh.material;\n      mat.map = sharedTexture;\n      const sliceW = 1 / 5;\n      const tx = i * sliceW;\n      mat.map = sharedTexture;\n      const cardTex = sharedTexture.clone();\n      cardTex.needsUpdate = true;\n      cardTex.wrapS = THREE.ClampToEdgeWrapping;\n      cardTex.wrapT = THREE.ClampToEdgeWrapping;\n      cardTex.repeat.set(sliceW, 1);\n      cardTex.offset.set(tx, 0);\n      mat.map = cardTex;\n      mat.needsUpdate = true;\n    });\n  });\n  for (let i = 0; i < 5; i++) {\n    const x = (i - focusIndex) * pitch;\n    const isFocus = i === focusIndex;\n    const dist = Math.abs(i - focusIndex);\n    const bevelGeo = new THREE.BoxGeometry(cardWidth + 0.05, cardHeight + 0.05, 0.025);\n    const bevelMat = new import_webgpu.MeshStandardNodeMaterial({\n      color: new THREE.Color(colors.ink),\n      roughness: 0.5,\n      metalness: 0.55,\n      clearcoat: 0.25\n    });\n    const bevelMesh = new THREE.Mesh(bevelGeo, bevelMat);\n    bevelMesh.position.set(x, 0, -0.013);\n    stripGroup.add(bevelMesh);\n    bevels.push(bevelMesh);\n    const cardGeo = new THREE.PlaneGeometry(cardWidth, cardHeight);\n    const opacity = isFocus ? 1 : THREE.MathUtils.lerp(1, 0.55, dist / 2);\n    const scale = isFocus ? 1 : 0.92;\n    const cardMat = new import_webgpu.MeshStandardNodeMaterial({\n      roughness: 0.55,\n      metalness: 0.2,\n      clearcoat: 0.15,\n      transparent: true,\n      opacity,\n      color: new THREE.Color(colors.surface)\n    });\n    const cardMesh = new THREE.Mesh(cardGeo, cardMat);\n    cardMesh.position.set(x, 0, 0);\n    cardMesh.scale.setScalar(scale);\n    if (isFocus) {\n      cardMesh.rotation.y = THREE.MathUtils.degToRad(18);\n      bevelMesh.rotation.y = THREE.MathUtils.degToRad(18);\n    } else {\n      cardMesh.rotation.y = 0;\n      bevelMesh.rotation.y = 0;\n    }\n    stripGroup.add(cardMesh);\n    cards.push({ mesh: cardMesh, bevel: bevelMesh, index: i, baseX: x });\n    const capText = captions[i] ? captions[i].text : `NA-0${i + 1}`;\n    const capObj = ctx.fontAtlas.createText(capText, {\n      fontSize: 18,\n      color: isFocus ? colors.accent : colors.paper,\n      align: \"center\",\n      letterSpacingPx: 1.4\n    });\n    capObj.position.set(x, -0.82, 0);\n    capObj.rotation.y = isFocus ? THREE.MathUtils.degToRad(18) : 0;\n    if (!isFocus) {\n      capObj.traverse((c) => {\n        if (c.material) {\n          c.material.transparent = true;\n          c.material.opacity = opacity;\n        }\n      });\n    }\n    stripGroup.add(capObj);\n    captionsObjs.push(capObj);\n  }\n  const underlineGeo = new THREE.PlaneGeometry(1.6, 0.035);\n  const underlineMat = new import_webgpu.MeshStandardNodeMaterial({\n    color: new THREE.Color(colors.accent),\n    emissive: new THREE.Color(colors.accent),\n    emissiveIntensity: 1.3,\n    roughness: 0.4,\n    metalness: 0.3\n  });\n  const underline = new THREE.Mesh(underlineGeo, underlineMat);\n  underline.position.set(0, -0.55, 1e-3);\n  underline.rotation.y = THREE.MathUtils.degToRad(18);\n  stripGroup.add(underline);\n  const headlineObj = ctx.fontAtlas.createText(headlineItem.text, {\n    fontSize: 68,\n    color: colors.paper,\n    align: \"left\",\n    letterSpacingPx: -0.34\n  });\n  headlineObj.position.set(-2.6, 1.5, 0);\n  group.add(headlineObj);\n  const bodyObj = ctx.fontAtlas.createText(bodyItem.text, {\n    fontSize: 26,\n    color: colors.paper,\n    align: \"left\"\n  });\n  bodyObj.position.set(-2.6, -1.5, 0);\n  group.add(bodyObj);\n  const shadowGeo = new THREE.PlaneGeometry(6, 1.4);\n  const shadowMat = new import_webgpu.MeshBasicNodeMaterial({\n    transparent: true,\n    opacity: 0.5,\n    color: new THREE.Color(0),\n    depthWrite: false\n  });\n  shadowMat.colorNode = (0, import_tsl.mix)(\n    (0, import_tsl.vec3)(0, 0, 0),\n    (0, import_tsl.vec3)(0.043, 0.043, 0.063),\n    (0, import_tsl.smoothstep)(0, 0.7, (0, import_tsl.uv)().x.clone().mul((0, import_tsl.uv)().x.clone()).add((0, import_tsl.uv)().y.clone().mul((0, import_tsl.uv)().y.clone())).sqrt())\n  );\n  const shadowPlane = new THREE.Mesh(shadowGeo, shadowMat);\n  shadowPlane.position.set(0, -1.1, -0.1);\n  shadowPlane.rotation.x = THREE.MathUtils.degToRad(-90);\n  group.add(shadowPlane);\n  const primCleanups = [];\n  const prims = config.cinematicPrimitives ?? [];\n  for (const p of prims) {\n    if (p.name === \"parallax-scroll\" && ctx.primitives && ctx.primitives[\"parallax-scroll\"]) {\n      const params = { ...p.params };\n      try {\n        const r = ctx.primitives[\"parallax-scroll\"](stripGroup, params);\n        if (r && r.cleanup) primCleanups.push(r.cleanup);\n      } catch (e) {\n      }\n    }\n  }\n  const tl = import_gsap.gsap.timeline();\n  group.userData._tl = tl;\n  group.scale.set(1, 1, 1);\n  group.position.y = 0.4;\n  group.opacity = 0;\n  tl.to(group.position, { y: 0, duration: 0.7, ease: \"power3.out\" });\n  headlineObj.position.y += 0.2;\n  bodyObj.position.y += 0.2;\n  tl.to(headlineObj.position, { y: 1.5, duration: 0.6, ease: \"power2.out\" }, 0.1);\n  tl.to(bodyObj.position, { y: -1.5, duration: 0.6, ease: \"power2.out\" }, 0.25);\n  group.userData.handlers = {\n    click: (e) => {\n    },\n    hover: (e) => {\n    }\n  };\n  group.userData.cleanup = () => {\n    tl.kill();\n    primCleanups.forEach((fn) => {\n      try {\n        fn();\n      } catch (e) {\n      }\n    });\n    cards.forEach((c) => {\n      c.mesh.geometry.dispose();\n      if (c.mesh.material.map && c.mesh.material.map !== sharedTexture) c.mesh.material.map.dispose();\n      c.mesh.material.dispose();\n    });\n    bevels.forEach((b) => {\n      b.geometry.dispose();\n      b.material.dispose();\n    });\n    captionsObjs.forEach((c) => {\n      c.traverse((o) => {\n        if (o.geometry) o.geometry.dispose();\n        if (o.material) o.material.dispose();\n      });\n    });\n    underlineGeo.dispose();\n    underlineMat.dispose();\n    bgGeo.dispose();\n    bgMat.dispose();\n    shadowGeo.dispose();\n    shadowMat.dispose();\n    headlineObj.traverse((o) => {\n      if (o.geometry) o.geometry.dispose();\n      if (o.material) o.material.dispose();\n    });\n    bodyObj.traverse((o) => {\n      if (o.geometry) o.geometry.dispose();\n      if (o.material) o.material.dispose();\n    });\n  };\n  return group;\n}\n",
+  "transformError": null
+}

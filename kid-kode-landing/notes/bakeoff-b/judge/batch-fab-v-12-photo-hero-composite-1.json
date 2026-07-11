@@ -1,0 +1,59 @@
+{
+  "label": "batch-fab-v-12-photo-hero-composite-1",
+  "judgedAt": "2026-07-11T04:09:13.756Z",
+  "judgeModel": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-12-photo-hero-composite-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-12-photo-hero-composite-1/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-12-photo-hero-composite-1/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-12-photo-hero-composite-1/F4.jpg"
+    }
+  ],
+  "mappingFile": "notes/bakeoff-b/judge/blind/batch-fab-v-12-photo-hero-composite-1/mapping.json",
+  "costUsd": 0.5311849999999999,
+  "durationApiMs": 39772,
+  "wallMs": 42462,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 14233,
+    "cache_read_input_tokens": 81908,
+    "output_tokens": 2590,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14233,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1831,
+        "cache_read_input_tokens": 43705,
+        "cache_creation_input_tokens": 8731,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8731
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 14, \"mustFix\": [ { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card stacked layers\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame — no photo plate, no filmic grade, no caption block\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"upper-right quadrant blurred white mass\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center card blue/violet fills\" } ], \"notes\": \"Blue glassmorphic layer stack instead of photographic hero; automatic blue-drift violation, no subject or caption, intrusive blurred overlay.\" }, { \"frame\": \"F2\", \"score\": 7, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"center card\" }, { \"defect\": \"ALL_BLACK_ELEMENT\", \"region\": \"center card\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame — no photo, subject, or caption\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"upper-right cropped letterform fragment\" } ], \"notes\": \"Near-empty black frame; unlit black plate with a stray blurred glyph. Effectively unrendered.\" }, { \"frame\": \"F3\", \"score\": 18, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"center gray plate\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center plate flat gradient\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame — no photographic content, subject separation, or caption block\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"top and right blurred white bars and red strokes\" } ], \"notes\": \"Palette-correct fragments but the hero plate is an empty gray gradient; no photography, no grade, no typography.\" }, { \"frame\": \"F4\", \"score\": 12, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"center white card\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame — no photo plate, subject, or caption text\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center card flat white fill\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"right edge blurred white blocks\" } ], \"notes\": \"Blank white card with lone red underline; inverts dark-first spec and contains no photographic or typographic content.\" } ] }"
+}

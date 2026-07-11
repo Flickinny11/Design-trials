@@ -1,0 +1,22 @@
+{
+  "bundle": "wbakeb/mercury-2/v-09-editorial-oversized-type-r2",
+  "contestant": "mercury-2",
+  "caseId": "v-09-editorial-oversized-type",
+  "run": 2,
+  "capturedAt": "2026-07-11T03:00:44.320Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 9,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/mercury-2/v-09-editorial-oversized-type-r2"
+  },
+  "consoleErrors": [
+    "THREE.TSL: TypeError: Cannot read properties of null (reading 'build') \"scene-root.ts:136\"\n    at scene-root.ts:136:22\n    at scene-root.ts:164:22"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

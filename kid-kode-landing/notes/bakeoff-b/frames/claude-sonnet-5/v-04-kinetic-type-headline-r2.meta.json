@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/claude-sonnet-5/v-04-kinetic-type-headline-r2",
+  "contestant": "claude-sonnet-5",
+  "caseId": "v-04-kinetic-type-headline",
+  "run": 2,
+  "capturedAt": "2026-07-11T03:56:23.211Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 6,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/claude-sonnet-5/v-04-kinetic-type-headline-r2"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

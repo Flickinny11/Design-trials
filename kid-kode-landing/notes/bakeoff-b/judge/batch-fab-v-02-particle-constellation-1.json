@@ -1,0 +1,59 @@
+{
+  "label": "batch-fab-v-02-particle-constellation-1",
+  "judgedAt": "2026-07-11T04:00:34.683Z",
+  "judgeModel": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-02-particle-constellation-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-02-particle-constellation-1/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-02-particle-constellation-1/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-02-particle-constellation-1/F4.jpg"
+    }
+  ],
+  "mappingFile": "notes/bakeoff-b/judge/blind/batch-fab-v-02-particle-constellation-1/mapping.json",
+  "costUsd": 0.412596,
+  "durationApiMs": 49188,
+  "wallMs": 50289,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 8708,
+    "cache_read_input_tokens": 87578,
+    "output_tokens": 2312,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8708,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1576,
+        "cache_read_input_tokens": 43789,
+        "cache_creation_input_tokens": 8708,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8708
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 22, \"mustFix\": [ { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"full frame — camera clipped inside oversized geometry\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"upper-left quadrant white mass and lower-right red slab dwarf particle field\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"lower-right red rectangle — flat fill, no emissive response\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no red accent core, no glow discipline\" } ], \"notes\": \"Not a starfield: giant blurred white shape and flat red slab swallow the sparse particles. No emissive core or depth staging.\" }, { \"frame\": \"F2\", \"score\": 18, \"mustFix\": [ { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"full frame — camera inside blurred white mass, red slab spans right half\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"left half white shape vs 0.012-unit points\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center-right red rectangle — flat unlit fill\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"origin — no 90-instance emissive red core\" } ], \"notes\": \"Same broken scene, worse: flat red slab dominates, particle shell barely reads, zero additive glow or fog depth.\" }, { \"frame\": \"F3\", \"score\": 5, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"full frame — near-uniform #0b0b10, no particles visible\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"everywhere — no starfield, no accent core\" } ], \"notes\": \"Effectively empty dark frame; nothing from the spec renders.\" }, { \"frame\": \"F4\", \"score\": 16, \"mustFix\": [ { \"defect\": \"SCALE_ERROR\", \"region\": \"center — 1200 points compressed into a tiny cube, not a 6x4x5 ellipsoid\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field surrounding the cluster\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center cluster — no #ff2a38 emissive accent core\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center cluster — uniform dots, no depth falloff or fog sink\" } ], \"notes\": \"Particles exist but as a distant monochrome clump; no red core, no depth falloff, frame is mostly void.\" } ] }"
+}

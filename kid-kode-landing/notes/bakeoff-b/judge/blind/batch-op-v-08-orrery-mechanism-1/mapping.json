@@ -1,0 +1,14 @@
+[
+  {
+    "label": "F1",
+    "bundleId": "wbakeb/claude-fable-5/v-08-orrery-mechanism-r2",
+    "contestant": "claude-fable-5",
+    "source": "notes/bakeoff-b/frames/claude-fable-5/v-08-orrery-mechanism-r2.png"
+  },
+  {
+    "label": "F2",
+    "bundleId": "wbakeb/claude-fable-5/v-08-orrery-mechanism-r1",
+    "contestant": "claude-fable-5",
+    "source": "notes/bakeoff-b/frames/claude-fable-5/v-08-orrery-mechanism-r1.png"
+  }
+]

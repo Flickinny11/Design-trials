@@ -1,0 +1,21 @@
+{
+  "bundle": "wbakeb/claude-haiku-4.5/v-18-nav-dock-r1",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-18-nav-dock",
+  "run": 1,
+  "capturedAt": "2026-07-11T02:51:57.066Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/claude-haiku-4.5/v-18-nav-dock-r1",
+    "moduleRuntimeError": "TypeError: THREE.MeshBasicNodeMaterial is not a constructor"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

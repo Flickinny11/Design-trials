@@ -1,0 +1,26 @@
+{
+  "bundle": "wbakeb/claude-haiku-4.5/v-07-filmstrip-carousel-r1",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-07-filmstrip-carousel",
+  "run": 1,
+  "capturedAt": "2026-07-11T02:50:24.765Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 3,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/claude-haiku-4.5/v-07-filmstrip-carousel-r1"
+  },
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

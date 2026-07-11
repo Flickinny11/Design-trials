@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/claude-haiku-4.5/v-09-editorial-oversized-type-r1",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-09-editorial-oversized-type",
+  "run": 1,
+  "capturedAt": "2026-07-11T02:50:42.476Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 9,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/claude-haiku-4.5/v-09-editorial-oversized-type-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

@@ -1,0 +1,188 @@
+{
+  "id": "wbakeb/glm-5.2/v-08-orrery-mechanism-r1",
+  "contestant": "glm-5.2",
+  "caseId": "v-08-orrery-mechanism",
+  "run": 1,
+  "node": {
+    "nodeId": "v-08-orrery-mechanism",
+    "subtype": "mechanism",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Orrery mechanism — A machined gear mechanism with metallic PBR, slow meshing rotation, and a jewel accent pivot.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "The going train",
+            "role": "headline",
+            "typography": {
+              "fontSize": 68,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "34 COMPONENTS / HAND-FINISHED",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 0.65,
+              "hex": "#101017"
+            },
+            {
+              "at": 1,
+              "hex": "#16161d"
+            }
+          ]
+        },
+        "typography": {
+          "headline": {
+            "family": "Lora",
+            "fontSize": 68,
+            "fontWeight": 600,
+            "letterSpacing": -0.005,
+            "lineHeight": 1.1
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Primary gear (/prism-mock/orrery/meshes/gear-a.glb) normalized to 1.6-unit diameter, centered at origin in the xy plane; secondary gear instance scaled to 0.9-unit diameter at [1.15, 0.35, -0.1], tooth-meshed at ratio 16:9 (primary 0.08 rad/s, secondary -0.142 rad/s, phase-locked so teeth never intersect). Gear material: machined steel roughness 0.5, metalness 0.55, clearcoat 0.2, clearcoatRoughness 0.3, anisotropy 0.7 oriented radially so spokes catch light as they turn. Jewel pivot: 0.12-unit-radius sphere at the primary hub, MeshPhysicalMaterial color #ff2a38, transmission 0.6, ior 1.76, emissive #ff2a38 intensity 1.8. Arbor shafts: 0.05-radius ink #16161d cylinders through both hubs, z-length 0.8. Contact shadow ellipse 2.6 x 1.2 units at y=-1.2, opacity 0.5. Backdrop plane 7 x 6 at z=-3 with the radial gradient stops; linear fog #0b0b10 near 5 far 11 for depth hint. Time-trigger orbit: camera drifts on radius 0.2 at 0.08 rad/s. Headline baseline at y=-1.7, caption at y=-2.1 on the 0.25-unit rhythm."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "mesh",
+    "depthMapUrl": null,
+    "meshUrl": "/prism-mock/orrery/meshes/gear-a.glb",
+    "cinematicPrimitives": [
+      {
+        "name": "orbit",
+        "trigger": "time",
+        "params": {
+          "speed": 0.08,
+          "radius": 0.2
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0.6,
+        0.5,
+        3.8
+      ],
+      "lookAt": [
+        0.3,
+        0.1,
+        0
+      ],
+      "fov": 45
+    },
+    "lights": [
+      {
+        "type": "directional",
+        "color": "#f2f4f8",
+        "intensity": 1.3,
+        "position": [
+          2,
+          3,
+          2.5
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#7e8aa0",
+        "intensity": 0.35,
+        "position": [
+          -2.5,
+          0.5,
+          1.5
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 1,
+        "position": [
+          -1,
+          2.5,
+          -2.5
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 1.2,
+        "position": [
+          0,
+          0,
+          0.6
+        ]
+      },
+      {
+        "type": "ambient",
+        "color": "#2a2e38",
+        "intensity": 0.25
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Both gears rotate in phase-locked mesh (0.08 and -0.142 rad/s) while the camera drifts on a 0.2-unit orbit; the ruby pivot glints as spokes sweep the key light."
+  },
+  "parsed": false,
+  "fenced": false,
+  "depGate": {
+    "sources": [],
+    "violations": []
+  },
+  "cjs": null,
+  "transformError": null
+}

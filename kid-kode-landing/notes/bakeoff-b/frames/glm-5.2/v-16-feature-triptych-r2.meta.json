@@ -1,0 +1,21 @@
+{
+  "bundle": "wbakeb/glm-5.2/v-16-feature-triptych-r2",
+  "contestant": "glm-5.2",
+  "caseId": "v-16-feature-triptych",
+  "run": 2,
+  "capturedAt": "2026-07-11T02:56:33.282Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/glm-5.2/v-16-feature-triptych-r2",
+    "moduleRuntimeError": "ReferenceError: MeshBasicNodeMaterial is not defined"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

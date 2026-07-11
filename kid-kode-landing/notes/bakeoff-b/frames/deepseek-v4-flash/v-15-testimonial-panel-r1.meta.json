@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/deepseek-v4-flash/v-15-testimonial-panel-r1",
+  "contestant": "deepseek-v4-flash",
+  "caseId": "v-15-testimonial-panel",
+  "run": 1,
+  "capturedAt": "2026-07-11T02:54:17.769Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 7,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/deepseek-v4-flash/v-15-testimonial-panel-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

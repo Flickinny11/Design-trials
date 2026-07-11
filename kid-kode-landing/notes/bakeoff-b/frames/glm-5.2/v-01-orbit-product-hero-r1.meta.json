@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/glm-5.2/v-01-orbit-product-hero-r1",
+  "contestant": "glm-5.2",
+  "caseId": "v-01-orbit-product-hero",
+  "run": 1,
+  "capturedAt": "2026-07-11T02:54:57.182Z",
+  "probe": {
+    "status": "error",
+    "error": "module did not default-export a function",
+    "renderables": 0,
+    "nodeMounted": false,
+    "bundleId": "wbakeb/glm-5.2/v-01-orbit-product-hero-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": false,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

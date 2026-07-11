@@ -1,0 +1,24 @@
+{
+  "bundle": "wbakeb/glm-5.2/v-18-nav-dock-r1",
+  "contestant": "glm-5.2",
+  "caseId": "v-18-nav-dock",
+  "run": 1,
+  "capturedAt": "2026-07-11T04:25:39.652Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 14,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/glm-5.2/v-18-nav-dock-r1"
+  },
+  "consoleErrors": [
+    "THREE.THREE.WebGLProgram: Shader Error 0 - VALIDATE_STATUS false\n\nProgram Info Log: Fragment shader is not compiled.\n\u0000\n\nFRAGMENT\n\nERROR: 0:800: 'NaN' : undeclared identifier\nERROR: 0:800: '.0' : syntax error\n\u0000\n\n  795: void main() {\n  796: \n  797: \t// flow\n  798: \t// code\n  799: \n> 800: \tDiffuseColor",
+    "THREE.THREE.WebGLProgram: Shader Error 1282 - VALIDATE_STATUS false\n\nProgram Info Log: Fragment shader is not compiled.\n\u0000\n\nFRAGMENT\n\nERROR: 0:89: 'NaN' : undeclared identifier\nERROR: 0:89: '.0' : syntax error\n\u0000\n\n  84: void main() {\n  85: \n  86: \t// flow\n  87: \t// code\n  88: \n> 89: \tDiffuseColor = ve",
+    "THREE.THREE.WebGLProgram: Shader Error 1282 - VALIDATE_STATUS false\n\nProgram Info Log: Fragment shader is not compiled.\n\u0000\n\nFRAGMENT\n\nERROR: 0:89: 'NaN' : undeclared identifier\nERROR: 0:89: '.0' : syntax error\n\u0000\n\n  84: void main() {\n  85: \n  86: \t// flow\n  87: \t// code\n  88: \n> 89: \tDiffuseColor = ve"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

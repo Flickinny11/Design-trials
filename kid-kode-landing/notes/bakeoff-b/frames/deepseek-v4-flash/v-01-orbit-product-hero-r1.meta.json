@@ -1,0 +1,21 @@
+{
+  "bundle": "wbakeb/deepseek-v4-flash/v-01-orbit-product-hero-r1",
+  "contestant": "deepseek-v4-flash",
+  "caseId": "v-01-orbit-product-hero",
+  "run": 1,
+  "capturedAt": "2026-07-11T02:52:20.968Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/deepseek-v4-flash/v-01-orbit-product-hero-r1",
+    "moduleRuntimeError": "ReferenceError: vec2 is not defined"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

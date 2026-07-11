@@ -1,0 +1,169 @@
+{
+  "id": "wbakeb/gemini-3.5-flash/v-04-kinetic-type-headline-r2",
+  "contestant": "gemini-3.5-flash",
+  "caseId": "v-04-kinetic-type-headline",
+  "run": 2,
+  "node": {
+    "nodeId": "v-04-kinetic-type-headline",
+    "subtype": "kinetic-typography",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Kinetic 3D type headline — A hero headline as dimensional type with staggered kinetic entrance and weighted settle; MSDF text only.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "NOVA ATELIER / CALIBRE PROGRAM",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "TIME, MACHINED.",
+            "role": "hero",
+            "typography": {
+              "fontSize": 124,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Every calibre begins as a solid billet.",
+            "role": "subhead",
+            "typography": {
+              "fontSize": 40,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#101017",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 1,
+              "hex": "#13131a"
+            }
+          ]
+        },
+        "typography": {
+          "hero": {
+            "family": "Lora",
+            "fontSize": 124,
+            "fontWeight": 600,
+            "letterSpacing": -0.01,
+            "lineHeight": 1.05
+          },
+          "subhead": {
+            "family": "JetBrains Mono",
+            "fontSize": 40,
+            "fontWeight": 400,
+            "letterSpacing": 0.02,
+            "lineHeight": 1.35
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Hero set as MSDF glyph planes (Lora 600), glyph em height 0.62 scene units, one line centered at y=0.4, per-word z offsets front-to-back 0.12 / 0.0 / -0.12 units for parallax depth. kinetic-text on load: per-glyph y +0.35 to 0 and opacity 0 to 1, 700ms each, 60ms stagger left to right, cubic-bezier(0.215,0.61,0.355,1); the final glyph triggers a group weighted-settle, scale 1.04 to 1.0 over 900ms cubic-bezier(0.165,0.84,0.44,1). Accent underline rule: 2.6 x 0.045-unit plane #ff2a38, emissive intensity 1.2, at y=-0.05 under the hero, scaleX 0 to 1 anchored left over 500ms cubic-bezier(0.25,0.46,0.45,0.94) starting 120ms after the last glyph lands. Subhead (em height 0.2) fades up (opacity 0 to 1, y +0.2 to 0, 500ms cubic-bezier(0.25,0.46,0.45,0.94)) at y=-0.65; caption kicker at y=1.15 in JetBrains Mono 700 uppercase. Backdrop: 7 x 5.5-unit plane at z=-1.5 with vertical engineered gradient #0b0b10 to #13131a plus 1.5 percent mono grain, no soft blur. Spacing locked to the 0.25-unit rhythm."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "kinetic-text",
+        "trigger": "load",
+        "params": {
+          "staggerMs": 60,
+          "riseUnits": 0.35
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        5.5
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#3a3f4a",
+        "intensity": 0.5
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 0.9,
+        "position": [
+          2,
+          3,
+          4
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Glyphs rise 0.35 units and fade in with a 60ms left-to-right stagger, the line settles with 1.04 overshoot, then the red underline draws left to right."
+  },
+  "parsed": false,
+  "fenced": true,
+  "depGate": {
+    "sources": [],
+    "violations": []
+  },
+  "cjs": null,
+  "transformError": null
+}

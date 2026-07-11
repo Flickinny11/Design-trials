@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/kimi-k2.7-code/v-04-kinetic-type-headline-r1",
+  "contestant": "kimi-k2.7-code",
+  "caseId": "v-04-kinetic-type-headline",
+  "run": 1,
+  "capturedAt": "2026-07-11T03:35:22.617Z",
+  "probe": {
+    "status": "error",
+    "error": "module did not default-export a function",
+    "renderables": 0,
+    "nodeMounted": false,
+    "bundleId": "wbakeb/kimi-k2.7-code/v-04-kinetic-type-headline-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": false,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

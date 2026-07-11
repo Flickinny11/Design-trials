@@ -1,0 +1,189 @@
+{
+  "id": "wbakeb/gpt-oss-120b/v-09-editorial-oversized-type-r1",
+  "contestant": "gpt-oss-120b",
+  "caseId": "v-09-editorial-oversized-type",
+  "run": 1,
+  "node": {
+    "nodeId": "v-09-editorial-oversized-type",
+    "subtype": "oversized-type",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Editorial oversized type — A massive editorial headline with tight tracking discipline, a kicker line, and an accent underline rule.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "NOVA ATELIER / JOURNAL",
+            "role": "kicker",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "PRECISION IS",
+            "role": "hero",
+            "typography": {
+              "fontSize": 124,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "A HABIT.",
+            "role": "hero",
+            "typography": {
+              "fontSize": 124,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Notes from the bench: tolerances, tempering, and the case for slower watchmaking.",
+            "role": "body",
+            "typography": {
+              "fontSize": 26,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "ISSUE 12 / JULY 2026",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 1,
+              "hex": "#14141a"
+            }
+          ]
+        },
+        "typography": {
+          "hero": {
+            "family": "Lora",
+            "fontSize": 124,
+            "fontWeight": 600,
+            "letterSpacing": -0.015,
+            "lineHeight": 0.98
+          },
+          "kicker": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.4
+          },
+          "body": {
+            "family": "JetBrains Mono",
+            "fontSize": 26,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.55
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Full-bleed editorial plate 7 x 5.5 scene units at z=0 with a vertical engineered gradient #0b0b10 to #14141a plus 1.5 percent monochrome grain (no soft pastel blur). All type left-aligned at x=-3.1 on a strict 0.25-unit baseline grid: kicker at y=1.7 (JetBrains Mono 700, uppercase, tracking 0.12em); hero in two stacked lines at y=0.9 and y=0.25 (Lora 600, em height 0.62 units, tracking -0.015em, lineHeight 0.98); accent underline rule 2.2 x 0.05 units #ff2a38 at emissive 1.2 at y=-0.15; body paragraph max-width 4.5 units at y=-0.8; caption at y=-1.9. Print-depth trick: hero glyph planes duplicated 0.02 units behind at #16161d for a letterpress shadow edge. Entrance: rise-in per block top-to-bottom (y +0.4 to 0, opacity 0 to 1, 700ms, cubic-bezier(0.215,0.61,0.355,1)) with 80ms stagger; the rule draws scaleX 0 to 1 over 500ms cubic-bezier(0.25,0.46,0.45,0.94) after the hero lands."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        6.2
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#3a3f4a",
+        "intensity": 0.55
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 0.8,
+        "position": [
+          1.5,
+          2.5,
+          4
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Type blocks rise in top-to-bottom with an 80ms stagger; the red rule draws left to right after the hero settles."
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap",
+      "@/text",
+      "@/primitives"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry } = ctx.THREE;\n  const toRgb = (hex) => {\n    const i = parseInt(hex.replace(\"#\", \"\"), 16);\n    return [(i >> 16 & 255) / 255, (i >> 8 & 255) / 255, (i & 255) / 255];\n  };\n  const setMaterialOpacity = (obj, value) => {\n    obj.traverse((child) => {\n      if (child.isMesh && child.material && \"opacity\" in child.material) {\n        child.material.transparent = true;\n        child.material.opacity = value;\n      }\n    });\n  };\n  const colors = config.colors ?? config?.visualSpec?.colors ?? {};\n  const typography = config.typography ?? config?.visualSpec?.typography ?? {};\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const root = new Group();\n  const bgGeometry = new PlaneGeometry(7, 5.5);\n  const bgMaterial = new import_webgpu.MeshBasicNodeMaterial();\n  const bgColorStart = (0, import_tsl.vec3)(...toRgb(colors.background ?? \"#0b0b10\"));\n  const bgColorEnd = (0, import_tsl.vec3)(...toRgb(colors.surface ?? \"#14141a\"));\n  const grainScale = 120;\n  const grain = (0, import_tsl.fract)((0, import_tsl.sin)((0, import_tsl.dot)((0, import_tsl.mul)((0, import_tsl.uv)(), grainScale), (0, import_tsl.vec3)(12.9898, 78.233, 0))) * 43758.5453);\n  const grainFactor = (0, import_tsl.mul)(grain, 0.015);\n  const gradient = (0, import_tsl.mix)(bgColorStart, bgColorEnd, (0, import_tsl.uv)().y);\n  bgMaterial.colorNode = (0, import_tsl.add)(gradient, grainFactor);\n  bgMaterial.transparent = false;\n  const bgMesh = new Mesh(bgGeometry, bgMaterial);\n  bgMesh.position.set(0, 0, 0);\n  root.add(bgMesh);\n  const textGroup = new Group();\n  const leftX = -3.1;\n  const textColor = colors.paper ?? \"#e8ecf2\";\n  const kickerSpec = typography.kicker ?? {};\n  const kicker = ctx.fontAtlas.createText(\"NOVA ATELIER / JOURNAL\", {\n    fontSize: kickerSpec.fontSize ?? 18,\n    color: textColor,\n    align: \"left\",\n    letterSpacingPx: (kickerSpec.letterSpacing ?? 0.12) * (kickerSpec.fontSize ?? 18)\n  });\n  const kickerContainer = new Group();\n  kickerContainer.add(kicker);\n  kickerContainer.position.set(leftX, 1.7, 0);\n  kickerContainer.position.y += 0.4;\n  setMaterialOpacity(kickerContainer, 0);\n  textGroup.add(kickerContainer);\n  const heroSpec = typography.hero ?? {};\n  const heroLine1 = ctx.fontAtlas.createText(\"PRECISION IS\", {\n    fontSize: heroSpec.fontSize ?? 124,\n    color: textColor,\n    align: \"left\",\n    letterSpacingPx: (heroSpec.letterSpacing ?? -0.015) * (heroSpec.fontSize ?? 124)\n  });\n  const hero1Container = new Group();\n  hero1Container.add(heroLine1);\n  hero1Container.position.set(leftX, 0.9, 0);\n  hero1Container.position.y += 0.4;\n  setMaterialOpacity(hero1Container, 0);\n  textGroup.add(hero1Container);\n  const heroLine2 = ctx.fontAtlas.createText(\"A HABIT.\", {\n    fontSize: heroSpec.fontSize ?? 124,\n    color: textColor,\n    align: \"left\",\n    letterSpacingPx: (heroSpec.letterSpacing ?? -0.015) * (heroSpec.fontSize ?? 124)\n  });\n  const hero2Container = new Group();\n  hero2Container.add(heroLine2);\n  hero2Container.position.set(leftX, 0.25, 0);\n  hero2Container.position.y += 0.4;\n  setMaterialOpacity(hero2Container, 0);\n  textGroup.add(hero2Container);\n  const bodySpec = typography.body ?? {};\n  const body = ctx.fontAtlas.createText(\n    \"Notes from the bench: tolerances, tempering, and the case for slower watchmaking.\",\n    {\n      fontSize: bodySpec.fontSize ?? 26,\n      color: textColor,\n      align: \"left\",\n      maxWidthPx: 4.5 * 100,\n      // rough conversion, not critical\n      letterSpacingPx: (bodySpec.letterSpacing ?? 0) * (bodySpec.fontSize ?? 26)\n    }\n  );\n  const bodyContainer = new Group();\n  bodyContainer.add(body);\n  bodyContainer.position.set(leftX, -0.8, 0);\n  bodyContainer.position.y += 0.4;\n  setMaterialOpacity(bodyContainer, 0);\n  textGroup.add(bodyContainer);\n  const captionSpec = typography.caption ?? {};\n  const caption = ctx.fontAtlas.createText(\"ISSUE 12 / JULY 2026\", {\n    fontSize: captionSpec.fontSize ?? 18,\n    color: textColor,\n    align: \"left\",\n    letterSpacingPx: (captionSpec.letterSpacing ?? 0.08) * (captionSpec.fontSize ?? 18)\n  });\n  const captionContainer = new Group();\n  captionContainer.add(caption);\n  captionContainer.position.set(leftX, -1.9, 0);\n  captionContainer.position.y += 0.4;\n  setMaterialOpacity(captionContainer, 0);\n  textGroup.add(captionContainer);\n  root.add(textGroup);\n  const ruleGeometry = new PlaneGeometry(2.2, 0.05);\n  const ruleMaterial = new import_webgpu.MeshStandardNodeMaterial();\n  const accentRgb = toRgb(colors.accent ?? \"#ff2a38\");\n  ruleMaterial.emissiveNode = (0, import_tsl.vec3)(...accentRgb);\n  ruleMaterial.emissiveIntensity = 1.2;\n  const ruleMesh = new Mesh(ruleGeometry, ruleMaterial);\n  ruleMesh.position.set(leftX, -0.15, 0.01);\n  ruleMesh.scale.set(0, 1, 1);\n  root.add(ruleMesh);\n  const timeline = import_gsap.gsap.timeline({ defaults: { ease: \"cubic-bezier(0.215,0.61,0.355,1)\", duration: 0.7 } });\n  const blocks = [\n    { obj: kickerContainer, targetY: 1.7 },\n    { obj: hero1Container, targetY: 0.9 },\n    { obj: hero2Container, targetY: 0.25 },\n    { obj: bodyContainer, targetY: -0.8 },\n    { obj: captionContainer, targetY: -1.9 }\n  ];\n  blocks.forEach((block, i) => {\n    timeline.to(\n      block.obj.position,\n      { y: block.targetY, duration: 0.7 },\n      i * 0.08\n    );\n    timeline.to(\n      block.obj,\n      {\n        onUpdate() {\n          setMaterialOpacity(block.obj, block.obj.material ? block.obj.material.opacity : 1);\n        },\n        opacity: 1,\n        duration: 0.7,\n        immediateRender: false\n      },\n      i * 0.08\n    );\n  });\n  timeline.to(\n    ruleMesh.scale,\n    {\n      x: 1,\n      duration: 0.5,\n      ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n    },\n    \"+=0.1\"\n    // after previous animations\n  );\n  timeline.play();\n  root.userData.handlers = {};\n  root.userData.cleanup = () => {\n    timeline.kill();\n    bgGeometry.dispose();\n    bgMaterial.dispose();\n    ruleGeometry.dispose();\n    ruleMaterial.dispose();\n    root.traverse((child) => {\n      if (child.isMesh) {\n        if (child.geometry) child.geometry.dispose();\n        if (child.material) child.material.dispose();\n      }\n    });\n  };\n  return root;\n}\n",
+  "transformError": null
+}

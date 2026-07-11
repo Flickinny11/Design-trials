@@ -1,0 +1,22 @@
+{
+  "bundle": "wbakeb/claude-sonnet-5/v-06-loop-column-gallery-r1",
+  "contestant": "claude-sonnet-5",
+  "caseId": "v-06-loop-column-gallery",
+  "run": 1,
+  "capturedAt": "2026-07-11T03:56:35.760Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 26,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/claude-sonnet-5/v-06-loop-column-gallery-r1"
+  },
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

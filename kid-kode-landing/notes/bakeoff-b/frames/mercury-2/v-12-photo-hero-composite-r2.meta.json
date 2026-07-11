@@ -1,0 +1,22 @@
+{
+  "bundle": "wbakeb/mercury-2/v-12-photo-hero-composite-r2",
+  "contestant": "mercury-2",
+  "caseId": "v-12-photo-hero-composite",
+  "run": 2,
+  "capturedAt": "2026-07-11T03:01:09.324Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 7,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/mercury-2/v-12-photo-hero-composite-r2"
+  },
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

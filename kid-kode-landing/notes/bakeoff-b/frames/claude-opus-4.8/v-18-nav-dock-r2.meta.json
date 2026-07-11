@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/claude-opus-4.8/v-18-nav-dock-r2",
+  "contestant": "claude-opus-4.8",
+  "caseId": "v-18-nav-dock",
+  "run": 2,
+  "capturedAt": "2026-07-11T03:55:40.910Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 15,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/claude-opus-4.8/v-18-nav-dock-r2"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

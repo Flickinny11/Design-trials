@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/claude-sonnet-5/v-19-empty-state-r2",
+  "contestant": "claude-sonnet-5",
+  "caseId": "v-19-empty-state",
+  "run": 2,
+  "capturedAt": "2026-07-11T03:58:23.339Z",
+  "probe": {
+    "status": "error",
+    "error": "module did not default-export a function",
+    "renderables": 0,
+    "nodeMounted": false,
+    "bundleId": "wbakeb/claude-sonnet-5/v-19-empty-state-r2"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": false,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

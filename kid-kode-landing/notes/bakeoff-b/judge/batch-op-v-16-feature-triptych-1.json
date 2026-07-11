@@ -1,0 +1,51 @@
+{
+  "label": "batch-op-v-16-feature-triptych-1",
+  "judgedAt": "2026-07-11T04:26:33.849Z",
+  "judgeModel": "claude-opus-4-8",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-op-v-16-feature-triptych-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-op-v-16-feature-triptych-1/F2.jpg"
+    }
+  ],
+  "mappingFile": "notes/bakeoff-b/judge/blind/batch-op-v-16-feature-triptych-1/mapping.json",
+  "costUsd": 0.221497,
+  "durationApiMs": 28046,
+  "wallMs": 30807,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 12072,
+    "cache_read_input_tokens": 78460,
+    "output_tokens": 1731,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12072,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1249,
+        "cache_read_input_tokens": 41562,
+        "cache_creation_input_tokens": 7408,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7408
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 37, \"mustFix\": [ { \"defect\": \"GARBLED_TEXT\", \"region\": \"center band — three titles collide into overlapping unreadable string\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"center — body copy overlaps across all three cards into a jumble\" }, { \"defect\": \"LOW_CONTRAST\", \"region\": \"center card text over dark surface\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"outer background field around card row\" } ], \"notes\": \"Cards, icon seats and red glyphs render with decent materiality, but title/body typography collides into total garble; hierarchy broken.\" }, { \"frame\": \"F2\", \"score\": 42, \"mustFix\": [ { \"defect\": \"GARBLED_TEXT\", \"region\": \"center band — titles and body copy overlap into unreadable string\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"center — text layers collide across the three cards\" }, { \"defect\": \"LOW_CONTRAST\", \"region\": \"center body copy over surface\" } ], \"notes\": \"Brighter card ramp, hairline borders and red underline accent help, but overlapping title/body text remains a fatal legibility defect.\" } ] }"
+}

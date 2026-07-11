@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/claude-sonnet-5/v-13-brand-wall-r1",
+  "contestant": "claude-sonnet-5",
+  "caseId": "v-13-brand-wall",
+  "run": 1,
+  "capturedAt": "2026-07-11T03:57:35.392Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 14,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/claude-sonnet-5/v-13-brand-wall-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

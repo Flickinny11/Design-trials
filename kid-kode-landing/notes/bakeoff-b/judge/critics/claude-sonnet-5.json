@@ -1,0 +1,1753 @@
+{
+  "candidate": "claude-sonnet-5",
+  "route": "claude-cli",
+  "model": "claude-sonnet-5",
+  "verdicts": [
+    {
+      "goldenId": "g-01",
+      "score": 3,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire frame"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "entire frame"
+        }
+      ],
+      "notes": "Near-empty dark frame; no torus knot, pedestal, contact shadow, or accent red rendered at all.",
+      "latencyMs": 18300,
+      "costUsd": 0.47635849999999996,
+      "usage": {
+        "input_tokens": 3041,
+        "cache_creation_input_tokens": 40264,
+        "cache_read_input_tokens": 73027,
+        "output_tokens": 817,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 40264,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 193,
+            "cache_read_input_tokens": 39762,
+            "cache_creation_input_tokens": 502,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 502
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-02",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center (prism geometry absent)"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        }
+      ],
+      "notes": "Near-uniform black frame; no prism, dispersion, iridescence, or rim light rendered at all.",
+      "latencyMs": 12776,
+      "costUsd": 0.1696855,
+      "usage": {
+        "input_tokens": 3018,
+        "cache_creation_input_tokens": 10699,
+        "cache_read_input_tokens": 62329,
+        "output_tokens": 595,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 10699,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 251,
+            "cache_read_input_tokens": 33263,
+            "cache_creation_input_tokens": 6502,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 6502
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-03",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center card"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center card"
+        }
+      ],
+      "notes": "Near-empty black frame with a plain white square; no gradient, grid, ghost preview, copy, or red accent per spec.",
+      "latencyMs": 23815,
+      "costUsd": 0.21152200000000002,
+      "usage": {
+        "input_tokens": 3041,
+        "cache_creation_input_tokens": 11341,
+        "cache_read_input_tokens": 102044,
+        "output_tokens": 1214,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 11341,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 220,
+            "cache_read_input_tokens": 39750,
+            "cache_creation_input_tokens": 657,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 657
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-04",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "left 2.0 units (wordmark block + accent bar)"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "right link-column area"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        }
+      ],
+      "notes": "Near-empty dark frame with one flat white square; no wordmark, links, hairlines, or accent bar rendered.",
+      "latencyMs": 14936,
+      "costUsd": 0.170367,
+      "usage": {
+        "input_tokens": 3018,
+        "cache_creation_input_tokens": 10666,
+        "cache_read_input_tokens": 62294,
+        "output_tokens": 637,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 10666,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 291,
+            "cache_read_input_tokens": 33228,
+            "cache_creation_input_tokens": 6504,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 6504
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-05",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame / background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center icon"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center"
+        }
+      ],
+      "notes": "No filmstrip, no cards, no photos, no perspective — a tiny generic blue layers-icon on empty black void.",
+      "latencyMs": 20317,
+      "costUsd": 0.2060045,
+      "usage": {
+        "input_tokens": 3041,
+        "cache_creation_input_tokens": 11172,
+        "cache_read_input_tokens": 102011,
+        "output_tokens": 1062,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 11172,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 230,
+            "cache_read_input_tokens": 39724,
+            "cache_creation_input_tokens": 514,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 514
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-06",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "full frame / upper two-thirds"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center of frame"
+        },
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "lower-left and left edge"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "background field"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "kicker area above grid"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "center rectangles"
+        }
+      ],
+      "notes": "Blown-out overlapping shapes obscure the 3x2 tile wall; no legible wordmarks, no brushed-metal PBR, near-void render.",
+      "latencyMs": 26620,
+      "costUsd": 0.20100999999999997,
+      "usage": {
+        "input_tokens": 3018,
+        "cache_creation_input_tokens": 10713,
+        "cache_read_input_tokens": 62318,
+        "output_tokens": 1843,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 10713,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 1473,
+            "cache_read_input_tokens": 33252,
+            "cache_creation_input_tokens": 6527,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 6527
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-07",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "center card"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "background field"
+        },
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        }
+      ],
+      "notes": "No MSDF headline glyphs rendered at all; just a flat gradient card and a stray light shaft. Spec unmet.",
+      "latencyMs": 18534,
+      "costUsd": 0.20091050000000002,
+      "usage": {
+        "input_tokens": 3041,
+        "cache_creation_input_tokens": 11072,
+        "cache_read_input_tokens": 102081,
+        "output_tokens": 895,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 11072,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 200,
+            "cache_read_input_tokens": 39766,
+            "cache_creation_input_tokens": 372,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 372
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-08",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "full upper two-thirds of frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field / coral fill area"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "bottom edge where cards are cropped and overlapping"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "card area, lower third"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "bottom band, cards clipped by frame edge"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "entire frame"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "dark card shapes at bottom against near-black"
+        }
+      ],
+      "notes": "Broken render: flat salmon flood fill, no dark ink surface, no visible icon discs/glyphs/text, cards clipped at bottom edge.",
+      "latencyMs": 24868,
+      "costUsd": 0.1965095,
+      "usage": {
+        "input_tokens": 3018,
+        "cache_creation_input_tokens": 10702,
+        "cache_read_input_tokens": 62299,
+        "output_tokens": 1668,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 10702,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 1291,
+            "cache_read_input_tokens": 33233,
+            "cache_creation_input_tokens": 6535,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 6535
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-09",
+      "score": 10,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center-right, watch floats disconnected above plinth top"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "upper-left quadrant, unexplained flat white triangular plane"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "watch body — flat unlit shading, no key/rim light, no brushed-metal specular response"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "overall frame — no red accent signal light present"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "lower-center plinth — flat mid-grey, missing near-black #14141a engineered gradient"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "watch position — not centered/resting at plinth top face per spec"
+        }
+      ],
+      "notes": "Flat unlit shading, stray white plane artifact, watch floats off plinth, no rim light or red accent; reads broken, not rendered per spec.",
+      "latencyMs": 26429,
+      "costUsd": 0.22384,
+      "usage": {
+        "input_tokens": 3041,
+        "cache_creation_input_tokens": 11600,
+        "cache_read_input_tokens": 102098,
+        "output_tokens": 1601,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 11600,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 377,
+            "cache_read_input_tokens": 39775,
+            "cache_creation_input_tokens": 891,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 891
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-10",
+      "score": 12,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field (~85% of frame)"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "right-of-center — secondary meshed gear absent"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "hub of primary gear — jewel accent pivot absent"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "primary gear — flat cream fill, no PBR specular/clearcoat response"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "primary gear — beige/tan material instead of machined steel or ink/paper/red palette"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper-left quadrant — gear rendered tiny and off-axis versus centered 1.6-unit spec"
+        }
+      ],
+      "notes": "Single flat-shaded tan gear adrift in a black void; no second gear, no jewel pivot, no metal shading or accent red.",
+      "latencyMs": 25592,
+      "costUsd": 0.219381,
+      "usage": {
+        "input_tokens": 3041,
+        "cache_creation_input_tokens": 11480,
+        "cache_read_input_tokens": 102094,
+        "output_tokens": 1471,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 11480,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 378,
+            "cache_read_input_tokens": 39768,
+            "cache_creation_input_tokens": 778,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 778
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-11",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "background field / giant letterform"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "center black rectangle"
+        }
+      ],
+      "notes": "No photo plate, no parallax depth, no caption block — just an extreme cropped letterform fragment, not a hero composite.",
+      "latencyMs": 20791,
+      "costUsd": 0.18628850000000002,
+      "usage": {
+        "input_tokens": 3018,
+        "cache_creation_input_tokens": 10644,
+        "cache_read_input_tokens": 62269,
+        "output_tokens": 1285,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 10644,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 936,
+            "cache_read_input_tokens": 33203,
+            "cache_creation_input_tokens": 6507,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 6507
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-12",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire ribbon"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "ribbon interior"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "background field"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "left edge tick mark"
+        }
+      ],
+      "notes": "No mono ticker text or tick marks rendered; bare gray bar plus one red dot on soft blurry vignette; void, unspecified glow.",
+      "latencyMs": 21384,
+      "costUsd": 0.209319,
+      "usage": {
+        "input_tokens": 3041,
+        "cache_creation_input_tokens": 11353,
+        "cache_read_input_tokens": 102084,
+        "output_tokens": 1120,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 11353,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 258,
+            "cache_read_input_tokens": 39757,
+            "cache_creation_input_tokens": 662,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 662
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-13",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field (entire frame outside center cluster)"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no red #ff2a38 emissive accent core"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center-left — points confined to tiny square patch, not ellipsoidal 6x4x5 shell"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center cluster — no additive glow, no emissive falloff"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center — square-shaped artifact instead of starfield"
+        }
+      ],
+      "notes": "Near-void black frame with a tiny broken square dot-cluster; no red core, no glow, no depth falloff.",
+      "latencyMs": 25039,
+      "costUsd": 0.219224,
+      "usage": {
+        "input_tokens": 3041,
+        "cache_creation_input_tokens": 11484,
+        "cache_read_input_tokens": 102028,
+        "output_tokens": 1465,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 11484,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 335,
+            "cache_read_input_tokens": 39736,
+            "cache_creation_input_tokens": 814,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 814
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-14",
+      "score": 10,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "left half / background field"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center-right small plates (blue-purple glow)"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-right white fragmented shape"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper-right white shape vs. lower plate pair"
+        }
+      ],
+      "notes": "No photographic plates, no filmic grading; flat white/gray blocks with off-palette blue glow and a broken, jaggedly cut geometry.",
+      "latencyMs": 26172,
+      "costUsd": 0.1981135,
+      "usage": {
+        "input_tokens": 3018,
+        "cache_creation_input_tokens": 10671,
+        "cache_read_input_tokens": 62285,
+        "output_tokens": 1746,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 10671,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 1386,
+            "cache_read_input_tokens": 33219,
+            "cache_creation_input_tokens": 6518,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 6518
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-15",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-right quadrant / dominating the frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card — no tier name, no price figure, no per-month caption, no CTA row visible"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center card — body reads as flat mid-gray, not near-black ink #16161d"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "upper-right white mass — untextured flat shape with no materiality"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "entire frame — no coherent light response, everything reads as flat fills"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "header strip — no brushed-metal anisotropy or clearcoat, just a flat light bar and stray diagonal shard"
+        }
+      ],
+      "notes": "Giant unexplained white shape occludes card; no legible pricing content; card reads mid-gray not ink black; broken, near-void render.",
+      "latencyMs": 33300,
+      "costUsd": 0.228472,
+      "usage": {
+        "input_tokens": 3041,
+        "cache_creation_input_tokens": 11710,
+        "cache_read_input_tokens": 102014,
+        "output_tokens": 1745,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 11710,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 373,
+            "cache_read_input_tokens": 39729,
+            "cache_creation_input_tokens": 1047,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 1047
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-16",
+      "score": 15,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center rail"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "center rail"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "entire frame"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center rail (edge-to-edge, not floating)"
+        }
+      ],
+      "notes": "Flat gray bar spans full width; no five entries, no active state, no red accent, no floating dock feel.",
+      "latencyMs": 24032,
+      "costUsd": 0.194518,
+      "usage": {
+        "input_tokens": 3018,
+        "cache_creation_input_tokens": 10697,
+        "cache_read_input_tokens": 62286,
+        "output_tokens": 1591,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 10697,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 1205,
+            "cache_read_input_tokens": 33220,
+            "cache_creation_input_tokens": 6543,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 6543
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-17",
+      "score": 22,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "background field"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-left quadrant"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower-center beneath prism"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center prism"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center prism"
+        }
+      ],
+      "notes": "Light paper-colored background inverts dark-first spec; stray black shadow triangle and pill blob break composition; prism reads flat/opaque, no rim light.",
+      "latencyMs": 35207,
+      "costUsd": 0.2143305,
+      "usage": {
+        "input_tokens": 3018,
+        "cache_creation_input_tokens": 10719,
+        "cache_read_input_tokens": 62329,
+        "output_tokens": 2373,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 10719,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 2009,
+            "cache_read_input_tokens": 33263,
+            "cache_creation_input_tokens": 6522,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 6522
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-18",
+      "score": 18,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "right third of frame"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center gear"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "right-of-center (secondary meshed gear obscured/absent)"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper-left of gear (stray protruding rod)"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "left half background"
+        }
+      ],
+      "notes": "Gear renders flat matte white, no PBR steel/clearcoat; broken white slab artifact; secondary gear unclear; only red jewel accent lands.",
+      "latencyMs": 31137,
+      "costUsd": 0.20730700000000002,
+      "usage": {
+        "input_tokens": 3018,
+        "cache_creation_input_tokens": 10695,
+        "cache_read_input_tokens": 62326,
+        "output_tokens": 2102,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 10695,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 1759,
+            "cache_read_input_tokens": 33260,
+            "cache_creation_input_tokens": 6501,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 6501
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-19",
+      "score": 14,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no #ff2a38 red accent anywhere"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center object (torus knot)"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center object — no brushed-metal PBR/anisotropy/clearcoat"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-left corner and right edge"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        }
+      ],
+      "notes": "Light/white void background instead of dark ink, no red accent, knot renders as flat chalky plastic not brushed metal, broken black blob artifacts.",
+      "latencyMs": 33720,
+      "costUsd": 0.246052,
+      "usage": {
+        "input_tokens": 3041,
+        "cache_creation_input_tokens": 12280,
+        "cache_read_input_tokens": 102094,
+        "output_tokens": 2217,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 12280,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 321,
+            "cache_read_input_tokens": 39763,
+            "cache_creation_input_tokens": 1583,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 1583
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-20",
+      "score": 18,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "dominant left cell and two stacked right cells"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "all three cells — no metric numbers or paper-colored labels, only a tiny red dash"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "top-center/upper-right — oversized translucent swirl/logo shape bleeding over grid, unrelated to bento spec"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "cell surfaces — no diagonal gradient or machined sheen band, flat solid gray fill"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "bottom and right edges — grid appears cropped, not centered per spec"
+        }
+      ],
+      "notes": "Flat void gray slabs with no gradient or metrics; stray oversized logo shape wrecks composition.",
+      "latencyMs": 32502,
+      "costUsd": 0.21410749999999998,
+      "usage": {
+        "input_tokens": 3018,
+        "cache_creation_input_tokens": 10663,
+        "cache_read_input_tokens": 62289,
+        "output_tokens": 2388,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 10663,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 2040,
+            "cache_read_input_tokens": 33223,
+            "cache_creation_input_tokens": 6506,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 6506
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-21",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "full frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "upper-left quadrant (kicker line absent)"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "center-right (letterform fragment, illegible)"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center (hero headline text absent/unreadable)"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "full frame (extreme crop/zoom cuts off all legible type)"
+        }
+      ],
+      "notes": "Extreme crop shows only a stray letter-edge blob and partial red rules; no legible kicker or headline at all.",
+      "latencyMs": 26145,
+      "costUsd": 0.19735000000000003,
+      "usage": {
+        "input_tokens": 3018,
+        "cache_creation_input_tokens": 10681,
+        "cache_read_input_tokens": 62306,
+        "output_tokens": 1710,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 10681,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 1361,
+            "cache_read_input_tokens": 33240,
+            "cache_creation_input_tokens": 6507,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 6507
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-22",
+      "score": 35,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "bottom-right accent button"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "right edge, subhead copy cut off mid-word"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "panel background field"
+        }
+      ],
+      "notes": "Ghost wireframe/grid present so not void, but accent reads pink not signal red, body copy truncates off-panel, radial gradient unengineered/flat.",
+      "latencyMs": 39955,
+      "costUsd": 0.2637965,
+      "usage": {
+        "input_tokens": 3041,
+        "cache_creation_input_tokens": 12848,
+        "cache_read_input_tokens": 102093,
+        "output_tokens": 2701,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 12848,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 200,
+            "cache_read_input_tokens": 39799,
+            "cache_creation_input_tokens": 2115,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 2115
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-23",
+      "score": 28,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field / lower half of frame"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center gears (rendered gold/brass, not machined steel per spec)"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center pivot (no red jewel accent, no visible clearcoat/anisotropy)"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "gear teeth and spokes (flat cartoonish shading, no PBR specular response)"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "lower-center (unstyled gray placeholder plane beneath floating gears)"
+        }
+      ],
+      "notes": "Correct gear count/mesh but flat brass shading, no jewel accent, void background, placeholder ground plane reads unfinished.",
+      "latencyMs": 29661,
+      "costUsd": 0.206192,
+      "usage": {
+        "input_tokens": 3018,
+        "cache_creation_input_tokens": 10711,
+        "cache_read_input_tokens": 62326,
+        "output_tokens": 2051,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 10711,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 1692,
+            "cache_read_input_tokens": 33260,
+            "cache_creation_input_tokens": 6517,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 6517
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-24",
+      "score": 55,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "right half and lower two-thirds of frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "hero headline (two stacked lines)"
+        }
+      ],
+      "notes": "Clean palette/kicker/rule but hero uses bold sans not spec'd Lora serif; large empty dark expanse right/lower, no grid richness.",
+      "latencyMs": 48122,
+      "costUsd": 0.28278349999999997,
+      "usage": {
+        "input_tokens": 3041,
+        "cache_creation_input_tokens": 13422,
+        "cache_read_input_tokens": 102073,
+        "output_tokens": 3231,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 13422,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 176,
+            "cache_read_input_tokens": 39767,
+            "cache_creation_input_tokens": 2721,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 2721
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-25",
+      "score": 3,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "full frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame"
+        }
+      ],
+      "notes": "Frame is a near-solid black field; no discernible content, type, or materiality rendered.",
+      "latencyMs": 12177,
+      "costUsd": 0.16469299999999998,
+      "usage": {
+        "input_tokens": 3018,
+        "cache_creation_input_tokens": 10325,
+        "cache_read_input_tokens": 61934,
+        "output_tokens": 565,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 10325,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 200,
+            "cache_read_input_tokens": 32868,
+            "cache_creation_input_tokens": 6523,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 6523
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-26",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "full frame"
+        }
+      ],
+      "notes": "Near-empty black frame; faint dark rectangle only, no type, no composition, no rendered materiality.",
+      "latencyMs": 25188,
+      "costUsd": 0.23336250000000003,
+      "usage": {
+        "input_tokens": 3064,
+        "cache_creation_input_tokens": 11279,
+        "cache_read_input_tokens": 141133,
+        "output_tokens": 1337,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 11279,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 273,
+            "cache_read_input_tokens": 39803,
+            "cache_creation_input_tokens": 542,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 542
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-27",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "top header block and lower footer block"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "center card, entire white body"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no typography, imagery, or content"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "whole frame — no red accent, no ink/paper treatment"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "white card surface"
+        }
+      ],
+      "notes": "Wireframe-level placeholder: flat blue/white blocks on black, no text, no material, no red, void card.",
+      "latencyMs": 15953,
+      "costUsd": 0.190643,
+      "usage": {
+        "input_tokens": 3041,
+        "cache_creation_input_tokens": 10453,
+        "cache_read_input_tokens": 101304,
+        "output_tokens": 760,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 10453,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 294,
+            "cache_read_input_tokens": 39370,
+            "cache_creation_input_tokens": 149,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 149
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-28",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "whole frame — no typography, copy, UI, or product content present"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "whole frame — no signal red accent, RED/BLACK/WHITE discipline unmet"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center cube and pedestal — flat generic gray shading, no engineered material response"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center — reads as an unstyled default placeholder mesh, not a designed scene"
+        }
+      ],
+      "notes": "Untextured gray cube-on-pedestal on black void; no palette, type, or materiality — looks like an unrendered placeholder.",
+      "latencyMs": 23365,
+      "costUsd": 0.2116515,
+      "usage": {
+        "input_tokens": 3041,
+        "cache_creation_input_tokens": 11013,
+        "cache_read_input_tokens": 101421,
+        "output_tokens": 1374,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 11013,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 357,
+            "cache_read_input_tokens": 39487,
+            "cache_creation_input_tokens": 592,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 592
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-29",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "upper two-thirds of frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "background field"
+        }
+      ],
+      "notes": "Near-empty near-black frame; only two faint flat triangles in lower-right corner. No composition, type, or rendered materiality.",
+      "latencyMs": 15148,
+      "costUsd": 0.190635,
+      "usage": {
+        "input_tokens": 3041,
+        "cache_creation_input_tokens": 10569,
+        "cache_read_input_tokens": 101308,
+        "output_tokens": 713,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 10569,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 242,
+            "cache_read_input_tokens": 39374,
+            "cache_creation_input_tokens": 261,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 261
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    },
+    {
+      "goldenId": "g-30",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field surrounding center cluster"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "center"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "full frame"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "full frame"
+        }
+      ],
+      "notes": "Tiny illegible white scribble marooned in vast flat black void; no red accent, no materiality, no hierarchy.",
+      "latencyMs": 23344,
+      "costUsd": 0.2124005,
+      "usage": {
+        "input_tokens": 3041,
+        "cache_creation_input_tokens": 11111,
+        "cache_read_input_tokens": 101309,
+        "output_tokens": 1367,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 11111,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 23,
+            "output_tokens": 252,
+            "cache_read_input_tokens": 39375,
+            "cache_creation_input_tokens": 802,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 802
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard"
+      }
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "label": "batch-op-v-11-gradient-cta-1",
+  "judgedAt": "2026-07-11T04:21:44.352Z",
+  "judgeModel": "claude-opus-4-8",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-op-v-11-gradient-cta-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-op-v-11-gradient-cta-1/F2.jpg"
+    }
+  ],
+  "mappingFile": "notes/bakeoff-b/judge/blind/batch-op-v-11-gradient-cta-1/mapping.json",
+  "costUsd": 0.235094,
+  "durationApiMs": 34941,
+  "wallMs": 36615,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 12101,
+    "cache_read_input_tokens": 78490,
+    "output_tokens": 2263,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12101,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1782,
+        "cache_read_input_tokens": 41592,
+        "cache_creation_input_tokens": 7407,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7407
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 33, \"mustFix\": [ { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"center — red slab bleeds off left/bottom edges, reads as an abstract band not a discrete 2.6x0.68 rounded-rect CTA\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"upper-left / left-half black field\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"right column pale grey/white region\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"button face — no label, no perimeter emissive channel, no chamfer edge-light\" } ], \"notes\": \"Gradient present but object is broken; huge black+white voids, no CTA label or machined edge. Not shippable.\" }, { \"frame\": \"F2\", \"score\": 26, \"mustFix\": [ { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"center — smeared trapezoid + band, no coherent rounded-rect button\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"whole red face — soft washed/blurred pink, violates DL7 engineered precision, no hard seam or bevel light\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"left/upper-left black field\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"right pale grey/white column\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"button face — no label, no crisp chamfer, no emissive perimeter\" } ], \"notes\": \"Blurred washed-out slab, motion-smeared shape, dominant black/white voids. No CTA object; worse than F1.\" } ] }"
+}

@@ -1,0 +1,21 @@
+{
+  "bundle": "wbakeb/glm-5.2/v-18-nav-dock-r2",
+  "contestant": "glm-5.2",
+  "caseId": "v-18-nav-dock",
+  "run": 2,
+  "capturedAt": "2026-07-11T03:58:36.082Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/glm-5.2/v-18-nav-dock-r2",
+    "moduleRuntimeError": "ReferenceError: mul is not defined"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

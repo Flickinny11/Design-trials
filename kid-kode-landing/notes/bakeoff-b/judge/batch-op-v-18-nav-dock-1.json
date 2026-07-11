@@ -1,0 +1,51 @@
+{
+  "label": "batch-op-v-18-nav-dock-1",
+  "judgedAt": "2026-07-11T04:27:34.901Z",
+  "judgeModel": "claude-opus-4-8",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-op-v-18-nav-dock-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-op-v-18-nav-dock-1/F2.jpg"
+    }
+  ],
+  "mappingFile": "notes/bakeoff-b/judge/blind/batch-op-v-18-nav-dock-1/mapping.json",
+  "costUsd": 0.21277399999999996,
+  "durationApiMs": 21610,
+  "wallMs": 24372,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 12037,
+    "cache_read_input_tokens": 78432,
+    "output_tokens": 1399,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12037,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 924,
+        "cache_read_input_tokens": 41534,
+        "cache_creation_input_tokens": 7401,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7401
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 84, \"mustFix\": [], \"notes\": \"Clean floating rail, brushed anisotropy, chamfer specular, five legible entries, red active underline, correct palette. Metal reads slightly gray but shippable.\" }, { \"frame\": \"F2\", \"score\": 12, \"mustFix\": [ { \"defect\": \"SCALE_ERROR\", \"region\": \"entire frame\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"five labeled entries absent\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"upper gray field\" } ], \"notes\": \"Dock is massively zoomed and cropped; only a fragment of rail and one red tick visible, all text gone, large flat gray void up top.\" } ] }"
+}

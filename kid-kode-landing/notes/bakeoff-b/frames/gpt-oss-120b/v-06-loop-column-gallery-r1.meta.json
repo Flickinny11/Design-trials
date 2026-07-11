@@ -1,0 +1,23 @@
+{
+  "bundle": "wbakeb/gpt-oss-120b/v-06-loop-column-gallery-r1",
+  "contestant": "gpt-oss-120b",
+  "caseId": "v-06-loop-column-gallery",
+  "run": 1,
+  "capturedAt": "2026-07-11T02:57:22.559Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/gpt-oss-120b/v-06-loop-column-gallery-r1",
+    "moduleRuntimeError": "TypeError: MeshStandardNodeMaterial2 is not a constructor"
+  },
+  "consoleErrors": [],
+  "depViolations": [
+    "three"
+  ],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

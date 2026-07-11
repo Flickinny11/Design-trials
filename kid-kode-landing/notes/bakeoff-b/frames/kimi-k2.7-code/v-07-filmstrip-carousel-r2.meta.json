@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/kimi-k2.7-code/v-07-filmstrip-carousel-r2",
+  "contestant": "kimi-k2.7-code",
+  "caseId": "v-07-filmstrip-carousel",
+  "run": 2,
+  "capturedAt": "2026-07-11T03:58:49.795Z",
+  "probe": {
+    "status": "error",
+    "error": "module did not default-export a function",
+    "renderables": 0,
+    "nodeMounted": false,
+    "bundleId": "wbakeb/kimi-k2.7-code/v-07-filmstrip-carousel-r2"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": "Transform failed with 1 error:\n<stdin>:247:15: ERROR: Unexpected end of file",
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

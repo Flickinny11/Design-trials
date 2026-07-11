@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/claude-fable-5/v-20-footer-colophon-r1",
+  "contestant": "claude-fable-5",
+  "caseId": "v-20-footer-colophon",
+  "run": 1,
+  "capturedAt": "2026-07-11T04:25:31.648Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 37,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/claude-fable-5/v-20-footer-colophon-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

@@ -1,0 +1,22 @@
+{
+  "bundle": "wbakeb/gpt-oss-120b/v-20-footer-colophon-r1",
+  "contestant": "gpt-oss-120b",
+  "caseId": "v-20-footer-colophon",
+  "run": 1,
+  "capturedAt": "2026-07-11T02:59:19.436Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 18,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/gpt-oss-120b/v-20-footer-colophon-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [
+    "three"
+  ],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

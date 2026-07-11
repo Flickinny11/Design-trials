@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/gemini-3.5-flash/v-13-brand-wall-r2",
+  "contestant": "gemini-3.5-flash",
+  "caseId": "v-13-brand-wall",
+  "run": 2,
+  "capturedAt": "2026-07-11T03:34:00.653Z",
+  "probe": {
+    "status": "error",
+    "error": "_ is not defined",
+    "renderables": 0,
+    "nodeMounted": false,
+    "bundleId": "wbakeb/gemini-3.5-flash/v-13-brand-wall-r2"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

@@ -1,0 +1,21 @@
+{
+  "bundle": "wbakeb/gemini-3.5-flash/v-08-orrery-mechanism-r2",
+  "contestant": "gemini-3.5-flash",
+  "caseId": "v-08-orrery-mechanism",
+  "run": 2,
+  "capturedAt": "2026-07-11T03:33:28.220Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/gemini-3.5-flash/v-08-orrery-mechanism-r2",
+    "moduleRuntimeError": "ReferenceError: MeshPhysicalMaterial is not defined"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

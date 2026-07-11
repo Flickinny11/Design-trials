@@ -1,0 +1,198 @@
+{
+  "id": "wbakeb/claude-opus-4.8/v-12-photo-hero-composite-r1",
+  "contestant": "claude-opus-4.8",
+  "caseId": "v-12-photo-hero-composite",
+  "run": 1,
+  "node": {
+    "nodeId": "v-12-photo-hero-composite",
+    "subtype": "layered-photo-hero",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": "/prism-mock/home/nodes/parallax-stack.png"
+    },
+    "intent": {
+      "caption": "Photo hero composite — A layered photographic hero plate with filmic grade, foreground subject separation, and caption block.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "NOVA ATELIER / GENEVA",
+            "role": "kicker",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Time, Machined.",
+            "role": "headline",
+            "typography": {
+              "fontSize": 34,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Every case begins as a single billet of 904L steel.",
+            "role": "body",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "CALIBRE NA-01 / 72 HOUR RESERVE",
+            "role": "caption",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#16161d",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0.45,
+              "hex": "#0b0b1000"
+            },
+            {
+              "at": 1,
+              "hex": "#0b0b10eb"
+            }
+          ]
+        },
+        "typography": {
+          "kicker": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.2
+          },
+          "headline": {
+            "family": "Lora",
+            "fontSize": 34,
+            "fontWeight": 600,
+            "letterSpacing": -0.01,
+            "lineHeight": 1.1
+          },
+          "body": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.5
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 400,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Layered photo plate 4.0w x 2.5h scene units on parallax-plane using the provided imageUrl and depthMapUrl, depth-displacement amplitude 0.18 scene units, parallax-scroll intensity 0.35 bound to scroll; filmic grade baked into the plate treatment: blacks lifted to #0d0d12, highlights shouldered toward #e8ecf2, midtone contrast plus 12 percent, global desaturation minus 8 percent with the red channel preserved so the accent stays pure; foreground subject separated by the depth map with a 0.02-unit rim of key light along its silhouette; bottom scrim gradient #0b0b1000 (at 0.45) -> #0b0b10eb (at 1.0) seats the caption block; caption block anchored bottom-left with 0.5-unit padding (2x base unit), kicker then headline then body stacked on a 0.25-unit baseline rhythm; accent hairline bar 0.75w x 0.02h in #ff2a38 emissive intensity 1.8 sits between headline and body; plate mount opacity 0 -> 1 over 500ms cubic-bezier(0.25,0.46,0.45,0.94); caption block rise-in y +0.4 -> 0 over 700ms cubic-bezier(0.215,0.61,0.355,1) starting 120ms after the plate; scroll shifts depth layers up to plus and minus 0.14 units against the camera so near layers overtake far layers with true occlusion."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "parallax-plane",
+    "depthMapUrl": "/prism-mock/home/nodes/parallax-stack.depth.png",
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "parallax-scroll",
+        "trigger": "scroll",
+        "params": {
+          "intensity": 0.35
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        4.8
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#c3c9d4",
+        "intensity": 0.5
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 0.9,
+        "position": [
+          3,
+          2,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.5,
+        "position": [
+          -2.2,
+          -1,
+          1.5
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Depth layers parallax against scroll at 0.35 intensity while the caption block rises in once and stays fixed.",
+    "contrastMinimum": "4.5:1 body text on the scrim region; 3:1 headline on graded plate"
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, DirectionalLight, AmbientLight, Color } = ctx.THREE;\n  const colors = config.intent?.visualSpec?.colors ?? {};\n  const bg = colors.background ?? \"#0b0b10\";\n  const accent = colors.accent ?? \"#ff2a38\";\n  const paper = colors.paper ?? \"#e8ecf2\";\n  const imageUrl = config.imageUrl ?? config.intent?.visualSpec?.imageUrl ?? \"/prism-mock/home/nodes/parallax-stack.png\";\n  const depthUrl = config.depthMapUrl ?? config.intent?.visualSpec?.depthMapUrl ?? \"/prism-mock/home/nodes/parallax-stack.depth.png\";\n  const group = new Group();\n  const timelines = [];\n  const primitiveHandles = [];\n  const disposables = [];\n  const backdropGeo = new PlaneGeometry(7, 6);\n  const backdropMat = new import_webgpu.MeshBasicNodeMaterial();\n  const cTop = new Color(bg).offsetHSL(0, 0, 0.02);\n  const cBottom = new Color(bg);\n  backdropMat.colorNode = (0, import_tsl.mix)(\n    (0, import_tsl.vec3)(cBottom.r, cBottom.g, cBottom.b),\n    (0, import_tsl.vec3)(cTop.r, cTop.g, cTop.b),\n    (0, import_tsl.uv)().y\n  );\n  const backdrop = new Mesh(backdropGeo, backdropMat);\n  backdrop.position.set(0, 0, -2.5);\n  group.add(backdrop);\n  disposables.push(backdropGeo, backdropMat);\n  const plateGeo = new PlaneGeometry(4, 2.5, 64, 64);\n  const plateMat = new import_webgpu.MeshStandardNodeMaterial();\n  plateMat.roughness = 0.6;\n  plateMat.metalness = 0.1;\n  plateMat.transparent = true;\n  const opacityU = (0, import_tsl.uniform)(0);\n  const dispAmp = (0, import_tsl.uniform)(0.18);\n  plateMat.colorNode = (0, import_tsl.vec3)(0.05, 0.05, 0.07);\n  plateMat.opacityNode = opacityU;\n  const plate = new Mesh(plateGeo, plateMat);\n  plate.position.set(0, 0.1, 0);\n  group.add(plate);\n  disposables.push(plateGeo, plateMat);\n  Promise.all([\n    ctx.textureLoader.loadTexture(imageUrl),\n    ctx.textureLoader.loadTexture(depthUrl)\n  ]).then(([photoTex, depthTex]) => {\n    const photo = (0, import_tsl.texture)(photoTex, (0, import_tsl.uv)());\n    const depth = (0, import_tsl.texture)(depthTex, (0, import_tsl.uv)());\n    const col = photo.rgb;\n    const lum = (0, import_tsl.luminance)(col);\n    const desat = (0, import_tsl.mix)(col, (0, import_tsl.vec3)(lum), (0, import_tsl.float)(0.08));\n    const graded = (0, import_tsl.vec3)(col.r, desat.g, desat.b);\n    const black = (0, import_tsl.vec3)(0.051, 0.051, 0.071);\n    const white = new Color(paper);\n    const lifted = (0, import_tsl.mix)(black, graded, (0, import_tsl.smoothstep)((0, import_tsl.float)(0), (0, import_tsl.float)(0.9), (0, import_tsl.max)(graded.r, (0, import_tsl.max)(graded.g, graded.b))));\n    const contrasted = (0, import_tsl.add)((0, import_tsl.mul)((0, import_tsl.add)(lifted, (0, import_tsl.float)(-0.5)), (0, import_tsl.float)(1.12)), (0, import_tsl.float)(0.5));\n    plateMat.colorNode = contrasted;\n    const dispVal = (0, import_tsl.texture)(depthTex, (0, import_tsl.uv)()).r;\n    plateMat.positionNode = (0, import_tsl.add)(\n      import_tsl.positionLocal,\n      (0, import_tsl.vec3)(0, 0, (0, import_tsl.mul)((0, import_tsl.add)(dispVal, (0, import_tsl.float)(-0.5)), dispAmp))\n    );\n    plateMat.needsUpdate = true;\n  });\n  const scrimGeo = new PlaneGeometry(4, 1.3);\n  const scrimMat = new import_webgpu.MeshBasicNodeMaterial();\n  scrimMat.transparent = true;\n  const scrimC = new Color(bg);\n  scrimMat.colorNode = (0, import_tsl.vec3)(scrimC.r, scrimC.g, scrimC.b);\n  scrimMat.opacityNode = (0, import_tsl.smoothstep)((0, import_tsl.float)(1), (0, import_tsl.float)(0.15), (0, import_tsl.uv)().y).mul(0.92);\n  const scrim = new Mesh(scrimGeo, scrimMat);\n  scrim.position.set(0, -0.6, 0.05);\n  group.add(scrim);\n  disposables.push(scrimGeo, scrimMat);\n  const captionGroup = new Group();\n  const leftX = -1.75;\n  let cursorY = -0.55;\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const byRole = {};\n  for (const it of items) byRole[it.role] = it.text;\n  const kicker = ctx.fontAtlas.createText(byRole.kicker ?? \"NOVA ATELIER / GENEVA\", {\n    fontSize: 34,\n    color: paper,\n    align: \"left\",\n    letterSpacingPx: 4\n  });\n  kicker.position.set(leftX, cursorY + 0.42, 0.1);\n  captionGroup.add(kicker);\n  const headline = ctx.fontAtlas.createText(byRole.headline ?? \"Time, Machined.\", {\n    fontSize: 96,\n    color: paper,\n    align: \"left\"\n  });\n  headline.position.set(leftX, cursorY + 0.12, 0.1);\n  captionGroup.add(headline);\n  const barGeo = new PlaneGeometry(0.75, 0.02);\n  const barMat = new import_webgpu.MeshStandardNodeMaterial();\n  const accentC = new Color(accent);\n  barMat.colorNode = (0, import_tsl.vec3)(accentC.r, accentC.g, accentC.b);\n  barMat.emissiveNode = (0, import_tsl.mul)((0, import_tsl.vec3)(accentC.r, accentC.g, accentC.b), (0, import_tsl.float)(1.8));\n  const bar = new Mesh(barGeo, barMat);\n  bar.position.set(leftX + 0.375, cursorY - 0.16, 0.1);\n  captionGroup.add(bar);\n  disposables.push(barGeo, barMat);\n  const body = ctx.fontAtlas.createText(byRole.body ?? \"Every case begins as a single billet of 904L steel.\", {\n    fontSize: 42,\n    color: paper,\n    align: \"left\",\n    maxWidthPx: 900\n  });\n  body.position.set(leftX, cursorY - 0.34, 0.1);\n  captionGroup.add(body);\n  const caption = ctx.fontAtlas.createText(byRole.caption ?? \"CALIBRE NA-01 / 72 HOUR RESERVE\", {\n    fontSize: 30,\n    color: \"#9aa0aa\",\n    align: \"left\",\n    letterSpacingPx: 3\n  });\n  caption.position.set(leftX, cursorY - 0.58, 0.1);\n  captionGroup.add(caption);\n  group.add(captionGroup);\n  const ambient = new AmbientLight(16777215, 0.35);\n  group.add(ambient);\n  const rim = new DirectionalLight(new Color(accent), 0.9);\n  rim.position.set(-3, 1.5, 2);\n  group.add(rim);\n  const key = new DirectionalLight(16777215, 1);\n  key.position.set(2.5, 2.5, 3);\n  group.add(key);\n  const tl = import_gsap.gsap.timeline();\n  tl.to(opacityU, { value: 1, duration: 0.5, ease: \"power2.out\" });\n  captionGroup.position.y = 0.4;\n  captionGroup.visible = true;\n  tl.fromTo(captionGroup.position, { y: 0.4 }, {\n    y: 0,\n    duration: 0.7,\n    ease: \"power3.out\"\n  }, 0.12);\n  timelines.push(tl);\n  const prims = config.cinematicPrimitives ?? [];\n  for (const p of prims) {\n    const fn = ctx.primitives?.[p.name];\n    if (fn) {\n      const handle = fn(plate, p.params ?? {});\n      if (handle) primitiveHandles.push(handle);\n    }\n  }\n  group.userData.handlers = {};\n  group.userData.cleanup = () => {\n    timelines.forEach((t) => t.kill());\n    primitiveHandles.forEach((h) => h?.cleanup?.());\n    disposables.forEach((d) => d?.dispose?.());\n  };\n  return group;\n}\n",
+  "transformError": null
+}

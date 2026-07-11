@@ -1,0 +1,21 @@
+{
+  "bundle": "wbakeb/gpt-oss-120b/v-01-orbit-product-hero-r1",
+  "contestant": "gpt-oss-120b",
+  "caseId": "v-01-orbit-product-hero",
+  "run": 1,
+  "capturedAt": "2026-07-11T02:56:38.800Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/gpt-oss-120b/v-01-orbit-product-hero-r1",
+    "moduleRuntimeError": "ReferenceError: MeshBasicNodeMaterial is not defined"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

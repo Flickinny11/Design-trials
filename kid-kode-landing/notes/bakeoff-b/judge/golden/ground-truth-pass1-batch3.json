@@ -1,0 +1,58 @@
+{
+  "label": "ground-truth-pass1-batch3",
+  "model": "claude-fable-5",
+  "frames": [
+    {
+      "label": "F1",
+      "goldenId": "g-11"
+    },
+    {
+      "label": "F2",
+      "goldenId": "g-12"
+    },
+    {
+      "label": "F3",
+      "goldenId": "g-13"
+    },
+    {
+      "label": "F4",
+      "goldenId": "g-14"
+    },
+    {
+      "label": "F5",
+      "goldenId": "g-15"
+    }
+  ],
+  "costUsd": 0.608937,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 15264,
+    "cache_read_input_tokens": 82382,
+    "output_tokens": 3715,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15264,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 2922,
+        "cache_read_input_tokens": 44179,
+        "cache_creation_input_tokens": 9288,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9288
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":10,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame — no photo plate, no subject, no caption block\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper-right quadrant — giant blurred white glyph fragment\"},{\"defect\":\"FLAT_VOID\",\"region\":\"left half background field\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center-right — letterform blown far past frame\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"black rectangles, center-left\"}],\"notes\":\"No photographic hero at all; a cropped blurred letterform over black voids. Only spec trace is one red hairline.\"},{\"frame\":\"F2\",\"score\":20,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center ribbon — no mono ticker figures, only one accent tick\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field and large gray square behind ribbon\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"ribbon plane, center — flat fill, no hairlines or material response\"},{\"defect\":\"LOW_CONTRAST\",\"region\":\"gray square vs background, center\"}],\"notes\":\"Ribbon geometry and one red tick exist, but zero data content; off-spec soft gray square dominates a dead field.\"},{\"frame\":\"F3\",\"score\":14,\"mustFix\":[{\"defect\":\"SCALE_ERROR\",\"region\":\"center — constellation compressed into a tiny dense square, not a 6x4x5 shell\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no red accent core instances visible\"},{\"defect\":\"FLAT_VOID\",\"region\":\"entire surrounding background field\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"center — uniform noise patch, no depth falloff or drift structure\"}],\"notes\":\"Particles render as a postage-stamp noise square; no ellipsoidal depth, no accent core, frame is 95% void.\"},{\"frame\":\"F4\",\"score\":15,\"mustFix\":[{\"defect\":\"FLAT_VOID\",\"region\":\"upper-right — huge blown-out featureless white block\"},{\"defect\":\"ALL_BLACK_ELEMENT\",\"region\":\"left-third plate — near-black void, not a photograph\"},{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center and lower-center plates — blue/purple glow content\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"column — plates lack distinct filmic photographs and frames\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"overall — column rhythm unreadable\"}],\"notes\":\"Plates read as voids or blue UI glows, not graded photographs; overexposed white slab wrecks the composition.\"},{\"frame\":\"F5\",\"score\":28,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"card interior — no tier name, price figure, or feature text anywhere\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"right half — giant blurred white glyph intruding over the card\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"right half — foreign letterform far beyond spec scale\"},{\"defect\":\"FLAT_VOID\",\"region\":\"lower-left background field\"}],\"notes\":\"Best of set: machined header strip, hairline rows, and accent CTA bar present, but all typography missing and an intruder glyph dominates.\"}]}"
+}

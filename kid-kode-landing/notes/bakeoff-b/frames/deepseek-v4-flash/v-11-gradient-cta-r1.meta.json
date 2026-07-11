@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/deepseek-v4-flash/v-11-gradient-cta-r1",
+  "contestant": "deepseek-v4-flash",
+  "caseId": "v-11-gradient-cta",
+  "run": 1,
+  "capturedAt": "2026-07-11T02:53:44.343Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 5,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/deepseek-v4-flash/v-11-gradient-cta-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

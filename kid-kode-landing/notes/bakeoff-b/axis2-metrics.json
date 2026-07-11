@@ -1,0 +1,282 @@
+{
+  "wave": "wbakeb",
+  "axis": "design",
+  "l1": "v2.1",
+  "ceilingReferenceMeans": {
+    "fable": 30.95,
+    "opus": 23.575
+  },
+  "perModel": {
+    "claude-haiku-4.5": {
+      "role": "contestant",
+      "n": 40,
+      "designMean": 18.25,
+      "designSd": 13.316174856936687,
+      "mustFixRate": 1,
+      "crashRate": 0.225,
+      "subset3D": {
+        "n": 16,
+        "mean": 21.3125,
+        "crashRate": 0.0625
+      },
+      "subset2D": {
+        "n": 24,
+        "mean": 16.208333333333332,
+        "crashRate": 0.3333333333333333
+      },
+      "ceilingGap": {
+        "vsFable": -12.7,
+        "vsOpus": -5.324999999999999
+      }
+    },
+    "deepseek-v4-flash": {
+      "role": "contestant",
+      "n": 39,
+      "designMean": 19.846153846153847,
+      "designSd": 16.320052988720835,
+      "mustFixRate": 1,
+      "crashRate": 0.3076923076923077,
+      "subset3D": {
+        "n": 16,
+        "mean": 18.1875,
+        "crashRate": 0.375
+      },
+      "subset2D": {
+        "n": 23,
+        "mean": 21,
+        "crashRate": 0.2608695652173913
+      },
+      "ceilingGap": {
+        "vsFable": -11.103846153846153,
+        "vsOpus": -3.7288461538461526
+      }
+    },
+    "glm-5.2": {
+      "role": "contestant",
+      "n": 33,
+      "designMean": 11.181818181818182,
+      "designSd": 12.64282045632655,
+      "mustFixRate": 1,
+      "crashRate": 0.696969696969697,
+      "subset3D": {
+        "n": 16,
+        "mean": 11.25,
+        "crashRate": 0.8125
+      },
+      "subset2D": {
+        "n": 17,
+        "mean": 11.117647058823529,
+        "crashRate": 0.5882352941176471
+      },
+      "ceilingGap": {
+        "vsFable": -19.768181818181816,
+        "vsOpus": -12.393181818181818
+      }
+    },
+    "gpt-oss-120b": {
+      "role": "contestant",
+      "n": 40,
+      "designMean": 10.625,
+      "designSd": 6.585483258166385,
+      "mustFixRate": 1,
+      "crashRate": 0.425,
+      "subset3D": {
+        "n": 16,
+        "mean": 10.75,
+        "crashRate": 0.6875
+      },
+      "subset2D": {
+        "n": 24,
+        "mean": 10.541666666666666,
+        "crashRate": 0.25
+      },
+      "ceilingGap": {
+        "vsFable": -20.325,
+        "vsOpus": -12.95
+      }
+    },
+    "mercury-2": {
+      "role": "contestant",
+      "n": 40,
+      "designMean": 13.75,
+      "designSd": 9.502361379934557,
+      "mustFixRate": 1,
+      "crashRate": 0.425,
+      "subset3D": {
+        "n": 16,
+        "mean": 16.875,
+        "crashRate": 0.4375
+      },
+      "subset2D": {
+        "n": 24,
+        "mean": 11.666666666666666,
+        "crashRate": 0.4166666666666667
+      },
+      "ceilingGap": {
+        "vsFable": -17.2,
+        "vsOpus": -9.825
+      }
+    },
+    "gemini-3.5-flash": {
+      "role": "contestant",
+      "n": 40,
+      "designMean": 11.4,
+      "designSd": 12.927410750724553,
+      "mustFixRate": 1,
+      "crashRate": 0.75,
+      "subset3D": {
+        "n": 16,
+        "mean": 16.875,
+        "crashRate": 0.625
+      },
+      "subset2D": {
+        "n": 24,
+        "mean": 7.75,
+        "crashRate": 0.8333333333333334
+      },
+      "ceilingGap": {
+        "vsFable": -19.549999999999997,
+        "vsOpus": -12.174999999999999
+      }
+    },
+    "kimi-k2.7-code": {
+      "role": "contestant",
+      "n": 17,
+      "designMean": 21.647058823529413,
+      "designSd": 22.49983660071387,
+      "mustFixRate": 1,
+      "crashRate": 0.5294117647058824,
+      "subset3D": {
+        "n": 15,
+        "mean": 16.533333333333335,
+        "crashRate": 0.6
+      },
+      "subset2D": {
+        "n": 2,
+        "mean": 60,
+        "crashRate": 0
+      },
+      "ceilingGap": {
+        "vsFable": -9.302941176470586,
+        "vsOpus": -1.9279411764705863
+      }
+    },
+    "claude-sonnet-5": {
+      "role": "contestant",
+      "n": 40,
+      "designMean": 18.6,
+      "designSd": 14.241146597456835,
+      "mustFixRate": 1,
+      "crashRate": 0.225,
+      "subset3D": {
+        "n": 16,
+        "mean": 21.75,
+        "crashRate": 0.125
+      },
+      "subset2D": {
+        "n": 24,
+        "mean": 16.5,
+        "crashRate": 0.2916666666666667
+      },
+      "ceilingGap": {
+        "vsFable": -12.349999999999998,
+        "vsOpus": -4.974999999999998
+      }
+    },
+    "claude-opus-4.8": {
+      "role": "ceiling-ref",
+      "n": 40,
+      "designMean": 23.575,
+      "designSd": 14.019926295574214,
+      "mustFixRate": 1,
+      "crashRate": 0,
+      "subset3D": {
+        "n": 16,
+        "mean": 25.25,
+        "crashRate": 0
+      },
+      "subset2D": {
+        "n": 24,
+        "mean": 22.458333333333332,
+        "crashRate": 0
+      },
+      "ceilingGap": {
+        "vsFable": -7.375,
+        "vsOpus": 0
+      }
+    },
+    "claude-fable-5": {
+      "role": "ceiling-ref",
+      "n": 40,
+      "designMean": 30.95,
+      "designSd": 18.595491595876343,
+      "mustFixRate": 0.975,
+      "crashRate": 0,
+      "subset3D": {
+        "n": 16,
+        "mean": 21.9375,
+        "crashRate": 0
+      },
+      "subset2D": {
+        "n": 24,
+        "mean": 36.958333333333336,
+        "crashRate": 0
+      },
+      "ceilingGap": {
+        "vsFable": 0,
+        "vsOpus": 7.375
+      }
+    }
+  },
+  "rankedContestants": [
+    {
+      "id": "kimi-k2.7-code",
+      "designMean": 21.647058823529413,
+      "crashRate": 0.5294117647058824,
+      "mustFixRate": 1
+    },
+    {
+      "id": "deepseek-v4-flash",
+      "designMean": 19.846153846153847,
+      "crashRate": 0.3076923076923077,
+      "mustFixRate": 1
+    },
+    {
+      "id": "claude-sonnet-5",
+      "designMean": 18.6,
+      "crashRate": 0.225,
+      "mustFixRate": 1
+    },
+    {
+      "id": "claude-haiku-4.5",
+      "designMean": 18.25,
+      "crashRate": 0.225,
+      "mustFixRate": 1
+    },
+    {
+      "id": "mercury-2",
+      "designMean": 13.75,
+      "crashRate": 0.425,
+      "mustFixRate": 1
+    },
+    {
+      "id": "gemini-3.5-flash",
+      "designMean": 11.4,
+      "crashRate": 0.75,
+      "mustFixRate": 1
+    },
+    {
+      "id": "glm-5.2",
+      "designMean": 11.181818181818182,
+      "crashRate": 0.696969696969697,
+      "mustFixRate": 1
+    },
+    {
+      "id": "gpt-oss-120b",
+      "designMean": 10.625,
+      "crashRate": 0.425,
+      "mustFixRate": 1
+    }
+  ],
+  "gradedAt": "2026-07-11T04:29:12.354Z"
+}

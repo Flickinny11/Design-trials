@@ -1,0 +1,31 @@
+{
+  "computedAt": "2026-07-11T07:04:00.736Z",
+  "note": "seam AUDITION, not a routing decision; mercury-2 substitutes for unreachable mercury-coder (disclosed)",
+  "deltas": 20,
+  "perExecutor": {
+    "mercury-2": {
+      "deltasAttempted": 20,
+      "transportErrors": 0,
+      "rendered": 20,
+      "fixSuccessRawJudge": 2,
+      "fixVoidedByMountGate": [
+        "s-20"
+      ],
+      "fixSuccess": 1,
+      "fixSuccessRate": 0.05,
+      "p50WallMs": 4168,
+      "meanCostPerFixUsd": 0.003102425
+    },
+    "claude-haiku-4.5": {
+      "deltasAttempted": 20,
+      "transportErrors": 0,
+      "rendered": 20,
+      "fixSuccessRawJudge": 2,
+      "fixVoidedByMountGate": [],
+      "fixSuccess": 2,
+      "fixSuccessRate": 0.1,
+      "p50WallMs": 74329,
+      "meanCostPerFixUsd": 0.04222274999999999
+    }
+  }
+}

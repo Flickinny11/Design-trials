@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/deepseek-v4-flash/v-10-bento-metrics-r1",
+  "contestant": "deepseek-v4-flash",
+  "caseId": "v-10-bento-metrics",
+  "run": 1,
+  "capturedAt": "2026-07-11T02:53:36.634Z",
+  "probe": {
+    "status": "error",
+    "error": "module did not default-export a function",
+    "renderables": 0,
+    "nodeMounted": false,
+    "bundleId": "wbakeb/deepseek-v4-flash/v-10-bento-metrics-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": "Transform failed with 1 error:\n<stdin>:118:10: ERROR: Expected \":\" but found \"valueOpts\"",
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

@@ -1,0 +1,55 @@
+{
+  "label": "batch-fab-v-03-glass-prism-refraction-1",
+  "judgedAt": "2026-07-11T04:01:21.059Z",
+  "judgeModel": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-03-glass-prism-refraction-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-03-glass-prism-refraction-1/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-03-glass-prism-refraction-1/F3.jpg"
+    }
+  ],
+  "mappingFile": "notes/bakeoff-b/judge/blind/batch-fab-v-03-glass-prism-refraction-1/mapping.json",
+  "costUsd": 0.524678,
+  "durationApiMs": 44824,
+  "wallMs": 46346,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 13332,
+    "cache_read_input_tokens": 81645,
+    "output_tokens": 2828,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 13332,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 2184,
+        "cache_read_input_tokens": 43442,
+        "cache_creation_input_tokens": 8093,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8093
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":24,\"mustFix\":[{\"defect\":\"OFF_PALETTE\",\"region\":\"background field (light near-white, spec demands #0b0b10 dark-first scene)\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper-left quadrant (smeared black wedge artifact)\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"background field (no dark gradient, no back rim light)\"},{\"defect\":\"ALL_BLACK_ELEMENT\",\"region\":\"lower-center shadow slab\"}],\"notes\":\"Prism shows some dispersion streaks, but rendered over a bright void — total dark-first inversion; scene lighting absent.\"},{\"frame\":\"F2\",\"score\":12,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center (flat dark rectangle, no triangular prism geometry)\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"background field (bright near-white)\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card (flat red blob, no refraction, dispersion, or iridescence)\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper-left quadrant (smeared black wedge artifact)\"}],\"notes\":\"Prism absent; a flat black plane with an unlit red smear on a light void. Reads as broken render.\"},{\"frame\":\"F3\",\"score\":26,\"mustFix\":[{\"defect\":\"OFF_PALETTE\",\"region\":\"background field (light near-white, not #0b0b10)\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper-left quadrant (smeared black wedge artifact)\"},{\"defect\":\"ALL_BLACK_ELEMENT\",\"region\":\"lower-center elliptical slab\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"background field (no dark scene, no back rim light); center shape reads tetrahedral, not the spec's triangular prism\"}],\"notes\":\"Best facet iridescence of batch, but wrong geometry, inverted palette, dead flat shadow slab. Far below exemplar bar.\"}]}"
+}

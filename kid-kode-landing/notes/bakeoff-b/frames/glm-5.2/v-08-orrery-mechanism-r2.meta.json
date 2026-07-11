@@ -1,0 +1,21 @@
+{
+  "bundle": "wbakeb/glm-5.2/v-08-orrery-mechanism-r2",
+  "contestant": "glm-5.2",
+  "caseId": "v-08-orrery-mechanism",
+  "run": 2,
+  "capturedAt": "2026-07-11T02:55:51.669Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/glm-5.2/v-08-orrery-mechanism-r2",
+    "moduleRuntimeError": "TypeError: suv.multiplyScalar is not a function"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

@@ -1,0 +1,200 @@
+{
+  "id": "wbakeb/claude-sonnet-5/v-15-testimonial-panel-r1",
+  "contestant": "claude-sonnet-5",
+  "caseId": "v-15-testimonial-panel",
+  "run": 1,
+  "node": {
+    "nodeId": "v-15-testimonial-panel",
+    "subtype": "quote-panel",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Testimonial panel — A typographic client quote with oversized quotation mark, attribution line, and surface depth.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "\"",
+            "role": "quote-mark",
+            "typography": {
+              "fontSize": 62,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "The bezel action alone is worth the wait. Nothing else on my wrist feels this considered.",
+            "role": "quote",
+            "typography": {
+              "fontSize": 20,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "M. OKAFOR",
+            "role": "attribution",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "COLLECTOR SINCE 2019",
+            "role": "caption",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#16161d",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#1a1a22"
+            },
+            {
+              "at": 1,
+              "hex": "#111116"
+            }
+          ]
+        },
+        "typography": {
+          "quote-mark": {
+            "family": "Lora",
+            "fontSize": 62,
+            "fontWeight": 600,
+            "letterSpacing": 0,
+            "lineHeight": 1
+          },
+          "quote": {
+            "family": "Lora",
+            "fontSize": 20,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.45
+          },
+          "attribution": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 700,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.2
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 400,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Panel 3.4w x 1.9h scene units, corner radius 0.06, albedo vertical engineered gradient #1a1a22 (at 0.0) -> #111116 (at 1.0), 0.006-unit hairline border #26262f, panel roughness 0.6, metalness 0.2, clearcoat 0.1; oversized quotation mark glyph 0.62 units tall in #ff2a38, extruded 0.04 units with roughness 0.5 and metalness 0.3, seated at top-left with 0.5-unit padding (2x base unit) so the key light catches its bowl edge; quote set 0.25 units below the mark on a 0.25-unit baseline grid with max measure 2.4 units; attribution row 0.25 below the quote led by a 0.2w x 0.02h accent rule in #ff2a38 emissive intensity 1.4; quote text floats translateZ +0.03 above the panel plane so raking light gives the letterforms edge definition against the surface; mount fade-up opacity 0 -> 1 and y +0.2 -> 0 over 500ms cubic-bezier(0.25,0.46,0.45,0.94) for the panel, then the quote mark weighted-settle scale 1.04 -> 1.0 over 900ms cubic-bezier(0.165,0.84,0.44,1); no idle motion, the piece rests with weight."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        3.6
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 48
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.4
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1,
+        "position": [
+          2.5,
+          2.5,
+          3.5
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.5,
+        "position": [
+          -2,
+          1.2,
+          -0.8
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#7f8896",
+        "intensity": 0.3,
+        "position": [
+          -2,
+          -1,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Panel fades up once, then the red quotation mark settles with a 1.04 overshoot; everything else is still.",
+    "contrastMinimum": "4.5:1 quote text on panel gradient; 5:1 accent quote mark on panel"
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const THREE = ctx.THREE;\n  const colors = config.intent?.visualSpec?.colors ?? {\n    background: \"#0b0b10\",\n    surface: \"#16161d\",\n    paper: \"#e8ecf2\",\n    accent: \"#ff2a38\",\n    gradientStops: [{ at: 0, hex: \"#1a1a22\" }, { at: 1, hex: \"#111116\" }]\n  };\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const byRole = {};\n  for (const it of items) byRole[it.role] = it;\n  const quoteMarkText = byRole[\"quote-mark\"]?.text ?? '\"';\n  const quoteText = byRole[\"quote\"]?.text ?? \"The bezel action alone is worth the wait. Nothing else on my wrist feels this considered.\";\n  const attributionText = byRole[\"attribution\"]?.text ?? \"M. OKAFOR\";\n  const captionText = byRole[\"caption\"]?.text ?? \"COLLECTOR SINCE 2019\";\n  const root = new import_webgpu.Group();\n  root.userData.handlers = {};\n  const backdropGeo = new import_webgpu.PlaneGeometry(7, 6);\n  const backdropMat = new import_webgpu.MeshPhysicalNodeMaterial({ roughness: 0.9, metalness: 0 });\n  const bgTop = (0, import_tsl.color)(colors.background);\n  const bgBottom = (0, import_tsl.color)(colors.surface);\n  backdropMat.colorNode = (0, import_tsl.mix)(bgTop, bgBottom, (0, import_tsl.uv)().y.oneMinus());\n  const backdrop = new import_webgpu.Mesh(backdropGeo, backdropMat);\n  backdrop.position.set(0, 0, -2.5);\n  root.add(backdrop);\n  const PANEL_W = 3.4;\n  const PANEL_H = 1.9;\n  const RADIUS = 0.06;\n  const panelGeo = new import_webgpu.PlaneGeometry(PANEL_W, PANEL_H, 1, 1);\n  const panelMat = new import_webgpu.MeshPhysicalNodeMaterial({\n    roughness: 0.6,\n    metalness: 0.2,\n    clearcoat: 0.1,\n    transparent: true\n  });\n  const stop0 = (0, import_tsl.color)(colors.gradientStops?.[0]?.hex ?? \"#1a1a22\");\n  const stop1 = (0, import_tsl.color)(colors.gradientStops?.[1]?.hex ?? \"#111116\");\n  const borderColor = (0, import_tsl.color)(\"#26262f\");\n  const t = (0, import_tsl.uv)().y.oneMinus();\n  const gradColor = (0, import_tsl.mix)(stop0, stop1, t);\n  const localX = (0, import_tsl.uv)().x.sub(0.5).mul(PANEL_W);\n  const localY = (0, import_tsl.uv)().y.sub(0.5).mul(PANEL_H);\n  const dx = (0, import_tsl.abs)(localX).sub((0, import_tsl.float)(PANEL_W / 2 - RADIUS));\n  const dy = (0, import_tsl.abs)(localY).sub((0, import_tsl.float)(PANEL_H / 2 - RADIUS));\n  const outsideVec = (0, import_tsl.vec2)((0, import_tsl.max)(dx, 0), (0, import_tsl.max)(dy, 0));\n  const outsideDist = (0, import_tsl.length)(outsideVec).sub(RADIUS);\n  const roundedAlpha = (0, import_tsl.smoothstep)(6e-3, 0, outsideDist);\n  const edgeDist = (0, import_tsl.min)(\n    (0, import_tsl.min)((0, import_tsl.uv)().x, (0, import_tsl.uv)().y),\n    (0, import_tsl.min)((0, import_tsl.uv)().x.oneMinus(), (0, import_tsl.uv)().y.oneMinus())\n  );\n  const borderWidth = 6e-3 / Math.min(PANEL_W, PANEL_H);\n  const borderMask = (0, import_tsl.smoothstep)(borderWidth, 0, edgeDist);\n  const finalColor = (0, import_tsl.mix)(gradColor, borderColor, borderMask);\n  const fadeUniform = (0, import_tsl.uniform)(0);\n  panelMat.colorNode = finalColor;\n  panelMat.opacityNode = roundedAlpha.mul(fadeUniform);\n  const panelMesh = new import_webgpu.Mesh(panelGeo, panelMat);\n  panelMesh.position.set(0, 0, 0);\n  root.add(panelMesh);\n  const markObj = ctx.fontAtlas.createText(quoteMarkText, {\n    fontSize: 62,\n    color: colors.accent,\n    align: \"left\"\n  });\n  markObj.position.set(-1.7 + 0.5, 0.95 - 0.5, 0.02);\n  root.add(markObj);\n  const quoteObj = ctx.fontAtlas.createText(quoteText, {\n    fontSize: 20,\n    color: colors.paper,\n    align: \"left\",\n    maxWidthPx: 240\n  });\n  quoteObj.position.set(-1.7 + 0.5, 0.02, 0.03);\n  root.add(quoteObj);\n  const ruleGeo = new import_webgpu.BoxGeometry(0.2, 0.02, 0.01);\n  const ruleMat = new import_webgpu.MeshStandardNodeMaterial({\n    roughness: 0.4,\n    metalness: 0.1\n  });\n  ruleMat.colorNode = (0, import_tsl.color)(colors.accent);\n  ruleMat.emissiveNode = (0, import_tsl.color)(colors.accent).mul(1.4);\n  const ruleMesh = new import_webgpu.Mesh(ruleGeo, ruleMat);\n  ruleMesh.position.set(-1.7 + 0.5 + 0.1, -0.62, 0.03);\n  root.add(ruleMesh);\n  const attribObj = ctx.fontAtlas.createText(attributionText, {\n    fontSize: 13,\n    color: colors.paper,\n    align: \"left\",\n    letterSpacingPx: 0.08 * 13\n  });\n  attribObj.position.set(-1.7 + 0.5 + 0.3, -0.7, 0.03);\n  root.add(attribObj);\n  const captionObj = ctx.fontAtlas.createText(captionText, {\n    fontSize: 9,\n    color: \"#9a9aa4\",\n    align: \"left\",\n    letterSpacingPx: 0.12 * 9\n  });\n  captionObj.position.set(-1.7 + 0.5, -0.85, 0.03);\n  root.add(captionObj);\n  const rimLight = new import_webgpu.PointLight(colors.accent, 0.8, 6);\n  rimLight.position.set(1.4, 0.8, 2.2);\n  root.add(rimLight);\n  const panelGroup = root;\n  const startY = panelMesh.position.y;\n  panelGroup.position.y = 0.2;\n  const tl = import_gsap.gsap.timeline();\n  tl.to(fadeUniform, {\n    value: 1,\n    duration: 0.5,\n    ease: \"power2.out\"\n  }, 0);\n  tl.to(panelGroup.position, {\n    y: startY,\n    duration: 0.5,\n    ease: \"power2.out\"\n  }, 0);\n  const fadeTargets = [markObj, quoteObj, attribObj, captionObj, ruleMesh];\n  for (const obj of fadeTargets) {\n    obj.traverse((child) => {\n      if (child.material) {\n        child.material.transparent = true;\n        child.material.opacity = 0;\n      }\n    });\n  }\n  tl.to({}, { duration: 0 }, 0);\n  fadeTargets.forEach((obj) => {\n    obj.traverse((child) => {\n      if (child.material) {\n        tl.to(child.material, { opacity: 1, duration: 0.5, ease: \"power2.out\" }, 0);\n      }\n    });\n  });\n  markObj.scale.set(1.04, 1.04, 1.04);\n  tl.to(markObj.scale, {\n    x: 1,\n    y: 1,\n    z: 1,\n    duration: 0.9,\n    ease: \"power4.out\"\n  }, 0.1);\n  root.userData.cleanup = () => {\n    tl.kill();\n    backdropGeo.dispose();\n    backdropMat.dispose();\n    panelGeo.dispose();\n    panelMat.dispose();\n    ruleGeo.dispose();\n    ruleMat.dispose();\n    [markObj, quoteObj, attribObj, captionObj].forEach((obj) => {\n      obj.traverse((child) => {\n        if (child.geometry) child.geometry.dispose();\n        if (child.material) {\n          if (Array.isArray(child.material)) {\n            child.material.forEach((m) => m.dispose());\n          } else {\n            child.material.dispose();\n          }\n        }\n      });\n    });\n    if (rimLight.parent) rimLight.parent.remove(rimLight);\n  };\n  return root;\n}\n",
+  "transformError": null
+}

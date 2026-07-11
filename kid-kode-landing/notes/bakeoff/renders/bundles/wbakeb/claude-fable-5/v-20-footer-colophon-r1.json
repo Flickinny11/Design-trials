@@ -1,0 +1,280 @@
+{
+  "id": "wbakeb/claude-fable-5/v-20-footer-colophon-r1",
+  "contestant": "claude-fable-5",
+  "caseId": "v-20-footer-colophon",
+  "run": 1,
+  "node": {
+    "nodeId": "v-20-footer-colophon",
+    "subtype": "footer",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Footer colophon — A footer colophon with type-scale discipline: wordmark, three link columns, legal line, hairline rules.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "NOVA ATELIER",
+            "role": "wordmark",
+            "typography": {
+              "fontSize": 34,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "ATELIER",
+            "role": "column-header",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Features",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Collection",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Pricing",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "COMPANY",
+            "role": "column-header",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Journal",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Visit the Atelier",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Contact",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "LEGAL",
+            "role": "column-header",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Privacy",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Terms",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Warranty",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "(c) 2026 Nova Atelier. All rights reserved. Machined in Geneva.",
+            "role": "legal",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#101015",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#121218"
+            },
+            {
+              "at": 1,
+              "hex": "#0b0b10"
+            }
+          ]
+        },
+        "typography": {
+          "wordmark": {
+            "family": "Lora",
+            "fontSize": 34,
+            "fontWeight": 600,
+            "letterSpacing": 0.02,
+            "lineHeight": 1
+          },
+          "column-header": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.2
+          },
+          "link": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.8
+          },
+          "legal": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 400,
+            "letterSpacing": 0.04,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Footer band 6.8w x 2.0h scene units, albedo vertical ramp #121218 (at 0.0) -> #0b0b10 (at 1.0), roughness 0.6, metalness 0.2, top edge carrying a full-width 0.006-unit hairline rule #23232b; layout on a 0.25-unit baseline grid: wordmark block occupies the left 2.0 units with the wordmark and a 0.3w x 0.02h accent bar #ff2a38 emissive 1.4 beneath it; three link columns each 1.2w with 0.375-unit gutters (1.5x base) to the right, each column led by a header then three links at 1.8 line height; legal line spans the full width 0.375 above the bottom edge, separated by a second 0.006-unit hairline #23232b with 0.25 clearance above and below; link hover color #e8ecf2 -> #ff2a38 over 140ms cubic-bezier(0.25,0.46,0.45,0.94) with translateZ 0 -> 0.02; mount is a single fade-up of the whole band opacity 0 -> 1 and y +0.2 -> 0 over 500ms cubic-bezier(0.25,0.46,0.45,0.94), no per-item stagger, the colophon arrives as one set object; the key light grazes from upper left so the hairline rules pick up a faint specular edge, reading etched rather than drawn."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        -0.05,
+        5.2
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.4
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1,
+        "position": [
+          -3,
+          3,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.4,
+        "position": [
+          2.4,
+          -0.8,
+          -1
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#7f8896",
+        "intensity": 0.25,
+        "position": [
+          3,
+          0.5,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "The whole colophon fades up once as a single object; hovered links shift to accent red and lift 0.02 units.",
+    "contrastMinimum": "4.5:1 links and legal on band ramp; 3:1 wordmark minimum"
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, BoxGeometry, DirectionalLight } = ctx.THREE;\n  const COLORS = {\n    background: \"#0b0b10\",\n    surface: \"#101015\",\n    paper: \"#e8ecf2\",\n    accent: \"#ff2a38\",\n    hairline: \"#23232b\",\n    gradTop: \"#121218\",\n    gradBot: \"#0b0b10\"\n  };\n  const root = new Group();\n  const disposables = [];\n  const timelines = [];\n  const primitiveHandles = [];\n  const backdropGeo = new PlaneGeometry(7, 6);\n  const backdropMat = new import_webgpu.MeshBasicNodeMaterial();\n  backdropMat.colorNode = (0, import_tsl.mix)((0, import_tsl.color)(COLORS.gradBot), (0, import_tsl.color)(COLORS.gradTop), (0, import_tsl.uv)().y);\n  const backdrop = new Mesh(backdropGeo, backdropMat);\n  backdrop.position.set(0, 0, -2.5);\n  root.add(backdrop);\n  disposables.push(backdropGeo, backdropMat);\n  const band = new Group();\n  band.position.set(0, -1.4, 0);\n  root.add(band);\n  const BAND_W = 6.8;\n  const BAND_H = 2;\n  const bandGeo = new BoxGeometry(BAND_W, BAND_H, 0.06);\n  const bandMat = new import_webgpu.MeshStandardNodeMaterial({ roughness: 0.6, metalness: 0.2 });\n  bandMat.colorNode = (0, import_tsl.mix)((0, import_tsl.color)(COLORS.gradBot), (0, import_tsl.color)(COLORS.gradTop), (0, import_tsl.uv)().y);\n  const bandMesh = new Mesh(bandGeo, bandMat);\n  bandMesh.position.set(0, 0, -0.03);\n  band.add(bandMesh);\n  disposables.push(bandGeo, bandMat);\n  const hairlineMat = new import_webgpu.MeshStandardNodeMaterial({\n    color: COLORS.hairline,\n    roughness: 0.28,\n    metalness: 0.5\n  });\n  disposables.push(hairlineMat);\n  const hairGeoTop = new BoxGeometry(BAND_W, 6e-3, 0.012);\n  const hairTop = new Mesh(hairGeoTop, hairlineMat);\n  hairTop.position.set(0, BAND_H / 2 - 3e-3, 8e-3);\n  band.add(hairTop);\n  disposables.push(hairGeoTop);\n  const hairGeoLegal = new BoxGeometry(BAND_W - 1, 6e-3, 0.012);\n  const hairLegal = new Mesh(hairGeoLegal, hairlineMat);\n  hairLegal.position.set(0, -0.375, 8e-3);\n  band.add(hairLegal);\n  disposables.push(hairGeoLegal);\n  const rim = new DirectionalLight(15265010, 0.8);\n  rim.position.set(-4, 3, 1.5);\n  rim.target = bandMesh;\n  band.add(rim);\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  let wordmarkItem = null;\n  let legalItem = null;\n  const columns = [];\n  let currentCol = null;\n  for (const item of items) {\n    if (item.role === \"wordmark\") wordmarkItem = item;\n    else if (item.role === \"legal\") legalItem = item;\n    else if (item.role === \"column-header\") {\n      currentCol = { header: item, links: [] };\n      columns.push(currentCol);\n    } else if (item.role === \"link\" && currentCol) {\n      currentCol.links.push(item);\n    }\n  }\n  const TEXT_Z = 0.04;\n  const leftPad = -BAND_W / 2 + 0.5;\n  if (wordmarkItem) {\n    const wm = ctx.fontAtlas.createText(String(wordmarkItem.text), {\n      fontSize: 34,\n      color: COLORS.paper,\n      align: \"left\",\n      letterSpacingPx: 0.7\n    });\n    wm.position.set(leftPad, 0.5, TEXT_Z);\n    band.add(wm);\n  }\n  const barGeo = new BoxGeometry(0.3, 0.02, 0.02);\n  const barMat = new import_webgpu.MeshStandardNodeMaterial({\n    color: COLORS.accent,\n    roughness: 0.5,\n    metalness: 0.2\n  });\n  barMat.emissiveNode = (0, import_tsl.color)(COLORS.accent).mul(1.4);\n  const accentBar = new Mesh(barGeo, barMat);\n  accentBar.position.set(leftPad + 0.15, 0.22, TEXT_Z);\n  band.add(accentBar);\n  disposables.push(barGeo, barMat);\n  const COL_W = 1.2;\n  const GUTTER = 0.375;\n  const colsLeft = -BAND_W / 2 + 2 + 0.25;\n  const hitboxes = [];\n  const hoverStates = /* @__PURE__ */ new Map();\n  const navMap = {\n    Features: \"hub-features\",\n    Collection: \"hub-collection\",\n    Pricing: \"hub-pricing\",\n    Journal: \"hub-journal\"\n  };\n  const hitMat = new import_webgpu.MeshBasicNodeMaterial({\n    transparent: true,\n    opacity: 0,\n    depthWrite: false\n  });\n  disposables.push(hitMat);\n  columns.forEach((col, ci) => {\n    const colX = colsLeft + ci * (COL_W + GUTTER);\n    const header = ctx.fontAtlas.createText(String(col.header.text), {\n      fontSize: 9,\n      color: \"#8a8f99\",\n      align: \"left\",\n      letterSpacingPx: 1.1\n    });\n    header.position.set(colX, 0.56, TEXT_Z);\n    band.add(header);\n    col.links.forEach((link, li) => {\n      const y = 0.32 - li * 0.234;\n      const label = String(link.text);\n      const linkGroup = new Group();\n      linkGroup.position.set(colX, y, TEXT_Z);\n      band.add(linkGroup);\n      const paperText = ctx.fontAtlas.createText(label, {\n        fontSize: 13,\n        color: COLORS.paper,\n        align: \"left\"\n      });\n      const accentText = ctx.fontAtlas.createText(label, {\n        fontSize: 13,\n        color: COLORS.accent,\n        align: \"left\"\n      });\n      accentText.visible = false;\n      linkGroup.add(paperText);\n      linkGroup.add(accentText);\n      const hitGeo = new PlaneGeometry(COL_W, 0.2);\n      const hit = new Mesh(hitGeo, hitMat);\n      hit.position.set(COL_W / 2 - 0.1, 0.02, 5e-3);\n      hit.userData.linkId = `link-${ci}-${li}`;\n      hit.userData.label = label;\n      linkGroup.add(hit);\n      disposables.push(hitGeo);\n      hitboxes.push(hit);\n      hoverStates.set(hit.userData.linkId, {\n        group: linkGroup,\n        paperText,\n        accentText,\n        label\n      });\n    });\n  });\n  if (legalItem) {\n    const legal = ctx.fontAtlas.createText(String(legalItem.text), {\n      fontSize: 9,\n      color: \"#a8adb6\",\n      align: \"left\",\n      letterSpacingPx: 0.4\n    });\n    legal.position.set(leftPad, -0.66, TEXT_Z);\n    band.add(legal);\n  }\n  const prims = config.cinematicPrimitives ?? [];\n  for (const primitive of prims) {\n    const fn = ctx.primitives[primitive.name];\n    if (fn) primitiveHandles.push(fn(band, primitive.params));\n  }\n  const bandRestY = band.position.y;\n  band.position.y = bandRestY - 0.2;\n  const mountTl = import_gsap.gsap.timeline();\n  mountTl.to(band.position, {\n    y: bandRestY,\n    duration: 0.5,\n    ease: \"power2.out\"\n  });\n  bandMat.transparent = true;\n  bandMat.opacity = 0;\n  mountTl.to(\n    bandMat,\n    {\n      opacity: 1,\n      duration: 0.5,\n      ease: \"power2.out\",\n      onComplete: () => {\n        bandMat.transparent = false;\n        bandMat.opacity = 1;\n      }\n    },\n    0\n  );\n  timelines.push(mountTl);\n  function findState(obj) {\n    let o = obj;\n    while (o) {\n      if (o.userData && o.userData.linkId) return hoverStates.get(o.userData.linkId);\n      o = o.parent;\n    }\n    return null;\n  }\n  root.userData.interactive = hitboxes;\n  root.userData.handlers = {\n    pointerover: (obj) => {\n      const st = findState(obj);\n      if (!st) return;\n      st.paperText.visible = false;\n      st.accentText.visible = true;\n      const tl = import_gsap.gsap.to(st.group.position, {\n        z: TEXT_Z + 0.02,\n        duration: 0.14,\n        ease: \"power2.out\"\n      });\n      timelines.push(tl);\n    },\n    pointerout: (obj) => {\n      const st = findState(obj);\n      if (!st) return;\n      st.paperText.visible = true;\n      st.accentText.visible = false;\n      const tl = import_gsap.gsap.to(st.group.position, {\n        z: TEXT_Z,\n        duration: 0.14,\n        ease: \"power2.out\"\n      });\n      timelines.push(tl);\n    },\n    click: (obj) => {\n      const st = findState(obj);\n      if (!st) return;\n      const tl = import_gsap.gsap.timeline();\n      tl.to(st.group.scale, { x: 0.97, y: 0.97, z: 0.97, duration: 0.12, ease: \"power2.in\" });\n      tl.to(st.group.scale, { x: 1, y: 1, z: 1, duration: 0.3, ease: \"back.out(2)\" });\n      timelines.push(tl);\n      const target = navMap[st.label];\n      if (target) {\n        ctx.emit(\"navigate\", { to: target });\n      } else {\n        ctx.emit(\"footer-link\", { label: st.label });\n      }\n    }\n  };\n  root.userData.cleanup = () => {\n    for (const tl of timelines) tl.kill();\n    for (const h of primitiveHandles) {\n      if (h && typeof h.cleanup === \"function\") h.cleanup();\n    }\n    for (const d of disposables) {\n      if (d && typeof d.dispose === \"function\") d.dispose();\n    }\n    root.traverse((o) => {\n      if (o.geometry && typeof o.geometry.dispose === \"function\") o.geometry.dispose();\n    });\n  };\n  return root;\n}\n",
+  "transformError": null
+}

@@ -1,0 +1,215 @@
+{
+  "id": "wbakeb-seam/claude-haiku-4.5/s-14",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "s-14",
+  "visualCaseId": "v-10-bento-metrics",
+  "run": 1,
+  "node": {
+    "nodeId": "v-10-bento-metrics",
+    "subtype": "bento-grid",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Bento metrics grid — A 2x2 bento of stat tiles with one dominant cell; machined surfaces, engineered gradients, no flat voids.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "ATELIER METRICS / Q2 2026",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "0.002 mm",
+            "role": "valueLarge",
+            "typography": {
+              "fontSize": 124,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Case tolerance, CNC pass",
+            "role": "label",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "38 h",
+            "role": "value",
+            "typography": {
+              "fontSize": 68,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Power reserve, NA-01",
+            "role": "label",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "214",
+            "role": "value",
+            "typography": {
+              "fontSize": 68,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Components per calibre",
+            "role": "label",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#101017"
+            },
+            {
+              "at": 1,
+              "hex": "#1a1a22"
+            }
+          ]
+        },
+        "typography": {
+          "value": {
+            "family": "Lora",
+            "fontSize": 68,
+            "fontWeight": 600,
+            "letterSpacing": -0.005,
+            "lineHeight": 1.05
+          },
+          "valueLarge": {
+            "family": "Lora",
+            "fontSize": 124,
+            "fontWeight": 600,
+            "letterSpacing": -0.01,
+            "lineHeight": 1
+          },
+          "label": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Bento grid spans 5.5 x 3.5 scene units centered at origin with 0.25-unit gutters (1x base). Dominant cell: 3.25 x 3.5 units occupying the left column, both rows; two secondary cells 2.0 x 1.625 units stacked in the right column. Each cell is a shallow extruded slab 0.06 units deep, surface #14141a with a 135-deg engineered diagonal gradient #101017 to #1a1a22 (hard-stop machined sheen band 0.15 units wide at 40 percent, +6 percent value), edge material brushed metal roughness 0.5, metalness 0.45, clearcoat 0.2 on a 0.04-unit chamfer that catches the key light. Inner padding 0.5 units (card padding token). Each cell carries a #ff2a38 tick bar 0.4 x 0.05 units at emissive 1.3, top-left inside the padding. Dominant cell: value in Lora 600 at 0.62-unit em height with label below at 0.5-unit offset; secondary cells: value at 0.34-unit em height plus label. Grid header caption sits 0.5 units above the grid, left-aligned to the grid edge at x=-2.75. Entrance: stagger-cards, fade-up per cell (opacity 0 to 1, y +0.2 to 0, 500ms, cubic-bezier(0.25,0.46,0.45,0.94)) at 80ms stagger, dominant first. Hover: press-down scale 1.0 to 0.97 in 120ms cubic-bezier(0.175,0.885,0.32,1.275), release weighted-settle 1.04 to 1.0 over 900ms cubic-bezier(0.165,0.84,0.44,1). No cell is a flat void: every surface carries the gradient, chamfer light, and tick structure."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        5.8
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#3a3f4a",
+        "intensity": 0.5
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 1,
+        "position": [
+          2,
+          3,
+          3
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.5,
+        "position": [
+          -2.5,
+          2,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Tiles fade up with an 80ms stagger (dominant cell first); hover presses a tile to 0.97 scale and releases with weighted 1.04 overshoot."
+  },
+  "parsed": true,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap",
+      "@/primitives",
+      "@/text"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const { Group: ThreeGroup } = ctx.THREE;\n  const root = new ThreeGroup();\n  root.name = \"BentoMetricsGrid\";\n  const gradStart = new import_webgpu.Color(\"#101017\");\n  const gradEnd = new import_webgpu.Color(\"#1a1a22\");\n  function createTile(width, height, depth2 = 0.06) {\n    const geometry = new import_webgpu.BoxGeometry(width, height, depth2);\n    const material = new import_webgpu.MeshStandardNodeMaterial({\n      metalness: 0.45,\n      roughness: 0.5,\n      clearcoat: 0.2,\n      transparent: true,\n      // Gradient node (135° diagonal)\n      colorNode: (0, import_tsl.mix)(\n        (0, import_tsl.uniform)(gradStart),\n        (0, import_tsl.uniform)(gradEnd),\n        (0, import_tsl.mul)((0, import_tsl.add)((0, import_tsl.uv)().x, (0, import_tsl.uv)().y), 0.5)\n      )\n    });\n    material.opacity = 0;\n    const mesh = new import_webgpu.Mesh(geometry, material);\n    mesh.castShadow = true;\n    mesh.receiveShadow = true;\n    return { mesh, material, geometry };\n  }\n  function createTickBar() {\n    const geometry = new import_webgpu.BoxGeometry(0.4, 0.05, 0.02);\n    const material = new import_webgpu.MeshStandardNodeMaterial({\n      emissive: new import_webgpu.Color(\"#ff2a38\"),\n      emissiveIntensity: 1.3,\n      metalness: 0,\n      roughness: 1,\n      color: 0\n    });\n    const mesh = new import_webgpu.Mesh(geometry, material);\n    mesh.position.set(0, 0, 0.04);\n    return { mesh, material, geometry };\n  }\n  function addText(parent, content, opts = {}) {\n    const txt = ctx.fontAtlas.createText(content, opts);\n    parent.add(txt);\n    return txt;\n  }\n  const totalWidth = 5.5;\n  const totalHeight = 3.5;\n  const gutter = 0.25;\n  const depth = 0.06;\n  const padding = 0.5;\n  const domWidth = 3.25;\n  const domHeight = 3.5;\n  const domX = -totalWidth / 2 + domWidth / 2;\n  const domY = 0;\n  const domGroup = new import_webgpu.Group();\n  domGroup.position.set(domX, domY, 0);\n  const domTile = createTile(domWidth, domHeight, depth);\n  domGroup.add(domTile.mesh);\n  const domTick = createTickBar();\n  domTick.mesh.position.set(\n    -domWidth / 2 + padding + 0.2,\n    domHeight / 2 - padding - 0.025,\n    0\n  );\n  domGroup.add(domTick.mesh);\n  addText(domGroup, \"0.002 mm\", {\n    fontSize: 124,\n    color: \"#e8ecf2\",\n    align: \"center\",\n    lineHeight: 1\n  }).position.set(0, 0.2, 0.07);\n  addText(domGroup, \"Case tolerance, CNC pass\", {\n    fontSize: 18,\n    color: \"#e8ecf2\",\n    align: \"center\",\n    lineHeight: 1.4\n  }).position.set(0, -0.6, 0.07);\n  root.add(domGroup);\n  const secWidth = 2;\n  const secHeight = 1.625;\n  const rightX = totalWidth / 2 - secWidth / 2;\n  const topY = totalHeight / 2 - secHeight / 2;\n  const botY = -topY;\n  const topGroup = new import_webgpu.Group();\n  topGroup.position.set(rightX, topY, 0);\n  const topTile = createTile(secWidth, secHeight, depth);\n  topGroup.add(topTile.mesh);\n  const topTick = createTickBar();\n  topTick.mesh.position.set(\n    -secWidth / 2 + padding + 0.2,\n    secHeight / 2 - padding - 0.025,\n    0\n  );\n  topGroup.add(topTick.mesh);\n  addText(topGroup, \"38 h\", {\n    fontSize: 68,\n    color: \"#e8ecf2\",\n    align: \"center\",\n    lineHeight: 1.05\n  }).position.set(0, 0.1, 0.07);\n  addText(topGroup, \"Power reserve, NA-01\", {\n    fontSize: 18,\n    color: \"#e8ecf2\",\n    align: \"center\",\n    lineHeight: 1.4\n  }).position.set(0, -0.5, 0.07);\n  root.add(topGroup);\n  const botGroup = new import_webgpu.Group();\n  botGroup.position.set(rightX, botY, 0);\n  const botTile = createTile(secWidth, secHeight, depth);\n  botGroup.add(botTile.mesh);\n  const botTick = createTickBar();\n  botTick.mesh.position.set(\n    -secWidth / 2 + padding + 0.2,\n    secHeight / 2 - padding - 0.025,\n    0\n  );\n  botGroup.add(botTick.mesh);\n  addText(botGroup, \"214\", {\n    fontSize: 68,\n    color: \"#e8ecf2\",\n    align: \"center\",\n    lineHeight: 1.05\n  }).position.set(0, 0.1, 0.07);\n  addText(botGroup, \"Components per calibre\", {\n    fontSize: 18,\n    color: \"#e8ecf2\",\n    align: \"center\",\n    lineHeight: 1.4\n  }).position.set(0, -0.5, 0.07);\n  root.add(botGroup);\n  const header = addText(root, \"ATELIER METRICS / Q2 2026\", {\n    fontSize: 18,\n    color: \"#ff2a38\",\n    align: \"left\",\n    lineHeight: 1.4\n  });\n  header.position.set(-totalWidth / 2, totalHeight / 2 + 0.5, 0.07);\n  const tileGroups = [domGroup, topGroup, botGroup];\n  const allMeshes = [];\n  tileGroups.forEach((g) => {\n    g.traverse((obj) => {\n      if (obj.isMesh) allMeshes.push(obj);\n    });\n    g.userData.handlers = {\n      hover: () => {\n        const tl = import_gsap.gsap.timeline();\n        tl.to(g.scale, {\n          x: 0.97,\n          y: 0.97,\n          z: 0.97,\n          duration: 0.12,\n          ease: \"cubic-bezier(0.175,0.885,0.32,1.275)\"\n        });\n        g.userData._hoverTl = tl;\n      },\n      leave: () => {\n        const tl = import_gsap.gsap.timeline();\n        tl.to(g.scale, {\n          x: 1.04,\n          y: 1.04,\n          z: 1.04,\n          duration: 0.9,\n          ease: \"cubic-bezier(0.165,0.84,0.44,1)\"\n        }).to(g.scale, {\n          x: 1,\n          y: 1,\n          z: 1,\n          duration: 0.3,\n          ease: \"power4.out\"\n        });\n        g.userData._leaveTl = tl;\n      }\n    };\n  });\n  const entranceTL = import_gsap.gsap.timeline();\n  tileGroups.forEach((g, i) => {\n    entranceTL.from(\n      g.position,\n      {\n        y: \"+=0.2\",\n        duration: 0.5,\n        ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n      },\n      i * 0.08\n    );\n    entranceTL.to(\n      g.children.map((c) => c.material ? c.material : {}),\n      {\n        opacity: 1,\n        duration: 0.5,\n        ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n      },\n      i * 0.08\n    );\n  });\n  entranceTL.play();\n  root.userData.cleanup = () => {\n    entranceTL.kill();\n    tileGroups.forEach((g) => {\n      if (g.userData._hoverTl) g.userData._hoverTl.kill();\n      if (g.userData._leaveTl) g.userData._leaveTl.kill();\n      g.traverse((obj) => {\n        if (obj.isMesh) {\n          if (obj.geometry) obj.geometry.dispose();\n          if (obj.material) {\n            if (Array.isArray(obj.material)) {\n              obj.material.forEach((m) => m.dispose && m.dispose());\n            } else {\n              obj.material.dispose && obj.material.dispose();\n            }\n          }\n        }\n      });\n    });\n    if (header && header.traverse) {\n      header.traverse((obj) => {\n        if (obj.isMesh && obj.geometry) obj.geometry.dispose();\n        if (obj.isMesh && obj.material) obj.material.dispose();\n      });\n    }\n  };\n  return root;\n}\n",
+  "transformError": null
+}

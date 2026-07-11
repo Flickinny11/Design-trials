@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/deepseek-v4-flash/v-13-brand-wall-r2",
+  "contestant": "deepseek-v4-flash",
+  "caseId": "v-13-brand-wall",
+  "run": 2,
+  "capturedAt": "2026-07-11T02:54:05.611Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 0,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/deepseek-v4-flash/v-13-brand-wall-r2"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

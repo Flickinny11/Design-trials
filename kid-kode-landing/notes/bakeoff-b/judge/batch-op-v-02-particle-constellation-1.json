@@ -1,0 +1,51 @@
+{
+  "label": "batch-op-v-02-particle-constellation-1",
+  "judgedAt": "2026-07-11T04:16:26.930Z",
+  "judgeModel": "claude-opus-4-8",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-op-v-02-particle-constellation-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-op-v-02-particle-constellation-1/F2.jpg"
+    }
+  ],
+  "mappingFile": "notes/bakeoff-b/judge/blind/batch-op-v-02-particle-constellation-1/mapping.json",
+  "costUsd": 0.230841,
+  "durationApiMs": 30515,
+  "wallMs": 33084,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 12081,
+    "cache_read_input_tokens": 78446,
+    "output_tokens": 2103,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12081,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1598,
+        "cache_read_input_tokens": 41548,
+        "cache_creation_input_tokens": 7431,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7431
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "Both numbered frames are broken renders. The spec calls for a deep, refined starfield of 1200 tiny instanced points with depth falloff and a controlled emissive red core with additive-glow discipline. Instead both frames are dominated by a massive blown-out white smear, a flat red bar, and a stray dark rectangle patch — the actual particles are just sparse scattered specks overwhelmed by broken elements.\n\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 15, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"upper-left through center white smear\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"whole frame — giant white blob + flat red bar + orphan dark rectangle\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"lower red bar — flat fill, no emissive additive glow\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"background field — no depth-falloff starfield or fog-sunk far points\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — blown-out blob and bar dwarf the 0.012-unit points\" } ], \"notes\": \"Blown white smear and flat red bar destroy the starfield; particles reduced to stray specks. Void, broken, off-spec.\" }, { \"frame\": \"F2\", \"score\": 16, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"left-center white smear\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"whole frame — same blob + bar + dark rectangle collision\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"lower red bar — flat, non-emissive\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"background field — no coherent depth-falloff constellation\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center blob/bar oversized vs intended micro-points\" } ], \"notes\": \"Near-identical to F1, marginally less bloom. Same flat void, flat red bar, incoherent composition; not a starfield hero.\" } ] }"
+}

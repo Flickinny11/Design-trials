@@ -1,0 +1,58 @@
+{
+  "label": "ground-truth-pass1-batch2",
+  "model": "claude-fable-5",
+  "frames": [
+    {
+      "label": "F1",
+      "goldenId": "g-06"
+    },
+    {
+      "label": "F2",
+      "goldenId": "g-07"
+    },
+    {
+      "label": "F3",
+      "goldenId": "g-08"
+    },
+    {
+      "label": "F4",
+      "goldenId": "g-09"
+    },
+    {
+      "label": "F5",
+      "goldenId": "g-10"
+    }
+  ],
+  "costUsd": 0.6013140000000001,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 15442,
+    "cache_read_input_tokens": 82505,
+    "output_tokens": 3486,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15442,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 2638,
+        "cache_read_input_tokens": 44302,
+        "cache_creation_input_tokens": 9343,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9343
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":10,\"mustFix\":[{\"defect\":\"SCALE_ERROR\",\"region\":\"full frame — giant blurred white forms\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no 3x2 tile grid or wordmarks\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"full frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"lower third black band\"}],\"notes\":\"Massively overscaled blurry white shapes; no machined tiles, no brand marks; only a stray red tick survives.\"},{\"frame\":\"F2\",\"score\":7,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no headline glyphs rendered\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field, right and top\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"center-right untextured white quad\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center card — raw gradient fill\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"below headline — no accent underline\"}],\"notes\":\"MSDF text failed to render; a blank gradient quad and stray cone on black void. No type, no accent.\"},{\"frame\":\"F3\",\"score\":9,\"mustFix\":[{\"defect\":\"SCALE_ERROR\",\"region\":\"upper half — enormous pink mass\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"upper half — salmon pink, not #ff2a38 signal red\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center row — card titles, body, icon discs absent\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"full frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"bottom third black field\"}],\"notes\":\"Accent element blown up to half the frame in off-palette pink; cards buried, no hierarchy or content.\"},{\"frame\":\"F4\",\"score\":20,\"mustFix\":[{\"defect\":\"DEAD_LIGHTING\",\"region\":\"watch body — flat unlit white, no brushed-metal response\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper-right — watch floating and cropped, not seated on plinth\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"scene — no red accent signal light\"},{\"defect\":\"FLAT_VOID\",\"region\":\"right half background\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"left edge — raw white light-card geometry visible\"}],\"notes\":\"Watch and plinth exist but materials are clay-white, watch levitates cropped off-frame; lighting rig geometry visible.\"},{\"frame\":\"F5\",\"score\":13,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"right of center — secondary meshed gear absent\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"gear pivot — no jewel accent\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"center-left gear — brass/gold, not machined steel; no accent red\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center-left — gear far too small in frame\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field — pure black, no gradient\"}],\"notes\":\"Single undersized brass gear adrift in a black void; no meshing pair, no jewel pivot, no engineered backdrop.\"}]}"
+}

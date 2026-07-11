@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/claude-fable-5/v-11-gradient-cta-r2",
+  "contestant": "claude-fable-5",
+  "caseId": "v-11-gradient-cta",
+  "run": 2,
+  "capturedAt": "2026-07-11T03:52:32.679Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 6,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/claude-fable-5/v-11-gradient-cta-r2"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

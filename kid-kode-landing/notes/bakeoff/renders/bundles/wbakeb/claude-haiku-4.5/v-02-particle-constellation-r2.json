@@ -1,0 +1,183 @@
+{
+  "id": "wbakeb/claude-haiku-4.5/v-02-particle-constellation-r2",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-02-particle-constellation",
+  "run": 2,
+  "node": {
+    "nodeId": "v-02-particle-constellation",
+    "subtype": "particle-field",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Particle constellation hero — A deep starfield of instanced points with depth falloff and an accent core, slow drift, additive glow discipline.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "NOVA ATELIER",
+            "role": "hero",
+            "typography": {
+              "fontSize": 124,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Precision instruments for the dark hours.",
+            "role": "subhead",
+            "typography": {
+              "fontSize": 40,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "EST. 2019 / GENEVA AND KYOTO",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#101017",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 1,
+              "hex": "#16161d"
+            }
+          ]
+        },
+        "typography": {
+          "hero": {
+            "family": "Lora",
+            "fontSize": 124,
+            "fontWeight": 600,
+            "letterSpacing": -0.01,
+            "lineHeight": 1.02
+          },
+          "subhead": {
+            "family": "JetBrains Mono",
+            "fontSize": 40,
+            "fontWeight": 400,
+            "letterSpacing": 0.02,
+            "lineHeight": 1.35
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "1200 instanced icosahedron points, each radius 0.012 scene units, distributed through an ellipsoidal shell 6 x 4 x 5 units centered at [0,0,-1.5]. Depth falloff: per-instance opacity 0.9 at z=0 falling linearly to 0.15 at z=-5; linear fog #0b0b10 near 4 far 10 so far points sink into the stage. Accent core: 90 instances within a 0.5-unit-radius sphere at origin tinted #ff2a38 with emissive #ff2a38 intensity 1.8 (additive blending only inside the core, hard cap, no screen-space soft blur). Field particles are paper #e8ecf2 at metalness 0, roughness 1, self-lit 0.9. particle-emerge on load: instances scale 0 to 1 and translate outward from the core to final anchors over 1400ms, staggered by distance-from-core, cubic-bezier(0.165,0.84,0.44,1). Ambient drift: each particle orbits its anchor +/-0.04 units at 0.05 Hz on offset phase. Core pulse: emissive intensity 1.5 to 1.8 sine at 0.1 Hz. Hero MSDF type plane at z=0.5, baseline 0.5 units (2x base) above center; subhead 0.75 units below hero baseline; caption pinned 2.25 units below center on the 0.25-unit rhythm."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "mesh",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "particle-emerge",
+        "trigger": "load",
+        "params": {
+          "count": 1200,
+          "durationMs": 1400
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0.2,
+        6.5
+      ],
+      "lookAt": [
+        0,
+        0,
+        -0.5
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#2a2e38",
+        "intensity": 0.4
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 1.2,
+        "position": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 0.6,
+        "position": [
+          1.5,
+          2.5,
+          4
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Particles emerge outward from the accent core over 1.4s, then drift slowly on offset phases while the red core pulses at 0.1 Hz."
+  },
+  "parsed": true,
+  "fenced": true,
+  "depGate": {
+    "sources": [
+      "gsap",
+      "three/webgpu",
+      "three/tsl"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_gsap = require(\"gsap\");\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nfunction createNode(config, ctx) {\n  const { THREE } = ctx;\n  const group = new THREE.Group();\n  const timelines = [];\n  const cleanups = [];\n  const backdropGeom = new THREE.PlaneGeometry(7, 6);\n  const gradStops = config.intent?.visualSpec?.colors?.gradientStops ?? [\n    { at: 0, hex: \"#0b0b10\" },\n    { at: 1, hex: \"#16161d\" }\n  ];\n  const gradCol0 = new THREE.Color(gradStops[0].hex);\n  const gradCol1 = new THREE.Color(gradStops[1].hex);\n  const gradMat = new import_webgpu.MeshBasicNodeMaterial();\n  const gradUv = (0, import_tsl.uv)();\n  gradMat.colorNode = (0, import_tsl.mix)((0, import_tsl.color)(gradCol0), (0, import_tsl.color)(gradCol1), gradUv.y);\n  const backdrop = new THREE.Mesh(backdropGeom, gradMat);\n  backdrop.position.z = -2.5;\n  group.add(backdrop);\n  const totalCount = 1200;\n  const coreCount = 90;\n  const fieldCount = totalCount - coreCount;\n  const corePositions = new Float32Array(coreCount * 3);\n  const coreEmissives = new Float32Array(coreCount * 3);\n  const coreAccent = new THREE.Color(\"#ff2a38\");\n  for (let i = 0; i < coreCount; i++) {\n    const phi = Math.random() * Math.PI * 2;\n    const theta = Math.acos(Math.random() * 2 - 1);\n    const r = 0.5 * Math.cbrt(Math.random());\n    corePositions[i * 3 + 0] = r * Math.sin(theta) * Math.cos(phi);\n    corePositions[i * 3 + 1] = r * Math.sin(theta) * Math.sin(phi);\n    corePositions[i * 3 + 2] = r * Math.cos(theta);\n    coreEmissives[i * 3 + 0] = coreAccent.r;\n    coreEmissives[i * 3 + 1] = coreAccent.g;\n    coreEmissives[i * 3 + 2] = coreAccent.b;\n  }\n  const fieldPositions = new Float32Array(fieldCount * 3);\n  const fieldOpacities = new Float32Array(fieldCount);\n  const paperCol = new THREE.Color(\"#e8ecf2\");\n  for (let i = 0; i < fieldCount; i++) {\n    const phi = Math.random() * Math.PI * 2;\n    const theta = Math.acos(Math.random() * 2 - 1);\n    const u = Math.cbrt(Math.random());\n    const rx = 3, ry = 2, rz = 2.5;\n    fieldPositions[i * 3 + 0] = u * rx * Math.sin(theta) * Math.cos(phi);\n    fieldPositions[i * 3 + 1] = u * ry * Math.sin(theta) * Math.sin(phi);\n    fieldPositions[i * 3 + 2] = -1.5 + u * rz * Math.cos(theta);\n    const z = fieldPositions[i * 3 + 2];\n    const depthFactor = Math.max(0.15, 0.9 - z / -5 * (0.9 - 0.15));\n    fieldOpacities[i] = depthFactor;\n  }\n  const coreIcosGeom = new THREE.IcosahedronGeometry(0.012, 1);\n  const coreMat = new import_webgpu.MeshStandardNodeMaterial();\n  coreMat.color.setHex(16722488);\n  coreMat.metalness = 0;\n  coreMat.roughness = 1;\n  coreMat.emissiveIntensity = 1.8;\n  coreMat.emissive.setHex(16722488);\n  coreMat.transparent = true;\n  coreMat.blending = THREE.AdditiveBlending;\n  const coreInstances = new THREE.InstancedMesh(coreIcosGeom, coreMat, coreCount);\n  coreInstances.instanceMatrix.setUsage(THREE.DynamicDrawUsage);\n  const coreMatrix = new THREE.Matrix4();\n  for (let i = 0; i < coreCount; i++) {\n    coreMatrix.setPosition(\n      corePositions[i * 3],\n      corePositions[i * 3 + 1],\n      corePositions[i * 3 + 2]\n    );\n    coreInstances.setMatrixAt(i, coreMatrix);\n  }\n  coreInstances.instanceMatrix.needsUpdate = true;\n  group.add(coreInstances);\n  const fieldIcosGeom = new THREE.IcosahedronGeometry(0.012, 1);\n  const fieldMat = new import_webgpu.MeshStandardNodeMaterial();\n  fieldMat.color.copy(paperCol);\n  fieldMat.metalness = 0;\n  fieldMat.roughness = 1;\n  fieldMat.emissiveIntensity = 0.9;\n  fieldMat.emissive.copy(paperCol);\n  fieldMat.transparent = true;\n  const fieldInstances = new THREE.InstancedMesh(fieldIcosGeom, fieldMat, fieldCount);\n  fieldInstances.instanceMatrix.setUsage(THREE.DynamicDrawUsage);\n  fieldInstances.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(fieldCount * 3), 3);\n  const fieldMatrix = new THREE.Matrix4();\n  for (let i = 0; i < fieldCount; i++) {\n    fieldMatrix.setPosition(\n      fieldPositions[i * 3],\n      fieldPositions[i * 3 + 1],\n      fieldPositions[i * 3 + 2]\n    );\n    fieldInstances.setMatrixAt(i, fieldMatrix);\n    const opacity = fieldOpacities[i];\n    fieldInstances.instanceColor.setXYZ(i, opacity, opacity, opacity);\n  }\n  fieldInstances.instanceMatrix.needsUpdate = true;\n  fieldInstances.instanceColor.needsUpdate = true;\n  group.add(fieldInstances);\n  const scene = group;\n  group.userData.fogConfig = {\n    color: \"#0b0b10\",\n    near: 4,\n    far: 10\n  };\n  const heroText = ctx.fontAtlas.createText(\"NOVA ATELIER\", {\n    fontSize: 124,\n    color: \"#e8ecf2\",\n    align: \"center\"\n  });\n  heroText.position.set(0, 0.5, 0.5);\n  group.add(heroText);\n  const subheadText = ctx.fontAtlas.createText(\"Precision instruments for the dark hours.\", {\n    fontSize: 40,\n    color: \"#e8ecf2\",\n    align: \"center\"\n  });\n  subheadText.position.set(0, 0.5 - 0.75, 0.5);\n  group.add(subheadText);\n  const captionText = ctx.fontAtlas.createText(\"EST. 2019 / GENEVA AND KYOTO\", {\n    fontSize: 18,\n    color: \"#e8ecf2\",\n    align: \"center\",\n    letterSpacingPx: 1.44\n    // 0.08em * 18px\n  });\n  captionText.position.set(0, -2.25, 0.5);\n  group.add(captionText);\n  const primitiveResult = ctx.primitives[\"particle-emerge\"](group, {\n    count: 1200,\n    durationMs: 1400\n  });\n  if (primitiveResult && primitiveResult.cleanup) {\n    cleanups.push(primitiveResult.cleanup);\n  }\n  if (primitiveResult && primitiveResult.timeline) {\n    timelines.push(primitiveResult.timeline);\n  }\n  const driftTimeline = import_gsap.gsap.timeline({ repeat: -1 });\n  const driftDuration = 1 / 0.05;\n  for (let i = 0; i < coreCount; i++) {\n    const originX = corePositions[i * 3];\n    const originY = corePositions[i * 3 + 1];\n    const originZ = corePositions[i * 3 + 2];\n    const phase = i / coreCount * Math.PI * 2;\n    driftTimeline.to(\n      { t: 0 },\n      {\n        t: 1,\n        duration: driftDuration,\n        ease: \"none\",\n        onUpdate: function() {\n          const angle = (this.targets()[0].t * Math.PI * 2 + phase) % (Math.PI * 2);\n          const offsetX = Math.cos(angle) * 0.04;\n          const offsetY = Math.sin(angle) * 0.04;\n          const mat = new THREE.Matrix4();\n          mat.setPosition(originX + offsetX, originY + offsetY, originZ);\n          coreInstances.setMatrixAt(i, mat);\n          coreInstances.instanceMatrix.needsUpdate = true;\n        }\n      },\n      0\n    );\n  }\n  for (let i = 0; i < fieldCount; i++) {\n    const originX = fieldPositions[i * 3];\n    const originY = fieldPositions[i * 3 + 1];\n    const originZ = fieldPositions[i * 3 + 2];\n    const phase = i / fieldCount * Math.PI * 2;\n    driftTimeline.to(\n      { t: 0 },\n      {\n        t: 1,\n        duration: driftDuration,\n        ease: \"none\",\n        onUpdate: function() {\n          const angle = (this.targets()[0].t * Math.PI * 2 + phase) % (Math.PI * 2);\n          const offsetX = Math.cos(angle) * 0.04;\n          const offsetY = Math.sin(angle) * 0.04;\n          const mat = new THREE.Matrix4();\n          mat.setPosition(originX + offsetX, originY + offsetY, originZ);\n          fieldInstances.setMatrixAt(i, mat);\n          fieldInstances.instanceMatrix.needsUpdate = true;\n        }\n      },\n      0\n    );\n  }\n  timelines.push(driftTimeline);\n  const pulsePeriod = 1 / 0.1;\n  const pulseTimeline = import_gsap.gsap.timeline({ repeat: -1 });\n  pulseTimeline.to(\n    coreMat,\n    {\n      emissiveIntensity: 1.8,\n      duration: pulsePeriod / 2,\n      ease: \"sine.inOut\"\n    },\n    0\n  ).to(\n    coreMat,\n    {\n      emissiveIntensity: 1.5,\n      duration: pulsePeriod / 2,\n      ease: \"sine.inOut\"\n    }\n  );\n  timelines.push(pulseTimeline);\n  group.userData.cleanup = function() {\n    timelines.forEach((tl) => {\n      if (tl && typeof tl.kill === \"function\") {\n        tl.kill();\n      }\n    });\n    cleanups.forEach((fn) => {\n      if (typeof fn === \"function\") fn();\n    });\n    backdropGeom.dispose();\n    gradMat.dispose();\n    coreIcosGeom.dispose();\n    coreMat.dispose();\n    fieldIcosGeom.dispose();\n    fieldMat.dispose();\n  };\n  return group;\n}\n",
+  "transformError": null
+}

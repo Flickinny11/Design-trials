@@ -1,0 +1,58 @@
+{
+  "label": "ground-truth-pass1-batch1",
+  "model": "claude-fable-5",
+  "frames": [
+    {
+      "label": "F1",
+      "goldenId": "g-01"
+    },
+    {
+      "label": "F2",
+      "goldenId": "g-02"
+    },
+    {
+      "label": "F3",
+      "goldenId": "g-03"
+    },
+    {
+      "label": "F4",
+      "goldenId": "g-04"
+    },
+    {
+      "label": "F5",
+      "goldenId": "g-05"
+    }
+  ],
+  "costUsd": 0.546057,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 15341,
+    "cache_read_input_tokens": 82459,
+    "output_tokens": 2423,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15341,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1630,
+        "cache_read_input_tokens": 44256,
+        "cache_creation_input_tokens": 9288,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9288
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 3, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame — no torus knot, pedestal, or lighting rendered\" } ], \"notes\": \"Near-black void; no pedestal, knot, or material study rendered at all.\" }, { \"frame\": \"F2\", \"score\": 3, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame — no prism, refraction, rim light, or emissive core\" } ], \"notes\": \"Uniform near-black frame; the prism scene never rendered.\" }, { \"frame\": \"F3\", \"score\": 8, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"background field — flat black, no gradient or hairline grid\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center card — no ghost preview, guidance copy, accent action, or border\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center card — flat untextured white fill\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card — tiny square vs 3.2x2.2 panel spec\" } ], \"notes\": \"Only a flat white square in a void; every DL16 richness element absent.\" }, { \"frame\": \"F4\", \"score\": 7, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"background field — no albedo ramp or hairline rules\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame — no wordmark, link columns, legal line, or accent bar\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center square — flat fill, no material response\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"center square — 6.8-wide footer band rendered as a centered stamp\" } ], \"notes\": \"Footer spec entirely unrendered; lone flat white square in black void.\" }, { \"frame\": \"F5\", \"score\": 7, \"mustFix\": [ { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center icon — blue/violet layered-stack element, off the red/black/white palette\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center icon\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame — no five-card filmstrip, photographs, bevels, or focused card\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center icon — tiny stamp instead of full carousel\" } ], \"notes\": \"Single flat blue stack icon in a void; carousel absent, automatic blue-drift MUST-FIX.\" } ] }"
+}

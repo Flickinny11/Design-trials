@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/claude-opus-4.8/v-17-data-ribbon-r2",
+  "contestant": "claude-opus-4.8",
+  "caseId": "v-17-data-ribbon",
+  "run": 2,
+  "capturedAt": "2026-07-11T03:55:32.886Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 30,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/claude-opus-4.8/v-17-data-ribbon-r2"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

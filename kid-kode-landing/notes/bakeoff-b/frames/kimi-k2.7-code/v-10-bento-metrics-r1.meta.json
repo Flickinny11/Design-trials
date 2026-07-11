@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/kimi-k2.7-code/v-10-bento-metrics-r1",
+  "contestant": "kimi-k2.7-code",
+  "caseId": "v-10-bento-metrics",
+  "run": 1,
+  "capturedAt": "2026-07-11T03:59:02.244Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 14,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/kimi-k2.7-code/v-10-bento-metrics-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

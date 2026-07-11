@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/claude-fable-5/v-16-feature-triptych-r2",
+  "contestant": "claude-fable-5",
+  "caseId": "v-16-feature-triptych",
+  "run": 2,
+  "capturedAt": "2026-07-11T04:25:03.500Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 26,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/claude-fable-5/v-16-feature-triptych-r2"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

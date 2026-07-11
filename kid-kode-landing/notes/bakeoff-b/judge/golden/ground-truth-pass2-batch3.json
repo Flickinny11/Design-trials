@@ -1,0 +1,58 @@
+{
+  "label": "ground-truth-pass2-batch3",
+  "model": "claude-fable-5",
+  "frames": [
+    {
+      "label": "F1",
+      "goldenId": "g-11"
+    },
+    {
+      "label": "F2",
+      "goldenId": "g-12"
+    },
+    {
+      "label": "F3",
+      "goldenId": "g-13"
+    },
+    {
+      "label": "F4",
+      "goldenId": "g-14"
+    },
+    {
+      "label": "F5",
+      "goldenId": "g-15"
+    }
+  ],
+  "costUsd": 0.6227820000000001,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 15274,
+    "cache_read_input_tokens": 82382,
+    "output_tokens": 3988,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15274,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 3185,
+        "cache_read_input_tokens": 44179,
+        "cache_creation_input_tokens": 9298,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9298
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":14,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame — no photo plate, subject, or caption block\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"upper-right quadrant — giant blurred glyph cropped off-canvas\"},{\"defect\":\"FLAT_VOID\",\"region\":\"left half background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center white glyph mass — flat blurred fill, no materiality\"}],\"notes\":\"No photographic hero at all; a blurred oversized glyph fragment replaces the entire spec. Palette present but content absent.\"},{\"frame\":\"F2\",\"score\":20,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"ribbon band — no mono ticker figures, only one accent tick\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"center — large unexplained gray gradient square behind ribbon\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"ribbon plane — flat fill, no roughness/metal response\"},{\"defect\":\"FLAT_VOID\",\"region\":\"outer background field\"}],\"notes\":\"Ribbon geometry and one red tick exist, but zero data content; empty band fails the spec's core purpose.\"},{\"frame\":\"F3\",\"score\":10,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame — near-empty black field\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"center — starfield collapsed into tiny dense patch\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no red accent core visible\"},{\"defect\":\"FLAT_VOID\",\"region\":\"entire background field\"}],\"notes\":\"Constellation collapsed to a postage-stamp speck cluster; no accent core, no depth falloff, frame effectively void.\"},{\"frame\":\"F4\",\"score\":15,\"mustFix\":[{\"defect\":\"DEFAULT_BLUE_DRIFT\",\"region\":\"center and lower-center plates — blue/purple glowing imagery\"},{\"defect\":\"FLAT_VOID\",\"region\":\"upper-right — blown flat-white plate with no image content\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"column — only ~3 plates visible, none photographic\"},{\"defect\":\"FLAT_VOID\",\"region\":\"left half — black empty panel\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"full frame — column misaligned, plates cropped\"}],\"notes\":\"No filmic photographs; blue-drift renders and a blown white plate. Automatic MUST-FIX palette violation plus voids.\"},{\"frame\":\"F5\",\"score\":32,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"card interior — no tier name, price figure, or feature text\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"right half — giant blurred glyph occluding the card\"},{\"defect\":\"FLAT_VOID\",\"region\":\"left background field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"upper-right glyph mass — flat blurred white fill\"}],\"notes\":\"Card structure, machined header, and physical red CTA read correctly, but all typography missing and composition wrecked by intruding blurred glyph.\"}]}"
+}

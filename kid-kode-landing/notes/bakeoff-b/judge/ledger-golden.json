@@ -1,0 +1,116 @@
+{
+  "wave": "wbakeb-golden",
+  "calls": [
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass1-batch1",
+      "frames": 5,
+      "costUsd": 0.546057,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T04:31:24.618Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass1-batch2",
+      "frames": 5,
+      "costUsd": 0.6013140000000001,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T04:32:22.311Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass1-batch3",
+      "frames": 5,
+      "costUsd": 0.608937,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T04:33:17.037Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass1-batch4",
+      "frames": 5,
+      "costUsd": 0.617831,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T04:34:17.075Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass1-batch5",
+      "frames": 5,
+      "costUsd": 0.6088070000000001,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T04:35:23.508Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass1-batch6",
+      "frames": 5,
+      "costUsd": 1.2300689999999999,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:16:35.015Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass2-batch1",
+      "frames": 5,
+      "costUsd": 0.5573170000000001,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:17:14.494Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass2-batch2",
+      "frames": 5,
+      "costUsd": 0.618214,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:18:06.913Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass2-batch3",
+      "frames": 5,
+      "costUsd": 0.6227820000000001,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:19:12.752Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass2-batch4",
+      "frames": 5,
+      "costUsd": 0.646251,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:20:18.418Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass2-batch5",
+      "frames": 5,
+      "costUsd": 0.6127469999999999,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:21:24.610Z"
+    },
+    {
+      "axis": "axis3-ground-truth",
+      "model": "claude-fable-5",
+      "batch": "ground-truth-pass2-batch6",
+      "frames": 5,
+      "costUsd": 0.43249999999999994,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:22:11.618Z"
+    }
+  ],
+  "totals": {
+    "subscriptionEquivalentUsd": 7.702826000000001
+  }
+}

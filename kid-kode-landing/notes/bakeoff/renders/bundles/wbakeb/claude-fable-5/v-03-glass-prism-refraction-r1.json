@@ -1,0 +1,181 @@
+{
+  "id": "wbakeb/claude-fable-5/v-03-glass-prism-refraction-r1",
+  "contestant": "claude-fable-5",
+  "caseId": "v-03-glass-prism-refraction",
+  "run": 1,
+  "node": {
+    "nodeId": "v-03-glass-prism-refraction",
+    "subtype": "glass-prism",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Glass prism refraction — A dispersive glass prism over a dark scene: iridescence, back rim light, emissive core — never flat glassmorphism.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "Light, machined.",
+            "role": "headline",
+            "typography": {
+              "fontSize": 68,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "SAPPHIRE OVER DIAL / ZERO DISTORTION",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#101017",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 0.6,
+              "hex": "#12121a"
+            },
+            {
+              "at": 1,
+              "hex": "#16161d"
+            }
+          ]
+        },
+        "typography": {
+          "headline": {
+            "family": "Lora",
+            "fontSize": 68,
+            "fontWeight": 600,
+            "letterSpacing": -0.005,
+            "lineHeight": 1.1
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Triangular prism: equilateral cross-section 1.2 units per side, length 1.8 units, axis horizontal, rotated 12 deg on z and 20 deg on y, centered at origin. Material: MeshPhysicalMaterial transmission 1.0, thickness 0.9, ior 1.55, TSL dispersion pass splitting refraction by 0.18 across RGB, iridescence 1.0, iridescenceIOR 1.3, iridescenceThicknessRange [120,480] nm, roughness 0.08, clearcoat 0.25, clearcoatRoughness 0.1, attenuationColor #e8ecf2 attenuationDistance 2.5. Emissive core: 0.35-unit octahedron inside the prism, color #ff2a38, emissive #ff2a38 intensity 2.2 (kept under the 2.5 AgX red-clip ceiling). Back rim: strong cool directional from behind-left so both long edges carry a bright rim line. Caustic streak: 2.4 x 0.5-unit plane on the floor at y=-1.1 with an engineered linear gradient of dispersed stops (#ff2a38 at 0.2, #e8ecf2 at 0.5, #9fb0c4 at 0.8) at opacity 0.35, elongating 8 percent when the prism tilts. Hover depth-rotate: up to 10 deg toward cursor over 350ms cubic-bezier(0.215,0.61,0.355,1); release weighted-settle 1.04 to 1.0 over 900ms cubic-bezier(0.165,0.84,0.44,1). Headline baseline 1.75 units (7x base) below center, caption 0.5 units below it. Never flat glassmorphism: no frosted planes, no uniform white borders."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "mesh",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "depth-rotate",
+        "trigger": "hover",
+        "params": {
+          "maxDeg": 10
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0.4,
+        0.3,
+        4.6
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 45
+    },
+    "lights": [
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 2,
+        "position": [
+          -2,
+          3,
+          -4
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#cdd6e4",
+        "intensity": 0.9,
+        "position": [
+          2.5,
+          2,
+          3
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 1.4,
+        "position": [
+          0,
+          0,
+          0.2
+        ]
+      },
+      {
+        "type": "ambient",
+        "color": "#2a2e38",
+        "intensity": 0.25
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Prism tilts up to 10 deg toward the cursor on hover and settles with weighted overshoot; the dispersed caustic streak on the floor elongates as it tilts."
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const { Group, Mesh, CylinderGeometry, OctahedronGeometry, PlaneGeometry, CircleGeometry, DirectionalLight, PointLight, DoubleSide } = ctx.THREE;\n  const colors = config.intent?.visualSpec?.colors ?? {};\n  const BG = colors.background ?? \"#0b0b10\";\n  const SURFACE = colors.surface ?? \"#101017\";\n  const INK = colors.ink ?? \"#16161d\";\n  const PAPER = colors.paper ?? \"#e8ecf2\";\n  const ACCENT = colors.accent ?? \"#ff2a38\";\n  const COOL = \"#9fb0c4\";\n  const group = new Group();\n  const disposables = [];\n  const timelines = [];\n  const primitiveHandles = [];\n  const backdropGeo = new PlaneGeometry(7, 6);\n  const backdropMat = new import_webgpu.MeshBasicNodeMaterial();\n  {\n    const v = (0, import_tsl.uv)().y;\n    const c0 = (0, import_tsl.color)(BG);\n    const c1 = (0, import_tsl.color)(\"#12121a\");\n    const c2 = (0, import_tsl.color)(INK);\n    const lower = (0, import_tsl.mix)(c0, c1, (0, import_tsl.smoothstep)((0, import_tsl.float)(0), (0, import_tsl.float)(0.6), v));\n    backdropMat.colorNode = (0, import_tsl.mix)(lower, c2, (0, import_tsl.smoothstep)((0, import_tsl.float)(0.6), (0, import_tsl.float)(1), v));\n  }\n  const backdrop = new Mesh(backdropGeo, backdropMat);\n  backdrop.position.set(0, -0.25, -2.5);\n  group.add(backdrop);\n  disposables.push(backdropGeo, backdropMat);\n  const rim = new DirectionalLight(COOL, 1.4);\n  rim.position.set(-3.2, 1.6, -4);\n  rim.target.position.set(0, 0.2, 0);\n  group.add(rim);\n  group.add(rim.target);\n  const coreGlow = new PointLight(ACCENT, 1.1, 4.5, 2);\n  coreGlow.position.set(0, 0.2, 0);\n  group.add(coreGlow);\n  const prismGroup = new Group();\n  prismGroup.position.set(0, 0.2, 0);\n  group.add(prismGroup);\n  const circumradius = 1.2 / Math.sqrt(3);\n  const prismGeo = new CylinderGeometry(circumradius, circumradius, 1.8, 3, 1, false);\n  prismGeo.rotateZ(Math.PI / 2);\n  const prismMat = new import_webgpu.MeshPhysicalNodeMaterial({\n    color: 16777215,\n    transmission: 1,\n    thickness: 0.9,\n    ior: 1.55,\n    roughness: 0.08,\n    metalness: 0,\n    clearcoat: 0.25,\n    clearcoatRoughness: 0.1,\n    iridescence: 1,\n    iridescenceIOR: 1.3,\n    iridescenceThicknessRange: [120, 480],\n    transparent: true,\n    side: DoubleSide\n  });\n  prismMat.dispersion = 0.18;\n  prismMat.attenuationColor = new ctx.THREE.Color(PAPER);\n  prismMat.attenuationDistance = 2.5;\n  {\n    const fres = (0, import_tsl.pow)((0, import_tsl.sub)((0, import_tsl.float)(1), (0, import_tsl.dot)(import_tsl.normalView, import_tsl.positionViewDirection).abs()), (0, import_tsl.float)(3));\n    const dispersed = (0, import_tsl.mix)(\n      (0, import_tsl.mix)((0, import_tsl.color)(ACCENT), (0, import_tsl.color)(PAPER), (0, import_tsl.smoothstep)((0, import_tsl.float)(0.2), (0, import_tsl.float)(0.5), (0, import_tsl.uv)().x)),\n      (0, import_tsl.color)(COOL),\n      (0, import_tsl.smoothstep)((0, import_tsl.float)(0.5), (0, import_tsl.float)(0.8), (0, import_tsl.uv)().x)\n    );\n    prismMat.emissiveNode = dispersed.mul(fres).mul((0, import_tsl.float)(0.55));\n  }\n  const prism = new Mesh(prismGeo, prismMat);\n  prism.rotation.z = 12 * Math.PI / 180;\n  prism.rotation.y = 20 * Math.PI / 180;\n  prismGroup.add(prism);\n  disposables.push(prismGeo, prismMat);\n  const coreGeo = new OctahedronGeometry(0.35, 0);\n  const coreMat = new import_webgpu.MeshStandardNodeMaterial({\n    color: ACCENT,\n    emissive: ACCENT,\n    emissiveIntensity: 2.2,\n    roughness: 0.4,\n    metalness: 0.1\n  });\n  const core = new Mesh(coreGeo, coreMat);\n  prismGroup.add(core);\n  disposables.push(coreGeo, coreMat);\n  const causticGeo = new PlaneGeometry(2.4, 0.5);\n  const causticMat = new import_webgpu.MeshBasicNodeMaterial({ transparent: true, depthWrite: false });\n  {\n    const x = (0, import_tsl.uv)().x;\n    const grad = (0, import_tsl.mix)(\n      (0, import_tsl.mix)((0, import_tsl.color)(ACCENT), (0, import_tsl.color)(PAPER), (0, import_tsl.smoothstep)((0, import_tsl.float)(0.2), (0, import_tsl.float)(0.5), x)),\n      (0, import_tsl.color)(COOL),\n      (0, import_tsl.smoothstep)((0, import_tsl.float)(0.5), (0, import_tsl.float)(0.8), x)\n    );\n    causticMat.colorNode = grad;\n    const edgeX = (0, import_tsl.smoothstep)((0, import_tsl.float)(0), (0, import_tsl.float)(0.15), x).mul((0, import_tsl.sub)((0, import_tsl.float)(1), (0, import_tsl.smoothstep)((0, import_tsl.float)(0.85), (0, import_tsl.float)(1), x)));\n    const edgeY = (0, import_tsl.smoothstep)((0, import_tsl.float)(0), (0, import_tsl.float)(0.25), (0, import_tsl.uv)().y).mul((0, import_tsl.sub)((0, import_tsl.float)(1), (0, import_tsl.smoothstep)((0, import_tsl.float)(0.75), (0, import_tsl.float)(1), (0, import_tsl.uv)().y)));\n    causticMat.opacityNode = edgeX.mul(edgeY).mul((0, import_tsl.float)(0.35));\n  }\n  const caustic = new Mesh(causticGeo, causticMat);\n  caustic.rotation.x = -Math.PI / 2;\n  caustic.position.set(0, -1.1, 0.3);\n  group.add(caustic);\n  disposables.push(causticGeo, causticMat);\n  const shadowGeo = new CircleGeometry(1.15, 48);\n  const shadowMat = new import_webgpu.MeshBasicNodeMaterial({ transparent: true, depthWrite: false });\n  shadowMat.colorNode = (0, import_tsl.vec3)(0, 0, 0);\n  shadowMat.opacityNode = (0, import_tsl.sub)((0, import_tsl.float)(1), (0, import_tsl.smoothstep)((0, import_tsl.float)(0.15), (0, import_tsl.float)(0.5), (0, import_tsl.length)((0, import_tsl.uv)().sub(0.5)))).mul((0, import_tsl.float)(0.5));\n  const contactShadow = new Mesh(shadowGeo, shadowMat);\n  contactShadow.rotation.x = -Math.PI / 2;\n  contactShadow.position.set(0, -1.11, 0.1);\n  group.add(contactShadow);\n  disposables.push(shadowGeo, shadowMat);\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  let yCursor = -1.75;\n  for (const item of items) {\n    const isHeadline = item.role === \"headline\";\n    const t = ctx.fontAtlas.createText(String(item.text), {\n      fontSize: item.typography?.fontSize ?? (isHeadline ? 68 : 18),\n      color: isHeadline ? PAPER : COOL,\n      align: \"center\",\n      letterSpacingPx: isHeadline ? -0.3 : 1.4\n    });\n    t.position.set(0, isHeadline ? -1.75 : yCursor - 0.5, 0.4);\n    if (!isHeadline) yCursor -= 0.5;\n    group.add(t);\n  }\n  for (const p of config.cinematicPrimitives ?? []) {\n    const fn = ctx.primitives[p.name];\n    if (fn) primitiveHandles.push(fn(prismGroup, p.params ?? {}));\n  }\n  const entrance = import_gsap.gsap.timeline();\n  entrance.from(prismGroup.position, { y: prismGroup.position.y - 0.35, duration: 0.7, ease: \"power3.out\" });\n  entrance.fromTo(\n    prismGroup.scale,\n    { x: 0.96, y: 0.96, z: 0.96 },\n    { x: 1.04, y: 1.04, z: 1.04, duration: 0.35, ease: \"power2.out\" },\n    0\n  );\n  entrance.to(prismGroup.scale, { x: 1, y: 1, z: 1, duration: 0.9, ease: \"power4.out\" }, 0.35);\n  timelines.push(entrance);\n  const idle = import_gsap.gsap.to(core.rotation, { y: Math.PI * 2, duration: 14, repeat: -1, ease: \"none\" });\n  timelines.push(idle);\n  group.userData.handlers = {\n    pointerover: () => {\n      import_gsap.gsap.to(caustic.scale, { x: 1.08, duration: 0.35, ease: \"power2.out\" });\n    },\n    pointerout: () => {\n      import_gsap.gsap.to(caustic.scale, { x: 1.04, duration: 0.2, ease: \"power2.out\", onComplete: () => {\n        import_gsap.gsap.to(caustic.scale, { x: 1, duration: 0.9, ease: \"power4.out\" });\n      } });\n    }\n  };\n  group.userData.cleanup = () => {\n    for (const tl of timelines) tl.kill();\n    import_gsap.gsap.killTweensOf(caustic.scale);\n    import_gsap.gsap.killTweensOf(prismGroup.scale);\n    import_gsap.gsap.killTweensOf(prismGroup.position);\n    for (const h of primitiveHandles) h?.cleanup?.();\n    for (const d of disposables) d?.dispose?.();\n  };\n  return group;\n}\n",
+  "transformError": null
+}

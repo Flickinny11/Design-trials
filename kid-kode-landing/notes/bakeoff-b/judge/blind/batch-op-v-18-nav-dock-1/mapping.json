@@ -1,0 +1,14 @@
+[
+  {
+    "label": "F1",
+    "bundleId": "wbakeb/claude-fable-5/v-18-nav-dock-r2",
+    "contestant": "claude-fable-5",
+    "source": "notes/bakeoff-b/frames/claude-fable-5/v-18-nav-dock-r2.png"
+  },
+  {
+    "label": "F2",
+    "bundleId": "wbakeb/claude-fable-5/v-18-nav-dock-r1",
+    "contestant": "claude-fable-5",
+    "source": "notes/bakeoff-b/frames/claude-fable-5/v-18-nav-dock-r1.png"
+  }
+]

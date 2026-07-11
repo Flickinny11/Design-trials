@@ -1,0 +1,21 @@
+{
+  "bundle": "wbakeb/gpt-oss-120b/v-05-pedestal-material-study-r2",
+  "contestant": "gpt-oss-120b",
+  "caseId": "v-05-pedestal-material-study",
+  "run": 2,
+  "capturedAt": "2026-07-11T02:57:17.910Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 0,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/gpt-oss-120b/v-05-pedestal-material-study-r2",
+    "moduleRuntimeError": "ReferenceError: float is not defined"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

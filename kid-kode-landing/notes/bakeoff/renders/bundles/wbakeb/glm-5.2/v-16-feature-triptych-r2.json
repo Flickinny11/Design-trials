@@ -1,0 +1,233 @@
+{
+  "id": "wbakeb/glm-5.2/v-16-feature-triptych-r2",
+  "contestant": "glm-5.2",
+  "caseId": "v-16-feature-triptych",
+  "run": 2,
+  "node": {
+    "nodeId": "v-16-feature-triptych",
+    "subtype": "feature-cards",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": "/prism-mock/home/nodes/feature-card.png"
+    },
+    "intent": {
+      "caption": "Feature triptych — Three feature cards in rhythm with icon seats, title/body hierarchy, and hover lift states.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "01",
+            "role": "icon-glyph",
+            "typography": {
+              "fontSize": 20,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "In-House Calibre",
+            "role": "card-title",
+            "typography": {
+              "fontSize": 20,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Every movement is designed, machined, and finished under one roof.",
+            "role": "body",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "02",
+            "role": "icon-glyph",
+            "typography": {
+              "fontSize": 20,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Five-Year Guarantee",
+            "role": "card-title",
+            "typography": {
+              "fontSize": 20,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Each piece is serviced free of charge for five years from delivery.",
+            "role": "body",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "03",
+            "role": "icon-glyph",
+            "typography": {
+              "fontSize": 20,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Hand-Finished Dials",
+            "role": "card-title",
+            "typography": {
+              "fontSize": 20,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Guilloche cut on a 1912 rose engine, one dial at a time.",
+            "role": "body",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#16161d",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#191921"
+            },
+            {
+              "at": 1,
+              "hex": "#121218"
+            }
+          ]
+        },
+        "typography": {
+          "card-title": {
+            "family": "Lora",
+            "fontSize": 20,
+            "fontWeight": 600,
+            "letterSpacing": 0,
+            "lineHeight": 1.2
+          },
+          "body": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.5
+          },
+          "icon-glyph": {
+            "family": "JetBrains Mono",
+            "fontSize": 20,
+            "fontWeight": 700,
+            "letterSpacing": 0,
+            "lineHeight": 1
+          }
+        },
+        "effects": "Three cards 1.5w x 1.9h scene units in a row, gap 0.25 (1x base unit), row total 5.0w centered at origin; card albedo vertical ramp #191921 (at 0.0) -> #121218 (at 1.0), corner radius 0.06, 0.006-unit hairline border #26262f, roughness 0.6, metalness 0.25, clearcoat 0.15; icon seat per card is a machined disc 0.4 diameter, extruded 0.05, brushed anisotropy 0.6, roughness 0.55, metalness 0.5, clearcoat 0.2, carrying a single mono glyph in #ff2a38 emissive intensity 1.6; interior padding 0.375 (1.5x base), vertical rhythm icon seat then 0.25 gap then title then 0.125 gap then body, all on a 0.25-unit baseline grid; mount stagger-cards with each card fade-up opacity 0 -> 1 and y +0.2 -> 0 over 500ms cubic-bezier(0.25,0.46,0.45,0.94) at 80ms stagger; hover lift y 0 -> 0.06 and translateZ 0 -> 0.12 over 180ms cubic-bezier(0.25,0.46,0.45,0.94) with the contact shadow under the card widening and softening as it rises, disc glyph emissive 1.6 -> 2.2 on the hovered card; the key light sits upper-left so lifted cards gain a brighter top bevel and a deeper bottom edge, making the lift read as physical."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0.1,
+        5
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.4
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1.1,
+        "position": [
+          -3,
+          3,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.5,
+        "position": [
+          0,
+          -1.8,
+          -1.2
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#8a93a3",
+        "intensity": 0.3,
+        "position": [
+          3,
+          1,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Cards cascade in at 80ms stagger; the hovered card lifts 0.06 up and 0.12 toward camera with a widening contact shadow and brighter disc glyph.",
+    "contrastMinimum": "4.5:1 body on card ramp; 3:1 titles; accent glyphs 4.6:1 on disc"
+  },
+  "parsed": true,
+  "fenced": true,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const THREE = ctx.THREE;\n  const group = new THREE.Group();\n  group.name = \"feature-triptych\";\n  const palette = config.intent?.visualSpec?.colors ?? config.colors ?? {\n    background: \"#0b0b10\",\n    surface: \"#16161d\",\n    ink: \"#16161d\",\n    paper: \"#e8ecf2\",\n    accent: \"#ff2a38\",\n    gradientStops: [{ at: 0, hex: \"#191921\" }, { at: 1, hex: \"#121218\" }]\n  };\n  const accentHex = palette.accent || \"#ff2a38\";\n  const paperHex = palette.paper || \"#e8ecf2\";\n  const stops = palette.gradientStops?.length ? palette.gradientStops : [{ at: 0, hex: \"#191921\" }, { at: 1, hex: \"#121218\" }];\n  const topColor = new THREE.Color(stops[0].hex);\n  const bottomColor = new THREE.Color(stops[stops.length - 1].hex);\n  const borderHex = \"#26262f\";\n  const ambient = new import_webgpu.AmbientLight(16777215, 0.55);\n  group.add(ambient);\n  const keyLight = new import_webgpu.DirectionalLight(16777215, 1.15);\n  keyLight.position.set(-3.2, 3.4, 4);\n  group.add(keyLight);\n  const rimLight = new import_webgpu.DirectionalLight(new THREE.Color(accentHex), 0.6);\n  rimLight.position.set(3.5, -1.5, 2.5);\n  group.add(rimLight);\n  const fillLight = new import_webgpu.PointLight(16777215, 0.35, 18, 1.5);\n  fillLight.position.set(0, -1.8, 3.2);\n  group.add(fillLight);\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const cards = [];\n  for (let i = 0; i < 3; i++) {\n    cards.push({\n      glyph: items[i * 3]?.text ?? String(i + 1).padStart(2, \"0\"),\n      title: items[i * 3 + 1]?.text ?? \"\",\n      body: items[i * 3 + 2]?.text ?? \"\"\n    });\n  }\n  const cardW = 1.5;\n  const cardH = 1.9;\n  const gap = 0.25;\n  const rowTotal = 3 * cardW + 2 * gap;\n  const startX = -rowTotal / 2 + cardW / 2;\n  const titleFontSize = 26;\n  const bodyFontSize = 15;\n  const glyphFontSize = 24;\n  const disposables = [];\n  const timelines = [];\n  function disposeNode(n) {\n    if (n.geometry) disposables.push(n.geometry);\n    if (n.material) disposables.push(n.material);\n  }\n  const bgGeo = new import_webgpu.PlaneGeometry(9, 6.5);\n  const bgMat = new MeshBasicNodeMaterial({ transparent: true, opacity: 1 });\n  bgMat.colorNode = (0, import_tsl.mix)((0, import_tsl.vec3)(topColor.r, topColor.g, topColor.b), (0, import_tsl.vec3)(bottomColor.r, bottomColor.g, bottomColor.b), (0, import_tsl.uv)().y);\n  const backdrop = new import_webgpu.Mesh(bgGeo, bgMat);\n  backdrop.position.set(0, 0, -2.5);\n  group.add(backdrop);\n  disposables.push(bgGeo, bgMat);\n  const floorGeo = new import_webgpu.PlaneGeometry(8, 3.2);\n  const floorMat = new MeshBasicNodeMaterial({ transparent: true, opacity: 0 });\n  floorMat.colorNode = (0, import_tsl.vec3)(0.06, 0.06, 0.075);\n  const floor = new import_webgpu.Mesh(floorGeo, floorMat);\n  floor.position.set(0, -1.6, -1.5);\n  floor.rotation.x = -0.08;\n  group.add(floor);\n  disposables.push(floorGeo, floorMat);\n  const cardObjects = [];\n  for (let i = 0; i < 3; i++) {\n    const cardGroup = new THREE.Group();\n    cardGroup.position.set(startX + i * (cardW + gap), 0, 0);\n    const cardGeo = new import_webgpu.PlaneGeometry(cardW, cardH, 1, 1);\n    const cardMat = new MeshStandardNodeMaterial({\n      metalness: 0.25,\n      roughness: 0.6,\n      clearcoat: 0.15,\n      transparent: false\n    });\n    cardMat.colorNode = (0, import_tsl.mix)(\n      (0, import_tsl.vec3)(topColor.r, topColor.g, topColor.b),\n      (0, import_tsl.vec3)(bottomColor.r, bottomColor.g, bottomColor.b),\n      (0, import_tsl.smoothstep)(0, 1, (0, import_tsl.uv)().y)\n    );\n    const bW = 6e-3;\n    const edgeX = (0, import_tsl.smoothstep)(0, bW, (0, import_tsl.uv)().x).sub((0, import_tsl.smoothstep)(1 - bW, 1, (0, import_tsl.uv)().x));\n    const edgeY = (0, import_tsl.smoothstep)(0, bW, (0, import_tsl.uv)().y).sub((0, import_tsl.smoothstep)(1 - bW, 1, (0, import_tsl.uv)().y));\n    const borderMask = edgeX.min(edgeY).oneMinus();\n    const borderCol = new THREE.Color(borderHex);\n    cardMat.colorNode = (0, import_tsl.mix)(\n      cardMat.colorNode,\n      (0, import_tsl.vec3)(borderCol.r, borderCol.g, borderCol.b),\n      borderMask\n    );\n    const cardMesh = new import_webgpu.Mesh(cardGeo, cardMat);\n    cardGroup.add(cardMesh);\n    disposables.push(cardGeo, cardMat);\n    const shadowGeo = new import_webgpu.PlaneGeometry(cardW * 1.1, cardH * 0.28);\n    const shadowMat = new MeshBasicNodeMaterial({\n      transparent: true,\n      opacity: 0.45,\n      depthWrite: false\n    });\n    const sy = (0, import_tsl.smoothstep)(0, 0.5, (0, import_tsl.uv)().y).mul((0, import_tsl.smoothstep)(1, 0.5, (0, import_tsl.uv)().y));\n    shadowMat.colorNode = (0, import_tsl.vec3)(0, 0, 0).mul(sy.mul(0.7).add(0.3));\n    shadowMat.opacityNode = sy.mul((0, import_tsl.uniform)(0.45));\n    const shadow = new import_webgpu.Mesh(shadowGeo, shadowMat);\n    shadow.position.set(0, -cardH / 2 - 0.04, -0.02);\n    shadow.rotation.x = -Math.PI / 2;\n    cardGroup.add(shadow);\n    disposables.push(shadowGeo, shadowMat);\n    const discGeo = new import_webgpu.CircleGeometry(0.2, 48);\n    const discMat = new MeshStandardNodeMaterial({\n      metalness: 0.5,\n      roughness: 0.55,\n      clearcoat: 0.2\n    });\n    const discColor = new THREE.Color(\"#1c1c24\");\n    discMat.colorNode = (0, import_tsl.vec3)(discColor.r, discColor.g, discColor.b);\n    const disc = new import_webgpu.Mesh(discGeo, discMat);\n    disc.position.set(0, cardH / 2 - 0.375 - 0.1, 0.04);\n    cardGroup.add(disc);\n    disposables.push(discGeo, discMat);\n    const ringGeo = new THREE.RingGeometry(0.18, 0.205, 48);\n    const ringMat = new MeshStandardNodeMaterial({\n      metalness: 0.6,\n      roughness: 0.4,\n      clearcoat: 0.25\n    });\n    ringMat.colorNode = (0, import_tsl.vec3)(0.16, 0.16, 0.2);\n    const ring = new import_webgpu.Mesh(ringGeo, ringMat);\n    ring.position.copy(disc.position);\n    ring.position.z = 0.045;\n    cardGroup.add(ring);\n    disposables.push(ringGeo, ringMat);\n    const glyphObj = ctx.fontAtlas.createText(cards[i].glyph, {\n      fontSize: glyphFontSize,\n      color: accentHex,\n      align: \"center\",\n      letterSpacingPx: 0\n    });\n    glyphObj.position.set(disc.position.x, disc.position.y, disc.position.z + 0.05);\n    cardGroup.add(glyphObj);\n    const glowGeo = new import_webgpu.CircleGeometry(0.16, 32);\n    const glowMat = new MeshBasicNodeMaterial({ transparent: true, opacity: 0.35, depthWrite: false });\n    glowMat.colorNode = (0, import_tsl.vec3)(new THREE.Color(accentHex).r, new THREE.Color(accentHex).g, new THREE.Color(accentHex).b);\n    const glow = new import_webgpu.Mesh(glowGeo, glowMat);\n    glow.position.copy(glyphObj.position);\n    glow.position.z -= 5e-3;\n    cardGroup.add(glow);\n    disposables.push(glowGeo, glowMat);\n    const titleObj = ctx.fontAtlas.createText(cards[i].title, {\n      fontSize: titleFontSize,\n      color: paperHex,\n      align: \"center\",\n      letterSpacingPx: 0,\n      maxWidthPx: 320\n    });\n    titleObj.position.set(0, disc.position.y - 0.2 - 0.25, 0.04);\n    cardGroup.add(titleObj);\n    const bodyObj = ctx.fontAtlas.createText(cards[i].body, {\n      fontSize: bodyFontSize,\n      color: \"#b9bdc7\",\n      align: \"center\",\n      letterSpacingPx: 0,\n      maxWidthPx: 320\n    });\n    bodyObj.position.set(0, titleObj.position.y - 0.18, 0.04);\n    cardGroup.add(bodyObj);\n    group.add(cardGroup);\n    cardObjects.push({\n      group: cardGroup,\n      mesh: cardMesh,\n      shadow,\n      disc,\n      ring,\n      glyph: glyphObj,\n      glow,\n      mat: cardMat,\n      shadowMat,\n      glowMat,\n      ringMat\n    });\n  }\n  const entrance = import_gsap.gsap.timeline();\n  cardObjects.forEach((c, i) => {\n    c.group.position.y = 0.2;\n    const proxy = { op: 0 };\n    entrance.to(proxy, {\n      op: 1,\n      duration: 0.5,\n      ease: \"power2.out\",\n      delay: i * 0.08,\n      onUpdate: () => {\n        c.mat.transparent = true;\n        c.mat.opacity = proxy.op;\n        c.shadowMat.opacity = proxy.op * 0.45;\n      }\n    }, 0);\n    entrance.to(c.group.position, {\n      y: 0,\n      duration: 0.5,\n      ease: \"power2.out\",\n      delay: i * 0.08\n    }, 0);\n    entrance.fromTo(c.glowMat, { opacity: 0 }, { opacity: 0.35, duration: 0.5, ease: \"power2.out\", delay: i * 0.08 }, 0);\n  });\n  timelines.push(entrance);\n  const hoverStates = cardObjects.map(() => ({ hovering: false, tl: null }));\n  function setHover(index, hovering) {\n    const c = cardObjects[index];\n    const st = hoverStates[index];\n    if (st.tl) st.tl.kill();\n    st.tl = import_gsap.gsap.timeline();\n    st.hovering = hovering;\n    st.tl.to(c.group.position, {\n      y: hovering ? 0.06 : 0,\n      z: hovering ? 0.12 : 0,\n      duration: 0.18,\n      ease: \"power2.out\"\n    }, 0);\n    st.tl.to(c.shadow.scale, {\n      x: hovering ? 1.18 : 1,\n      y: hovering ? 1.5 : 1,\n      duration: 0.18,\n      ease: \"power2.out\"\n    }, 0);\n    const glowTarget = hovering ? 0.6 : 0.35;\n    st.tl.to(c.glowMat, { opacity: glowTarget, duration: 0.18, ease: \"power2.out\" }, 0);\n    st.tl.to(c.ringMat, {\n      emissive: new THREE.Color(accentHex),\n      emissiveIntensity: hovering ? 0.6 : 0,\n      duration: 0.18,\n      ease: \"power2.out\"\n    }, 0);\n    if (!hovering) {\n      st.tl.to(c.group.scale, { x: 1, y: 1, z: 1, duration: 0.12, ease: \"back.out(2)\" }, 0);\n    } else {\n      st.tl.to(c.group.scale, { x: 1.02, y: 1.02, z: 1.02, duration: 0.18, ease: \"power2.out\" }, 0);\n    }\n    timelines.push(st.tl);\n  }\n  group.userData.handlers = {\n    onPointerOver: (e) => {\n      const idx = cardObjects.findIndex((c) => c.group === e.object?.parent || c.mesh === e.object || c.group === e.object);\n      if (idx >= 0) setHover(idx, true);\n    },\n    onPointerOut: (e) => {\n      const idx = cardObjects.findIndex((c) => c.group === e.object?.parent || c.mesh === e.object || c.group === e.object);\n      if (idx >= 0) setHover(idx, false);\n    },\n    onClick: (e) => {\n      ctx.emit(\"navigate\", { to: \"hub-features\" });\n    }\n  };\n  const prims = config.cinematicPrimitives ?? [];\n  const primHandles = [];\n  for (const p of prims) {\n    if (ctx.primitives && ctx.primitives[p.name]) {\n      const r = ctx.primitives[p.name](group, p.params);\n      if (r) primHandles.push(r);\n    }\n  }\n  group.userData.cleanup = () => {\n    timelines.forEach((t) => {\n      try {\n        t.kill();\n      } catch (_) {\n      }\n    });\n    primHandles.forEach((h) => {\n      try {\n        h.cleanup?.();\n      } catch (_) {\n      }\n    });\n    disposables.forEach((d) => {\n      try {\n        d.dispose?.();\n      } catch (_) {\n      }\n    });\n  };\n  return group;\n}\n",
+  "transformError": null
+}

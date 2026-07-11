@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/claude-opus-4.8/v-01-orbit-product-hero-r1",
+  "contestant": "claude-opus-4.8",
+  "caseId": "v-01-orbit-product-hero",
+  "run": 1,
+  "capturedAt": "2026-07-11T03:53:10.759Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 6,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/claude-opus-4.8/v-01-orbit-product-hero-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

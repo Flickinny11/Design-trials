@@ -1,0 +1,23 @@
+{
+  "bundle": "wbakeb/claude-haiku-4.5/v-12-photo-hero-composite-r1",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-12-photo-hero-composite",
+  "run": 1,
+  "capturedAt": "2026-07-11T02:51:06.729Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 7,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/claude-haiku-4.5/v-12-photo-hero-composite-r1"
+  },
+  "consoleErrors": [
+    "THREE.TSL: NodeError: THREE.TSL: `texture( value )` function expects a valid instance of THREE.Texture(). \"scene-root.ts:136\"\n    at scene-root.ts:136:22\n    at scene-root.ts:164:22",
+    "THREE.TSL: NodeError: THREE.TSL: `texture( value )` function expects a valid instance of THREE.Texture(). \"scene-root.ts:136\"\n    at scene-root.ts:136:22\n    at scene-root.ts:164:22"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

@@ -1,0 +1,192 @@
+{
+  "id": "wbakeb/claude-haiku-4.5/v-08-orrery-mechanism-r2",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-08-orrery-mechanism",
+  "run": 2,
+  "node": {
+    "nodeId": "v-08-orrery-mechanism",
+    "subtype": "mechanism",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Orrery mechanism — A machined gear mechanism with metallic PBR, slow meshing rotation, and a jewel accent pivot.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "The going train",
+            "role": "headline",
+            "typography": {
+              "fontSize": 68,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "34 COMPONENTS / HAND-FINISHED",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 0.65,
+              "hex": "#101017"
+            },
+            {
+              "at": 1,
+              "hex": "#16161d"
+            }
+          ]
+        },
+        "typography": {
+          "headline": {
+            "family": "Lora",
+            "fontSize": 68,
+            "fontWeight": 600,
+            "letterSpacing": -0.005,
+            "lineHeight": 1.1
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Primary gear (/prism-mock/orrery/meshes/gear-a.glb) normalized to 1.6-unit diameter, centered at origin in the xy plane; secondary gear instance scaled to 0.9-unit diameter at [1.15, 0.35, -0.1], tooth-meshed at ratio 16:9 (primary 0.08 rad/s, secondary -0.142 rad/s, phase-locked so teeth never intersect). Gear material: machined steel roughness 0.5, metalness 0.55, clearcoat 0.2, clearcoatRoughness 0.3, anisotropy 0.7 oriented radially so spokes catch light as they turn. Jewel pivot: 0.12-unit-radius sphere at the primary hub, MeshPhysicalMaterial color #ff2a38, transmission 0.6, ior 1.76, emissive #ff2a38 intensity 1.8. Arbor shafts: 0.05-radius ink #16161d cylinders through both hubs, z-length 0.8. Contact shadow ellipse 2.6 x 1.2 units at y=-1.2, opacity 0.5. Backdrop plane 7 x 6 at z=-3 with the radial gradient stops; linear fog #0b0b10 near 5 far 11 for depth hint. Time-trigger orbit: camera drifts on radius 0.2 at 0.08 rad/s. Headline baseline at y=-1.7, caption at y=-2.1 on the 0.25-unit rhythm."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "mesh",
+    "depthMapUrl": null,
+    "meshUrl": "/prism-mock/orrery/meshes/gear-a.glb",
+    "cinematicPrimitives": [
+      {
+        "name": "orbit",
+        "trigger": "time",
+        "params": {
+          "speed": 0.08,
+          "radius": 0.2
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0.6,
+        0.5,
+        3.8
+      ],
+      "lookAt": [
+        0.3,
+        0.1,
+        0
+      ],
+      "fov": 45
+    },
+    "lights": [
+      {
+        "type": "directional",
+        "color": "#f2f4f8",
+        "intensity": 1.3,
+        "position": [
+          2,
+          3,
+          2.5
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#7e8aa0",
+        "intensity": 0.35,
+        "position": [
+          -2.5,
+          0.5,
+          1.5
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 1,
+        "position": [
+          -1,
+          2.5,
+          -2.5
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 1.2,
+        "position": [
+          0,
+          0,
+          0.6
+        ]
+      },
+      {
+        "type": "ambient",
+        "color": "#2a2e38",
+        "intensity": 0.25
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Both gears rotate in phase-locked mesh (0.08 and -0.142 rad/s) while the camera drifts on a 0.2-unit orbit; the ruby pivot glints as spokes sweep the key light."
+  },
+  "parsed": true,
+  "fenced": true,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_webgpu2 = require(\"three/webgpu\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const { THREE } = ctx;\n  const root = new import_webgpu.Group();\n  root.position.copy(config.scenePosition || new THREE.Vector3(0, 0, 0));\n  const cleanup = {\n    timelines: [],\n    resources: [],\n    dispose() {\n      this.timelines.forEach((t) => t.kill());\n      this.resources.forEach((r) => r.dispose?.());\n    }\n  };\n  root.userData.cleanup = () => cleanup.dispose();\n  const gearPromise = ctx.glbLoader.loadGLB(config.meshUrl).then((gltf) => {\n    const primaryGear = gltf.scene;\n    primaryGear.scale.set(1.6, 1.6, 1.6);\n    primaryGear.position.set(0, 0, 0);\n    root.add(primaryGear);\n    const secondaryGear = primaryGear.clone();\n    secondaryGear.scale.set(0.9, 0.9, 0.9);\n    secondaryGear.position.set(1.15, 0.35, -0.1);\n    root.add(secondaryGear);\n    const applyGearMaterial = (obj) => {\n      obj.traverse((child) => {\n        if (child instanceof import_webgpu.Mesh) {\n          const oldMat = child.material;\n          const newMat = new import_webgpu2.MeshStandardNodeMaterial({\n            color: \"#a8a8b0\",\n            roughness: 0.5,\n            metalness: 0.55,\n            clearcoat: 0.2,\n            clearcoatRoughness: 0.3,\n            anisotropy: 0.7\n          });\n          child.material = newMat;\n          cleanup.resources.push(newMat);\n        }\n      });\n    };\n    applyGearMaterial(primaryGear);\n    applyGearMaterial(secondaryGear);\n    const jewelGeo = new import_webgpu.SphereGeometry(0.12, 32, 32);\n    const jewelMat = new import_webgpu2.MeshPhysicalNodeMaterial({\n      color: \"#ff2a38\",\n      transmission: 0.6,\n      ior: 1.76,\n      emissive: \"#ff2a38\",\n      emissiveIntensity: 1.8,\n      roughness: 0.2,\n      metalness: 0.1\n    });\n    const jewel = new import_webgpu.Mesh(jewelGeo, jewelMat);\n    jewel.position.set(0, 0, 0);\n    root.add(jewel);\n    cleanup.resources.push(jewelGeo, jewelMat);\n    const arborGeo = new import_webgpu.CylinderGeometry(0.05, 0.05, 0.8, 16);\n    const arborMat = new import_webgpu2.MeshStandardNodeMaterial({\n      color: \"#16161d\",\n      roughness: 0.6,\n      metalness: 0.3\n    });\n    const arbor1 = new import_webgpu.Mesh(arborGeo, arborMat);\n    arbor1.position.set(0, 0, 0);\n    arbor1.rotation.x = Math.PI / 2;\n    root.add(arbor1);\n    const arbor2 = new import_webgpu.Mesh(arborGeo, arborMat.clone());\n    arbor2.position.set(1.15, 0.35, -0.1);\n    arbor2.rotation.x = Math.PI / 2;\n    root.add(arbor2);\n    cleanup.resources.push(arborGeo, arborMat);\n    const shadowGeo = new import_webgpu.PlaneGeometry(2.6, 1.2);\n    const shadowMat = new import_webgpu2.MeshStandardNodeMaterial({\n      color: \"#000000\",\n      emissive: \"#000000\",\n      roughness: 0.8,\n      metalness: 0,\n      transparent: true,\n      opacity: 0.5\n    });\n    const shadow = new import_webgpu.Mesh(shadowGeo, shadowMat);\n    shadow.position.set(0, -1.2, -0.01);\n    shadow.rotation.x = -Math.PI / 2;\n    root.add(shadow);\n    cleanup.resources.push(shadowGeo, shadowMat);\n    const gearState = { primaryAngle: 0, secondaryAngle: 0 };\n    const updateGears = () => {\n      gearState.primaryAngle += 0.08 * (1 / 60);\n      gearState.secondaryAngle = -(0.08 * (16 / 9)) * (1 / 60);\n      primaryGear.rotation.z = gearState.primaryAngle;\n      secondaryGear.rotation.z = gearState.secondaryAngle;\n    };\n    const gearTimeline = import_gsap.gsap.timeline({ repeat: -1 });\n    gearTimeline.to(gearState, {\n      primaryAngle: Math.PI * 2,\n      duration: Math.PI * 2 / 0.08,\n      ease: \"none\",\n      onUpdate: updateGears\n    }, 0);\n    cleanup.timelines.push(gearTimeline);\n  });\n  const backdropGeo = new import_webgpu.PlaneGeometry(7, 6);\n  const backdropMat = new import_webgpu2.MeshStandardNodeMaterial({\n    color: \"#0b0b10\",\n    emissive: \"#000000\",\n    roughness: 1,\n    metalness: 0\n  });\n  const backdrop = new import_webgpu.Mesh(backdropGeo, backdropMat);\n  backdrop.position.z = -3;\n  root.add(backdrop);\n  cleanup.resources.push(backdropGeo, backdropMat);\n  const headlineText = ctx.fontAtlas.createText(\"The going train\", {\n    fontSize: 68,\n    color: \"#e8ecf2\",\n    align: \"center\",\n    letterSpacingPx: -0.34\n  });\n  headlineText.position.set(0, -1.7, 0.1);\n  root.add(headlineText);\n  const captionText = ctx.fontAtlas.createText(\"34 COMPONENTS / HAND-FINISHED\", {\n    fontSize: 18,\n    color: \"#e8ecf2\",\n    align: \"center\",\n    letterSpacingPx: 1.44\n  });\n  captionText.position.set(0, -2.1, 0.1);\n  root.add(captionText);\n  const orbitResult = ctx.primitives[\"orbit\"](root, {\n    radius: 0.2,\n    period: Math.PI * 2 / 0.08\n    // Derived from speed 0.08 rad/s\n  });\n  if (orbitResult) {\n    cleanup.timelines.push(orbitResult.timeline);\n  }\n  return root;\n}\n",
+  "transformError": null
+}

@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/mercury-2/v-16-feature-triptych-r2",
+  "contestant": "mercury-2",
+  "caseId": "v-16-feature-triptych",
+  "run": 2,
+  "capturedAt": "2026-07-11T03:01:41.216Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 15,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/mercury-2/v-16-feature-triptych-r2"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

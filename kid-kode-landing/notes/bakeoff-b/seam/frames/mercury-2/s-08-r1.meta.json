@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb-seam/mercury-2/s-08",
+  "contestant": "mercury-2",
+  "caseId": "s-08",
+  "run": 1,
+  "capturedAt": "2026-07-11T06:43:37.410Z",
+  "probe": {
+    "status": "error",
+    "error": "module did not default-export a function",
+    "renderables": 0,
+    "nodeMounted": false,
+    "bundleId": "wbakeb-seam/mercury-2/s-08"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": false,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

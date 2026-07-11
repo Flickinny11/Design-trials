@@ -1,0 +1,173 @@
+{
+  "id": "wbakeb-seam/mercury-2/s-02",
+  "contestant": "mercury-2",
+  "caseId": "s-02",
+  "visualCaseId": "v-04-kinetic-type-headline",
+  "run": 1,
+  "node": {
+    "nodeId": "v-04-kinetic-type-headline",
+    "subtype": "kinetic-typography",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Kinetic 3D type headline — A hero headline as dimensional type with staggered kinetic entrance and weighted settle; MSDF text only.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "NOVA ATELIER / CALIBRE PROGRAM",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "TIME, MACHINED.",
+            "role": "hero",
+            "typography": {
+              "fontSize": 124,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Every calibre begins as a solid billet.",
+            "role": "subhead",
+            "typography": {
+              "fontSize": 40,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#101017",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 1,
+              "hex": "#13131a"
+            }
+          ]
+        },
+        "typography": {
+          "hero": {
+            "family": "Lora",
+            "fontSize": 124,
+            "fontWeight": 600,
+            "letterSpacing": -0.01,
+            "lineHeight": 1.05
+          },
+          "subhead": {
+            "family": "JetBrains Mono",
+            "fontSize": 40,
+            "fontWeight": 400,
+            "letterSpacing": 0.02,
+            "lineHeight": 1.35
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Hero set as MSDF glyph planes (Lora 600), glyph em height 0.62 scene units, one line centered at y=0.4, per-word z offsets front-to-back 0.12 / 0.0 / -0.12 units for parallax depth. kinetic-text on load: per-glyph y +0.35 to 0 and opacity 0 to 1, 700ms each, 60ms stagger left to right, cubic-bezier(0.215,0.61,0.355,1); the final glyph triggers a group weighted-settle, scale 1.04 to 1.0 over 900ms cubic-bezier(0.165,0.84,0.44,1). Accent underline rule: 2.6 x 0.045-unit plane #ff2a38, emissive intensity 1.2, at y=-0.05 under the hero, scaleX 0 to 1 anchored left over 500ms cubic-bezier(0.25,0.46,0.45,0.94) starting 120ms after the last glyph lands. Subhead (em height 0.2) fades up (opacity 0 to 1, y +0.2 to 0, 500ms cubic-bezier(0.25,0.46,0.45,0.94)) at y=-0.65; caption kicker at y=1.15 in JetBrains Mono 700 uppercase. Backdrop: 7 x 5.5-unit plane at z=-1.5 with vertical engineered gradient #0b0b10 to #13131a plus 1.5 percent mono grain, no soft blur. Spacing locked to the 0.25-unit rhythm."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "kinetic-text",
+        "trigger": "load",
+        "params": {
+          "staggerMs": 60,
+          "riseUnits": 0.35
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        5.5
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#3a3f4a",
+        "intensity": 0.5
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 0.9,
+        "position": [
+          2,
+          3,
+          4
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Glyphs rise 0.35 units and fade in with a 60ms left-to-right stagger, the line settles with 1.04 overshoot, then the red underline draws left to right."
+  },
+  "parsed": true,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const { THREE } = ctx;\n  const group = new THREE.Group();\n  const backdropGeometry = new import_webgpu.PlaneGeometry(7, 5.5);\n  const gradientMaterial = new import_webgpu.MeshBasicNodeMaterial();\n  const u = (0, import_tsl.uv)();\n  const gradient = (0, import_tsl.mix)(\n    (0, import_tsl.vec3)(11 / 255, 11 / 255, 16 / 255),\n    (0, import_tsl.vec3)(19 / 255, 19 / 255, 26 / 255),\n    u.y\n  );\n  gradientMaterial.colorNode = gradient;\n  const backdrop = new THREE.Mesh(backdropGeometry, gradientMaterial);\n  backdrop.position.z = -1.5;\n  group.add(backdrop);\n  const ambient = new THREE.AmbientLight(4210784, 0.6);\n  group.add(ambient);\n  const keyLight = new THREE.DirectionalLight(16777215, 1.2);\n  keyLight.position.set(5, 5, 5);\n  group.add(keyLight);\n  const rimLight = new THREE.DirectionalLight(15265010, 0.8);\n  rimLight.position.set(-5, 0, -5);\n  group.add(rimLight);\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  let heroText = \"\", subheadText = \"\", captionText = \"\";\n  let heroFontSize = 0.62, subheadFontSize = 0.2, captionFontSize = 0.09;\n  for (const item of items) {\n    if (item.role === \"hero\") {\n      heroText = item.text;\n      heroFontSize = item.typography?.fontSize ? item.typography.fontSize / 200 : 0.62;\n    } else if (item.role === \"subhead\") {\n      subheadText = item.text;\n      subheadFontSize = item.typography?.fontSize ? item.typography.fontSize / 200 : 0.2;\n    } else if (item.role === \"caption\") {\n      captionText = item.text;\n      captionFontSize = item.typography?.fontSize ? item.typography.fontSize / 200 : 0.09;\n    }\n  }\n  const cardGeometry = new import_webgpu.BoxGeometry(3.2, 0.9, 0.12);\n  const cardMaterial = new import_webgpu.MeshStandardNodeMaterial();\n  cardMaterial.color = new THREE.Color(\"#0b0b10\");\n  cardMaterial.metalness = 0.2;\n  cardMaterial.roughness = 0.6;\n  const card = new THREE.Mesh(cardGeometry, cardMaterial);\n  card.position.set(0, 0.4, -0.02);\n  group.add(card);\n  const heroGroup = ctx.fontAtlas.createText(heroText, {\n    fontSize: heroFontSize,\n    color: \"#e8ecf2\",\n    align: \"center\"\n  });\n  heroGroup.position.set(0, 0.4, 0.03);\n  group.add(heroGroup);\n  const glyphs = heroGroup.children.filter((c) => c.isMesh);\n  const textChars = heroText.split(\"\");\n  const zOffsets = [0.12, 0, -0.12];\n  let charIdx = 0;\n  for (let i = 0; i < glyphs.length; i++) {\n    if (textChars[charIdx] === \" \") {\n      charIdx++;\n      continue;\n    }\n    const spacesBefore = textChars.slice(0, charIdx).filter((c) => c === \" \").length;\n    const wordIdx = Math.min(spacesBefore, zOffsets.length - 1);\n    glyphs[i].position.z = zOffsets[wordIdx];\n    charIdx++;\n  }\n  const subheadGroup = ctx.fontAtlas.createText(subheadText, {\n    fontSize: subheadFontSize,\n    color: \"#e8ecf2\",\n    align: \"center\"\n  });\n  subheadGroup.position.y = -0.65 + 0.2;\n  subheadGroup.visible = true;\n  subheadGroup.children.forEach((child) => {\n    if (child.isMesh && child.material) {\n      child.material.transparent = true;\n      child.material.opacity = 0;\n    }\n  });\n  group.add(subheadGroup);\n  const captionGroup = ctx.fontAtlas.createText(captionText, {\n    fontSize: captionFontSize,\n    color: \"#e8ecf2\",\n    align: \"center\",\n    letterSpacingPx: 0.12 * captionFontSize\n  });\n  captionGroup.position.y = 1.15;\n  group.add(captionGroup);\n  const underlineGeometry = new import_webgpu.PlaneGeometry(2.6, 0.045);\n  const underlineMaterial = new import_webgpu.MeshStandardNodeMaterial();\n  underlineMaterial.color = new THREE.Color(\"#ff2a38\");\n  underlineMaterial.emissive = new THREE.Color(\"#ff2a38\");\n  underlineMaterial.emissiveIntensity = 1.2;\n  const underline = new THREE.Mesh(underlineGeometry, underlineMaterial);\n  underline.position.set(0, -0.05, 0.07);\n  underline.scale.x = 0;\n  card.add(underline);\n  const kineticResult = ctx.primitives[\"kinetic-text\"](heroGroup, {\n    staggerMs: 60,\n    riseUnits: 0.35\n  });\n  const visibleGlyphCount = heroText.replace(/ /g, \"\").length;\n  const kineticDuration = (visibleGlyphCount - 1) * 0.06 + 0.7;\n  const tl = import_gsap.gsap.timeline({ paused: true });\n  tl.add(kineticResult.timeline);\n  tl.to(heroGroup.scale, { x: 1.04, y: 1.04, z: 1.04, duration: 0.3, ease: \"power4.out\" }, `+=${kineticDuration}`);\n  tl.to(heroGroup.scale, { x: 1, y: 1, z: 1, duration: 0.6, ease: \"power4.out\" }, \">\");\n  const underlineStart = kineticDuration + 0.12;\n  tl.to(underline.scale, {\n    x: 1,\n    duration: 0.5,\n    ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n  }, `+=${underlineStart}`);\n  const subheadStart = underlineStart;\n  tl.to(subheadGroup.position, {\n    y: -0.65,\n    duration: 0.5,\n    ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n  }, `+=${subheadStart}`);\n  tl.to(subheadGroup.children, {\n    opacity: 1,\n    duration: 0.5,\n    ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n  }, `+=${subheadStart}`);\n  tl.play();\n  group.userData.handlers = {};\n  group.userData.cleanup = () => {\n    tl.kill();\n    kineticResult.cleanup();\n    backdropGeometry.dispose();\n    gradientMaterial.dispose();\n    underlineGeometry.dispose();\n    underlineMaterial.dispose();\n    cardGeometry.dispose();\n    cardMaterial.dispose();\n    group.traverse((child) => {\n      if (child.isMesh) {\n        child.geometry?.dispose();\n        if (child.material) {\n          if (Array.isArray(child.material)) {\n            child.material.forEach((m) => m.dispose());\n          } else {\n            child.material.dispose();\n          }\n        }\n      }\n    });\n  };\n  return group;\n}\n",
+  "transformError": null
+}

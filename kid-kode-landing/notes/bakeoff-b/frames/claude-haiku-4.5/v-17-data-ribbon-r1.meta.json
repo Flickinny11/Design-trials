@@ -1,0 +1,31 @@
+{
+  "bundle": "wbakeb/claude-haiku-4.5/v-17-data-ribbon-r1",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-17-data-ribbon",
+  "run": 1,
+  "capturedAt": "2026-07-11T02:51:48.880Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 24,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/claude-haiku-4.5/v-17-data-ribbon-r1"
+  },
+  "consoleErrors": [
+    "THREE.WebGLState: MultiplyBlending requires material.premultipliedAlpha = true",
+    "THREE.WebGLState: MultiplyBlending requires material.premultipliedAlpha = true",
+    "THREE.WebGLState: MultiplyBlending requires material.premultipliedAlpha = true",
+    "THREE.WebGLState: MultiplyBlending requires material.premultipliedAlpha = true",
+    "THREE.WebGLState: MultiplyBlending requires material.premultipliedAlpha = true",
+    "THREE.WebGLState: MultiplyBlending requires material.premultipliedAlpha = true",
+    "THREE.WebGLState: MultiplyBlending requires material.premultipliedAlpha = true",
+    "THREE.WebGLState: MultiplyBlending requires material.premultipliedAlpha = true",
+    "THREE.WebGLState: MultiplyBlending requires material.premultipliedAlpha = true",
+    "THREE.WebGLState: MultiplyBlending requires material.premultipliedAlpha = true"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

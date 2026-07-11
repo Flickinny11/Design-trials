@@ -1,0 +1,22 @@
+{
+  "bundle": "wbakeb/mercury-2/v-17-data-ribbon-r1",
+  "contestant": "mercury-2",
+  "caseId": "v-17-data-ribbon",
+  "run": 1,
+  "capturedAt": "2026-07-11T03:01:44.696Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 35,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/mercury-2/v-17-data-ribbon-r1"
+  },
+  "consoleErrors": [
+    "THREE.THREE.WebGLProgram: Shader Error 0 - VALIDATE_STATUS false\n\nProgram Info Log: Fragment shader is not compiled.\n\u0000\n\nFRAGMENT\n\nERROR: 0:89: '+' : wrong operand types - no operation '+' exists that takes a left-hand operand of type 'bool' and a right operand of type 'bool' (or there is no acceptab"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

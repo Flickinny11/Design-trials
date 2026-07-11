@@ -1,0 +1,22 @@
+{
+  "bundle": "wbakeb/claude-haiku-4.5/v-19-empty-state-r1",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-19-empty-state",
+  "run": 1,
+  "capturedAt": "2026-07-11T02:52:04.666Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 10,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/claude-haiku-4.5/v-19-empty-state-r1"
+  },
+  "consoleErrors": [
+    "THREE.TSL: \"min()\" parameter length is less than minimum required. \"<anonymous>:67\"\n    at <anonymous>:67:15\n    at page.tsx:153:44\n    at coderef-factory.ts:106:27"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

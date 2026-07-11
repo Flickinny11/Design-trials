@@ -1,0 +1,235 @@
+{
+  "id": "wbakeb/gpt-oss-120b/v-16-feature-triptych-r1",
+  "contestant": "gpt-oss-120b",
+  "caseId": "v-16-feature-triptych",
+  "run": 1,
+  "node": {
+    "nodeId": "v-16-feature-triptych",
+    "subtype": "feature-cards",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": "/prism-mock/home/nodes/feature-card.png"
+    },
+    "intent": {
+      "caption": "Feature triptych — Three feature cards in rhythm with icon seats, title/body hierarchy, and hover lift states.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "01",
+            "role": "icon-glyph",
+            "typography": {
+              "fontSize": 20,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "In-House Calibre",
+            "role": "card-title",
+            "typography": {
+              "fontSize": 20,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Every movement is designed, machined, and finished under one roof.",
+            "role": "body",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "02",
+            "role": "icon-glyph",
+            "typography": {
+              "fontSize": 20,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Five-Year Guarantee",
+            "role": "card-title",
+            "typography": {
+              "fontSize": 20,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Each piece is serviced free of charge for five years from delivery.",
+            "role": "body",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "03",
+            "role": "icon-glyph",
+            "typography": {
+              "fontSize": 20,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Hand-Finished Dials",
+            "role": "card-title",
+            "typography": {
+              "fontSize": 20,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Guilloche cut on a 1912 rose engine, one dial at a time.",
+            "role": "body",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#16161d",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#191921"
+            },
+            {
+              "at": 1,
+              "hex": "#121218"
+            }
+          ]
+        },
+        "typography": {
+          "card-title": {
+            "family": "Lora",
+            "fontSize": 20,
+            "fontWeight": 600,
+            "letterSpacing": 0,
+            "lineHeight": 1.2
+          },
+          "body": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.5
+          },
+          "icon-glyph": {
+            "family": "JetBrains Mono",
+            "fontSize": 20,
+            "fontWeight": 700,
+            "letterSpacing": 0,
+            "lineHeight": 1
+          }
+        },
+        "effects": "Three cards 1.5w x 1.9h scene units in a row, gap 0.25 (1x base unit), row total 5.0w centered at origin; card albedo vertical ramp #191921 (at 0.0) -> #121218 (at 1.0), corner radius 0.06, 0.006-unit hairline border #26262f, roughness 0.6, metalness 0.25, clearcoat 0.15; icon seat per card is a machined disc 0.4 diameter, extruded 0.05, brushed anisotropy 0.6, roughness 0.55, metalness 0.5, clearcoat 0.2, carrying a single mono glyph in #ff2a38 emissive intensity 1.6; interior padding 0.375 (1.5x base), vertical rhythm icon seat then 0.25 gap then title then 0.125 gap then body, all on a 0.25-unit baseline grid; mount stagger-cards with each card fade-up opacity 0 -> 1 and y +0.2 -> 0 over 500ms cubic-bezier(0.25,0.46,0.45,0.94) at 80ms stagger; hover lift y 0 -> 0.06 and translateZ 0 -> 0.12 over 180ms cubic-bezier(0.25,0.46,0.45,0.94) with the contact shadow under the card widening and softening as it rises, disc glyph emissive 1.6 -> 2.2 on the hovered card; the key light sits upper-left so lifted cards gain a brighter top bevel and a deeper bottom edge, making the lift read as physical."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0.1,
+        5
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.4
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1.1,
+        "position": [
+          -3,
+          3,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.5,
+        "position": [
+          0,
+          -1.8,
+          -1.2
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#8a93a3",
+        "intensity": 0.3,
+        "position": [
+          3,
+          1,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Cards cascade in at 80ms stagger; the hovered card lifts 0.06 up and 0.12 toward camera with a widening contact shadow and brighter disc glyph.",
+    "contrastMinimum": "4.5:1 body on card ramp; 3:1 titles; accent glyphs 4.6:1 on disc"
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap",
+      "@/primitives",
+      "@/text"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, CylinderGeometry, Color } = ctx.THREE;\n  const root = new Group();\n  root.name = \"feature-triptych-root\";\n  const backdropGeom = new PlaneGeometry(7, 6);\n  const backdropMat = new import_webgpu.MeshStandardNodeMaterial();\n  const gradColor = (0, import_tsl.mix)(\n    (0, import_tsl.color)(1644833),\n    (0, import_tsl.color)(1184280),\n    (0, import_tsl.uv)().y\n  );\n  backdropMat.colorNode = gradColor;\n  backdropMat.metalness = 0;\n  backdropMat.roughness = 1;\n  backdropMat.transparent = false;\n  const backdropMesh = new Mesh(backdropGeom, backdropMat);\n  backdropMesh.position.z = -2.5;\n  root.add(backdropMesh);\n  const CARD_W = 1.5;\n  const CARD_H = 1.9;\n  const GAP = 0.25;\n  const ROW_TOTAL_W = 5;\n  const START_X = -ROW_TOTAL_W / 2 + CARD_W / 2;\n  const CARD_POS_X = [START_X, 0, -START_X];\n  const TEXT_COLOR = \"#e8ecf2\";\n  const GLYPH_COLOR = \"#ff2a38\";\n  const BORDER_COLOR = \"#26262f\";\n  const BORDER_WIDTH = 6e-3;\n  const disposables = [];\n  const cardData = [\n    {\n      glyph: \"01\",\n      title: \"In-House Calibre\",\n      body: \"Every movement is designed, machined, and finished under one roof.\"\n    },\n    {\n      glyph: \"02\",\n      title: \"Five-Year Guarantee\",\n      body: \"Each piece is serviced free of charge for five years from delivery.\"\n    },\n    {\n      glyph: \"03\",\n      title: \"Hand-Finished Dials\",\n      body: \"Guilloche cut on a 1912 rose engine, one dial at a time.\"\n    }\n  ];\n  const allTimelines = [];\n  cardData.forEach((item, idx) => {\n    const cardGroup = new Group();\n    cardGroup.name = `card-${idx + 1}`;\n    cardGroup.position.set(CARD_POS_X[idx], 0, 0);\n    root.add(cardGroup);\n    const cardGeom = new PlaneGeometry(CARD_W, CARD_H);\n    const cardMat = new import_webgpu.MeshStandardNodeMaterial();\n    const albedoNode = (0, import_tsl.mix)(\n      (0, import_tsl.color)(1644833),\n      (0, import_tsl.color)(1184280),\n      (0, import_tsl.uv)().y\n    );\n    const borderMask = (0, import_tsl.max)(\n      (0, import_tsl.step)(BORDER_WIDTH, (0, import_tsl.uv)().x),\n      (0, import_tsl.step)(BORDER_WIDTH, (0, import_tsl.uv)().y)\n    );\n    const borderMaskInv = (0, import_tsl.sub)(1, borderMask);\n    const finalColor = (0, import_tsl.mix)(\n      albedoNode,\n      (0, import_tsl.color)(2500143),\n      borderMaskInv\n    );\n    cardMat.colorNode = finalColor;\n    cardMat.metalness = 0.25;\n    cardMat.roughness = 0.6;\n    cardMat.clearcoat = 0.15;\n    cardMat.transparent = true;\n    const cardMesh = new Mesh(cardGeom, cardMat);\n    cardGroup.add(cardMesh);\n    disposables.push(cardGeom, cardMat);\n    const shadowGeom = new PlaneGeometry(CARD_W, CARD_H);\n    const shadowMat = new import_webgpu.MeshStandardNodeMaterial();\n    shadowMat.colorNode = (0, import_tsl.color)(0);\n    shadowMat.opacityNode = (0, import_tsl.step)(0, 0);\n    shadowMat.transparent = true;\n    const shadowMesh = new Mesh(shadowGeom, shadowMat);\n    shadowMesh.position.z = -0.01;\n    cardGroup.add(shadowMesh);\n    disposables.push(shadowGeom, shadowMat);\n    const discRadius = 0.2;\n    const discHeight = 0.05;\n    const discGeom = new CylinderGeometry(discRadius, discRadius, discHeight, 32);\n    const discMat = new import_webgpu.MeshStandardNodeMaterial();\n    discMat.metalness = 0.5;\n    discMat.roughness = 0.55;\n    discMat.clearcoat = 0.2;\n    discMat.anisotropy = 0.6;\n    const discMesh = new Mesh(discGeom, discMat);\n    const PAD = 0.375;\n    const iconCenterY = CARD_H / 2 - PAD - discRadius;\n    discMesh.position.set(0, iconCenterY, 0);\n    cardGroup.add(discMesh);\n    disposables.push(discGeom, discMat);\n    const glyphObj = ctx.fontAtlas.createText(item.glyph, {\n      fontSize: 20,\n      color: GLYPH_COLOR,\n      align: \"center\"\n    });\n    glyphObj.name = \"glyph\";\n    glyphObj.position.set(0, iconCenterY, discHeight / 2 + 1e-3);\n    cardGroup.add(glyphObj);\n    const titleObj = ctx.fontAtlas.createText(item.title, {\n      fontSize: 20,\n      color: TEXT_COLOR,\n      align: \"center\"\n    });\n    titleObj.name = \"title\";\n    const TITLE_GAP = 0.25;\n    const titleY = iconCenterY - discRadius - TITLE_GAP - 0.1;\n    titleObj.position.set(0, titleY, 1e-3);\n    cardGroup.add(titleObj);\n    const bodyObj = ctx.fontAtlas.createText(item.body, {\n      fontSize: 13,\n      color: TEXT_COLOR,\n      align: \"center\",\n      lineHeight: 1.5,\n      maxWidthPx: 300\n    });\n    bodyObj.name = \"body\";\n    const BODY_GAP = 0.125;\n    const bodyY = titleY - 0.12 - BODY_GAP;\n    bodyObj.position.set(0, bodyY, 1e-3);\n    cardGroup.add(bodyObj);\n    const hoverTimeline = import_gsap.gsap.timeline({ paused: true });\n    hoverTimeline.to(cardGroup.position, {\n      y: 0.06,\n      z: 0.12,\n      duration: 0.18,\n      ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n    }, 0);\n    hoverTimeline.to(shadowMesh.scale, {\n      x: 1.2,\n      y: 1.2,\n      duration: 0.18,\n      ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n    }, 0);\n    hoverTimeline.to(shadowMat, {\n      opacityNode: 0.3,\n      duration: 0.18,\n      ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n    }, 0);\n    let glyphMaterial = null;\n    glyphObj.traverse((c) => {\n      if (c.isMesh && c.material && \"emissiveIntensity\" in c.material) {\n        glyphMaterial = c.material;\n      }\n    });\n    if (glyphMaterial) {\n      hoverTimeline.to(glyphMaterial, {\n        emissiveIntensity: 2.2,\n        duration: 0.18,\n        ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n      }, 0);\n    }\n    cardGroup.userData.handlers = {\n      hoverEnter: () => hoverTimeline.play(),\n      hoverLeave: () => hoverTimeline.reverse()\n    };\n    allTimelines.push(hoverTimeline);\n  });\n  const entranceTimeline = import_gsap.gsap.timeline();\n  root.children.filter((c) => c.name.startsWith(\"card-\")).forEach((cardGroup, i) => {\n    const delay = i * 0.08;\n    const startY = cardGroup.position.y + 0.2;\n    const startOpacity = 0;\n    cardGroup.position.y = startY;\n    cardGroup.traverse((obj) => {\n      if (obj.material && \"opacity\" in obj.material) {\n        obj.material.transparent = true;\n        obj.material.opacity = startOpacity;\n      }\n    });\n    entranceTimeline.to(cardGroup.position, {\n      y: 0,\n      duration: 0.5,\n      ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\",\n      delay\n    }, 0);\n    entranceTimeline.to(cardGroup, {\n      // dummy target to animate opacity of children\n      onUpdate: () => {\n        cardGroup.traverse((obj) => {\n          if (obj.material && \"opacity\" in obj.material) {\n            obj.material.opacity = 1 - (obj.position.y - 0) / 0.2;\n          }\n        });\n      },\n      duration: 0.5,\n      delay\n    }, 0);\n  });\n  allTimelines.push(entranceTimeline);\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      root.children.forEach((c) => {\n        if (c.name.startsWith(\"card-\") && c.children[0] && c.children[0].material) {\n          c.children[0].material.map = tex;\n          c.children[0].material.needsUpdate = true;\n        }\n      });\n    });\n  }\n  root.userData.cleanup = () => {\n    allTimelines.forEach((t) => t.kill());\n    disposables.forEach((d) => {\n      if (d.isTexture) d.dispose();\n      else if (d.isMaterial) d.dispose();\n      else if (d.isGeometry) d.dispose();\n    });\n    if (root.parent) root.parent.remove(root);\n  };\n  return root;\n}\n",
+  "transformError": null
+}

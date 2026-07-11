@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/claude-fable-5/v-12-photo-hero-composite-r1",
+  "contestant": "claude-fable-5",
+  "caseId": "v-12-photo-hero-composite",
+  "run": 1,
+  "capturedAt": "2026-07-11T03:52:36.381Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 8,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/claude-fable-5/v-12-photo-hero-composite-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

@@ -1,0 +1,609 @@
+{
+  "wave": "wbakeb-critics",
+  "calls": [
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-01",
+      "costUsd": 0.47635849999999996,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:23:19.696Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-02",
+      "costUsd": 0.1696855,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:23:32.478Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-03",
+      "costUsd": 0.21152200000000002,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:23:56.297Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-04",
+      "costUsd": 0.170367,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:24:11.238Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-05",
+      "costUsd": 0.2060045,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:24:31.559Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-06",
+      "costUsd": 0.20100999999999997,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:24:58.183Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-07",
+      "costUsd": 0.20091050000000002,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:25:16.721Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-08",
+      "costUsd": 0.1965095,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:25:41.593Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-09",
+      "costUsd": 0.22384,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:26:08.026Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-10",
+      "costUsd": 0.219381,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:26:33.622Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-11",
+      "costUsd": 0.18628850000000002,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:26:54.417Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-12",
+      "costUsd": 0.209319,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:27:15.805Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-13",
+      "costUsd": 0.219224,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:27:40.848Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-14",
+      "costUsd": 0.1981135,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:28:07.024Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-15",
+      "costUsd": 0.228472,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:28:40.328Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-16",
+      "costUsd": 0.194518,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:29:04.365Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-17",
+      "costUsd": 0.2143305,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:29:39.576Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-18",
+      "costUsd": 0.20730700000000002,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:30:10.717Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-19",
+      "costUsd": 0.246052,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:30:44.442Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-20",
+      "costUsd": 0.21410749999999998,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:31:16.948Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-21",
+      "costUsd": 0.19735000000000003,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:31:43.098Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-22",
+      "costUsd": 0.2637965,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:32:23.057Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-23",
+      "costUsd": 0.206192,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:32:52.722Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-24",
+      "costUsd": 0.28278349999999997,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:33:40.849Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-25",
+      "costUsd": 0.16469299999999998,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:33:53.030Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-26",
+      "costUsd": 0.23336250000000003,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:34:18.223Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-27",
+      "costUsd": 0.190643,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:34:34.180Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-28",
+      "costUsd": 0.2116515,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:34:57.554Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-29",
+      "costUsd": 0.190635,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:35:12.707Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-sonnet-5",
+      "route": "claude-cli",
+      "model": "claude-sonnet-5",
+      "goldenId": "g-30",
+      "costUsd": 0.2124005,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:35:36.056Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-01",
+      "costUsd": 0.10595979999999999,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:35:59.465Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-02",
+      "costUsd": 0.034027100000000005,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:36:18.951Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-03",
+      "costUsd": 0.0357855,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:36:37.510Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-04",
+      "costUsd": 0.0370085,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:37:02.583Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-05",
+      "costUsd": 0.037958900000000004,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:37:31.202Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-06",
+      "costUsd": 0.037827099999999995,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:37:58.540Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-07",
+      "costUsd": 0.03619649999999999,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:38:23.738Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-08",
+      "costUsd": 0.0393845,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:38:55.348Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-09",
+      "costUsd": 0.0411086,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:39:31.354Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-10",
+      "costUsd": 0.038505899999999996,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:40:03.074Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-11",
+      "costUsd": 0.0377524,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:40:31.758Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-12",
+      "costUsd": 0.038870199999999994,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:41:03.664Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-13",
+      "costUsd": 0.041314500000000004,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:41:38.615Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-14",
+      "costUsd": 0.0390201,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:42:08.845Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-15",
+      "costUsd": 0.037936,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:42:39.742Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-16",
+      "costUsd": 0.037452,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:43:07.125Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-17",
+      "costUsd": 0.0462371,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:43:46.845Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-18",
+      "costUsd": 0.0418609,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:44:18.570Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-19",
+      "costUsd": 0.039582000000000006,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:44:51.901Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-20",
+      "costUsd": 0.0409413,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:45:24.986Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-21",
+      "costUsd": 0.0385222,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:45:53.799Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-22",
+      "costUsd": 0.0403405,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:46:25.500Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-23",
+      "costUsd": 0.0385349,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:46:52.452Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-24",
+      "costUsd": 0.0440542,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:47:32.285Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-25",
+      "costUsd": 0.032978600000000004,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:47:50.465Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-26",
+      "costUsd": 0.0353286,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:48:16.663Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-27",
+      "costUsd": 0.0361346,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:48:42.279Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-28",
+      "costUsd": 0.0351546,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:49:06.823Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-29",
+      "costUsd": 0.035753599999999996,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:49:30.160Z"
+    },
+    {
+      "axis": "axis3-critic",
+      "candidate": "claude-haiku-4.5",
+      "route": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "goldenId": "g-30",
+      "costUsd": 0.03483359999999999,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:49:54.083Z"
+    }
+  ],
+  "totals": {
+    "meteredUsd": 0,
+    "subscriptionEquivalentUsd": 7.763192299999997
+  }
+}

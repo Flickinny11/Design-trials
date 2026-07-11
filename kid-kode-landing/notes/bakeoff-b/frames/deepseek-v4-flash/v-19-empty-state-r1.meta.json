@@ -1,0 +1,23 @@
+{
+  "bundle": "wbakeb/deepseek-v4-flash/v-19-empty-state-r1",
+  "contestant": "deepseek-v4-flash",
+  "caseId": "v-19-empty-state",
+  "run": 1,
+  "capturedAt": "2026-07-11T02:54:45.854Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 10,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/deepseek-v4-flash/v-19-empty-state-r1"
+  },
+  "consoleErrors": [
+    "THREE.TSL: TypeError: 1.sub is not a function \"<anonymous>:76\"\n    at <anonymous>:76:46\n    at scene-root.ts:136:22\n    at scene-root.ts:164:22",
+    "THREE.THREE.WebGLProgram: Shader Error 0 - VALIDATE_STATUS false\n\nProgram Info Log: Fragment shader is not compiled.\n\u0000\n\nFRAGMENT\n\nERROR: 0:733: 'NaN' : undeclared identifier\nERROR: 0:733: '.0' : syntax error\n\u0000\n\n  728: \tRoughness = min( ( max( nodeUniform2, 0.0525 ) + max( max( nodeVar0.x, nodeVar0.y"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

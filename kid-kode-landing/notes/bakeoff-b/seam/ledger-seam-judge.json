@@ -1,0 +1,248 @@
+{
+  "wave": "wbakeb-seam-judge",
+  "calls": [
+    {
+      "blindId": "S012285c1",
+      "costUsd": 0.30698200000000003,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:46:30.523Z"
+    },
+    {
+      "blindId": "S1190efdd",
+      "costUsd": 0.335086,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:46:59.374Z"
+    },
+    {
+      "blindId": "S14e13aba",
+      "costUsd": 0.34663900000000003,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:47:30.628Z"
+    },
+    {
+      "blindId": "S1550ce74",
+      "costUsd": 0.306057,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:47:56.575Z"
+    },
+    {
+      "blindId": "S1551d012",
+      "costUsd": 0.31731699999999996,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:48:25.337Z"
+    },
+    {
+      "blindId": "S1e8d531a",
+      "costUsd": 0.322624,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:48:50.297Z"
+    },
+    {
+      "blindId": "S22db31b3",
+      "costUsd": 0.30662,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:49:15.109Z"
+    },
+    {
+      "blindId": "S2b1135de",
+      "costUsd": 0.31073700000000004,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:49:35.735Z"
+    },
+    {
+      "blindId": "S2bcec426",
+      "costUsd": 0.30772700000000003,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:49:59.671Z"
+    },
+    {
+      "blindId": "S304edfcd",
+      "costUsd": 0.30279599999999995,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:50:21.674Z"
+    },
+    {
+      "blindId": "S3f3653b0",
+      "costUsd": 0.301842,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:50:44.335Z"
+    },
+    {
+      "blindId": "S3fe4f41f",
+      "costUsd": 0.315154,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:51:07.442Z"
+    },
+    {
+      "blindId": "S49cdf3d1",
+      "costUsd": 0.30886100000000005,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:51:27.835Z"
+    },
+    {
+      "blindId": "S4a046fb8",
+      "costUsd": 0.31151,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:51:53.873Z"
+    },
+    {
+      "blindId": "S4afc45f6",
+      "costUsd": 0.303114,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:52:16.007Z"
+    },
+    {
+      "blindId": "S4b3565df",
+      "costUsd": 0.313046,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:52:41.770Z"
+    },
+    {
+      "blindId": "S4cd95481",
+      "costUsd": 0.316056,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:53:07.138Z"
+    },
+    {
+      "blindId": "S4ebdfb00",
+      "costUsd": 0.304202,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:53:26.234Z"
+    },
+    {
+      "blindId": "S52065feb",
+      "costUsd": 0.35550299999999996,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:54:01.153Z"
+    },
+    {
+      "blindId": "S5c362d09",
+      "costUsd": 0.314853,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:54:24.533Z"
+    },
+    {
+      "blindId": "S5cc21552",
+      "costUsd": 0.311275,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:54:47.415Z"
+    },
+    {
+      "blindId": "S69b130c4",
+      "costUsd": 0.320056,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:55:07.943Z"
+    },
+    {
+      "blindId": "S69b999de",
+      "costUsd": 0.308464,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:55:31.135Z"
+    },
+    {
+      "blindId": "S6ac12796",
+      "costUsd": 0.310357,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:55:48.873Z"
+    },
+    {
+      "blindId": "S73b675a1",
+      "costUsd": 0.30734799999999995,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:56:08.147Z"
+    },
+    {
+      "blindId": "S740e63a8",
+      "costUsd": 0.625831,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:56:26.747Z"
+    },
+    {
+      "blindId": "S74e10ae6",
+      "costUsd": 0.313968,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:56:48.724Z"
+    },
+    {
+      "blindId": "S957b1d93",
+      "costUsd": 0.32477300000000003,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:57:16.454Z"
+    },
+    {
+      "blindId": "S97b02025",
+      "costUsd": 0.302879,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:57:43.501Z"
+    },
+    {
+      "blindId": "Saf50f895",
+      "costUsd": 0.31117300000000003,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:58:03.735Z"
+    },
+    {
+      "blindId": "Sb1872d9e",
+      "costUsd": 0.31143199999999993,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:58:26.322Z"
+    },
+    {
+      "blindId": "Sba4c7b7c",
+      "costUsd": 0.30394,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:58:42.589Z"
+    },
+    {
+      "blindId": "Sc1692cb0",
+      "costUsd": 0.31,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:59:02.033Z"
+    },
+    {
+      "blindId": "Scc0c0b90",
+      "costUsd": 0.30319399999999996,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:59:25.583Z"
+    },
+    {
+      "blindId": "Scfe534fb",
+      "costUsd": 0.302384,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T06:59:45.663Z"
+    },
+    {
+      "blindId": "Sdcf2b044",
+      "costUsd": 0.300002,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T07:00:05.320Z"
+    },
+    {
+      "blindId": "Se37baafe",
+      "costUsd": 0.300203,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T07:00:25.738Z"
+    },
+    {
+      "blindId": "Se84e6943",
+      "costUsd": 0.301851,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T07:00:45.832Z"
+    },
+    {
+      "blindId": "Sf0b632b4",
+      "costUsd": 0.30076800000000004,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T07:01:05.237Z"
+    },
+    {
+      "blindId": "Sf4b68a74",
+      "costUsd": 0.312807,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-11T07:01:28.570Z"
+    }
+  ],
+  "totals": {
+    "subscriptionEquivalentUsd": 12.789430999999999
+  }
+}

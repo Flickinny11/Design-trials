@@ -1,0 +1,194 @@
+{
+  "id": "wbakeb/claude-fable-5/v-18-nav-dock-r2",
+  "contestant": "claude-fable-5",
+  "caseId": "v-18-nav-dock",
+  "run": 2,
+  "node": {
+    "nodeId": "v-18-nav-dock",
+    "subtype": "nav-dock",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Navigation dock — A floating navigation dock of five entries with active state, machined rail, and press-down affordance.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "HOME",
+            "role": "nav-active",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "FEATURES",
+            "role": "nav-item",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "COLLECTION",
+            "role": "nav-item",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "PRICING",
+            "role": "nav-item",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "JOURNAL",
+            "role": "nav-item",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#1b1b23"
+            },
+            {
+              "at": 1,
+              "hex": "#101015"
+            }
+          ]
+        },
+        "typography": {
+          "nav-active": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 700,
+            "letterSpacing": 0.08,
+            "lineHeight": 1
+          },
+          "nav-item": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1
+          }
+        },
+        "effects": "Floating rail 3.6w x 0.5h scene units, corner radius 0.1, brushed-metal PBR with vertical albedo ramp #1b1b23 (at 0.0) -> #101015 (at 1.0), anisotropy 0.6 along x, roughness 0.55, metalness 0.5, clearcoat 0.2, chamfered edge 0.02 catching a continuous specular line from the key light; rail floats translateZ +0.15 above a contact-shadow plane at 35 percent opacity, shadow offset 0.06 down; five entries laid out on centers 0.68 apart with 0.25-unit (1x base) horizontal padding inside each hit cell 0.6w x 0.34h; active entry Home in paper 700 with an underline bar 0.28w x 0.025h in #ff2a38 emissive intensity 1.8 seated 0.06 below its baseline; inactive entries #a6adba 400; hover inactive color #a6adba -> #e8ecf2 over 160ms cubic-bezier(0.25,0.46,0.45,0.94); press per entry scale 1.0 -> 0.97 over 120ms cubic-bezier(0.175,0.885,0.32,1.275) with the cell dipping translateZ -0.03 into the rail; on active change the underline bar translates x to the new entry over 260ms cubic-bezier(0.165,0.84,0.44,1) with a weighted 1.04 overshoot; mount rise-in y +0.4 -> 0 over 700ms cubic-bezier(0.215,0.61,0.355,1)."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0.05,
+        3
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 45
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.35
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1.15,
+        "position": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.5,
+        "position": [
+          -1.5,
+          -0.6,
+          -1
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#8a93a3",
+        "intensity": 0.3,
+        "position": [
+          -2.5,
+          1,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Rail rises in once; the red active underline slides between entries with a weighted overshoot; pressed entries compress and dip into the rail.",
+    "contrastMinimum": "4.5:1 inactive entries on rail; active underline 4.6:1 against rail"
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, Shape, ExtrudeGeometry, DirectionalLight, Color } = ctx.THREE;\n  const root = new Group();\n  const disposables = [];\n  const timelines = [];\n  const killTween = (t) => {\n    if (t) t.kill();\n  };\n  const spec = config.intent?.visualSpec ?? {};\n  const colors = spec.colors ?? {};\n  const cAccent = colors.accent ?? \"#ff2a38\";\n  const cPaper = colors.paper ?? \"#e8ecf2\";\n  const cInactive = \"#a6adba\";\n  const stops = colors.gradientStops ?? [{ at: 0, hex: \"#1b1b23\" }, { at: 1, hex: \"#101015\" }];\n  const backdropGeo = new PlaneGeometry(7, 6);\n  const backdropMat = new import_webgpu.MeshBasicNodeMaterial();\n  backdropMat.colorNode = (0, import_tsl.mix)((0, import_tsl.color)(stops[1].hex), (0, import_tsl.color)(stops[0].hex), (0, import_tsl.uv)().y);\n  const backdrop = new Mesh(backdropGeo, backdropMat);\n  backdrop.position.set(0, 0, -2.5);\n  root.add(backdrop);\n  disposables.push(backdropGeo, backdropMat);\n  const rim = new DirectionalLight(new Color(cAccent), 0.85);\n  rim.position.set(-2.5, 1.2, -1.5);\n  rim.target.position.set(0, 0, 0);\n  root.add(rim);\n  root.add(rim.target);\n  const shadowGeo = new PlaneGeometry(4.6, 1.1);\n  const shadowMat = new import_webgpu.MeshBasicNodeMaterial();\n  shadowMat.transparent = true;\n  shadowMat.depthWrite = false;\n  shadowMat.colorNode = (0, import_tsl.vec3)(0, 0, 0);\n  const dist = (0, import_tsl.length)((0, import_tsl.uv)().sub((0, import_tsl.vec2)(0.5, 0.5)).mul((0, import_tsl.vec2)(2, 2)));\n  shadowMat.opacityNode = (0, import_tsl.float)(1).sub(dist).clamp(0, 1).pow(1.6).mul(0.35);\n  const shadow = new Mesh(shadowGeo, shadowMat);\n  shadow.position.set(0, -0.06, 0);\n  root.add(shadow);\n  disposables.push(shadowGeo, shadowMat);\n  const dock = new Group();\n  dock.position.set(0, -0.4, 0.15);\n  root.add(dock);\n  const railW = 3.6, railH = 0.5, r = 0.1;\n  const shape = new Shape();\n  const hw = railW / 2, hh = railH / 2;\n  shape.moveTo(-hw + r, -hh);\n  shape.lineTo(hw - r, -hh);\n  shape.quadraticCurveTo(hw, -hh, hw, -hh + r);\n  shape.lineTo(hw, hh - r);\n  shape.quadraticCurveTo(hw, hh, hw - r, hh);\n  shape.lineTo(-hw + r, hh);\n  shape.quadraticCurveTo(-hw, hh, -hw, hh - r);\n  shape.lineTo(-hw, -hh + r);\n  shape.quadraticCurveTo(-hw, -hh, -hw + r, -hh);\n  const railGeo = new ExtrudeGeometry(shape, {\n    depth: 0.06,\n    bevelEnabled: true,\n    bevelThickness: 0.02,\n    bevelSize: 0.02,\n    bevelSegments: 3,\n    curveSegments: 12\n  });\n  railGeo.translate(0, 0, -0.03);\n  const railMat = new import_webgpu.MeshPhysicalNodeMaterial();\n  const railT = import_tsl.positionLocal.y.add(hh).div(railH).clamp(0, 1);\n  const brushed = (0, import_tsl.sin)(import_tsl.positionLocal.x.mul(420)).mul(0.012);\n  railMat.colorNode = (0, import_tsl.mix)((0, import_tsl.color)(stops[1].hex), (0, import_tsl.color)(stops[0].hex), railT).add((0, import_tsl.vec3)(brushed, brushed, brushed));\n  railMat.roughness = 0.55;\n  railMat.metalness = 0.5;\n  railMat.clearcoat = 0.2;\n  railMat.clearcoatRoughness = 0.35;\n  railMat.anisotropy = 0.6;\n  const rail = new Mesh(railGeo, railMat);\n  dock.add(rail);\n  disposables.push(railGeo, railMat);\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const fallback = [\n    { text: \"HOME\", role: \"nav-active\" },\n    { text: \"FEATURES\", role: \"nav-item\" },\n    { text: \"COLLECTION\", role: \"nav-item\" },\n    { text: \"PRICING\", role: \"nav-item\" },\n    { text: \"JOURNAL\", role: \"nav-item\" }\n  ];\n  const navItems = items.length ? items : fallback;\n  const routeMap = {\n    HOME: \"hub-home\",\n    FEATURES: \"hub-features\",\n    COLLECTION: \"hub-collection\",\n    PRICING: \"hub-pricing\",\n    JOURNAL: \"hub-journal\"\n  };\n  const spacing = 0.68;\n  const startX = -spacing * (navItems.length - 1) / 2;\n  const TEXT_SCALE = 75e-4;\n  const entries = [];\n  let activeIndex = navItems.findIndex((it) => it.role === \"nav-active\");\n  if (activeIndex < 0) activeIndex = 0;\n  const hitGeo = new PlaneGeometry(0.6, 0.34);\n  const hitMat = new import_webgpu.MeshBasicNodeMaterial();\n  hitMat.transparent = true;\n  hitMat.opacity = 0;\n  hitMat.depthWrite = false;\n  disposables.push(hitGeo, hitMat);\n  for (let i = 0; i < navItems.length; i++) {\n    const item = navItems[i];\n    const text = String(item.text ?? \"\");\n    const isActive = i === activeIndex;\n    const cell = new Group();\n    cell.position.set(startX + i * spacing, 0, 0.07);\n    dock.add(cell);\n    const fontSize = item.typography?.fontSize ?? 13;\n    const label = ctx.fontAtlas.createText(text, {\n      fontSize,\n      color: isActive ? cPaper : cInactive,\n      align: \"center\",\n      letterSpacingPx: fontSize * 0.08\n    });\n    label.scale.setScalar(TEXT_SCALE);\n    label.position.set(0, 0, 0.06);\n    cell.add(label);\n    const textMats = [];\n    label.traverse((o) => {\n      if (o.material && o.material.color) textMats.push(o.material);\n    });\n    const hit = new Mesh(hitGeo, hitMat);\n    hit.position.set(0, 0, 0.08);\n    hit.userData.navIndex = i;\n    cell.add(hit);\n    entries.push({ index: i, text, cell, label, textMats, hit, hoverTween: null, pressTween: null });\n  }\n  const barGeo = new PlaneGeometry(0.28, 0.025);\n  const barMat = new import_webgpu.MeshBasicNodeMaterial();\n  const accCol = new Color(cAccent);\n  barMat.colorNode = (0, import_tsl.vec3)(accCol.r * 1.8, accCol.g * 1.8, accCol.b * 1.8);\n  const underline = new Mesh(barGeo, barMat);\n  underline.position.set(startX + activeIndex * spacing, -0.11, 0.14);\n  dock.add(underline);\n  disposables.push(barGeo, barMat);\n  const mountTl = import_gsap.gsap.timeline();\n  mountTl.to(dock.position, { y: 0, duration: 0.7, ease: \"power3.out\" });\n  timelines.push(mountTl);\n  const idleTl = import_gsap.gsap.timeline({ repeat: -1, yoyo: true, delay: 0.8 });\n  idleTl.to(dock.position, { y: 0.02, duration: 3.2, ease: \"sine.inOut\" });\n  timelines.push(idleTl);\n  const findEntry = (hit) => {\n    let obj = hit?.object ?? hit;\n    while (obj) {\n      if (obj.userData && obj.userData.navIndex !== void 0) return entries[obj.userData.navIndex];\n      obj = obj.parent;\n    }\n    return null;\n  };\n  const tintEntry = (entry, hex, dur) => {\n    const target = new Color(hex);\n    for (const m of entry.textMats) {\n      killTween(entry.hoverTween);\n      entry.hoverTween = import_gsap.gsap.to(m.color, { r: target.r, g: target.g, b: target.b, duration: dur, ease: \"power2.out\" });\n    }\n  };\n  const setActive = (idx) => {\n    if (idx === activeIndex || !entries[idx]) return;\n    const prev = entries[activeIndex];\n    const next = entries[idx];\n    activeIndex = idx;\n    tintEntry(prev, cInactive, 0.16);\n    tintEntry(next, cPaper, 0.16);\n    const barTl = import_gsap.gsap.timeline();\n    barTl.to(underline.position, {\n      x: startX + idx * spacing,\n      duration: 0.26,\n      ease: \"back.out(1.4)\"\n    });\n    barTl.fromTo(underline.scale, { x: 1.04 }, { x: 1, duration: 0.4, ease: \"power4.out\" }, 0.1);\n    timelines.push(barTl);\n  };\n  root.userData.handlers = {\n    onHoverStart: (hit) => {\n      const entry = findEntry(hit);\n      if (!entry || entry.index === activeIndex) return;\n      tintEntry(entry, cPaper, 0.16);\n    },\n    onHoverEnd: (hit) => {\n      const entry = findEntry(hit);\n      if (!entry || entry.index === activeIndex) return;\n      tintEntry(entry, cInactive, 0.16);\n    },\n    onPointerDown: (hit) => {\n      const entry = findEntry(hit);\n      if (!entry) return;\n      killTween(entry.pressTween);\n      entry.pressTween = import_gsap.gsap.to(entry.cell, {\n        duration: 0.12,\n        ease: \"back.out(1.7)\",\n        onUpdate: null\n      });\n      import_gsap.gsap.to(entry.cell.scale, { x: 0.97, y: 0.97, z: 0.97, duration: 0.12, ease: \"back.out(1.7)\" });\n      import_gsap.gsap.to(entry.cell.position, { z: 0.04, duration: 0.12, ease: \"back.out(1.7)\" });\n    },\n    onPointerUp: (hit) => {\n      const entry = findEntry(hit);\n      if (!entry) return;\n      import_gsap.gsap.to(entry.cell.scale, { x: 1, y: 1, z: 1, duration: 0.2, ease: \"power2.out\" });\n      import_gsap.gsap.to(entry.cell.position, { z: 0.07, duration: 0.2, ease: \"power2.out\" });\n    },\n    onClick: (hit) => {\n      const entry = findEntry(hit);\n      if (!entry) return;\n      setActive(entry.index);\n      const route = routeMap[entry.text.toUpperCase()] ?? \"hub-home\";\n      ctx.emit(\"navigate\", { to: route });\n    }\n  };\n  root.userData.cleanup = () => {\n    for (const tl of timelines) tl.kill();\n    for (const e of entries) {\n      killTween(e.hoverTween);\n      killTween(e.pressTween);\n      import_gsap.gsap.killTweensOf(e.cell.scale);\n      import_gsap.gsap.killTweensOf(e.cell.position);\n      for (const m of e.textMats) import_gsap.gsap.killTweensOf(m.color);\n    }\n    import_gsap.gsap.killTweensOf(dock.position);\n    import_gsap.gsap.killTweensOf(underline.position);\n    import_gsap.gsap.killTweensOf(underline.scale);\n    for (const d of disposables) {\n      if (d.dispose) d.dispose();\n    }\n    rim.dispose?.();\n  };\n  return root;\n}\n",
+  "transformError": null
+}

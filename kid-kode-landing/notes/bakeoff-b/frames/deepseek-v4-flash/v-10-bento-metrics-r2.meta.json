@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/deepseek-v4-flash/v-10-bento-metrics-r2",
+  "contestant": "deepseek-v4-flash",
+  "caseId": "v-10-bento-metrics",
+  "run": 2,
+  "capturedAt": "2026-07-11T02:53:40.476Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 13,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/deepseek-v4-flash/v-10-bento-metrics-r2"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

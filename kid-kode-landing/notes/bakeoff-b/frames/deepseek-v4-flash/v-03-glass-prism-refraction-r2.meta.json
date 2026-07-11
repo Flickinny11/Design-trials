@@ -1,0 +1,24 @@
+{
+  "bundle": "wbakeb/deepseek-v4-flash/v-03-glass-prism-refraction-r2",
+  "contestant": "deepseek-v4-flash",
+  "caseId": "v-03-glass-prism-refraction",
+  "run": 2,
+  "capturedAt": "2026-07-11T02:52:45.217Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 7,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/deepseek-v4-flash/v-03-glass-prism-refraction-r2"
+  },
+  "consoleErrors": [
+    "THREE.TSL: Error: Uniform \"string\" not implemented. \"scene-root.ts:136\"\n    at scene-root.ts:136:22\n    at scene-root.ts:164:22",
+    "THREE.TSL: Error: Uniform \"string\" not implemented. \"scene-root.ts:136\"\n    at scene-root.ts:136:22\n    at scene-root.ts:164:22",
+    "THREE.TSL: Error: Uniform \"string\" not implemented. \"scene-root.ts:136\"\n    at scene-root.ts:136:22\n    at scene-root.ts:164:22"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

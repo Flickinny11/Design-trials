@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb-seam/claude-haiku-4.5/s-10",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "s-10",
+  "run": 1,
+  "capturedAt": "2026-07-11T06:42:24.934Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 15,
+    "nodeMounted": true,
+    "bundleId": "wbakeb-seam/claude-haiku-4.5/s-10"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

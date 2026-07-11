@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/kimi-k2.7-code/v-01-orbit-product-hero-r2",
+  "contestant": "kimi-k2.7-code",
+  "caseId": "v-01-orbit-product-hero",
+  "run": 2,
+  "capturedAt": "2026-07-11T03:35:06.283Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 6,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/kimi-k2.7-code/v-01-orbit-product-hero-r2"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

@@ -1,0 +1,12 @@
+{
+  "probedAt": "2026-07-11T06:16:41.820Z",
+  "purpose": "I-BB5 evidence at D4 critic launch: gemini-3.5-flash (deepinfra) + qwen3.7-plus (openrouter) reachability re-check before running the critic pool",
+  "deepinfra": {
+    "status": 402,
+    "body": "{\"detail\":{\"error\":\"You need positive balance to do inference. Please add balance manually or setup top-up\"}}"
+  },
+  "openrouter": {
+    "status": 402,
+    "body": "{\"error\":{\"message\":\"Insufficient credits. Add more using https://openrouter.ai/settings/credits\",\"code\":402}}"
+  }
+}

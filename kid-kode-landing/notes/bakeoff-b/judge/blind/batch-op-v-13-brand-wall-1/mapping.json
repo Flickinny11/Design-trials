@@ -1,0 +1,14 @@
+[
+  {
+    "label": "F1",
+    "bundleId": "wbakeb/claude-fable-5/v-13-brand-wall-r1",
+    "contestant": "claude-fable-5",
+    "source": "notes/bakeoff-b/frames/claude-fable-5/v-13-brand-wall-r1.png"
+  },
+  {
+    "label": "F2",
+    "bundleId": "wbakeb/claude-fable-5/v-13-brand-wall-r2",
+    "contestant": "claude-fable-5",
+    "source": "notes/bakeoff-b/frames/claude-fable-5/v-13-brand-wall-r2.png"
+  }
+]

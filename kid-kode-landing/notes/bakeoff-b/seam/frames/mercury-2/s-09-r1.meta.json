@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb-seam/mercury-2/s-09",
+  "contestant": "mercury-2",
+  "caseId": "s-09",
+  "run": 1,
+  "capturedAt": "2026-07-11T06:43:41.756Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 22,
+    "nodeMounted": true,
+    "bundleId": "wbakeb-seam/mercury-2/s-09"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

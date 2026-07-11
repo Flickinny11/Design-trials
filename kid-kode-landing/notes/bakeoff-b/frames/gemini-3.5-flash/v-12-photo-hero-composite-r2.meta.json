@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/gemini-3.5-flash/v-12-photo-hero-composite-r2",
+  "contestant": "gemini-3.5-flash",
+  "caseId": "v-12-photo-hero-composite",
+  "run": 2,
+  "capturedAt": "2026-07-11T03:33:54.646Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 7,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/gemini-3.5-flash/v-12-photo-hero-composite-r2"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

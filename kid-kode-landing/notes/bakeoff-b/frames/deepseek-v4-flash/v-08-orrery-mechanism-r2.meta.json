@@ -1,0 +1,26 @@
+{
+  "bundle": "wbakeb/deepseek-v4-flash/v-08-orrery-mechanism-r2",
+  "contestant": "deepseek-v4-flash",
+  "caseId": "v-08-orrery-mechanism",
+  "run": 2,
+  "capturedAt": "2026-07-11T02:53:26.409Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 4,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/deepseek-v4-flash/v-08-orrery-mechanism-r2"
+  },
+  "consoleErrors": [
+    "THREE.TSL: Length of parameters exceeds maximum length of function 'vec3()' type. Stack trace not available. Enable \"THREE.Node.captureStackTrace\" to capture stack traces.",
+    "THREE.THREE.WebGLProgram: Shader Error 0 - VALIDATE_STATUS false\n\nProgram Info Log: Fragment shader is not compiled.\n\u0000\n\nFRAGMENT\n\nERROR: 0:86: 'NaN' : undeclared identifier\nERROR: 0:86: '.0' : syntax error\n\u0000\n\n  81: \n  82: \t// flow\n  83: \t// code\n  84: \n  85: \tDiffuseColor = vec4( vec3( 0.0, 0.0, 0.0",
+    "THREE.TSL: Length of parameters exceeds maximum length of function 'vec3()' type. Stack trace not available. Enable \"THREE.Node.captureStackTrace\" to capture stack traces.",
+    "THREE.TSL: TypeError: Cannot read properties of undefined (reading 'isOutputStructNode') \"scene-root.ts:136\"\n    at scene-root.ts:136:22\n    at scene-root.ts:164:22",
+    "THREE.TSL: TypeError: Cannot read properties of undefined (reading 'isOutputStructNode') \"scene-root.ts:136\"\n    at scene-root.ts:136:22\n    at scene-root.ts:164:22"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

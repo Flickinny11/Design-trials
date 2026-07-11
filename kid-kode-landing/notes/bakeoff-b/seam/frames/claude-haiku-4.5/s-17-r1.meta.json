@@ -1,0 +1,22 @@
+{
+  "bundle": "wbakeb-seam/claude-haiku-4.5/s-17",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "s-17",
+  "run": 1,
+  "capturedAt": "2026-07-11T06:42:54.900Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 13,
+    "nodeMounted": true,
+    "bundleId": "wbakeb-seam/claude-haiku-4.5/s-17"
+  },
+  "consoleErrors": [
+    "THREE.THREE.WebGLProgram: Shader Error 0 - VALIDATE_STATUS false\n\nProgram Info Log: Fragment shader is not compiled.\n\u0000\n\nFRAGMENT\n\nERROR: 0:84: 'NaN' : undeclared identifier\nERROR: 0:84: '.0' : syntax error\n\u0000\n\n  79: \n  80: \t// flow\n  81: \t// code\n  82: \n  83: \tDiffuseColor = vec4( vec3( 0.0, 0.0, 0.0"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

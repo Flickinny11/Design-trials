@@ -1,0 +1,21 @@
+{
+  "bundle": "wbakeb/gemini-3.5-flash/v-02-particle-constellation-r1",
+  "contestant": "gemini-3.5-flash",
+  "caseId": "v-02-particle-constellation",
+  "run": 1,
+  "capturedAt": "2026-07-11T03:32:36.537Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/gemini-3.5-flash/v-02-particle-constellation-r1",
+    "moduleRuntimeError": "TypeError: currentPos.copy(...).addValues is not a function"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

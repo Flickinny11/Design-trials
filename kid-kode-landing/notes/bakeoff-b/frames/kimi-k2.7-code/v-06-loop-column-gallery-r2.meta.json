@@ -1,0 +1,22 @@
+{
+  "bundle": "wbakeb/kimi-k2.7-code/v-06-loop-column-gallery-r2",
+  "contestant": "kimi-k2.7-code",
+  "caseId": "v-06-loop-column-gallery",
+  "run": 2,
+  "capturedAt": "2026-07-11T03:35:36.694Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 26,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/kimi-k2.7-code/v-06-loop-column-gallery-r2"
+  },
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

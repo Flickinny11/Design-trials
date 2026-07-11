@@ -1,0 +1,58 @@
+{
+  "label": "ground-truth-pass1-batch5",
+  "model": "claude-fable-5",
+  "frames": [
+    {
+      "label": "F1",
+      "goldenId": "g-21"
+    },
+    {
+      "label": "F2",
+      "goldenId": "g-22"
+    },
+    {
+      "label": "F3",
+      "goldenId": "g-23"
+    },
+    {
+      "label": "F4",
+      "goldenId": "g-24"
+    },
+    {
+      "label": "F5",
+      "goldenId": "g-25"
+    }
+  ],
+  "costUsd": 0.6088070000000001,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 14977,
+    "cache_read_input_tokens": 82090,
+    "output_tokens": 3837,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14977,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 3039,
+        "cache_read_input_tokens": 43887,
+        "cache_creation_input_tokens": 9293,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9293
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 16, \"mustFix\": [ { \"defect\": \"SCALE_ERROR\", \"region\": \"full frame — letterforms cropped far past legibility\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"right two-thirds\" }, { \"defect\": \"GARBLED_TEXT\", \"region\": \"center and right — no readable hero or kicker\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"upper-left quadrant — kicker line absent\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"far-left black column\" } ], \"notes\": \"Hero type zoomed into abstract cropped blobs with soft blur edges; only the red rule survives. Composition unusable.\" }, { \"frame\": \"F2\", \"score\": 54, \"mustFix\": [ { \"defect\": \"OFF_PALETTE\", \"region\": \"center-right accent button — pink/salmon, not #ff2a38 signal red\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"right edge — guidance copy clipped mid-word\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"accent button — flat fill, no physical read (DL12)\" } ], \"notes\": \"Structure follows DL16 well: grid, ghost watch-card, copy, action. Pink drift and clipped text hold it back.\" }, { \"frame\": \"F3\", \"score\": 44, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"background field — flat black, no engineered gradient\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"lower-center floor plane — flat gray polygon, no light response\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"both gears — antique brass/gold instead of machined steel\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"primary gear hub — no jewel accent pivot\" } ], \"notes\": \"Gear PBR itself is credible, but wrong material, dead floor plane, void backdrop, and missing red jewel pivot.\" }, { \"frame\": \"F4\", \"score\": 74, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"hero headline — sans-serif substituted for specified Lora serif\" } ], \"notes\": \"Strong hierarchy: kicker, stacked hero, red rule, grain, footer meta. Typeface deviation and modest hero scale cap it.\" }, { \"frame\": \"F5\", \"score\": 4, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"entire frame\" } ], \"notes\": \"Uniform near-black frame with no content rendered.\" } ] }"
+}

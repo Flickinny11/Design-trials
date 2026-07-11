@@ -1,0 +1,214 @@
+{
+  "id": "wbakeb/claude-opus-4.8/v-07-filmstrip-carousel-r1",
+  "contestant": "claude-opus-4.8",
+  "caseId": "v-07-filmstrip-carousel",
+  "run": 1,
+  "node": {
+    "nodeId": "v-07-filmstrip-carousel",
+    "subtype": "carousel-3d",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": "/prism-mock/home/nodes/parallax-stack.png"
+    },
+    "intent": {
+      "caption": "Filmstrip 3D carousel — An angled 3D filmstrip of image cards with perspective recession and one focused card; distinct plates, no echo.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "The collection",
+            "role": "headline",
+            "typography": {
+              "fontSize": 68,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Five calibres. One discipline.",
+            "role": "body",
+            "typography": {
+              "fontSize": 26,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "NA-01 MERIDIAN",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "NA-02 NOCTURNE",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "NA-03 SIGNAL",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "NA-04 VANTAGE",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "NA-05 ARCHIVE",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 700
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 1,
+              "hex": "#12121a"
+            }
+          ]
+        },
+        "typography": {
+          "headline": {
+            "family": "Lora",
+            "fontSize": 68,
+            "fontWeight": 600,
+            "letterSpacing": -0.005,
+            "lineHeight": 1.1
+          },
+          "body": {
+            "family": "JetBrains Mono",
+            "fontSize": 26,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.5
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 700,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Five cards, each 1.6 x 1.0 units, arranged along x at 1.85-unit pitch, whole strip rotated -18 deg on y so cards recede to the right with perspective. Each card carries a DISTINCT photograph texture (base /prism-mock/home/nodes/parallax-stack.png plus four distinct variants; no repeated subject, no echo). Card material: map, roughness 0.55, metalness 0.2, clearcoat 0.15, framed by a 0.025-unit machined ink #16161d bevel. Focused card at x=0 counter-rotates to face the camera dead-on at scale 1.0; non-focused cards scale 0.92 with opacity falling 1.0 to 0.55 by distance. parallax-scroll intensity 0.5: strip translates x by 0.5 units per scroll unit while card textures counter-shift UV +/-0.04 for internal parallax. Snap-to-card on scroll end: weighted-settle 900ms cubic-bezier(0.165,0.84,0.44,1), overshoot 1.04 to 1.0. Focused card gets a #ff2a38 underline bar 1.6 x 0.035 units at emissive 1.3 plus its caption below; headline pinned at [-2.6, 1.5, 0]; body line at [-2.6, -1.5, 0]. All spacing on the 0.25-unit rhythm."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "parallax-scroll",
+        "trigger": "scroll",
+        "params": {
+          "intensity": 0.5
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0.4,
+        0.15,
+        4.8
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 48
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#3a3f4a",
+        "intensity": 0.45
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 1.1,
+        "position": [
+          2.5,
+          3,
+          2.5
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#8f9ab0",
+        "intensity": 0.4,
+        "position": [
+          -2,
+          1,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Scroll slides the angled filmstrip along x with 0.5 intensity parallax and UV counter-shift; on release the strip snaps to the nearest card with weighted overshoot and the red underline transfers to the newly focused card."
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, BoxGeometry, DirectionalLight, AmbientLight, Vector2, DoubleSide } = ctx.THREE;\n  const colors = config.intent?.visualSpec?.colors ?? {\n    background: \"#0b0b10\",\n    surface: \"#14141a\",\n    ink: \"#16161d\",\n    paper: \"#e8ecf2\",\n    accent: \"#ff2a38\"\n  };\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const group = new Group();\n  const timelines = [];\n  const primHandles = [];\n  const disposables = [];\n  const bgGeo = new PlaneGeometry(7, 6);\n  const bgMat = new import_webgpu.MeshBasicNodeMaterial();\n  const topC = (0, import_tsl.color)(\"#12121a\");\n  const botC = (0, import_tsl.color)(\"#0b0b10\");\n  const t = import_tsl.positionLocal.y.mul(1 / 6).add(0.5).clamp(0, 1);\n  bgMat.colorNode = (0, import_tsl.mix)(botC, topC, t);\n  const bg = new Mesh(bgGeo, bgMat);\n  bg.position.set(0, 0, -2.5);\n  group.add(bg);\n  disposables.push(bgGeo, bgMat);\n  const rim = new DirectionalLight(colors.accent, 0.9);\n  rim.position.set(-3, 1.5, 2);\n  group.add(rim);\n  const fill = new AmbientLight(colors.paper, 0.35);\n  group.add(fill);\n  const strip = new Group();\n  strip.rotation.y = -18 * Math.PI / 180;\n  group.add(strip);\n  const captions = [\n    \"NA-01 MERIDIAN\",\n    \"NA-02 NOCTURNE\",\n    \"NA-03 SIGNAL\",\n    \"NA-04 VANTAGE\",\n    \"NA-05 ARCHIVE\"\n  ];\n  const cardW = 1.6, cardH = 1, pitch = 1.85;\n  const focusIndex = 2;\n  const cardMeshes = [];\n  const uvOffsets = [];\n  const cardGeo = new BoxGeometry(cardW, cardH, 0.04);\n  const bevelGeo = new BoxGeometry(cardW + 0.05, cardH + 0.05, 0.03);\n  for (let i = 0; i < 5; i++) {\n    const cardRoot = new Group();\n    const dist = i - focusIndex;\n    cardRoot.position.x = dist * pitch;\n    const isFocus = i === focusIndex;\n    const opacity = isFocus ? 1 : Math.max(0.55, 1 - Math.abs(dist) * 0.18);\n    const scale = isFocus ? 1 : 0.92;\n    cardRoot.scale.setScalar(scale);\n    if (isFocus) cardRoot.rotation.y = 18 * Math.PI / 180;\n    const bevelMat = new import_webgpu.MeshPhysicalNodeMaterial();\n    bevelMat.colorNode = (0, import_tsl.color)(colors.ink);\n    bevelMat.roughness = 0.5;\n    bevelMat.metalness = 0.5;\n    bevelMat.clearcoat = 0.2;\n    const bevel = new Mesh(bevelGeo, bevelMat);\n    bevel.position.z = -0.01;\n    cardRoot.add(bevel);\n    disposables.push(bevelMat);\n    const uvOff = (0, import_tsl.uniform)(new Vector2(0, 0));\n    const cardMat = new import_webgpu.MeshPhysicalNodeMaterial();\n    cardMat.colorNode = (0, import_tsl.color)(colors.surface);\n    cardMat.roughness = 0.55;\n    cardMat.metalness = 0.2;\n    cardMat.clearcoat = 0.15;\n    cardMat.transparent = true;\n    cardMat.opacity = opacity;\n    const card = new Mesh(cardGeo, cardMat);\n    cardRoot.add(card);\n    disposables.push(cardMat);\n    uvOffsets.push({ card, off: uvOff });\n    cardMeshes.push(cardRoot);\n    const cap = ctx.fontAtlas.createText(captions[i], {\n      fontSize: 18,\n      color: isFocus ? colors.paper : colors.ink,\n      align: \"center\",\n      letterSpacingPx: 3\n    });\n    cap.position.set(0, -0.75, 0.05);\n    cap.scale.setScalar(0.9);\n    cardRoot.add(cap);\n    strip.add(cardRoot);\n  }\n  disposables.push(cardGeo, bevelGeo);\n  const barGeo = new PlaneGeometry(1.6, 0.035);\n  const barMat = new import_webgpu.MeshBasicNodeMaterial();\n  barMat.colorNode = (0, import_tsl.color)(colors.accent).mul(1.3);\n  const bar = new Mesh(barGeo, barMat);\n  bar.position.set(0, -0.6, 0.06);\n  bar.rotation.y = 18 * Math.PI / 180;\n  strip.add(bar);\n  disposables.push(barGeo, barMat);\n  const baseUrl = config.imageUrl ?? config.intent?.visualSpec?.imageUrl ?? \"/prism-mock/home/nodes/parallax-stack.png\";\n  ctx.textureLoader.loadTexture(baseUrl).then((tex) => {\n    uvOffsets.forEach(({ card }, idx) => {\n      const t2 = tex.clone();\n      t2.needsUpdate = true;\n      t2.offset = new Vector2(idx * 0.13 % 1, idx * 0.07 % 1);\n      card.material.map = t2;\n      card.material.colorNode = null;\n      card.material.needsUpdate = true;\n      disposables.push(t2);\n    });\n  }).catch(() => {\n  });\n  const headline = ctx.fontAtlas.createText(\"The collection\", {\n    fontSize: 68,\n    color: colors.paper,\n    align: \"left\"\n  });\n  headline.position.set(-2.6, 1.5, 0);\n  group.add(headline);\n  const body = ctx.fontAtlas.createText(\"Five calibres. One discipline.\", {\n    fontSize: 26,\n    color: colors.paper,\n    align: \"left\"\n  });\n  body.position.set(-2.6, -1.5, 0);\n  group.add(body);\n  const prims = config.cinematicPrimitives ?? [{ name: \"parallax-scroll\", params: { intensity: 0.5 }, trigger: \"scroll\" }];\n  for (const p of prims) {\n    if (ctx.primitives[p.name]) {\n      const h = ctx.primitives[p.name](strip, p.params ?? {});\n      if (h) primHandles.push(h);\n    }\n  }\n  strip.position.y = 0.4;\n  strip.scale.setScalar(1.04);\n  const tl = import_gsap.gsap.timeline();\n  tl.to(strip.position, { y: 0, duration: 0.7, ease: \"power3.out\" }, 0);\n  tl.to(strip.scale, { x: 1, y: 1, z: 1, duration: 0.9, ease: \"power4.out\" }, 0.1);\n  timelines.push(tl);\n  const idle = import_gsap.gsap.to(bar.scale, {\n    x: 1.02,\n    duration: 2.2,\n    ease: \"sine.inOut\",\n    yoyo: true,\n    repeat: -1\n  });\n  timelines.push(idle);\n  group.userData.handlers = {\n    scroll: (delta) => {\n      const d = (typeof delta === \"number\" ? delta : delta?.deltaY ?? 0) * 1e-3;\n      uvOffsets.forEach(({ off }, i) => {\n        const dir = i % 2 === 0 ? 1 : -1;\n        off.value.x = Math.max(-0.04, Math.min(0.04, off.value.x + d * dir));\n      });\n    },\n    click: () => {\n      ctx.emit(\"navigate\", { to: \"hub-collection\" });\n    }\n  };\n  group.userData.cleanup = () => {\n    timelines.forEach((tl2) => tl2.kill());\n    primHandles.forEach((h) => h?.cleanup?.());\n    disposables.forEach((d) => d?.dispose?.());\n    group.traverse((o) => {\n      if (o.geometry) o.geometry.dispose?.();\n      if (o.material) {\n        if (o.material.map) o.material.map.dispose?.();\n        o.material.dispose?.();\n      }\n    });\n  };\n  return group;\n}\n",
+  "transformError": null
+}

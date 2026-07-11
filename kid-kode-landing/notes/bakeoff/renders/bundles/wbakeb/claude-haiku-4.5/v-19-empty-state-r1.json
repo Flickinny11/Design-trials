@@ -1,0 +1,185 @@
+{
+  "id": "wbakeb/claude-haiku-4.5/v-19-empty-state-r1",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-19-empty-state",
+  "run": 1,
+  "node": {
+    "nodeId": "v-19-empty-state",
+    "subtype": "empty-state",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Rich empty state — An empty-state panel that is rich, never void (DL16): guidance copy, ghost preview, one accent action.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "Your ledger is empty.",
+            "role": "headline",
+            "typography": {
+              "fontSize": 34,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Commissioned pieces and saved references will appear here once you begin.",
+            "role": "body",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "BROWSE THE COLLECTION",
+            "role": "cta-label",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#16161d",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#14141a"
+            },
+            {
+              "at": 1,
+              "hex": "#0b0b10"
+            }
+          ]
+        },
+        "typography": {
+          "headline": {
+            "family": "Lora",
+            "fontSize": 34,
+            "fontWeight": 600,
+            "letterSpacing": -0.01,
+            "lineHeight": 1.15
+          },
+          "body": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.5
+          },
+          "cta-label": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 700,
+            "letterSpacing": 0.08,
+            "lineHeight": 1
+          }
+        },
+        "effects": "Panel 3.2w x 2.2h scene units, corner radius 0.06, filled with a radial engineered gradient #14141a (at 0.0, center) -> #0b0b10 (at 1.0, edges) plus a hairline grid at 0.25-unit pitch (1x base) in #e8ecf2 at 6 percent opacity so the region is never void; 0.006-unit hairline border #26262f; ghost preview at left of center: a wireframe watch-card outline 1.1w x 1.4h drawn in 0.008-unit strokes of #e8ecf2 at 30 percent opacity containing a ghost dial circle 0.55 diameter and two ghost text bars 0.7w x 0.06h at 22 percent; ghost group breathes opacity 0.24 -> 0.34 over 2400ms cubic-bezier(0.445,0.05,0.55,0.95) yoyo repeat; copy column right of the ghost with 0.5-unit padding (2x base), headline then body on a 0.25 baseline rhythm; accent CTA 1.5w x 0.36h below the body, vertical gradient #ff4450 -> #c1121f, ink label, edge emissive #ff2a38 intensity 1.5, press scale 1.0 -> 0.97 over 120ms cubic-bezier(0.175,0.885,0.32,1.275); mount fade-up opacity 0 -> 1 and y +0.2 -> 0 over 500ms cubic-bezier(0.25,0.46,0.45,0.94); the key light grazes the panel so the hairline grid catches faint specular structure, keeping depth in an intentionally empty region."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        4.2
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 45
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.4
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1,
+        "position": [
+          2.5,
+          2.5,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.45,
+        "position": [
+          -1.8,
+          -0.8,
+          -1
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#7f8896",
+        "intensity": 0.3,
+        "position": [
+          -3,
+          1,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "The ghost watch-card outline breathes between 24 and 34 percent opacity on a 2.4s cycle; the CTA compresses on press; everything else is still.",
+    "contrastMinimum": "4.5:1 body on radial gradient center; 4.8:1 ink CTA label on accent"
+  },
+  "parsed": true,
+  "fenced": true,
+  "depGate": {
+    "sources": [
+      "gsap",
+      "three/webgpu",
+      "three/tsl"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_gsap = require(\"gsap\");\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nfunction createNode(config, ctx) {\n  const { THREE } = ctx;\n  const { Group, Mesh, PlaneGeometry, Vector3 } = THREE;\n  const root = new Group();\n  root.position.copy(new Vector3(0, 0, 0));\n  root.rotation.order = \"XYZ\";\n  const panelW = 3.2;\n  const panelH = 2.2;\n  const cornerRadius = 0.06;\n  const gridPitch = 0.25;\n  const gridOpacity = 0.06;\n  const borderWidth = 6e-3;\n  const borderColor = \"#26262f\";\n  const ghostW = 1.1;\n  const ghostH = 1.4;\n  const ghostDialDiameter = 0.55;\n  const ghostOpacity = { min: 0.22, max: 0.34 };\n  const ghostBarW = 0.7;\n  const ghostBarH = 0.06;\n  const textPaddingX = 0.5;\n  const textPaddingY = 0.5;\n  const baselineRhythm = 0.25;\n  const ctaW = 1.5;\n  const ctaH = 0.36;\n  const panelGeometry = new PlaneGeometry(panelW, panelH, 128, 128);\n  const uvNode = (0, import_tsl.uv)();\n  const centerUV = (0, import_tsl.vec2)(0.5, 0.5);\n  const distFromCenter = uvNode.distance(centerUV).mul(2);\n  const gradientColor = (0, import_tsl.mix)(\n    (0, import_tsl.color)(\"#14141a\"),\n    (0, import_tsl.color)(\"#0b0b10\"),\n    distFromCenter.clamp(0, 1)\n  );\n  const gridUV = uvNode.mul((0, import_tsl.vec2)(panelW, panelH).mul(1 / gridPitch));\n  const gridFract = gridUV.fract();\n  const gridThreshold = 8e-3 / gridPitch;\n  const gridLines = (0, import_tsl.mix)(\n    1,\n    0,\n    gridFract.min().smoothstep(gridThreshold, gridThreshold + 1e-3)\n  );\n  const gridAlpha = (0, import_tsl.color)(\"#e8ecf2\").mul(gridOpacity).mul(gridLines);\n  const panelColor = (0, import_tsl.mix)(gradientColor, (0, import_tsl.color)(\"#e8ecf2\"), gridAlpha.a);\n  const panelMaterial = new import_webgpu.MeshBasicNodeMaterial({\n    colorNode: panelColor\n  });\n  const panelMesh = new Mesh(panelGeometry, panelMaterial);\n  panelMesh.position.z = 0;\n  root.add(panelMesh);\n  const borderGeometry = new PlaneGeometry(panelW, panelH, 32, 32);\n  const borderMaterial = new import_webgpu.MeshBasicNodeMaterial({\n    color: borderColor,\n    transparent: true,\n    opacity: 1\n  });\n  const borderMesh = new Mesh(borderGeometry, borderMaterial);\n  borderMesh.position.z = 1e-3;\n  borderMesh.scale.set(1, 1, 1);\n  root.add(borderMesh);\n  const ghostGroup = new Group();\n  const ghostCardX = -(panelW / 2) + ghostW / 2 + 0.25;\n  ghostGroup.position.x = ghostCardX;\n  ghostGroup.position.z = 2e-3;\n  const outlineGeometry = new PlaneGeometry(ghostW, ghostH, 2, 2);\n  const outlineMaterial = new import_webgpu.MeshBasicNodeMaterial({\n    color: \"#e8ecf2\",\n    transparent: true,\n    opacity: 0.3,\n    wireframe: true\n  });\n  const outlineMesh = new Mesh(outlineGeometry, outlineMaterial);\n  ghostGroup.add(outlineMesh);\n  const dialSegments = 32;\n  const dialGeometry = new PlaneGeometry(ghostDialDiameter, ghostDialDiameter, dialSegments, 1);\n  const dialMaterial = new import_webgpu.MeshBasicNodeMaterial({\n    color: \"#e8ecf2\",\n    transparent: true,\n    opacity: 0.3,\n    wireframe: true\n  });\n  const dialMesh = new Mesh(dialGeometry, dialMaterial);\n  dialMesh.position.y = 0.15;\n  dialMesh.position.z = 1e-3;\n  ghostGroup.add(dialMesh);\n  const barGeometry = new PlaneGeometry(ghostBarW, ghostBarH);\n  const barMaterial = new import_webgpu.MeshBasicNodeMaterial({\n    color: \"#e8ecf2\",\n    transparent: true,\n    opacity: 0.22\n  });\n  const bar1 = new Mesh(barGeometry, barMaterial);\n  bar1.position.y = -0.35;\n  bar1.position.z = 1e-3;\n  ghostGroup.add(bar1);\n  const bar2 = new Mesh(barGeometry, barMaterial);\n  bar2.position.y = -0.55;\n  bar2.position.z = 1e-3;\n  ghostGroup.add(bar2);\n  root.add(ghostGroup);\n  const textColumnX = panelW / 2 - textPaddingX - ghostW / 2 - 0.3;\n  const textColumnY = panelH / 2 - textPaddingY;\n  const headlineText = ctx.fontAtlas.createText(\"Your ledger is empty.\", {\n    fontSize: 34,\n    color: \"#e8ecf2\",\n    align: \"left\",\n    maxWidthPx: Math.floor((panelW - ghostW - textPaddingX * 2 - 0.2) * 100)\n  });\n  headlineText.position.set(\n    textColumnX - panelW / 2,\n    textColumnY - 0.15,\n    3e-3\n  );\n  root.add(headlineText);\n  const bodyText = ctx.fontAtlas.createText(\n    \"Commissioned pieces and saved references will appear here once you begin.\",\n    {\n      fontSize: 13,\n      color: \"#e8ecf2\",\n      align: \"left\",\n      maxWidthPx: Math.floor((panelW - ghostW - textPaddingX * 2 - 0.2) * 100)\n    }\n  );\n  bodyText.position.set(\n    textColumnX - panelW / 2,\n    textColumnY - 0.6,\n    3e-3\n  );\n  root.add(bodyText);\n  const ctaGeometry = new PlaneGeometry(ctaW, ctaH);\n  const ctaUV = (0, import_tsl.uv)();\n  const ctaGradient = (0, import_tsl.mix)(\n    (0, import_tsl.color)(\"#ff4450\"),\n    (0, import_tsl.color)(\"#c1121f\"),\n    ctaUV.y\n  );\n  const ctaMaterial = new import_webgpu.MeshBasicNodeMaterial({\n    colorNode: ctaGradient\n  });\n  const ctaMesh = new Mesh(ctaGeometry, ctaMaterial);\n  ctaMesh.position.set(\n    textColumnX - panelW / 2,\n    textColumnY - 1.35,\n    4e-3\n  );\n  ctaMesh.userData.isButton = true;\n  root.add(ctaMesh);\n  const ctaLabel = ctx.fontAtlas.createText(\"BROWSE THE COLLECTION\", {\n    fontSize: 13,\n    color: \"#16161d\",\n    // ink\n    align: \"center\"\n  });\n  ctaLabel.position.set(\n    textColumnX - panelW / 2,\n    textColumnY - 1.35,\n    5e-3\n  );\n  root.add(ctaLabel);\n  const timelines = [];\n  const breatheTimeline = import_gsap.gsap.timeline({ repeat: -1, yoyo: true });\n  breatheTimeline.to(\n    ghostGroup,\n    {\n      opacity: ghostOpacity.max,\n      duration: 2.4,\n      ease: \"power1.inOut\"\n      // cubic-bezier(0.445,0.05,0.55,0.95) approximation\n    },\n    0\n  );\n  ghostGroup.opacity = ghostOpacity.min;\n  timelines.push(breatheTimeline);\n  root.opacity = 0;\n  root.position.y += 0.2;\n  const mountTimeline = import_gsap.gsap.timeline();\n  mountTimeline.to(\n    root,\n    {\n      opacity: 1,\n      y: root.position.y - 0.2,\n      duration: 0.5,\n      ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n    },\n    0\n  );\n  timelines.push(mountTimeline);\n  const ctaHandler = () => {\n    import_gsap.gsap.to(ctaMesh.scale, {\n      x: 0.97,\n      y: 0.97,\n      duration: 0.12,\n      ease: \"back.out\",\n      yoyo: true,\n      repeat: 1\n    });\n    ctx.emit(\"navigate\", { to: \"hub-collection\" });\n  };\n  ctaMesh.userData.handlers = {\n    click: ctaHandler\n  };\n  root.userData.cleanup = () => {\n    timelines.forEach((tl) => tl.kill());\n    panelGeometry.dispose();\n    panelMaterial.dispose();\n    borderGeometry.dispose();\n    borderMaterial.dispose();\n    outlineGeometry.dispose();\n    outlineMaterial.dispose();\n    dialGeometry.dispose();\n    dialMaterial.dispose();\n    barGeometry.dispose();\n    barMaterial.dispose();\n    ctaGeometry.dispose();\n    ctaMaterial.dispose();\n  };\n  return root;\n}\n",
+  "transformError": null
+}

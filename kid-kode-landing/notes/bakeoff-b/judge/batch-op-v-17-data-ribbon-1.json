@@ -1,0 +1,51 @@
+{
+  "label": "batch-op-v-17-data-ribbon-1",
+  "judgedAt": "2026-07-11T04:27:10.515Z",
+  "judgeModel": "claude-opus-4-8",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-op-v-17-data-ribbon-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-op-v-17-data-ribbon-1/F2.jpg"
+    }
+  ],
+  "mappingFile": "notes/bakeoff-b/judge/blind/batch-op-v-17-data-ribbon-1/mapping.json",
+  "costUsd": 0.230345,
+  "durationApiMs": 33757,
+  "wallMs": 36649,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 12131,
+    "cache_read_input_tokens": 78516,
+    "output_tokens": 2061,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12131,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1576,
+        "cache_read_input_tokens": 41618,
+        "cache_creation_input_tokens": 7411,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7411
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 73, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"background field surrounding ribbon\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"faint ghost rectangle upper-center behind ribbon\" } ], \"notes\": \"On-spec mono ticker, crisp paper text, correct red emissive ticks, real metallic light response and edge fades; surrounding black field reads void and a faint stray panel lingers.\" }, { \"frame\": \"F2\", \"score\": 76, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"background field surrounding ribbon\" } ], \"notes\": \"Clean on-palette ribbon with rounded glossy ends showing genuine dimensionality, correct red ticks, mono paper figures, working edge fades; large dead-black surround keeps it from flagship tier.\" } ] }"
+}

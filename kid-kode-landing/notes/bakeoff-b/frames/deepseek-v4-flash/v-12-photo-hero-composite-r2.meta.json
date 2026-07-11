@@ -1,0 +1,21 @@
+{
+  "bundle": "wbakeb/deepseek-v4-flash/v-12-photo-hero-composite-r2",
+  "contestant": "deepseek-v4-flash",
+  "caseId": "v-12-photo-hero-composite",
+  "run": 2,
+  "capturedAt": "2026-07-11T02:53:58.539Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/deepseek-v4-flash/v-12-photo-hero-composite-r2",
+    "moduleRuntimeError": "TypeError: (intermediate value).createTexture is not a function"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

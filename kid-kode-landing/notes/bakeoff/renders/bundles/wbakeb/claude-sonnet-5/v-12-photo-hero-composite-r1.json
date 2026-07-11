@@ -1,0 +1,198 @@
+{
+  "id": "wbakeb/claude-sonnet-5/v-12-photo-hero-composite-r1",
+  "contestant": "claude-sonnet-5",
+  "caseId": "v-12-photo-hero-composite",
+  "run": 1,
+  "node": {
+    "nodeId": "v-12-photo-hero-composite",
+    "subtype": "layered-photo-hero",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": "/prism-mock/home/nodes/parallax-stack.png"
+    },
+    "intent": {
+      "caption": "Photo hero composite — A layered photographic hero plate with filmic grade, foreground subject separation, and caption block.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "NOVA ATELIER / GENEVA",
+            "role": "kicker",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Time, Machined.",
+            "role": "headline",
+            "typography": {
+              "fontSize": 34,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Every case begins as a single billet of 904L steel.",
+            "role": "body",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "CALIBRE NA-01 / 72 HOUR RESERVE",
+            "role": "caption",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#16161d",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0.45,
+              "hex": "#0b0b1000"
+            },
+            {
+              "at": 1,
+              "hex": "#0b0b10eb"
+            }
+          ]
+        },
+        "typography": {
+          "kicker": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.2
+          },
+          "headline": {
+            "family": "Lora",
+            "fontSize": 34,
+            "fontWeight": 600,
+            "letterSpacing": -0.01,
+            "lineHeight": 1.1
+          },
+          "body": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.5
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 400,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Layered photo plate 4.0w x 2.5h scene units on parallax-plane using the provided imageUrl and depthMapUrl, depth-displacement amplitude 0.18 scene units, parallax-scroll intensity 0.35 bound to scroll; filmic grade baked into the plate treatment: blacks lifted to #0d0d12, highlights shouldered toward #e8ecf2, midtone contrast plus 12 percent, global desaturation minus 8 percent with the red channel preserved so the accent stays pure; foreground subject separated by the depth map with a 0.02-unit rim of key light along its silhouette; bottom scrim gradient #0b0b1000 (at 0.45) -> #0b0b10eb (at 1.0) seats the caption block; caption block anchored bottom-left with 0.5-unit padding (2x base unit), kicker then headline then body stacked on a 0.25-unit baseline rhythm; accent hairline bar 0.75w x 0.02h in #ff2a38 emissive intensity 1.8 sits between headline and body; plate mount opacity 0 -> 1 over 500ms cubic-bezier(0.25,0.46,0.45,0.94); caption block rise-in y +0.4 -> 0 over 700ms cubic-bezier(0.215,0.61,0.355,1) starting 120ms after the plate; scroll shifts depth layers up to plus and minus 0.14 units against the camera so near layers overtake far layers with true occlusion."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "parallax-plane",
+    "depthMapUrl": "/prism-mock/home/nodes/parallax-stack.depth.png",
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "parallax-scroll",
+        "trigger": "scroll",
+        "params": {
+          "intensity": 0.35
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        4.8
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#c3c9d4",
+        "intensity": 0.5
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 0.9,
+        "position": [
+          3,
+          2,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.5,
+        "position": [
+          -2.2,
+          -1,
+          1.5
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Depth layers parallax against scroll at 0.35 intensity while the caption block rises in once and stays fixed.",
+    "contrastMinimum": "4.5:1 body text on the scrim region; 3:1 headline on graded plate"
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction hexToRgbA(hex) {\n  const h = String(hex).replace(\"#\", \"\");\n  const r = parseInt(h.substring(0, 2), 16) / 255;\n  const g = parseInt(h.substring(2, 4), 16) / 255;\n  const b = parseInt(h.substring(4, 6), 16) / 255;\n  const a = h.length > 6 ? parseInt(h.substring(6, 8), 16) / 255 : 1;\n  return { r, g, b, a };\n}\nfunction createNode(config, ctx) {\n  const { THREE } = ctx;\n  const visualSpec = config.intent?.visualSpec ?? {};\n  const colors = config.colors ?? visualSpec.colors ?? {\n    background: \"#0b0b10\",\n    surface: \"#16161d\",\n    ink: \"#16161d\",\n    paper: \"#e8ecf2\",\n    accent: \"#ff2a38\",\n    gradientStops: [\n      { at: 0.45, hex: \"#0b0b1000\" },\n      { at: 1, hex: \"#0b0b10eb\" }\n    ]\n  };\n  const typography = config.typography ?? visualSpec.typography ?? {\n    kicker: { fontSize: 9, letterSpacing: 0.12 },\n    headline: { fontSize: 34, letterSpacing: -0.01 },\n    body: { fontSize: 13, letterSpacing: 0 },\n    caption: { fontSize: 9, letterSpacing: 0.12 }\n  };\n  const items = config.textContent ?? visualSpec.textContent ?? [];\n  const findText = (role) => items.find((it) => it.role === role)?.text ?? \"\";\n  const root = new import_webgpu.Group();\n  root.userData.handlers = {};\n  const primitiveHandles = [];\n  const timelines = [];\n  const disposables = [];\n  {\n    const bgC = new import_webgpu.Color(colors.background);\n    const surfC = new import_webgpu.Color(colors.surface);\n    const bgVec = (0, import_tsl.vec3)(bgC.r, bgC.g, bgC.b);\n    const surfVec = (0, import_tsl.vec3)(surfC.r, surfC.g, surfC.b);\n    const geo = new import_webgpu.PlaneGeometry(7, 6, 1, 1);\n    const mat = new import_webgpu.MeshBasicNodeMaterial();\n    mat.colorNode = (0, import_tsl.mix)(surfVec, bgVec, (0, import_tsl.smoothstep)(0, 1, (0, import_tsl.uv)().y));\n    const backdrop = new import_webgpu.Mesh(geo, mat);\n    backdrop.position.set(0, -0.25, -2.5);\n    root.add(backdrop);\n    disposables.push(() => {\n      geo.dispose();\n      mat.dispose();\n    });\n  }\n  const layerGroup = new import_webgpu.Group();\n  layerGroup.position.set(0, 0.35, 0);\n  root.add(layerGroup);\n  const PLATE_W = 4;\n  const PLATE_H = 2.5;\n  const DISPLACE_AMP = 0.18;\n  const placeholderTex = new import_webgpu.Texture();\n  const placeholderDepth = new import_webgpu.Texture();\n  const colorTexNode = (0, import_tsl.texture)(placeholderTex, (0, import_tsl.uv)());\n  const depthTexNode = (0, import_tsl.texture)(placeholderDepth, (0, import_tsl.uv)());\n  const liftC = new import_webgpu.Color(\"#0d0d12\");\n  const shoulderC = new import_webgpu.Color(colors.paper);\n  const liftVec = (0, import_tsl.vec3)(liftC.r, liftC.g, liftC.b);\n  const shoulderVec = (0, import_tsl.vec3)(shoulderC.r, shoulderC.g, shoulderC.b);\n  const lum = colorTexNode.r.mul(0.299).add(colorTexNode.g.mul(0.587)).add(colorTexNode.b.mul(0.114));\n  const desatG = (0, import_tsl.mix)(colorTexNode.g, lum, 0.08);\n  const desatB = (0, import_tsl.mix)(colorTexNode.b, lum, 0.08);\n  const desaturated = (0, import_tsl.vec3)(colorTexNode.r, desatG, desatB);\n  const contrasted = (0, import_tsl.clamp)(desaturated.sub(0.5).mul(1.12).add(0.5), 0, 1);\n  const graded = (0, import_tsl.mix)(liftVec, shoulderVec, contrasted);\n  const plateMat = new import_webgpu.MeshStandardNodeMaterial({ roughness: 0.6, metalness: 0.1, transparent: true });\n  plateMat.colorNode = graded;\n  plateMat.positionNode = import_tsl.positionLocal.add(import_tsl.normalLocal.mul(depthTexNode.r.mul(DISPLACE_AMP)));\n  const plateOpacityCtrl = { value: 0 };\n  plateMat.opacityNode = (0, import_tsl.texture)(placeholderTex, (0, import_tsl.uv)()).a.mul(0).add(plateOpacityCtrl.value);\n  const applyPlateOpacity = () => {\n    plateMat.opacity = plateOpacityCtrl.value;\n    plateMat.opacityNode = null;\n    plateMat.transparent = true;\n    plateMat.needsUpdate = true;\n  };\n  applyPlateOpacity();\n  const plateGeo = new import_webgpu.PlaneGeometry(PLATE_W, PLATE_H, 64, 64);\n  const plateMesh = new import_webgpu.Mesh(plateGeo, plateMat);\n  plateMesh.position.set(0, 0, 0);\n  layerGroup.add(plateMesh);\n  disposables.push(() => {\n    plateGeo.dispose();\n    plateMat.dispose();\n  });\n  ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n    colorTexNode.value = tex;\n    plateMat.needsUpdate = true;\n  }).catch(() => {\n  });\n  if (config.depthMapUrl) {\n    ctx.textureLoader.loadTexture(config.depthMapUrl).then((tex) => {\n      depthTexNode.value = tex;\n      plateMat.needsUpdate = true;\n    }).catch(() => {\n    });\n  }\n  const rimLight = new import_webgpu.DirectionalLight(16777215, 0.7);\n  rimLight.position.set(-1.2, 0.6, 1.5);\n  layerGroup.add(rimLight);\n  disposables.push(() => layerGroup.remove(rimLight));\n  const accentColorObj = new import_webgpu.Color(colors.accent);\n  const backLight = new import_webgpu.DirectionalLight(accentColorObj, 0.3);\n  backLight.position.set(1.5, -0.5, -1);\n  layerGroup.add(backLight);\n  disposables.push(() => layerGroup.remove(backLight));\n  {\n    const stops = colors.gradientStops && colors.gradientStops.length >= 2 ? colors.gradientStops : [{ at: 0.45, hex: \"#0b0b1000\" }, { at: 1, hex: \"#0b0b10eb\" }];\n    const s0 = hexToRgbA(stops[0].hex);\n    const s1 = hexToRgbA(stops[stops.length - 1].hex);\n    const scrimColor = (0, import_tsl.vec3)(s1.r, s1.g, s1.b);\n    const geo = new import_webgpu.PlaneGeometry(PLATE_W, PLATE_H, 1, 1);\n    const mat = new import_webgpu.MeshBasicNodeMaterial({ transparent: true });\n    const t = (0, import_tsl.uv)().y.oneMinus();\n    const factor = (0, import_tsl.smoothstep)(stops[0].at, stops[stops.length - 1].at, t);\n    mat.colorNode = scrimColor;\n    mat.opacityNode = (0, import_tsl.mix)(s0.a, s1.a, factor);\n    const scrim = new import_webgpu.Mesh(geo, mat);\n    scrim.position.set(0, 0, 0.02);\n    layerGroup.add(scrim);\n    disposables.push(() => {\n      geo.dispose();\n      mat.dispose();\n    });\n  }\n  const captionGroup = new import_webgpu.Group();\n  const anchorX = -PLATE_W / 2 + 0.5;\n  const anchorY = -PLATE_H / 2 + 0.5;\n  captionGroup.position.set(anchorX, anchorY, 0.03);\n  let cursorY = 0;\n  const bodyText = ctx.fontAtlas.createText(findText(\"body\") || \"Every case begins as a single billet of 904L steel.\", {\n    fontSize: typography.body?.fontSize ?? 13,\n    color: colors.paper,\n    align: \"left\",\n    maxWidthPx: 420,\n    letterSpacingPx: (typography.body?.letterSpacing ?? 0) * (typography.body?.fontSize ?? 13)\n  });\n  bodyText.position.set(0, cursorY, 0);\n  captionGroup.add(bodyText);\n  cursorY += 0.3;\n  const accentC = new import_webgpu.Color(colors.accent);\n  const hairlineGeo = new import_webgpu.PlaneGeometry(0.75, 0.02, 1, 1);\n  const hairlineMat = new import_webgpu.MeshStandardNodeMaterial({ roughness: 0.5, metalness: 0.1 });\n  hairlineMat.colorNode = (0, import_tsl.vec3)(accentC.r, accentC.g, accentC.b);\n  hairlineMat.emissiveNode = (0, import_tsl.vec3)(accentC.r, accentC.g, accentC.b).mul(1.8);\n  const hairline = new import_webgpu.Mesh(hairlineGeo, hairlineMat);\n  hairline.position.set(0.375, cursorY + 0.11, 0);\n  captionGroup.add(hairline);\n  disposables.push(() => {\n    hairlineGeo.dispose();\n    hairlineMat.dispose();\n  });\n  cursorY += 0.3;\n  const headlineText = ctx.fontAtlas.createText(findText(\"headline\") || \"Time, Machined.\", {\n    fontSize: typography.headline?.fontSize ?? 34,\n    color: colors.paper,\n    align: \"left\",\n    letterSpacingPx: (typography.headline?.letterSpacing ?? 0) * (typography.headline?.fontSize ?? 34)\n  });\n  headlineText.position.set(0, cursorY, 0);\n  captionGroup.add(headlineText);\n  cursorY += 0.42;\n  const kickerText = ctx.fontAtlas.createText(findText(\"kicker\") || \"NOVA ATELIER / GENEVA\", {\n    fontSize: typography.kicker?.fontSize ?? 9,\n    color: colors.accent,\n    align: \"left\",\n    letterSpacingPx: (typography.kicker?.letterSpacing ?? 0.12) * (typography.kicker?.fontSize ?? 9)\n  });\n  kickerText.position.set(0, cursorY, 0);\n  captionGroup.add(kickerText);\n  layerGroup.add(captionGroup);\n  const captionTag = ctx.fontAtlas.createText(findText(\"caption\") || \"CALIBRE NA-01 / 72 HOUR RESERVE\", {\n    fontSize: typography.caption?.fontSize ?? 9,\n    color: colors.paper,\n    align: \"right\",\n    letterSpacingPx: (typography.caption?.letterSpacing ?? 0.12) * (typography.caption?.fontSize ?? 9)\n  });\n  captionTag.position.set(PLATE_W / 2 - 0.35, PLATE_H / 2 - 0.35, 0.03);\n  layerGroup.add(captionTag);\n  const plateTl = import_gsap.gsap.timeline();\n  plateTl.to(plateOpacityCtrl, {\n    value: 1,\n    duration: 0.5,\n    ease: \"power2.out\",\n    onUpdate: () => {\n      plateMat.opacity = plateOpacityCtrl.value;\n    }\n  });\n  timelines.push(plateTl);\n  captionGroup.position.y -= 0.4;\n  const captionTl = import_gsap.gsap.timeline({ delay: 0.12 });\n  captionTl.to(captionGroup.position, {\n    y: anchorY,\n    duration: 0.7,\n    ease: \"power3.out\"\n  });\n  timelines.push(captionTl);\n  for (const prim of config.cinematicPrimitives ?? []) {\n    const handler = ctx.primitives[prim.name];\n    if (typeof handler === \"function\") {\n      const handle = handler(layerGroup, prim.params ?? {});\n      if (handle) primitiveHandles.push(handle);\n    }\n  }\n  root.userData.cleanup = () => {\n    for (const tl of timelines) {\n      tl.kill();\n    }\n    for (const handle of primitiveHandles) {\n      handle?.timeline?.kill?.();\n      handle?.cleanup?.();\n    }\n    for (const dispose of disposables) {\n      try {\n        dispose();\n      } catch (e) {\n      }\n    }\n    placeholderTex.dispose();\n    placeholderDepth.dispose();\n    if (colorTexNode.value && colorTexNode.value !== placeholderTex) colorTexNode.value.dispose?.();\n    if (depthTexNode.value && depthTexNode.value !== placeholderDepth) depthTexNode.value.dispose?.();\n  };\n  return root;\n}\n",
+  "transformError": null
+}

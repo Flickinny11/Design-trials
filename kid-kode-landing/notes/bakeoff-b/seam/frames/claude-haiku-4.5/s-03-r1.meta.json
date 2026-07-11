@@ -1,0 +1,22 @@
+{
+  "bundle": "wbakeb-seam/claude-haiku-4.5/s-03",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "s-03",
+  "run": 1,
+  "capturedAt": "2026-07-11T06:41:56.855Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 24,
+    "nodeMounted": true,
+    "bundleId": "wbakeb-seam/claude-haiku-4.5/s-03"
+  },
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

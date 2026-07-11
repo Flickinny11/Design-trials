@@ -1,0 +1,210 @@
+{
+  "id": "wbakeb/claude-haiku-4.5/v-13-brand-wall-r1",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-13-brand-wall",
+  "run": 1,
+  "node": {
+    "nodeId": "v-13-brand-wall",
+    "subtype": "brand-wall",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Brand mark wall — A 3x2 wall of monochrome brand-mark tiles rendered premium on machined tiles — no icon-pack styling.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "AS FEATURED IN",
+            "role": "kicker",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "HODINKEE",
+            "role": "brand-mark",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "MONOCLE",
+            "role": "brand-mark",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "WALLPAPER",
+            "role": "brand-mark",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "ESQUIRE",
+            "role": "brand-mark",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "WIRED",
+            "role": "brand-mark",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "FINANCIAL TIMES",
+            "role": "brand-mark",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#16161d",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#1a1a22"
+            },
+            {
+              "at": 1,
+              "hex": "#121218"
+            }
+          ]
+        },
+        "typography": {
+          "kicker": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.2
+          },
+          "brand-mark": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 700,
+            "letterSpacing": 0.08,
+            "lineHeight": 1
+          }
+        },
+        "effects": "Six machined tiles 1.0w x 0.62h scene units in a 3x2 grid, gap 0.25 (1x base unit), grid total 3.5w x 1.49h centered at origin with the kicker 0.3 units above; each tile brushed-metal PBR, anisotropy strength 0.6 aligned to x, roughness 0.55, metalness 0.5, clearcoat 0.2, albedo vertical ramp #1a1a22 (at 0.0) -> #121218 (at 1.0), chamfered edges 0.02 units; brand wordmarks rendered flat monochrome #e8ecf2 at 78 percent opacity, no drop shadows, no strokes, no icon-pack styling; hover per tile wordmark opacity 0.78 -> 1.0 and tile translateZ 0 -> 0.05 over 160ms cubic-bezier(0.25,0.46,0.45,0.94); mount stagger-cards with each tile fade-up opacity 0 -> 1 and y +0.2 -> 0 over 500ms cubic-bezier(0.25,0.46,0.45,0.94) at 80ms stagger, top row left-to-right first; key light rakes at 35deg elevation so the brushed anisotropic highlight sweeps across each tile as it settles, giving the wall visible material motion without color noise."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0.1,
+        4
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 45
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.4
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1.1,
+        "position": [
+          3,
+          2.5,
+          3.5
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#7f8896",
+        "intensity": 0.35,
+        "position": [
+          -3,
+          1,
+          2
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.4,
+        "position": [
+          0,
+          -1.6,
+          -1
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Tiles fade-up in an 80ms left-to-right stagger while the brushed specular band sweeps each tile; hover lifts a tile 0.05 units.",
+    "contrastMinimum": "4.5:1 wordmarks at rest opacity on tile albedo; kicker on background exceeds 15:1"
+  },
+  "parsed": true,
+  "fenced": true,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const { THREE } = ctx;\n  const { Group, Mesh, PlaneGeometry, Vector3 } = THREE;\n  const group = new Group();\n  group.userData.handlers = {};\n  group.userData.cleanup = () => {\n    import_gsap.gsap.killTweensOf(tileObjects);\n    tileObjects.forEach((tile) => {\n      tile.geometry.dispose();\n      tile.material.dispose();\n    });\n  };\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const brandMarks = [\"HODINKEE\", \"MONOCLE\", \"WALLPAPER\", \"ESQUIRE\", \"WIRED\", \"FINANCIAL TIMES\"];\n  const kickerText = \"AS FEATURED IN\";\n  const kicker = ctx.fontAtlas.createText(kickerText, {\n    fontSize: 9,\n    color: \"#e8ecf2\",\n    align: \"center\",\n    letterSpacingPx: 1.08\n  });\n  kicker.position.set(0, 0.9, 0);\n  group.add(kicker);\n  const tileWidth = 1;\n  const tileHeight = 0.62;\n  const gap = 0.25;\n  const gridWidth = 3 * tileWidth + 2 * gap;\n  const gridHeight = 2 * tileHeight + gap;\n  const startX = -gridWidth / 2;\n  const startY = gridHeight / 2;\n  const tileObjects = [];\n  const tileGeometry = new PlaneGeometry(tileWidth, tileHeight, 4, 4);\n  const tileGeometryBeveled = new PlaneGeometry(tileWidth - 0.04, tileHeight - 0.04, 4, 4);\n  const positions = tileGeometryBeveled.attributes.position;\n  const posArray = positions.array;\n  const chamferRadius = 0.02;\n  for (let i = 0; i < posArray.length; i += 3) {\n    const x = posArray[i];\n    const y = posArray[i + 1];\n    const halfW = (tileWidth - 0.04) / 2;\n    const halfH = (tileHeight - 0.04) / 2;\n    if (Math.abs(x) > halfW - chamferRadius && Math.abs(y) > halfH - chamferRadius) {\n      const cornerX = Math.sign(x) * (halfW - chamferRadius);\n      const cornerY = Math.sign(y) * (halfH - chamferRadius);\n      const distX = Math.abs(x) - Math.abs(cornerX);\n      const distY = Math.abs(y) - Math.abs(cornerY);\n      const dist = Math.sqrt(distX * distX + distY * distY);\n      if (dist < chamferRadius) {\n        const factor = 1 - (chamferRadius - dist) / chamferRadius * 0.5;\n        posArray[i] *= factor;\n        posArray[i + 1] *= factor;\n      }\n    }\n  }\n  positions.needsUpdate = true;\n  const createTileMaterial = () => {\n    const gradientStops = [\n      { at: 0, hex: \"#1a1a22\" },\n      { at: 1, hex: \"#121218\" }\n    ];\n    const uvNode = (0, import_tsl.uv)();\n    const gradientColor = (0, import_tsl.mix)(\n      (0, import_tsl.vec3)(0.102, 0.102, 0.133),\n      (0, import_tsl.vec3)(0.071, 0.071, 0.098),\n      (0, import_tsl.smoothstep)(0, 1, uvNode.y)\n    );\n    const material = new import_webgpu.MeshStandardNodeMaterial({\n      colorNode: gradientColor,\n      roughnessNode: (0, import_tsl.uniform)(0.55),\n      metalnessNode: (0, import_tsl.uniform)(0.5),\n      clearcoatNode: (0, import_tsl.uniform)(0.2),\n      normalScale: new Vector3(1, 1, 1)\n    });\n    material.anisotropyStrength = 0.6;\n    material.anisotropyRotation = 0;\n    return material;\n  };\n  const tilePositions = [];\n  for (let row = 0; row < 2; row++) {\n    for (let col = 0; col < 3; col++) {\n      tilePositions.push({\n        x: startX + col * (tileWidth + gap) + tileWidth / 2,\n        y: startY - row * (tileHeight + gap) - tileHeight / 2,\n        index: row * 3 + col\n      });\n    }\n  }\n  tilePositions.forEach((pos) => {\n    const tile = new Mesh(tileGeometryBeveled, createTileMaterial());\n    tile.position.set(pos.x, pos.y, 0);\n    tile.userData.originalZ = 0;\n    tile.userData.hoverActive = false;\n    const markText = ctx.fontAtlas.createText(brandMarks[pos.index], {\n      fontSize: 13,\n      color: \"#e8ecf2\",\n      align: \"center\"\n    });\n    markText.position.z = 0.01;\n    markText.material.opacity = 0.78;\n    markText.material.transparent = true;\n    tile.add(markText);\n    tile.userData.markText = markText;\n    group.userData.handlers[`tile-${pos.index}`] = {\n      hover: (state) => {\n        tile.userData.hoverActive = state;\n        import_gsap.gsap.to(tile.position, {\n          z: state ? 0.05 : 0,\n          duration: 0.16,\n          ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n        });\n        import_gsap.gsap.to(markText.material, {\n          opacity: state ? 1 : 0.78,\n          duration: 0.16,\n          ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n        });\n      }\n    };\n    tile.userData.isHoverable = true;\n    group.add(tile);\n    tileObjects.push(tile);\n  });\n  const staggerDelay = 0.08;\n  tileObjects.forEach((tile, idx) => {\n    const isTopRow = idx < 3;\n    const colIndex = isTopRow ? idx : idx - 3;\n    const staggerIndex = isTopRow ? colIndex : 3 + colIndex;\n    tile.position.y += 0.2;\n    tile.material.transparent = true;\n    tile.material.opacity = 0;\n    tile.userData.markText.material.opacity = 0;\n    import_gsap.gsap.to(tile.position, {\n      y: tilePositions[staggerIndex].y,\n      duration: 0.5,\n      ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\",\n      delay: staggerIndex * staggerDelay\n    });\n    import_gsap.gsap.to(tile.material, {\n      opacity: 1,\n      duration: 0.5,\n      ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\",\n      delay: staggerIndex * staggerDelay\n    });\n    import_gsap.gsap.to(tile.userData.markText.material, {\n      opacity: 0.78,\n      duration: 0.5,\n      ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\",\n      delay: staggerIndex * staggerDelay\n    });\n  });\n  const keyLight = new THREE.DirectionalLight(16777215, 1.2);\n  const elevation = 35 * Math.PI / 180;\n  const azimuth = 0 * Math.PI / 180;\n  keyLight.position.set(\n    Math.cos(azimuth) * Math.cos(elevation),\n    Math.sin(elevation),\n    Math.sin(azimuth) * Math.cos(elevation)\n  );\n  keyLight.position.normalize().multiplyScalar(3);\n  group.add(keyLight);\n  const rimLight = new THREE.DirectionalLight(15265010, 0.6);\n  rimLight.position.set(-2, 1.5, 2);\n  group.add(rimLight);\n  const ambientLight = new THREE.AmbientLight(16777215, 0.4);\n  group.add(ambientLight);\n  return group;\n}\n",
+  "transformError": null
+}

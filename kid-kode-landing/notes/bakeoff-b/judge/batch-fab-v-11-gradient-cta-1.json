@@ -1,0 +1,59 @@
+{
+  "label": "batch-fab-v-11-gradient-cta-1",
+  "judgedAt": "2026-07-11T04:08:31.254Z",
+  "judgeModel": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-11-gradient-cta-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-11-gradient-cta-1/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-11-gradient-cta-1/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-11-gradient-cta-1/F4.jpg"
+    }
+  ],
+  "mappingFile": "notes/bakeoff-b/judge/blind/batch-fab-v-11-gradient-cta-1/mapping.json",
+  "costUsd": 0.563615,
+  "durationApiMs": 64643,
+  "wallMs": 66536,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 14402,
+    "cache_read_input_tokens": 82080,
+    "output_tokens": 3163,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14402,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 2407,
+        "cache_read_input_tokens": 43877,
+        "cache_creation_input_tokens": 8728,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8728
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 3, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" } ], \"notes\": \"Near-black void; no button, gradient, or lighting rendered at all.\" }, { \"frame\": \"F2\", \"score\": 13, \"mustFix\": [ { \"defect\": \"ALL_BLACK_ELEMENT\", \"region\": \"center-right button\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"button face (no red gradient, seam, or emissive perimeter)\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"upper background field (white, not #0b0b10)\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"left half of button, soft blur smear\" } ], \"notes\": \"Grayscale ghost of the spec; red palette entirely absent, no machined edge, heavy forbidden blur.\" }, { \"frame\": \"F3\", \"score\": 21, \"mustFix\": [ { \"defect\": \"OFF_PALETTE\", \"region\": \"background field (light gray, violates dark-first)\" }, { \"defect\": \"LOW_CONTRAST\", \"region\": \"center button face, blown-out white\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"button face (gradient ramp and hard seam absent)\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"upper-right of button face, stray pink rectangle\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"left edge, blurred dissolve\" } ], \"notes\": \"Overexposed pale-pink slab on light ground; faint red perimeter is the only spec trace.\" }, { \"frame\": \"F4\", \"score\": 48, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"button perimeter (no machined chamfer highlight or emissive channel)\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"left third of button, edge dissolves into blur\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"button face, soft diffuse glow instead of clearcoat light response\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"large white background blocks fighting dark-first field\" } ], \"notes\": \"Best of batch: red ramp and faint seam present, but soft-blur materiality, washed coral stops, no engineered edges.\" } ] }"
+}

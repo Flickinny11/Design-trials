@@ -1,0 +1,21 @@
+{
+  "bundle": "wbakeb/mercury-2/v-03-glass-prism-refraction-r1",
+  "contestant": "mercury-2",
+  "caseId": "v-03-glass-prism-refraction",
+  "run": 1,
+  "capturedAt": "2026-07-11T02:59:48.119Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 0,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/mercury-2/v-03-glass-prism-refraction-r1",
+    "moduleRuntimeError": "ReferenceError: THREE is not defined"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

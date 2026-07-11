@@ -1,0 +1,173 @@
+{
+  "id": "wbakeb/claude-haiku-4.5/v-04-kinetic-type-headline-r2",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-04-kinetic-type-headline",
+  "run": 2,
+  "node": {
+    "nodeId": "v-04-kinetic-type-headline",
+    "subtype": "kinetic-typography",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Kinetic 3D type headline — A hero headline as dimensional type with staggered kinetic entrance and weighted settle; MSDF text only.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "NOVA ATELIER / CALIBRE PROGRAM",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "TIME, MACHINED.",
+            "role": "hero",
+            "typography": {
+              "fontSize": 124,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Every calibre begins as a solid billet.",
+            "role": "subhead",
+            "typography": {
+              "fontSize": 40,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#101017",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 1,
+              "hex": "#13131a"
+            }
+          ]
+        },
+        "typography": {
+          "hero": {
+            "family": "Lora",
+            "fontSize": 124,
+            "fontWeight": 600,
+            "letterSpacing": -0.01,
+            "lineHeight": 1.05
+          },
+          "subhead": {
+            "family": "JetBrains Mono",
+            "fontSize": 40,
+            "fontWeight": 400,
+            "letterSpacing": 0.02,
+            "lineHeight": 1.35
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Hero set as MSDF glyph planes (Lora 600), glyph em height 0.62 scene units, one line centered at y=0.4, per-word z offsets front-to-back 0.12 / 0.0 / -0.12 units for parallax depth. kinetic-text on load: per-glyph y +0.35 to 0 and opacity 0 to 1, 700ms each, 60ms stagger left to right, cubic-bezier(0.215,0.61,0.355,1); the final glyph triggers a group weighted-settle, scale 1.04 to 1.0 over 900ms cubic-bezier(0.165,0.84,0.44,1). Accent underline rule: 2.6 x 0.045-unit plane #ff2a38, emissive intensity 1.2, at y=-0.05 under the hero, scaleX 0 to 1 anchored left over 500ms cubic-bezier(0.25,0.46,0.45,0.94) starting 120ms after the last glyph lands. Subhead (em height 0.2) fades up (opacity 0 to 1, y +0.2 to 0, 500ms cubic-bezier(0.25,0.46,0.45,0.94)) at y=-0.65; caption kicker at y=1.15 in JetBrains Mono 700 uppercase. Backdrop: 7 x 5.5-unit plane at z=-1.5 with vertical engineered gradient #0b0b10 to #13131a plus 1.5 percent mono grain, no soft blur. Spacing locked to the 0.25-unit rhythm."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "kinetic-text",
+        "trigger": "load",
+        "params": {
+          "staggerMs": 60,
+          "riseUnits": 0.35
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        5.5
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#3a3f4a",
+        "intensity": 0.5
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 0.9,
+        "position": [
+          2,
+          3,
+          4
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Glyphs rise 0.35 units and fade in with a 60ms left-to-right stagger, the line settles with 1.04 overshoot, then the red underline draws left to right."
+  },
+  "parsed": true,
+  "fenced": true,
+  "depGate": {
+    "sources": [
+      "gsap",
+      "three/webgpu",
+      "three/tsl"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_gsap = require(\"gsap\");\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nfunction createNode(config, ctx) {\n  const { THREE } = ctx;\n  const group = new THREE.Group();\n  const timelines = [];\n  const meshes = [];\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  let captionText = \"\";\n  let heroText = \"\";\n  let subheadText = \"\";\n  for (const item of items) {\n    if (item.role === \"caption\" || item.typography?.fontSize === 18) {\n      captionText = item.text;\n    } else if (item.role === \"hero\" || item.typography?.fontSize === 124) {\n      heroText = item.text;\n    } else if (item.role === \"subhead\" || item.typography?.fontSize === 40) {\n      subheadText = item.text;\n    }\n  }\n  const colors = {\n    background: \"#0b0b10\",\n    surface: \"#101017\",\n    ink: \"#16161d\",\n    paper: \"#e8ecf2\",\n    accent: \"#ff2a38\"\n  };\n  const backdropGeom = new THREE.PlaneGeometry(7, 5.5);\n  const backdropMat = new import_webgpu.MeshBasicNodeMaterial({\n    side: THREE.FrontSide,\n    transparent: true\n  });\n  const gradientNode = (0, import_tsl.mix)(\n    (0, import_tsl.vec3)(0.0431, 0.0431, 0.0627),\n    // #0b0b10\n    (0, import_tsl.vec3)(0.0745, 0.0745, 0.102)\n    // #13131a\n  );\n  const grainUV = (0, import_tsl.uv)();\n  const grain = (0, import_tsl.smoothstep)(\n    0.3,\n    0.7,\n    (0, import_tsl.mix)(grainUV.x, grainUV.y, 0.5)\n  ).mul(0.015);\n  backdropMat.colorNode = (0, import_tsl.mix)(\n    gradientNode,\n    (0, import_tsl.vec3)(0.5),\n    grain\n  );\n  const backdrop = new THREE.Mesh(backdropGeom, backdropMat);\n  backdrop.position.z = -1.5;\n  group.add(backdrop);\n  if (captionText) {\n    const captionObj = ctx.fontAtlas.createText(captionText, {\n      fontSize: 18,\n      color: colors.paper,\n      align: \"center\",\n      letterSpacingPx: 2.16\n      // 0.12 * 18\n    });\n    captionObj.position.y = 1.15;\n    captionObj.position.z = 0;\n    group.add(captionObj);\n  }\n  const heroGroup = new THREE.Group();\n  heroGroup.position.y = 0.4;\n  heroGroup.position.z = 0;\n  if (heroText) {\n    const words = heroText.split(/\\s+/);\n    const wordGroups = [];\n    let xOffset = 0;\n    const wordZOffsets = [0.12, 0, -0.12];\n    const wordZMap = {};\n    words.forEach((word, idx) => {\n      wordZMap[word + idx] = wordZOffsets[idx % wordZOffsets.length];\n    });\n    for (let widx = 0; widx < words.length; widx++) {\n      const word = words[widx];\n      const wordGroup = new THREE.Group();\n      const wordObj = ctx.fontAtlas.createText(word, {\n        fontSize: 124,\n        color: colors.paper,\n        align: \"left\",\n        letterSpacingPx: -1.24\n        // -0.01 * 124\n      });\n      const zDepth = wordZMap[word + widx] || 0;\n      wordObj.position.z = zDepth;\n      const glyphCount = word.length;\n      for (let gidx = 0; gidx < wordObj.children.length; gidx++) {\n        const glyph = wordObj.children[gidx];\n        const totalGlyphIndex = gidx;\n        const delay = totalGlyphIndex * 0.06;\n        glyph.position.y = 0.35;\n        if (glyph.material) {\n          glyph.material.opacity = 0;\n          glyph.material.transparent = true;\n        }\n        const glyphTL = import_gsap.gsap.timeline({ paused: true });\n        glyphTL.to(\n          glyph.position,\n          { y: 0, duration: 0.7, ease: \"cubic-bezier(0.215, 0.61, 0.355, 1)\" },\n          0\n        );\n        if (glyph.material) {\n          glyphTL.to(\n            glyph.material,\n            { opacity: 1, duration: 0.7, ease: \"cubic-bezier(0.215, 0.61, 0.355, 1)\" },\n            0\n          );\n        }\n        glyphTL.play();\n        glyphTL.seek(delay);\n        timelines.push(glyphTL);\n      }\n      wordGroup.add(wordObj);\n      heroGroup.add(wordGroup);\n      wordGroups.push(wordGroup);\n    }\n    group.add(heroGroup);\n    const lastGlyphCompleteTime2 = (words.reduce((sum, w) => sum + w.length, 0) - 1) * 0.06 + 0.7;\n    const settleTL = import_gsap.gsap.timeline({ paused: true });\n    settleTL.to(\n      heroGroup.scale,\n      {\n        x: 1,\n        y: 1,\n        z: 1,\n        duration: 0.9,\n        ease: \"cubic-bezier(0.165, 0.84, 0.44, 1)\"\n      },\n      0\n    );\n    heroGroup.scale.set(1.04, 1.04, 1.04);\n    settleTL.play();\n    settleTL.seek(lastGlyphCompleteTime2);\n    timelines.push(settleTL);\n  }\n  const underlineGeom = new THREE.PlaneGeometry(2.6, 0.045);\n  const underlineMat = new import_webgpu.MeshBasicNodeMaterial({\n    color: colors.accent,\n    emissive: colors.accent,\n    emissiveIntensity: 1.2,\n    transparent: true\n  });\n  const underline = new THREE.Mesh(underlineGeom, underlineMat);\n  underline.position.y = -0.05;\n  underline.position.z = 0.01;\n  underline.scale.x = 0;\n  underline.geometry.translate(-1.3, 0, 0);\n  group.add(underline);\n  const lastGlyphCompleteTime = heroText ? (heroText.length - 1) * 0.06 + 0.7 : 0;\n  const underlineTL = import_gsap.gsap.timeline({ paused: true });\n  underlineTL.to(\n    underline.scale,\n    {\n      x: 1,\n      duration: 0.5,\n      ease: \"cubic-bezier(0.25, 0.46, 0.45, 0.94)\"\n    },\n    0\n  );\n  underlineTL.play();\n  underlineTL.seek(lastGlyphCompleteTime + 0.12);\n  timelines.push(underlineTL);\n  if (subheadText) {\n    const subheadObj = ctx.fontAtlas.createText(subheadText, {\n      fontSize: 40,\n      color: colors.paper,\n      align: \"center\",\n      letterSpacingPx: 0.8\n      // 0.02 * 40\n    });\n    subheadObj.position.y = -0.65;\n    subheadObj.position.z = 0;\n    subheadObj.position.y += 0.2;\n    const subheadTL = import_gsap.gsap.timeline({ paused: true });\n    subheadTL.to(\n      subheadObj.position,\n      {\n        y: -0.65,\n        duration: 0.5,\n        ease: \"cubic-bezier(0.25, 0.46, 0.45, 0.94)\"\n      },\n      0\n    );\n    subheadObj.traverse((child) => {\n      if (child.material && !child.material.emissive) {\n        child.material.transparent = true;\n        child.material.opacity = 0;\n      }\n    });\n    subheadObj.traverse((child) => {\n      if (child.material && child.material.opacity !== void 0) {\n        subheadTL.to(\n          child.material,\n          { opacity: 1, duration: 0.5, ease: \"cubic-bezier(0.25, 0.46, 0.45, 0.94)\" },\n          0\n        );\n      }\n    });\n    const subheadStartTime = lastGlyphCompleteTime;\n    subheadTL.play();\n    subheadTL.seek(subheadStartTime);\n    timelines.push(subheadTL);\n    group.add(subheadObj);\n  }\n  if (ctx.primitives && ctx.primitives[\"kinetic-text\"]) {\n    try {\n      const primitiveResult = ctx.primitives[\"kinetic-text\"](group, {\n        staggerMs: 60,\n        riseUnits: 0.35\n      });\n      if (primitiveResult && primitiveResult.cleanup) {\n        timelines.push({ cleanup: primitiveResult.cleanup });\n      }\n    } catch (e) {\n    }\n  }\n  group.userData.cleanup = function() {\n    timelines.forEach((tl) => {\n      if (tl.kill) tl.kill();\n      if (tl.cleanup) tl.cleanup();\n    });\n    meshes.forEach((m) => {\n      if (m.geometry) m.geometry.dispose();\n      if (m.material) {\n        if (Array.isArray(m.material)) {\n          m.material.forEach((mat) => mat.dispose());\n        } else {\n          m.material.dispose();\n        }\n      }\n    });\n    group.traverse((child) => {\n      if (child.geometry) child.geometry.dispose();\n      if (child.material) {\n        if (Array.isArray(child.material)) {\n          child.material.forEach((mat) => mat.dispose());\n        } else {\n          child.material.dispose();\n        }\n      }\n    });\n  };\n  return group;\n}\n",
+  "transformError": null
+}

@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/gemini-3.5-flash/v-04-kinetic-type-headline-r1",
+  "contestant": "gemini-3.5-flash",
+  "caseId": "v-04-kinetic-type-headline",
+  "run": 1,
+  "capturedAt": "2026-07-11T03:32:52.664Z",
+  "probe": {
+    "status": "error",
+    "error": "module did not default-export a function",
+    "renderables": 0,
+    "nodeMounted": false,
+    "bundleId": "wbakeb/gemini-3.5-flash/v-04-kinetic-type-headline-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": false,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

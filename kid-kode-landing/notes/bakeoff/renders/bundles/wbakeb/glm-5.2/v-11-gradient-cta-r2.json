@@ -1,0 +1,174 @@
+{
+  "id": "wbakeb/glm-5.2/v-11-gradient-cta-r2",
+  "contestant": "glm-5.2",
+  "caseId": "v-11-gradient-cta",
+  "run": 2,
+  "node": {
+    "nodeId": "v-11-gradient-cta",
+    "subtype": "cta-button",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Gradient CTA object — A primary CTA as a physical object: engineered gradient ramp, press-down state, accent edge light (DL12).",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "BEGIN COMMISSION",
+            "role": "cta-label",
+            "typography": {
+              "fontSize": 20,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "NO DEPOSIT REQUIRED",
+            "role": "caption",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#16161d",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#ff4450"
+            },
+            {
+              "at": 0.55,
+              "hex": "#ff2a38"
+            },
+            {
+              "at": 1,
+              "hex": "#c1121f"
+            }
+          ]
+        },
+        "typography": {
+          "cta-label": {
+            "family": "JetBrains Mono",
+            "fontSize": 20,
+            "fontWeight": 700,
+            "letterSpacing": 0.08,
+            "lineHeight": 1
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 400,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Rounded-rect button plane 2.6w x 0.68h scene units, corner radius 0.08, extruded bevel depth 0.03 with 45deg chamfer that catches the key light as a bright machined edge; face carries a vertical engineered gradient #ff4450 (at 0.0) -> #ff2a38 (at 0.55) -> #c1121f (at 1.0) with one hard 0.01-unit seam line at 50 percent face height, zero soft blur; material roughness 0.5, metalness 0.35, clearcoat 0.22; perimeter emissive channel 0.015 units wide in #ff2a38 at intensity 1.6; label centered with 0.25-unit side padding (1x base unit), caption line 0.25 below the button in paper; mount motion weighted-settle scale 1.04 -> 1.0 over 900ms cubic-bezier(0.165,0.84,0.44,1); hover translateZ 0 -> 0.06 and edge emissive intensity 1.6 -> 2.2 over 180ms cubic-bezier(0.25,0.46,0.45,0.94); press scale 1.0 -> 0.97 over 120ms cubic-bezier(0.175,0.885,0.32,1.275) while the chamfer shadow visibly deepens under the raking key light; contact shadow plane 0.08 below at 35 percent opacity that tightens on press."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0.15,
+        2.8
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 38
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.35
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1.15,
+        "position": [
+          2.5,
+          3,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.8,
+        "position": [
+          -1.6,
+          -0.4,
+          -1.2
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#8a93a3",
+        "intensity": 0.3,
+        "position": [
+          -3,
+          1,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Button settles with 1.04 overshoot on mount; hover lifts 0.06 units toward camera with brighter edge glow; press compresses to 0.97 scale.",
+    "contrastMinimum": "4.8:1 ink label #16161d on accent gradient midpoint #ff2a38; 4.5:1 minimum all text; caption #e8ecf2 on #0b0b10 exceeds 15:1"
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const { Group: Group2, Mesh: Mesh2, PlaneGeometry: PlaneGeometry2, Shape: Shape2, ShapeGeometry: ShapeGeometry2, ExtrudeGeometry: ExtrudeGeometry2, Color: Color2, DoubleSide: DoubleSide2, FrontSide: FrontSide2 } = ctx.THREE;\n  const { MeshStandardNodeMaterial: MeshStandardNodeMaterial2, MeshBasicNodeMaterial: MeshBasicNodeMaterial2 } = THREE_webgpu;\n  const { uv: uv2, vec3: vec32, mix: mix2, smoothstep: smoothstep2, step: step2, fract: fract2, uniform: uniform2, float: float2, vec2: vec22, abs: abs2, pow: pow2, min: min2, max: max2 } = TSL;\n  const group = new Group2();\n  group.name = \"gradient-cta\";\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const labelItem = items.find((i) => i.role === \"cta-label\") || items[0] || { text: \"BEGIN COMMISSION\" };\n  const captionItem = items.find((i) => i.role === \"caption\") || items[1] || { text: \"NO DEPOSIT REQUIRED\" };\n  const backdrop = new Mesh2(\n    new PlaneGeometry2(7, 6),\n    new MeshBasicNodeMaterial2({ transparent: true })\n  );\n  backdrop.position.set(0, 0, -2.5);\n  backdrop.material.colorNode = mix2(\n    vec32(Color2(\"#0b0b10\")),\n    vec32(Color2(\"#16161d\")),\n    uv2().y.smoothstep(0, 1)\n  );\n  backdrop.material.opacityNode = float2(0.95);\n  group.add(backdrop);\n  const keyLight = new ctx.THREE.DirectionalLight(16777215, 1.2);\n  keyLight.position.set(2, 3, 4);\n  group.add(keyLight);\n  const rimLight = new ctx.THREE.DirectionalLight(16777215, 0.7);\n  rimLight.position.set(-2, 1, -3);\n  group.add(rimLight);\n  const ambient = new ctx.THREE.AmbientLight(16777215, 0.4);\n  group.add(ambient);\n  const accentLight = new ctx.THREE.PointLight(16722488, 1.4, 8, 2);\n  accentLight.position.set(-1.5, -0.5, 1.5);\n  group.add(accentLight);\n  const W = 2.6;\n  const H = 0.68;\n  const R = 0.08;\n  const bevelDepth = 0.03;\n  const shape = new Shape2();\n  shape.moveTo(-W / 2 + R, -H / 2);\n  shape.lineTo(W / 2 - R, -H / 2);\n  shape.quadraticCurveTo(W / 2, -H / 2, W / 2, -H / 2 + R);\n  shape.lineTo(W / 2, H / 2 - R);\n  shape.quadraticCurveTo(W / 2, H / 2, W / 2 - R, H / 2);\n  shape.lineTo(-W / 2 + R, H / 2);\n  shape.quadraticCurveTo(-W / 2, H / 2, -W / 2, H / 2 - R);\n  shape.lineTo(-W / 2, -H / 2 + R);\n  shape.quadraticCurveTo(-W / 2, -H / 2, -W / 2 + R, -H / 2);\n  const extrudeSettings = {\n    depth: bevelDepth,\n    bevelEnabled: true,\n    bevelThickness: bevelDepth,\n    bevelSize: bevelDepth,\n    bevelSegments: 3,\n    steps: 1\n  };\n  const buttonGeo = new ExtrudeGeometry2(shape, extrudeSettings);\n  buttonGeo.center();\n  buttonGeo.rotateZ(0);\n  const emissiveIntensity = uniform2(1.6);\n  const buttonMat = new MeshStandardNodeMaterial2({\n    roughness: 0.5,\n    metalness: 0.35,\n    side: DoubleSide2\n  });\n  const c0 = vec32(Color2(\"#ff4450\"));\n  const c1 = vec32(Color2(\"#ff2a38\"));\n  const c2 = vec32(Color2(\"#c1121f\"));\n  const v = uv2().y;\n  const grad = mix2(c0, c1, smoothstep2(0, 0.55, v));\n  const gradFinal = mix2(grad, c2, smoothstep2(0.55, 1, v));\n  const seam = smoothstep2(0.49, 0.5, v).sub(smoothstep2(0.5, 0.51, v));\n  const seamColor = vec32(0.9, 0.9, 0.9).mul(seam);\n  const edgeU = step2(0.95, abs2(uv2().x.sub(0.5)).mul(2));\n  const edgeV = step2(0.92, abs2(uv2().y.sub(0.5)).mul(2));\n  const edge = max2(edgeU, edgeV);\n  buttonMat.colorNode = gradFinal.add(seamColor.mul(0.3));\n  buttonMat.emissiveNode = mix2(vec32(0, 0, 0), vec32(Color2(\"#ff2a38\")), edge).mul(emissiveIntensity);\n  buttonMat.roughnessNode = float2(0.5);\n  buttonMat.metalnessNode = float2(0.35);\n  const button = new Mesh2(buttonGeo, buttonMat);\n  button.position.set(0, 0, 0);\n  group.add(button);\n  const contactMat = new MeshBasicNodeMaterial2({ transparent: true, side: DoubleSide2 });\n  const shadowScale = uniform2(0.35);\n  contactMat.colorNode = vec32(0, 0, 0);\n  contactMat.opacityNode = shadowScale.mul(smoothstep2(0.6, 0, uv2().sub(0.5).length()));\n  const contactShadow = new Mesh2(new PlaneGeometry2(W * 1.2, H * 1.5), contactMat);\n  contactShadow.position.set(0, -0.08, -0.05);\n  contactShadow.rotation.x = -Math.PI / 2;\n  group.add(contactShadow);\n  const labelOpts = { fontSize: 20, color: \"#e8ecf2\", align: \"center\", letterSpacingPx: 1.6 };\n  const labelMesh = ctx.fontAtlas.createText(String(labelItem.text), labelOpts);\n  labelMesh.position.set(0, 0.01, bevelDepth + 1e-3);\n  group.add(labelMesh);\n  const captionOpts = { fontSize: 9, color: \"#e8ecf2\", align: \"center\", letterSpacingPx: 1.08 };\n  const captionMesh = ctx.fontAtlas.createText(String(captionItem.text), captionOpts);\n  captionMesh.position.set(0, -0.25 - H / 2, 0);\n  group.add(captionMesh);\n  const intro = import_gsap.gsap.timeline();\n  intro.fromTo(button.scale, { x: 1.04, y: 1.04, z: 1.04 }, { x: 1, y: 1, z: 1, duration: 0.9, ease: \"power4.out\" });\n  intro.fromTo(labelMesh.position, { z: bevelDepth + 0.1 }, { z: bevelDepth + 1e-3, duration: 0.9, ease: \"power4.out\" }, 0);\n  intro.fromTo(group.position, { y: 0.2 }, { y: 0, duration: 0.7, ease: \"power3.out\" }, 0);\n  const hoverTl = import_gsap.gsap.timeline({ paused: true });\n  hoverTl.to(button.position, { z: 0.06, duration: 0.18, ease: \"power2.out\" });\n  hoverTl.to(emissiveIntensity, { value: 2.2, duration: 0.18, ease: \"power2.out\" }, 0);\n  hoverTl.to(labelMesh.position, { z: bevelDepth + 0.06 + 1e-3, duration: 0.18, ease: \"power2.out\" }, 0);\n  hoverTl.to(shadowScale, { value: 0.25, duration: 0.18, ease: \"power2.out\" }, 0);\n  const pressTl = import_gsap.gsap.timeline({ paused: true });\n  pressTl.to(button.scale, { x: 0.97, y: 0.97, z: 0.97, duration: 0.12, ease: \"expo.in\" });\n  pressTl.to(shadowScale, { value: 0.5, duration: 0.12, ease: \"expo.in\" }, 0);\n  group.userData.handlers = {\n    onPointerEnter: () => {\n      hoverTl.play();\n    },\n    onPointerLeave: () => {\n      hoverTl.reverse();\n    },\n    onPointerDown: () => {\n      pressTl.play();\n    },\n    onPointerUp: () => {\n      pressTl.reverse();\n    },\n    onClick: () => {\n      ctx.emit(\"navigate\", { to: \"hub-pricing\" });\n    }\n  };\n  group.userData.cleanup = () => {\n    intro.kill();\n    hoverTl.kill();\n    pressTl.kill();\n    buttonGeo.dispose();\n    buttonMat.dispose();\n    contactShadow.geometry.dispose();\n    contactMat.dispose();\n    backdrop.geometry.dispose();\n    backdrop.material.dispose();\n  };\n  return group;\n}\n",
+  "transformError": null
+}

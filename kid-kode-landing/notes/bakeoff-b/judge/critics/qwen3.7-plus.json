@@ -1,0 +1,7 @@
+{
+  "candidate": "qwen3.7-plus",
+  "route": "openrouter",
+  "model": "qwen/qwen3.7-plus",
+  "blocked": "UNREACHABLE (I-BB5): OpenRouter-only lane; blocked at the first mid-wave 402 funding boundary (~21:55 CDT 2026-07-10, probes/openrouter-refund-check.json) and re-probed 402 at critic-launch time 2026-07-11 (probes/d4-critic-reachability.json). Not hosted on any other keyed vision route. Zero critic verdicts generated — never extrapolated.",
+  "verdicts": []
+}

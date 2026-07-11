@@ -1,0 +1,213 @@
+{
+  "id": "wbakeb/claude-haiku-4.5/v-10-bento-metrics-r1",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-10-bento-metrics",
+  "run": 1,
+  "node": {
+    "nodeId": "v-10-bento-metrics",
+    "subtype": "bento-grid",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Bento metrics grid — A 2x2 bento of stat tiles with one dominant cell; machined surfaces, engineered gradients, no flat voids.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "ATELIER METRICS / Q2 2026",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "0.002 mm",
+            "role": "valueLarge",
+            "typography": {
+              "fontSize": 124,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Case tolerance, CNC pass",
+            "role": "label",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "38 h",
+            "role": "value",
+            "typography": {
+              "fontSize": 68,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Power reserve, NA-01",
+            "role": "label",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "214",
+            "role": "value",
+            "typography": {
+              "fontSize": 68,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Components per calibre",
+            "role": "label",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#101017"
+            },
+            {
+              "at": 1,
+              "hex": "#1a1a22"
+            }
+          ]
+        },
+        "typography": {
+          "value": {
+            "family": "Lora",
+            "fontSize": 68,
+            "fontWeight": 600,
+            "letterSpacing": -0.005,
+            "lineHeight": 1.05
+          },
+          "valueLarge": {
+            "family": "Lora",
+            "fontSize": 124,
+            "fontWeight": 600,
+            "letterSpacing": -0.01,
+            "lineHeight": 1
+          },
+          "label": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Bento grid spans 5.5 x 3.5 scene units centered at origin with 0.25-unit gutters (1x base). Dominant cell: 3.25 x 3.5 units occupying the left column, both rows; two secondary cells 2.0 x 1.625 units stacked in the right column. Each cell is a shallow extruded slab 0.06 units deep, surface #14141a with a 135-deg engineered diagonal gradient #101017 to #1a1a22 (hard-stop machined sheen band 0.15 units wide at 40 percent, +6 percent value), edge material brushed metal roughness 0.5, metalness 0.45, clearcoat 0.2 on a 0.04-unit chamfer that catches the key light. Inner padding 0.5 units (card padding token). Each cell carries a #ff2a38 tick bar 0.4 x 0.05 units at emissive 1.3, top-left inside the padding. Dominant cell: value in Lora 600 at 0.62-unit em height with label below at 0.5-unit offset; secondary cells: value at 0.34-unit em height plus label. Grid header caption sits 0.5 units above the grid, left-aligned to the grid edge at x=-2.75. Entrance: stagger-cards, fade-up per cell (opacity 0 to 1, y +0.2 to 0, 500ms, cubic-bezier(0.25,0.46,0.45,0.94)) at 80ms stagger, dominant first. Hover: press-down scale 1.0 to 0.97 in 120ms cubic-bezier(0.175,0.885,0.32,1.275), release weighted-settle 1.04 to 1.0 over 900ms cubic-bezier(0.165,0.84,0.44,1). No cell is a flat void: every surface carries the gradient, chamfer light, and tick structure."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        5.8
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#3a3f4a",
+        "intensity": 0.5
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 1,
+        "position": [
+          2,
+          3,
+          3
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.5,
+        "position": [
+          -2.5,
+          2,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Tiles fade up with an 80ms stagger (dominant cell first); hover presses a tile to 0.97 scale and releases with weighted 1.04 overshoot."
+  },
+  "parsed": true,
+  "fenced": true,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, BoxGeometry, Vector3, Color } = ctx.THREE;\n  const root = new Group();\n  root.position.set(0, 0, 0);\n  root.rotation.set(0, 0, 0);\n  root.scale.set(1, 1, 1);\n  const COLORS = {\n    background: new Color(\"#0b0b10\"),\n    surface: new Color(\"#14141a\"),\n    ink: new Color(\"#16161d\"),\n    paper: new Color(\"#e8ecf2\"),\n    accent: new Color(\"#ff2a38\"),\n    gradStop0: new Color(\"#101017\"),\n    gradStop1: new Color(\"#1a1a22\")\n  };\n  const GRID = {\n    width: 5.5,\n    height: 3.5,\n    gutterBase: 0.25,\n    cellDepth: 0.06,\n    chamferSize: 0.04,\n    padding: 0.5,\n    tickWidth: 0.4,\n    tickHeight: 0.05,\n    tickEmissive: 1.3\n  };\n  const DOMINANT = {\n    width: 3.25,\n    height: 3.5\n  };\n  const SECONDARY = {\n    width: 2,\n    height: 1.625\n  };\n  const stageMat = new import_webgpu.MeshBasicNodeMaterial({\n    color: COLORS.surface\n  });\n  const stageGeom = new PlaneGeometry(7, 6);\n  const stage = new Mesh(stageGeom, stageMat);\n  stage.position.z = -2.5;\n  root.add(stage);\n  const gridGroup = new Group();\n  root.add(gridGroup);\n  function createCell(width, height, label, value, isLarge) {\n    const cellGroup = new Group();\n    const slabGeom = new BoxGeometry(width, height, GRID.cellDepth);\n    const gradientMat = new import_webgpu.MeshStandardNodeMaterial({\n      color: COLORS.surface,\n      metalness: 0.45,\n      roughness: 0.5,\n      clearcoat: 0.2,\n      emissive: new Color(0)\n    });\n    const slab = new Mesh(slabGeom, gradientMat);\n    cellGroup.add(slab);\n    const chamferGeo = new BoxGeometry(\n      width + GRID.chamferSize * 2,\n      height + GRID.chamferSize * 2,\n      GRID.cellDepth + GRID.chamferSize\n    );\n    const chamferMat = new import_webgpu.MeshStandardNodeMaterial({\n      color: new Color(\"#2a2a32\"),\n      metalness: 0.55,\n      roughness: 0.5,\n      clearcoat: 0.15,\n      emissive: new Color(0)\n    });\n    const chamfer = new Mesh(chamferGeo, chamferMat);\n    chamfer.scale.set(0.95, 0.95, 0.9);\n    chamfer.position.z = -0.02;\n    cellGroup.add(chamfer);\n    const tickGeo = new BoxGeometry(GRID.tickWidth, GRID.tickHeight, GRID.cellDepth + 0.01);\n    const tickMat = new import_webgpu.MeshStandardNodeMaterial({\n      color: COLORS.accent,\n      emissive: COLORS.accent,\n      emissiveIntensity: GRID.tickEmissive,\n      metalness: 0.3,\n      roughness: 0.4\n    });\n    const tick = new Mesh(tickGeo, tickMat);\n    tick.position.x = -width / 2 + GRID.padding + GRID.tickWidth / 2;\n    tick.position.y = height / 2 - GRID.padding - GRID.tickHeight / 2;\n    tick.position.z = GRID.cellDepth / 2 + 5e-3;\n    cellGroup.add(tick);\n    const valueFontSize = isLarge ? 0.62 : 0.34;\n    const valueText = ctx.fontAtlas.createText(value, {\n      fontSize: valueFontSize * 100,\n      color: COLORS.paper,\n      align: \"left\"\n    });\n    valueText.position.x = -width / 2 + GRID.padding;\n    valueText.position.y = isLarge ? height / 4 : height / 3;\n    valueText.position.z = GRID.cellDepth / 2 + 0.01;\n    cellGroup.add(valueText);\n    const labelText = ctx.fontAtlas.createText(label, {\n      fontSize: 0.09 * 100,\n      color: COLORS.paper,\n      align: \"left\"\n    });\n    labelText.position.x = -width / 2 + GRID.padding;\n    labelText.position.y = isLarge ? height / 4 - 0.5 : height / 3 - 0.35;\n    labelText.position.z = GRID.cellDepth / 2 + 0.01;\n    cellGroup.add(labelText);\n    cellGroup.userData.valueObj = valueText;\n    cellGroup.userData.labelObj = labelText;\n    cellGroup.userData.mainMesh = slab;\n    return cellGroup;\n  }\n  const dominantCell = createCell(\n    DOMINANT.width,\n    DOMINANT.height,\n    \"Case tolerance, CNC pass\",\n    \"0.002 mm\",\n    true\n  );\n  dominantCell.position.x = -(GRID.width / 2 - DOMINANT.width / 2);\n  dominantCell.position.y = 0;\n  gridGroup.add(dominantCell);\n  const secondaryCell1 = createCell(\n    SECONDARY.width,\n    SECONDARY.height,\n    \"Power reserve, NA-01\",\n    \"38 h\",\n    false\n  );\n  secondaryCell1.position.x = DOMINANT.width / 2 + GRID.gutterBase / 2 + SECONDARY.width / 2;\n  secondaryCell1.position.y = SECONDARY.height / 2 + GRID.gutterBase / 2;\n  gridGroup.add(secondaryCell1);\n  const secondaryCell2 = createCell(\n    SECONDARY.width,\n    SECONDARY.height,\n    \"Components per calibre\",\n    \"214\",\n    false\n  );\n  secondaryCell2.position.x = DOMINANT.width / 2 + GRID.gutterBase / 2 + SECONDARY.width / 2;\n  secondaryCell2.position.y = -(SECONDARY.height / 2 + GRID.gutterBase / 2);\n  gridGroup.add(secondaryCell2);\n  const headerText = ctx.fontAtlas.createText(\"ATELIER METRICS / Q2 2026\", {\n    fontSize: 0.09 * 100,\n    color: COLORS.paper,\n    align: \"left\"\n  });\n  headerText.position.x = -GRID.width / 2;\n  headerText.position.y = GRID.height / 2 + 0.5;\n  headerText.position.z = 0.1;\n  root.add(headerText);\n  const cells = [dominantCell, secondaryCell1, secondaryCell2];\n  const timeline = import_gsap.gsap.timeline();\n  cells.forEach((cell, idx) => {\n    cell.opacity = 0;\n    cell.position.y += 0.2;\n    timeline.to(\n      cell.position,\n      {\n        y: cell.position.y - 0.2,\n        duration: 0.5,\n        ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n      },\n      idx * 0.08\n    );\n    timeline.to(\n      cell,\n      {\n        opacity: 1,\n        duration: 0.5,\n        ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n      },\n      idx * 0.08\n    );\n    cell.userData.handlers = cell.userData.handlers || {};\n    cell.userData.handlers.onPointerEnter = () => {\n      import_gsap.gsap.to(cell.scale, {\n        x: 0.97,\n        y: 0.97,\n        z: 0.97,\n        duration: 0.12,\n        ease: \"cubic-bezier(0.175,0.885,0.32,1.275)\"\n      });\n    };\n    cell.userData.handlers.onPointerLeave = () => {\n      import_gsap.gsap.to(cell.scale, {\n        x: 1,\n        y: 1,\n        z: 1,\n        duration: 0.9,\n        ease: \"cubic-bezier(0.165,0.84,0.44,1)\",\n        overwrite: \"auto\"\n      });\n    };\n  });\n  root.userData.cleanup = () => {\n    timeline.kill();\n    cells.forEach((cell) => {\n      if (cell.userData.valueObj) cell.userData.valueObj.geometry?.dispose();\n      if (cell.userData.labelObj) cell.userData.labelObj.geometry?.dispose();\n      if (cell.userData.mainMesh) {\n        cell.userData.mainMesh.geometry?.dispose();\n        cell.userData.mainMesh.material?.dispose();\n      }\n    });\n    stageMat.dispose();\n    stageGeom.dispose();\n    headerText.geometry?.dispose();\n  };\n  return root;\n}\n",
+  "transformError": null
+}

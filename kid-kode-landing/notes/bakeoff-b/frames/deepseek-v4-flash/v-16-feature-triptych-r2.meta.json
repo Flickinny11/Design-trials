@@ -1,0 +1,31 @@
+{
+  "bundle": "wbakeb/deepseek-v4-flash/v-16-feature-triptych-r2",
+  "contestant": "deepseek-v4-flash",
+  "caseId": "v-16-feature-triptych",
+  "run": 2,
+  "capturedAt": "2026-07-11T02:54:31.730Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 21,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/deepseek-v4-flash/v-16-feature-triptych-r2"
+  },
+  "consoleErrors": [
+    "THREE.Renderer: Objects of type THREE.LineLoop are not supported. Please use THREE.Line or THREE.LineSegments.",
+    "THREE.Renderer: Objects of type THREE.LineLoop are not supported. Please use THREE.Line or THREE.LineSegments.",
+    "THREE.Renderer: Objects of type THREE.LineLoop are not supported. Please use THREE.Line or THREE.LineSegments.",
+    "THREE.Renderer: Objects of type THREE.LineLoop are not supported. Please use THREE.Line or THREE.LineSegments.",
+    "THREE.Renderer: Objects of type THREE.LineLoop are not supported. Please use THREE.Line or THREE.LineSegments.",
+    "THREE.Renderer: Objects of type THREE.LineLoop are not supported. Please use THREE.Line or THREE.LineSegments.",
+    "THREE.Renderer: Objects of type THREE.LineLoop are not supported. Please use THREE.Line or THREE.LineSegments.",
+    "THREE.Renderer: Objects of type THREE.LineLoop are not supported. Please use THREE.Line or THREE.LineSegments.",
+    "THREE.Renderer: Objects of type THREE.LineLoop are not supported. Please use THREE.Line or THREE.LineSegments.",
+    "THREE.Renderer: Objects of type THREE.LineLoop are not supported. Please use THREE.Line or THREE.LineSegments."
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

@@ -1,0 +1,21 @@
+{
+  "bundle": "wbakeb/mercury-2/v-12-photo-hero-composite-r1",
+  "contestant": "mercury-2",
+  "caseId": "v-12-photo-hero-composite",
+  "run": 1,
+  "capturedAt": "2026-07-11T03:01:05.492Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/mercury-2/v-12-photo-hero-composite-r1",
+    "moduleRuntimeError": "ReferenceError: MeshStandardNodeMaterial is not defined"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

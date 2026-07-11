@@ -1,0 +1,63 @@
+{
+  "label": "batch-fab-v-09-editorial-oversized-type-1",
+  "judgedAt": "2026-07-11T04:06:29.782Z",
+  "judgeModel": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-09-editorial-oversized-type-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-09-editorial-oversized-type-1/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-09-editorial-oversized-type-1/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-09-editorial-oversized-type-1/F4.jpg"
+    },
+    {
+      "label": "F5",
+      "blindPath": "notes/bakeoff-b/judge/blind/batch-fab-v-09-editorial-oversized-type-1/F5.jpg"
+    }
+  ],
+  "mappingFile": "notes/bakeoff-b/judge/blind/batch-fab-v-09-editorial-oversized-type-1/mapping.json",
+  "costUsd": 0.628412,
+  "durationApiMs": 58640,
+  "wallMs": 62221,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 15517,
+    "cache_read_input_tokens": 82544,
+    "output_tokens": 3997,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15517,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 3113,
+        "cache_read_input_tokens": 44341,
+        "cache_creation_input_tokens": 9379,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9379
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 30, \"mustFix\": [ { \"defect\": \"SCALE_ERROR\", \"region\": \"right two-thirds — hero type zoomed so far it crops to abstract fragments\" }, { \"defect\": \"GARBLED_TEXT\", \"region\": \"center-right letterform mass, illegible\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"upper-left quadrant — kicker line absent\" } ], \"notes\": \"Grain and red rule present, but headline is an illegible cropped fragment with blurred edges; no kicker, no readable hierarchy.\" }, { \"frame\": \"F2\", \"score\": 26, \"mustFix\": [ { \"defect\": \"SCALE_ERROR\", \"region\": \"right two-thirds — hero cropped beyond legibility\" }, { \"defect\": \"GARBLED_TEXT\", \"region\": \"center-right letterform fragments\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"upper-left quadrant — kicker absent\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center-left underline rule renders washed pink, not #ff2a38\" } ], \"notes\": \"Same broken crop as F1 plus the accent rule drifts pink; stray pink sliver at top edge of letterform.\" }, { \"frame\": \"F3\", \"score\": 36, \"mustFix\": [ { \"defect\": \"SCALE_ERROR\", \"region\": \"right two-thirds — hero cropped to fragments\" }, { \"defect\": \"GARBLED_TEXT\", \"region\": \"center letterform mass, unreadable\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"upper-left quadrant — kicker absent; spec gradient+grain replaced by contour-line field\" } ], \"notes\": \"Engineered contour field adds materiality, but headline is still an illegible crop and the kicker is missing.\" }, { \"frame\": \"F4\", \"score\": 74, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center-left headline — spec Lora 600 serif rendered as a grotesque sans\" } ], \"notes\": \"Complete, disciplined composition: kicker, stacked hero, red rule, grain, baseline order. Typeface substitution and modest hero scale hold it below flagship.\" }, { \"frame\": \"F5\", \"score\": 28, \"mustFix\": [ { \"defect\": \"SCALE_ERROR\", \"region\": \"right two-thirds — hero cropped beyond legibility\" }, { \"defect\": \"GARBLED_TEXT\", \"region\": \"center-right letterform fragments\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"upper-left quadrant — kicker absent\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center-left rule renders pink rather than signal red\" } ], \"notes\": \"Near-duplicate of F1/F2 failure: abstract cropped type, no kicker, pinkish rule; grain alone can't carry the frame.\" } ] }"
+}

@@ -1,0 +1,173 @@
+{
+  "wave": "wbakeb-seam",
+  "executor": "mercury-2",
+  "route": "inception",
+  "model": "mercury-2",
+  "calls": [
+    {
+      "seamId": "s-01",
+      "promptTokens": 5184,
+      "completionTokens": 1564,
+      "costUsd": 0.002469,
+      "billing": "metered",
+      "at": "2026-07-11T04:32:14.293Z"
+    },
+    {
+      "seamId": "s-02",
+      "promptTokens": 5107,
+      "completionTokens": 1913,
+      "costUsd": 0.0027115000000000004,
+      "billing": "metered",
+      "at": "2026-07-11T04:32:17.222Z"
+    },
+    {
+      "seamId": "s-03",
+      "promptTokens": 6320,
+      "completionTokens": 2996,
+      "costUsd": 0.0038269999999999997,
+      "billing": "metered",
+      "at": "2026-07-11T04:32:21.505Z"
+    },
+    {
+      "seamId": "s-04",
+      "promptTokens": 6056,
+      "completionTokens": 2764,
+      "costUsd": 0.003587,
+      "billing": "metered",
+      "at": "2026-07-11T04:32:30.018Z"
+    },
+    {
+      "seamId": "s-05",
+      "promptTokens": 5251,
+      "completionTokens": 1861,
+      "costUsd": 0.0027085,
+      "billing": "metered",
+      "at": "2026-07-11T04:32:37.651Z"
+    },
+    {
+      "seamId": "s-06",
+      "promptTokens": 5618,
+      "completionTokens": 2347,
+      "costUsd": 0.00316475,
+      "billing": "metered",
+      "at": "2026-07-11T04:32:41.602Z"
+    },
+    {
+      "seamId": "s-07",
+      "promptTokens": 5304,
+      "completionTokens": 1951,
+      "costUsd": 0.00278925,
+      "billing": "metered",
+      "at": "2026-07-11T04:32:45.848Z"
+    },
+    {
+      "seamId": "s-08",
+      "promptTokens": 5280,
+      "completionTokens": 1878,
+      "costUsd": 0.0027285,
+      "billing": "metered",
+      "at": "2026-07-11T04:32:50.569Z"
+    },
+    {
+      "seamId": "s-09",
+      "promptTokens": 5757,
+      "completionTokens": 2429,
+      "costUsd": 0.003261,
+      "billing": "metered",
+      "at": "2026-07-11T04:32:54.091Z"
+    },
+    {
+      "seamId": "s-10",
+      "promptTokens": 6024,
+      "completionTokens": 2611,
+      "costUsd": 0.00346425,
+      "billing": "metered",
+      "at": "2026-07-11T04:33:00.805Z"
+    },
+    {
+      "seamId": "s-11",
+      "promptTokens": 6216,
+      "completionTokens": 2904,
+      "costUsd": 0.003732,
+      "billing": "metered",
+      "at": "2026-07-11T04:33:04.988Z"
+    },
+    {
+      "seamId": "s-12",
+      "promptTokens": 5648,
+      "completionTokens": 2484,
+      "costUsd": 0.003275,
+      "billing": "metered",
+      "at": "2026-07-11T04:33:07.900Z"
+    },
+    {
+      "seamId": "s-13",
+      "promptTokens": 5271,
+      "completionTokens": 1694,
+      "costUsd": 0.00258825,
+      "billing": "metered",
+      "at": "2026-07-11T04:33:10.053Z"
+    },
+    {
+      "seamId": "s-14",
+      "promptTokens": 5430,
+      "completionTokens": 2119,
+      "costUsd": 0.0029467499999999997,
+      "billing": "metered",
+      "at": "2026-07-11T04:33:12.652Z"
+    },
+    {
+      "seamId": "s-15",
+      "promptTokens": 6663,
+      "completionTokens": 2320,
+      "costUsd": 0.00340575,
+      "billing": "metered",
+      "at": "2026-07-11T04:33:19.017Z"
+    },
+    {
+      "seamId": "s-16",
+      "promptTokens": 5659,
+      "completionTokens": 2353,
+      "costUsd": 0.0031795,
+      "billing": "metered",
+      "at": "2026-07-11T04:33:23.541Z"
+    },
+    {
+      "seamId": "s-17",
+      "promptTokens": 6876,
+      "completionTokens": 2700,
+      "costUsd": 0.003744,
+      "billing": "metered",
+      "at": "2026-07-11T04:33:27.351Z"
+    },
+    {
+      "seamId": "s-18",
+      "promptTokens": 4738,
+      "completionTokens": 1440,
+      "costUsd": 0.0022645,
+      "billing": "metered",
+      "at": "2026-07-11T04:33:31.540Z"
+    },
+    {
+      "seamId": "s-19",
+      "promptTokens": 5735,
+      "completionTokens": 2356,
+      "costUsd": 0.0032007499999999996,
+      "billing": "metered",
+      "at": "2026-07-11T04:33:34.217Z"
+    },
+    {
+      "seamId": "s-20",
+      "promptTokens": 5618,
+      "completionTokens": 2129,
+      "costUsd": 0.0030012499999999996,
+      "billing": "metered",
+      "at": "2026-07-11T04:33:37.721Z"
+    }
+  ],
+  "totals": {
+    "meteredUsd": 0.0620485,
+    "subscriptionEquivalentUsd": 0,
+    "totalUsd": 0.0620485
+  }
+}

@@ -1,0 +1,233 @@
+{
+  "id": "wbakeb/claude-fable-5/v-16-feature-triptych-r2",
+  "contestant": "claude-fable-5",
+  "caseId": "v-16-feature-triptych",
+  "run": 2,
+  "node": {
+    "nodeId": "v-16-feature-triptych",
+    "subtype": "feature-cards",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": "/prism-mock/home/nodes/feature-card.png"
+    },
+    "intent": {
+      "caption": "Feature triptych — Three feature cards in rhythm with icon seats, title/body hierarchy, and hover lift states.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "01",
+            "role": "icon-glyph",
+            "typography": {
+              "fontSize": 20,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "In-House Calibre",
+            "role": "card-title",
+            "typography": {
+              "fontSize": 20,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Every movement is designed, machined, and finished under one roof.",
+            "role": "body",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "02",
+            "role": "icon-glyph",
+            "typography": {
+              "fontSize": 20,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Five-Year Guarantee",
+            "role": "card-title",
+            "typography": {
+              "fontSize": 20,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Each piece is serviced free of charge for five years from delivery.",
+            "role": "body",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "03",
+            "role": "icon-glyph",
+            "typography": {
+              "fontSize": 20,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Hand-Finished Dials",
+            "role": "card-title",
+            "typography": {
+              "fontSize": 20,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Guilloche cut on a 1912 rose engine, one dial at a time.",
+            "role": "body",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#16161d",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#191921"
+            },
+            {
+              "at": 1,
+              "hex": "#121218"
+            }
+          ]
+        },
+        "typography": {
+          "card-title": {
+            "family": "Lora",
+            "fontSize": 20,
+            "fontWeight": 600,
+            "letterSpacing": 0,
+            "lineHeight": 1.2
+          },
+          "body": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.5
+          },
+          "icon-glyph": {
+            "family": "JetBrains Mono",
+            "fontSize": 20,
+            "fontWeight": 700,
+            "letterSpacing": 0,
+            "lineHeight": 1
+          }
+        },
+        "effects": "Three cards 1.5w x 1.9h scene units in a row, gap 0.25 (1x base unit), row total 5.0w centered at origin; card albedo vertical ramp #191921 (at 0.0) -> #121218 (at 1.0), corner radius 0.06, 0.006-unit hairline border #26262f, roughness 0.6, metalness 0.25, clearcoat 0.15; icon seat per card is a machined disc 0.4 diameter, extruded 0.05, brushed anisotropy 0.6, roughness 0.55, metalness 0.5, clearcoat 0.2, carrying a single mono glyph in #ff2a38 emissive intensity 1.6; interior padding 0.375 (1.5x base), vertical rhythm icon seat then 0.25 gap then title then 0.125 gap then body, all on a 0.25-unit baseline grid; mount stagger-cards with each card fade-up opacity 0 -> 1 and y +0.2 -> 0 over 500ms cubic-bezier(0.25,0.46,0.45,0.94) at 80ms stagger; hover lift y 0 -> 0.06 and translateZ 0 -> 0.12 over 180ms cubic-bezier(0.25,0.46,0.45,0.94) with the contact shadow under the card widening and softening as it rises, disc glyph emissive 1.6 -> 2.2 on the hovered card; the key light sits upper-left so lifted cards gain a brighter top bevel and a deeper bottom edge, making the lift read as physical."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0.1,
+        5
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.4
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1.1,
+        "position": [
+          -3,
+          3,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.5,
+        "position": [
+          0,
+          -1.8,
+          -1.2
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#8a93a3",
+        "intensity": 0.3,
+        "position": [
+          3,
+          1,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Cards cascade in at 80ms stagger; the hovered card lifts 0.06 up and 0.12 toward camera with a widening contact shadow and brighter disc glyph.",
+    "contrastMinimum": "4.5:1 body on card ramp; 3:1 titles; accent glyphs 4.6:1 on disc"
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const {\n    Group,\n    Mesh,\n    PlaneGeometry,\n    CircleGeometry,\n    CylinderGeometry,\n    Shape,\n    ExtrudeGeometry,\n    DirectionalLight,\n    AdditiveBlending,\n    DoubleSide\n  } = ctx.THREE;\n  const COLORS = config.intent && config.intent.visualSpec && config.intent.visualSpec.colors || {};\n  const ACCENT = COLORS.accent || \"#ff2a38\";\n  const PAPER = COLORS.paper || \"#e8ecf2\";\n  const GRAD_TOP = \"#191921\";\n  const GRAD_BOT = \"#121218\";\n  const BORDER = \"#26262f\";\n  const root = new Group();\n  root.name = \"feature-triptych\";\n  const disposables = [];\n  const timelines = [];\n  const primHandles = [];\n  const backdropGeo = new PlaneGeometry(7, 6);\n  const backdropMat = new import_webgpu.MeshBasicNodeMaterial();\n  backdropMat.colorNode = (0, import_tsl.mix)((0, import_tsl.color)(GRAD_TOP), (0, import_tsl.color)(GRAD_BOT), (0, import_tsl.uv)().y.oneMinus());\n  const backdrop = new Mesh(backdropGeo, backdropMat);\n  backdrop.position.set(0, -0.25, -2.5);\n  root.add(backdrop);\n  disposables.push(backdropGeo, backdropMat);\n  const rim = new DirectionalLight(ACCENT, 0.7);\n  rim.position.set(2.5, -1.5, 2);\n  root.add(rim);\n  const bevelKey = new DirectionalLight(\"#e8ecf2\", 0.5);\n  bevelKey.position.set(-2, 2.5, 3);\n  root.add(bevelKey);\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const glyphs = items.filter((i) => i.role === \"icon-glyph\").map((i) => i.text);\n  const titles = items.filter((i) => i.role === \"card-title\").map((i) => i.text);\n  const bodies = items.filter((i) => i.role === \"body\").map((i) => i.text);\n  const PX = 0.01;\n  const CARD_W = 1.5;\n  const CARD_H = 1.9;\n  const GAP = 0.25;\n  const RADIUS = 0.06;\n  function roundedRectShape(w, h, r) {\n    const s = new Shape();\n    const x = -w / 2, y = -h / 2;\n    s.moveTo(x + r, y);\n    s.lineTo(x + w - r, y);\n    s.quadraticCurveTo(x + w, y, x + w, y + r);\n    s.lineTo(x + w, y + h - r);\n    s.quadraticCurveTo(x + w, y + h, x + w - r, y + h);\n    s.lineTo(x + r, y + h);\n    s.quadraticCurveTo(x, y + h, x, y + h - r);\n    s.lineTo(x, y + r);\n    s.quadraticCurveTo(x, y, x + r, y);\n    return s;\n  }\n  const cardShape = roundedRectShape(CARD_W, CARD_H, RADIUS);\n  const cardGeo = new ExtrudeGeometry(cardShape, {\n    depth: 0.04,\n    bevelEnabled: true,\n    bevelThickness: 0.01,\n    bevelSize: 0.01,\n    bevelSegments: 2,\n    curveSegments: 12\n  });\n  disposables.push(cardGeo);\n  const borderShape = roundedRectShape(CARD_W + 0.012, CARD_H + 0.012, RADIUS + 6e-3);\n  const borderGeo = new ExtrudeGeometry(borderShape, {\n    depth: 0.02,\n    bevelEnabled: false,\n    curveSegments: 12\n  });\n  disposables.push(borderGeo);\n  const discGeo = new CylinderGeometry(0.2, 0.2, 0.05, 48);\n  discGeo.rotateX(Math.PI / 2);\n  disposables.push(discGeo);\n  const shadowGeo = new PlaneGeometry(1.8, 0.5);\n  disposables.push(shadowGeo);\n  const cardGradient = (0, import_tsl.mix)(\n    (0, import_tsl.color)(GRAD_TOP),\n    (0, import_tsl.color)(GRAD_BOT),\n    import_tsl.positionLocal.y.negate().add(CARD_H / 2).div(CARD_H).clamp(0, 1)\n  );\n  const cards = [];\n  const xs = [-(CARD_W + GAP), 0, CARD_W + GAP];\n  for (let i = 0; i < 3; i++) {\n    const card = new Group();\n    card.name = \"feature-card-\" + i;\n    card.position.set(xs[i], 0, 0);\n    const borderMat = new import_webgpu.MeshStandardNodeMaterial({\n      roughness: 0.65,\n      metalness: 0.2,\n      transparent: true\n    });\n    borderMat.colorNode = (0, import_tsl.color)(BORDER);\n    const border = new Mesh(borderGeo, borderMat);\n    border.position.z = -0.015;\n    card.add(border);\n    disposables.push(borderMat);\n    const faceMat = new import_webgpu.MeshPhysicalNodeMaterial({\n      roughness: 0.6,\n      metalness: 0.25,\n      clearcoat: 0.15,\n      clearcoatRoughness: 0.5,\n      transparent: true\n    });\n    faceMat.colorNode = cardGradient;\n    const face = new Mesh(cardGeo, faceMat);\n    card.add(face);\n    disposables.push(faceMat);\n    const discMat = new import_webgpu.MeshPhysicalNodeMaterial({\n      roughness: 0.55,\n      metalness: 0.5,\n      clearcoat: 0.2,\n      clearcoatRoughness: 0.4,\n      transparent: true\n    });\n    discMat.colorNode = (0, import_tsl.mix)(\n      (0, import_tsl.color)(\"#2c2c36\"),\n      (0, import_tsl.color)(\"#1c1c24\"),\n      (0, import_tsl.uv)().distance((0, import_tsl.vec2)(0.5)).mul(2).clamp(0, 1)\n    );\n    const disc = new Mesh(discGeo, discMat);\n    disc.position.set(0, 0.5, 0.09);\n    card.add(disc);\n    disposables.push(discMat);\n    const glowIntensity = (0, import_tsl.uniform)(1.6);\n    const glowMat = new import_webgpu.MeshBasicNodeMaterial({\n      transparent: true,\n      blending: AdditiveBlending,\n      depthWrite: false\n    });\n    glowMat.colorNode = (0, import_tsl.color)(ACCENT).mul(glowIntensity.mul(0.12));\n    glowMat.opacityNode = (0, import_tsl.smoothstep)((0, import_tsl.float)(0.5), (0, import_tsl.float)(0.05), (0, import_tsl.uv)().distance((0, import_tsl.vec2)(0.5)));\n    const glowGeo = new CircleGeometry(0.19, 32);\n    const glow = new Mesh(glowGeo, glowMat);\n    glow.position.set(0, 0.5, 0.121);\n    card.add(glow);\n    disposables.push(glowMat, glowGeo);\n    if (glyphs[i]) {\n      const glyph = ctx.fontAtlas.createText(String(glyphs[i]), {\n        fontSize: 20,\n        color: ACCENT,\n        align: \"center\"\n      });\n      glyph.scale.setScalar(PX);\n      glyph.position.set(0, 0.5, 0.125);\n      card.add(glyph);\n    }\n    if (titles[i]) {\n      const title = ctx.fontAtlas.createText(String(titles[i]), {\n        fontSize: 20,\n        color: PAPER,\n        align: \"center\",\n        maxWidthPx: 130\n      });\n      title.scale.setScalar(PX);\n      title.position.set(0, 0.14, 0.09);\n      card.add(title);\n    }\n    if (bodies[i]) {\n      const body = ctx.fontAtlas.createText(String(bodies[i]), {\n        fontSize: 13,\n        color: \"#a9b0bc\",\n        align: \"center\",\n        maxWidthPx: 112,\n        letterSpacingPx: 0.2\n      });\n      body.scale.setScalar(PX);\n      body.position.set(0, -0.18, 0.09);\n      card.add(body);\n    }\n    const shadowMat = new import_webgpu.MeshBasicNodeMaterial({\n      transparent: true,\n      depthWrite: false\n    });\n    shadowMat.colorNode = (0, import_tsl.color)(\"#000000\");\n    shadowMat.opacityNode = (0, import_tsl.smoothstep)((0, import_tsl.float)(0.5), (0, import_tsl.float)(0.08), (0, import_tsl.uv)().distance((0, import_tsl.vec2)(0.5))).mul(0.5);\n    const shadow = new Mesh(shadowGeo, shadowMat);\n    shadow.position.set(0, -1.06, -0.1);\n    card.add(shadow);\n    disposables.push(shadowMat);\n    root.add(card);\n    cards.push({ card, shadow, glowIntensity, hoverTl: null });\n  }\n  const ruleGeo = new PlaneGeometry(0.5, 0.02);\n  const ruleMat = new import_webgpu.MeshBasicNodeMaterial();\n  ruleMat.colorNode = (0, import_tsl.color)(ACCENT);\n  const rule = new Mesh(ruleGeo, ruleMat);\n  rule.position.set(0, -1.42, 0.4);\n  root.add(rule);\n  disposables.push(ruleGeo, ruleMat);\n  const cardMats = cards.map(({ card }) => {\n    const mats = [];\n    card.traverse((o) => {\n      if (o.material) mats.push(o.material);\n    });\n    return mats;\n  });\n  const mountTl = import_gsap.gsap.timeline();\n  cards.forEach(({ card }, i) => {\n    const mats = cardMats[i];\n    mats.forEach((m) => {\n      m.opacity = 0;\n    });\n    card.position.y = -0.2;\n    const state = { t: 0 };\n    mountTl.to(state, {\n      t: 1,\n      duration: 0.5,\n      ease: \"power2.out\",\n      onUpdate: () => {\n        card.position.y = -0.2 * (1 - state.t);\n        for (const m of mats) m.opacity = state.t;\n      }\n    }, i * 0.08);\n  });\n  mountTl.fromTo(\n    root.scale,\n    { x: 1.04, y: 1.04, z: 1.04 },\n    { x: 1, y: 1, z: 1, duration: 0.9, ease: \"power4.out\" },\n    0.55\n  );\n  timelines.push(mountTl);\n  function liftCard(i, lifted) {\n    const entry = cards[i];\n    if (!entry) return;\n    if (entry.hoverTl) entry.hoverTl.kill();\n    const tl = import_gsap.gsap.timeline();\n    tl.to(entry.card.position, {\n      y: lifted ? 0.06 : 0,\n      z: lifted ? 0.12 : 0,\n      duration: 0.18,\n      ease: \"power2.out\"\n    }, 0);\n    tl.to(entry.shadow.scale, {\n      x: lifted ? 1.18 : 1,\n      y: lifted ? 1.12 : 1,\n      duration: 0.18,\n      ease: \"power2.out\"\n    }, 0);\n    tl.to(entry.shadow.position, {\n      y: lifted ? -1.1 : -1.06,\n      duration: 0.18,\n      ease: \"power2.out\"\n    }, 0);\n    tl.to(entry.glowIntensity, {\n      value: lifted ? 2.2 : 1.6,\n      duration: 0.18,\n      ease: \"power2.out\"\n    }, 0);\n    entry.hoverTl = tl;\n    timelines.push(tl);\n  }\n  function findCardIndex(obj) {\n    let o = obj;\n    while (o) {\n      const idx = cards.findIndex((c) => c.card === o);\n      if (idx !== -1) return idx;\n      o = o.parent;\n    }\n    return -1;\n  }\n  root.userData.handlers = {\n    pointerenter: (e) => {\n      const idx = e && e.object ? findCardIndex(e.object) : -1;\n      if (idx !== -1) liftCard(idx, true);\n    },\n    pointerleave: () => {\n      for (let i = 0; i < cards.length; i++) liftCard(i, false);\n    },\n    pointermove: (e) => {\n      const idx = e && e.object ? findCardIndex(e.object) : -1;\n      for (let i = 0; i < cards.length; i++) liftCard(i, i === idx);\n    }\n  };\n  cards.forEach((entry, i) => {\n    entry.card.userData.handlers = {\n      pointerenter: () => liftCard(i, true),\n      pointerleave: () => liftCard(i, false)\n    };\n  });\n  for (const primitive of config.cinematicPrimitives || []) {\n    if (ctx.primitives[primitive.name]) {\n      primHandles.push(ctx.primitives[primitive.name](root, primitive.params));\n    }\n  }\n  root.userData.cleanup = () => {\n    for (const tl of timelines) tl.kill();\n    for (const entry of cards) {\n      if (entry.hoverTl) entry.hoverTl.kill();\n    }\n    for (const h of primHandles) {\n      if (h && typeof h.cleanup === \"function\") h.cleanup();\n    }\n    for (const d of disposables) {\n      if (d && typeof d.dispose === \"function\") d.dispose();\n    }\n    root.traverse((o) => {\n      if (o.geometry && typeof o.geometry.dispose === \"function\") o.geometry.dispose();\n      if (o.material && typeof o.material.dispose === \"function\") o.material.dispose();\n    });\n    if (root.parent) root.parent.remove(root);\n  };\n  return root;\n}\n",
+  "transformError": null
+}

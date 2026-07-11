@@ -47,7 +47,11 @@ const sha = (s) => createHash('sha256').update(s).digest('hex');
 
 const EXECUTORS = {
   'mercury-2': CONTESTANTS.find((c) => c.id === 'mercury-2'),
-  'claude-haiku-4.5': CONTESTANTS.find((c) => c.id === 'claude-haiku-4.5'),
+  // haiku's metered route (deepinfra) hit the SECOND mid-wave 402 boundary before D5;
+  // the seam executor rides the founder claude-cli lane instead (subscription-equivalent
+  // billing, ~2K CLI envelope outside L1/L2). TRANSPORT ASYMMETRY vs mercury-2 (metered
+  // HTTP) is disclosed in the report — wall/cost columns are not route-comparable.
+  'claude-haiku-4.5': { id: 'claude-haiku-4.5', label: 'Claude Haiku 4.5 (cli)', route: 'claude-cli', model: 'claude-haiku-4-5-20251001', usdPerMTokIn: 1.0, usdPerMTokOut: 5.0 },
 };
 
 const args = process.argv.slice(2);
@@ -114,6 +118,21 @@ if (args.includes('--select')) {
 
 // ── phase: execute ───────────────────────────────────────────────────────────
 async function callExecutor(ct, system, user) {
+  if (ct.route === 'claude-cli') {
+    // Same CLI mechanism as run-gen-b's claude-cli lane (clean cwd, hooks/tools off).
+    const t0 = Date.now();
+    const { stdout } = await pexecFile('claude', [
+      '--print', '--model', ct.model, '--effort', 'low',
+      '--settings', '{"hooks":{},"disableAllHooks":true}',
+      '--system-prompt', system, '--disallowedTools', '*',
+      '--no-session-persistence', '--strict-mcp-config', '--mcp-config', '{"mcpServers":{}}',
+      '--output-format', 'json', user,
+    ], { maxBuffer: 64 * 1024 * 1024, timeout: 420000, cwd: '/tmp/wbake-clean' });
+    const wallMs = Date.now() - t0;
+    const env = JSON.parse(stdout);
+    if (env.is_error) throw new Error(`claude cli error: ${String(env.result).slice(0, 200)}`);
+    return { text: env.result ?? '', wallMs, usage: { promptTokens: env.usage?.input_tokens ?? null, completionTokens: env.usage?.output_tokens ?? null }, billing: 'subscription-equivalent' };
+  }
   const r = ROUTES[ct.route];
   const key = providerKey(ct.route);
   if (!key) throw new Error(`no key for route ${ct.route}`);
@@ -177,9 +196,12 @@ if (args.includes('--execute')) {
     try {
       const r = await callExecutor(ct, SYSTEM, user);
       const costUsd = ((r.usage.promptTokens ?? 0) / 1e6) * (ct.usdPerMTokIn ?? 0) + ((r.usage.completionTokens ?? 0) / 1e6) * (ct.usdPerMTokOut ?? 0);
-      writeFileSync(outPath, JSON.stringify({ ok: true, seamId: d.seamId, executor: execId, output: r.text, wallMs: r.wallMs, usage: r.usage, costUsd }, null, 2));
-      ledger.calls.push({ seamId: d.seamId, promptTokens: r.usage.promptTokens, completionTokens: r.usage.completionTokens, costUsd, billing: 'metered', at: new Date().toISOString() });
-      ledger.totals.meteredUsd = ledger.calls.reduce((s, c) => s + (c.costUsd ?? 0), 0);
+      writeFileSync(outPath, JSON.stringify({ ok: true, seamId: d.seamId, executor: execId, route: ct.route, output: r.text, wallMs: r.wallMs, usage: r.usage, costUsd, billing: r.billing ?? 'metered' }, null, 2));
+      ledger.calls.push({ seamId: d.seamId, promptTokens: r.usage.promptTokens, completionTokens: r.usage.completionTokens, costUsd, billing: r.billing ?? 'metered', at: new Date().toISOString() });
+      // split totals by billing currency: totalUsd carries METERED (real) dollars
+      // only — founder-CLI sub-equivalent is ledgered separately (report §7/§8).
+      ledger.totals.meteredUsd = ledger.calls.filter((c) => c.billing !== 'subscription-equivalent').reduce((s, c) => s + (c.costUsd ?? 0), 0);
+      ledger.totals.subscriptionEquivalentUsd = ledger.calls.filter((c) => c.billing === 'subscription-equivalent').reduce((s, c) => s + (c.costUsd ?? 0), 0);
       ledger.totals.totalUsd = ledger.totals.meteredUsd;
       writeFileSync(LEDGER_PATH, JSON.stringify(ledger, null, 2));
       console.log(`[${execId}] ${d.seamId} ok (${r.wallMs}ms, $${costUsd.toFixed(4)})`);
@@ -204,7 +226,10 @@ if (args.includes('--execute')) {
       const c = cases.get(d.caseId);
       const ext = extractModule(rec.output);
       const tag = rec.seamId;
-      const bundle = { id: `wbakeb-seam/${ex}/${tag}`, contestant: ex, caseId: d.caseId, run: 1, node: c.node, sceneSpec: c.sceneSpec, parsed: ext.parsed, depGate: { sources: [], violations: [] }, cjs: null, transformError: null };
+      // Index caseId is the seamId (not the visual caseId): capture-b names frames
+      // `${caseId}-r${run}.png`, and several deltas share one visual case (v-18 ×3) —
+      // real-case naming would silently overwrite frames. Judge reads `${seamId}-r1.png`.
+      const bundle = { id: `wbakeb-seam/${ex}/${tag}`, contestant: ex, caseId: rec.seamId, visualCaseId: d.caseId, run: 1, node: c.node, sceneSpec: c.sceneSpec, parsed: ext.parsed, depGate: { sources: [], violations: [] }, cjs: null, transformError: null };
       if (ext.parsed && ext.source) {
         const sources = new Set();
         for (const m of ext.source.matchAll(/(?:import\s+[^'"]*?from\s*|import\s*\(\s*|require\s*\(\s*|import\s+)['"]([^'"]+)['"]/g)) sources.add(m[1]);
@@ -213,7 +238,7 @@ if (args.includes('--execute')) {
         catch (err) { bundle.transformError = String(err?.message ?? err).slice(0, 400); }
       }
       writeFileSync(path.join(outDir, `${tag}.json`), JSON.stringify(bundle, null, 2));
-      index.push({ id: bundle.id, contestant: ex, caseId: d.caseId, run: 1, renderable: Boolean(bundle.cjs), parsed: ext.parsed, fenced: false, depViolations: bundle.depGate.violations, transformError: bundle.transformError });
+      index.push({ id: bundle.id, contestant: ex, caseId: rec.seamId, visualCaseId: d.caseId, run: 1, renderable: Boolean(bundle.cjs), parsed: ext.parsed, fenced: false, depViolations: bundle.depGate.violations, transformError: bundle.transformError });
     }
   }
   index.sort((a, b) => a.id.localeCompare(b.id));
@@ -236,7 +261,7 @@ if (args.includes('--judge')) {
   const jobs = [];
   for (const ex of Object.keys(EXECUTORS)) {
     for (const d of plan) {
-      const frame = path.join(SEAM, 'frames', ex, `${d.seamId}.png`);
+      const frame = path.join(SEAM, 'frames', ex, `${d.seamId}-r1.png`); // capture-b names frames `${indexCaseId}-r${run}.png`; index caseId = seamId
       const key = `${ex}/${d.seamId}`;
       if (doneKeys.has(key)) continue;
       jobs.push({ ex, d, frame, exists: existsSync(frame) });
@@ -284,7 +309,9 @@ if (args.includes('--judge')) {
     ledger.calls.push({ blindId: j.blindId, costUsd: env.total_cost_usd ?? 0, billing: 'subscription-equivalent', at: new Date().toISOString() });
     ledger.totals.subscriptionEquivalentUsd = ledger.calls.reduce((s, c) => s + (c.costUsd ?? 0), 0);
     writeFileSync(LEDGER_PATH, JSON.stringify(ledger, null, 2));
-    if (genSpend() + ledger.totals.subscriptionEquivalentUsd >= HARD_CAP_USD - MARGIN) { console.error('!! MERGED cap — stopping seam judge'); break; }
+    // 2026-07-11 cap semantics (report §8): the $120 cap is METERED-only; the
+    // judge's founder-CLI spend is sub-equivalent, ledgered + disclosed, uncapped.
+    if (genSpend() >= HARD_CAP_USD - MARGIN) { console.error('!! METERED cap — stopping seam judge'); break; }
     let text = (env.result ?? '').trim();
     if (text.startsWith('```')) text = text.replace(/^```(?:json)?\s*/, '').replace(/\s*```$/, '');
     const s = text.indexOf('{'); const e = text.lastIndexOf('}');
@@ -309,12 +336,27 @@ if (args.includes('--metrics')) {
     const okRecs = recs.filter((r) => r.ok);
     const vs = verdicts.filter((v) => v.executor === ex);
     const walls = okRecs.map((r) => r.wallMs).sort((a, b) => a - b);
+    // deterministic MOUNT GATE on fixed=true verdicts: a "fix" whose module
+    // never mounted (capture probe nodeMounted=false — the after-frame is the
+    // empty lab background) is a blind-judge false positive, voided here and
+    // disclosed per-row (caught live on mercury-2 s-20: OFF_PALETTE "fixed"
+    // by a module that failed to default-export).
+    const mounted = (v) => {
+      try {
+        const meta = JSON.parse(readFileSync(path.join(SEAM, 'frames', ex, `${v.seamId}-r1.meta.json`), 'utf8'));
+        return meta.probe?.nodeMounted !== false;
+      } catch { return true; }
+    };
+    const fixedRaw = vs.filter((v) => v.fixed);
+    const fixedGated = fixedRaw.filter(mounted);
     perExec[ex] = {
       deltasAttempted: recs.length,
       transportErrors: recs.filter((r) => !r.ok).length,
       rendered: vs.filter((v) => v.judgeModel).length,
-      fixSuccess: vs.filter((v) => v.fixed).length,
-      fixSuccessRate: vs.length ? vs.filter((v) => v.fixed).length / vs.length : null,
+      fixSuccessRawJudge: fixedRaw.length,
+      fixVoidedByMountGate: fixedRaw.filter((v) => !mounted(v)).map((v) => v.seamId),
+      fixSuccess: fixedGated.length,
+      fixSuccessRate: vs.length ? fixedGated.length / vs.length : null,
       p50WallMs: walls.length ? walls[Math.floor(walls.length / 2)] : null,
       meanCostPerFixUsd: okRecs.length ? okRecs.reduce((s, r) => s + (r.costUsd ?? 0), 0) / okRecs.length : null,
     };

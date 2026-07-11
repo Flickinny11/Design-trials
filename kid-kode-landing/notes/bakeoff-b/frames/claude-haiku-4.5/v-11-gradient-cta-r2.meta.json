@@ -1,0 +1,21 @@
+{
+  "bundle": "wbakeb/claude-haiku-4.5/v-11-gradient-cta-r2",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-11-gradient-cta",
+  "run": 2,
+  "capturedAt": "2026-07-11T02:51:03.163Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/claude-haiku-4.5/v-11-gradient-cta-r2",
+    "moduleRuntimeError": "ReferenceError: THREE is not defined"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

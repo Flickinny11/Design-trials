@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/gemini-3.5-flash/v-06-loop-column-gallery-r2",
+  "contestant": "gemini-3.5-flash",
+  "caseId": "v-06-loop-column-gallery",
+  "run": 2,
+  "capturedAt": "2026-07-11T03:33:11.094Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 26,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/gemini-3.5-flash/v-06-loop-column-gallery-r2"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

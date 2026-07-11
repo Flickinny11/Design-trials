@@ -1,0 +1,202 @@
+[
+  {
+    "blindId": "Sdcf2b044",
+    "executor": "mercury-2",
+    "seamId": "s-01"
+  },
+  {
+    "blindId": "S69b130c4",
+    "executor": "mercury-2",
+    "seamId": "s-02"
+  },
+  {
+    "blindId": "S1e8d531a",
+    "executor": "mercury-2",
+    "seamId": "s-03"
+  },
+  {
+    "blindId": "S6ac12796",
+    "executor": "mercury-2",
+    "seamId": "s-04"
+  },
+  {
+    "blindId": "S4afc45f6",
+    "executor": "mercury-2",
+    "seamId": "s-05"
+  },
+  {
+    "blindId": "S304edfcd",
+    "executor": "mercury-2",
+    "seamId": "s-06"
+  },
+  {
+    "blindId": "S012285c1",
+    "executor": "mercury-2",
+    "seamId": "s-07"
+  },
+  {
+    "blindId": "Se84e6943",
+    "executor": "mercury-2",
+    "seamId": "s-08"
+  },
+  {
+    "blindId": "S4ebdfb00",
+    "executor": "mercury-2",
+    "seamId": "s-09"
+  },
+  {
+    "blindId": "S5cc21552",
+    "executor": "mercury-2",
+    "seamId": "s-10"
+  },
+  {
+    "blindId": "S3fe4f41f",
+    "executor": "mercury-2",
+    "seamId": "s-11"
+  },
+  {
+    "blindId": "Se37baafe",
+    "executor": "mercury-2",
+    "seamId": "s-12"
+  },
+  {
+    "blindId": "S740e63a8",
+    "executor": "mercury-2",
+    "seamId": "s-13"
+  },
+  {
+    "blindId": "Saf50f895",
+    "executor": "mercury-2",
+    "seamId": "s-14"
+  },
+  {
+    "blindId": "Scfe534fb",
+    "executor": "mercury-2",
+    "seamId": "s-15"
+  },
+  {
+    "blindId": "S2bcec426",
+    "executor": "mercury-2",
+    "seamId": "s-16"
+  },
+  {
+    "blindId": "Sf4b68a74",
+    "executor": "mercury-2",
+    "seamId": "s-17"
+  },
+  {
+    "blindId": "Sba4c7b7c",
+    "executor": "mercury-2",
+    "seamId": "s-18"
+  },
+  {
+    "blindId": "S69b999de",
+    "executor": "mercury-2",
+    "seamId": "s-19"
+  },
+  {
+    "blindId": "Sc1692cb0",
+    "executor": "mercury-2",
+    "seamId": "s-20"
+  },
+  {
+    "blindId": "S74e10ae6",
+    "executor": "claude-haiku-4.5",
+    "seamId": "s-01"
+  },
+  {
+    "blindId": "Sb1872d9e",
+    "executor": "claude-haiku-4.5",
+    "seamId": "s-02"
+  },
+  {
+    "blindId": "S22db31b3",
+    "executor": "claude-haiku-4.5",
+    "seamId": "s-03"
+  },
+  {
+    "blindId": "S52065feb",
+    "executor": "claude-haiku-4.5",
+    "seamId": "s-04"
+  },
+  {
+    "blindId": "S49cdf3d1",
+    "executor": "claude-haiku-4.5",
+    "seamId": "s-05"
+  },
+  {
+    "blindId": "S4cd95481",
+    "executor": "claude-haiku-4.5",
+    "seamId": "s-06"
+  },
+  {
+    "blindId": "S4b3565df",
+    "executor": "claude-haiku-4.5",
+    "seamId": "s-07"
+  },
+  {
+    "blindId": "S73b675a1",
+    "executor": "claude-haiku-4.5",
+    "seamId": "s-08"
+  },
+  {
+    "blindId": "S1190efdd",
+    "executor": "claude-haiku-4.5",
+    "seamId": "s-09"
+  },
+  {
+    "blindId": "S2b1135de",
+    "executor": "claude-haiku-4.5",
+    "seamId": "s-10"
+  },
+  {
+    "blindId": "S4a046fb8",
+    "executor": "claude-haiku-4.5",
+    "seamId": "s-11"
+  },
+  {
+    "blindId": "Sf0b632b4",
+    "executor": "claude-haiku-4.5",
+    "seamId": "s-12"
+  },
+  {
+    "blindId": "S97b02025",
+    "executor": "claude-haiku-4.5",
+    "seamId": "s-13"
+  },
+  {
+    "blindId": "S5c362d09",
+    "executor": "claude-haiku-4.5",
+    "seamId": "s-14"
+  },
+  {
+    "blindId": "S14e13aba",
+    "executor": "claude-haiku-4.5",
+    "seamId": "s-15"
+  },
+  {
+    "blindId": "S1550ce74",
+    "executor": "claude-haiku-4.5",
+    "seamId": "s-16"
+  },
+  {
+    "blindId": "S1551d012",
+    "executor": "claude-haiku-4.5",
+    "seamId": "s-17"
+  },
+  {
+    "blindId": "S3f3653b0",
+    "executor": "claude-haiku-4.5",
+    "seamId": "s-18"
+  },
+  {
+    "blindId": "S957b1d93",
+    "executor": "claude-haiku-4.5",
+    "seamId": "s-19"
+  },
+  {
+    "blindId": "Scc0c0b90",
+    "executor": "claude-haiku-4.5",
+    "seamId": "s-20"
+  }
+]

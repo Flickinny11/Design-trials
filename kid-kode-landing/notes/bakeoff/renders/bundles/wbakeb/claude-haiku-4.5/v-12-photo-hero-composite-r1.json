@@ -1,0 +1,198 @@
+{
+  "id": "wbakeb/claude-haiku-4.5/v-12-photo-hero-composite-r1",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-12-photo-hero-composite",
+  "run": 1,
+  "node": {
+    "nodeId": "v-12-photo-hero-composite",
+    "subtype": "layered-photo-hero",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": "/prism-mock/home/nodes/parallax-stack.png"
+    },
+    "intent": {
+      "caption": "Photo hero composite — A layered photographic hero plate with filmic grade, foreground subject separation, and caption block.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "NOVA ATELIER / GENEVA",
+            "role": "kicker",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Time, Machined.",
+            "role": "headline",
+            "typography": {
+              "fontSize": 34,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Every case begins as a single billet of 904L steel.",
+            "role": "body",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "CALIBRE NA-01 / 72 HOUR RESERVE",
+            "role": "caption",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#16161d",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0.45,
+              "hex": "#0b0b1000"
+            },
+            {
+              "at": 1,
+              "hex": "#0b0b10eb"
+            }
+          ]
+        },
+        "typography": {
+          "kicker": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.2
+          },
+          "headline": {
+            "family": "Lora",
+            "fontSize": 34,
+            "fontWeight": 600,
+            "letterSpacing": -0.01,
+            "lineHeight": 1.1
+          },
+          "body": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.5
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 400,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Layered photo plate 4.0w x 2.5h scene units on parallax-plane using the provided imageUrl and depthMapUrl, depth-displacement amplitude 0.18 scene units, parallax-scroll intensity 0.35 bound to scroll; filmic grade baked into the plate treatment: blacks lifted to #0d0d12, highlights shouldered toward #e8ecf2, midtone contrast plus 12 percent, global desaturation minus 8 percent with the red channel preserved so the accent stays pure; foreground subject separated by the depth map with a 0.02-unit rim of key light along its silhouette; bottom scrim gradient #0b0b1000 (at 0.45) -> #0b0b10eb (at 1.0) seats the caption block; caption block anchored bottom-left with 0.5-unit padding (2x base unit), kicker then headline then body stacked on a 0.25-unit baseline rhythm; accent hairline bar 0.75w x 0.02h in #ff2a38 emissive intensity 1.8 sits between headline and body; plate mount opacity 0 -> 1 over 500ms cubic-bezier(0.25,0.46,0.45,0.94); caption block rise-in y +0.4 -> 0 over 700ms cubic-bezier(0.215,0.61,0.355,1) starting 120ms after the plate; scroll shifts depth layers up to plus and minus 0.14 units against the camera so near layers overtake far layers with true occlusion."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "parallax-plane",
+    "depthMapUrl": "/prism-mock/home/nodes/parallax-stack.depth.png",
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "parallax-scroll",
+        "trigger": "scroll",
+        "params": {
+          "intensity": 0.35
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        4.8
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#c3c9d4",
+        "intensity": 0.5
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 0.9,
+        "position": [
+          3,
+          2,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.5,
+        "position": [
+          -2.2,
+          -1,
+          1.5
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Depth layers parallax against scroll at 0.35 intensity while the caption block rises in once and stays fixed.",
+    "contrastMinimum": "4.5:1 body text on the scrim region; 3:1 headline on graded plate"
+  },
+  "parsed": true,
+  "fenced": true,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const { THREE } = ctx;\n  const group = new THREE.Group();\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const textMap = {};\n  for (const item of items) {\n    if (item.role === \"kicker\") textMap.kicker = item.text;\n    if (item.role === \"headline\") textMap.headline = item.text;\n    if (item.role === \"body\") textMap.body = item.text;\n    if (item.role === \"caption\") textMap.caption = item.text;\n  }\n  textMap.kicker ??= \"NOVA ATELIER / GENEVA\";\n  textMap.headline ??= \"Time, Machined.\";\n  textMap.body ??= \"Every case begins as a single billet of 904L steel.\";\n  textMap.caption ??= \"CALIBRE NA-01 / 72 HOUR RESERVE\";\n  const colors = config.intent?.visualSpec?.colors ?? {\n    background: \"#0b0b10\",\n    surface: \"#16161d\",\n    ink: \"#16161d\",\n    paper: \"#e8ecf2\",\n    accent: \"#ff2a38\"\n  };\n  const planeGeo = new THREE.PlaneGeometry(4, 2.5, 64, 64);\n  let imageTex = null;\n  let depthTex = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      imageTex = tex;\n      imageTex.colorSpace = THREE.SRGBColorSpace;\n      plateMat.colorNode = (0, import_tsl.texture)(imageTex);\n      plateMat.needsUpdate = true;\n    });\n  }\n  if (config.depthMapUrl) {\n    ctx.textureLoader.loadTexture(config.depthMapUrl).then((tex) => {\n      depthTex = tex;\n      depthTex.colorSpace = THREE.NoColorSpace;\n      const dispIntensity = (0, import_tsl.uniform)(0.18);\n      plateMat.displacementNode = (0, import_tsl.texture)(depthTex).r.mul(dispIntensity).sub(dispIntensity.mul(0.5));\n      plateMat.needsUpdate = true;\n    });\n  }\n  const filmicGrade = (texColor) => {\n    const liftColor = (0, import_tsl.vec3)(0.05, 0.05, 0.07);\n    const lifted = (0, import_tsl.mix)(liftColor, texColor, (0, import_tsl.smoothstep)(0, 0.3, texColor));\n    const paperColor = (0, import_tsl.vec3)(0.91, 0.93, 0.95);\n    const shouldered = (0, import_tsl.mix)(lifted, paperColor, (0, import_tsl.smoothstep)(0.7, 1, lifted));\n    const midMask = (0, import_tsl.smoothstep)(0.3, 0.7, shouldered);\n    const contrast = (0, import_tsl.mix)(shouldered, shouldered.sub(0.5).mul(1.12).add(0.5), midMask);\n    const gray = contrast.x.mul(0.299).add(contrast.y.mul(0.587)).add(contrast.z.mul(0.114));\n    const desat = (0, import_tsl.mix)(gray, contrast, (0, import_tsl.vec3)(1, 0.92, 0.92));\n    return desat;\n  };\n  const plateMat = new import_webgpu.MeshBasicNodeMaterial({\n    colorNode: filmicGrade((0, import_tsl.texture)((0, import_tsl.uv)().xy, 0)),\n    side: THREE.FrontSide,\n    toneMapped: true\n  });\n  const plateGeometryNode = planeGeo.clone();\n  const plateMesh = new THREE.Mesh(planeGeo, plateMat);\n  plateMesh.name = \"plate\";\n  group.add(plateMesh);\n  plateMesh.material.opacity = 0;\n  plateMesh.material.transparent = true;\n  import_gsap.gsap.to(plateMesh.material, {\n    opacity: 1,\n    duration: 0.5,\n    ease: \"cubic.inOut\"\n  });\n  const captionGroup = new THREE.Group();\n  captionGroup.position.set(-1.8, -1, 0.01);\n  group.add(captionGroup);\n  const kickerText = ctx.fontAtlas.createText(textMap.kicker, {\n    fontSize: 9,\n    color: colors.paper,\n    align: \"left\",\n    letterSpacingPx: 0.12 * 9\n  });\n  kickerText.position.y = 0.3;\n  captionGroup.add(kickerText);\n  const headlineText = ctx.fontAtlas.createText(textMap.headline, {\n    fontSize: 34,\n    color: colors.paper,\n    align: \"left\",\n    maxWidthPx: 400\n  });\n  headlineText.position.y = -0.1;\n  captionGroup.add(headlineText);\n  const hairlineGeo = new THREE.PlaneGeometry(0.75, 0.02);\n  const hairlineMat = new THREE.MeshBasicMaterial({\n    color: colors.accent,\n    emissive: colors.accent,\n    emissiveIntensity: 1.8\n  });\n  const hairline = new THREE.Mesh(hairlineGeo, hairlineMat);\n  hairline.position.y = -0.25;\n  hairline.position.z = 0.01;\n  captionGroup.add(hairline);\n  const bodyText = ctx.fontAtlas.createText(textMap.body, {\n    fontSize: 13,\n    color: colors.paper,\n    align: \"left\",\n    maxWidthPx: 400\n  });\n  bodyText.position.y = -0.45;\n  captionGroup.add(bodyText);\n  const captionText = ctx.fontAtlas.createText(textMap.caption, {\n    fontSize: 9,\n    color: colors.paper,\n    align: \"left\",\n    letterSpacingPx: 0.12 * 9\n  });\n  captionText.position.y = -0.7;\n  captionGroup.add(captionText);\n  captionGroup.position.y = -0.6;\n  import_gsap.gsap.to(captionGroup.position, {\n    y: -1,\n    duration: 0.7,\n    ease: \"power3.out\",\n    delay: 0.12\n  });\n  let primitiveCleanup = null;\n  if (config.cinematicPrimitives && config.cinematicPrimitives.length > 0) {\n    for (const prim of config.cinematicPrimitives) {\n      if (prim.name === \"parallax-scroll\") {\n        const result = ctx.primitives[\"parallax-scroll\"](group, prim.params ?? { intensity: 0.35 });\n        primitiveCleanup = result.cleanup;\n        break;\n      }\n    }\n  }\n  const scrimGeo = new THREE.PlaneGeometry(7, 6);\n  const scrimMat = new THREE.MeshBasicMaterial({\n    color: colors.background,\n    side: THREE.BackSide\n  });\n  const canvas = document.createElement(\"canvas\");\n  canvas.width = 1;\n  canvas.height = 256;\n  const ctx2d = canvas.getContext(\"2d\");\n  const grad = ctx2d.createLinearGradient(0, 0, 0, 256);\n  grad.addColorStop(0.45, \"rgba(11, 11, 16, 0)\");\n  grad.addColorStop(1, \"rgba(11, 11, 16, 0.92)\");\n  ctx2d.fillStyle = grad;\n  ctx2d.fillRect(0, 0, 1, 256);\n  const scrimTex = new THREE.CanvasTexture(canvas);\n  scrimMat.map = scrimTex;\n  scrimMat.transparent = true;\n  const scrimMesh = new THREE.Mesh(scrimGeo, scrimMat);\n  scrimMesh.position.z = -2.5;\n  group.add(scrimMesh);\n  group.userData.cleanup = () => {\n    if (primitiveCleanup) primitiveCleanup();\n    import_gsap.gsap.killTweensOf([plateMesh.material, captionGroup.position]);\n    planeGeo.dispose();\n    plateMat.dispose();\n    hairlineMat.dispose();\n    scrimMat.dispose();\n    scrimTex.dispose();\n  };\n  return group;\n}\n",
+  "transformError": null
+}

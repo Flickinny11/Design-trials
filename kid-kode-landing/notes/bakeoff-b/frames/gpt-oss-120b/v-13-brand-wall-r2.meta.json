@@ -1,0 +1,20 @@
+{
+  "bundle": "wbakeb/gpt-oss-120b/v-13-brand-wall-r2",
+  "contestant": "gpt-oss-120b",
+  "caseId": "v-13-brand-wall",
+  "run": 2,
+  "capturedAt": "2026-07-11T02:58:25.860Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 13,
+    "nodeMounted": true,
+    "bundleId": "wbakeb/gpt-oss-120b/v-13-brand-wall-r2"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

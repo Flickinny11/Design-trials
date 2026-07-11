@@ -1,0 +1,26 @@
+[
+  {
+    "label": "F1",
+    "bundleId": "wbakeb/claude-opus-4.8/v-20-footer-colophon-r1",
+    "contestant": "claude-opus-4.8",
+    "source": "notes/bakeoff-b/frames/claude-opus-4.8/v-20-footer-colophon-r1.png"
+  },
+  {
+    "label": "F2",
+    "bundleId": "wbakeb/claude-opus-4.8/v-20-footer-colophon-r2",
+    "contestant": "claude-opus-4.8",
+    "source": "notes/bakeoff-b/frames/claude-opus-4.8/v-20-footer-colophon-r2.png"
+  },
+  {
+    "label": "F3",
+    "bundleId": "wbakeb/claude-sonnet-5/v-20-footer-colophon-r1",
+    "contestant": "claude-sonnet-5",
+    "source": "notes/bakeoff-b/frames/claude-sonnet-5/v-20-footer-colophon-r1.png"
+  },
+  {
+    "label": "F4",
+    "bundleId": "wbakeb/claude-sonnet-5/v-20-footer-colophon-r2",
+    "contestant": "claude-sonnet-5",
+    "source": "notes/bakeoff-b/frames/claude-sonnet-5/v-20-footer-colophon-r2.png"
+  }
+]

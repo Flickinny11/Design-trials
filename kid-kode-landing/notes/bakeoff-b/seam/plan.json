@@ -1,0 +1,306 @@
+{
+  "builtAt": "2026-07-11T04:32:06.025Z",
+  "method": "20 region-anchored judge MUST-FIX deltas from failing D3 renders (score<60, renderable, judge-emitted rubric defects only, sha-ordered, contestant cap 4)",
+  "deltas": [
+    {
+      "seamId": "s-01",
+      "bundleId": "wbakeb/mercury-2/v-03-glass-prism-refraction-r2",
+      "contestant": "mercury-2",
+      "caseId": "v-03-glass-prism-refraction",
+      "tag": "v-03-glass-prism-refraction-r2",
+      "d3Score": 5,
+      "delta": {
+        "defect": "BLANK_RENDER",
+        "region": "entire frame",
+        "judgeNote": "Near-black empty frame; nothing rendered."
+      },
+      "sourceParsed": true,
+      "beforeFrame": "notes/bakeoff-b/frames/mercury-2/v-03-glass-prism-refraction-r2.png"
+    },
+    {
+      "seamId": "s-02",
+      "bundleId": "wbakeb/deepseek-v4-flash/v-04-kinetic-type-headline-r2",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "v-04-kinetic-type-headline",
+      "tag": "v-04-kinetic-type-headline-r2",
+      "d3Score": 30,
+      "delta": {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "center card — no red accent underline, no 3D depth, wrong sans font",
+        "judgeNote": "Readable headline but a flat 2D grey slide; zero dimensionality, zero red, wrong typeface."
+      },
+      "sourceParsed": true,
+      "beforeFrame": "notes/bakeoff-b/frames/deepseek-v4-flash/v-04-kinetic-type-headline-r2.png"
+    },
+    {
+      "seamId": "s-03",
+      "bundleId": "wbakeb/claude-fable-5/v-07-filmstrip-carousel-r2",
+      "contestant": "claude-fable-5",
+      "caseId": "v-07-filmstrip-carousel",
+      "tag": "v-07-filmstrip-carousel-r2",
+      "d3Score": 8,
+      "delta": {
+        "defect": "BLANK_RENDER",
+        "region": "full frame — near-empty, single tiny card",
+        "judgeNote": "Effectively broken: one lone white card on blown-out white voids, no filmstrip, no plates, no recession."
+      },
+      "sourceParsed": true,
+      "beforeFrame": "notes/bakeoff-b/frames/claude-fable-5/v-07-filmstrip-carousel-r2.png"
+    },
+    {
+      "seamId": "s-04",
+      "bundleId": "wbakeb/claude-haiku-4.5/v-12-photo-hero-composite-r2",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-12-photo-hero-composite",
+      "tag": "v-12-photo-hero-composite-r2",
+      "d3Score": 13,
+      "delta": {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "entire frame",
+        "judgeNote": "Muddy gray slabs and oversized letterform blur; accent red absent entirely. No photographic hero content."
+      },
+      "sourceParsed": true,
+      "beforeFrame": "notes/bakeoff-b/frames/claude-haiku-4.5/v-12-photo-hero-composite-r2.png"
+    },
+    {
+      "seamId": "s-05",
+      "bundleId": "wbakeb/claude-opus-4.8/v-13-brand-wall-r1",
+      "contestant": "claude-opus-4.8",
+      "caseId": "v-13-brand-wall",
+      "tag": "v-13-brand-wall-r1",
+      "d3Score": 14,
+      "delta": {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "all six tiles — no brand wordmarks, no kicker",
+        "judgeNote": "3x2 grid recognizable but every wordmark missing; background corrupted by blurred masses. Empty shell of the spec."
+      },
+      "sourceParsed": true,
+      "beforeFrame": "notes/bakeoff-b/frames/claude-opus-4.8/v-13-brand-wall-r1.png"
+    },
+    {
+      "seamId": "s-06",
+      "bundleId": "wbakeb/claude-sonnet-5/v-13-brand-wall-r1",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-13-brand-wall",
+      "tag": "v-13-brand-wall-r1",
+      "d3Score": 7,
+      "delta": {
+        "defect": "BROKEN_COMPOSITION",
+        "region": "full frame",
+        "judgeNote": "Incoherent blurred white masses; grid, wordmarks, and kicker absent. Unusable render."
+      },
+      "sourceParsed": true,
+      "beforeFrame": "notes/bakeoff-b/frames/claude-sonnet-5/v-13-brand-wall-r1.png"
+    },
+    {
+      "seamId": "s-07",
+      "bundleId": "wbakeb/claude-sonnet-5/v-09-editorial-oversized-type-r2",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-09-editorial-oversized-type",
+      "tag": "v-09-editorial-oversized-type-r2",
+      "d3Score": 28,
+      "delta": {
+        "defect": "SCALE_ERROR",
+        "region": "right two-thirds — hero cropped beyond legibility",
+        "judgeNote": "Near-duplicate of F1/F2 failure: abstract cropped type, no kicker, pinkish rule; grain alone can't carry the frame."
+      },
+      "sourceParsed": true,
+      "beforeFrame": "notes/bakeoff-b/frames/claude-sonnet-5/v-09-editorial-oversized-type-r2.png"
+    },
+    {
+      "seamId": "s-08",
+      "bundleId": "wbakeb/mercury-2/v-16-feature-triptych-r2",
+      "contestant": "mercury-2",
+      "caseId": "v-16-feature-triptych",
+      "tag": "v-16-feature-triptych-r2",
+      "d3Score": 13,
+      "delta": {
+        "defect": "OFF_PALETTE",
+        "region": "three dots center — desaturated salmon, not #ff2a38",
+        "judgeNote": "Inverted palette on cards, salmon drift, no machined discs or typography; composition drowned by blobs."
+      },
+      "sourceParsed": true,
+      "beforeFrame": "notes/bakeoff-b/frames/mercury-2/v-16-feature-triptych-r2.png"
+    },
+    {
+      "seamId": "s-09",
+      "bundleId": "wbakeb/claude-haiku-4.5/v-16-feature-triptych-r1",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-16-feature-triptych",
+      "tag": "v-16-feature-triptych-r1",
+      "d3Score": 22,
+      "delta": {
+        "defect": "BROKEN_COMPOSITION",
+        "region": "upper half — blurred red circle and white slab collide with card row",
+        "judgeNote": "Three-card rhythm and pedestal legible, but glyphless flat dots, uneven cards, and blob intrusion kill it."
+      },
+      "sourceParsed": true,
+      "beforeFrame": "notes/bakeoff-b/frames/claude-haiku-4.5/v-16-feature-triptych-r1.png"
+    },
+    {
+      "seamId": "s-10",
+      "bundleId": "wbakeb/claude-opus-4.8/v-18-nav-dock-r2",
+      "contestant": "claude-opus-4.8",
+      "caseId": "v-18-nav-dock",
+      "tag": "v-18-nav-dock-r2",
+      "d3Score": 12,
+      "delta": {
+        "defect": "BROKEN_COMPOSITION",
+        "region": "upper half — formless gray blob dominates",
+        "judgeNote": "Same broken blob composition; translucent band with lone red dash, dock structure entirely absent."
+      },
+      "sourceParsed": true,
+      "beforeFrame": "notes/bakeoff-b/frames/claude-opus-4.8/v-18-nav-dock-r2.png"
+    },
+    {
+      "seamId": "s-11",
+      "bundleId": "wbakeb/claude-opus-4.8/v-19-empty-state-r1",
+      "contestant": "claude-opus-4.8",
+      "caseId": "v-19-empty-state",
+      "tag": "v-19-empty-state-r1",
+      "d3Score": 44,
+      "delta": {
+        "defect": "ALL_BLACK_ELEMENT",
+        "region": "left-center quadrant",
+        "judgeNote": "Panel, grid, ghost watch-card and red action present, but black slab occludes preview; white blob intrudes; guidance copy absent."
+      },
+      "sourceParsed": true,
+      "beforeFrame": "notes/bakeoff-b/frames/claude-opus-4.8/v-19-empty-state-r1.png"
+    },
+    {
+      "seamId": "s-12",
+      "bundleId": "wbakeb/claude-haiku-4.5/v-18-nav-dock-r1",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-18-nav-dock",
+      "tag": "v-18-nav-dock-r1",
+      "d3Score": 5,
+      "delta": {
+        "defect": "BLANK_RENDER",
+        "region": "entire frame",
+        "judgeNote": "Duplicate void: white square on black, nothing from spec rendered."
+      },
+      "sourceParsed": true,
+      "beforeFrame": "notes/bakeoff-b/frames/claude-haiku-4.5/v-18-nav-dock-r1.png"
+    },
+    {
+      "seamId": "s-13",
+      "bundleId": "wbakeb/claude-haiku-4.5/v-08-orrery-mechanism-r1",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-08-orrery-mechanism",
+      "tag": "v-08-orrery-mechanism-r1",
+      "d3Score": 55,
+      "delta": {
+        "defect": "FLAT_VOID",
+        "region": "lower half background field",
+        "judgeNote": "Best frame: both gears meshed at correct ratio with worn PBR texture, but composition top-heavy over void."
+      },
+      "sourceParsed": true,
+      "beforeFrame": "notes/bakeoff-b/frames/claude-haiku-4.5/v-08-orrery-mechanism-r1.png"
+    },
+    {
+      "seamId": "s-14",
+      "bundleId": "wbakeb/gpt-oss-120b/v-10-bento-metrics-r1",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-10-bento-metrics",
+      "tag": "v-10-bento-metrics-r1",
+      "d3Score": 10,
+      "delta": {
+        "defect": "BROKEN_COMPOSITION",
+        "region": "entire frame — blurred white blobs fill the field",
+        "judgeNote": "Unreadable blur of white masses and a red sliver; the grid never appears."
+      },
+      "sourceParsed": true,
+      "beforeFrame": "notes/bakeoff-b/frames/gpt-oss-120b/v-10-bento-metrics-r1.png"
+    },
+    {
+      "seamId": "s-15",
+      "bundleId": "wbakeb/gemini-3.5-flash/v-19-empty-state-r1",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "v-19-empty-state",
+      "tag": "v-19-empty-state-r1",
+      "d3Score": 44,
+      "delta": {
+        "defect": "OFF_PALETTE",
+        "region": "center-right accent button",
+        "judgeNote": "Spec elements present but accent is pink not #ff2a38, panel washed light-gray vs dark gradient, copy clipped at frame edge, flat button."
+      },
+      "sourceParsed": true,
+      "beforeFrame": "notes/bakeoff-b/frames/gemini-3.5-flash/v-19-empty-state-r1.png"
+    },
+    {
+      "seamId": "s-16",
+      "bundleId": "wbakeb/claude-opus-4.8/v-14-pricing-card-r1",
+      "contestant": "claude-opus-4.8",
+      "caseId": "v-14-pricing-card",
+      "tag": "v-14-pricing-card-r1",
+      "d3Score": 20,
+      "delta": {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "center card — no tier name, price figure, or feature text anywhere",
+        "judgeNote": "Card skeleton and red CTA exist but zero typography; massive white blob destroys composition."
+      },
+      "sourceParsed": true,
+      "beforeFrame": "notes/bakeoff-b/frames/claude-opus-4.8/v-14-pricing-card-r1.png"
+    },
+    {
+      "seamId": "s-17",
+      "bundleId": "wbakeb/deepseek-v4-flash/v-18-nav-dock-r2",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "v-18-nav-dock",
+      "tag": "v-18-nav-dock-r2",
+      "d3Score": 15,
+      "delta": {
+        "defect": "OFF_PALETTE",
+        "region": "center pill and background field",
+        "judgeNote": "Light-gray pill on gray field inverts ink surface spec; no entries, accent, or machined material."
+      },
+      "sourceParsed": true,
+      "beforeFrame": "notes/bakeoff-b/frames/deepseek-v4-flash/v-18-nav-dock-r2.png"
+    },
+    {
+      "seamId": "s-18",
+      "bundleId": "wbakeb/gpt-oss-120b/v-04-kinetic-type-headline-r2",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-04-kinetic-type-headline",
+      "tag": "v-04-kinetic-type-headline-r2",
+      "d3Score": 10,
+      "delta": {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "entire frame — no type, no accent underline",
+        "judgeNote": "A flat gradient rectangle and one blob; no headline, no red, no materiality."
+      },
+      "sourceParsed": true,
+      "beforeFrame": "notes/bakeoff-b/frames/gpt-oss-120b/v-04-kinetic-type-headline-r2.png"
+    },
+    {
+      "seamId": "s-19",
+      "bundleId": "wbakeb/gpt-oss-120b/v-19-empty-state-r2",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-19-empty-state",
+      "tag": "v-19-empty-state-r2",
+      "d3Score": 5,
+      "delta": {
+        "defect": "BLANK_RENDER",
+        "region": "entire frame (lone white square on flat black)",
+        "judgeNote": "Identical near-empty render; white square only."
+      },
+      "sourceParsed": true,
+      "beforeFrame": "notes/bakeoff-b/frames/gpt-oss-120b/v-19-empty-state-r2.png"
+    },
+    {
+      "seamId": "s-20",
+      "bundleId": "wbakeb/claude-sonnet-5/v-03-glass-prism-refraction-r2",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-03-glass-prism-refraction",
+      "tag": "v-03-glass-prism-refraction-r2",
+      "d3Score": 26,
+      "delta": {
+        "defect": "OFF_PALETTE",
+        "region": "background field (light near-white, not #0b0b10)",
+        "judgeNote": "Best facet iridescence of batch, but wrong geometry, inverted palette, dead flat shadow slab. Far below exemplar bar."
+      },
+      "sourceParsed": true,
+      "beforeFrame": "notes/bakeoff-b/frames/claude-sonnet-5/v-03-glass-prism-refraction-r2.png"
+    }
+  ]
+}

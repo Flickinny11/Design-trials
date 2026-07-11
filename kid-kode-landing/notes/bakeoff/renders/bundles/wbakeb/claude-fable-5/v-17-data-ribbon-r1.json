@@ -1,0 +1,202 @@
+{
+  "id": "wbakeb/claude-fable-5/v-17-data-ribbon-r1",
+  "contestant": "claude-fable-5",
+  "caseId": "v-17-data-ribbon",
+  "run": 1,
+  "node": {
+    "nodeId": "v-17-data-ribbon",
+    "subtype": "ticker",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Data ticker ribbon — A horizontal data ribbon of mono figures scrolling with constant velocity and edge fades.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "CAL NA-01 BEAT 28800 VPH",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "POWER RESERVE 72H",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "CASE 40.5 MM 904L",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "REF 5811 IN STOCK",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "WAITLIST 1204",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "NEXT FITTING JUL 18",
+            "role": "ticker-figure",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 700
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#111117",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10ff"
+            },
+            {
+              "at": 0.09,
+              "hex": "#0b0b1000"
+            },
+            {
+              "at": 0.91,
+              "hex": "#0b0b1000"
+            },
+            {
+              "at": 1,
+              "hex": "#0b0b10ff"
+            }
+          ]
+        },
+        "typography": {
+          "ticker-figure": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 700,
+            "letterSpacing": 0.06,
+            "lineHeight": 1
+          }
+        },
+        "effects": "Ribbon plane 7.0w x 0.35h scene units centered at origin, albedo #111117, top and bottom 0.006-unit hairlines #23232b, roughness 0.6, metalness 0.2; ticker entries set in mono 700 paper on a single baseline, separated by vertical accent tick marks 0.02w x 0.14h in #ff2a38 emissive intensity 1.5 with 0.5-unit gaps (2x base unit) on both sides of each tick, never punctuation glyphs; content strip duplicated for a seamless loop and translated x at constant velocity 0.4 scene units per second leftward (fly-through primitive, speed 0.4, depthUnits 0), linear timing cubic-bezier(0,0,1,1), loop period equal to strip length divided by 0.4 with zero visible seam; edge fade masks 0.6 units wide at both ends using the stop ramp #0b0b10ff (at 0.0) -> #0b0b1000 (at 0.09) and mirrored at the right so figures dissolve into the stage rather than clipping; figures float translateZ +0.02 above the rail so the key light gives the mono digits a crisp top edge; no vertical motion, no easing changes, the ribbon reads as instrumentation."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "fly-through",
+        "trigger": "time",
+        "params": {
+          "depthUnits": 0,
+          "speed": 0.4
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 55
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.45
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1,
+        "position": [
+          0,
+          3,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.4,
+        "position": [
+          0,
+          -1,
+          -1
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "The figure strip translates left at a constant 0.4 scene units per second in a seamless loop; entries dissolve through 0.6-unit edge fades.",
+    "contrastMinimum": "4.5:1 figures on ribbon surface at full opacity zone"
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, DirectionalLight, Box3 } = ctx.THREE;\n  const COLORS = config.intent && config.intent.visualSpec && config.intent.visualSpec.colors || {};\n  const BG = COLORS.background || \"#0b0b10\";\n  const SURFACE = COLORS.surface || \"#111117\";\n  const PAPER = COLORS.paper || \"#e8ecf2\";\n  const ACCENT = COLORS.accent || \"#ff2a38\";\n  const HAIRLINE = \"#23232b\";\n  const root = new Group();\n  root.name = \"data-ticker-ribbon\";\n  const disposables = [];\n  const primitiveHandles = [];\n  let loopTween = null;\n  const backdropGeo = new PlaneGeometry(7, 6);\n  const backdropMat = new import_webgpu.MeshBasicNodeMaterial();\n  backdropMat.colorNode = (0, import_tsl.mix)(\n    (0, import_tsl.color)(BG),\n    (0, import_tsl.color)(SURFACE),\n    (0, import_tsl.smoothstep)((0, import_tsl.float)(0), (0, import_tsl.float)(1), (0, import_tsl.uv)().y).mul(0.55)\n  );\n  const backdrop = new Mesh(backdropGeo, backdropMat);\n  backdrop.position.set(0, 0, -2.5);\n  root.add(backdrop);\n  disposables.push(backdropGeo, backdropMat);\n  const rim = new DirectionalLight(PAPER, 0.7);\n  rim.position.set(-2, 1.6, -1.5);\n  root.add(rim);\n  const railGeo = new PlaneGeometry(7, 0.35);\n  const railMat = new import_webgpu.MeshStandardNodeMaterial({\n    color: SURFACE,\n    roughness: 0.6,\n    metalness: 0.2\n  });\n  const rail = new Mesh(railGeo, railMat);\n  rail.position.set(0, 0, 0);\n  root.add(rail);\n  disposables.push(railGeo, railMat);\n  const hairGeo = new PlaneGeometry(7, 6e-3);\n  const hairMat = new import_webgpu.MeshBasicNodeMaterial({ color: HAIRLINE });\n  const hairTop = new Mesh(hairGeo, hairMat);\n  hairTop.position.set(0, 0.172, 5e-3);\n  const hairBot = new Mesh(hairGeo, hairMat);\n  hairBot.position.set(0, -0.172, 5e-3);\n  root.add(hairTop, hairBot);\n  disposables.push(hairGeo, hairMat);\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const figures = items.length ? items.map((it) => String(it.text)) : [\"CAL NA-01 BEAT 28800 VPH\"];\n  const TEXT_TARGET_H = 0.12;\n  const GAP = 0.5;\n  const TICK_W = 0.02;\n  const TICK_H = 0.14;\n  const tickGeo = new PlaneGeometry(TICK_W, TICK_H);\n  const tickMat = new import_webgpu.MeshStandardNodeMaterial({\n    color: ACCENT,\n    emissive: ACCENT,\n    emissiveIntensity: 1.5,\n    roughness: 0.5,\n    metalness: 0\n  });\n  disposables.push(tickGeo, tickMat);\n  const measureBox = new Box3();\n  function buildStrip() {\n    const strip = new Group();\n    let cursor = 0;\n    for (let i = 0; i < figures.length; i++) {\n      const txt = ctx.fontAtlas.createText(figures[i], {\n        fontSize: 13,\n        color: PAPER,\n        align: \"left\",\n        letterSpacingPx: 0.78\n      });\n      measureBox.setFromObject(txt);\n      const rawW = Math.max(measureBox.max.x - measureBox.min.x, 1e-4);\n      const rawH = Math.max(measureBox.max.y - measureBox.min.y, 1e-4);\n      const s = TEXT_TARGET_H / rawH;\n      txt.scale.setScalar(s);\n      txt.position.x = cursor - measureBox.min.x * s;\n      txt.position.y = -((measureBox.min.y + measureBox.max.y) * 0.5) * s;\n      strip.add(txt);\n      cursor += rawW * s;\n      cursor += GAP;\n      const tick = new Mesh(tickGeo, tickMat);\n      tick.position.set(cursor + TICK_W * 0.5, 0, 0);\n      strip.add(tick);\n      cursor += TICK_W + GAP;\n    }\n    return { group: strip, width: cursor };\n  }\n  const stripContainer = new Group();\n  stripContainer.position.set(0, 0, 0.02);\n  root.add(stripContainer);\n  const first = buildStrip();\n  const stripWidth = first.width;\n  first.group.position.x = 0;\n  stripContainer.add(first.group);\n  const before = buildStrip();\n  before.group.position.x = -stripWidth;\n  stripContainer.add(before.group);\n  const after = buildStrip();\n  after.group.position.x = stripWidth;\n  stripContainer.add(after.group);\n  loopTween = import_gsap.gsap.to(stripContainer.position, {\n    x: -stripWidth,\n    duration: stripWidth / 0.4,\n    ease: \"none\",\n    repeat: -1\n  });\n  const fadeGeo = new PlaneGeometry(2.6, 0.5);\n  const fadeLeftMat = new import_webgpu.MeshBasicNodeMaterial({ transparent: true, depthWrite: false });\n  fadeLeftMat.colorNode = (0, import_tsl.color)(BG);\n  fadeLeftMat.opacityNode = (0, import_tsl.oneMinus)((0, import_tsl.smoothstep)((0, import_tsl.float)(0.769), (0, import_tsl.float)(1), (0, import_tsl.uv)().x));\n  const fadeLeft = new Mesh(fadeGeo, fadeLeftMat);\n  fadeLeft.position.set(-4.2, 0, 0.06);\n  fadeLeft.renderOrder = 10;\n  root.add(fadeLeft);\n  const fadeRightMat = new import_webgpu.MeshBasicNodeMaterial({ transparent: true, depthWrite: false });\n  fadeRightMat.colorNode = (0, import_tsl.color)(BG);\n  fadeRightMat.opacityNode = (0, import_tsl.smoothstep)((0, import_tsl.float)(0), (0, import_tsl.float)(0.231), (0, import_tsl.uv)().x);\n  const fadeRight = new Mesh(fadeGeo, fadeRightMat);\n  fadeRight.position.set(4.2, 0, 0.06);\n  fadeRight.renderOrder = 10;\n  root.add(fadeRight);\n  disposables.push(fadeGeo, fadeLeftMat, fadeRightMat);\n  const prims = config.cinematicPrimitives ?? [];\n  for (const p of prims) {\n    const fn = ctx.primitives[p.name];\n    if (fn) {\n      const handle = fn(root, p.params || {});\n      if (handle) primitiveHandles.push(handle);\n    }\n  }\n  root.position.y -= 0.25;\n  const entrance = import_gsap.gsap.to(root.position, {\n    y: root.position.y + 0.25,\n    duration: 0.7,\n    ease: \"power3.out\"\n  });\n  root.userData.handlers = {};\n  root.userData.cleanup = () => {\n    if (loopTween) loopTween.kill();\n    entrance.kill();\n    for (const h of primitiveHandles) {\n      if (h && typeof h.cleanup === \"function\") h.cleanup();\n    }\n    root.traverse((obj) => {\n      if (obj.geometry && typeof obj.geometry.dispose === \"function\") obj.geometry.dispose();\n      if (obj.material) {\n        const mats = Array.isArray(obj.material) ? obj.material : [obj.material];\n        for (const m of mats) {\n          if (m && typeof m.dispose === \"function\") m.dispose();\n        }\n      }\n    });\n    for (const d of disposables) {\n      if (d && typeof d.dispose === \"function\") d.dispose();\n    }\n  };\n  return root;\n}\n",
+  "transformError": null
+}
