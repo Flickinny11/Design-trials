@@ -24,8 +24,12 @@ const args = process.argv.slice(2);
 const argOf = (k, d) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : d; };
 const PORT = Number(argOf('--port', '3107'));
 const NO_SERVER = args.includes('--no-server');
+// D5 seam reuse: --index / --frames-root point the SAME capture discipline at
+// the seam bundles (defaults unchanged for the Axis 2 path).
+const INDEX_PATH = argOf('--index', path.join(B, 'bundles-index.json'));
+const FRAMES_ROOT = argOf('--frames-root', FRAMES_DIR);
 
-const index = JSON.parse(readFileSync(path.join(B, 'bundles-index.json'), 'utf8')).bundles;
+const index = JSON.parse(readFileSync(INDEX_PATH, 'utf8')).bundles;
 
 async function waitForServer(url, timeoutMs = 180000) {
   const t0 = Date.now();
@@ -48,7 +52,7 @@ console.log('dev server ready');
 const browser = await chromium.launch({ headless: true });
 let done = 0;
 for (const b of index) {
-  const outDir = path.join(FRAMES_DIR, b.contestant);
+  const outDir = path.join(FRAMES_ROOT, b.contestant);
   mkdirSync(outDir, { recursive: true });
   const tag = `${b.caseId}-r${b.run}`;
   const png = path.join(outDir, `${tag}.png`);
@@ -85,4 +89,4 @@ for (const b of index) {
 }
 await browser.close();
 if (server) server.kill('SIGTERM');
-console.log(`captured ${done}/${index.length} frames -> ${FRAMES_DIR}`);
+console.log(`captured ${done}/${index.length} frames -> ${FRAMES_ROOT}`);
