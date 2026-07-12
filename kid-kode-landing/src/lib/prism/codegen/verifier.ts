@@ -15,6 +15,7 @@
 // (see PIXI_IMPORT below).
 
 import type { RenderMode } from '@/lib/prism-graph/types';
+import { checkSpecManifestSource, type SpecElement } from './spec-manifest';
 
 // Spec §10.A L362-L367 — verbatim list. Used by tooling that wants to inspect
 // allowed Three.js exports; verification of *unknown* imports is an editor
@@ -76,6 +77,10 @@ export interface VerifierContext {
    *  default behavior (undefined) is "error" — §10.B L370 lists PIXI_IMPORT
    *  among the deterministic deviations. */
   phase5Strict?: boolean;
+  /** W-VIS D2 (additive): when supplied, the module must carry a complete
+   *  `@spec-manifest` comment mapping every listed element (spec-manifest.ts).
+   *  Absent/empty -> the rule never fires (existing callers unchanged). */
+  specElements?: SpecElement[];
 }
 
 // Spec §10.B L369-L377 — the 7 deterministic deviation regexes, in order.
@@ -218,6 +223,26 @@ function checkStructural(
         severity: 'error',
         message:
           'nodes with non-empty textContent must iterate config.textContent and call ctx.fontAtlas (§10.C L385)',
+      });
+    }
+  }
+
+  // W-VIS D2 — spec-manifest completeness gate (additive; fires only when the
+  // caller supplies the node's extracted spec elements). Rejects unmapped L3
+  // spec elements BEFORE any mount — the deterministic answer to W-BAKEB's
+  // dominant MISSING_SPEC_ELEMENT defect (297/369 renders).
+  if (ctx.specElements && ctx.specElements.length > 0) {
+    const gate = checkSpecManifestSource(source, ctx.specElements);
+    if (!gate.ok) {
+      const detail = !gate.manifestPresent
+        ? 'no @spec-manifest comment found'
+        : gate.parseError
+          ? `manifest JSON parse error: ${gate.parseError}`
+          : `unmapped spec elements: ${gate.unmapped.map((e) => e.id).join(', ')}`;
+      out.push({
+        rule: 'SPEC_MANIFEST_INCOMPLETE',
+        severity: 'error',
+        message: `spec-manifest gate (W-VIS D2): ${detail}`,
       });
     }
   }

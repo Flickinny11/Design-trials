@@ -26,6 +26,7 @@ import type {
 } from '@/lib/prism-graph/types';
 import { RUNTIME_SURFACE_L1_BLOCK } from './runtime-surface.generated';
 import { DESIGN_DOCTRINE_L1_BLOCK, DEPENDENCY_L1_BLOCK } from './pcp-blocks';
+import { extractSpecElements, buildSpecManifestPromptBlock } from './spec-manifest';
 
 /** Spec §9.A L250-L276 — the pre-PCP L1, byte-frozen (W-BAKE ran on exactly
  *  these bytes; the W-PCP probe's "old" arm re-uses them verbatim). */
@@ -369,8 +370,16 @@ export function buildCodegenPrompt(
 ): CodegenPrompt {
   const perNode = buildPerNodePrompt(node, neighbors, atlas);
   const sub = buildRenderModeSubPrompt(node.renderMode ?? 'sprite');
+  // W-VIS D2 (additive): visual nodes carry a required spec-manifest block —
+  // the generator maps every L3 spec element to a code location; the
+  // deterministic gate (spec-manifest.ts + verifier SPEC_MANIFEST_INCOMPLETE)
+  // rejects unmapped elements pre-render. Nodes with no extractable spec
+  // elements get no block (byte-identical prompt to pre-D2 for those nodes).
+  const specElements = extractSpecElements(node);
+  const manifestBlock = buildSpecManifestPromptBlock(specElements);
+  const manifestSection = manifestBlock ? `\n\n--- SPEC MANIFEST ---\n${manifestBlock}` : '';
   return {
     system: SHARED_SYSTEM_PROMPT,
-    user: `${perNode}\n\n--- RENDER MODE GUIDANCE ---\n${sub}`,
+    user: `${perNode}\n\n--- RENDER MODE GUIDANCE ---\n${sub}${manifestSection}`,
   };
 }
