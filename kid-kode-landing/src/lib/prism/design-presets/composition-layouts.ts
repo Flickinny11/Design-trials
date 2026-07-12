@@ -20,6 +20,7 @@ export const COMPOSITION_LAYOUTS: readonly CompositionLayoutPreset[] = [
       { role: 'caption', rect: [0.38, 0.82, 0.24, 0.06], depth: 0.8 },
       { role: 'negative', rect: [0, 0.9, 1, 0.1] },
     ],
+    thumbUrl: '/design-presets/thumbs/layout-type-sandwich.webp',
   },
   {
     id: 'layout-hero-left-copy-right',
@@ -34,6 +35,7 @@ export const COMPOSITION_LAYOUTS: readonly CompositionLayoutPreset[] = [
       { role: 'body', rect: [0.54, 0.44, 0.36, 0.2] },
       { role: 'cta', rect: [0.54, 0.7, 0.18, 0.08], depth: 0.4 },
     ],
+    thumbUrl: '/design-presets/thumbs/layout-hero-left-copy-right.webp',
   },
   {
     id: 'layout-hero-right-copy-left',
@@ -48,6 +50,7 @@ export const COMPOSITION_LAYOUTS: readonly CompositionLayoutPreset[] = [
       { role: 'body', rect: [0.06, 0.44, 0.36, 0.2] },
       { role: 'cta', rect: [0.06, 0.7, 0.18, 0.08], depth: 0.4 },
     ],
+    thumbUrl: '/design-presets/thumbs/layout-hero-right-copy-left.webp',
   },
   {
     id: 'layout-centered-monolith',
@@ -62,6 +65,7 @@ export const COMPOSITION_LAYOUTS: readonly CompositionLayoutPreset[] = [
       { role: 'caption', rect: [0.35, 0.84, 0.3, 0.05] },
       { role: 'negative', rect: [0, 0.24, 0.2, 0.52], note: 'breathing room is load-bearing' },
     ],
+    thumbUrl: '/design-presets/thumbs/layout-centered-monolith.webp',
   },
   {
     id: 'layout-bento-grid',
@@ -77,6 +81,7 @@ export const COMPOSITION_LAYOUTS: readonly CompositionLayoutPreset[] = [
       { role: 'body', rect: [0.36, 0.54, 0.28, 0.38] },
       { role: 'cta', rect: [0.68, 0.54, 0.28, 0.38] },
     ],
+    thumbUrl: '/design-presets/thumbs/layout-bento-grid.webp',
   },
   {
     id: 'layout-editorial-column',
@@ -91,6 +96,7 @@ export const COMPOSITION_LAYOUTS: readonly CompositionLayoutPreset[] = [
       { role: 'caption', rect: [0.3, 0.88, 0.24, 0.04] },
       { role: 'accent', rect: [0.08, 0.4, 0.14, 0.02], note: 'signal rule line' },
     ],
+    thumbUrl: '/design-presets/thumbs/layout-editorial-column.webp',
   },
   {
     id: 'layout-filmstrip-row',
@@ -106,6 +112,7 @@ export const COMPOSITION_LAYOUTS: readonly CompositionLayoutPreset[] = [
       { role: 'media', rect: [0.68, 0.34, 0.28, 0.42] },
       { role: 'caption', rect: [0.06, 0.82, 0.4, 0.05] },
     ],
+    thumbUrl: '/design-presets/thumbs/layout-filmstrip-row.webp',
   },
   {
     id: 'layout-diagonal-sweep',
@@ -120,6 +127,7 @@ export const COMPOSITION_LAYOUTS: readonly CompositionLayoutPreset[] = [
       { role: 'headline', rect: [0.08, 0.1, 0.36, 0.16] },
       { role: 'cta', rect: [0.74, 0.78, 0.2, 0.08], depth: 0.4 },
     ],
+    thumbUrl: '/design-presets/thumbs/layout-diagonal-sweep.webp',
   },
   {
     id: 'layout-footer-band',
@@ -135,6 +143,7 @@ export const COMPOSITION_LAYOUTS: readonly CompositionLayoutPreset[] = [
       { role: 'accent', rect: [0.06, 0.74, 0.88, 0.01], note: 'hairline' },
       { role: 'caption', rect: [0.06, 0.82, 0.5, 0.05] },
     ],
+    thumbUrl: '/design-presets/thumbs/layout-footer-band.webp',
   },
   {
     id: 'layout-pedestal-stage',
@@ -149,6 +158,7 @@ export const COMPOSITION_LAYOUTS: readonly CompositionLayoutPreset[] = [
       { role: 'caption', rect: [0.42, 0.88, 0.16, 0.05], depth: 0.6, note: 'label plate' },
       { role: 'negative', rect: [0, 0.05, 1, 0.12], note: 'headroom' },
     ],
+    thumbUrl: '/design-presets/thumbs/layout-pedestal-stage.webp',
   },
   {
     id: 'layout-triptych',
@@ -163,6 +173,7 @@ export const COMPOSITION_LAYOUTS: readonly CompositionLayoutPreset[] = [
       { role: 'media', rect: [0.68, 0.18, 0.28, 0.6] },
       { role: 'caption', rect: [0.36, 0.88, 0.28, 0.05] },
     ],
+    thumbUrl: '/design-presets/thumbs/layout-triptych.webp',
   },
   {
     id: 'layout-orbital-field',
@@ -179,6 +190,7 @@ export const COMPOSITION_LAYOUTS: readonly CompositionLayoutPreset[] = [
       { role: 'accent', rect: [0.72, 0.62, 0.12, 0.16], depth: -0.9 },
       { role: 'headline', rect: [0.3, 0.06, 0.4, 0.1], depth: -0.4 },
     ],
+    thumbUrl: '/design-presets/thumbs/layout-orbital-field.webp',
   },
 ];
 
