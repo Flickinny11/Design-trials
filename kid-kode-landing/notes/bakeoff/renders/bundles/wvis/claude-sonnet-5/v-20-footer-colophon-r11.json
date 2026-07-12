@@ -1,0 +1,278 @@
+{
+  "id": "wvis/claude-sonnet-5/v-20-footer-colophon-r11",
+  "contestant": "claude-sonnet-5",
+  "caseId": "v-20-footer-colophon",
+  "run": 11,
+  "phase": "iter1",
+  "arm": "vision",
+  "node": {
+    "nodeId": "v-20-footer-colophon",
+    "subtype": "footer",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Footer colophon — A footer colophon with type-scale discipline: wordmark, three link columns, legal line, hairline rules.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "NOVA ATELIER",
+            "role": "wordmark",
+            "typography": {
+              "fontSize": 34,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "ATELIER",
+            "role": "column-header",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Features",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Collection",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Pricing",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "COMPANY",
+            "role": "column-header",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Journal",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Visit the Atelier",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Contact",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "LEGAL",
+            "role": "column-header",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Privacy",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Terms",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Warranty",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "(c) 2026 Nova Atelier. All rights reserved. Machined in Geneva.",
+            "role": "legal",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#101015",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#121218"
+            },
+            {
+              "at": 1,
+              "hex": "#0b0b10"
+            }
+          ]
+        },
+        "typography": {
+          "wordmark": {
+            "family": "Lora",
+            "fontSize": 34,
+            "fontWeight": 600,
+            "letterSpacing": 0.02,
+            "lineHeight": 1
+          },
+          "column-header": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.2
+          },
+          "link": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.8
+          },
+          "legal": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 400,
+            "letterSpacing": 0.04,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Footer band 6.8w x 2.0h scene units, albedo vertical ramp #121218 (at 0.0) -> #0b0b10 (at 1.0), roughness 0.6, metalness 0.2, top edge carrying a full-width 0.006-unit hairline rule #23232b; layout on a 0.25-unit baseline grid: wordmark block occupies the left 2.0 units with the wordmark and a 0.3w x 0.02h accent bar #ff2a38 emissive 1.4 beneath it; three link columns each 1.2w with 0.375-unit gutters (1.5x base) to the right, each column led by a header then three links at 1.8 line height; legal line spans the full width 0.375 above the bottom edge, separated by a second 0.006-unit hairline #23232b with 0.25 clearance above and below; link hover color #e8ecf2 -> #ff2a38 over 140ms cubic-bezier(0.25,0.46,0.45,0.94) with translateZ 0 -> 0.02; mount is a single fade-up of the whole band opacity 0 -> 1 and y +0.2 -> 0 over 500ms cubic-bezier(0.25,0.46,0.45,0.94), no per-item stagger, the colophon arrives as one set object; the key light grazes from upper left so the hairline rules pick up a faint specular edge, reading etched rather than drawn."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        -0.05,
+        5.2
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.4
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1,
+        "position": [
+          -3,
+          3,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.4,
+        "position": [
+          2.4,
+          -0.8,
+          -1
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#7f8896",
+        "intensity": 0.25,
+        "position": [
+          3,
+          0.5,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "The whole colophon fades up once as a single object; hovered links shift to accent red and lift 0.02 units.",
+    "contrastMinimum": "4.5:1 links and legal on band ramp; 3:1 wordmark minimum"
+  },
+  "parsed": false,
+  "fenced": false,
+  "depGate": {
+    "sources": [],
+    "violations": []
+  },
+  "cjs": null,
+  "transformError": null
+}

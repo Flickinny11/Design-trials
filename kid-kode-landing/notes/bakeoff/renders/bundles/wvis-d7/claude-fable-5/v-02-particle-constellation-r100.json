@@ -1,0 +1,184 @@
+{
+  "id": "wvis-d7/claude-fable-5/v-02-particle-constellation-r100",
+  "contestant": "claude-fable-5",
+  "caseId": "v-02-particle-constellation",
+  "run": 100,
+  "stage": "gen",
+  "node": {
+    "nodeId": "v-02-particle-constellation",
+    "subtype": "particle-field",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Particle constellation hero — A deep starfield of instanced points with depth falloff and an accent core, slow drift, additive glow discipline.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "NOVA ATELIER",
+            "role": "hero",
+            "typography": {
+              "fontSize": 124,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Precision instruments for the dark hours.",
+            "role": "subhead",
+            "typography": {
+              "fontSize": 40,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "EST. 2019 / GENEVA AND KYOTO",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#101017",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 1,
+              "hex": "#16161d"
+            }
+          ]
+        },
+        "typography": {
+          "hero": {
+            "family": "Lora",
+            "fontSize": 124,
+            "fontWeight": 600,
+            "letterSpacing": -0.01,
+            "lineHeight": 1.02
+          },
+          "subhead": {
+            "family": "JetBrains Mono",
+            "fontSize": 40,
+            "fontWeight": 400,
+            "letterSpacing": 0.02,
+            "lineHeight": 1.35
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "1200 instanced icosahedron points, each radius 0.012 scene units, distributed through an ellipsoidal shell 6 x 4 x 5 units centered at [0,0,-1.5]. Depth falloff: per-instance opacity 0.9 at z=0 falling linearly to 0.15 at z=-5; linear fog #0b0b10 near 4 far 10 so far points sink into the stage. Accent core: 90 instances within a 0.5-unit-radius sphere at origin tinted #ff2a38 with emissive #ff2a38 intensity 1.8 (additive blending only inside the core, hard cap, no screen-space soft blur). Field particles are paper #e8ecf2 at metalness 0, roughness 1, self-lit 0.9. particle-emerge on load: instances scale 0 to 1 and translate outward from the core to final anchors over 1400ms, staggered by distance-from-core, cubic-bezier(0.165,0.84,0.44,1). Ambient drift: each particle orbits its anchor +/-0.04 units at 0.05 Hz on offset phase. Core pulse: emissive intensity 1.5 to 1.8 sine at 0.1 Hz. Hero MSDF type plane at z=0.5, baseline 0.5 units (2x base) above center; subhead 0.75 units below hero baseline; caption pinned 2.25 units below center on the 0.25-unit rhythm."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "mesh",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "particle-emerge",
+        "trigger": "load",
+        "params": {
+          "count": 1200,
+          "durationMs": 1400
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0.2,
+        6.5
+      ],
+      "lookAt": [
+        0,
+        0,
+        -0.5
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#2a2e38",
+        "intensity": 0.4
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 1.2,
+        "position": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 0.6,
+        "position": [
+          1.5,
+          2.5,
+          4
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Particles emerge outward from the accent core over 1.4s, then drift slowly on offset phases while the red core pulses at 0.1 Hz."
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nconst COLORS = {\n  background: \"#0b0b10\",\n  surface: \"#101017\",\n  ink: \"#16161d\",\n  paper: \"#e8ecf2\",\n  accent: \"#ff2a38\"\n};\nfunction mulberry32(seed) {\n  let a = seed >>> 0;\n  return function() {\n    a |= 0;\n    a = a + 1831565813 | 0;\n    let t = Math.imul(a ^ a >>> 15, 1 | a);\n    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;\n    return ((t ^ t >>> 14) >>> 0) / 4294967296;\n  };\n}\nfunction stageBackdrop(config) {\n  const stops = config.intent?.visualSpec?.colors?.gradientStops ?? [\n    { at: 0, hex: COLORS.background },\n    { at: 1, hex: COLORS.ink }\n  ];\n  const geo = new import_webgpu.PlaneGeometry(7, 6);\n  const mat = new import_webgpu.MeshBasicNodeMaterial();\n  const c0 = new import_webgpu.Color(stops[0].hex);\n  const c1 = new import_webgpu.Color(stops[stops.length - 1].hex);\n  const surface = new import_webgpu.Color(COLORS.surface);\n  const g = (0, import_tsl.uv)().y;\n  const base = (0, import_tsl.mix)((0, import_tsl.vec3)(c0.r, c0.g, c0.b), (0, import_tsl.vec3)(c1.r, c1.g, c1.b), g);\n  const band = (0, import_tsl.smoothstep)((0, import_tsl.float)(0.25), (0, import_tsl.float)(0.55), g).mul((0, import_tsl.smoothstep)((0, import_tsl.float)(0.85), (0, import_tsl.float)(0.55), g));\n  mat.colorNode = (0, import_tsl.mix)(base, (0, import_tsl.vec3)(surface.r, surface.g, surface.b), band.mul(0.6));\n  const mesh = new import_webgpu.Mesh(geo, mat);\n  mesh.position.set(0, 0, -2.5);\n  return { mesh, geo, mat };\n}\nfunction lightRig(group) {\n  const ambient = new import_webgpu.AmbientLight(\"#ffffff\", 0.08);\n  const key = new import_webgpu.DirectionalLight(\"#f8f4ee\", 2.4);\n  key.position.set(1.4, 3, 2);\n  key.target.position.set(0, 0.4, 0);\n  const practical = new import_webgpu.PointLight(COLORS.accent, 14, 6, 2);\n  practical.position.set(0, -0.65, 0.6);\n  const rim = new import_webgpu.DirectionalLight(\"#ffffff\", 1.3);\n  rim.position.set(-1.4, 2, -2.4);\n  rim.target.position.set(0, 0.5, 0);\n  group.add(ambient, key, key.target, practical, rim, rim.target);\n  return { ambient, key, practical, rim };\n}\nfunction buildParticles(group) {\n  const rand = mulberry32(20190419);\n  const FIELD_COUNT = 1200;\n  const CORE_COUNT = 90;\n  const geoField = new import_webgpu.IcosahedronGeometry(0.012, 1);\n  const geoCore = new import_webgpu.IcosahedronGeometry(0.012, 1);\n  const alphas = new Float32Array(FIELD_COUNT);\n  const anchors = [];\n  const center = { x: 0, y: 0, z: -1.5 };\n  for (let i = 0; i < FIELD_COUNT; i++) {\n    let x, y, z, d;\n    do {\n      x = rand() * 2 - 1;\n      y = rand() * 2 - 1;\n      z = rand() * 2 - 1;\n      d = x * x + y * y + z * z;\n    } while (d > 1 || d < 0.04);\n    const shell = 0.45 + 0.55 * Math.cbrt(rand());\n    const len = Math.sqrt(d) || 1;\n    x = x / len * shell * 3 + center.x;\n    y = y / len * shell * 2 + center.y;\n    z = z / len * shell * 2.5 + center.z;\n    anchors.push({ x, y, z, phase: rand() * Math.PI * 2, s: 0 });\n    const t = Math.min(Math.max(-z / 5, 0), 1);\n    alphas[i] = 0.9 + (0.15 - 0.9) * t;\n  }\n  geoField.setAttribute(\"instAlpha\", new import_webgpu.InstancedBufferAttribute(alphas, 1));\n  const paper = new import_webgpu.Color(COLORS.paper);\n  const bg = new import_webgpu.Color(COLORS.background);\n  const matField = new import_webgpu.MeshStandardNodeMaterial({\n    color: COLORS.paper,\n    roughness: 1,\n    metalness: 0,\n    transparent: true\n  });\n  matField.emissiveNode = (0, import_tsl.vec3)(paper.r, paper.g, paper.b).mul(0.9);\n  const alphaA = (0, import_tsl.attribute)(\"instAlpha\", \"float\");\n  const fogT = (0, import_tsl.smoothstep)((0, import_tsl.float)(4), (0, import_tsl.float)(10), import_tsl.positionView.z.negate());\n  matField.opacityNode = alphaA.mul(fogT.oneMinus());\n  matField.colorNode = (0, import_tsl.mix)((0, import_tsl.vec3)(paper.r, paper.g, paper.b), (0, import_tsl.vec3)(bg.r, bg.g, bg.b), fogT);\n  const field = new import_webgpu.InstancedMesh(geoField, matField, FIELD_COUNT);\n  const accent = new import_webgpu.Color(COLORS.accent);\n  const matCore = new import_webgpu.MeshStandardNodeMaterial({\n    color: COLORS.accent,\n    roughness: 0.6,\n    metalness: 0,\n    transparent: true,\n    blending: import_webgpu.AdditiveBlending,\n    depthWrite: false\n  });\n  const emissiveScale = { value: 1.8 };\n  const coreAnchors = [];\n  for (let i = 0; i < CORE_COUNT; i++) {\n    let x, y, z, d;\n    do {\n      x = rand() * 2 - 1;\n      y = rand() * 2 - 1;\n      z = rand() * 2 - 1;\n      d = x * x + y * y + z * z;\n    } while (d > 1);\n    coreAnchors.push({ x: x * 0.5, y: y * 0.5, z: z * 0.5, phase: rand() * Math.PI * 2, s: 0 });\n  }\n  matCore.emissive = new import_webgpu.Color(COLORS.accent);\n  matCore.emissiveIntensity = 1.8;\n  const core = new import_webgpu.InstancedMesh(geoCore, matCore, CORE_COUNT);\n  group.add(field, core);\n  return { field, core, geoField, geoCore, matField, matCore, anchors, coreAnchors, accent, emissiveScale };\n}\nfunction typeBlock(config, ctx, group) {\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const byRole = (role) => items.find((i) => i.role === role);\n  const made = [];\n  const hero = byRole(\"hero\");\n  if (hero) {\n    const t = ctx.fontAtlas.createText(hero.text, {\n      fontSize: hero.typography?.fontSize ?? 124,\n      color: COLORS.paper,\n      align: \"center\",\n      letterSpacingPx: -1\n    });\n    t.position.set(0, 0.5, 0.5);\n    group.add(t);\n    made.push(t);\n  }\n  const subhead = byRole(\"subhead\");\n  if (subhead) {\n    const t = ctx.fontAtlas.createText(subhead.text, {\n      fontSize: subhead.typography?.fontSize ?? 40,\n      color: COLORS.paper,\n      align: \"center\"\n    });\n    t.position.set(0, -0.25, 0.5);\n    group.add(t);\n    made.push(t);\n  }\n  const caption = byRole(\"caption\");\n  if (caption) {\n    const t = ctx.fontAtlas.createText(caption.text, {\n      fontSize: caption.typography?.fontSize ?? 18,\n      color: COLORS.paper,\n      align: \"center\",\n      letterSpacingPx: 1.5\n    });\n    t.position.set(0, -2.25, 0.5);\n    group.add(t);\n    made.push(t);\n  }\n  return made;\n}\nfunction contactShadow(group) {\n  const geo = new import_webgpu.CircleGeometry(1.6, 48);\n  const mat = new import_webgpu.MeshBasicNodeMaterial({ transparent: true, depthWrite: false });\n  const ink = new import_webgpu.Color(COLORS.ink);\n  const acc = new import_webgpu.Color(COLORS.accent);\n  const d = (0, import_tsl.uv)().sub((0, import_tsl.vec4)(0.5, 0.5, 0, 0).xy).length().mul(2);\n  const fall = (0, import_tsl.smoothstep)((0, import_tsl.float)(1), (0, import_tsl.float)(0), d);\n  mat.colorNode = (0, import_tsl.mix)((0, import_tsl.vec3)(ink.r, ink.g, ink.b), (0, import_tsl.vec3)(acc.r, acc.g, acc.b), fall.mul(0.35));\n  mat.opacityNode = fall.mul(0.5);\n  const mesh = new import_webgpu.Mesh(geo, mat);\n  mesh.rotation.x = -Math.PI / 2;\n  mesh.position.set(0, -2.6, -1.5);\n  group.add(mesh);\n  return { mesh, geo, mat };\n}\nfunction createNode(config, ctx) {\n  const group = new import_webgpu.Group();\n  group.name = \"particle-constellation-hero\";\n  const backdrop = stageBackdrop(config);\n  group.add(backdrop.mesh);\n  const lights = lightRig(group);\n  const P = buildParticles(group);\n  const texts = typeBlock(config, ctx, group);\n  const shadow = contactShadow(group);\n  const dummy = new import_webgpu.Object3D();\n  const CENTER = { x: 0, y: 0, z: -1.5 };\n  const emerge = { t: 0 };\n  const clock = { t: 0 };\n  function writeInstances() {\n    const e = emerge.t;\n    for (let i = 0; i < P.anchors.length; i++) {\n      const a = P.anchors[i];\n      const dx = a.x - CENTER.x, dy = a.y - CENTER.y, dz = a.z - CENTER.z;\n      const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);\n      const delay = dist / 3.5 * 0.45;\n      let lt = Math.min(Math.max((e - delay) / (1 - 0.45), 0), 1);\n      lt = 1 - Math.pow(1 - lt, 3);\n      const drift = 0.04;\n      const w = 2 * Math.PI * 0.05;\n      const ox = Math.sin(clock.t * w + a.phase) * drift;\n      const oy = Math.cos(clock.t * w * 0.9 + a.phase * 1.3) * drift;\n      const oz = Math.sin(clock.t * w * 1.1 + a.phase * 0.7) * drift;\n      dummy.position.set(\n        CENTER.x + dx * lt + ox * lt,\n        CENTER.y + dy * lt + oy * lt,\n        CENTER.z + dz * lt + oz * lt\n      );\n      dummy.scale.setScalar(Math.max(lt, 1e-4));\n      dummy.updateMatrix();\n      P.field.setMatrixAt(i, dummy.matrix);\n    }\n    P.field.instanceMatrix.needsUpdate = true;\n    for (let i = 0; i < P.coreAnchors.length; i++) {\n      const a = P.coreAnchors[i];\n      const lt = 1 - Math.pow(1 - Math.min(e * 1.6, 1), 3);\n      const w = 2 * Math.PI * 0.05;\n      dummy.position.set(\n        a.x * lt + Math.sin(clock.t * w + a.phase) * 0.02,\n        a.y * lt + Math.cos(clock.t * w + a.phase) * 0.02,\n        a.z * lt\n      );\n      dummy.scale.setScalar(Math.max(lt, 1e-4));\n      dummy.updateMatrix();\n      P.core.setMatrixAt(i, dummy.matrix);\n    }\n    P.core.instanceMatrix.needsUpdate = true;\n    P.matCore.emissiveIntensity = 1.65 + 0.15 * Math.sin(clock.t * 2 * Math.PI * 0.1);\n  }\n  const tl = import_gsap.gsap.timeline();\n  tl.to(emerge, { t: 1, duration: 1.4, ease: \"power3.out\", onUpdate: writeInstances });\n  texts.forEach((t, i) => {\n    const y0 = t.position.y;\n    tl.fromTo(t.position, { y: y0 - 0.3 }, { y: y0, duration: 0.7, ease: \"power3.out\" }, 0.2 + i * 0.08);\n    tl.fromTo(t.scale, { x: 1.04, y: 1.04, z: 1.04 }, { x: 1, y: 1, z: 1, duration: 0.9, ease: \"power4.out\" }, 0.5 + i * 0.08);\n  });\n  const tick = () => {\n    clock.t += import_gsap.gsap.ticker.deltaRatio(60) / 60;\n    writeInstances();\n  };\n  import_gsap.gsap.ticker.add(tick);\n  writeInstances();\n  const primHandles = [];\n  for (const p of config.cinematicPrimitives ?? []) {\n    const fn = ctx.primitives?.[p.name];\n    if (fn) primHandles.push(fn(P.field, p.params ?? {}));\n  }\n  group.userData.handlers = {};\n  group.userData.cleanup = () => {\n    tl.kill();\n    import_gsap.gsap.ticker.remove(tick);\n    primHandles.forEach((h) => h?.cleanup?.());\n    [backdrop.geo, shadow.geo, P.geoField, P.geoCore].forEach((g) => g.dispose());\n    [backdrop.mat, shadow.mat, P.matField, P.matCore].forEach((m) => m.dispose());\n    P.field.dispose();\n    P.core.dispose();\n    texts.forEach((t) => {\n      t.traverse((o) => {\n        o.geometry?.dispose?.();\n        o.material?.dispose?.();\n      });\n    });\n  };\n  return group;\n}\n",
+  "transformError": null
+}

@@ -1,0 +1,189 @@
+{
+  "id": "wvis/kimi-k2.7-code/v-09-editorial-oversized-type-r21",
+  "contestant": "kimi-k2.7-code",
+  "caseId": "v-09-editorial-oversized-type",
+  "run": 21,
+  "phase": "iter1",
+  "arm": "vision",
+  "node": {
+    "nodeId": "v-09-editorial-oversized-type",
+    "subtype": "oversized-type",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Editorial oversized type — A massive editorial headline with tight tracking discipline, a kicker line, and an accent underline rule.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "NOVA ATELIER / JOURNAL",
+            "role": "kicker",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "PRECISION IS",
+            "role": "hero",
+            "typography": {
+              "fontSize": 124,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "A HABIT.",
+            "role": "hero",
+            "typography": {
+              "fontSize": 124,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Notes from the bench: tolerances, tempering, and the case for slower watchmaking.",
+            "role": "body",
+            "typography": {
+              "fontSize": 26,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "ISSUE 12 / JULY 2026",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 1,
+              "hex": "#14141a"
+            }
+          ]
+        },
+        "typography": {
+          "hero": {
+            "family": "Lora",
+            "fontSize": 124,
+            "fontWeight": 600,
+            "letterSpacing": -0.015,
+            "lineHeight": 0.98
+          },
+          "kicker": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.4
+          },
+          "body": {
+            "family": "JetBrains Mono",
+            "fontSize": 26,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.55
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Full-bleed editorial plate 7 x 5.5 scene units at z=0 with a vertical engineered gradient #0b0b10 to #14141a plus 1.5 percent monochrome grain (no soft pastel blur). All type left-aligned at x=-3.1 on a strict 0.25-unit baseline grid: kicker at y=1.7 (JetBrains Mono 700, uppercase, tracking 0.12em); hero in two stacked lines at y=0.9 and y=0.25 (Lora 600, em height 0.62 units, tracking -0.015em, lineHeight 0.98); accent underline rule 2.2 x 0.05 units #ff2a38 at emissive 1.2 at y=-0.15; body paragraph max-width 4.5 units at y=-0.8; caption at y=-1.9. Print-depth trick: hero glyph planes duplicated 0.02 units behind at #16161d for a letterpress shadow edge. Entrance: rise-in per block top-to-bottom (y +0.4 to 0, opacity 0 to 1, 700ms, cubic-bezier(0.215,0.61,0.355,1)) with 80ms stagger; the rule draws scaleX 0 to 1 over 500ms cubic-bezier(0.25,0.46,0.45,0.94) after the hero lands."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        6.2
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#3a3f4a",
+        "intensity": 0.55
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 0.8,
+        "position": [
+          1.5,
+          2.5,
+          4
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Type blocks rise in top-to-bottom with an 80ms stagger; the red rule draws left to right after the hero settles."
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const { THREE } = ctx;\n  const root = new THREE.Group();\n  const visual = config.intent?.visualSpec ?? config.visual ?? {};\n  const palette = visual.colors ?? config.colors ?? {};\n  const typography = visual.typography ?? config.typography ?? {};\n  const items = config.textContent ?? visual.textContent ?? [];\n  const bgHex = palette.background ?? \"#0b0b10\";\n  const surfaceHex = palette.surface ?? \"#14141a\";\n  const accentHex = palette.accent ?? \"#ff2a38\";\n  const paperHex = palette.paper ?? \"#e8ecf2\";\n  const inkHex = palette.ink ?? \"#16161d\";\n  const heroPx = typography.hero?.fontSize ?? 124;\n  const emScale = 0.62 / heroPx;\n  const noiseData = new Uint8Array(256 * 256);\n  for (let i = 0; i < noiseData.length; i++) noiseData[i] = Math.floor(Math.random() * 256);\n  const noiseTex = new THREE.DataTexture(noiseData, 256, 256, THREE.RedFormat);\n  noiseTex.wrapS = THREE.RepeatWrapping;\n  noiseTex.wrapT = THREE.RepeatWrapping;\n  noiseTex.needsUpdate = true;\n  const gradT = (0, import_tsl.uv)().y;\n  const gradient = (0, import_tsl.mix)((0, import_tsl.color)(surfaceHex), (0, import_tsl.color)(bgHex), gradT);\n  const grainUV = (0, import_tsl.uv)().mul((0, import_tsl.vec2)(512, 512));\n  const grainSample = (0, import_tsl.texture)(noiseTex, grainUV);\n  const grain = grainSample.sub(0.5).mul(0.015).xxx;\n  const plateColor = gradient.add(grain);\n  const plate = new THREE.Mesh(\n    new THREE.PlaneGeometry(7, 5.5),\n    new import_webgpu.MeshBasicNodeMaterial({ colorNode: plateColor })\n  );\n  root.add(plate);\n  const ruleWrap = new THREE.Group();\n  ruleWrap.position.set(-3.1, -0.15, 0.05);\n  const ruleGeo = new THREE.PlaneGeometry(2.2, 0.05);\n  ruleGeo.translate(1.1, 0, 0);\n  const rule = new THREE.Mesh(\n    ruleGeo,\n    new import_webgpu.MeshBasicNodeMaterial({ colorNode: (0, import_tsl.color)(accentHex).mul(1.2) })\n  );\n  ruleWrap.scale.x = 0;\n  ruleWrap.add(rule);\n  root.add(ruleWrap);\n  const tl = import_gsap.gsap.timeline();\n  const allTextMeshes = [];\n  const allMaterials = [];\n  function gatherMaterials(obj, list) {\n    obj.traverse((child) => {\n      if (child.material) {\n        const mats = Array.isArray(child.material) ? child.material : [child.material];\n        mats.forEach((m) => {\n          m.transparent = true;\n          m.needsUpdate = true;\n          list.push(m);\n        });\n      }\n    });\n  }\n  function getFamily(item) {\n    return item.typography?.family ?? typography[item.role]?.family ?? \"JetBrains Mono\";\n  }\n  function getWeight(item) {\n    return item.typography?.fontWeight ?? typography[item.role]?.fontWeight ?? 400;\n  }\n  function getFontSize(item) {\n    const px = item.typography?.fontSize ?? heroPx;\n    return px * emScale;\n  }\n  function addTextBlock(item, y, startAt) {\n    if (!item) return;\n    const fontSize = getFontSize(item);\n    const tracking = item.typography?.letterSpacing ?? 0;\n    const family = getFamily(item);\n    const weight = getWeight(item);\n    const wrap = new THREE.Group();\n    wrap.position.set(-3.1, y + 0.4, 0.05);\n    const opts = {\n      fontSize,\n      color: paperHex,\n      align: \"left\",\n      letterSpacingPx: fontSize * tracking,\n      maxWidthPx: item.role === \"body\" ? 4.5 : void 0,\n      fontFamily: family,\n      fontWeight: weight\n    };\n    const text = ctx.fontAtlas.createText(item.text, opts);\n    wrap.add(text);\n    if (item.role === \"hero\") {\n      const shadow = ctx.fontAtlas.createText(item.text, { ...opts, color: inkHex });\n      shadow.position.z = -0.02;\n      wrap.add(shadow);\n    }\n    const mats = [];\n    gatherMaterials(wrap, mats);\n    allMaterials.push(...mats);\n    allTextMeshes.push(wrap);\n    root.add(wrap);\n    mats.forEach((m) => {\n      m.opacity = 0;\n    });\n    const proxy = { o: 0 };\n    tl.to(wrap.position, { y, duration: 0.7, ease: \"power3.out\" }, startAt);\n    tl.to(proxy, {\n      o: 1,\n      duration: 0.7,\n      ease: \"power3.out\",\n      onUpdate: () => {\n        const v = proxy.o;\n        mats.forEach((m) => {\n          m.opacity = v;\n        });\n      }\n    }, startAt);\n  }\n  const kickerItem = items.find((i) => i.role === \"kicker\");\n  const heroItems = items.filter((i) => i.role === \"hero\");\n  const bodyItem = items.find((i) => i.role === \"body\");\n  const captionItem = items.find((i) => i.role === \"caption\");\n  if (kickerItem) addTextBlock(kickerItem, 1.7, 0);\n  heroItems.slice(0, 2).forEach((it, idx) => {\n    const y = idx === 0 ? 0.9 : 0.25;\n    addTextBlock(it, y, 0.08 + idx * 0.08);\n  });\n  tl.to(ruleWrap.scale, { x: 1, duration: 0.5, ease: \"power2.out\" }, 0.86);\n  if (bodyItem) addTextBlock(bodyItem, -0.8, 0.24);\n  if (captionItem) addTextBlock(captionItem, -1.9, 0.32);\n  root.userData.handlers = {};\n  root.userData.cleanup = () => {\n    tl.kill();\n    ruleWrap.traverse((child) => {\n      if (child.geometry) child.geometry.dispose();\n      if (child.material) {\n        if (Array.isArray(child.material)) child.material.forEach((m) => m.dispose());\n        else child.material.dispose();\n      }\n    });\n    allTextMeshes.forEach((group) => {\n      group.traverse((child) => {\n        if (child.geometry) child.geometry.dispose();\n        if (child.material) {\n          if (Array.isArray(child.material)) child.material.forEach((m) => m.dispose());\n          else child.material.dispose();\n        }\n      });\n    });\n    root.traverse((child) => {\n      if (child.geometry) child.geometry.dispose();\n      if (child.material) {\n        if (Array.isArray(child.material)) child.material.forEach((m) => m.dispose());\n        else child.material.dispose();\n      }\n    });\n    noiseTex.dispose();\n  };\n  return root;\n}\n",
+  "transformError": null
+}

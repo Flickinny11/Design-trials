@@ -1,0 +1,184 @@
+{
+  "id": "wvis/claude-opus-4.8/v-05-pedestal-material-study-r21",
+  "contestant": "claude-opus-4.8",
+  "caseId": "v-05-pedestal-material-study",
+  "run": 21,
+  "phase": "iter1",
+  "arm": "vision",
+  "node": {
+    "nodeId": "v-05-pedestal-material-study",
+    "subtype": "material-pedestal",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": "/prism-assets/chrome/brushed-metal.map.png"
+    },
+    "intent": {
+      "caption": "Pedestal material study — A cinematic-floor pedestal with a torus-knot material study: brushed metal PBR, contact shadow, imperfection pass.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "Material study 03",
+            "role": "headline",
+            "typography": {
+              "fontSize": 68,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "GRADE 5 TITANIUM / BRUSHED AT 1200 GRIT",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 0.7,
+              "hex": "#101017"
+            },
+            {
+              "at": 1,
+              "hex": "#16161d"
+            }
+          ]
+        },
+        "typography": {
+          "headline": {
+            "family": "Lora",
+            "fontSize": 68,
+            "fontWeight": 600,
+            "letterSpacing": -0.005,
+            "lineHeight": 1.1
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Torus knot (radius 0.7, tube 0.22, 220 x 36 segments) centered at [0,0.4,0] above a cylindrical pedestal radius 1.1, height 0.5, top face at y=-0.35. Knot material: brushed-metal PBR, roughnessMap /prism-assets/chrome/brushed-metal.map.png injected with center 0.9 (map multiplies, swap-proof), base roughness 0.55, metalness 0.55, clearcoat 0.22, clearcoatRoughness 0.35, anisotropy 0.9 rotated 90 deg to the tube direction. Imperfection pass: scratch-noise normal map at strength 0.15, plus 2 percent value jitter on roughness so highlights break up. Pedestal: #14141a, roughness 0.7, metalness 0.35, 0.03-unit chamfered top edge catching the key light. Contact shadow: radial gradient plane radius 1.5 units at y=-0.36, center opacity 0.6 falling to 0 over 0.4 units. Environment: neutral studio PMREM IBL at intensity 0.7 so the brushed anisotropy streaks read. Backdrop 7 x 6-unit plane at z=-3 with the vertical gradient stops. Orbit on load: knot rotates about y at 0.1 rad/s, camera drifts on radius 0.4; caption baseline 1.6 units below center, headline 1.2 units below center on the 0.25-unit rhythm."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "mesh",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "orbit",
+        "trigger": "load",
+        "params": {
+          "speed": 0.1,
+          "radius": 0.4
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        1.6,
+        0.9,
+        4.2
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 45
+    },
+    "lights": [
+      {
+        "type": "directional",
+        "color": "#f2f4f8",
+        "intensity": 1.5,
+        "position": [
+          2.5,
+          3.5,
+          2
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#8f9ab0",
+        "intensity": 0.4,
+        "position": [
+          -3,
+          1,
+          2
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.9,
+        "position": [
+          -1.5,
+          2,
+          -3
+        ]
+      },
+      {
+        "type": "ambient",
+        "color": "#2a2e38",
+        "intensity": 0.3
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "The torus knot rotates slowly (0.1 rad/s) while the camera drifts on a 0.4-unit orbit; brushed highlights sweep across the anisotropic surface."
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const { THREE } = ctx;\n  const {\n    Group,\n    Mesh,\n    TorusKnotGeometry,\n    CylinderGeometry,\n    PlaneGeometry,\n    CircleGeometry,\n    DirectionalLight,\n    PointLight,\n    Color,\n    RepeatWrapping\n  } = THREE;\n  const group = new Group();\n  group.name = \"pedestal-material-study\";\n  const colors = config.intent?.visualSpec?.colors ?? {\n    background: \"#0b0b10\",\n    surface: \"#14141a\",\n    ink: \"#16161d\",\n    paper: \"#e8ecf2\",\n    accent: \"#ff2a38\",\n    gradientStops: [\n      { at: 0, hex: \"#0b0b10\" },\n      { at: 0.7, hex: \"#101017\" },\n      { at: 1, hex: \"#16161d\" }\n    ]\n  };\n  const stops = colors.gradientStops ?? [\n    { at: 0, hex: \"#0b0b10\" },\n    { at: 0.7, hex: \"#101017\" },\n    { at: 1, hex: \"#16161d\" }\n  ];\n  const cBottom = new Color(stops[0].hex);\n  const cMid = new Color(stops[Math.min(1, stops.length - 1)].hex);\n  const cTop = new Color(stops[stops.length - 1].hex);\n  const backdropMat = new import_webgpu.MeshBasicNodeMaterial();\n  {\n    const v = (0, import_tsl.uv)().y;\n    const lower = (0, import_tsl.mix)(\n      (0, import_tsl.vec3)(cBottom.r, cBottom.g, cBottom.b),\n      (0, import_tsl.vec3)(cMid.r, cMid.g, cMid.b),\n      (0, import_tsl.smoothstep)(0, 0.7, v)\n    );\n    const grad = (0, import_tsl.mix)(\n      lower,\n      (0, import_tsl.vec3)(cTop.r * 1.35, cTop.g * 1.35, cTop.b * 1.4),\n      (0, import_tsl.smoothstep)(0.62, 1, v)\n    );\n    backdropMat.colorNode = (0, import_tsl.vec4)(grad, (0, import_tsl.float)(1));\n    backdropMat.toneMapped = false;\n  }\n  const backdrop = new Mesh(new PlaneGeometry(11, 8), backdropMat);\n  backdrop.position.set(0, 0.6, -3);\n  group.add(backdrop);\n  const floorMat = new import_webgpu.MeshStandardNodeMaterial();\n  floorMat.roughness = 0.5;\n  floorMat.metalness = 0.25;\n  {\n    const d = (0, import_tsl.length)((0, import_tsl.uv)().sub(0.5)).mul(2);\n    const base = (0, import_tsl.vec3)(cBottom.r * 1.2, cBottom.g * 1.2, cBottom.b * 1.25);\n    const edge = (0, import_tsl.vec3)(cBottom.r * 0.4, cBottom.g * 0.4, cBottom.b * 0.45);\n    const g = (0, import_tsl.mix)(base, edge, (0, import_tsl.smoothstep)(0, 1, d));\n    floorMat.colorNode = (0, import_tsl.vec4)(g, (0, import_tsl.float)(1));\n  }\n  const floor = new Mesh(new PlaneGeometry(16, 12), floorMat);\n  floor.rotation.x = -Math.PI / 2;\n  floor.position.set(0, -0.86, -1);\n  group.add(floor);\n  const pedestalMat = new import_webgpu.MeshStandardNodeMaterial();\n  pedestalMat.color = new Color(colors.surface || \"#14141a\");\n  pedestalMat.roughness = 0.7;\n  pedestalMat.metalness = 0.35;\n  const pedestal = new Mesh(new CylinderGeometry(1.1, 1.12, 0.5, 96, 1, false), pedestalMat);\n  pedestal.position.set(0, -0.6, 0);\n  group.add(pedestal);\n  const chamferMat = new import_webgpu.MeshStandardNodeMaterial();\n  chamferMat.color = new Color(\"#20202a\");\n  chamferMat.roughness = 0.42;\n  chamferMat.metalness = 0.5;\n  const chamfer = new Mesh(new CylinderGeometry(1.1, 1.15, 0.03, 96, 1, false), chamferMat);\n  chamfer.position.set(0, -0.365, 0);\n  group.add(chamfer);\n  const floorShadowMat = new import_webgpu.MeshBasicNodeMaterial();\n  floorShadowMat.transparent = true;\n  floorShadowMat.depthWrite = false;\n  {\n    const d = (0, import_tsl.length)((0, import_tsl.uv)().sub(0.5)).mul(2);\n    const a = (0, import_tsl.smoothstep)(1, 0.15, d).mul(0.55);\n    floorShadowMat.colorNode = (0, import_tsl.vec4)((0, import_tsl.vec3)(0, 0, 0), a);\n    floorShadowMat.toneMapped = false;\n  }\n  const floorShadow = new Mesh(new CircleGeometry(1.7, 72), floorShadowMat);\n  floorShadow.rotation.x = -Math.PI / 2;\n  floorShadow.position.set(0, -0.85, 0);\n  group.add(floorShadow);\n  const topShadowMat = new import_webgpu.MeshBasicNodeMaterial();\n  topShadowMat.transparent = true;\n  topShadowMat.depthWrite = false;\n  {\n    const d = (0, import_tsl.length)((0, import_tsl.uv)().sub(0.5)).mul(2);\n    const a = (0, import_tsl.smoothstep)(1, 0, d).mul(0.5);\n    topShadowMat.colorNode = (0, import_tsl.vec4)((0, import_tsl.vec3)(0, 0, 0), a);\n    topShadowMat.toneMapped = false;\n  }\n  const topShadow = new Mesh(new CircleGeometry(0.95, 64), topShadowMat);\n  topShadow.rotation.x = -Math.PI / 2;\n  topShadow.position.set(0, -0.343, 0);\n  group.add(topShadow);\n  const knotMat = new import_webgpu.MeshPhysicalNodeMaterial();\n  knotMat.color = new Color(\"#5c5f66\");\n  knotMat.roughness = 0.5;\n  knotMat.metalness = 0.55;\n  knotMat.clearcoat = 0.22;\n  knotMat.clearcoatRoughness = 0.35;\n  knotMat.envMapIntensity = 0.9;\n  if (\"anisotropy\" in knotMat) {\n    knotMat.anisotropy = 0.9;\n    knotMat.anisotropyRotation = Math.PI / 2;\n  }\n  const knot = new Mesh(new TorusKnotGeometry(0.7, 0.22, 220, 36), knotMat);\n  knot.position.set(0, 0.4, 0);\n  group.add(knot);\n  ctx.textureLoader.loadTexture(config.imageUrl || \"/prism-assets/chrome/brushed-metal.map.png\").then((tex) => {\n    tex.wrapS = RepeatWrapping;\n    tex.wrapT = RepeatWrapping;\n    knotMat.roughnessMap = tex;\n    knotMat.normalMap = tex;\n    knotMat.normalScale = new THREE.Vector2(0.15, 0.15);\n    knotMat.roughness = 0.55;\n    knotMat.needsUpdate = true;\n  }).catch(() => {\n  });\n  const key = new DirectionalLight(16777215, 1.15);\n  key.position.set(3.5, 4.5, 4);\n  group.add(key);\n  const rim = new DirectionalLight(new Color(colors.accent || \"#ff2a38\"), 0.9);\n  rim.position.set(-4, 2.8, -2.5);\n  group.add(rim);\n  const topFill = new DirectionalLight(14673134, 0.5);\n  topFill.position.set(0, 5, 1.5);\n  group.add(topFill);\n  const streakA = new PointLight(16777215, 0.55, 12, 2);\n  streakA.position.set(2.2, 1.4, 2.6);\n  group.add(streakA);\n  const streakB = new PointLight(12567759, 0.4, 12, 2);\n  streakB.position.set(-2.2, 1, 2.4);\n  group.add(streakB);\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [\n    { text: \"Material study 03\", role: \"headline\" },\n    { text: \"GRADE 5 TITANIUM / BRUSHED AT 1200 GRIT\", role: \"caption\" }\n  ];\n  const textMeshes = [];\n  for (const item of items) {\n    if (!item || !item.text) continue;\n    const role = item.role || \"caption\";\n    let mesh;\n    if (role === \"headline\") {\n      mesh = ctx.fontAtlas.createText(String(item.text), {\n        fontSize: 68,\n        color: colors.paper || \"#e8ecf2\",\n        align: \"center\"\n      });\n      mesh.position.set(0, -1.2, 0.2);\n    } else {\n      mesh = ctx.fontAtlas.createText(String(item.text), {\n        fontSize: 18,\n        color: colors.paper || \"#e8ecf2\",\n        align: \"center\",\n        letterSpacingPx: 2\n      });\n      mesh.position.set(0, -1.62, 0.2);\n    }\n    group.add(mesh);\n    textMeshes.push(mesh);\n  }\n  const tls = [];\n  knot.scale.setScalar(1.04);\n  tls.push(\n    import_gsap.gsap.to(knot.scale, { x: 1, y: 1, z: 1, duration: 0.9, ease: \"power4.out\" })\n  );\n  for (let i = 0; i < textMeshes.length; i++) {\n    const m = textMeshes[i];\n    const baseY = m.position.y;\n    m.position.y = baseY + 0.3;\n    tls.push(\n      import_gsap.gsap.to(m.position, {\n        y: baseY,\n        duration: 0.7,\n        delay: 0.1 + i * 0.08,\n        ease: \"power3.out\"\n      })\n    );\n  }\n  const primResults = [];\n  const primitives = config.cinematicPrimitives ?? [];\n  for (const p of primitives) {\n    const fn = ctx.primitives?.[p.name];\n    if (typeof fn === \"function\") {\n      const target = p.name === \"orbit\" ? knot : group;\n      const r = fn(target, p.params || {});\n      if (r) primResults.push(r);\n    }\n  }\n  group.userData.handlers = {};\n  group.userData.cleanup = () => {\n    for (const t of tls) t.kill?.();\n    for (const r of primResults) r.cleanup?.();\n    group.traverse((obj) => {\n      if (obj.isMesh) {\n        obj.geometry?.dispose?.();\n        const m = obj.material;\n        if (Array.isArray(m)) m.forEach((mm) => mm.dispose?.());\n        else m?.dispose?.();\n      }\n    });\n    if (knotMat.roughnessMap) knotMat.roughnessMap.dispose?.();\n  };\n  return group;\n}\n",
+  "transformError": null
+}

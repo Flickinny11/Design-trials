@@ -1,0 +1,189 @@
+{
+  "id": "wvis/claude-haiku-4.5/v-09-editorial-oversized-type-r3",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-09-editorial-oversized-type",
+  "run": 3,
+  "phase": "control",
+  "arm": "control-resample",
+  "node": {
+    "nodeId": "v-09-editorial-oversized-type",
+    "subtype": "oversized-type",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Editorial oversized type — A massive editorial headline with tight tracking discipline, a kicker line, and an accent underline rule.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "NOVA ATELIER / JOURNAL",
+            "role": "kicker",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "PRECISION IS",
+            "role": "hero",
+            "typography": {
+              "fontSize": 124,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "A HABIT.",
+            "role": "hero",
+            "typography": {
+              "fontSize": 124,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Notes from the bench: tolerances, tempering, and the case for slower watchmaking.",
+            "role": "body",
+            "typography": {
+              "fontSize": 26,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "ISSUE 12 / JULY 2026",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 1,
+              "hex": "#14141a"
+            }
+          ]
+        },
+        "typography": {
+          "hero": {
+            "family": "Lora",
+            "fontSize": 124,
+            "fontWeight": 600,
+            "letterSpacing": -0.015,
+            "lineHeight": 0.98
+          },
+          "kicker": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.4
+          },
+          "body": {
+            "family": "JetBrains Mono",
+            "fontSize": 26,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.55
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Full-bleed editorial plate 7 x 5.5 scene units at z=0 with a vertical engineered gradient #0b0b10 to #14141a plus 1.5 percent monochrome grain (no soft pastel blur). All type left-aligned at x=-3.1 on a strict 0.25-unit baseline grid: kicker at y=1.7 (JetBrains Mono 700, uppercase, tracking 0.12em); hero in two stacked lines at y=0.9 and y=0.25 (Lora 600, em height 0.62 units, tracking -0.015em, lineHeight 0.98); accent underline rule 2.2 x 0.05 units #ff2a38 at emissive 1.2 at y=-0.15; body paragraph max-width 4.5 units at y=-0.8; caption at y=-1.9. Print-depth trick: hero glyph planes duplicated 0.02 units behind at #16161d for a letterpress shadow edge. Entrance: rise-in per block top-to-bottom (y +0.4 to 0, opacity 0 to 1, 700ms, cubic-bezier(0.215,0.61,0.355,1)) with 80ms stagger; the rule draws scaleX 0 to 1 over 500ms cubic-bezier(0.25,0.46,0.45,0.94) after the hero lands."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        6.2
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#3a3f4a",
+        "intensity": 0.55
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 0.8,
+        "position": [
+          1.5,
+          2.5,
+          4
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Type blocks rise in top-to-bottom with an 80ms stagger; the red rule draws left to right after the hero settles."
+  },
+  "parsed": true,
+  "fenced": true,
+  "depGate": {
+    "sources": [
+      "gsap",
+      "three/webgpu",
+      "three/tsl"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_gsap = require(\"gsap\");\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nfunction createNode(config, ctx) {\n  const { THREE } = ctx;\n  const group = new THREE.Group();\n  const timelines = [];\n  const textBlocks = [];\n  const backdropGeometry = new THREE.PlaneGeometry(7, 5.5);\n  const backdropMaterial = new import_webgpu.MeshBasicNodeMaterial();\n  const colorA = (0, import_tsl.vec3)(0.043, 0.043, 0.082);\n  const colorB = (0, import_tsl.vec3)(0.078, 0.078, 0.102);\n  const gradientNode = (0, import_tsl.mix)(colorA, colorB, (0, import_tsl.uv)().y);\n  const grainIntensity = 0.015;\n  const grainNoise = (0, import_tsl.vec3)(\n    Math.sin((0, import_tsl.uv)().x * 100 + (0, import_tsl.uv)().y * 50) * 0.5 + 0.5\n  );\n  backdropMaterial.colorNode = (0, import_tsl.mix)(gradientNode, grainNoise, grainIntensity);\n  const backdropMesh = new THREE.Mesh(backdropGeometry, backdropMaterial);\n  backdropMesh.position.z = 0;\n  group.add(backdropMesh);\n  const baseX = -3.1;\n  const kickerMesh = ctx.fontAtlas.createText(\"NOVA ATELIER / JOURNAL\", {\n    fontSize: 18,\n    color: \"#e8ecf2\",\n    align: \"left\"\n  });\n  kickerMesh.position.set(baseX, 1.7, 0.1);\n  kickerMesh.userData.animGroup = \"kicker\";\n  group.add(kickerMesh);\n  textBlocks.push(kickerMesh);\n  const heroLine1 = ctx.fontAtlas.createText(\"PRECISION IS\", {\n    fontSize: 124,\n    color: \"#e8ecf2\",\n    align: \"left\"\n  });\n  heroLine1.position.set(baseX, 0.9, 0.1);\n  heroLine1.userData.animGroup = \"hero\";\n  group.add(heroLine1);\n  textBlocks.push(heroLine1);\n  const heroLine1Shadow = ctx.fontAtlas.createText(\"PRECISION IS\", {\n    fontSize: 124,\n    color: \"#16161d\",\n    align: \"left\"\n  });\n  heroLine1Shadow.position.set(baseX, 0.9, -0.02);\n  group.add(heroLine1Shadow);\n  const heroLine2 = ctx.fontAtlas.createText(\"A HABIT.\", {\n    fontSize: 124,\n    color: \"#e8ecf2\",\n    align: \"left\"\n  });\n  heroLine2.position.set(baseX, 0.25, 0.1);\n  heroLine2.userData.animGroup = \"hero\";\n  group.add(heroLine2);\n  textBlocks.push(heroLine2);\n  const heroLine2Shadow = ctx.fontAtlas.createText(\"A HABIT.\", {\n    fontSize: 124,\n    color: \"#16161d\",\n    align: \"left\"\n  });\n  heroLine2Shadow.position.set(baseX, 0.25, -0.02);\n  group.add(heroLine2Shadow);\n  const ruleGeometry = new THREE.PlaneGeometry(2.2, 0.05);\n  const ruleMaterial = new import_webgpu.MeshBasicNodeMaterial({\n    color: 16722488,\n    emissive: 16722488,\n    emissiveIntensity: 1.2\n  });\n  const ruleMesh = new THREE.Mesh(ruleGeometry, ruleMaterial);\n  ruleMesh.position.set(baseX + 1.1, -0.15, 0.05);\n  ruleMesh.scale.x = 0;\n  ruleMesh.userData.isRule = true;\n  group.add(ruleMesh);\n  const bodyMesh = ctx.fontAtlas.createText(\n    \"Notes from the bench: tolerances, tempering,\\nand the case for slower watchmaking.\",\n    {\n      fontSize: 26,\n      color: \"#e8ecf2\",\n      align: \"left\",\n      maxWidthPx: 800\n    }\n  );\n  bodyMesh.position.set(baseX, -0.8, 0.1);\n  bodyMesh.userData.animGroup = \"body\";\n  group.add(bodyMesh);\n  textBlocks.push(bodyMesh);\n  const captionMesh = ctx.fontAtlas.createText(\"ISSUE 12 / JULY 2026\", {\n    fontSize: 18,\n    color: \"#e8ecf2\",\n    align: \"left\"\n  });\n  captionMesh.position.set(baseX, -1.9, 0.1);\n  captionMesh.userData.animGroup = \"caption\";\n  group.add(captionMesh);\n  textBlocks.push(captionMesh);\n  const animationGroups = {\n    kicker: [kickerMesh],\n    hero: [heroLine1, heroLine2],\n    body: [bodyMesh],\n    caption: [captionMesh]\n  };\n  let currentDelay = 0;\n  const staggerDelay = 0.08;\n  const riseInDuration = 0.7;\n  const groupOrder = [\"kicker\", \"hero\", \"body\", \"caption\"];\n  groupOrder.forEach((groupName) => {\n    animationGroups[groupName].forEach((mesh) => {\n      const initY = mesh.position.y;\n      mesh.position.y += 0.4;\n      mesh.material.opacity = 0;\n      const tl = import_gsap.gsap.timeline({ delay: currentDelay });\n      tl.to(mesh.position, {\n        y: initY,\n        duration: riseInDuration,\n        ease: \"power3.out\"\n      }, 0);\n      tl.to(mesh.material, {\n        opacity: 1,\n        duration: riseInDuration,\n        ease: \"power3.out\"\n      }, 0);\n      timelines.push(tl);\n    });\n    currentDelay += staggerDelay;\n  });\n  const ruleDelay = currentDelay - staggerDelay + riseInDuration;\n  const ruleTl = import_gsap.gsap.timeline({ delay: ruleDelay });\n  ruleTl.to(ruleMesh.scale, {\n    x: 1,\n    duration: 0.5,\n    ease: \"power2.inOut\"\n  }, 0);\n  timelines.push(ruleTl);\n  group.userData.cleanup = () => {\n    timelines.forEach((tl) => tl.kill());\n    backdropGeometry.dispose();\n    backdropMaterial.dispose();\n    ruleGeometry.dispose();\n    ruleMaterial.dispose();\n  };\n  return group;\n}\n",
+  "transformError": null
+}

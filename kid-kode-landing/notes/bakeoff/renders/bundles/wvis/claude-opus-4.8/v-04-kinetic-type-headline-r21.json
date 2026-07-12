@@ -1,0 +1,175 @@
+{
+  "id": "wvis/claude-opus-4.8/v-04-kinetic-type-headline-r21",
+  "contestant": "claude-opus-4.8",
+  "caseId": "v-04-kinetic-type-headline",
+  "run": 21,
+  "phase": "iter1",
+  "arm": "vision",
+  "node": {
+    "nodeId": "v-04-kinetic-type-headline",
+    "subtype": "kinetic-typography",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Kinetic 3D type headline — A hero headline as dimensional type with staggered kinetic entrance and weighted settle; MSDF text only.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "NOVA ATELIER / CALIBRE PROGRAM",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "TIME, MACHINED.",
+            "role": "hero",
+            "typography": {
+              "fontSize": 124,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Every calibre begins as a solid billet.",
+            "role": "subhead",
+            "typography": {
+              "fontSize": 40,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#101017",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 1,
+              "hex": "#13131a"
+            }
+          ]
+        },
+        "typography": {
+          "hero": {
+            "family": "Lora",
+            "fontSize": 124,
+            "fontWeight": 600,
+            "letterSpacing": -0.01,
+            "lineHeight": 1.05
+          },
+          "subhead": {
+            "family": "JetBrains Mono",
+            "fontSize": 40,
+            "fontWeight": 400,
+            "letterSpacing": 0.02,
+            "lineHeight": 1.35
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Hero set as MSDF glyph planes (Lora 600), glyph em height 0.62 scene units, one line centered at y=0.4, per-word z offsets front-to-back 0.12 / 0.0 / -0.12 units for parallax depth. kinetic-text on load: per-glyph y +0.35 to 0 and opacity 0 to 1, 700ms each, 60ms stagger left to right, cubic-bezier(0.215,0.61,0.355,1); the final glyph triggers a group weighted-settle, scale 1.04 to 1.0 over 900ms cubic-bezier(0.165,0.84,0.44,1). Accent underline rule: 2.6 x 0.045-unit plane #ff2a38, emissive intensity 1.2, at y=-0.05 under the hero, scaleX 0 to 1 anchored left over 500ms cubic-bezier(0.25,0.46,0.45,0.94) starting 120ms after the last glyph lands. Subhead (em height 0.2) fades up (opacity 0 to 1, y +0.2 to 0, 500ms cubic-bezier(0.25,0.46,0.45,0.94)) at y=-0.65; caption kicker at y=1.15 in JetBrains Mono 700 uppercase. Backdrop: 7 x 5.5-unit plane at z=-1.5 with vertical engineered gradient #0b0b10 to #13131a plus 1.5 percent mono grain, no soft blur. Spacing locked to the 0.25-unit rhythm."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "kinetic-text",
+        "trigger": "load",
+        "params": {
+          "staggerMs": 60,
+          "riseUnits": 0.35
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        5.5
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#3a3f4a",
+        "intensity": 0.5
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 0.9,
+        "position": [
+          2,
+          3,
+          4
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Glyphs rise 0.35 units and fade in with a 60ms left-to-right stagger, the line settles with 1.04 overshoot, then the red underline draws left to right."
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const {\n    Group,\n    Mesh,\n    PlaneGeometry,\n    Color,\n    DirectionalLight,\n    PointLight,\n    AmbientLight,\n    Box3,\n    Vector3\n  } = ctx.THREE;\n  const COLORS = config.intent?.visualSpec?.colors ?? {\n    background: \"#0b0b10\",\n    surface: \"#101017\",\n    ink: \"#16161d\",\n    paper: \"#e8ecf2\",\n    accent: \"#ff2a38\"\n  };\n  const group = new Group();\n  group.userData.handlers = {};\n  const timelines = [];\n  const primHandles = [];\n  const disposables = [];\n  const backdropGeo = new PlaneGeometry(24, 15);\n  const backdropMat = new import_webgpu.MeshBasicNodeMaterial();\n  const cTop = (0, import_tsl.uniform)((0, import_tsl.vec3)(...new Color(\"#13131a\").toArray()));\n  const cBot = (0, import_tsl.uniform)((0, import_tsl.vec3)(...new Color(\"#0b0b10\").toArray()));\n  const gr = (0, import_tsl.fract)((0, import_tsl.sin)((0, import_tsl.dot)((0, import_tsl.uv)(), (0, import_tsl.vec2)(12.9898, 78.233))).mul(43758.5453));\n  const grain = gr.sub(0.5).mul(0.015);\n  backdropMat.colorNode = (0, import_tsl.mix)(cBot, cTop, (0, import_tsl.uv)().y).add(grain);\n  const backdrop = new Mesh(backdropGeo, backdropMat);\n  backdrop.position.set(0, 0, -2.5);\n  group.add(backdrop);\n  disposables.push(backdropGeo, backdropMat);\n  const ambient = new AmbientLight(new Color(COLORS.paper), 0.5);\n  group.add(ambient);\n  const key = new DirectionalLight(new Color(COLORS.paper), 1.1);\n  key.position.set(2.5, 3, 4);\n  group.add(key);\n  const rim = new PointLight(new Color(COLORS.accent), 1, 20);\n  rim.position.set(-3, -1.5, 2.5);\n  group.add(rim);\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const findRole = (r) => items.find((i) => i.role === r);\n  const captionText = (findRole(\"caption\")?.text ?? \"NOVA ATELIER / CALIBRE PROGRAM\").toUpperCase();\n  const heroText = findRole(\"hero\")?.text ?? \"TIME, MACHINED.\";\n  const subheadText = findRole(\"subhead\")?.text ?? \"Every calibre begins as a solid billet.\";\n  const fitInto = (obj, targetHeight) => {\n    obj.updateWorldMatrix(true, true);\n    const box = new Box3().setFromObject(obj);\n    const size = new Vector3();\n    const center = new Vector3();\n    box.getSize(size);\n    box.getCenter(center);\n    const s = size.y > 1e-4 ? targetHeight / size.y : 1;\n    obj.scale.setScalar(s);\n    obj.position.set(-center.x * s, -center.y * s, 0);\n  };\n  const captionRaw = ctx.fontAtlas.createText(captionText, {\n    fontSize: 64,\n    color: COLORS.paper,\n    align: \"center\",\n    letterSpacingPx: 8\n  });\n  fitInto(captionRaw, 0.11);\n  const captionWrap = new Group();\n  captionWrap.add(captionRaw);\n  captionWrap.position.set(0, 1.15, 0);\n  group.add(captionWrap);\n  const heroGroup = new Group();\n  heroGroup.position.set(0, 0.4, 0);\n  group.add(heroGroup);\n  const heroWrap = new Group();\n  heroGroup.add(heroWrap);\n  const heroRaw = ctx.fontAtlas.createText(heroText, {\n    fontSize: 96,\n    color: COLORS.paper,\n    align: \"center\"\n  });\n  fitInto(heroRaw, 0.62);\n  heroWrap.add(heroRaw);\n  const ulGeo = new PlaneGeometry(2.6, 0.045);\n  ulGeo.translate(1.3, 0, 0);\n  const ulMat = new import_webgpu.MeshStandardNodeMaterial();\n  ulMat.color = new Color(COLORS.accent);\n  ulMat.emissive = new Color(COLORS.accent);\n  ulMat.emissiveIntensity = 1.2;\n  ulMat.roughness = 0.5;\n  ulMat.metalness = 0.2;\n  const underline = new Mesh(ulGeo, ulMat);\n  underline.position.set(-1.3, -0.05, 0.12);\n  underline.scale.x = 0;\n  group.add(underline);\n  disposables.push(ulGeo, ulMat);\n  const subheadRaw = ctx.fontAtlas.createText(subheadText, {\n    fontSize: 64,\n    color: COLORS.paper,\n    align: \"center\"\n  });\n  fitInto(subheadRaw, 0.2);\n  const subheadWrap = new Group();\n  subheadWrap.add(subheadRaw);\n  subheadWrap.position.set(0, -0.65, 0);\n  group.add(subheadWrap);\n  captionWrap.position.y = 1.15 + 0.2;\n  const capTl = import_gsap.gsap.timeline();\n  capTl.to(captionWrap.position, { y: 1.15, duration: 0.5, ease: \"power2.out\" }, 0.1);\n  timelines.push(capTl);\n  heroGroup.scale.setScalar(1.04);\n  const heroTl = import_gsap.gsap.timeline();\n  heroTl.fromTo(\n    heroGroup.scale,\n    { x: 1.04, y: 1.04, z: 1.04 },\n    { x: 1, y: 1, z: 1, duration: 0.9, ease: \"power4.out\" },\n    0.6\n  );\n  heroTl.to(underline.scale, { x: 1, duration: 0.5, ease: \"power2.out\" }, 0.85);\n  timelines.push(heroTl);\n  subheadWrap.position.y = -0.65 - 0.2;\n  const subTl = import_gsap.gsap.timeline();\n  subTl.to(subheadWrap.position, { y: -0.65, duration: 0.5, ease: \"power2.out\" }, 1);\n  timelines.push(subTl);\n  const idleTl = import_gsap.gsap.timeline({ delay: 2.2 });\n  idleTl.to(heroGroup.scale, {\n    x: 1.015,\n    y: 1.015,\n    z: 1.015,\n    duration: 4,\n    ease: \"sine.inOut\",\n    yoyo: true,\n    repeat: -1\n  });\n  timelines.push(idleTl);\n  const prims = config.cinematicPrimitives ?? [];\n  for (const p of prims) {\n    const fn = ctx.primitives?.[p.name];\n    if (fn) {\n      const target = p.name === \"kinetic-text\" ? heroWrap : group;\n      const handle = fn(target, p.params ?? {});\n      if (handle) primHandles.push(handle);\n    }\n  }\n  group.userData.cleanup = () => {\n    for (const tl of timelines) tl.kill();\n    for (const h of primHandles) h?.cleanup?.();\n    for (const d of disposables) d?.dispose?.();\n    group.traverse((o) => {\n      if (o.geometry) o.geometry.dispose?.();\n      if (o.material) {\n        if (Array.isArray(o.material)) o.material.forEach((m) => m.dispose?.());\n        else o.material.dispose?.();\n      }\n    });\n  };\n  return group;\n}\n",
+  "transformError": null
+}

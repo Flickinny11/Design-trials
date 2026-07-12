@@ -1,0 +1,209 @@
+{
+  "id": "wvis/kimi-k2.7-code/v-06-loop-column-gallery-r21",
+  "contestant": "kimi-k2.7-code",
+  "caseId": "v-06-loop-column-gallery",
+  "run": 21,
+  "phase": "iter1",
+  "arm": "vision",
+  "node": {
+    "nodeId": "v-06-loop-column-gallery",
+    "subtype": "loop-column",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": "/prism-mock/home/nodes/feature-card.png"
+    },
+    "intent": {
+      "caption": "Loop column gallery — A vertical loop column of distinct image plates cycling with weighted motion; plates read as photographs, not voids.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "Inside the atelier",
+            "role": "headline",
+            "typography": {
+              "fontSize": 68,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "DIAL ROOM",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "ESCAPEMENT BENCH",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "CNC HALL",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "FINISHING LAB",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "ARCHIVE VAULT",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "ASSEMBLY LINE ONE",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 1,
+              "hex": "#14141a"
+            }
+          ]
+        },
+        "typography": {
+          "headline": {
+            "family": "Lora",
+            "fontSize": 68,
+            "fontWeight": 600,
+            "letterSpacing": -0.005,
+            "lineHeight": 1.1
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Six image plates, each 1.9 x 1.2 units (16:10), stacked vertically at 1.5-unit pitch (6x base 0.25), column offset x=+0.9, looping seamlessly modulo 9.0 units. Each plate carries a DISTINCT filmic-graded photograph texture (base /prism-mock/home/nodes/feature-card.png plus five distinct crops/variants, subtle vignette baked, never near-black voids). Plate material: map, roughness 0.6, metalness 0.1, clearcoat 0.1; each plate framed by a 0.03-unit machined ink #16161d bevel with a brushed edge highlight (roughness 0.5, metalness 0.5). Scroll drives column y at 1.5 units per viewport scroll with weighted inertia (damping 0.12), stopping with weighted-settle over 900ms cubic-bezier(0.165,0.84,0.44,1). fly-through on scroll: camera dollies 2.5 units deeper in z across the full scroll range. The plate nearest y=0 is focused: scale 1.0 to 1.06 over 350ms cubic-bezier(0.215,0.61,0.355,1), left edge lit by a #ff2a38 accent strip 0.03 units wide at emissive 1.4, its caption fading up at x=-1.6. Headline column-header pinned at [-1.6, 1.9, 0]."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "fly-through",
+        "trigger": "scroll",
+        "params": {
+          "depthUnits": 2.5
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0.9,
+        0,
+        5
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#3a3f4a",
+        "intensity": 0.5
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 1,
+        "position": [
+          2,
+          2.5,
+          3
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.8,
+        "position": [
+          -1.2,
+          0,
+          1.5
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "The plate column scrolls vertically in a seamless loop with weighted inertia and settle; the camera pushes 2.5 units deeper across the scroll range while the focused plate scales to 1.06."
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": null,
+  "transformError": "Transform failed with 1 error:\n<stdin>:150:21: ERROR: Unexpected end of file"
+}

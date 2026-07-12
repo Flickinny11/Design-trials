@@ -1,0 +1,214 @@
+{
+  "id": "wvis-d7/claude-fable-5/v-10-bento-metrics-r100",
+  "contestant": "claude-fable-5",
+  "caseId": "v-10-bento-metrics",
+  "run": 100,
+  "stage": "gen",
+  "node": {
+    "nodeId": "v-10-bento-metrics",
+    "subtype": "bento-grid",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Bento metrics grid — A 2x2 bento of stat tiles with one dominant cell; machined surfaces, engineered gradients, no flat voids.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "ATELIER METRICS / Q2 2026",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "0.002 mm",
+            "role": "valueLarge",
+            "typography": {
+              "fontSize": 124,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Case tolerance, CNC pass",
+            "role": "label",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "38 h",
+            "role": "value",
+            "typography": {
+              "fontSize": 68,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Power reserve, NA-01",
+            "role": "label",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "214",
+            "role": "value",
+            "typography": {
+              "fontSize": 68,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "Components per calibre",
+            "role": "label",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#101017"
+            },
+            {
+              "at": 1,
+              "hex": "#1a1a22"
+            }
+          ]
+        },
+        "typography": {
+          "value": {
+            "family": "Lora",
+            "fontSize": 68,
+            "fontWeight": 600,
+            "letterSpacing": -0.005,
+            "lineHeight": 1.05
+          },
+          "valueLarge": {
+            "family": "Lora",
+            "fontSize": 124,
+            "fontWeight": 600,
+            "letterSpacing": -0.01,
+            "lineHeight": 1
+          },
+          "label": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Bento grid spans 5.5 x 3.5 scene units centered at origin with 0.25-unit gutters (1x base). Dominant cell: 3.25 x 3.5 units occupying the left column, both rows; two secondary cells 2.0 x 1.625 units stacked in the right column. Each cell is a shallow extruded slab 0.06 units deep, surface #14141a with a 135-deg engineered diagonal gradient #101017 to #1a1a22 (hard-stop machined sheen band 0.15 units wide at 40 percent, +6 percent value), edge material brushed metal roughness 0.5, metalness 0.45, clearcoat 0.2 on a 0.04-unit chamfer that catches the key light. Inner padding 0.5 units (card padding token). Each cell carries a #ff2a38 tick bar 0.4 x 0.05 units at emissive 1.3, top-left inside the padding. Dominant cell: value in Lora 600 at 0.62-unit em height with label below at 0.5-unit offset; secondary cells: value at 0.34-unit em height plus label. Grid header caption sits 0.5 units above the grid, left-aligned to the grid edge at x=-2.75. Entrance: stagger-cards, fade-up per cell (opacity 0 to 1, y +0.2 to 0, 500ms, cubic-bezier(0.25,0.46,0.45,0.94)) at 80ms stagger, dominant first. Hover: press-down scale 1.0 to 0.97 in 120ms cubic-bezier(0.175,0.885,0.32,1.275), release weighted-settle 1.04 to 1.0 over 900ms cubic-bezier(0.165,0.84,0.44,1). No cell is a flat void: every surface carries the gradient, chamfer light, and tick structure."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        0,
+        5.8
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#3a3f4a",
+        "intensity": 0.5
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 1,
+        "position": [
+          2,
+          3,
+          3
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.5,
+        "position": [
+          -2.5,
+          2,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "Tiles fade up with an 80ms stagger (dominant cell first); hover presses a tile to 0.97 scale and releases with weighted 1.04 overshoot."
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const THREE = ctx.THREE;\n  const root = new THREE.Group();\n  root.name = \"bento-metrics-grid\";\n  const geometries = [];\n  const materials = [];\n  const timelines = [];\n  const primHandles = [];\n  const spec = config.intent?.visualSpec ?? {};\n  const colors = spec.colors ?? {};\n  const C = {\n    background: colors.background ?? \"#0b0b10\",\n    // color.background\n    surface: colors.surface ?? \"#14141a\",\n    // color.surface\n    ink: colors.ink ?? \"#16161d\",\n    // color.ink\n    paper: colors.paper ?? \"#e8ecf2\",\n    // color.paper\n    accent: colors.accent ?? \"#ff2a38\",\n    // color.accent\n    grad0: colors.gradientStops?.[0]?.hex ?? \"#101017\",\n    grad1: colors.gradientStops?.[1]?.hex ?? \"#1a1a22\"\n  };\n  function backdropStage() {\n    const geo = new THREE.PlaneGeometry(7, 6);\n    geometries.push(geo);\n    const mat = new import_webgpu.MeshBasicNodeMaterial();\n    const g0 = (0, import_tsl.vec3)(...hexToLin(C.background));\n    const g1 = (0, import_tsl.vec3)(...hexToLin(C.grad1));\n    const v = (0, import_tsl.uv)().y;\n    const lift = (0, import_tsl.smoothstep)(0.15, 0.75, v).mul(0.85).add((0, import_tsl.smoothstep)(0, 1, (0, import_tsl.uv)().x.sub(0.5).abs().oneMinus()).mul(0.15));\n    mat.colorNode = (0, import_tsl.mix)(g0, g1, lift);\n    materials.push(mat);\n    const mesh = new THREE.Mesh(geo, mat);\n    mesh.position.set(0, 0, -2.5);\n    root.add(mesh);\n  }\n  function hexToLin(hex) {\n    const c = new THREE.Color(hex);\n    return [c.r, c.g, c.b];\n  }\n  function lightRig() {\n    const amb = new THREE.AmbientLight(\"#e6e9ee\", 0.34);\n    root.add(amb);\n    const key = new THREE.DirectionalLight(\"#f2f4f6\", 1.2);\n    key.position.set(1.6, 3, 2.6);\n    key.target.position.set(0, 0.4, 0);\n    root.add(key, key.target);\n    const fill = new THREE.DirectionalLight(\"#e6e9ee\", 1);\n    fill.position.set(-2, 2.4, 2.2);\n    fill.target.position.set(0, 0.4, 0);\n    root.add(fill, fill.target);\n    const rim = new THREE.DirectionalLight(\"#ffffff\", 0.8);\n    rim.position.set(0, 2, -3);\n    rim.target.position.set(0, 0.5, 0);\n    root.add(rim, rim.target);\n  }\n  function slabFaceMaterial() {\n    const mat = new import_webgpu.MeshStandardNodeMaterial({ roughness: 0.55, metalness: 0.35 });\n    const g0 = (0, import_tsl.vec3)(...hexToLin(C.grad0));\n    const g1 = (0, import_tsl.vec3)(...hexToLin(C.grad1));\n    const d = (0, import_tsl.uv)().x.add((0, import_tsl.uv)().y.oneMinus()).mul(0.5);\n    let col = (0, import_tsl.mix)(g0, g1, d);\n    const band = (0, import_tsl.step)(0.4, d).mul((0, import_tsl.step)(d, (0, import_tsl.float)(0.47)));\n    col = (0, import_tsl.mix)(col, col.add((0, import_tsl.vec3)(0.06, 0.06, 0.065)), band);\n    mat.colorNode = col;\n    materials.push(mat);\n    return mat;\n  }\n  function chamferFrameMaterial() {\n    const mat = new import_webgpu.MeshPhysicalNodeMaterial({\n      color: new THREE.Color(C.ink),\n      roughness: 0.5,\n      metalness: 0.45,\n      clearcoat: 0.2,\n      clearcoatRoughness: 0.35\n    });\n    materials.push(mat);\n    return mat;\n  }\n  function tickBar() {\n    const geo = new THREE.BoxGeometry(0.4, 0.05, 0.02);\n    geometries.push(geo);\n    const mat = new import_webgpu.MeshStandardNodeMaterial({\n      color: new THREE.Color(C.accent),\n      emissive: new THREE.Color(C.accent),\n      emissiveIntensity: 1.3,\n      roughness: 0.6,\n      metalness: 0.1\n    });\n    materials.push(mat);\n    return new THREE.Mesh(geo, mat);\n  }\n  function buildCell(w, h, x, y) {\n    const cell = new THREE.Group();\n    cell.position.set(x, y, 0);\n    const frameGeo = new THREE.BoxGeometry(w, h, 0.06);\n    geometries.push(frameGeo);\n    const frame = new THREE.Mesh(frameGeo, chamferFrameMaterial());\n    frame.position.z = 0;\n    cell.add(frame);\n    const faceGeo = new THREE.PlaneGeometry(w - 0.08, h - 0.08);\n    geometries.push(faceGeo);\n    const face = new THREE.Mesh(faceGeo, slabFaceMaterial());\n    face.position.z = 0.035;\n    cell.add(face);\n    const tick = tickBar();\n    tick.position.set(-w / 2 + 0.5 + 0.2, h / 2 - 0.5 + 0.1, 0.06);\n    cell.add(tick);\n    root.add(cell);\n    return cell;\n  }\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  function findText(role, fallback) {\n    const hit = items.find((i) => i.role === role && !hit?._used);\n    return hit?.text ?? fallback;\n  }\n  const t = items.map((i) => i.text);\n  const captionTxt = t[0] ?? \"ATELIER METRICS / Q2 2026\";\n  const heroValTxt = t[1] ?? \"0.002 mm\";\n  const heroLblTxt = t[2] ?? \"Case tolerance, CNC pass\";\n  const v2Txt = t[3] ?? \"38 h\";\n  const l2Txt = t[4] ?? \"Power reserve, NA-01\";\n  const v3Txt = t[5] ?? \"214\";\n  const l3Txt = t[6] ?? \"Components per calibre\";\n  function addText(parent, content, opts, x, y) {\n    const obj = ctx.fontAtlas.createText(content, opts);\n    obj.position.set(x, y, 0.07);\n    parent.add(obj);\n    return obj;\n  }\n  backdropStage();\n  lightRig();\n  const domCell = buildCell(3.25, 3.5, -1.125, 0);\n  const topCell = buildCell(2, 1.625, 1.75, 0.9375);\n  const botCell = buildCell(2, 1.625, 1.75, -0.9375);\n  const caption = ctx.fontAtlas.createText(captionTxt, {\n    fontSize: 18,\n    color: C.paper,\n    align: \"left\",\n    letterSpacingPx: 2.2\n  });\n  caption.position.set(-2.75, 1.75 + 0.5, 0.02);\n  root.add(caption);\n  addText(domCell, heroValTxt, { fontSize: 124, color: C.paper, align: \"left\" }, -3.25 / 2 + 0.5, 0.1);\n  addText(domCell, heroLblTxt, { fontSize: 18, color: \"#9aa2ad\", align: \"left\", letterSpacingPx: 1.4 }, -3.25 / 2 + 0.5, -0.5);\n  addText(topCell, v2Txt, { fontSize: 68, color: C.paper, align: \"left\" }, -1 + 0.5, 0.05);\n  addText(topCell, l2Txt, { fontSize: 18, color: \"#9aa2ad\", align: \"left\", letterSpacingPx: 1.4 }, -1 + 0.5, -0.35);\n  addText(botCell, v3Txt, { fontSize: 68, color: C.paper, align: \"left\" }, -1 + 0.5, 0.05);\n  addText(botCell, l3Txt, { fontSize: 18, color: \"#9aa2ad\", align: \"left\", letterSpacingPx: 1.4 }, -1 + 0.5, -0.35);\n  (function contactShadow() {\n    const geo = new THREE.PlaneGeometry(6.6, 4.4);\n    geometries.push(geo);\n    const mat = new import_webgpu.MeshBasicNodeMaterial({ transparent: true, depthWrite: false });\n    const d2 = (0, import_tsl.uv)().sub(0.5).length();\n    mat.colorNode = (0, import_tsl.vec3)(0, 0, 0);\n    mat.opacityNode = (0, import_tsl.smoothstep)(0.5, 0.15, d2).mul(0.5);\n    materials.push(mat);\n    const mesh = new THREE.Mesh(geo, mat);\n    mesh.position.set(0.1, -0.15, -0.4);\n    root.add(mesh);\n  })();\n  const cells = [domCell, topCell, botCell];\n  const entrance = import_gsap.gsap.timeline();\n  cells.forEach((cell, i) => {\n    const targetY = cell.position.y;\n    cell.position.y = targetY + 0.2;\n    cell.scale.setScalar(1e-3);\n    entrance.to(\n      cell.position,\n      { y: targetY, duration: 0.5, ease: \"power2.out\" },\n      i * 0.08\n    );\n    entrance.to(\n      cell.scale,\n      { x: 1, y: 1, z: 1, duration: 0.5, ease: \"power2.out\" },\n      i * 0.08\n    );\n  });\n  entrance.fromTo(\n    caption.position,\n    { y: 2.25 + 0.2 },\n    { y: 2.25, duration: 0.5, ease: \"power2.out\" },\n    0\n  );\n  timelines.push(entrance);\n  let pressTl = null;\n  function pressCell(cell) {\n    if (pressTl) pressTl.kill();\n    pressTl = import_gsap.gsap.timeline();\n    pressTl.to(cell.scale, { x: 0.97, y: 0.97, z: 0.97, duration: 0.12, ease: \"back.out(1.7)\" });\n    pressTl.to(cell.scale, { x: 1.04, y: 1.04, z: 1.04, duration: 0.15, ease: \"power2.out\" });\n    pressTl.to(cell.scale, { x: 1, y: 1, z: 1, duration: 0.9, ease: \"power4.out\" });\n    timelines.push(pressTl);\n  }\n  for (const p of config.cinematicPrimitives ?? []) {\n    const fn = ctx.primitives[p.name];\n    if (fn) primHandles.push(fn(root, p.params ?? {}));\n  }\n  root.userData.handlers = {\n    pointerdown: () => pressCell(domCell),\n    click: () => ctx.emit(\"metric-select\", { id: \"case-tolerance\" })\n  };\n  root.userData.cleanup = () => {\n    timelines.forEach((tl) => tl.kill());\n    primHandles.forEach((h) => h?.cleanup?.());\n    geometries.forEach((g) => g.dispose());\n    materials.forEach((m) => m.dispose());\n  };\n  return root;\n}\n",
+  "transformError": null
+}

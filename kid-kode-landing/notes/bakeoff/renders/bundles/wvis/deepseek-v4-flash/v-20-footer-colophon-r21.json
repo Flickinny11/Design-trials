@@ -1,0 +1,282 @@
+{
+  "id": "wvis/deepseek-v4-flash/v-20-footer-colophon-r21",
+  "contestant": "deepseek-v4-flash",
+  "caseId": "v-20-footer-colophon",
+  "run": 21,
+  "phase": "iter1",
+  "arm": "text-critique-only",
+  "node": {
+    "nodeId": "v-20-footer-colophon",
+    "subtype": "footer",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": null
+    },
+    "intent": {
+      "caption": "Footer colophon — A footer colophon with type-scale discipline: wordmark, three link columns, legal line, hairline rules.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "NOVA ATELIER",
+            "role": "wordmark",
+            "typography": {
+              "fontSize": 34,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "ATELIER",
+            "role": "column-header",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Features",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Collection",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Pricing",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "COMPANY",
+            "role": "column-header",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Journal",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Visit the Atelier",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Contact",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "LEGAL",
+            "role": "column-header",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 700
+            }
+          },
+          {
+            "text": "Privacy",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Terms",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "Warranty",
+            "role": "link",
+            "typography": {
+              "fontSize": 13,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "(c) 2026 Nova Atelier. All rights reserved. Machined in Geneva.",
+            "role": "legal",
+            "typography": {
+              "fontSize": 9,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#101015",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#121218"
+            },
+            {
+              "at": 1,
+              "hex": "#0b0b10"
+            }
+          ]
+        },
+        "typography": {
+          "wordmark": {
+            "family": "Lora",
+            "fontSize": 34,
+            "fontWeight": 600,
+            "letterSpacing": 0.02,
+            "lineHeight": 1
+          },
+          "column-header": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 700,
+            "letterSpacing": 0.12,
+            "lineHeight": 1.2
+          },
+          "link": {
+            "family": "JetBrains Mono",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "letterSpacing": 0,
+            "lineHeight": 1.8
+          },
+          "legal": {
+            "family": "JetBrains Mono",
+            "fontSize": 9,
+            "fontWeight": 400,
+            "letterSpacing": 0.04,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Footer band 6.8w x 2.0h scene units, albedo vertical ramp #121218 (at 0.0) -> #0b0b10 (at 1.0), roughness 0.6, metalness 0.2, top edge carrying a full-width 0.006-unit hairline rule #23232b; layout on a 0.25-unit baseline grid: wordmark block occupies the left 2.0 units with the wordmark and a 0.3w x 0.02h accent bar #ff2a38 emissive 1.4 beneath it; three link columns each 1.2w with 0.375-unit gutters (1.5x base) to the right, each column led by a header then three links at 1.8 line height; legal line spans the full width 0.375 above the bottom edge, separated by a second 0.006-unit hairline #23232b with 0.25 clearance above and below; link hover color #e8ecf2 -> #ff2a38 over 140ms cubic-bezier(0.25,0.46,0.45,0.94) with translateZ 0 -> 0.02; mount is a single fade-up of the whole band opacity 0 -> 1 and y +0.2 -> 0 over 500ms cubic-bezier(0.25,0.46,0.45,0.94), no per-item stagger, the colophon arrives as one set object; the key light grazes from upper left so the hairline rules pick up a faint specular edge, reading etched rather than drawn."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0,
+        -0.05,
+        5.2
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#aeb6c4",
+        "intensity": 0.4
+      },
+      {
+        "type": "directional",
+        "color": "#f4f6fa",
+        "intensity": 1,
+        "position": [
+          -3,
+          3,
+          4
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.4,
+        "position": [
+          2.4,
+          -0.8,
+          -1
+        ]
+      },
+      {
+        "type": "directional",
+        "color": "#7f8896",
+        "intensity": 0.25,
+        "position": [
+          3,
+          0.5,
+          2
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "The whole colophon fades up once as a single object; hovered links shift to accent red and lift 0.02 units.",
+    "contrastMinimum": "4.5:1 links and legal on band ramp; 3:1 wordmark minimum"
+  },
+  "parsed": true,
+  "fenced": true,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_webgpu2 = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const THREE = ctx.THREE;\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const bandWidth = 6.8;\n  const bandHeight = 2;\n  const group = new import_webgpu.Group();\n  const bandGeo = new import_webgpu.PlaneGeometry(bandWidth, bandHeight);\n  const bandMat = new import_webgpu2.MeshStandardNodeMaterial({\n    roughness: 0.6,\n    metalness: 0.2,\n    side: THREE.DoubleSide\n  });\n  const colorBottom = new import_webgpu.Color(\"#121218\");\n  const colorTop = new import_webgpu.Color(\"#0b0b10\");\n  bandMat.colorNode = (0, import_tsl.mix)(\n    (0, import_tsl.vec3)(colorBottom.r, colorBottom.g, colorBottom.b),\n    (0, import_tsl.vec3)(colorTop.r, colorTop.g, colorTop.b),\n    (0, import_tsl.uv)().y\n    // 0 at bottom, 1 at top\n  );\n  const bandMesh = new import_webgpu.Mesh(bandGeo, bandMat);\n  bandMesh.position.z = 0;\n  group.add(bandMesh);\n  const keyLight = new import_webgpu.DirectionalLight(16777215, 1);\n  keyLight.position.set(3, 3, 5);\n  keyLight.target.position.set(0, 0, 0);\n  group.add(keyLight);\n  group.add(keyLight.target);\n  const hairlineGeo = new import_webgpu.BoxGeometry(bandWidth, 6e-3, 0.01);\n  const hairlineMat = new import_webgpu2.MeshStandardNodeMaterial({\n    color: new import_webgpu.Color(\"#23232b\"),\n    roughness: 0.6,\n    metalness: 0.2\n  });\n  const topHair = new import_webgpu.Mesh(hairlineGeo, hairlineMat);\n  topHair.position.set(0, bandHeight / 2 - 3e-3, 5e-3);\n  group.add(topHair);\n  const bottomHair = new import_webgpu.Mesh(hairlineGeo.clone(), hairlineMat.clone());\n  bottomHair.position.set(0, -bandHeight / 2 + 0.25 + 3e-3, 5e-3);\n  group.add(bottomHair);\n  const accentGeo = new import_webgpu.BoxGeometry(0.3, 0.02, 0.01);\n  const accentMat = new import_webgpu2.MeshStandardNodeMaterial({\n    color: new import_webgpu.Color(\"#ff2a38\"),\n    emissive: new import_webgpu.Color(\"#ff2a38\"),\n    emissiveIntensity: 1.4,\n    roughness: 0.5,\n    metalness: 0.2\n  });\n  const accentBar = new import_webgpu.Mesh(accentGeo, accentMat);\n  accentBar.position.set(-bandWidth / 2 + 1, 0.68, 5e-3);\n  group.add(accentBar);\n  const leftBlockX = -bandWidth / 2 + 0.5;\n  const wordmarkY = 0.8;\n  const colXPositions = [-1.4, 0.175, 1.75];\n  const colHeaderY = 0.5;\n  const fontSizeWordmark = 0.62;\n  const fontSizeColumnHeader = 0.09;\n  const fontSizeLink = 0.13;\n  const fontSizeLegal = 0.09;\n  const linkStep = fontSizeLink * 1.8;\n  const roleConfig = {\n    wordmark: { fontSize: fontSizeWordmark, letterSpacing: 0.02, align: \"left\", color: \"#e8ecf2\" },\n    \"column-header\": { fontSize: fontSizeColumnHeader, letterSpacing: 0.12, align: \"left\", color: \"#e8ecf2\" },\n    link: { fontSize: fontSizeLink, letterSpacing: 0, align: \"left\", color: \"#e8ecf2\" },\n    legal: { fontSize: fontSizeLegal, letterSpacing: 0.04, align: \"center\", color: \"#e8ecf2\" }\n  };\n  let colIndex = -1;\n  let linkIndex = 0;\n  const linkObjects = [];\n  const isHoverable = (role) => role === \"link\";\n  items.forEach((item) => {\n    const role = item.role;\n    const text = item.text;\n    const cfg = roleConfig[role];\n    if (!cfg) return;\n    const textObj = ctx.fontAtlas.createText(text, {\n      fontSize: cfg.fontSize,\n      letterSpacingPx: cfg.letterSpacing,\n      align: cfg.align,\n      color: cfg.color,\n      maxWidthPx: role === \"wordmark\" || role === \"legal\" ? bandWidth : 1.2\n    });\n    if (role === \"wordmark\") {\n      textObj.position.set(leftBlockX, wordmarkY, 5e-3);\n    } else if (role === \"column-header\") {\n      colIndex++;\n      linkIndex = 0;\n      textObj.position.set(colXPositions[colIndex], colHeaderY, 5e-3);\n    } else if (role === \"link\") {\n      const x = colXPositions[colIndex];\n      const y = colHeaderY - fontSizeColumnHeader * 1.2 - (linkIndex + 1) * linkStep;\n      textObj.position.set(x, y, 5e-3);\n      linkIndex++;\n      linkObjects.push(textObj);\n    } else if (role === \"legal\") {\n      textObj.position.set(0, -0.625, 5e-3);\n    }\n    group.add(textObj);\n  });\n  const linkTimelines = [];\n  linkObjects.forEach((obj) => {\n    const originalColor = \"#e8ecf2\";\n    const hoverColor = \"#ff2a38\";\n    const meshes = [];\n    obj.traverse((child) => {\n      if (child.isMesh) {\n        meshes.push(child);\n        child.material.transparent = true;\n        child.material.needsUpdate = true;\n      }\n    });\n    const onEnter = () => {\n      if (linkTimelines[obj.uuid]) {\n        linkTimelines[obj.uuid].kill();\n      }\n      const tl = import_gsap.gsap.to(\n        meshes.map((m) => m.material.color),\n        { r: new import_webgpu.Color(hoverColor).r, g: new import_webgpu.Color(hoverColor).g, b: new import_webgpu.Color(hoverColor).b, duration: 0.14, ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\", overwrite: true }\n      );\n      import_gsap.gsap.to(obj.position, { z: 0.02, duration: 0.14, ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\", overwrite: true });\n      linkTimelines[obj.uuid] = tl;\n    };\n    const onLeave = () => {\n      if (linkTimelines[obj.uuid]) {\n        linkTimelines[obj.uuid].kill();\n      }\n      const tl = import_gsap.gsap.to(\n        meshes.map((m) => m.material.color),\n        { r: new import_webgpu.Color(originalColor).r, g: new import_webgpu.Color(originalColor).g, b: new import_webgpu.Color(originalColor).b, duration: 0.14, ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\", overwrite: true }\n      );\n      import_gsap.gsap.to(obj.position, { z: 0, duration: 0.14, ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\", overwrite: true });\n      linkTimelines[obj.uuid] = tl;\n    };\n    obj.userData.handlers = {\n      pointerenter: onEnter,\n      pointerleave: onLeave\n    };\n  });\n  const allMaterials = [];\n  group.traverse((child) => {\n    if (child.isMesh && child.material) {\n      child.material.transparent = true;\n      child.material.needsUpdate = true;\n      allMaterials.push(child.material);\n    }\n  });\n  allMaterials.forEach((mat) => {\n    mat.opacity = 0;\n  });\n  group.position.y = 0.2;\n  const enterTL = import_gsap.gsap.timeline({\n    paused: true,\n    onComplete: () => {\n      allMaterials.forEach((mat) => {\n        mat.opacity = 1;\n      });\n      group.position.y = 0;\n    }\n  });\n  enterTL.to(allMaterials.map((mat) => ({ obj: mat, prop: \"opacity\" })), {\n    opacity: 1,\n    duration: 0.5,\n    ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\",\n    stagger: 0,\n    onUpdate: function() {\n    }\n  }, 0);\n  enterTL.to(group.position, {\n    y: 0,\n    duration: 0.5,\n    ease: \"cubic-bezier(0.25,0.46,0.45,0.94)\"\n  }, 0);\n  enterTL.play();\n  const disposeList = [\n    bandGeo,\n    bandMat,\n    bandMesh,\n    hairlineGeo,\n    topHair,\n    bottomHair,\n    accentGeo,\n    accentMat,\n    accentBar,\n    ...group.children.filter((c) => c.geometry && c.geometry !== bandGeo && c.geometry !== hairlineGeo && c.geometry !== accentGeo)\n  ];\n  group.userData.cleanup = () => {\n    enterTL.kill();\n    Object.values(linkTimelines).forEach((tl) => tl && tl.kill());\n    group.remove(keyLight);\n    group.remove(keyLight.target);\n    disposeList.forEach((obj) => {\n      if (obj.geometry) obj.geometry.dispose();\n      if (obj.material) obj.material.dispose();\n      if (obj.children) {\n        obj.traverse((child) => {\n          if (child.geometry) child.geometry.dispose();\n          if (child.material) child.material.dispose();\n        });\n      }\n    });\n  };\n  return group;\n}\n",
+  "transformError": null
+}

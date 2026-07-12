@@ -1,0 +1,209 @@
+{
+  "id": "wvis/glm-5.2/v-06-loop-column-gallery-r3",
+  "contestant": "glm-5.2",
+  "caseId": "v-06-loop-column-gallery",
+  "run": 3,
+  "phase": "control",
+  "arm": "control-resample",
+  "node": {
+    "nodeId": "v-06-loop-column-gallery",
+    "subtype": "loop-column",
+    "parentHubId": "hub-visual-stage",
+    "serviceTag": "wbake-visual-corpus",
+    "visual": {
+      "sourceAsset": "/prism-mock/home/nodes/feature-card.png"
+    },
+    "intent": {
+      "caption": "Loop column gallery — A vertical loop column of distinct image plates cycling with weighted motion; plates read as photographs, not voids.",
+      "behaviorSpec": {
+        "interactions": [],
+        "apiCalls": [],
+        "dataBindings": [],
+        "emits": [],
+        "listens": [],
+        "triggersDownstream": []
+      },
+      "stateEffects": [],
+      "visualSpec": {
+        "textContent": [
+          {
+            "text": "Inside the atelier",
+            "role": "headline",
+            "typography": {
+              "fontSize": 68,
+              "fontWeight": 600
+            }
+          },
+          {
+            "text": "DIAL ROOM",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "ESCAPEMENT BENCH",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "CNC HALL",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "FINISHING LAB",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "ARCHIVE VAULT",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          },
+          {
+            "text": "ASSEMBLY LINE ONE",
+            "role": "caption",
+            "typography": {
+              "fontSize": 18,
+              "fontWeight": 400
+            }
+          }
+        ],
+        "layers": [],
+        "colors": {
+          "background": "#0b0b10",
+          "surface": "#14141a",
+          "ink": "#16161d",
+          "paper": "#e8ecf2",
+          "accent": "#ff2a38",
+          "gradientStops": [
+            {
+              "at": 0,
+              "hex": "#0b0b10"
+            },
+            {
+              "at": 1,
+              "hex": "#14141a"
+            }
+          ]
+        },
+        "typography": {
+          "headline": {
+            "family": "Lora",
+            "fontSize": 68,
+            "fontWeight": 600,
+            "letterSpacing": -0.005,
+            "lineHeight": 1.1
+          },
+          "caption": {
+            "family": "JetBrains Mono",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "letterSpacing": 0.08,
+            "lineHeight": 1.4
+          }
+        },
+        "effects": "Six image plates, each 1.9 x 1.2 units (16:10), stacked vertically at 1.5-unit pitch (6x base 0.25), column offset x=+0.9, looping seamlessly modulo 9.0 units. Each plate carries a DISTINCT filmic-graded photograph texture (base /prism-mock/home/nodes/feature-card.png plus five distinct crops/variants, subtle vignette baked, never near-black voids). Plate material: map, roughness 0.6, metalness 0.1, clearcoat 0.1; each plate framed by a 0.03-unit machined ink #16161d bevel with a brushed edge highlight (roughness 0.5, metalness 0.5). Scroll drives column y at 1.5 units per viewport scroll with weighted inertia (damping 0.12), stopping with weighted-settle over 900ms cubic-bezier(0.165,0.84,0.44,1). fly-through on scroll: camera dollies 2.5 units deeper in z across the full scroll range. The plate nearest y=0 is focused: scale 1.0 to 1.06 over 350ms cubic-bezier(0.215,0.61,0.355,1), left edge lit by a #ff2a38 accent strip 0.03 units wide at emissive 1.4, its caption fading up at x=-1.6. Headline column-header pinned at [-1.6, 1.9, 0]."
+      },
+      "contracts": {
+        "inputs": {},
+        "outputs": {}
+      }
+    },
+    "codeRef": "",
+    "backendRef": null,
+    "renderMode": "plane",
+    "depthMapUrl": null,
+    "meshUrl": null,
+    "cinematicPrimitives": [
+      {
+        "name": "fly-through",
+        "trigger": "scroll",
+        "params": {
+          "depthUnits": 2.5
+        }
+      }
+    ],
+    "scenePosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "sceneSpec": {
+    "camera": {
+      "position": [
+        0.9,
+        0,
+        5
+      ],
+      "lookAt": [
+        0,
+        0,
+        0
+      ],
+      "fov": 50
+    },
+    "lights": [
+      {
+        "type": "ambient",
+        "color": "#3a3f4a",
+        "intensity": 0.5
+      },
+      {
+        "type": "directional",
+        "color": "#e8ecf2",
+        "intensity": 1,
+        "position": [
+          2,
+          2.5,
+          3
+        ]
+      },
+      {
+        "type": "point",
+        "color": "#ff2a38",
+        "intensity": 0.8,
+        "position": [
+          -1.2,
+          0,
+          1.5
+        ]
+      }
+    ],
+    "background": "#0b0b10",
+    "motionNote": "The plate column scrolls vertically in a seamless loop with weighted inertia and settle; the camera pushes 2.5 units deeper across the scroll range while the focused plate scales to 1.06."
+  },
+  "parsed": true,
+  "fenced": false,
+  "depGate": {
+    "sources": [
+      "three/webgpu",
+      "three/tsl",
+      "gsap"
+    ],
+    "violations": []
+  },
+  "cjs": "var __defProp = Object.defineProperty;\nvar __getOwnPropDesc = Object.getOwnPropertyDescriptor;\nvar __getOwnPropNames = Object.getOwnPropertyNames;\nvar __hasOwnProp = Object.prototype.hasOwnProperty;\nvar __export = (target, all) => {\n  for (var name in all)\n    __defProp(target, name, { get: all[name], enumerable: true });\n};\nvar __copyProps = (to, from, except, desc) => {\n  if (from && typeof from === \"object\" || typeof from === \"function\") {\n    for (let key of __getOwnPropNames(from))\n      if (!__hasOwnProp.call(to, key) && key !== except)\n        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });\n  }\n  return to;\n};\nvar __toCommonJS = (mod) => __copyProps(__defProp({}, \"__esModule\", { value: true }), mod);\nvar stdin_exports = {};\n__export(stdin_exports, {\n  default: () => createNode\n});\nmodule.exports = __toCommonJS(stdin_exports);\nvar import_webgpu = require(\"three/webgpu\");\nvar import_tsl = require(\"three/tsl\");\nvar import_gsap = require(\"gsap\");\nfunction createNode(config, ctx) {\n  const { THREE } = ctx;\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const colors = config.intent?.visualSpec?.colors ?? {};\n  const imageUrl = config.imageUrl;\n  const accentHex = colors.accent ?? \"#ff2a38\";\n  const inkHex = colors.ink ?? \"#16161d\";\n  const paperHex = colors.paper ?? \"#e8ecf2\";\n  const bgHex = colors.background ?? \"#0b0b10\";\n  const surfHex = colors.surface ?? \"#14141a\";\n  const root = new import_webgpu.Group();\n  root.name = \"loop-column-gallery\";\n  const cleanups = [];\n  const disposeList = [];\n  const backdropGeo = new import_webgpu.PlaneGeometry(8, 7);\n  disposeList.push(backdropGeo);\n  const backdropMat = new import_webgpu.MeshBasicNodeMaterial();\n  backdropMat.colorNode = (0, import_tsl.mix)((0, import_tsl.vec3)(new import_webgpu.Color(bgHex).r, new import_webgpu.Color(bgHex).g, new import_webgpu.Color(bgHex).b), (0, import_tsl.vec3)(new import_webgpu.Color(surfHex).r, new import_webgpu.Color(surfHex).g, new import_webgpu.Color(surfHex).b), (0, import_tsl.uv)().y);\n  const backdrop = new import_webgpu.Mesh(backdropGeo, backdropMat);\n  backdrop.position.set(0, 0, -2.5);\n  root.add(backdrop);\n  disposeList.push(backdropMat);\n  const atmosGeo = new import_webgpu.PlaneGeometry(3.4, 6.4);\n  disposeList.push(atmosGeo);\n  const atmosMat = new import_webgpu.MeshBasicNodeMaterial();\n  atmosMat.colorNode = (0, import_tsl.mix)((0, import_tsl.vec3)(0.02, 0, 0), (0, import_tsl.vec3)(0, 0, 0), (0, import_tsl.smoothstep)(0, 1, (0, import_tsl.uv)().y));\n  atmosMat.transparent = true;\n  const atmos = new import_webgpu.Mesh(atmosGeo, atmosMat);\n  atmos.position.set(0.9, 0, -2.2);\n  root.add(atmos);\n  disposeList.push(atmosMat);\n  const ambient = new import_webgpu.AmbientLight(16777215, 0.45);\n  root.add(ambient);\n  const keyLight = new import_webgpu.DirectionalLight(16777215, 1.1);\n  keyLight.position.set(-2.2, 2.6, 3);\n  root.add(keyLight);\n  const rim = new import_webgpu.DirectionalLight(new import_webgpu.Color(accentHex), 0.7);\n  rim.position.set(3, -1, -1.8);\n  root.add(rim);\n  const fill = new import_webgpu.PointLight(6975616, 0.4, 12, 1.5);\n  fill.position.set(-2.5, 0.5, 2);\n  root.add(fill);\n  const column = new import_webgpu.Group();\n  root.add(column);\n  const PLATE_W = 1.9, PLATE_H = 1.2, PITCH = 1.5, N = 6, LOOP = 9, COL_X = 0.9;\n  const plates = [];\n  const captions = [];\n  const accentMats = [];\n  const headlineItem = items.find((i) => i.role === \"headline\");\n  const headlineText = headlineItem?.text ?? \"Inside the atelier\";\n  const headline = ctx.fontAtlas.createText(headlineText, { fontSize: 68, color: paperHex, align: \"left\" });\n  headline.position.set(-1.6, 1.9, 0);\n  root.add(headline);\n  const microLabel = ctx.fontAtlas.createText(\"NOVA ATELIER  /  THE INDEX\", { fontSize: 16, color: accentHex, align: \"left\", letterSpacingPx: 1.9 });\n  microLabel.position.set(-1.6, 2.35, 0);\n  root.add(microLabel);\n  const captionItems = items.filter((i) => i.role === \"caption\");\n  const captionStrings = captionItems.map((i) => i.text);\n  const inkColor = new import_webgpu.Color(inkHex);\n  for (let i = 0; i < N; i++) {\n    const pg = new import_webgpu.Group();\n    column.add(pg);\n    const frameGeo = new import_webgpu.BoxGeometry(PLATE_W + 0.08, PLATE_H + 0.08, 0.05);\n    disposeList.push(frameGeo);\n    const frameMat = new import_webgpu.MeshPhysicalNodeMaterial();\n    frameMat.color = inkColor;\n    frameMat.roughness = 0.5;\n    frameMat.metalness = 0.5;\n    frameMat.clearcoat = 0.25;\n    const frame = new import_webgpu.Mesh(frameGeo, frameMat);\n    frame.position.set(COL_X, 0, -0.03);\n    pg.add(frame);\n    disposeList.push(frameMat);\n    const edgeGeo = new import_webgpu.PlaneGeometry(PLATE_W + 0.04, PLATE_H + 0.04);\n    disposeList.push(edgeGeo);\n    const edgeMat = new import_webgpu.MeshBasicNodeMaterial();\n    edgeMat.colorNode = (0, import_tsl.vec3)(0.32, 0.33, 0.36);\n    edgeMat.transparent = true;\n    edgeMat.opacity = 0.5;\n    const edge = new import_webgpu.Mesh(edgeGeo, edgeMat);\n    edge.position.set(COL_X, 0, -5e-3);\n    pg.add(edge);\n    disposeList.push(edgeMat);\n    const plateGeo = new import_webgpu.PlaneGeometry(PLATE_W, PLATE_H);\n    disposeList.push(plateGeo);\n    const plateMat = new import_webgpu.MeshPhysicalNodeMaterial();\n    plateMat.color = new import_webgpu.Color(2105384);\n    plateMat.roughness = 0.6;\n    plateMat.metalness = 0.1;\n    plateMat.clearcoat = 0.1;\n    const plate = new import_webgpu.Mesh(plateGeo, plateMat);\n    plate.position.set(COL_X, 0, 0.012);\n    pg.add(plate);\n    disposeList.push(plateMat);\n    const accentGeo = new import_webgpu.PlaneGeometry(0.03, PLATE_H + 0.04);\n    disposeList.push(accentGeo);\n    const accentMat = new import_webgpu.MeshBasicNodeMaterial();\n    accentMat.colorNode = (0, import_tsl.vec3)(new import_webgpu.Color(accentHex).r, new import_webgpu.Color(accentHex).g, new import_webgpu.Color(accentHex).b).mul(1.4);\n    accentMat.transparent = true;\n    accentMat.opacity = 0;\n    const accent = new import_webgpu.Mesh(accentGeo, accentMat);\n    accent.position.set(COL_X - PLATE_W / 2 - 0.015, 0, 0.02);\n    pg.add(accent);\n    disposeList.push(accentMat);\n    const baseY = (i - (N - 1) / 2) * PITCH;\n    plates.push({ group: pg, mat: plateMat, frameMat, baseY, idx: i });\n    accentMats.push(accentMat);\n    const capStr = captionStrings[i] ?? \"\";\n    const cap = ctx.fontAtlas.createText(capStr, { fontSize: 18, color: paperHex, align: \"left\", letterSpacingPx: 1.44 });\n    cap.position.set(-1.6, baseY, 0.05);\n    cap.visible = false;\n    column.add(cap);\n    captions.push(cap);\n  }\n  if (imageUrl) {\n    ctx.textureLoader.loadTexture(imageUrl).then((tex) => {\n      tex.wrapS = tex.wrapT = import_webgpu.RepeatWrapping;\n      tex.minFilter = tex.magFilter = import_webgpu.LinearFilter;\n      tex.needsUpdate = true;\n      for (let i = 0; i < N; i++) {\n        const repY = 1 / 6;\n        const offY = i / 6;\n        const texNode = (0, import_tsl.texture)(tex, (0, import_tsl.uv)().mul((0, import_tsl.vec2)(1, repY)).add((0, import_tsl.vec2)(0, offY)));\n        const d = (0, import_tsl.uv)().sub(0.5).length().mul(1.7);\n        const vignette = (0, import_tsl.smoothstep)(0.42, 0.66, d);\n        const p = plates[i];\n        p.mat.colorNode = (0, import_tsl.mix)(texNode.rgb, (0, import_tsl.vec3)(0.015, 0.015, 0.02), vignette);\n        p.mat.needsUpdate = true;\n      }\n    });\n  }\n  let offset = 0;\n  let displayOffset = 0;\n  let focused = -1;\n  const SPEED = 0.45;\n  function mod9(v) {\n    let m = v % LOOP;\n    if (m < 0) m += LOOP;\n    return m;\n  }\n  function setFocus(newIdx, y) {\n    if (newIdx === focused) return;\n    if (focused >= 0) {\n      const op = plates[focused];\n      import_gsap.gsap.to(op.group.scale, { x: 1, y: 1, z: 1, duration: 0.45, ease: \"power3.out\" });\n      import_gsap.gsap.to(accentMats[focused], { opacity: 0, duration: 0.35, ease: \"power2.out\" });\n      const oc = captions[focused];\n      import_gsap.gsap.to(oc.position, { y: y + 0.15, duration: 0.3, ease: \"power2.in\", onComplete: () => {\n        oc.visible = false;\n      } });\n    }\n    focused = newIdx;\n    const np = plates[focused];\n    import_gsap.gsap.to(np.group.scale, { x: 1.06, y: 1.06, z: 1, duration: 0.35, ease: \"expo.out\" });\n    import_gsap.gsap.to(accentMats[focused], { opacity: 1, duration: 0.35, ease: \"power2.out\" });\n    const nc = captions[focused];\n    nc.visible = true;\n    import_gsap.gsap.fromTo(nc.position, { y: y - 0.12 }, { y, duration: 0.5, ease: \"power3.out\" });\n  }\n  function tickFn(dt) {\n    offset += SPEED * dt;\n    displayOffset += (offset - displayOffset) * (1 - Math.exp(-dt / 0.55));\n    let best = 0, bestD = Infinity, bestY = 0;\n    for (let i = 0; i < N; i++) {\n      const p = plates[i];\n      let y = mod9(p.baseY - displayOffset);\n      if (y > LOOP / 2) y -= LOOP;\n      p.group.position.y = y;\n      const d = Math.abs(y);\n      if (d < bestD) {\n        bestD = d;\n        best = i;\n        bestY = y;\n      }\n    }\n    if (focused >= 0) {\n      captions[focused].position.y = plates[focused].group.position.y;\n    }\n    setFocus(best, bestY);\n  }\n  import_gsap.gsap.ticker.add(tickFn);\n  const introTl = import_gsap.gsap.timeline();\n  introTl.from(headline.position, { y: 1.9 + 0.4, duration: 0.7, ease: \"power3.out\" }, 0);\n  introTl.from(headline, { ...{} }, 0);\n  introTl.from(microLabel.position, { y: 2.35 + 0.2, duration: 0.5, ease: \"power2.out\" }, 0.1);\n  introTl.from(column.position, { z: 0.4, duration: 0.8, ease: \"power3.out\" }, 0);\n  introTl.from(column.position, { y: 0.25, duration: 0.8, ease: \"power3.out\" }, 0);\n  const primCleanups = [];\n  const prims = config.cinematicPrimitives ?? [];\n  for (const prim of prims) {\n    if (prim.name && ctx.primitives && ctx.primitives[prim.name]) {\n      try {\n        const r = ctx.primitives[prim.name](root, prim.params ?? {});\n        if (r && r.cleanup) primCleanups.push(r.cleanup);\n      } catch (e) {\n      }\n    }\n  }\n  root.userData.cleanup = () => {\n    import_gsap.gsap.ticker.remove(tickFn);\n    introTl.kill();\n    import_gsap.gsap.killTweensOf(column.position);\n    for (const p of plates) {\n      import_gsap.gsap.killTweensOf(p.group.scale);\n      import_gsap.gsap.killTweensOf(p.group.position);\n    }\n    for (const am of accentMats) import_gsap.gsap.killTweensOf(am);\n    for (const c of captions) import_gsap.gsap.killTweensOf(c.position);\n    for (const c of primCleanups) {\n      try {\n        c();\n      } catch (e) {\n      }\n    }\n    for (const d of disposeList) {\n      try {\n        d.dispose && d.dispose();\n      } catch (e) {\n      }\n    }\n  };\n  root.userData.handlers = {};\n  return root;\n}\n",
+  "transformError": null
+}
