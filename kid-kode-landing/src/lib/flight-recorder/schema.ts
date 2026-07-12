@@ -243,6 +243,31 @@ export interface PrismAttributes {
 
   // Timing
   "prism.latency.ms"?: number;
+
+  // W-VIS D4/D5 (additive) — design-lane vision micro-loop + reference-frame
+  // conditioning columns. Recorded per node_attempt in the see-then-revise
+  // lane; the sentinel column discharges signed-table condition 4.
+  /** Seen iterations consumed by the OD11 micro-loop (0 = first pass only). */
+  "prism.design.iterations_used"?: number;
+  /** Blind-judge score per iteration, index 0 = first pass. */
+  "prism.design.iteration_scores"?: number[];
+  /** D3 preset selections that rode the generation prompt. */
+  "prism.design.preset.light_rig"?: string;
+  "prism.design.preset.camera_framing"?: string;
+  "prism.design.preset.composition_layout"?: string;
+  /** D4 conditioning arm: composition frame image, structured text fallback
+   *  (text-only route), or none. */
+  "prism.design.reference_frame"?: "image" | "text-fallback" | "none";
+  /** Critic render-vs-frame fidelity score (D4), alongside the DL score. */
+  "prism.design.frame_fidelity"?: number | null;
+  /** Best-of-N sampling width used (1 = single sample). */
+  "prism.design.best_of"?: number;
+  /** Which sample index won the best-of selection. */
+  "prism.design.selected_sample"?: number;
+  /** Signed-table condition 4: Luna first-pass regression sentinel — true
+   *  when a gpt-5.6-luna production first-pass FAILED verification (watched
+   *  against the 100% bakeoff profile). */
+  "prism.sentinel.luna_first_pass_regression"?: boolean;
 }
 
 // ─── Record envelope + the six discriminated record types ────────────────────
