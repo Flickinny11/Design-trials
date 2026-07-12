@@ -1,0 +1,46 @@
+{
+  "wave": "wvis-d1",
+  "iter": 1,
+  "arm": "vision",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4.5",
+  "route": "openrouter",
+  "caseId": "v-08-orrery-mechanism",
+  "sourceTag": "v-08-orrery-mechanism-r2",
+  "tag": "v-08-orrery-mechanism-r21",
+  "run": 21,
+  "critiqueFed": {
+    "score": 40,
+    "mustFix": [
+      {
+        "defect": "DEAD_LIGHTING",
+        "region": "both gears — flat white clay material, no metalness or anisotropy"
+      },
+      {
+        "defect": "OFF_PALETTE",
+        "region": "center and right gears — white plastic instead of machined steel"
+      },
+      {
+        "defect": "FLAT_VOID",
+        "region": "lower background field"
+      },
+      {
+        "defect": "BROKEN_COMPOSITION",
+        "region": "bottom center — floating translucent floor quad"
+      }
+    ],
+    "notes": "Correct gear pair and red pivot accent, but untextured clay-render look violates rendered-materiality law.",
+    "runtimeError": null
+  },
+  "frameFed": "notes/bakeoff-b/frames/claude-haiku-4.5/v-08-orrery-mechanism-r2.png",
+  "ok": true,
+  "wallMs": 1422,
+  "finishReason": "stop",
+  "usage": {
+    "promptTokens": 7736,
+    "completionTokens": 2740
+  },
+  "costUsd": 0.021436,
+  "billing": "metered",
+  "output": "```javascript\nimport { Group, Mesh, Cylinder, Sphere, PlaneGeometry, CylinderGeometry, SphereGeometry } from 'three/webgpu';\nimport { MeshStandardNodeMaterial, MeshPhysicalNodeMaterial } from 'three/webgpu';\nimport { color, uniform, vec3, mix, uv } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const root = new Group();\n  root.position.copy(config.scenePosition || new THREE.Vector3(0, 0, 0));\n\n  const cleanup = {\n    timelines: [],\n    resources: [],\n    dispose() {\n      this.timelines.forEach(t => t.kill());\n      this.resources.forEach(r => r.dispose?.());\n    }\n  };\n\n  root.userData.cleanup = () => cleanup.dispose();\n\n  // Load primary gear from GLB\n  const gearPromise = ctx.glbLoader.loadGLB(config.meshUrl).then(gltf => {\n    const primaryGear = gltf.scene;\n    primaryGear.scale.set(1.6, 1.6, 1.6);\n    primaryGear.position.set(0, 0, 0);\n    root.add(primaryGear);\n\n    // Clone and position secondary gear\n    const secondaryGear = primaryGear.clone();\n    secondaryGear.scale.set(0.9, 0.9, 0.9);\n    secondaryGear.position.set(1.15, 0.35, -0.1);\n    root.add(secondaryGear);\n\n    // Apply gear material properties (machined steel with anisotropy)\n    const applyGearMaterial = (obj) => {\n      obj.traverse(child => {\n        if (child instanceof Mesh) {\n          const newMat = new MeshStandardNodeMaterial({\n            color: '#3a3a42', // Dark brushed steel\n            roughness: 0.5,\n            metalness: 0.55,\n            clearcoat: 0.2,\n            clearcoatRoughness: 0.3,\n            anisotropy: 0.7,\n            emissive: '#1a1a20',\n            emissiveIntensity: 0.15\n          });\n          child.material = newMat;\n          cleanup.resources.push(newMat);\n        }\n      });\n    };\n\n    applyGearMaterial(primaryGear);\n    applyGearMaterial(secondaryGear);\n\n    // Jewel pivot sphere at primary hub\n    const jewelGeo = new SphereGeometry(0.12, 32, 32);\n    const jewelMat = new MeshPhysicalNodeMaterial({\n      color: '#ff2a38',\n      transmission: 0.6,\n      ior: 1.76,\n      emissive: '#ff2a38',\n      emissiveIntensity: 1.8,\n      roughness: 0.2,\n      metalness: 0.1\n    });\n    const jewel = new Mesh(jewelGeo, jewelMat);\n    jewel.position.set(0, 0, 0);\n    root.add(jewel);\n    cleanup.resources.push(jewelGeo, jewelMat);\n\n    // Arbor shafts (ink cylinders through hubs)\n    const arborGeo = new CylinderGeometry(0.05, 0.05, 0.8, 16);\n    const arborMat = new MeshStandardNodeMaterial({\n      color: '#16161d',\n      roughness: 0.6,\n      metalness: 0.2,\n      emissive: '#0a0a0f',\n      emissiveIntensity: 0.1\n    });\n\n    const arbor1 = new Mesh(arborGeo, arborMat);\n    arbor1.position.set(0, 0, 0);\n    arbor1.rotation.x = Math.PI / 2;\n    root.add(arbor1);\n\n    const arbor2 = new Mesh(arborGeo, arborMat.clone());\n    arbor2.position.set(1.15, 0.35, -0.1);\n    arbor2.rotation.x = Math.PI / 2;\n    root.add(arbor2);\n\n    cleanup.resources.push(arborGeo, arborMat);\n\n    // Contact shadow ellipse (subtle, grounded)\n    const shadowGeo = new PlaneGeometry(2.6, 1.2);\n    const shadowMat = new MeshStandardNodeMaterial({\n      color: '#000000',\n      emissive: '#000000',\n      roughness: 0.95,\n      metalness: 0,\n      transparent: true,\n      opacity: 0.35\n    });\n    const shadow = new Mesh(shadowGeo, shadowMat);\n    shadow.position.set(0, -1.2, -1.95);\n    shadow.rotation.x = -Math.PI / 2;\n    root.add(shadow);\n    cleanup.resources.push(shadowGeo, shadowMat);\n\n    // Setup gear rotation animation (phase-locked)\n    const gearState = { primaryAngle: 0, secondaryAngle: 0 };\n    const updateGears = () => {\n      gearState.primaryAngle += 0.08 * (1 / 60); // ~0.08 rad/s\n      gearState.secondaryAngle = -(0.08 * (16 / 9)) * (1 / 60); // -0.142 rad/s (16:9 ratio)\n      \n      primaryGear.rotation.z = gearState.primaryAngle;\n      secondaryGear.rotation.z = gearState.secondaryAngle;\n    };\n\n    const gearTimeline = gsap.timeline({ repeat: -1 });\n    gearTimeline.to(gearState, {\n      primaryAngle: Math.PI * 2,\n      duration: (Math.PI * 2) / 0.08,\n      ease: 'none',\n      onUpdate: updateGears\n    }, 0);\n\n    cleanup.timelines.push(gearTimeline);\n  });\n\n  // Backdrop gradient plane with TSL gradient\n  const backdropGeo = new PlaneGeometry(7, 6);\n  const gradColor1 = uniform(color('#0b0b10'));\n  const gradColor2 = uniform(color('#101017'));\n  const gradColor3 = uniform(color('#16161d'));\n  \n  const backdropMat = new MeshStandardNodeMaterial({\n    colorNode: mix(\n      mix(gradColor1, gradColor2, uv().y.clamp(0, 0.65)),\n      gradColor3,\n      uv().y.sub(0.65).clamp(0, 1).mul(2.857)\n    ),\n    emissive: '#000000',\n    emissiveIntensity: 0.05,\n    roughness: 1,\n    metalness: 0\n  });\n  const backdrop = new Mesh(backdropGeo, backdropMat);\n  backdrop.position.z = -3;\n  root.add(backdrop);\n  cleanup.resources.push(backdropGeo, backdropMat);\n\n  // Text: headline \"The going train\"\n  const headlineText = ctx.fontAtlas.createText('The going train', {\n    fontSize: 68,\n    color: '#e8ecf2',\n    align: 'center',\n    letterSpacingPx: -0.34\n  });\n  headlineText.position.set(0, -1.7, 0.1);\n  root.add(headlineText);\n\n  // Text: caption \"34 COMPONENTS / HAND-FINISHED\"\n  const captionText = ctx.fontAtlas.createText('34 COMPONENTS / HAND-FINISHED', {\n    fontSize: 18,\n    color: '#e8ecf2',\n    align: 'center',\n    letterSpacingPx: 1.44\n  });\n  captionText.position.set(0, -2.1, 0.1);\n  root.add(captionText);\n\n  // Apply orbit cinematic primitive (camera drift)\n  const orbitResult = ctx.primitives['orbit'](root, {\n    radius: 0.2,\n    period: (Math.PI * 2) / 0.08 // Derived from speed 0.08 rad/s\n  });\n  if (orbitResult) {\n    cleanup.timelines.push(orbitResult.timeline);\n  }\n\n  return root;\n}\n```"
+}

@@ -1,0 +1,2188 @@
+{
+  "sampledAt": "2026-07-12T04:47:14.394Z",
+  "salt": "wvis-d1-2026-07-11",
+  "poolRule": "judged renders with renderable=true AND score<85 (runtime crashes included; parse/transform failures excluded — format problem, disclosed)",
+  "stratification": "round-robin over (score band [0-29|30-59|60-84] x category [3d|2d]) in sha256(bundleId+salt) order; max 1 render per (model,case)",
+  "poolSize": 307,
+  "perModel": 6,
+  "sample": [
+    {
+      "bundleId": "wbakeb/claude-fable-5/v-04-kinetic-type-headline-r1",
+      "contestant": "claude-fable-5",
+      "caseId": "v-04-kinetic-type-headline",
+      "sourceTag": "v-04-kinetic-type-headline-r1",
+      "sourceRun": 1,
+      "category": "3d",
+      "scoreBand": 0,
+      "originalScore": 7,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "whole frame — no text present"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "full field — near-white/lavender, inverts DL1 dark-first"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire upper 85% flat gradient"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "no headline glyphs, no underline"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "dark noise band along bottom edge"
+        }
+      ],
+      "judgeNotes": "Near-empty light field with a faint red smudge; inverted palette, zero headline. Effectively blank.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-fable-5/v-04-kinetic-type-headline-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-fable-5/v-04-kinetic-type-headline-r1.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-fable-5/v-18-nav-dock-r1",
+      "contestant": "claude-fable-5",
+      "caseId": "v-18-nav-dock",
+      "sourceTag": "v-18-nav-dock-r1",
+      "sourceRun": 1,
+      "category": "2d",
+      "scoreBand": 0,
+      "originalScore": 12,
+      "mustFix": [
+        {
+          "defect": "SCALE_ERROR",
+          "region": "entire frame"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "five labeled entries absent"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "upper gray field"
+        }
+      ],
+      "judgeNotes": "Dock is massively zoomed and cropped; only a fragment of rail and one red tick visible, all text gone, large flat gray void up top.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-fable-5/v-18-nav-dock-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-fable-5/v-18-nav-dock-r1.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-fable-5/v-01-orbit-product-hero-r2",
+      "contestant": "claude-fable-5",
+      "caseId": "v-01-orbit-product-hero",
+      "sourceTag": "v-01-orbit-product-hero-r2",
+      "sourceRun": 2,
+      "category": "3d",
+      "scoreBand": 1,
+      "originalScore": 43,
+      "mustFix": [
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "left blown-out flat white light panel"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "polished gold body vs specified brushed-metal PBR"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "soft diffuse rendering lacks key+rim precision, background field"
+        }
+      ],
+      "judgeNotes": "Better: watch rests on plinth, thin red accent line on plinth rim. Still marred by blown white panel and soft, imprecise materiality.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-fable-5/v-01-orbit-product-hero-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-fable-5/v-01-orbit-product-hero-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-fable-5/v-16-feature-triptych-r2",
+      "contestant": "claude-fable-5",
+      "caseId": "v-16-feature-triptych",
+      "sourceTag": "v-16-feature-triptych-r2",
+      "sourceRun": 2,
+      "category": "2d",
+      "scoreBand": 1,
+      "originalScore": 42,
+      "mustFix": [
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "center band — titles and body copy overlap into unreadable string"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center — text layers collide across the three cards"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "center body copy over surface"
+        }
+      ],
+      "judgeNotes": "Brighter card ramp, hairline borders and red underline accent help, but overlapping title/body text remains a fatal legibility defect.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-fable-5/v-16-feature-triptych-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-fable-5/v-16-feature-triptych-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-fable-5/v-17-data-ribbon-r2",
+      "contestant": "claude-fable-5",
+      "caseId": "v-17-data-ribbon",
+      "sourceTag": "v-17-data-ribbon-r2",
+      "sourceRun": 2,
+      "category": "2d",
+      "scoreBand": 2,
+      "originalScore": 76,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field surrounding ribbon"
+        }
+      ],
+      "judgeNotes": "Clean on-palette ribbon with rounded glossy ends showing genuine dimensionality, correct red ticks, mono paper figures, working edge fades; large dead-black surround keeps it from flagship tier.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-fable-5/v-17-data-ribbon-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-fable-5/v-17-data-ribbon-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-fable-5/v-06-loop-column-gallery-r2",
+      "contestant": "claude-fable-5",
+      "caseId": "v-06-loop-column-gallery",
+      "sourceTag": "v-06-loop-column-gallery-r2",
+      "sourceRun": 2,
+      "category": "3d",
+      "scoreBand": 0,
+      "originalScore": 19,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "left half / background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "blown-out white plate upper-right"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "plates render as flat gray fills, not photographs"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "oversized clipped white slab center-right"
+        }
+      ],
+      "judgeNotes": "Plates read as flat gray/blown voids, not filmic photos; vast black left field; overexposed slab breaks column.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-fable-5/v-06-loop-column-gallery-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-fable-5/v-06-loop-column-gallery-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-haiku-4.5/v-05-pedestal-material-study-r2",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-05-pedestal-material-study",
+      "sourceTag": "v-05-pedestal-material-study-r2",
+      "sourceRun": 2,
+      "category": "3d",
+      "scoreBand": 0,
+      "originalScore": 28,
+      "mustFix": [
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "center knot — near-black gloss, no brushed-metal anisotropy or roughness map"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "background field — giant white blobs violate dark #0b0b10 gradient"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "pedestal base — no contact shadow; no red accent anywhere"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center-bottom pedestal — cylinder front face sliced open (pac-man cut)"
+        }
+      ],
+      "judgeNotes": "Smooth dark plastic, not brushed metal; broken pedestal geometry; palette inverted to white-dominant.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-haiku-4.5/v-05-pedestal-material-study-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-haiku-4.5/v-05-pedestal-material-study-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-haiku-4.5/v-09-editorial-oversized-type-r2",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-09-editorial-oversized-type",
+      "sourceTag": "v-09-editorial-oversized-type-r2",
+      "sourceRun": 2,
+      "category": "2d",
+      "scoreBand": 0,
+      "originalScore": 14,
+      "mustFix": [
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center and right field — glyphs enormously over-cropped"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "center — unreadable blurred letterforms"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — kicker and hero lines absent"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "left third — flat black, no gradient/grain"
+        }
+      ],
+      "judgeNotes": "Correct red accent rule appears, but composition is still an illegible over-zoomed fragment.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-haiku-4.5/v-09-editorial-oversized-type-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-haiku-4.5/v-09-editorial-oversized-type-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-haiku-4.5/v-08-orrery-mechanism-r2",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-08-orrery-mechanism",
+      "sourceTag": "v-08-orrery-mechanism-r2",
+      "sourceRun": 2,
+      "category": "3d",
+      "scoreBand": 1,
+      "originalScore": 40,
+      "mustFix": [
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "both gears — flat white clay material, no metalness or anisotropy"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center and right gears — white plastic instead of machined steel"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower background field"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "bottom center — floating translucent floor quad"
+        }
+      ],
+      "judgeNotes": "Correct gear pair and red pivot accent, but untextured clay-render look violates rendered-materiality law.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-haiku-4.5/v-08-orrery-mechanism-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-haiku-4.5/v-08-orrery-mechanism-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-haiku-4.5/v-10-bento-metrics-r2",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-10-bento-metrics",
+      "sourceTag": "v-10-bento-metrics-r2",
+      "sourceRun": 2,
+      "category": "2d",
+      "scoreBand": 1,
+      "originalScore": 40,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "all three cells — no stat numerals or labels"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-right quadrant — giant blurred white blob intrusion"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower-left background field"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "cell surfaces — gradient nearly imperceptible"
+        }
+      ],
+      "judgeNotes": "Correct bento geometry and red ticks, but zero metrics content, void background, and an off-spec white intrusion.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-haiku-4.5/v-10-bento-metrics-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-haiku-4.5/v-10-bento-metrics-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-haiku-4.5/v-04-kinetic-type-headline-r1",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-04-kinetic-type-headline",
+      "sourceTag": "v-04-kinetic-type-headline-r1",
+      "sourceRun": 1,
+      "category": "3d",
+      "scoreBand": 0,
+      "originalScore": 17,
+      "mustFix": [
+        {
+          "defect": "SCALE_ERROR",
+          "region": "entire frame — glyphs cropped far beyond frame"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "full-width blurred letterforms"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "bottom-center noisy grey slab"
+        }
+      ],
+      "judgeNotes": "Camera buried inside oversized blurred glyphs; unreadable, only the red underline survives.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-haiku-4.5/v-04-kinetic-type-headline-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-haiku-4.5/v-04-kinetic-type-headline-r1.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-haiku-4.5/v-13-brand-wall-r2",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-13-brand-wall",
+      "sourceTag": "v-13-brand-wall-r2",
+      "sourceRun": 2,
+      "category": "2d",
+      "scoreBand": 0,
+      "originalScore": 7,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "no grid, marks, or kicker anywhere"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "single small white square, center"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center square, flat fill"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: (0 , import_webgpu2.uv) is not a function"
+        }
+      ],
+      "judgeNotes": "Duplicate of F5 failure: lone flat white square on empty black.",
+      "moduleRuntimeError": "TypeError: (0 , import_webgpu2.uv) is not a function",
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-haiku-4.5/v-13-brand-wall-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-haiku-4.5/v-13-brand-wall-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-opus-4.8/v-04-kinetic-type-headline-r2",
+      "contestant": "claude-opus-4.8",
+      "caseId": "v-04-kinetic-type-headline",
+      "sourceTag": "v-04-kinetic-type-headline-r2",
+      "sourceRun": 2,
+      "category": "3d",
+      "scoreBand": 0,
+      "originalScore": 11,
+      "mustFix": [
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper-right — single glyph blob fills most of frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no headline text, only stray underline"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "pink underline washed out against white blob"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "left and lower black field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "white mass — flat blurred fill"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "whole frame"
+        }
+      ],
+      "judgeNotes": "One oversized blurred glyph and a floating faded underline; no legible type, composition broken.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-opus-4.8/v-04-kinetic-type-headline-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-opus-4.8/v-04-kinetic-type-headline-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-opus-4.8/v-12-photo-hero-composite-r2",
+      "contestant": "claude-opus-4.8",
+      "caseId": "v-12-photo-hero-composite",
+      "sourceTag": "v-12-photo-hero-composite-r2",
+      "sourceRun": 2,
+      "category": "2d",
+      "scoreBand": 0,
+      "originalScore": 12,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "center white card"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no photo plate, subject, or caption text"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center card flat white fill"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "right edge blurred white blocks"
+        }
+      ],
+      "judgeNotes": "Blank white card with lone red underline; inverts dark-first spec and contains no photographic or typographic content.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-opus-4.8/v-12-photo-hero-composite-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-opus-4.8/v-12-photo-hero-composite-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-opus-4.8/v-05-pedestal-material-study-r2",
+      "contestant": "claude-opus-4.8",
+      "caseId": "v-05-pedestal-material-study",
+      "sourceTag": "v-05-pedestal-material-study-r2",
+      "sourceRun": 2,
+      "category": "3d",
+      "scoreBand": 1,
+      "originalScore": 31,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center knot — matte white, no brushed-metal, metalness, or anisotropic highlight"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center object — soft diffuse only, no contact shadow or specular"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "background field — blurred white blob left side; sphere protruding under pedestal"
+        },
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "center pedestal"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "lower field — cinematic floor and spec gradient absent"
+        }
+      ],
+      "judgeNotes": "Marginally better shading than F1 but same plaster material, dead light, and blob-contaminated composition.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-opus-4.8/v-05-pedestal-material-study-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-opus-4.8/v-05-pedestal-material-study-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-opus-4.8/v-19-empty-state-r1",
+      "contestant": "claude-opus-4.8",
+      "caseId": "v-19-empty-state",
+      "sourceTag": "v-19-empty-state-r1",
+      "sourceRun": 1,
+      "category": "2d",
+      "scoreBand": 1,
+      "originalScore": 44,
+      "mustFix": [
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "left-center quadrant"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-right corner"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center panel"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "accent button lower-right"
+        }
+      ],
+      "judgeNotes": "Panel, grid, ghost watch-card and red action present, but black slab occludes preview; white blob intrudes; guidance copy absent.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-opus-4.8/v-19-empty-state-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-opus-4.8/v-19-empty-state-r1.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-opus-4.8/v-08-orrery-mechanism-r2",
+      "contestant": "claude-opus-4.8",
+      "caseId": "v-08-orrery-mechanism",
+      "sourceTag": "v-08-orrery-mechanism-r2",
+      "sourceRun": 2,
+      "category": "3d",
+      "scoreBand": 2,
+      "originalScore": 66,
+      "mustFix": [
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "gear body vs background, center"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "upper gear rim, weak specular response"
+        }
+      ],
+      "judgeNotes": "Centered meshing pair, red jewel pivot, gradient and grounded shadow; material underlit and soft, lacking machined anisotropy.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-opus-4.8/v-08-orrery-mechanism-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-opus-4.8/v-08-orrery-mechanism-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-opus-4.8/v-02-particle-constellation-r2",
+      "contestant": "claude-opus-4.8",
+      "caseId": "v-02-particle-constellation",
+      "sourceTag": "v-02-particle-constellation-r2",
+      "sourceRun": 2,
+      "category": "3d",
+      "scoreBand": 0,
+      "originalScore": 18,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "full frame — camera inside blurred white mass, red slab spans right half"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "left half white shape vs 0.012-unit points"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center-right red rectangle — flat unlit fill"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "origin — no 90-instance emissive red core"
+        }
+      ],
+      "judgeNotes": "Same broken scene, worse: flat red slab dominates, particle shell barely reads, zero additive glow or fog depth.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-opus-4.8/v-02-particle-constellation-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-opus-4.8/v-02-particle-constellation-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-sonnet-5/v-04-kinetic-type-headline-r1",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-04-kinetic-type-headline",
+      "sourceTag": "v-04-kinetic-type-headline-r1",
+      "sourceRun": 1,
+      "category": "3d",
+      "scoreBand": 0,
+      "originalScore": 7,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "center and lower two-thirds — empty noisy black field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "whole frame — no headline, no accent underline, no red anywhere"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper-left and right white blobs — glyph fragments at extreme zoom"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "white fragments — featureless blur"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "whole frame"
+        }
+      ],
+      "judgeNotes": "Near-void frame; two blurred white fragments on empty black, zero accent, zero readable content.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-sonnet-5/v-04-kinetic-type-headline-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-sonnet-5/v-04-kinetic-type-headline-r1.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-sonnet-5/v-12-photo-hero-composite-r2",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-12-photo-hero-composite",
+      "sourceTag": "v-12-photo-hero-composite-r2",
+      "sourceRun": 2,
+      "category": "2d",
+      "scoreBand": 0,
+      "originalScore": 7,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "center card"
+        },
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no photo, subject, or caption"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-right cropped letterform fragment"
+        }
+      ],
+      "judgeNotes": "Near-empty black frame; unlit black plate with a stray blurred glyph. Effectively unrendered.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-sonnet-5/v-12-photo-hero-composite-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-sonnet-5/v-12-photo-hero-composite-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-sonnet-5/v-08-orrery-mechanism-r2",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-08-orrery-mechanism",
+      "sourceTag": "v-08-orrery-mechanism-r2",
+      "sourceRun": 2,
+      "category": "3d",
+      "scoreBand": 1,
+      "originalScore": 44,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "blown white plane, right third"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "artifact scribbles, upper-right quadrant"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "left background field"
+        }
+      ],
+      "judgeNotes": "Dark steel gears with red jewel glow read closer to spec; residual white-plane and artifact debris kill it.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-sonnet-5/v-08-orrery-mechanism-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-sonnet-5/v-08-orrery-mechanism-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-sonnet-5/v-10-bento-metrics-r2",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-10-bento-metrics",
+      "sourceTag": "v-10-bento-metrics-r2",
+      "sourceRun": 2,
+      "category": "2d",
+      "scoreBand": 1,
+      "originalScore": 31,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "background field — large soft blurred gray-white blobs top and right"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire grid — no metric text and no red accent anywhere"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "whole frame — monochrome gray, accent #ff2a38 absent"
+        }
+      ],
+      "judgeNotes": "Best slab materiality and sheen of the batch, but zero content, zero accent, and blurred background blobs.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-sonnet-5/v-10-bento-metrics-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-sonnet-5/v-10-bento-metrics-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-sonnet-5/v-20-footer-colophon-r1",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-20-footer-colophon",
+      "sourceTag": "v-20-footer-colophon-r1",
+      "sourceRun": 1,
+      "category": "2d",
+      "scoreBand": 2,
+      "originalScore": 62,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "left wordmark block — accent bar present but no wordmark"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center band ramp reads mid-gray, far lighter than spec ink surfaces"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "band top edge — full-width hairline rule not visible"
+        }
+      ],
+      "judgeNotes": "Legible colophon: three columns, legal line, hairline, accent bar. Loses points for absent wordmark and washed-out band.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-sonnet-5/v-20-footer-colophon-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-sonnet-5/v-20-footer-colophon-r1.json"
+    },
+    {
+      "bundleId": "wbakeb/claude-sonnet-5/v-05-pedestal-material-study-r2",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-05-pedestal-material-study",
+      "sourceTag": "v-05-pedestal-material-study-r2",
+      "sourceRun": 2,
+      "category": "3d",
+      "scoreBand": 0,
+      "originalScore": 27,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center knot — no brushed-metal PBR, reads as matte plaster; no anisotropy or imperfection pass"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center object — flat diffuse, no specular response or contact shadow"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "background field — giant blurred white blob dominates left half; white sphere protrudes below pedestal"
+        },
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "center pedestal — featureless near-black cylinder"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "lower field — no cinematic floor or gradient per spec"
+        }
+      ],
+      "judgeNotes": "Geometry present but material study absent: plaster knot, dead light, no floor, intrusive background blob.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/claude-sonnet-5/v-05-pedestal-material-study-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/claude-sonnet-5/v-05-pedestal-material-study-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/deepseek-v4-flash/v-07-filmstrip-carousel-r2",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "v-07-filmstrip-carousel",
+      "sourceTag": "v-07-filmstrip-carousel-r2",
+      "sourceRun": 2,
+      "category": "3d",
+      "scoreBand": 0,
+      "originalScore": 12,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — one plate instead of five, no textures"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center card blown white core"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center card cropped by frame edges"
+        }
+      ],
+      "judgeNotes": "Single untextured gray plate nuked by bloom; no filmstrip, no bevel, no accent.",
+      "moduleRuntimeError": null,
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/deepseek-v4-flash/v-07-filmstrip-carousel-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/deepseek-v4-flash/v-07-filmstrip-carousel-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/deepseek-v4-flash/v-16-feature-triptych-r1",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "v-16-feature-triptych",
+      "sourceTag": "v-16-feature-triptych-r1",
+      "sourceRun": 1,
+      "category": "2d",
+      "scoreBand": 0,
+      "originalScore": 11,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "upper half — washed salmon field, not spec #ff2a38 on ink"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "full frame — hard salmon/black split replaces the card layout"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "card row — cards reduced to faint gray stubs; no discs, glyphs, or text"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "lower third — card remnants barely separate from background"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "entire frame — flat fills throughout"
+        }
+      ],
+      "judgeNotes": "Salmon wash with three white dashes; triptych structure nearly gone, palette and materiality both violated.",
+      "moduleRuntimeError": null,
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/deepseek-v4-flash/v-16-feature-triptych-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/deepseek-v4-flash/v-16-feature-triptych-r1.json"
+    },
+    {
+      "bundleId": "wbakeb/deepseek-v4-flash/v-04-kinetic-type-headline-r1",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "v-04-kinetic-type-headline",
+      "sourceTag": "v-04-kinetic-type-headline-r1",
+      "sourceRun": 1,
+      "category": "3d",
+      "scoreBand": 1,
+      "originalScore": 32,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — dimensional Lora headline absent; sans subhead only"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "entire frame — flat 2D planes, no light response"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "left-anchored underline misaligned with centered text"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower half of frame"
+        }
+      ],
+      "judgeNotes": "Legible and on-palette, but the hero 3D headline is missing; flat slide, not kinetic type.",
+      "moduleRuntimeError": null,
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/deepseek-v4-flash/v-04-kinetic-type-headline-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/deepseek-v4-flash/v-04-kinetic-type-headline-r1.json"
+    },
+    {
+      "bundleId": "wbakeb/deepseek-v4-flash/v-11-gradient-cta-r1",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "v-11-gradient-cta",
+      "sourceTag": "v-11-gradient-cta-r1",
+      "sourceRun": 1,
+      "category": "2d",
+      "scoreBand": 1,
+      "originalScore": 55,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center button face"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center button"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "button perimeter"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "background field"
+        }
+      ],
+      "judgeNotes": "Best of batch: seam and bevel present, but face is washed pink not spec ramp, no machined key-light edge; seam artifact bleeds across background.",
+      "moduleRuntimeError": null,
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/deepseek-v4-flash/v-11-gradient-cta-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/deepseek-v4-flash/v-11-gradient-cta-r1.json"
+    },
+    {
+      "bundleId": "wbakeb/deepseek-v4-flash/v-20-footer-colophon-r2",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "v-20-footer-colophon",
+      "sourceTag": "v-20-footer-colophon-r2",
+      "sourceRun": 2,
+      "category": "2d",
+      "scoreBand": 2,
+      "originalScore": 72,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "footer band — albedo reads mid-gray, much lighter than spec #121218→#0b0b10 ramp"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "band top edge — hairline rule sits below legal line instead of top"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "band surface — mostly flat fill, minimal light response"
+        }
+      ],
+      "judgeNotes": "All spec content present and legible: wordmark, red accent bar, three columns, legal line. Palette and lighting miss spec.",
+      "moduleRuntimeError": null,
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/deepseek-v4-flash/v-20-footer-colophon-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/deepseek-v4-flash/v-20-footer-colophon-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/deepseek-v4-flash/v-06-loop-column-gallery-r1",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "v-06-loop-column-gallery",
+      "sourceTag": "v-06-loop-column-gallery-r1",
+      "sourceRun": 1,
+      "category": "3d",
+      "scoreBand": 0,
+      "originalScore": 12,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "tiny plate at center"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center plate"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "column — single plate only"
+        }
+      ],
+      "judgeNotes": "One postage-stamp blue plate floating in a void; no column, no photographs, no accent.",
+      "moduleRuntimeError": null,
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/deepseek-v4-flash/v-06-loop-column-gallery-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/deepseek-v4-flash/v-06-loop-column-gallery-r1.json"
+    },
+    {
+      "bundleId": "wbakeb/gemini-3.5-flash/v-08-orrery-mechanism-r2",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "v-08-orrery-mechanism",
+      "sourceTag": "v-08-orrery-mechanism-r2",
+      "sourceRun": 2,
+      "category": "3d",
+      "scoreBand": 0,
+      "originalScore": 13,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field — pure flat black, no spec gradient"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "right of center — secondary meshed gear absent"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "gear pivot — no red jewel accent (#ff2a38)"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center-left gear — tan/brass instead of machined steel; accent color unused"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center-left gear — flat shading, no metallic/clearcoat light response"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center-left gear — undersized, not centered at origin as primary"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-left quadrant — isolated small object, stray pin artifact, ~90% empty frame"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "ReferenceError: MeshPhysicalMaterial is not defined"
+        }
+      ],
+      "judgeNotes": "Near-identical to F1; same lone off-palette gear in a void, missing secondary gear, accent, and PBR materiality.",
+      "moduleRuntimeError": "ReferenceError: MeshPhysicalMaterial is not defined",
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/gemini-3.5-flash/v-08-orrery-mechanism-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/gemini-3.5-flash/v-08-orrery-mechanism-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/gemini-3.5-flash/v-11-gradient-cta-r2",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "v-11-gradient-cta",
+      "sourceTag": "v-11-gradient-cta-r2",
+      "sourceRun": 2,
+      "category": "2d",
+      "scoreBand": 0,
+      "originalScore": 6,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "center card"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center card"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "entire frame"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: (0 , import_webgpu.uniform) is not a function"
+        }
+      ],
+      "judgeNotes": "Flat white square on void black; no gradient ramp, bevel, seam, red accent, or emissive channel from spec.",
+      "moduleRuntimeError": "TypeError: (0 , import_webgpu.uniform) is not a function",
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/gemini-3.5-flash/v-11-gradient-cta-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/gemini-3.5-flash/v-11-gradient-cta-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/gemini-3.5-flash/v-06-loop-column-gallery-r1",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "v-06-loop-column-gallery",
+      "sourceTag": "v-06-loop-column-gallery-r1",
+      "sourceRun": 1,
+      "category": "3d",
+      "scoreBand": 1,
+      "originalScore": 36,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "background field — washed mid-grey, not #0b0b10 ink"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "all plates — identical dim gradient texture, not six distinct filmic photographs"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "plate interiors — blue-violet glow dominates over red accent"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "left third and right edge — featureless grey"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "background field — no gradient, no light response"
+        }
+      ],
+      "judgeNotes": "Visually identical to F2 — same palette drift, duplicate non-photographic plate textures, flat grey void; also suggests frozen motion.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/gemini-3.5-flash/v-06-loop-column-gallery-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/gemini-3.5-flash/v-06-loop-column-gallery-r1.json"
+    },
+    {
+      "bundleId": "wbakeb/gemini-3.5-flash/v-15-testimonial-panel-r1",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "v-15-testimonial-panel",
+      "sourceTag": "v-15-testimonial-panel-r1",
+      "sourceRun": 1,
+      "category": "2d",
+      "scoreBand": 1,
+      "originalScore": 32,
+      "mustFix": [
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "center card right edge — quote clipped mid-word at frame boundary"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-left of card — quote glyph floats detached above panel edge"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper-left quadrant — quotation mark far below spec 0.62-unit size"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "background field and panel — washed mid-gray, not #0b0b10/#1a1a22 ink"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center card — flat fill, no clearcoat or key-light response"
+        }
+      ],
+      "judgeNotes": "Attribution present with red accent, but washed grays, clipped quote, tiny detached glyph kill panel materiality.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/gemini-3.5-flash/v-15-testimonial-panel-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/gemini-3.5-flash/v-15-testimonial-panel-r1.json"
+    },
+    {
+      "bundleId": "wbakeb/gemini-3.5-flash/v-02-particle-constellation-r2",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "v-02-particle-constellation",
+      "sourceTag": "v-02-particle-constellation-r2",
+      "sourceRun": 2,
+      "category": "3d",
+      "scoreBand": 0,
+      "originalScore": 10,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame — near-empty black field"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — particle system collapsed to a tiny square patch"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "whole frame — no headline, no accent core, no depth staging"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field — ~95% featureless black"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: currentPos.copy(...).addValues is not a function"
+        }
+      ],
+      "judgeNotes": "Scene collapsed to a postage-stamp particle patch in a void; effectively a failed render.",
+      "moduleRuntimeError": "TypeError: currentPos.copy(...).addValues is not a function",
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/gemini-3.5-flash/v-02-particle-constellation-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/gemini-3.5-flash/v-02-particle-constellation-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/gemini-3.5-flash/v-12-photo-hero-composite-r2",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "v-12-photo-hero-composite",
+      "sourceTag": "v-12-photo-hero-composite-r2",
+      "sourceRun": 2,
+      "category": "2d",
+      "scoreBand": 0,
+      "originalScore": 17,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "center card — photo plate is a blank white rectangle"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card — imageUrl/depth plate and filmic grade absent"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "center-left — 'Time, Machined.' headline and kicker nearly invisible over white plate"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "background field — flat fill, no grade, no light response"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center-left — caption block collides with plate edge"
+        }
+      ],
+      "judgeNotes": "Photo plate failed to load; white void hero kills the concept despite correct red accent and caption skeleton.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/gemini-3.5-flash/v-12-photo-hero-composite-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/gemini-3.5-flash/v-12-photo-hero-composite-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/glm-5.2/v-06-loop-column-gallery-r1",
+      "contestant": "glm-5.2",
+      "caseId": "v-06-loop-column-gallery",
+      "sourceTag": "v-06-loop-column-gallery-r1",
+      "sourceRun": 1,
+      "category": "3d",
+      "scoreBand": 0,
+      "originalScore": 18,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "blown white L-shaped region upper-center and right"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "left half background field"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "lower-center plate"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "column — duplicate glass renders, not distinct photos"
+        }
+      ],
+      "judgeNotes": "Column hinted with red edge accent, but overexposed slab dominates and plates repeat the same blue glass render.",
+      "moduleRuntimeError": null,
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/glm-5.2/v-06-loop-column-gallery-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/glm-5.2/v-06-loop-column-gallery-r1.json"
+    },
+    {
+      "bundleId": "wbakeb/glm-5.2/v-15-testimonial-panel-r2",
+      "contestant": "glm-5.2",
+      "caseId": "v-15-testimonial-panel",
+      "sourceTag": "v-15-testimonial-panel-r2",
+      "sourceRun": 2,
+      "category": "2d",
+      "scoreBand": 0,
+      "originalScore": 28,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "lower card — attribution line absent"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "center-right — quote clipped mid-sentence past panel edge"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center card — text overflows panel bounds onto background"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper-left of card — quotation mark tiny versus 0.62-unit spec"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center card — light gray surface, not #1a1a22→#111116 gradient"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center card — flat gradient, no border hairline or light response"
+        }
+      ],
+      "judgeNotes": "Dark background correct but panel washed gray, text overflows, no attribution; fails DL2/DL10 materiality.",
+      "moduleRuntimeError": null,
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/glm-5.2/v-15-testimonial-panel-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/glm-5.2/v-15-testimonial-panel-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/glm-5.2/v-03-glass-prism-refraction-r2",
+      "contestant": "glm-5.2",
+      "caseId": "v-03-glass-prism-refraction",
+      "sourceTag": "v-03-glass-prism-refraction-r2",
+      "sourceRun": 2,
+      "category": "3d",
+      "scoreBand": 1,
+      "originalScore": 46,
+      "mustFix": [
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "lower-center over 'machined'"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "bottom text strip clipped at frame edge"
+        }
+      ],
+      "judgeNotes": "Real glass with dispersion hints and red core, but white smear artifact corrupts text; void background.",
+      "moduleRuntimeError": null,
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/glm-5.2/v-03-glass-prism-refraction-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/glm-5.2/v-03-glass-prism-refraction-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/glm-5.2/v-10-bento-metrics-r1",
+      "contestant": "glm-5.2",
+      "caseId": "v-10-bento-metrics",
+      "sourceTag": "v-10-bento-metrics-r1",
+      "sourceRun": 1,
+      "category": "2d",
+      "scoreBand": 1,
+      "originalScore": 42,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no extruded slab cells, no red accent"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field and lower-left quadrant"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center — flat fills, no machined gradient or sheen"
+        }
+      ],
+      "judgeNotes": "Clean legible metrics typography, but tiles, materiality, and the signal-red accent are entirely absent.",
+      "moduleRuntimeError": null,
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/glm-5.2/v-10-bento-metrics-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/glm-5.2/v-10-bento-metrics-r1.json"
+    },
+    {
+      "bundleId": "wbakeb/glm-5.2/v-07-filmstrip-carousel-r2",
+      "contestant": "glm-5.2",
+      "caseId": "v-07-filmstrip-carousel",
+      "sourceTag": "v-07-filmstrip-carousel-r2",
+      "sourceRun": 2,
+      "category": "3d",
+      "scoreBand": 0,
+      "originalScore": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame near-empty"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center icon"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no five-card filmstrip"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: (0 , import_tsl.uv)(...).x.clone is not a function"
+        }
+      ],
+      "judgeNotes": "Tiny flat blue source texture floating in black void; no carousel, no perspective, no plates rendered.",
+      "moduleRuntimeError": "TypeError: (0 , import_tsl.uv)(...).x.clone is not a function",
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/glm-5.2/v-07-filmstrip-carousel-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/glm-5.2/v-07-filmstrip-carousel-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/glm-5.2/v-19-empty-state-r2",
+      "contestant": "glm-5.2",
+      "caseId": "v-19-empty-state",
+      "sourceTag": "v-19-empty-state-r2",
+      "sourceRun": 2,
+      "category": "2d",
+      "scoreBand": 0,
+      "originalScore": 8,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: Cannot read properties of undefined (reading '0')"
+        }
+      ],
+      "judgeNotes": "Lone flat white square on void black; no panel, grid, ghost preview, copy, or accent.",
+      "moduleRuntimeError": "TypeError: Cannot read properties of undefined (reading '0')",
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/glm-5.2/v-19-empty-state-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/glm-5.2/v-19-empty-state-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/gpt-oss-120b/v-07-filmstrip-carousel-r1",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-07-filmstrip-carousel",
+      "sourceTag": "v-07-filmstrip-carousel-r1",
+      "sourceRun": 1,
+      "category": "3d",
+      "scoreBand": 0,
+      "originalScore": 13,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "entire frame"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center blown-white field"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "upper-center white band"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "left third black region"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no photograph textures"
+        }
+      ],
+      "judgeNotes": "Abstract blown black/white shards; unreadable geometry, stray red sliver only palette survivor.",
+      "moduleRuntimeError": null,
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/gpt-oss-120b/v-07-filmstrip-carousel-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/gpt-oss-120b/v-07-filmstrip-carousel-r1.json"
+    },
+    {
+      "bundleId": "wbakeb/gpt-oss-120b/v-17-data-ribbon-r2",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-17-data-ribbon",
+      "sourceTag": "v-17-data-ribbon-r2",
+      "sourceRun": 2,
+      "category": "2d",
+      "scoreBand": 0,
+      "originalScore": 15,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "ribbon band — no ticker figures, only one accent tick"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center background — large unexplained soft gray slab/orb behind ribbon"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "ribbon band — mid-gray albedo far lighter than #111117"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "ribbon band — no hairlines or edge fades legible"
+        }
+      ],
+      "judgeNotes": "Ribbon plane exists with one pink tick, but content missing and a ghost gray slab pollutes the field.",
+      "moduleRuntimeError": null,
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/gpt-oss-120b/v-17-data-ribbon-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/gpt-oss-120b/v-17-data-ribbon-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/gpt-oss-120b/v-08-orrery-mechanism-r1",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-08-orrery-mechanism",
+      "sourceTag": "v-08-orrery-mechanism-r1",
+      "sourceRun": 1,
+      "category": "3d",
+      "scoreBand": 1,
+      "originalScore": 30,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "right of center — secondary gear absent"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "gear pivot — no red jewel accent"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center gear — brass, not steel; accent missing"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper-left quadrant — gear small and off-center"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: (0 , import_webgpu2.color) is not a function"
+        }
+      ],
+      "judgeNotes": "Repeat of F2-family frame: lone brass gear on black void, spec pair and jewel missing.",
+      "moduleRuntimeError": "TypeError: (0 , import_webgpu2.color) is not a function",
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/gpt-oss-120b/v-08-orrery-mechanism-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/gpt-oss-120b/v-08-orrery-mechanism-r1.json"
+    },
+    {
+      "bundleId": "wbakeb/gpt-oss-120b/v-05-pedestal-material-study-r1",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-05-pedestal-material-study",
+      "sourceTag": "v-05-pedestal-material-study-r1",
+      "sourceRun": 1,
+      "category": "3d",
+      "scoreBand": 0,
+      "originalScore": 3,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame — near-black void"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "ReferenceError: smoothstep is not defined"
+        }
+      ],
+      "judgeNotes": "Nothing rendered.",
+      "moduleRuntimeError": "ReferenceError: smoothstep is not defined",
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/gpt-oss-120b/v-05-pedestal-material-study-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/gpt-oss-120b/v-05-pedestal-material-study-r1.json"
+    },
+    {
+      "bundleId": "wbakeb/gpt-oss-120b/v-12-photo-hero-composite-r2",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-12-photo-hero-composite",
+      "sourceTag": "v-12-photo-hero-composite-r2",
+      "sourceRun": 2,
+      "category": "2d",
+      "scoreBand": 0,
+      "originalScore": 15,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "entire frame"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "right half"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "left-center white blocks"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "white regions"
+        }
+      ],
+      "judgeNotes": "Same broken zoom of giant letterforms; flat white rectangles, tiny red underline only. No photographic content whatsoever.",
+      "moduleRuntimeError": null,
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/gpt-oss-120b/v-12-photo-hero-composite-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/gpt-oss-120b/v-12-photo-hero-composite-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/gpt-oss-120b/v-02-particle-constellation-r1",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-02-particle-constellation",
+      "sourceTag": "v-02-particle-constellation-r1",
+      "sourceRun": 1,
+      "category": "3d",
+      "scoreBand": 0,
+      "originalScore": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center cluster"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center (no red accent core)"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "ReferenceError: multiply is not defined"
+        }
+      ],
+      "judgeNotes": "Particles collapsed into a tiny square patch; no ellipsoidal shell, no depth falloff, no accent core. Near-empty black frame.",
+      "moduleRuntimeError": "ReferenceError: multiply is not defined",
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/gpt-oss-120b/v-02-particle-constellation-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/gpt-oss-120b/v-02-particle-constellation-r1.json"
+    },
+    {
+      "bundleId": "wbakeb/kimi-k2.7-code/v-06-loop-column-gallery-r2",
+      "contestant": "kimi-k2.7-code",
+      "caseId": "v-06-loop-column-gallery",
+      "sourceTag": "v-06-loop-column-gallery-r2",
+      "sourceRun": 2,
+      "category": "3d",
+      "scoreBand": 0,
+      "originalScore": 12,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "all three plates — blown-out white, no photographic textures"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "entire frame"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "top edge — headline clipped"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "plate faces — pure white, no accent, no filmic grade"
+        }
+      ],
+      "judgeNotes": "Plates render as pure-white voids; textures failed to load. Flat black backdrop, clipped headline. Far below bar.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/kimi-k2.7-code/v-06-loop-column-gallery-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/kimi-k2.7-code/v-06-loop-column-gallery-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/kimi-k2.7-code/v-05-pedestal-material-study-r1",
+      "contestant": "kimi-k2.7-code",
+      "caseId": "v-05-pedestal-material-study",
+      "sourceTag": "v-05-pedestal-material-study-r1",
+      "sourceRun": 1,
+      "category": "3d",
+      "scoreBand": 1,
+      "originalScore": 37,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center knot — matte white plastic instead of brushed-metal PBR"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "right of pedestal — '3' and 'GRIT' caption clipped/occluded"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "right background field — featureless dark region"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "pedestal top face — tan/brown tint outside spec palette"
+        }
+      ],
+      "judgeNotes": "Best of batch: has contact shadow and light gradation, but material misses spec and text is broken.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/kimi-k2.7-code/v-05-pedestal-material-study-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/kimi-k2.7-code/v-05-pedestal-material-study-r1.json"
+    },
+    {
+      "bundleId": "wbakeb/kimi-k2.7-code/v-10-bento-metrics-r1",
+      "contestant": "kimi-k2.7-code",
+      "caseId": "v-10-bento-metrics",
+      "sourceTag": "v-10-bento-metrics-r1",
+      "sourceRun": 1,
+      "category": "2d",
+      "scoreBand": 1,
+      "originalScore": 46,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "all three cells — no stat numerals or labels rendered"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "dominant left cell — vast empty surface, no sheen band or content"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "dominant cell upper-left — accent reduced to a near-invisible red speck"
+        }
+      ],
+      "judgeNotes": "Cleanest composition and machined edges of the batch, but tiles are contentless voids with almost no accent.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/kimi-k2.7-code/v-10-bento-metrics-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/kimi-k2.7-code/v-10-bento-metrics-r1.json"
+    },
+    {
+      "bundleId": "wbakeb/kimi-k2.7-code/v-09-editorial-oversized-type-r2",
+      "contestant": "kimi-k2.7-code",
+      "caseId": "v-09-editorial-oversized-type",
+      "sourceTag": "v-09-editorial-oversized-type-r2",
+      "sourceRun": 2,
+      "category": "2d",
+      "scoreBand": 2,
+      "originalScore": 74,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center-left headline — spec Lora 600 serif rendered as a grotesque sans"
+        }
+      ],
+      "judgeNotes": "Complete, disciplined composition: kicker, stacked hero, red rule, grain, baseline order. Typeface substitution and modest hero scale hold it below flagship.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/kimi-k2.7-code/v-09-editorial-oversized-type-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/kimi-k2.7-code/v-09-editorial-oversized-type-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/kimi-k2.7-code/v-01-orbit-product-hero-r2",
+      "contestant": "kimi-k2.7-code",
+      "caseId": "v-01-orbit-product-hero",
+      "sourceTag": "v-01-orbit-product-hero-r2",
+      "sourceRun": 2,
+      "category": "3d",
+      "scoreBand": 0,
+      "originalScore": 20,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center background field"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper edge, cropped watch"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center, watch floating above plinth"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "entire scene"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "no red accent signal light anywhere"
+        }
+      ],
+      "judgeNotes": "Giant white panel destroys dark-first palette; watch cropped and hovering; flat ambient shading, no key+rim or accent.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/kimi-k2.7-code/v-01-orbit-product-hero-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/kimi-k2.7-code/v-01-orbit-product-hero-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/kimi-k2.7-code/v-04-kinetic-type-headline-r2",
+      "contestant": "kimi-k2.7-code",
+      "caseId": "v-04-kinetic-type-headline",
+      "sourceTag": "v-04-kinetic-type-headline-r2",
+      "sourceRun": 2,
+      "category": "3d",
+      "scoreBand": 1,
+      "originalScore": 32,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center — subtitle overlaps headline baseline, both illegible where they collide"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center headline — no red accent underline, no per-word z-depth/parallax, sans-serif instead of Lora 600"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "full frame — flat gray fill, no material light response on glyphs"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "frame edges — render letterboxed inside black margins, headline clips right edge"
+        }
+      ],
+      "judgeNotes": "Type renders but subtitle collides with headline; no accent red, no dimensionality, wrong typeface, inset letterboxed composition.",
+      "moduleRuntimeError": null,
+      "arm": "vision",
+      "framePath": "notes/bakeoff-b/frames/kimi-k2.7-code/v-04-kinetic-type-headline-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/kimi-k2.7-code/v-04-kinetic-type-headline-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/mercury-2/v-02-particle-constellation-r2",
+      "contestant": "mercury-2",
+      "caseId": "v-02-particle-constellation",
+      "sourceTag": "v-02-particle-constellation-r2",
+      "sourceRun": 2,
+      "category": "3d",
+      "scoreBand": 0,
+      "originalScore": 27,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center and left (overlapping flat rectangular planes clip the core)"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "large gray slabs across left half and lower band"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "gray slab surfaces"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center (core reads as clipped half-disc, not 90-instance particle sphere)"
+        }
+      ],
+      "judgeNotes": "Only frame with the red accent and dispersed starfield, but flat slab geometry occludes the core and breaks the stage.",
+      "moduleRuntimeError": null,
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/mercury-2/v-02-particle-constellation-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/mercury-2/v-02-particle-constellation-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/mercury-2/v-18-nav-dock-r2",
+      "contestant": "mercury-2",
+      "caseId": "v-18-nav-dock",
+      "sourceTag": "v-18-nav-dock-r2",
+      "sourceRun": 2,
+      "category": "2d",
+      "scoreBand": 0,
+      "originalScore": 14,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center rail"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "upper background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center rail"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower half"
+        }
+      ],
+      "judgeNotes": "Featureless dark slab, no entries, no accent, no chamfer specular; background off-palette gray.",
+      "moduleRuntimeError": null,
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/mercury-2/v-18-nav-dock-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/mercury-2/v-18-nav-dock-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/mercury-2/v-08-orrery-mechanism-r1",
+      "contestant": "mercury-2",
+      "caseId": "v-08-orrery-mechanism",
+      "sourceTag": "v-08-orrery-mechanism-r1",
+      "sourceRun": 1,
+      "category": "3d",
+      "scoreBand": 1,
+      "originalScore": 35,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "left edge and right third — huge blown-out white panels"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "upper-right white panel — noisy glyph-like artifacts"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "background field — clipped whites against crushed black"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "white slabs — outside ink/paper gradient spec"
+        }
+      ],
+      "judgeNotes": "Both gears and red jewel present edge-on, but frame wrecked by blown white slabs and noise artifacts.",
+      "moduleRuntimeError": null,
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/mercury-2/v-08-orrery-mechanism-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/mercury-2/v-08-orrery-mechanism-r1.json"
+    },
+    {
+      "bundleId": "wbakeb/mercury-2/v-11-gradient-cta-r2",
+      "contestant": "mercury-2",
+      "caseId": "v-11-gradient-cta",
+      "sourceTag": "v-11-gradient-cta-r2",
+      "sourceRun": 2,
+      "category": "2d",
+      "scoreBand": 1,
+      "originalScore": 35,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "background field white slabs"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center button face"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center button face"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "upper-right face patch"
+        }
+      ],
+      "judgeNotes": "Button geometry decent, but blown white slabs invade frame, rectangular texture patch mars face, spec gradient ramp and hard seam absent.",
+      "moduleRuntimeError": null,
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/mercury-2/v-11-gradient-cta-r2.png",
+      "runFile": "notes/bakeoff-b/runs/design/mercury-2/v-11-gradient-cta-r2.json"
+    },
+    {
+      "bundleId": "wbakeb/mercury-2/v-04-kinetic-type-headline-r1",
+      "contestant": "mercury-2",
+      "caseId": "v-04-kinetic-type-headline",
+      "sourceTag": "v-04-kinetic-type-headline-r1",
+      "sourceRun": 1,
+      "category": "3d",
+      "scoreBand": 0,
+      "originalScore": 18,
+      "mustFix": [
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "upper-left and right-center blurred glyph blobs"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "glyph fragments scattered at frame edges"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no legible headline line at y=0.4"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "center and bottom field"
+        }
+      ],
+      "judgeNotes": "Two illegible motion-blurred blobs plus accent line; headline never resolves into readable type.",
+      "moduleRuntimeError": null,
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/mercury-2/v-04-kinetic-type-headline-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/mercury-2/v-04-kinetic-type-headline-r1.json"
+    },
+    {
+      "bundleId": "wbakeb/mercury-2/v-14-pricing-card-r1",
+      "contestant": "mercury-2",
+      "caseId": "v-14-pricing-card",
+      "sourceTag": "v-14-pricing-card-r1",
+      "sourceRun": 1,
+      "category": "2d",
+      "scoreBand": 0,
+      "originalScore": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "full frame — white placeholder square on black"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "full frame — no pricing card content"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: ctx.THREE.MeshBasicNodeMaterial is not a constructor"
+        }
+      ],
+      "judgeNotes": "Duplicate of F2 failure state: placeholder quad, zero spec content.",
+      "moduleRuntimeError": "TypeError: ctx.THREE.MeshBasicNodeMaterial is not a constructor",
+      "arm": "text-critique-only",
+      "framePath": "notes/bakeoff-b/frames/mercury-2/v-14-pricing-card-r1.png",
+      "runFile": "notes/bakeoff-b/runs/design/mercury-2/v-14-pricing-card-r1.json"
+    }
+  ],
+  "controlBundleIds": [
+    "wbakeb/claude-fable-5/v-01-orbit-product-hero-r2",
+    "wbakeb/claude-fable-5/v-16-feature-triptych-r2",
+    "wbakeb/claude-haiku-4.5/v-05-pedestal-material-study-r2",
+    "wbakeb/claude-haiku-4.5/v-09-editorial-oversized-type-r2",
+    "wbakeb/claude-opus-4.8/v-05-pedestal-material-study-r2",
+    "wbakeb/claude-opus-4.8/v-12-photo-hero-composite-r2",
+    "wbakeb/claude-sonnet-5/v-12-photo-hero-composite-r2",
+    "wbakeb/claude-sonnet-5/v-05-pedestal-material-study-r2",
+    "wbakeb/deepseek-v4-flash/v-07-filmstrip-carousel-r2",
+    "wbakeb/deepseek-v4-flash/v-11-gradient-cta-r1",
+    "wbakeb/gemini-3.5-flash/v-02-particle-constellation-r2",
+    "wbakeb/gemini-3.5-flash/v-15-testimonial-panel-r1",
+    "wbakeb/glm-5.2/v-03-glass-prism-refraction-r2",
+    "wbakeb/glm-5.2/v-06-loop-column-gallery-r1",
+    "wbakeb/gpt-oss-120b/v-05-pedestal-material-study-r1",
+    "wbakeb/gpt-oss-120b/v-17-data-ribbon-r2",
+    "wbakeb/kimi-k2.7-code/v-05-pedestal-material-study-r1",
+    "wbakeb/kimi-k2.7-code/v-09-editorial-oversized-type-r2",
+    "wbakeb/mercury-2/v-02-particle-constellation-r2",
+    "wbakeb/mercury-2/v-08-orrery-mechanism-r1"
+  ],
+  "summary": {
+    "claude-fable-5": {
+      "n": 6,
+      "bands": [
+        3,
+        2,
+        1
+      ],
+      "cats": {
+        "3d": 3,
+        "2d": 3
+      },
+      "arm": "vision"
+    },
+    "claude-haiku-4.5": {
+      "n": 6,
+      "bands": [
+        4,
+        2,
+        0
+      ],
+      "cats": {
+        "3d": 3,
+        "2d": 3
+      },
+      "arm": "vision"
+    },
+    "claude-opus-4.8": {
+      "n": 6,
+      "bands": [
+        3,
+        2,
+        1
+      ],
+      "cats": {
+        "3d": 4,
+        "2d": 2
+      },
+      "arm": "vision"
+    },
+    "claude-sonnet-5": {
+      "n": 6,
+      "bands": [
+        3,
+        2,
+        1
+      ],
+      "cats": {
+        "3d": 3,
+        "2d": 3
+      },
+      "arm": "vision"
+    },
+    "deepseek-v4-flash": {
+      "n": 6,
+      "bands": [
+        3,
+        2,
+        1
+      ],
+      "cats": {
+        "3d": 3,
+        "2d": 3
+      },
+      "arm": "text-critique-only"
+    },
+    "gemini-3.5-flash": {
+      "n": 6,
+      "bands": [
+        4,
+        2,
+        0
+      ],
+      "cats": {
+        "3d": 3,
+        "2d": 3
+      },
+      "arm": "vision"
+    },
+    "glm-5.2": {
+      "n": 6,
+      "bands": [
+        4,
+        2,
+        0
+      ],
+      "cats": {
+        "3d": 3,
+        "2d": 3
+      },
+      "arm": "text-critique-only"
+    },
+    "gpt-oss-120b": {
+      "n": 6,
+      "bands": [
+        5,
+        1,
+        0
+      ],
+      "cats": {
+        "3d": 4,
+        "2d": 2
+      },
+      "arm": "text-critique-only"
+    },
+    "kimi-k2.7-code": {
+      "n": 6,
+      "bands": [
+        2,
+        3,
+        1
+      ],
+      "cats": {
+        "3d": 4,
+        "2d": 2
+      },
+      "arm": "vision"
+    },
+    "mercury-2": {
+      "n": 6,
+      "bands": [
+        4,
+        2,
+        0
+      ],
+      "cats": {
+        "3d": 3,
+        "2d": 3
+      },
+      "arm": "text-critique-only"
+    }
+  }
+}

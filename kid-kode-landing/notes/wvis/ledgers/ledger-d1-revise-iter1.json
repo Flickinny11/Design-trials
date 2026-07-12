@@ -1,0 +1,90 @@
+{
+  "wave": "wvis",
+  "name": "d1-revise-iter1",
+  "phase": "d1",
+  "iter": 1,
+  "calls": [
+    {
+      "phase": "d1-revise-iter1",
+      "contestant": "claude-haiku-4.5",
+      "arm": "vision",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r21",
+      "promptTokens": 9154,
+      "completionTokens": 4445,
+      "costUsd": 0.031379,
+      "billing": "metered",
+      "rateNote": "estimate from live-probed per-MTok rates 2026-07-11",
+      "at": "2026-07-12T04:51:36.820Z"
+    },
+    {
+      "phase": "d1-revise-iter1",
+      "contestant": "claude-haiku-4.5",
+      "arm": "vision",
+      "caseId": "v-09-editorial-oversized-type",
+      "tag": "v-09-editorial-oversized-type-r21",
+      "promptTokens": 8384,
+      "completionTokens": 3895,
+      "costUsd": 0.027859,
+      "billing": "metered",
+      "rateNote": "estimate from live-probed per-MTok rates 2026-07-11",
+      "at": "2026-07-12T04:52:02.082Z"
+    },
+    {
+      "phase": "d1-revise-iter1",
+      "contestant": "claude-haiku-4.5",
+      "arm": "vision",
+      "caseId": "v-08-orrery-mechanism",
+      "tag": "v-08-orrery-mechanism-r21",
+      "promptTokens": 7736,
+      "completionTokens": 2740,
+      "costUsd": 0.021436,
+      "billing": "metered",
+      "rateNote": "estimate from live-probed per-MTok rates 2026-07-11",
+      "at": "2026-07-12T04:52:21.782Z"
+    },
+    {
+      "phase": "d1-revise-iter1",
+      "contestant": "claude-haiku-4.5",
+      "arm": "vision",
+      "caseId": "v-10-bento-metrics",
+      "tag": "v-10-bento-metrics-r21",
+      "promptTokens": 8395,
+      "completionTokens": 3438,
+      "costUsd": 0.025585,
+      "billing": "metered",
+      "rateNote": "estimate from live-probed per-MTok rates 2026-07-11",
+      "at": "2026-07-12T04:52:45.187Z"
+    },
+    {
+      "phase": "d1-revise-iter1",
+      "contestant": "claude-haiku-4.5",
+      "arm": "vision",
+      "caseId": "v-04-kinetic-type-headline",
+      "tag": "v-04-kinetic-type-headline-r11",
+      "promptTokens": 9769,
+      "completionTokens": 4199,
+      "costUsd": 0.030764,
+      "billing": "metered",
+      "rateNote": "estimate from live-probed per-MTok rates 2026-07-11",
+      "at": "2026-07-12T04:53:12.975Z"
+    },
+    {
+      "phase": "d1-revise-iter1",
+      "contestant": "claude-haiku-4.5",
+      "arm": "vision",
+      "caseId": "v-13-brand-wall",
+      "tag": "v-13-brand-wall-r21",
+      "promptTokens": 10257,
+      "completionTokens": 7467,
+      "costUsd": 0.047592,
+      "billing": "metered",
+      "rateNote": "estimate from live-probed per-MTok rates 2026-07-11",
+      "at": "2026-07-12T04:53:51.857Z"
+    }
+  ],
+  "totals": {
+    "meteredUsd": 0.184615,
+    "subscriptionEquivalentUsd": 0
+  }
+}
