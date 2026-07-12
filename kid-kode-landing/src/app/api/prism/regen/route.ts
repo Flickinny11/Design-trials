@@ -24,6 +24,7 @@ import {
   type VerifierViolation,
 } from '@/lib/prism/codegen/verifier';
 import type { PrismNode } from '@/lib/prism-graph/types';
+import { extractSpecElements } from '@/lib/prism/codegen/spec-manifest';
 
 export const runtime = 'nodejs';
 
@@ -166,9 +167,17 @@ async function handleVerifyNode(body: VerifyNodeBody): Promise<Response> {
     const raw = body.node as Record<string, unknown>;
     const tc = raw['textContent'];
     const hasTextContent = Array.isArray(tc) && tc.length > 0;
+    // W-VIS D2 (additive, opt-in): when the caller sets enforceSpecManifest,
+    // the node's extracted spec elements ride the verifier context and the
+    // SPEC_MANIFEST_INCOMPLETE gate fires. Opt-in keeps legacy stored modules
+    // (which predate manifests) verifying exactly as before; the codegen
+    // lane opts in for NEW generations (pre-render gate).
+    const enforceManifest = (body as Record<string, unknown>)['enforceSpecManifest'] === true;
+    const specElements = enforceManifest ? extractSpecElements(normalized as PrismNode) : undefined;
     const result = verifyNodeModule(body.codeModule, {
       renderMode: normalized.renderMode,
       hasTextContent,
+      specElements,
     });
     codeViolations = result.violations;
   }
