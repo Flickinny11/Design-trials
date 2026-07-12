@@ -1,0 +1,20 @@
+{
+  "bundle": "wvis-presets/light-rigs/rig-product-hero-r1",
+  "contestant": "light-rigs",
+  "caseId": "rig-product-hero",
+  "run": 1,
+  "capturedAt": "2026-07-12T05:22:48.382Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 5,
+    "nodeMounted": true,
+    "bundleId": "wvis-presets/light-rigs/rig-product-hero-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

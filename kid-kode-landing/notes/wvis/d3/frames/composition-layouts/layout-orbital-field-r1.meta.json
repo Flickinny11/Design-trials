@@ -1,0 +1,20 @@
+{
+  "bundle": "wvis-presets/composition-layouts/layout-orbital-field-r1",
+  "contestant": "composition-layouts",
+  "caseId": "layout-orbital-field",
+  "run": 1,
+  "capturedAt": "2026-07-12T05:22:13.678Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 7,
+    "nodeMounted": true,
+    "bundleId": "wvis-presets/composition-layouts/layout-orbital-field-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

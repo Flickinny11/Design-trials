@@ -1,0 +1,20 @@
+{
+  "bundle": "wvis-presets/camera-framings/cam-editorial-offset-right-r1",
+  "contestant": "camera-framings",
+  "caseId": "cam-editorial-offset-right",
+  "run": 1,
+  "capturedAt": "2026-07-12T05:21:06.033Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 5,
+    "nodeMounted": true,
+    "bundleId": "wvis-presets/camera-framings/cam-editorial-offset-right-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

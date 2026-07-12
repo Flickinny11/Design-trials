@@ -739,6 +739,18 @@ export interface PrismLayer {
   [k: string]: unknown;
 }
 
+// W-VIS D3 (additive, INV-18) — the L3 schema carrier for design-preset
+// selections. The design director emits ids from the render-proven catalogs
+// in src/lib/prism/design-presets/ (which re-exports this type); codegen
+// inlines the preset's exact numbers. Absent -> freeform numbers (fallback).
+export interface PrismPresetSelections {
+  lightRig?: string;
+  cameraFraming?: string;
+  compositionLayout?: string;
+  /** Director-tuned numeric overrides layered over the preset numbers. */
+  overrides?: Record<string, unknown>;
+}
+
 export interface PrismVisualSpec {
   sourceAsset?: string;
   textContent: PrismTextContent[];
@@ -749,6 +761,8 @@ export interface PrismVisualSpec {
     frameCount?: number;
     [k: string]: unknown;
   };
+  /** W-VIS D3 (additive): design-preset selections for visual nodes. */
+  presetSelections?: PrismPresetSelections;
   [k: string]: unknown;
 }
 

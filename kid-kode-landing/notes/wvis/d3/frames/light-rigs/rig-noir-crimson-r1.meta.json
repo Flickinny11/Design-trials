@@ -1,0 +1,20 @@
+{
+  "bundle": "wvis-presets/light-rigs/rig-noir-crimson-r1",
+  "contestant": "light-rigs",
+  "caseId": "rig-noir-crimson",
+  "run": 1,
+  "capturedAt": "2026-07-12T05:22:44.362Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 5,
+    "nodeMounted": true,
+    "bundleId": "wvis-presets/light-rigs/rig-noir-crimson-r1"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

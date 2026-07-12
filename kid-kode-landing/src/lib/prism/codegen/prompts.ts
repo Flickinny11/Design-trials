@@ -27,6 +27,7 @@ import type {
 import { RUNTIME_SURFACE_L1_BLOCK } from './runtime-surface.generated';
 import { DESIGN_DOCTRINE_L1_BLOCK, DEPENDENCY_L1_BLOCK } from './pcp-blocks';
 import { extractSpecElements, buildSpecManifestPromptBlock } from './spec-manifest';
+import { buildPresetSelectionPromptBlock } from '@/lib/prism/design-presets';
 
 /** Spec §9.A L250-L276 — the pre-PCP L1, byte-frozen (W-BAKE ran on exactly
  *  these bytes; the W-PCP probe's "old" arm re-uses them verbatim). */
@@ -272,6 +273,11 @@ export function buildPerNodePrompt(
   const text = fmtTextContent(node.intent?.visualSpec?.textContent);
   const primitives = fmtPrimitives(node.cinematicPrimitives);
   const neighborsBlock = fmtNeighbors(neighbors);
+  // W-VIS D3 (additive): when the director selected design presets, inline
+  // the preset's exact numbers — light rig, camera framing, composition
+  // layout. Absent selections -> empty string (freeform fallback, prompt
+  // byte-identical to pre-D3).
+  const presetBlock = buildPresetSelectionPromptBlock(node.intent?.visualSpec?.presetSelections);
 
   return [
     'ELEMENT SPECIFICATION:',
@@ -287,6 +293,7 @@ export function buildPerNodePrompt(
     `- Colors: ${vs.colors}`,
     `- Typography: ${vs.typography}`,
     `- Effects: ${vs.effects}`,
+    ...(presetBlock ? ['', 'DESIGN PRESETS (render-proven — execute these numbers, do not invent your own):', presetBlock] : []),
     '',
     'TEXT CONTENT:',
     text,
