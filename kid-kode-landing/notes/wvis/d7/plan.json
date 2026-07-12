@@ -1,0 +1,247 @@
+{
+  "plannedAt": "2026-07-12T05:35:00.105Z",
+  "directorRoute": "claude-cli:claude-fable-5",
+  "directorCostUsd": 0.295089,
+  "cases": [
+    {
+      "caseId": "v-01-orbit-product-hero",
+      "category": "3d",
+      "criticality": "hero",
+      "maxSeenIterations": 2,
+      "presetSelections": {
+        "lightRig": "rig-product-hero",
+        "cameraFraming": "cam-orbital-start",
+        "compositionLayout": "layout-pedestal-stage"
+      },
+      "selectionSource": "director"
+    },
+    {
+      "caseId": "v-02-particle-constellation",
+      "category": "3d",
+      "criticality": "hero",
+      "maxSeenIterations": 2,
+      "presetSelections": {
+        "lightRig": "rig-underglow-signal",
+        "cameraFraming": "cam-wide-stage",
+        "compositionLayout": "layout-orbital-field"
+      },
+      "selectionSource": "director"
+    },
+    {
+      "caseId": "v-03-glass-prism-refraction",
+      "category": "3d",
+      "criticality": "hero",
+      "maxSeenIterations": 2,
+      "presetSelections": {
+        "lightRig": "rig-noir-crimson",
+        "cameraFraming": "cam-profile-silhouette",
+        "compositionLayout": "layout-centered-monolith"
+      },
+      "selectionSource": "director"
+    },
+    {
+      "caseId": "v-04-kinetic-type-headline",
+      "category": "3d",
+      "criticality": "hero",
+      "maxSeenIterations": 2,
+      "presetSelections": {
+        "lightRig": "rig-split-contrast",
+        "cameraFraming": "cam-dutch-drama",
+        "compositionLayout": "layout-type-sandwich"
+      },
+      "selectionSource": "director"
+    },
+    {
+      "caseId": "v-05-pedestal-material-study",
+      "category": "3d",
+      "criticality": "hero",
+      "maxSeenIterations": 2,
+      "presetSelections": {
+        "lightRig": "rig-top-museum",
+        "cameraFraming": "cam-face-on-pedestal",
+        "compositionLayout": "layout-pedestal-stage"
+      },
+      "selectionSource": "director"
+    },
+    {
+      "caseId": "v-06-loop-column-gallery",
+      "category": "3d",
+      "criticality": "standard",
+      "maxSeenIterations": 1,
+      "presetSelections": {
+        "lightRig": "rig-gallery-soft",
+        "cameraFraming": "cam-editorial-offset-right",
+        "compositionLayout": "layout-hero-right-copy-left"
+      },
+      "selectionSource": "director"
+    },
+    {
+      "caseId": "v-07-filmstrip-carousel",
+      "category": "3d",
+      "criticality": "standard",
+      "maxSeenIterations": 1,
+      "presetSelections": {
+        "lightRig": "rig-dusk-editorial",
+        "cameraFraming": "cam-orbital-start",
+        "compositionLayout": "layout-diagonal-sweep"
+      },
+      "selectionSource": "director"
+    },
+    {
+      "caseId": "v-08-orrery-mechanism",
+      "category": "3d",
+      "criticality": "hero",
+      "maxSeenIterations": 2,
+      "presetSelections": {
+        "lightRig": "rig-ember-glow",
+        "cameraFraming": "cam-macro-detail",
+        "compositionLayout": "layout-orbital-field"
+      },
+      "selectionSource": "director"
+    },
+    {
+      "caseId": "v-09-editorial-oversized-type",
+      "category": "2d",
+      "criticality": "standard",
+      "maxSeenIterations": 1,
+      "presetSelections": {
+        "lightRig": "rig-dusk-editorial",
+        "cameraFraming": "cam-editorial-offset-left",
+        "compositionLayout": "layout-editorial-column"
+      },
+      "selectionSource": "director"
+    },
+    {
+      "caseId": "v-10-bento-metrics",
+      "category": "2d",
+      "criticality": "standard",
+      "maxSeenIterations": 1,
+      "presetSelections": {
+        "lightRig": "rig-tech-clinical",
+        "cameraFraming": "cam-elevated-showcase",
+        "compositionLayout": "layout-bento-grid"
+      },
+      "selectionSource": "director"
+    },
+    {
+      "caseId": "v-11-gradient-cta",
+      "category": "2d",
+      "criticality": "standard",
+      "maxSeenIterations": 1,
+      "presetSelections": {
+        "lightRig": "rig-underglow-signal",
+        "cameraFraming": "cam-hero-three-quarter",
+        "compositionLayout": "layout-centered-monolith"
+      },
+      "selectionSource": "director"
+    },
+    {
+      "caseId": "v-12-photo-hero-composite",
+      "category": "2d",
+      "criticality": "hero",
+      "maxSeenIterations": 2,
+      "presetSelections": {
+        "lightRig": "rig-dusk-editorial",
+        "cameraFraming": "cam-editorial-offset-left",
+        "compositionLayout": "layout-hero-left-copy-right"
+      },
+      "selectionSource": "director"
+    },
+    {
+      "caseId": "v-13-brand-wall",
+      "category": "2d",
+      "criticality": "standard",
+      "maxSeenIterations": 1,
+      "presetSelections": {
+        "lightRig": "rig-gallery-soft",
+        "cameraFraming": "cam-top-down-flatlay",
+        "compositionLayout": "layout-triptych"
+      },
+      "selectionSource": "director"
+    },
+    {
+      "caseId": "v-14-pricing-card",
+      "category": "2d",
+      "criticality": "hero",
+      "maxSeenIterations": 2,
+      "presetSelections": {
+        "lightRig": "rig-product-hero",
+        "cameraFraming": "cam-face-on-pedestal",
+        "compositionLayout": "layout-hero-right-copy-left"
+      },
+      "selectionSource": "director"
+    },
+    {
+      "caseId": "v-15-testimonial-panel",
+      "category": "2d",
+      "criticality": "standard",
+      "maxSeenIterations": 1,
+      "presetSelections": {
+        "lightRig": "rig-soft-wrap",
+        "cameraFraming": "cam-editorial-offset-right",
+        "compositionLayout": "layout-editorial-column"
+      },
+      "selectionSource": "director"
+    },
+    {
+      "caseId": "v-16-feature-triptych",
+      "category": "2d",
+      "criticality": "standard",
+      "maxSeenIterations": 1,
+      "presetSelections": {
+        "lightRig": "rig-studio-neutral",
+        "cameraFraming": "cam-elevated-showcase",
+        "compositionLayout": "layout-triptych"
+      },
+      "selectionSource": "director"
+    },
+    {
+      "caseId": "v-17-data-ribbon",
+      "category": "2d",
+      "criticality": "standard",
+      "maxSeenIterations": 1,
+      "presetSelections": {
+        "lightRig": "rig-tech-clinical",
+        "cameraFraming": "cam-top-down-flatlay",
+        "compositionLayout": "layout-filmstrip-row"
+      },
+      "selectionSource": "director"
+    },
+    {
+      "caseId": "v-18-nav-dock",
+      "category": "2d",
+      "criticality": "standard",
+      "maxSeenIterations": 1,
+      "presetSelections": {
+        "lightRig": "rig-product-hero",
+        "cameraFraming": "cam-hero-three-quarter",
+        "compositionLayout": "layout-centered-monolith"
+      },
+      "selectionSource": "director"
+    },
+    {
+      "caseId": "v-19-empty-state",
+      "category": "2d",
+      "criticality": "standard",
+      "maxSeenIterations": 1,
+      "presetSelections": {
+        "lightRig": "rig-soft-wrap",
+        "cameraFraming": "cam-face-on-pedestal",
+        "compositionLayout": "layout-centered-monolith"
+      },
+      "selectionSource": "director"
+    },
+    {
+      "caseId": "v-20-footer-colophon",
+      "category": "2d",
+      "criticality": "standard",
+      "maxSeenIterations": 1,
+      "presetSelections": {
+        "lightRig": "rig-gallery-soft",
+        "cameraFraming": "cam-top-down-flatlay",
+        "compositionLayout": "layout-footer-band"
+      },
+      "selectionSource": "director"
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "generatedAt": "2026-07-12T05:35:09.811Z",
+  "frames": {
+    "v-01-orbit-product-hero": {
+      "arm": "image",
+      "path": "notes/wvis/d7/ref-frames/v-01-orbit-product-hero.png",
+      "seed": 1001,
+      "prompt": "Cinematic composition reference for: Orbit product hero — A machined-metal product body on a low plinth, slow orbital presentation, key+rim lighting, accent signal light... Deep #0b0b10 stage. single #ff2a38 signal accent. Watch mesh (/prism-mock/orrery/meshes/watch.glb) normalized to 2.2 scene units tall, centered at origin, resting on a low cylindrical plinth radius 1.4, height 0.25 units, top f",
+      "wallMs": 17140
+    },
+    "v-02-particle-constellation": {
+      "arm": "image",
+      "path": "notes/wvis/d7/ref-frames/v-02-particle-constellation.png",
+      "seed": 1002,
+      "prompt": "Cinematic composition reference for: Particle constellation hero — A deep starfield of instanced points with depth falloff and an accent core, slow drift, additive glow discipline... Deep #0b0b10 stage. single #ff2a38 signal accent. 1200 instanced icosahedron points, each radius 0.012 scene units, distributed through an ellipsoidal shell 6 x 4 x 5 units centered at [0,0,-1.5]. Depth falloff: per-i",
+      "wallMs": 12596
+    },
+    "v-03-glass-prism-refraction": {
+      "arm": "image",
+      "path": "notes/wvis/d7/ref-frames/v-03-glass-prism-refraction.png",
+      "seed": 1003,
+      "prompt": "Cinematic composition reference for: Glass prism refraction — A dispersive glass prism over a dark scene: iridescence, back rim light, emissive core — never flat glassmorphism... Deep #0b0b10 stage. single #ff2a38 signal accent. Triangular prism: equilateral cross-section 1.2 units per side, length 1.8 units, axis horizontal, rotated 12 deg on z and 20 deg on y, centered at origin. Material: MeshP",
+      "wallMs": 10554
+    },
+    "v-04-kinetic-type-headline": {
+      "arm": "image",
+      "path": "notes/wvis/d7/ref-frames/v-04-kinetic-type-headline.png",
+      "seed": 1004,
+      "prompt": "Cinematic composition reference for: Kinetic 3D type headline — A hero headline as dimensional type with staggered kinetic entrance and weighted settle; MSDF text only... Deep #0b0b10 stage. single #ff2a38 signal accent. Hero set as MSDF glyph planes (Lora 600), glyph em height 0.62 scene units, one line centered at y=0.4, per-word z offsets front-to-back 0.12 / 0.0 / -0.12 units for parallax dept",
+      "wallMs": 15101
+    },
+    "v-05-pedestal-material-study": {
+      "arm": "image",
+      "path": "notes/wvis/d7/ref-frames/v-05-pedestal-material-study.png",
+      "seed": 1005,
+      "prompt": "Cinematic composition reference for: Pedestal material study — A cinematic-floor pedestal with a torus-knot material study: brushed metal PBR, contact shadow, imperfection pass... Deep #0b0b10 stage. single #ff2a38 signal accent. Torus knot (radius 0.7, tube 0.22, 220 x 36 segments) centered at [0,0.4,0] above a cylindrical pedestal radius 1.1, height 0.5, top face at y=-0.35. Knot material: brush",
+      "wallMs": 11328
+    },
+    "v-06-loop-column-gallery": {
+      "arm": "image",
+      "path": "notes/wvis/d7/ref-frames/v-06-loop-column-gallery.png",
+      "seed": 1006,
+      "prompt": "Cinematic composition reference for: Loop column gallery — A vertical loop column of distinct image plates cycling with weighted motion; plates read as photographs, not voids... Deep #0b0b10 stage. single #ff2a38 signal accent. Six image plates, each 1.9 x 1.2 units (16:10), stacked vertically at 1.5-unit pitch (6x base 0.25), column offset x=+0.9, looping seamlessly modulo 9.0 units. Each plate c",
+      "wallMs": 13982
+    },
+    "v-07-filmstrip-carousel": {
+      "arm": "image",
+      "path": "notes/wvis/d7/ref-frames/v-07-filmstrip-carousel.png",
+      "seed": 1007,
+      "prompt": "Cinematic composition reference for: Filmstrip 3D carousel — An angled 3D filmstrip of image cards with perspective recession and one focused card; distinct plates, no echo... Deep #0b0b10 stage. single #ff2a38 signal accent. Five cards, each 1.6 x 1.0 units, arranged along x at 1.85-unit pitch, whole strip rotated -18 deg on y so cards recede to the right with perspective. Each card carries a DIS",
+      "wallMs": 13811
+    },
+    "v-08-orrery-mechanism": {
+      "arm": "image",
+      "path": "notes/wvis/d7/ref-frames/v-08-orrery-mechanism.png",
+      "seed": 1008,
+      "prompt": "Cinematic composition reference for: Orrery mechanism — A machined gear mechanism with metallic PBR, slow meshing rotation, and a jewel accent pivot... Deep #0b0b10 stage. single #ff2a38 signal accent. Primary gear (/prism-mock/orrery/meshes/gear-a.glb) normalized to 1.6-unit diameter, centered at origin in the xy plane; secondary gear instance scaled to 0.9-unit diameter at [1.15, 0.35, -0.1], to",
+      "wallMs": 11290
+    },
+    "v-09-editorial-oversized-type": {
+      "arm": "image",
+      "path": "notes/wvis/d7/ref-frames/v-09-editorial-oversized-type.png",
+      "seed": 1009,
+      "prompt": "Cinematic composition reference for: Editorial oversized type — A massive editorial headline with tight tracking discipline, a kicker line, and an accent underline rule... Deep #0b0b10 stage. single #ff2a38 signal accent. Full-bleed editorial plate 7 x 5.5 scene units at z=0 with a vertical engineered gradient #0b0b10 to #14141a plus 1.5 percent monochrome grain (no soft pastel blur). All type lef",
+      "wallMs": 11056
+    },
+    "v-10-bento-metrics": {
+      "arm": "image",
+      "path": "notes/wvis/d7/ref-frames/v-10-bento-metrics.png",
+      "seed": 1010,
+      "prompt": "Cinematic composition reference for: Bento metrics grid — A 2x2 bento of stat tiles with one dominant cell; machined surfaces, engineered gradients, no flat voids... Deep #0b0b10 stage. single #ff2a38 signal accent. Bento grid spans 5.5 x 3.5 scene units centered at origin with 0.25-unit gutters (1x base). Dominant cell: 3.25 x 3.5 units occupying the left column, both rows; two secondary cells 2.",
+      "wallMs": 14723
+    },
+    "v-11-gradient-cta": {
+      "arm": "image",
+      "path": "notes/wvis/d7/ref-frames/v-11-gradient-cta.png",
+      "seed": 1011,
+      "prompt": "Cinematic composition reference for: Gradient CTA object — A primary CTA as a physical object: engineered gradient ramp, press-down state, accent edge light (DL12)... Deep #0b0b10 stage. single #ff2a38 signal accent. Rounded-rect button plane 2.6w x 0.68h scene units, corner radius 0.08, extruded bevel depth 0.03 with 45deg chamfer that catches the key light as a bright machined edge; face carries",
+      "wallMs": 12342
+    },
+    "v-12-photo-hero-composite": {
+      "arm": "image",
+      "path": "notes/wvis/d7/ref-frames/v-12-photo-hero-composite.png",
+      "seed": 1012,
+      "prompt": "Cinematic composition reference for: Photo hero composite — A layered photographic hero plate with filmic grade, foreground subject separation, and caption block... Deep #0b0b10 stage. single #ff2a38 signal accent. Layered photo plate 4.0w x 2.5h scene units on parallax-plane using the provided imageUrl and depthMapUrl, depth-displacement amplitude 0.18 scene units, parallax-scroll intensity 0.35 ",
+      "wallMs": 11146
+    },
+    "v-13-brand-wall": {
+      "arm": "image",
+      "path": "notes/wvis/d7/ref-frames/v-13-brand-wall.png",
+      "seed": 1013,
+      "prompt": "Cinematic composition reference for: Brand mark wall — A 3x2 wall of monochrome brand-mark tiles rendered premium on machined tiles — no icon-pack styling... Deep #0b0b10 stage. single #ff2a38 signal accent. Six machined tiles 1.0w x 0.62h scene units in a 3x2 grid, gap 0.25 (1x base unit), grid total 3.5w x 1.49h centered at origin with the kicker 0.3 units above; each tile brushed-metal PBR, ani",
+      "wallMs": 11399
+    },
+    "v-14-pricing-card": {
+      "arm": "image",
+      "path": "notes/wvis/d7/ref-frames/v-14-pricing-card.png",
+      "seed": 1014,
+      "prompt": "Cinematic composition reference for: Premium pricing card — A single flagship pricing card: tier name, price figure, feature list rhythm, one accent CTA row... Deep #0b0b10 stage. single #ff2a38 signal accent. Card plane 2.4w x 3.2h scene units, corner radius 0.06, albedo #16161d over background #0b0b10 with a 0.006-unit hairline border #2a2a33; machined header strip 2.4w x 0.08h across the top ed",
+      "wallMs": 13980
+    },
+    "v-15-testimonial-panel": {
+      "arm": "image",
+      "path": "notes/wvis/d7/ref-frames/v-15-testimonial-panel.png",
+      "seed": 1015,
+      "prompt": "Cinematic composition reference for: Testimonial panel — A typographic client quote with oversized quotation mark, attribution line, and surface depth... Deep #0b0b10 stage. single #ff2a38 signal accent. Panel 3.4w x 1.9h scene units, corner radius 0.06, albedo vertical engineered gradient #1a1a22 (at 0.0) -> #111116 (at 1.0), 0.006-unit hairline border #26262f, panel roughness 0.6, metalness 0.2,",
+      "wallMs": 12709
+    },
+    "v-16-feature-triptych": {
+      "arm": "image",
+      "path": "notes/wvis/d7/ref-frames/v-16-feature-triptych.png",
+      "seed": 1016,
+      "prompt": "Cinematic composition reference for: Feature triptych — Three feature cards in rhythm with icon seats, title/body hierarchy, and hover lift states... Deep #0b0b10 stage. single #ff2a38 signal accent. Three cards 1.5w x 1.9h scene units in a row, gap 0.25 (1x base unit), row total 5.0w centered at origin; card albedo vertical ramp #191921 (at 0.0) -> #121218 (at 1.0), corner radius 0.06, 0.006-unit",
+      "wallMs": 13765
+    },
+    "v-17-data-ribbon": {
+      "arm": "image",
+      "path": "notes/wvis/d7/ref-frames/v-17-data-ribbon.png",
+      "seed": 1017,
+      "prompt": "Cinematic composition reference for: Data ticker ribbon — A horizontal data ribbon of mono figures scrolling with constant velocity and edge fades... Deep #0b0b10 stage. single #ff2a38 signal accent. Ribbon plane 7.0w x 0.35h scene units centered at origin, albedo #111117, top and bottom 0.006-unit hairlines #23232b, roughness 0.6, metalness 0.2; ticker entries set in mono 700 paper on a single ba",
+      "wallMs": 11560
+    },
+    "v-18-nav-dock": {
+      "arm": "image",
+      "path": "notes/wvis/d7/ref-frames/v-18-nav-dock.png",
+      "seed": 1018,
+      "prompt": "Cinematic composition reference for: Navigation dock — A floating navigation dock of five entries with active state, machined rail, and press-down affordance... Deep #0b0b10 stage. single #ff2a38 signal accent. Floating rail 3.6w x 0.5h scene units, corner radius 0.1, brushed-metal PBR with vertical albedo ramp #1b1b23 (at 0.0) -> #101015 (at 1.0), anisotropy 0.6 along x, roughness 0.55, metalness",
+      "wallMs": 11219
+    },
+    "v-19-empty-state": {
+      "arm": "image",
+      "path": "notes/wvis/d7/ref-frames/v-19-empty-state.png",
+      "seed": 1019,
+      "prompt": "Cinematic composition reference for: Rich empty state — An empty-state panel that is rich, never void (DL16): guidance copy, ghost preview, one accent action... Deep #0b0b10 stage. single #ff2a38 signal accent. Panel 3.2w x 2.2h scene units, corner radius 0.06, filled with a radial engineered gradient #14141a (at 0.0, center) -> #0b0b10 (at 1.0, edges) plus a hairline grid at 0.25-unit pitch (1x b",
+      "wallMs": 12354
+    },
+    "v-20-footer-colophon": {
+      "arm": "image",
+      "path": "notes/wvis/d7/ref-frames/v-20-footer-colophon.png",
+      "seed": 1020,
+      "prompt": "Cinematic composition reference for: Footer colophon — A footer colophon with type-scale discipline: wordmark, three link columns, legal line, hairline rules... Deep #0b0b10 stage. single #ff2a38 signal accent. Footer band 6.8w x 2.0h scene units, albedo vertical ramp #121218 (at 0.0) -> #0b0b10 (at 1.0), roughness 0.6, metalness 0.2, top edge carrying a full-width 0.006-unit hairline rule #23232b",
+      "wallMs": 16659
+    }
+  }
+}

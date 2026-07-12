@@ -1,0 +1,111 @@
+{
+  "wave": "wvis",
+  "name": "d1-control",
+  "phase": "d1",
+  "arm": "control",
+  "calls": [
+    {
+      "phase": "d1-control",
+      "contestant": "claude-fable-5",
+      "caseId": "v-01-orbit-product-hero",
+      "tag": "v-01-orbit-product-hero-r3",
+      "promptTokens": 7023,
+      "completionTokens": 4898,
+      "costUsd": 0.31513,
+      "billing": "metered",
+      "at": "2026-07-12T05:27:52.394Z"
+    },
+    {
+      "phase": "d1-control",
+      "contestant": "claude-fable-5",
+      "caseId": "v-16-feature-triptych",
+      "tag": "v-16-feature-triptych-r3",
+      "promptTokens": 7049,
+      "completionTokens": 11464,
+      "costUsd": 0.64369,
+      "billing": "metered",
+      "at": "2026-07-12T05:30:05.683Z"
+    },
+    {
+      "phase": "d1-control",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r3",
+      "promptTokens": 5035,
+      "completionTokens": 3833,
+      "costUsd": 0.0242,
+      "billing": "metered",
+      "at": "2026-07-12T05:30:28.975Z"
+    },
+    {
+      "phase": "d1-control",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-09-editorial-oversized-type",
+      "tag": "v-09-editorial-oversized-type-r3",
+      "promptTokens": 4988,
+      "completionTokens": 3268,
+      "costUsd": 0.021328,
+      "billing": "metered",
+      "at": "2026-07-12T05:30:48.415Z"
+    },
+    {
+      "phase": "d1-control",
+      "contestant": "claude-opus-4.8",
+      "caseId": "v-12-photo-hero-composite",
+      "tag": "v-12-photo-hero-composite-r3",
+      "promptTokens": 7068,
+      "completionTokens": 10934,
+      "costUsd": 0.30869,
+      "billing": "metered",
+      "at": "2026-07-12T05:33:07.939Z"
+    },
+    {
+      "phase": "d1-control",
+      "contestant": "claude-opus-4.8",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r3",
+      "promptTokens": 6994,
+      "completionTokens": 5733,
+      "costUsd": 0.178295,
+      "billing": "metered",
+      "at": "2026-07-12T05:34:12.177Z"
+    },
+    {
+      "phase": "d1-control",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-12-photo-hero-composite",
+      "tag": "v-12-photo-hero-composite-r3",
+      "promptTokens": 7068,
+      "completionTokens": 16384,
+      "costUsd": 0.177976,
+      "billing": "metered",
+      "at": "2026-07-12T05:37:03.474Z"
+    },
+    {
+      "phase": "d1-control",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r3",
+      "promptTokens": 6994,
+      "completionTokens": 10346,
+      "costUsd": 0.117448,
+      "billing": "metered",
+      "at": "2026-07-12T05:38:40.834Z"
+    },
+    {
+      "phase": "d1-control",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "v-07-filmstrip-carousel",
+      "tag": "v-07-filmstrip-carousel-r3",
+      "promptTokens": 4546,
+      "completionTokens": 4971,
+      "costUsd": 0.00110933,
+      "billing": "metered",
+      "at": "2026-07-12T05:39:27.357Z"
+    }
+  ],
+  "totals": {
+    "meteredUsd": 1.7878663300000002,
+    "subscriptionEquivalentUsd": 0
+  }
+}

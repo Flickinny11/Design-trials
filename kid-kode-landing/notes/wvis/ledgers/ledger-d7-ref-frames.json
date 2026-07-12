@@ -1,0 +1,212 @@
+{
+  "wave": "wvis",
+  "name": "d7-ref-frames",
+  "phase": "d7",
+  "provider": "replicate-flux-2-pro",
+  "calls": [
+    {
+      "phase": "d7-ref-frames",
+      "caseId": "v-01-orbit-product-hero",
+      "seed": 1001,
+      "wallMs": 17140,
+      "costUsd": 0.04,
+      "billing": "metered",
+      "rateNote": "Replicate flux-2-pro 1MP published-rate estimate",
+      "at": "2026-07-12T05:35:26.952Z"
+    },
+    {
+      "phase": "d7-ref-frames",
+      "caseId": "v-02-particle-constellation",
+      "seed": 1002,
+      "wallMs": 12596,
+      "costUsd": 0.04,
+      "billing": "metered",
+      "rateNote": "Replicate flux-2-pro 1MP published-rate estimate",
+      "at": "2026-07-12T05:35:39.549Z"
+    },
+    {
+      "phase": "d7-ref-frames",
+      "caseId": "v-03-glass-prism-refraction",
+      "seed": 1003,
+      "wallMs": 10554,
+      "costUsd": 0.04,
+      "billing": "metered",
+      "rateNote": "Replicate flux-2-pro 1MP published-rate estimate",
+      "at": "2026-07-12T05:35:50.104Z"
+    },
+    {
+      "phase": "d7-ref-frames",
+      "caseId": "v-04-kinetic-type-headline",
+      "seed": 1004,
+      "wallMs": 15101,
+      "costUsd": 0.04,
+      "billing": "metered",
+      "rateNote": "Replicate flux-2-pro 1MP published-rate estimate",
+      "at": "2026-07-12T05:36:05.206Z"
+    },
+    {
+      "phase": "d7-ref-frames",
+      "caseId": "v-05-pedestal-material-study",
+      "seed": 1005,
+      "wallMs": 11328,
+      "costUsd": 0.04,
+      "billing": "metered",
+      "rateNote": "Replicate flux-2-pro 1MP published-rate estimate",
+      "at": "2026-07-12T05:36:16.535Z"
+    },
+    {
+      "phase": "d7-ref-frames",
+      "caseId": "v-06-loop-column-gallery",
+      "seed": 1006,
+      "wallMs": 13982,
+      "costUsd": 0.04,
+      "billing": "metered",
+      "rateNote": "Replicate flux-2-pro 1MP published-rate estimate",
+      "at": "2026-07-12T05:36:30.518Z"
+    },
+    {
+      "phase": "d7-ref-frames",
+      "caseId": "v-07-filmstrip-carousel",
+      "seed": 1007,
+      "wallMs": 13811,
+      "costUsd": 0.04,
+      "billing": "metered",
+      "rateNote": "Replicate flux-2-pro 1MP published-rate estimate",
+      "at": "2026-07-12T05:36:44.330Z"
+    },
+    {
+      "phase": "d7-ref-frames",
+      "caseId": "v-08-orrery-mechanism",
+      "seed": 1008,
+      "wallMs": 11290,
+      "costUsd": 0.04,
+      "billing": "metered",
+      "rateNote": "Replicate flux-2-pro 1MP published-rate estimate",
+      "at": "2026-07-12T05:36:55.621Z"
+    },
+    {
+      "phase": "d7-ref-frames",
+      "caseId": "v-09-editorial-oversized-type",
+      "seed": 1009,
+      "wallMs": 11056,
+      "costUsd": 0.04,
+      "billing": "metered",
+      "rateNote": "Replicate flux-2-pro 1MP published-rate estimate",
+      "at": "2026-07-12T05:37:06.679Z"
+    },
+    {
+      "phase": "d7-ref-frames",
+      "caseId": "v-10-bento-metrics",
+      "seed": 1010,
+      "wallMs": 14723,
+      "costUsd": 0.04,
+      "billing": "metered",
+      "rateNote": "Replicate flux-2-pro 1MP published-rate estimate",
+      "at": "2026-07-12T05:37:21.403Z"
+    },
+    {
+      "phase": "d7-ref-frames",
+      "caseId": "v-11-gradient-cta",
+      "seed": 1011,
+      "wallMs": 12342,
+      "costUsd": 0.04,
+      "billing": "metered",
+      "rateNote": "Replicate flux-2-pro 1MP published-rate estimate",
+      "at": "2026-07-12T05:37:33.746Z"
+    },
+    {
+      "phase": "d7-ref-frames",
+      "caseId": "v-12-photo-hero-composite",
+      "seed": 1012,
+      "wallMs": 11146,
+      "costUsd": 0.04,
+      "billing": "metered",
+      "rateNote": "Replicate flux-2-pro 1MP published-rate estimate",
+      "at": "2026-07-12T05:37:44.893Z"
+    },
+    {
+      "phase": "d7-ref-frames",
+      "caseId": "v-13-brand-wall",
+      "seed": 1013,
+      "wallMs": 11399,
+      "costUsd": 0.04,
+      "billing": "metered",
+      "rateNote": "Replicate flux-2-pro 1MP published-rate estimate",
+      "at": "2026-07-12T05:37:56.293Z"
+    },
+    {
+      "phase": "d7-ref-frames",
+      "caseId": "v-14-pricing-card",
+      "seed": 1014,
+      "wallMs": 13980,
+      "costUsd": 0.04,
+      "billing": "metered",
+      "rateNote": "Replicate flux-2-pro 1MP published-rate estimate",
+      "at": "2026-07-12T05:38:10.274Z"
+    },
+    {
+      "phase": "d7-ref-frames",
+      "caseId": "v-15-testimonial-panel",
+      "seed": 1015,
+      "wallMs": 12709,
+      "costUsd": 0.04,
+      "billing": "metered",
+      "rateNote": "Replicate flux-2-pro 1MP published-rate estimate",
+      "at": "2026-07-12T05:38:22.984Z"
+    },
+    {
+      "phase": "d7-ref-frames",
+      "caseId": "v-16-feature-triptych",
+      "seed": 1016,
+      "wallMs": 13765,
+      "costUsd": 0.04,
+      "billing": "metered",
+      "rateNote": "Replicate flux-2-pro 1MP published-rate estimate",
+      "at": "2026-07-12T05:38:36.750Z"
+    },
+    {
+      "phase": "d7-ref-frames",
+      "caseId": "v-17-data-ribbon",
+      "seed": 1017,
+      "wallMs": 11560,
+      "costUsd": 0.04,
+      "billing": "metered",
+      "rateNote": "Replicate flux-2-pro 1MP published-rate estimate",
+      "at": "2026-07-12T05:38:48.310Z"
+    },
+    {
+      "phase": "d7-ref-frames",
+      "caseId": "v-18-nav-dock",
+      "seed": 1018,
+      "wallMs": 11219,
+      "costUsd": 0.04,
+      "billing": "metered",
+      "rateNote": "Replicate flux-2-pro 1MP published-rate estimate",
+      "at": "2026-07-12T05:38:59.530Z"
+    },
+    {
+      "phase": "d7-ref-frames",
+      "caseId": "v-19-empty-state",
+      "seed": 1019,
+      "wallMs": 12354,
+      "costUsd": 0.04,
+      "billing": "metered",
+      "rateNote": "Replicate flux-2-pro 1MP published-rate estimate",
+      "at": "2026-07-12T05:39:11.886Z"
+    },
+    {
+      "phase": "d7-ref-frames",
+      "caseId": "v-20-footer-colophon",
+      "seed": 1020,
+      "wallMs": 16659,
+      "costUsd": 0.04,
+      "billing": "metered",
+      "rateNote": "Replicate flux-2-pro 1MP published-rate estimate",
+      "at": "2026-07-12T05:39:28.546Z"
+    }
+  ],
+  "totals": {
+    "meteredUsd": 0.8000000000000002,
+    "subscriptionEquivalentUsd": 0
+  }
+}

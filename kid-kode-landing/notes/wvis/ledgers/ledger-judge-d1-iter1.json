@@ -1,0 +1,82 @@
+{
+  "wave": "wvis-d1-judge",
+  "phase": "iter1",
+  "calls": [
+    {
+      "batch": "batch-fab-v-01-orbit-product-hero-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 1,
+      "costUsd": 1.1467330000000002,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:32:44.794Z"
+    },
+    {
+      "batch": "batch-fab-v-02-particle-constellation-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 4,
+      "costUsd": 0.525994,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:33:26.900Z"
+    },
+    {
+      "batch": "batch-fab-v-03-glass-prism-refraction-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 1,
+      "costUsd": 0.376415,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:33:46.663Z"
+    },
+    {
+      "batch": "batch-fab-v-04-kinetic-type-headline-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 6,
+      "costUsd": 0.6142540000000001,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:34:35.351Z"
+    },
+    {
+      "batch": "batch-fab-v-05-pedestal-material-study-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 5,
+      "costUsd": 0.623837,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:35:36.789Z"
+    },
+    {
+      "batch": "batch-fab-v-06-loop-column-gallery-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 4,
+      "costUsd": 0.49709099999999995,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:36:07.581Z"
+    },
+    {
+      "batch": "batch-fab-v-07-filmstrip-carousel-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 3,
+      "costUsd": 0.46799499999999994,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:37:58.120Z"
+    },
+    {
+      "batch": "batch-fab-v-08-orrery-mechanism-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 6,
+      "costUsd": 0.6301019999999999,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:38:49.713Z"
+    },
+    {
+      "batch": "batch-fab-v-09-editorial-oversized-type-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 2,
+      "costUsd": 0.484252,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:39:35.760Z"
+    }
+  ],
+  "totals": {
+    "meteredUsd": 0,
+    "subscriptionEquivalentUsd": 5.3666730000000005
+  }
+}
