@@ -1,0 +1,20 @@
+{
+  "bundle": "wvis/glm-5.2/v-07-filmstrip-carousel-r21",
+  "contestant": "glm-5.2",
+  "caseId": "v-07-filmstrip-carousel",
+  "run": 21,
+  "capturedAt": "2026-07-12T05:30:32.647Z",
+  "probe": {
+    "status": "error",
+    "error": "module did not default-export a function",
+    "renderables": 0,
+    "nodeMounted": false,
+    "bundleId": "wvis/glm-5.2/v-07-filmstrip-carousel-r21"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": false,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

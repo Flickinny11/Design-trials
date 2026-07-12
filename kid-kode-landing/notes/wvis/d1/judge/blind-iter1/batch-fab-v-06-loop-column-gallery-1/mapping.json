@@ -1,0 +1,26 @@
+[
+  {
+    "label": "F1",
+    "bundleId": "wvis/deepseek-v4-flash/v-06-loop-column-gallery-r11",
+    "contestant": "deepseek-v4-flash",
+    "source": "notes/wvis/d1/frames-iter1/deepseek-v4-flash/v-06-loop-column-gallery-r11.png"
+  },
+  {
+    "label": "F2",
+    "bundleId": "wvis/glm-5.2/v-06-loop-column-gallery-r11",
+    "contestant": "glm-5.2",
+    "source": "notes/wvis/d1/frames-iter1/glm-5.2/v-06-loop-column-gallery-r11.png"
+  },
+  {
+    "label": "F3",
+    "bundleId": "wvis/gemini-3.5-flash/v-06-loop-column-gallery-r11",
+    "contestant": "gemini-3.5-flash",
+    "source": "notes/wvis/d1/frames-iter1/gemini-3.5-flash/v-06-loop-column-gallery-r11.png"
+  },
+  {
+    "label": "F4",
+    "bundleId": "wvis/kimi-k2.7-code/v-06-loop-column-gallery-r21",
+    "contestant": "kimi-k2.7-code",
+    "source": "notes/wvis/d1/frames-iter1/kimi-k2.7-code/v-06-loop-column-gallery-r21.png"
+  }
+]

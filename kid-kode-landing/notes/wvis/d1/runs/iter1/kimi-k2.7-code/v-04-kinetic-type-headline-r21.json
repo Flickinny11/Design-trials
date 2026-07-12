@@ -1,0 +1,46 @@
+{
+  "wave": "wvis-d1",
+  "iter": 1,
+  "arm": "vision",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "caseId": "v-04-kinetic-type-headline",
+  "sourceTag": "v-04-kinetic-type-headline-r2",
+  "tag": "v-04-kinetic-type-headline-r21",
+  "run": 21,
+  "critiqueFed": {
+    "score": 32,
+    "mustFix": [
+      {
+        "defect": "BROKEN_COMPOSITION",
+        "region": "center — subtitle overlaps headline baseline, both illegible where they collide"
+      },
+      {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "center headline — no red accent underline, no per-word z-depth/parallax, sans-serif instead of Lora 600"
+      },
+      {
+        "defect": "DEAD_LIGHTING",
+        "region": "full frame — flat gray fill, no material light response on glyphs"
+      },
+      {
+        "defect": "SCALE_ERROR",
+        "region": "frame edges — render letterboxed inside black margins, headline clips right edge"
+      }
+    ],
+    "notes": "Type renders but subtitle collides with headline; no accent red, no dimensionality, wrong typeface, inset letterboxed composition.",
+    "runtimeError": null
+  },
+  "frameFed": "notes/bakeoff-b/frames/kimi-k2.7-code/v-04-kinetic-type-headline-r2.png",
+  "ok": true,
+  "wallMs": 2958,
+  "finishReason": "length",
+  "usage": {
+    "promptTokens": 6890,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.0623048,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial, MeshStandardNodeMaterial } from 'three/webgpu';\nimport { uv, vec2, vec3, color, mix, fract, sin, dot, mul } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const {\n    Group,\n    PlaneGeometry,\n    Box3,\n    DirectionalLight,\n    DoubleSide,\n    Vector3,\n  } = ctx.THREE;\n\n  const root = new Group();\n\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const findText = (role) => {\n    const r = role.toLowerCase();\n    const item = items.find((it) => (it.role || '').toLowerCase() === r);\n    return item?.text ?? '';\n  };\n\n  const heroStr = findText('hero') || 'TIME, MACHINED.';\n  const subStr = findText('subhead') || 'Every calibre begins as a solid billet.';\n  const capStr = findText('caption') || 'NOVA ATELIER / CALIBRE PROGRAM';\n\n  const timelines = [];\n  const primitiveRuns = [];\n  const materials = new Set();\n\n  // --- Backdrop: fill the camera frustum with engineered gradient + mono grain ---\n  const v = uv();\n  const grain = fract(mul(sin(dot(v, vec2(12.9898, 78.233))), 43758.5453));\n  const grad = mix(color('#0b0b10'), color('#13131a'), v.y);\n  const backdropColor = mix(grad, vec3(grain), 0.015);\n\n  const backdropMat = new MeshBasicNodeMaterial({ colorNode: backdropColor });\n  materials.add(backdropMat);\n\n  // large enough to cover the visible frame at the given camera position\n  const backdrop = new ctx.THREE.Mesh(new PlaneGeometry(18, 12), backdropMat);\n  backdrop.position.set(0, 0, -2.2);\n  root.add(backdrop);\n\n  // --- Material upgrade helper: MSDF glyphs -> lit PBR ---\n  const makeGlyphPBR = (oldMat, opts = {}) => {\n    const m = new MeshStandardNodeMaterial();\n    ['colorNode', 'alphaNode', 'opacityNode', 'positionNode', 'normalNode', 'emissiveNode'].forEach((k) => {\n      if (oldMat[k]) m[k] = oldMat[k];\n    });\n    m.transparent = oldMat.transparent ?? true;\n    m.alphaTest = oldMat.alphaTest ?? 0.5;\n    m.side = oldMat.side ?? DoubleSide;\n    m.depthWrite = oldMat.depthWrite ?? false;\n    m.opacity = oldMat.opacity ?? 1;\n    m.roughness = opts.roughness ?? 0.55;\n    m.metalness = opts.metalness ?? 0.08;\n    if (opts.emissiveNode) m.emissiveNode = opts.emissiveNode;\n    materials.add(oldMat);\n    materials.add(m);\n    return m;\n  };\n\n  const convertGroupToPBR = (g, opts) => {\n    g.traverse((o) => {\n      if (o.isMesh && o.material) {\n        o.material = makeGlyphPBR(o.material, opts);\n      }\n    });\n  };\n\n  // --- Hero: per-word dimensional type with parallax z-depth ---\n  const heroGroup = new Group();\n  const words = heroStr.split(' ').filter(Boolean);\n  const wordOffsets = [0.12, 0.0, -0.12];\n\n  const wordMeshes = words.map((w) =>\n    ctx.fontAtlas.createText(w, {\n      fontSize: 0.62,\n      color: '#e8ecf2',\n      align: 'center',\n    })\n  );\n\n  const boxTemp = new Box3();\n  const widths = [];\n  let totalWidth = 0;\n\n  wordMeshes.forEach((m) => {\n    boxTemp.setFromObject(m);\n    const w = Math.max(0.001, boxTemp.max.x - boxTemp.min.x);\n    widths.push(w);\n    totalWidth += w;\n  });\n\n  const wordGap = 0.14;\n  totalWidth += wordGap * Math.max(0, words.length - 1);\n\n  let cursor = -totalWidth / 2;\n  wordMeshes.forEach((m, i) => {\n    m.position.set(cursor + widths[i] / 2, 0, wordOffsets[i] ?? 0);\n    cursor += widths[i] + wordGap;\n    heroGroup.add(m);\n  });\n\n  // scale the line down if it risks clipping the frame edges\n  const heroBox = new Box3().setFromObject(heroGroup);\n  const heroWidth = Math.max(0.001, heroBox.max.x - heroBox.min.x);\n  const heroHeight = Math.max(0.001, heroBox.max.y - heroBox.min.y);\n  const heroScale = heroWidth > 6.1 ? 6.1 / heroWidth : 1;\n  heroGroup.scale.setScalar(heroScale);\n\n  // lift the line so its optical center sits at y = 0.4\n  heroGroup.position.set(0, 0.4, 0);\n  root.add(heroGroup);\n\n  convertGroupToPBR(heroGroup, { roughness: 0.5, metalness: 0.1 });\n\n  // --- Accent underline rule ---\n  const ruleGeo = new PlaneGeometry(2.6, 0.045);\n  ruleGeo.translate(1.3, 0, 0);\n  const ruleMat = new MeshStandardNodeMaterial({\n    colorNode: color('#ff2a38'),\n"
+}

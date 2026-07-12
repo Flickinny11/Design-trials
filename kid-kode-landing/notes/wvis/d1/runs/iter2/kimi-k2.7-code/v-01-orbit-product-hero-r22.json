@@ -1,0 +1,54 @@
+{
+  "wave": "wvis-d1",
+  "iter": 2,
+  "arm": "vision",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "caseId": "v-01-orbit-product-hero",
+  "sourceTag": "v-01-orbit-product-hero-r2",
+  "tag": "v-01-orbit-product-hero-r22",
+  "run": 22,
+  "critiqueFed": {
+    "score": 38,
+    "mustFix": [
+      {
+        "defect": "BROKEN_COMPOSITION",
+        "region": "upper-left quadrant — blown-out white backdrop/light-card quad visibly intruding into frame"
+      },
+      {
+        "defect": "OFF_PALETTE",
+        "region": "center watch body — gold/rose-gold case instead of spec brushed near-black metal"
+      },
+      {
+        "defect": "FLAT_VOID",
+        "region": "right background field — featureless black, no engineered gradient"
+      },
+      {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "whole frame — no #ff2a38 accent signal light"
+      },
+      {
+        "defect": "DEAD_LIGHTING",
+        "region": "plinth and background field — no rim light, harsh blown key, flat response"
+      },
+      {
+        "defect": "SCALE_ERROR",
+        "region": "center card — watch floats above plinth rather than resting on top face"
+      }
+    ],
+    "notes": "Recognizable product render but toy-grade PBR, visible light card, off-palette gold, missing red accent, dead background; far below exemplar bar.",
+    "runtimeError": null
+  },
+  "frameFed": "notes/wvis/d1/frames-iter1/kimi-k2.7-code/v-01-orbit-product-hero-r21.png",
+  "ok": true,
+  "wallMs": 1959,
+  "finishReason": "length",
+  "usage": {
+    "promptTokens": 7123,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.062472559999999996,
+  "billing": "metered",
+  "output": ""
+}

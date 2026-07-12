@@ -1,0 +1,50 @@
+{
+  "wave": "wvis-d1",
+  "iter": 1,
+  "arm": "vision",
+  "contestant": "gemini-3.5-flash",
+  "model": "google/gemini-3.5-flash",
+  "route": "openrouter",
+  "caseId": "v-02-particle-constellation",
+  "sourceTag": "v-02-particle-constellation-r2",
+  "tag": "v-02-particle-constellation-r21",
+  "run": 21,
+  "critiqueFed": {
+    "score": 10,
+    "mustFix": [
+      {
+        "defect": "BLANK_RENDER",
+        "region": "entire frame — near-empty black field"
+      },
+      {
+        "defect": "SCALE_ERROR",
+        "region": "center — particle system collapsed to a tiny square patch"
+      },
+      {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "whole frame — no headline, no accent core, no depth staging"
+      },
+      {
+        "defect": "FLAT_VOID",
+        "region": "background field — ~95% featureless black"
+      },
+      {
+        "defect": "RUNTIME_ERROR",
+        "region": "TypeError: currentPos.copy(...).addValues is not a function"
+      }
+    ],
+    "notes": "Scene collapsed to a postage-stamp particle patch in a void; effectively a failed render.",
+    "runtimeError": "TypeError: currentPos.copy(...).addValues is not a function"
+  },
+  "frameFed": "notes/bakeoff-b/frames/gemini-3.5-flash/v-02-particle-constellation-r2.png",
+  "ok": true,
+  "wallMs": 2171,
+  "finishReason": "stop",
+  "usage": {
+    "promptTokens": 9030,
+    "completionTokens": 3985
+  },
+  "costUsd": 0.04941,
+  "billing": "metered",
+  "output": "import { \n  MeshBasicNodeMaterial, \n  MeshStandardNodeMaterial, \n  MeshPhysicalNodeMaterial \n} from 'three/webgpu';\nimport { \n  attribute, \n  uniform, \n  color, \n  mix \n} from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, IcosahedronGeometry, InstancedMesh, Matrix4, Vector3, Color, PointLight, PlaneGeometry } = ctx.THREE;\n  const group = new Group();\n  const timelines = [];\n\n  // --- STAGE BACKDROP ---\n  // Large background plane at z=-5.0 (behind the particle shell)\n  const bgGeo = new PlaneGeometry(18, 14);\n  const bgMat = new MeshBasicNodeMaterial();\n  const vUv = attribute('uv');\n  bgMat.colorNode = mix(color('#0b0b10'), color('#16161d'), vUv.y);\n  bgMat.depthWrite = false;\n  const bgMesh = new Mesh(bgGeo, bgMat);\n  bgMesh.position.set(0, 0, -5.0);\n  group.add(bgMesh);\n\n  // --- LOCAL ACCENT LIGHTING ---\n  const rawAccentColor = new Color('#ff2a38');\n  const accentLight = new PointLight(rawAccentColor, 1.4, 8);\n  accentLight.position.set(2, -1, 1);\n  group.add(accentLight);\n\n  // --- PARTICLES GENERATION ---\n  const fieldCount = 1200;\n  const coreCount = 90;\n\n  const baseGeom = new IcosahedronGeometry(0.012, 1);\n\n  // 1. Field Particles material and InstancedMesh\n  const fieldMat = new MeshStandardNodeMaterial({\n    color: '#e8ecf2',\n    roughness: 1.0,\n    metalness: 0.0\n  });\n  fieldMat.emissiveNode = color('#e8ecf2').mul(0.9);\n\n  const fieldInst = new InstancedMesh(baseGeom, fieldMat, fieldCount);\n  group.add(fieldInst);\n\n  // 2. Core Particles material and InstancedMesh\n  const coreMat = new MeshPhysicalNodeMaterial({\n    color: '#ff2a38',\n    transparent: true,\n    blending: ctx.THREE.AdditiveBlending,\n    depthWrite: false\n  });\n  const coreEmissiveIntensity = uniform(1.5);\n  coreMat.emissiveNode = color('#ff2a38').mul(coreEmissiveIntensity);\n\n  const coreInst = new InstancedMesh(baseGeom, coreMat, coreCount);\n  group.add(coreInst);\n\n  // Generate distributions and populate positions\n  const dummy = new Matrix4();\n  const pos = new Vector3();\n\n  // Field: Ellipsoidal shell 6 x 4 x 5 centered at [0,0,-1.5]\n  const fieldData = [];\n  const fieldCenter = new Vector3(0, 0, -1.5);\n  for (let i = 0; i < fieldCount; i++) {\n    const theta = Math.acos(2 * Math.random() - 1);\n    const phi = Math.random() * Math.PI * 2;\n    const r = 0.35 + Math.random() * 0.65;\n    \n    const rx = (6 / 2) * r;\n    const ry = (4 / 2) * r;\n    const rz = (5 / 2) * r;\n\n    pos.x = rx * Math.sin(theta) * Math.cos(phi) + fieldCenter.x;\n    pos.y = ry * Math.sin(theta) * Math.sin(phi) + fieldCenter.y;\n    pos.z = rz * Math.cos(theta) + fieldCenter.z;\n\n    fieldData.push({\n      anchor: pos.clone(),\n      phaseX: Math.random() * Math.PI * 2,\n      phaseY: Math.random() * Math.PI * 2,\n      phaseZ: Math.random() * Math.PI * 2,\n      scale: 0\n    });\n\n    dummy.setPosition(pos);\n    fieldInst.setMatrixAt(i, dummy);\n  }\n\n  // Core: 90 instances within a 0.5 sphere at origin\n  const coreData = [];\n  for (let i = 0; i < coreCount; i++) {\n    const theta = Math.acos(2 * Math.random() - 1);\n    const phi = Math.random() * Math.PI * 2;\n    const r = Math.random() * 0.5;\n\n    pos.x = r * Math.sin(theta) * Math.cos(phi);\n    pos.y = r * Math.sin(theta) * Math.sin(phi);\n    pos.z = r * Math.cos(theta);\n\n    coreData.push({\n      anchor: pos.clone(),\n      phaseX: Math.random() * Math.PI * 2,\n      phaseY: Math.random() * Math.PI * 2,\n      phaseZ: Math.random() * Math.PI * 2,\n      scale: 0\n    });\n\n    dummy.setPosition(pos);\n    coreInst.setMatrixAt(i, dummy);\n  }\n\n  fieldInst.instanceMatrix.needsUpdate = true;\n  coreInst.instanceMatrix.needsUpdate = true;\n\n  // --- TYPOGRAPHY PLANE AT Z=0.5 ---\n  const textGroup = new Group();\n  textGroup.position.z = 0.5;\n  group.add(textGroup);\n\n  // Hero Text\n  const hHero = ctx.fontAtlas.createText('NOVA ATELIER', {\n    fontSize: 0.62,\n    color: '#e8ecf2',\n    align: 'center'\n  });\n  hHero.position.y = 1.0;\n  textGroup.add(hHero);\n\n  // Subhead Text\n  const hSub = ctx.fontAtlas.createText('Precision instruments for the dark hours.', {\n    fontSize: 0.2,\n    color: '#e8ecf2',\n    align: 'center'\n  });\n  hSub.position.y = 0.25;\n  textGroup.add(hSub);\n\n  // Caption Text\n  const hCap = ctx.fontAtlas.createText('EST. 2019 / GENEVA AND KYOTO', {\n    fontSize: 0.09,\n    color: '#ff2a38',\n    align: 'center',\n    letterSpacingPx: 8\n  });\n  hCap.position.y = -2.25;\n  textGroup.add(hCap);\n\n  // --- ANIMATIONS & CORE DRIFT UPDATE ---\n  // Core Pulsing\n  const pulseTl = gsap.timeline({ repeat: -1 });\n  pulseTl.to(coreEmissiveIntensity, {\n    value: 1.8,\n    duration: 5,\n    ease: 'sine.inOut'\n  }).to(coreEmissiveIntensity, {\n    value: 1.5,\n    duration: 5,\n    ease: 'sine.inOut'\n  });\n  timelines.push(pulseTl);\n\n  // Emerge entrance logic via GSAP custom scale/pos driver\n  const animProxy = { progress: 0 };\n  const emergeTl = gsap.to(animProxy, {\n    progress: 1,\n    duration: 1.4,\n    ease: 'power3.out',\n    onUpdate: () => {\n      const p = animProxy.progress;\n      for (let i = 0; i < fieldCount; i++) {\n        const item = fieldData[i];\n        const dist = item.anchor.length();\n        const startThreshold = dist * 0.15;\n        const localProgress = Math.max(0, Math.min(1, (p - startThreshold) / (1 - startThreshold)));\n        item.scale = localProgress;\n      }\n      for (let i = 0; i < coreCount; i++) {\n        const item = coreData[i];\n        const dist = item.anchor.length();\n        const startThreshold = dist * 0.1;\n        const localProgress = Math.max(0, Math.min(1, (p - startThreshold) / (1 - startThreshold)));\n        item.scale = localProgress;\n      }\n    }\n  });\n  timelines.push(emergeTl);\n\n  // Animation frame updater for slow orbit drift & matrix applying\n  let frameId;\n  const currentPos = new Vector3();\n  const scaleVector = new Vector3();\n\n  const update = () => {\n    frameId = requestAnimationFrame(update);\n    const timeSecs = performance.now() * 0.001;\n    const driftFreq = 0.05 * Math.PI * 2;\n\n    // Update field\n    for (let i = 0; i < fieldCount; i++) {\n      const data = fieldData[i];\n      const ox = Math.sin(timeSecs * driftFreq + data.phaseX) * 0.04;\n      const oy = Math.sin(timeSecs * driftFreq + data.phaseY) * 0.04;\n      const oz = Math.sin(timeSecs * driftFreq + data.phaseZ) * 0.04;\n\n      currentPos.set(data.anchor.x + ox, data.anchor.y + oy, data.anchor.z + oz);\n      dummy.setPosition(currentPos);\n      \n      scaleVector.setScalar(data.scale);\n      dummy.scale(scaleVector);\n      \n      fieldInst.setMatrixAt(i, dummy);\n    }\n    fieldInst.instanceMatrix.needsUpdate = true;\n\n    // Update core\n    for (let i = 0; i < coreCount; i++) {\n      const data = coreData[i];\n      const ox = Math.sin(timeSecs * driftFreq + data.phaseX) * 0.04;\n      const oy = Math.sin(timeSecs * driftFreq + data.phaseY) * 0.04;\n      const oz = Math.sin(timeSecs * driftFreq + data.phaseZ) * 0.04;\n\n      currentPos.set(data.anchor.x + ox, data.anchor.y + oy, data.anchor.z + oz);\n      dummy.setPosition(currentPos);\n      \n      scaleVector.setScalar(data.scale);\n      dummy.scale(scaleVector);\n\n      coreInst.setMatrixAt(i, dummy);\n    }\n    coreInst.instanceMatrix.needsUpdate = true;\n  };\n  update();\n\n  // Apply Cinematic Primitives\n  const configuredPrimitives = config.cinematicPrimitives ?? [];\n  const activePrimitives = configuredPrimitives.map((prim) => {\n    if (ctx.primitives[prim.name]) {\n      return ctx.primitives[prim.name](group, prim.params);\n    }\n    return null;\n  }).filter(Boolean);\n\n  // --- CLEANUP ---\n  group.userData.cleanup = () => {\n    cancelAnimationFrame(frameId);\n    timelines.forEach((t) => t.kill());\n    activePrimitives.forEach((p) => p.cleanup?.());\n    baseGeom.dispose();\n    fieldMat.dispose();\n    coreMat.dispose();\n    bgGeo.dispose();\n    bgMat.dispose();\n    fieldInst.dispose();\n    coreInst.dispose();\n  };\n\n  return group;\n}"
+}

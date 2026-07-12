@@ -1,0 +1,22 @@
+{
+  "bundle": "wvis/claude-opus-4.8/v-12-photo-hero-composite-r21",
+  "contestant": "claude-opus-4.8",
+  "caseId": "v-12-photo-hero-composite",
+  "run": 21,
+  "capturedAt": "2026-07-12T05:29:05.762Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 8,
+    "nodeMounted": true,
+    "bundleId": "wvis/claude-opus-4.8/v-12-photo-hero-composite-r21"
+  },
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

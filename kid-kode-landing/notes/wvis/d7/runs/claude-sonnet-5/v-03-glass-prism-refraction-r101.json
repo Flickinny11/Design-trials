@@ -1,0 +1,22 @@
+{
+  "wave": "wvis-d7",
+  "model": "claude-sonnet-5",
+  "stage": "revise1",
+  "iter": 1,
+  "caseId": "v-03-glass-prism-refraction",
+  "tag": "v-03-glass-prism-refraction-r101",
+  "run": 101,
+  "criticality": "hero",
+  "sawOwnFrame": true,
+  "referenceFrameArm": "image",
+  "ok": true,
+  "wallMs": 4215,
+  "usage": {
+    "promptTokens": 15229,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.194298,
+  "billing": "metered",
+  "route": "openrouter",
+  "output": ""
+}

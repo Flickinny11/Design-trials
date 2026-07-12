@@ -1,0 +1,14 @@
+[
+  {
+    "label": "F1",
+    "bundleId": "wvis/claude-opus-4.8/v-12-photo-hero-composite-r3",
+    "contestant": "claude-opus-4.8",
+    "source": "notes/wvis/d1/frames-control/claude-opus-4.8/v-12-photo-hero-composite-r3.png"
+  },
+  {
+    "label": "F2",
+    "bundleId": "wvis/claude-sonnet-5/v-12-photo-hero-composite-r3",
+    "contestant": "claude-sonnet-5",
+    "source": "notes/wvis/d1/frames-control/claude-sonnet-5/v-12-photo-hero-composite-r3.png"
+  }
+]

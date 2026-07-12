@@ -1,0 +1,1841 @@
+{
+  "judgedBy": "ROTATION: claude-fable-5 (all non-Fable) + claude-opus-4-8 (Fable renders). PRE-BLINDED anonymous 800px JPEGs, per-case sha-ordered batches, 2 calibration exemplars, W-BAKE pass-2 DL rubric. W-VIS D1 phase: iter1",
+  "renders": [
+    {
+      "bundleId": "wvis/kimi-k2.7-code/v-01-orbit-product-hero-r21",
+      "phase": "iter1",
+      "contestant": "kimi-k2.7-code",
+      "caseId": "v-01-orbit-product-hero",
+      "tag": "v-01-orbit-product-hero-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 38,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-left quadrant — blown-out white backdrop/light-card quad visibly intruding into frame"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center watch body — gold/rose-gold case instead of spec brushed near-black metal"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "right background field — featureless black, no engineered gradient"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "whole frame — no #ff2a38 accent signal light"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "plinth and background field — no rim light, harsh blown key, flat response"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center card — watch floats above plinth rather than resting on top face"
+        }
+      ],
+      "notes": "Recognizable product render but toy-grade PBR, visible light card, off-palette gold, missing red accent, dead background; far below exemplar bar.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-opus-4.8/v-02-particle-constellation-r21",
+      "phase": "iter1",
+      "contestant": "claude-opus-4.8",
+      "caseId": "v-02-particle-constellation",
+      "tag": "v-02-particle-constellation-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 64,
+      "mustFix": [
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "center band — subtitle text tangled in dense particle field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "particle cloud — flat white dots, no additive glow or depth-graded falloff on accent core"
+        }
+      ],
+      "notes": "Full spec composition present: ellipsoidal cloud, red core, palette correct. Particles read flat; subtitle legibility suffers. Competent, not flagship.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/gemini-3.5-flash/v-02-particle-constellation-r21",
+      "phase": "iter1",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "v-02-particle-constellation",
+      "tag": "v-02-particle-constellation-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 42,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — red accent core absent"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower half and background field — sparse faint dots, no constellation body"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "background field — no depth falloff or fog gradation visible"
+        }
+      ],
+      "notes": "Typography clean and on-palette, but the constellation itself is nearly gone; reads as text over a void.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/gpt-oss-120b/v-02-particle-constellation-r11",
+      "phase": "iter1",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-02-particle-constellation",
+      "tag": "v-02-particle-constellation-r11",
+      "judgeModel": "claude-fable-5",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "whole frame"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — particle system collapsed into tiny square block"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "whole frame — headline, subtitle, and red accent core absent"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: (0 , import_tsl.position) is not a function"
+        }
+      ],
+      "notes": "Near-empty black frame; particles collapsed to a small square patch, no text, no accent core.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: (0 , import_tsl.position) is not a function",
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/mercury-2/v-02-particle-constellation-r21",
+      "phase": "iter1",
+      "contestant": "mercury-2",
+      "caseId": "v-02-particle-constellation",
+      "tag": "v-02-particle-constellation-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "whole frame"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — particle system collapsed into tiny square block"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "whole frame — headline, subtitle, and red accent core absent"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: (0 , import_tsl.position) is not a function"
+        }
+      ],
+      "notes": "Same failure as F3: near-void frame with a tiny square particle patch; spec unmet.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: (0 , import_tsl.position) is not a function",
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/glm-5.2/v-03-glass-prism-refraction-r21",
+      "phase": "iter1",
+      "contestant": "glm-5.2",
+      "caseId": "v-03-glass-prism-refraction",
+      "tag": "v-03-glass-prism-refraction-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 3,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center (prism, dispersion, iridescence all absent)"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "entire frame"
+        }
+      ],
+      "notes": "Uniform near-black frame; no prism, refraction, rim light, or emissive core rendered. Complete void.",
+      "renderable": false,
+      "probeStatus": "error",
+      "moduleRuntimeError": null,
+      "nodeMounted": false
+    },
+    {
+      "bundleId": "wvis/deepseek-v4-flash/v-04-kinetic-type-headline-r11",
+      "phase": "iter1",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "v-04-kinetic-type-headline",
+      "tag": "v-04-kinetic-type-headline-r11",
+      "judgeModel": "claude-fable-5",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame — near-empty black field with lone white square"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no headline glyphs, no accent underline"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "ReferenceError: Vector3 is not defined"
+        }
+      ],
+      "notes": "Near-empty frame; a single untextured white quad instead of the MSDF headline. Nothing of the spec rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "ReferenceError: Vector3 is not defined",
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-sonnet-5/v-04-kinetic-type-headline-r11",
+      "phase": "iter1",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-04-kinetic-type-headline",
+      "tag": "v-04-kinetic-type-headline-r11",
+      "judgeModel": "claude-fable-5",
+      "score": 2,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no type, no underline"
+        }
+      ],
+      "notes": "Solid black void; nothing rendered.",
+      "renderable": false,
+      "probeStatus": "error",
+      "moduleRuntimeError": null,
+      "nodeMounted": false
+    },
+    {
+      "bundleId": "wvis/kimi-k2.7-code/v-04-kinetic-type-headline-r21",
+      "phase": "iter1",
+      "contestant": "kimi-k2.7-code",
+      "caseId": "v-04-kinetic-type-headline",
+      "tag": "v-04-kinetic-type-headline-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 2,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no type, no underline"
+        }
+      ],
+      "notes": "Solid black void; identical failure to F2.",
+      "renderable": false,
+      "probeStatus": "error",
+      "moduleRuntimeError": null,
+      "nodeMounted": false
+    },
+    {
+      "bundleId": "wvis/claude-haiku-4.5/v-04-kinetic-type-headline-r11",
+      "phase": "iter1",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-04-kinetic-type-headline",
+      "tag": "v-04-kinetic-type-headline-r11",
+      "judgeModel": "claude-fable-5",
+      "score": 16,
+      "mustFix": [
+        {
+          "defect": "SCALE_ERROR",
+          "region": "full frame — glyphs hundreds of times spec em height, cropped at all edges"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "upper two-thirds — letterforms unreadable and overlapping"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center — misaligned gray panel behind glyph fragments"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center panel — mid-gray not in ink/surface palette"
+        }
+      ],
+      "notes": "Camera or scale blowout; blurred glyph fragments swallow the frame. Accent line present but composition is destroyed.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-opus-4.8/v-04-kinetic-type-headline-r21",
+      "phase": "iter1",
+      "contestant": "claude-opus-4.8",
+      "caseId": "v-04-kinetic-type-headline",
+      "tag": "v-04-kinetic-type-headline-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 58,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center headline — geometric sans, not Lora 600; no visible per-word z parallax"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center headline — flat 2D fills, no dimensional light response on glyph planes"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "accent rule above headline — washed salmon-pink, not #ff2a38 signal red"
+        }
+      ],
+      "notes": "Legible, composed, on-brief hierarchy, but flat 2D type in the wrong face; underline sits above and reads pink.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/mercury-2/v-04-kinetic-type-headline-r11",
+      "phase": "iter1",
+      "contestant": "mercury-2",
+      "caseId": "v-04-kinetic-type-headline",
+      "tag": "v-04-kinetic-type-headline-r11",
+      "judgeModel": "claude-fable-5",
+      "score": 10,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower two-thirds — empty black field"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper-left and upper-right corners — enormous blurred glyph fragments"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "full frame — stray dark square and orphaned pink dash, no headline"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "center card — barely distinguishable from background"
+        }
+      ],
+      "notes": "Near-void frame with cropped glyph debris and an orphaned accent tick; headline absent.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-haiku-4.5/v-05-pedestal-material-study-r21",
+      "phase": "iter1",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 20,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center object — tubes disconnected, does not read as torus knot; pedestal half-clipped"
+        },
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "center knot against right black field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center object — flat matte diffuse, no metal response"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "whole frame — no brushed-metal PBR, no red accent, no contact shadow"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "left half — large white/grey field violates dark background spec"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "upper-right black region"
+        }
+      ],
+      "notes": "Geometry broken, matte plastic instead of brushed metal, palette inverted; only pedestal cylinder partially matches spec.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-opus-4.8/v-05-pedestal-material-study-r21",
+      "phase": "iter1",
+      "contestant": "claude-opus-4.8",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 58,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "upper-left quadrant — huge blown-white blob field against dark-gradient spec"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "upper-right black region"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "pedestal base — contact shadow weak/absent; floor reads generic grey, not cinematic gradient"
+        }
+      ],
+      "notes": "Best of batch: knot topology correct, anisotropic metal streaks and red accent reflections present; background composition undermines it.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/kimi-k2.7-code/v-05-pedestal-material-study-r11",
+      "phase": "iter1",
+      "contestant": "kimi-k2.7-code",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r11",
+      "judgeModel": "claude-fable-5",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame — uniform near-black, no geometry visible"
+        }
+      ],
+      "notes": "Solid dark frame; nothing rendered.",
+      "renderable": false,
+      "probeStatus": "error",
+      "moduleRuntimeError": null,
+      "nodeMounted": false
+    },
+    {
+      "bundleId": "wvis/claude-sonnet-5/v-05-pedestal-material-study-r21",
+      "phase": "iter1",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 35,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center knot — matte white material, not brushed-metal PBR with anisotropy/clearcoat"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center knot — flat diffuse white, no specular metal response"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "pedestal top — spurious white rim ring; stray glowing artifact bottom-center"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "upper-left and right black regions"
+        }
+      ],
+      "notes": "Knot shape plausible and red floor accent present, but material completely wrong and artifacts break the study.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/gpt-oss-120b/v-05-pedestal-material-study-r11",
+      "phase": "iter1",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r11",
+      "judgeModel": "claude-fable-5",
+      "score": 18,
+      "mustFix": [
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "upper-left — blown-out white knot merges into white background field"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center — knot form melted/unreadable; pedestal renders as flat black slab, not cylinder"
+        },
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "lower-center pedestal slab"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center object — clipped whites, no material response"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "whole frame — no brushed metal, no red accent, no contact shadow"
+        }
+      ],
+      "notes": "Overexposed white-on-white with broken pedestal geometry; spec material entirely absent.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/deepseek-v4-flash/v-06-loop-column-gallery-r11",
+      "phase": "iter1",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "v-06-loop-column-gallery",
+      "tag": "v-06-loop-column-gallery-r11",
+      "judgeModel": "claude-fable-5",
+      "score": 26,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "right-side plate column — plates are flat gray fills, no filmic photograph textures"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "left half / background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "all three plates — uniform gray, no light response"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "center-left tiny illegible label"
+        }
+      ],
+      "notes": "Column structure and red edge accents exist, but plates are gray voids, not photographs; only three visible, dead lighting.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/glm-5.2/v-06-loop-column-gallery-r11",
+      "phase": "iter1",
+      "contestant": "glm-5.2",
+      "caseId": "v-06-loop-column-gallery",
+      "tag": "v-06-loop-column-gallery-r11",
+      "judgeModel": "claude-fable-5",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        }
+      ],
+      "notes": "Uniform near-black frame; nothing rendered.",
+      "renderable": false,
+      "probeStatus": "error",
+      "moduleRuntimeError": null,
+      "nodeMounted": false
+    },
+    {
+      "bundleId": "wvis/gemini-3.5-flash/v-06-loop-column-gallery-r11",
+      "phase": "iter1",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "v-06-loop-column-gallery",
+      "tag": "v-06-loop-column-gallery-r11",
+      "judgeModel": "claude-fable-5",
+      "score": 11,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire background field"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center card glow"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center card — tiny single element"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "whole frame — no six-plate loop column"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "ReferenceError: sin is not defined"
+        }
+      ],
+      "notes": "One tiny blue-lit card in a black void; off-palette blue, no gallery column at all.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "ReferenceError: sin is not defined",
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/kimi-k2.7-code/v-06-loop-column-gallery-r21",
+      "phase": "iter1",
+      "contestant": "kimi-k2.7-code",
+      "caseId": "v-06-loop-column-gallery",
+      "tag": "v-06-loop-column-gallery-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        }
+      ],
+      "notes": "Uniform near-black frame; nothing rendered.",
+      "renderable": false,
+      "probeStatus": "error",
+      "moduleRuntimeError": null,
+      "nodeMounted": false
+    },
+    {
+      "bundleId": "wvis/glm-5.2/v-07-filmstrip-carousel-r21",
+      "phase": "iter1",
+      "contestant": "glm-5.2",
+      "caseId": "v-07-filmstrip-carousel",
+      "tag": "v-07-filmstrip-carousel-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        }
+      ],
+      "notes": "Near-black empty frame; no carousel, cards, or lighting rendered at all.",
+      "renderable": false,
+      "probeStatus": "error",
+      "moduleRuntimeError": null,
+      "nodeMounted": false
+    },
+    {
+      "bundleId": "wvis/deepseek-v4-flash/v-07-filmstrip-carousel-r21",
+      "phase": "iter1",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "v-07-filmstrip-carousel",
+      "tag": "v-07-filmstrip-carousel-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 30,
+      "mustFix": [
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center and left cards"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "background field behind focused card"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "second and fourth card faces"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "all cards — no photographic textures, repeated echo graphic"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "card textures"
+        }
+      ],
+      "notes": "Carousel geometry exists but blue placeholder plates repeat, two flat gray voids, blown flat white backdrop kills materiality.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/gpt-oss-120b/v-07-filmstrip-carousel-r11",
+      "phase": "iter1",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-07-filmstrip-carousel",
+      "tag": "v-07-filmstrip-carousel-r11",
+      "judgeModel": "claude-fable-5",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "entire frame"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "upper half — camera clipped inside geometry"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "left and lower-left quadrants"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "whole frame — no legible filmstrip or textures"
+        },
+        {
+          "defect": "BLANK_RENDER",
+          "region": "card faces — pure white plates"
+        }
+      ],
+      "notes": "Incoherent clipped geometry; abstract black/white shards, blank white plates, no recognizable filmstrip.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-opus-4.8/v-08-orrery-mechanism-r21",
+      "phase": "iter1",
+      "contestant": "claude-opus-4.8",
+      "caseId": "v-08-orrery-mechanism",
+      "tag": "v-08-orrery-mechanism-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 26,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center gear — pinkish white plastic instead of machined steel"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "gear assembly, no metallic light response"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "secondary gear not visibly tooth-meshed"
+        }
+      ],
+      "notes": "Edge-on plastic-looking gear floating in a flat black void; no steel PBR, no jewel pivot readable, weak composition.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/gpt-oss-120b/v-08-orrery-mechanism-r11",
+      "phase": "iter1",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-08-orrery-mechanism",
+      "tag": "v-08-orrery-mechanism-r11",
+      "judgeModel": "claude-fable-5",
+      "score": 33,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "right third — blown-out white slabs intersecting frame"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "gear material white plastic, not machined steel"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "gear surfaces, matte plastic response"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "left wall and floor"
+        }
+      ],
+      "notes": "Gears mesh and red pivot accent reads, but plastic material and chaotic overexposed right side break it.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-sonnet-5/v-08-orrery-mechanism-r21",
+      "phase": "iter1",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-08-orrery-mechanism",
+      "tag": "v-08-orrery-mechanism-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        }
+      ],
+      "notes": "Near-black empty frame; nothing rendered.",
+      "renderable": false,
+      "probeStatus": "error",
+      "moduleRuntimeError": null,
+      "nodeMounted": false
+    },
+    {
+      "bundleId": "wvis/gemini-3.5-flash/v-08-orrery-mechanism-r21",
+      "phase": "iter1",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "v-08-orrery-mechanism",
+      "tag": "v-08-orrery-mechanism-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 27,
+      "mustFix": [
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "bottom center — clipped rotated caption"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "gears — white plastic, not steel"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "gear cluster, flat shading"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "gear clipping into left gray wall"
+        }
+      ],
+      "notes": "White plastic gears wedged into a wall corner with clipped stray text; no metallic PBR or jewel accent.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-haiku-4.5/v-08-orrery-mechanism-r21",
+      "phase": "iter1",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-08-orrery-mechanism",
+      "tag": "v-08-orrery-mechanism-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 44,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "gap between primary and secondary gears — not tooth-meshed"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "gear surfaces — clay-like, weak metalness/anisotropy"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "white pill artifact under right gear"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower background field"
+        }
+      ],
+      "notes": "Best of batch: legible gears, red jewel pivot present, near-palette grays; but gears don't mesh and material is soft clay.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/mercury-2/v-08-orrery-mechanism-r11",
+      "phase": "iter1",
+      "contestant": "mercury-2",
+      "caseId": "v-08-orrery-mechanism",
+      "tag": "v-08-orrery-mechanism-r11",
+      "judgeModel": "claude-fable-5",
+      "score": 36,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "gears — brass/gold instead of machined steel"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "left half — full-bleed blown white plane violating dark-first"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "secondary gear separated, not tooth-meshed"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "right edge white streaks against black"
+        }
+      ],
+      "notes": "Textured gears and glowing red jewel show materiality, but brass palette and huge white field defy DL1/DL2 and spec.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-haiku-4.5/v-09-editorial-oversized-type-r21",
+      "phase": "iter1",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-09-editorial-oversized-type",
+      "tag": "v-09-editorial-oversized-type-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 14,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-center white blur smear obscuring headline"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "upper half, duplicate overlapping headline layers"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "full frame, type cropped off left and right edges"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "upper-left, mono uppercase kicker absent"
+        }
+      ],
+      "notes": "Overscaled overlapping type layers, soft white blur blob, cropped lines; red rule present but composition is wrecked.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/kimi-k2.7-code/v-09-editorial-oversized-type-r21",
+      "phase": "iter1",
+      "contestant": "kimi-k2.7-code",
+      "caseId": "v-09-editorial-oversized-type",
+      "tag": "v-09-editorial-oversized-type-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 74,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center-left hero headline, sans-serif instead of specified Lora serif"
+        }
+      ],
+      "notes": "Clean plate: kicker, stacked hero, red rule, grain, on-palette. Hero typeface wrong and undersized versus 'massive' editorial intent.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/kimi-k2.7-code/v-10-bento-metrics-r11",
+      "phase": "iter1",
+      "contestant": "kimi-k2.7-code",
+      "caseId": "v-10-bento-metrics",
+      "tag": "v-10-bento-metrics-r11",
+      "judgeModel": "claude-fable-5",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        }
+      ],
+      "notes": "Uniform near-black field, nothing rendered. No grid, no text, no lighting.",
+      "renderable": false,
+      "probeStatus": "error",
+      "moduleRuntimeError": null,
+      "nodeMounted": false
+    },
+    {
+      "bundleId": "wvis/claude-haiku-4.5/v-10-bento-metrics-r21",
+      "phase": "iter1",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-10-bento-metrics",
+      "tag": "v-10-bento-metrics-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 14,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-right quadrant"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "whole frame"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "right edge"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center-left slab"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower-left background field"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "whole frame"
+        }
+      ],
+      "notes": "Giant blown-out white blobs invade frame; single flat dark slab; no bento grid, metrics, or accent anywhere.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/glm-5.2/v-10-bento-metrics-r11",
+      "phase": "iter1",
+      "contestant": "glm-5.2",
+      "caseId": "v-10-bento-metrics",
+      "tag": "v-10-bento-metrics-r11",
+      "judgeModel": "claude-fable-5",
+      "score": 46,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "accent bars, all cells"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center-left dominant cell fill"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "dominant cell surface"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "right-column secondary cells (no slabs)"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "right and lower background field"
+        }
+      ],
+      "notes": "Legible metrics and sane layout, but orange accent replaces signal red, dominant cell is flat washed-gray, secondary tiles lack surfaces.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-sonnet-5/v-10-bento-metrics-r21",
+      "phase": "iter1",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-10-bento-metrics",
+      "tag": "v-10-bento-metrics-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        }
+      ],
+      "notes": "Uniform near-black field, nothing rendered. Identical failure to F1.",
+      "renderable": false,
+      "probeStatus": "error",
+      "moduleRuntimeError": null,
+      "nodeMounted": false
+    },
+    {
+      "bundleId": "wvis/deepseek-v4-flash/v-11-gradient-cta-r11",
+      "phase": "iter1",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "v-11-gradient-cta",
+      "tag": "v-11-gradient-cta-r11",
+      "judgeModel": "claude-fable-5",
+      "score": 3,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame"
+        }
+      ],
+      "notes": "Uniform near-black frame; no CTA object, gradient, or lighting rendered at all.",
+      "renderable": false,
+      "probeStatus": "error",
+      "moduleRuntimeError": null,
+      "nodeMounted": false
+    },
+    {
+      "bundleId": "wvis/mercury-2/v-11-gradient-cta-r21",
+      "phase": "iter1",
+      "contestant": "mercury-2",
+      "caseId": "v-11-gradient-cta",
+      "tag": "v-11-gradient-cta-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 7,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center card"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "entire frame"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center card"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "ReferenceError: mul is not defined"
+        }
+      ],
+      "notes": "Flat white square on black void; no gradient, bevel, seam, text, or material response whatsoever.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "ReferenceError: mul is not defined",
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/gemini-3.5-flash/v-11-gradient-cta-r21",
+      "phase": "iter1",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "v-11-gradient-cta",
+      "tag": "v-11-gradient-cta-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 58,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "button perimeter"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center button edges"
+        }
+      ],
+      "notes": "Recognizable physical CTA with seam line, but washed pink gradient, gray not-#0b0b10 background, soft plastic edges, no emissive channel or machined chamfer.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/gpt-oss-120b/v-12-photo-hero-composite-r21",
+      "phase": "iter1",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-12-photo-hero-composite",
+      "tag": "v-12-photo-hero-composite-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 14,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no photographic plate, no caption block, no subject"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center — amorphous white blobs overlap a gray panel with no structure"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center gray panel — flat linear fill, no light response"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "left and right black background field"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "lower-left of white block — red stroke reads as failed underline with no text"
+        }
+      ],
+      "notes": "No photo, no grade, no caption; incoherent blob shapes over flat fills. Unusable render.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-sonnet-5/v-12-photo-hero-composite-r21",
+      "phase": "iter1",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-12-photo-hero-composite",
+      "tag": "v-12-photo-hero-composite-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 3,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame — uniform near-black, nothing rendered"
+        }
+      ],
+      "notes": "Empty black frame; nothing from the spec rendered.",
+      "renderable": false,
+      "probeStatus": "error",
+      "moduleRuntimeError": null,
+      "nodeMounted": false
+    },
+    {
+      "bundleId": "wvis/gemini-3.5-flash/v-12-photo-hero-composite-r21",
+      "phase": "iter1",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "v-12-photo-hero-composite",
+      "tag": "v-12-photo-hero-composite-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 38,
+      "mustFix": [
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "center hero plate — photo area is a solid black rectangle"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center plate — imageUrl photograph, filmic grade, and subject separation absent"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field — flat ink with faint vignette only, no gradient scrim per spec"
+        }
+      ],
+      "notes": "Caption block, kicker, red accent, and type discipline are correct; the hero photograph itself never rendered.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-opus-4.8/v-12-photo-hero-composite-r21",
+      "phase": "iter1",
+      "contestant": "claude-opus-4.8",
+      "caseId": "v-12-photo-hero-composite",
+      "tag": "v-12-photo-hero-composite-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 10,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no photograph and no caption text block"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "right half — giant soft white blob bleeds across the plate edge"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center card — flat vertical gradient, no material response"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "upper-right of center card — smeared red blur reads as artifact, not the signal accent"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "left third black background field"
+        }
+      ],
+      "notes": "Abstract smears where the photo composite should be; only a stray red line and blur survive.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-haiku-4.5/v-13-brand-wall-r21",
+      "phase": "iter1",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-13-brand-wall",
+      "tag": "v-13-brand-wall-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "entire frame"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "entire frame — camera appears inside/zoomed into geometry"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no 3x2 tile grid, no wordmarks, no kicker"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower half — flat untextured black field"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "upper-left and upper-right quadrants — flat white fields"
+        },
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "center and lower half"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "entire frame — no material response, no brushed-metal anisotropy"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "entire frame — no accent, no gradient ramp, raw black/white only"
+        }
+      ],
+      "notes": "Unreadable abstract black/white blobs; likely extreme scale/camera failure. No tiles, marks, lighting, or palette present. Effectively a failed render.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/mercury-2/v-14-pricing-card-r11",
+      "phase": "iter1",
+      "contestant": "mercury-2",
+      "caseId": "v-14-pricing-card",
+      "tag": "v-14-pricing-card-r11",
+      "judgeModel": "claude-fable-5",
+      "score": 12,
+      "mustFix": [
+        {
+          "defect": "SCALE_ERROR",
+          "region": "entire frame — camera crashed into partial glyphs, card larger than viewport"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "entire frame — abstract block collage, no legible card layout"
+        },
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "left and right edges — giant clipped unreadable letterforms"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center card — no tier name, price figure, feature rows, machined header strip, or CTA"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center rectangles — flat albedo fills, no material light response"
+        }
+      ],
+      "notes": "Renders on-palette but is an unreadable zoomed block collage; every spec element of the pricing card is absent.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/glm-5.2/v-15-testimonial-panel-r21",
+      "phase": "iter1",
+      "contestant": "glm-5.2",
+      "caseId": "v-15-testimonial-panel",
+      "tag": "v-15-testimonial-panel-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire frame"
+        }
+      ],
+      "notes": "Uniform near-black frame; no panel, glyph, or text rendered at all.",
+      "renderable": false,
+      "probeStatus": "error",
+      "moduleRuntimeError": null,
+      "nodeMounted": false
+    },
+    {
+      "bundleId": "wvis/gemini-3.5-flash/v-15-testimonial-panel-r11",
+      "phase": "iter1",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "v-15-testimonial-panel",
+      "tag": "v-15-testimonial-panel-r11",
+      "judgeModel": "claude-fable-5",
+      "score": 34,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "background field"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center panel"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "panel upper-left (oversized red quotation glyph absent)"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center panel"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "panel edge vs background field"
+        }
+      ],
+      "notes": "Legible quote and attribution, but light-gray washed palette breaks dark-first; red glyph reduced to a stray underline; flat lighting.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/deepseek-v4-flash/v-16-feature-triptych-r11",
+      "phase": "iter1",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "v-16-feature-triptych",
+      "tag": "v-16-feature-triptych-r11",
+      "judgeModel": "claude-fable-5",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "upper two-thirds white field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center row — no cards, icon seats, glyphs, or red accent"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "background field — white instead of #0b0b10 dark-first"
+        },
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "bottom band — featureless solid black strip"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "entire frame — no material response anywhere"
+        }
+      ],
+      "notes": "Near-empty render: white void over black band, three faint hairlines where cards should be. Triptych absent entirely.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/gpt-oss-120b/v-17-data-ribbon-r21",
+      "phase": "iter1",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-17-data-ribbon",
+      "tag": "v-17-data-ribbon-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 10,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center ribbon — no mono ticker figures, only tick marks on an empty strip"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-right quadrant — huge blurred white blob artifact occluding the ribbon"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field — flat undifferentiated black, no surface or gradient"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center ribbon plane — flat gray fill, no hairlines, no material light response"
+        }
+      ],
+      "notes": "Ribbon renders only red ticks on a flat strip; ticker text absent; giant blurred white artifact wrecks composition; void background.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/mercury-2/v-18-nav-dock-r21",
+      "phase": "iter1",
+      "contestant": "mercury-2",
+      "caseId": "v-18-nav-dock",
+      "tag": "v-18-nav-dock-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 8,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no five entries, active state, or red accent"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "full frame — camera clipped inside geometry, blurred fragments upper edges"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower two-thirds gray slab"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "background field — light blue-gray instead of #0b0b10"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center slab — flat fill, no brushed-metal specular or chamfer highlight"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — rail cropped at extreme close-up, edges bleed off frame"
+        }
+      ],
+      "notes": "Unusable render: camera clips into a flat gray slab on a blue-gray void; no dock entries, accent, or materiality present.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-opus-4.8/v-19-empty-state-r11",
+      "phase": "iter1",
+      "contestant": "claude-opus-4.8",
+      "caseId": "v-19-empty-state",
+      "tag": "v-19-empty-state-r11",
+      "judgeModel": "claude-fable-5",
+      "score": 3,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no panel, grid, ghost preview, copy, or accent action"
+        }
+      ],
+      "notes": "Near-black empty frame; nothing from spec rendered — the exact void DL16 forbids.",
+      "renderable": false,
+      "probeStatus": "error",
+      "moduleRuntimeError": null,
+      "nodeMounted": false
+    },
+    {
+      "bundleId": "wvis/glm-5.2/v-19-empty-state-r21",
+      "phase": "iter1",
+      "contestant": "glm-5.2",
+      "caseId": "v-19-empty-state",
+      "tag": "v-19-empty-state-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 3,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no panel, grid, ghost preview, copy, or accent action"
+        }
+      ],
+      "notes": "Identical near-black void; no gradient, hairline border, or accent visible.",
+      "renderable": false,
+      "probeStatus": "error",
+      "moduleRuntimeError": null,
+      "nodeMounted": false
+    },
+    {
+      "bundleId": "wvis/deepseek-v4-flash/v-20-footer-colophon-r21",
+      "phase": "iter1",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "v-20-footer-colophon",
+      "tag": "v-20-footer-colophon-r21",
+      "judgeModel": "claude-fable-5",
+      "score": 38,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "upper-center — wordmark clipped in half by footer band's top edge"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center footer band — renders washed mid-gray instead of spec ink ramp #121218→#0b0b10"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "band top edge — no full-width #23232b hairline rule; link columns lack lead headers"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field surrounding band and left interior of band below accent bar"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center band — flat fill, no roughness/metalness light response"
+        }
+      ],
+      "notes": "Columns, legal line, accent bar present, but clipped wordmark, gray off-palette band, and dead flat surfaces sink it.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-sonnet-5/v-20-footer-colophon-r11",
+      "phase": "iter1",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-20-footer-colophon",
+      "tag": "v-20-footer-colophon-r11",
+      "judgeModel": "claude-fable-5",
+      "score": 3,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame — uniform near-black, no content"
+        }
+      ],
+      "notes": "Nothing rendered; solid near-black frame with zero spec elements.",
+      "renderable": false,
+      "probeStatus": "error",
+      "moduleRuntimeError": null,
+      "nodeMounted": false
+    },
+    {
+      "bundleId": "wvis/claude-fable-5/v-01-orbit-product-hero-r21",
+      "phase": "iter1",
+      "contestant": "claude-fable-5",
+      "caseId": "v-01-orbit-product-hero",
+      "tag": "v-01-orbit-product-hero-r21",
+      "judgeModel": "claude-opus-4-8",
+      "score": 34,
+      "mustFix": [
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "left / upper-left quadrant — giant blown-out flat white light slab in frame"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "left quadrant white slab intruding; watch awkwardly tilted/leaning on plinth"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — watch body renders as chalky translucent glass/plastic, not brushed machined-metal PBR"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center subject — washed white material breaks RED/BLACK/WHITE ink-surface discipline"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "left field — large unmodulated blown-white region, no material response"
+        }
+      ],
+      "notes": "Plinth + thin red rim accent present, but wrong translucent material, blown white light slab, and dead flat lighting make it clearly deficient.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-fable-5/v-04-kinetic-type-headline-r11",
+      "phase": "iter1",
+      "contestant": "claude-fable-5",
+      "caseId": "v-04-kinetic-type-headline",
+      "tag": "v-04-kinetic-type-headline-r11",
+      "judgeModel": "claude-opus-4-8",
+      "score": 62,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center headline — type is flat 2D, no dimensional MSDF depth or per-word z-parallax"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center headline — Lora 600 serif specified but rendered as generic sans; accent underline absent"
+        }
+      ],
+      "notes": "On-palette, atmospheric red-glow hero, legible clean type. But flat 2D text misses the core 3D/dimensional kinetic-type spec; wrong font, no depth or underline.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-fable-5/v-06-loop-column-gallery-r21",
+      "phase": "iter1",
+      "contestant": "claude-fable-5",
+      "caseId": "v-06-loop-column-gallery",
+      "tag": "v-06-loop-column-gallery-r21",
+      "judgeModel": "claude-opus-4-8",
+      "score": 15,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "large near-black flat field across left third"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "oversized blown-white plates upper-center and upper-right (no photographic texture)"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "no plate reads as a distinct filmic photograph anywhere"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "plates overlap and are wildly mis-scaled; no coherent vertical column"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "gray plates lower-center show flat blurred blobs, no material light response"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "top plates dwarf the 16:10 stacked pitch called for"
+        }
+      ],
+      "notes": "Broken column: giant flat white/black voids, no photographic plates, chaotic overlap, stray red smear. Fails core spec.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-fable-5/v-16-feature-triptych-r21",
+      "phase": "iter1",
+      "contestant": "claude-fable-5",
+      "caseId": "v-16-feature-triptych",
+      "tag": "v-16-feature-triptych-r21",
+      "judgeModel": "claude-opus-4-8",
+      "score": 44,
+      "mustFix": [
+        {
+          "defect": "GARBLED_TEXT",
+          "region": "center band across all three cards — body paragraphs overlap into an illegible collision"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "body copy escapes card bounds; stray red underline floating in lower-center void"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "icon seats — soft red glow blobs, not machined brushed-metal discs; cards read flat matte"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "outer background field and card faces — flat fills, no rendered light response"
+        }
+      ],
+      "notes": "Correct triptych structure and red/black/white palette, but overlapping garbled body text breaks the core title/body hierarchy and seats are AI-soft-glow, not machined.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-fable-5/v-17-data-ribbon-r21",
+      "phase": "iter1",
+      "contestant": "claude-fable-5",
+      "caseId": "v-17-data-ribbon",
+      "tag": "v-17-data-ribbon-r21",
+      "judgeModel": "claude-opus-4-8",
+      "score": 76,
+      "mustFix": [
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "background field upper and lower thirds — faint horizontal scan-line streaks read as flat/noisy rather than rendered light"
+        }
+      ],
+      "notes": "On-spec ticker: centered mono-700 paper entries, red accent ticks, correct edge fades, red under-glow adds materiality. Palette-clean. Ribbon plane surface slightly flat; sparse field keeps it competent, not flagship.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-fable-5/v-18-nav-dock-r11",
+      "phase": "iter1",
+      "contestant": "claude-fable-5",
+      "caseId": "v-18-nav-dock",
+      "tag": "v-18-nav-dock-r11",
+      "judgeModel": "claude-opus-4-8",
+      "score": 70,
+      "mustFix": [
+        {
+          "defect": "OFF_PALETTE",
+          "region": "active underline beneath HOME (center-left) reads muted salmon/pink, not crisp signal red #ff2a38"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "tilted darker backing slab behind the rail is offset/misaligned, reading as a compositing artifact"
+        }
+      ],
+      "notes": "Dark-first, all five entries legible, active state present; machined rail has specular edge but metal is soft/under-rendered and accent drifts pink.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    }
+  ]
+}

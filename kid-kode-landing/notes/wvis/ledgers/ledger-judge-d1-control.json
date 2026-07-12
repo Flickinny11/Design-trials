@@ -1,0 +1,58 @@
+{
+  "wave": "wvis-d1-judge",
+  "phase": "control",
+  "calls": [
+    {
+      "batch": "batch-fab-v-02-particle-constellation-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 2,
+      "costUsd": 0.46334200000000003,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T06:21:59.768Z"
+    },
+    {
+      "batch": "batch-fab-v-03-glass-prism-refraction-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 1,
+      "costUsd": 0.371957,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T06:22:19.207Z"
+    },
+    {
+      "batch": "batch-fab-v-05-pedestal-material-study-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 5,
+      "costUsd": 0.570692,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T06:23:00.347Z"
+    },
+    {
+      "batch": "batch-fab-v-06-loop-column-gallery-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 1,
+      "costUsd": 0.405325,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T06:23:30.239Z"
+    },
+    {
+      "batch": "batch-fab-v-07-filmstrip-carousel-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 1,
+      "costUsd": 0.39026500000000003,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T06:23:52.824Z"
+    },
+    {
+      "batch": "batch-op-v-01-orbit-product-hero-1",
+      "judgeModel": "claude-opus-4-8",
+      "frames": 1,
+      "costUsd": 0.204675,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T06:24:57.125Z"
+    }
+  ],
+  "totals": {
+    "meteredUsd": 0,
+    "subscriptionEquivalentUsd": 2.406256
+  }
+}

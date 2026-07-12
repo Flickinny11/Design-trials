@@ -1,0 +1,22 @@
+{
+  "wave": "wvis-d1",
+  "arm": "control-resample",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "caseId": "v-05-pedestal-material-study",
+  "sourceTag": "v-05-pedestal-material-study-r1",
+  "tag": "v-05-pedestal-material-study-r3",
+  "run": 3,
+  "originalScore": 37,
+  "ok": true,
+  "wallMs": 1002,
+  "finishReason": "length",
+  "usage": {
+    "promptTokens": 4261,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.06041192,
+  "billing": "metered",
+  "output": ""
+}

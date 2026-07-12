@@ -1,0 +1,42 @@
+{
+  "wave": "wvis-d1",
+  "iter": 1,
+  "arm": "vision",
+  "contestant": "claude-sonnet-5",
+  "model": "anthropic/claude-sonnet-5",
+  "route": "openrouter",
+  "caseId": "v-20-footer-colophon",
+  "sourceTag": "v-20-footer-colophon-r1",
+  "tag": "v-20-footer-colophon-r11",
+  "run": 11,
+  "critiqueFed": {
+    "score": 62,
+    "mustFix": [
+      {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "left wordmark block — accent bar present but no wordmark"
+      },
+      {
+        "defect": "OFF_PALETTE",
+        "region": "center band ramp reads mid-gray, far lighter than spec ink surfaces"
+      },
+      {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "band top edge — full-width hairline rule not visible"
+      }
+    ],
+    "notes": "Legible colophon: three columns, legal line, hairline, accent bar. Loses points for absent wordmark and washed-out band.",
+    "runtimeError": null
+  },
+  "frameFed": "notes/bakeoff-b/frames/claude-sonnet-5/v-20-footer-colophon-r1.png",
+  "ok": true,
+  "wallMs": 2190,
+  "finishReason": "length",
+  "usage": {
+    "promptTokens": 12391,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.188622,
+  "billing": "metered",
+  "output": ""
+}

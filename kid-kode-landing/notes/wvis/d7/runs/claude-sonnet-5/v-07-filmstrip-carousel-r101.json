@@ -1,0 +1,22 @@
+{
+  "wave": "wvis-d7",
+  "model": "claude-sonnet-5",
+  "stage": "revise1",
+  "iter": 1,
+  "caseId": "v-07-filmstrip-carousel",
+  "tag": "v-07-filmstrip-carousel-r101",
+  "run": 101,
+  "criticality": "standard",
+  "sawOwnFrame": true,
+  "referenceFrameArm": "image",
+  "ok": true,
+  "wallMs": 2439,
+  "usage": {
+    "promptTokens": 15410,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.19466,
+  "billing": "metered",
+  "route": "openrouter",
+  "output": "/*\n * NOVA_ATELIER — Filmstrip 3D Carousel (hub-visual-stage) — REVISED\n * 1) COMPOSITION: oversized graded backdrop (14x10 @ z=-3.2, vignette) removes\n *    corner void; a 5-card filmstrip recedes -18deg on Y with the center card\n *    counter-rotated flat-to-camera; a single surface-colored ground/contact-\n *    shadow plane (small radius, soft edge) grounds the strip; a low-key accent\n *    mark sits lower-left for compositional mass; headline/body pinned world-space.\n * 2) LIGHT RIG: rig-dusk-editorial EXACT numbers — ambient 0.09 + key directional\n *    (#ffc890 2.8 @ [3,0.9,1.2]->[0,0.4,0]) + fill point (#b9a68e 3, dist9 decay2\n *    @ [-2.4,0.6,1.8]) + rim directional (#f2f4f6 1.7 @ [-1.8,2.8,-2]->[0,0.6,0]).\n * 3) MATERIALS: MeshPhysicalNodeMaterial per card w/ explicit TSL texture-node\n *    colorNode (never bare .map dependency) sampling DISTINCT UV crops of the\n *    single provided photograph, each lightly tint-mixed with a warm neutral\n *    (no blue) to read as separate plates; ink machined bevel frame boxes;\n *    accent emissive underline on the focused card only, capped intensity.\n * 4) MOTION: weighted-settle entrance (power4 overshoot 1.04"
+}

@@ -1,0 +1,46 @@
+{
+  "wave": "wvis-d1",
+  "iter": 1,
+  "arm": "text-critique-only",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "v-17-data-ribbon",
+  "sourceTag": "v-17-data-ribbon-r2",
+  "tag": "v-17-data-ribbon-r21",
+  "run": 21,
+  "critiqueFed": {
+    "score": 15,
+    "mustFix": [
+      {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "ribbon band — no ticker figures, only one accent tick"
+      },
+      {
+        "defect": "BROKEN_COMPOSITION",
+        "region": "center background — large unexplained soft gray slab/orb behind ribbon"
+      },
+      {
+        "defect": "OFF_PALETTE",
+        "region": "ribbon band — mid-gray albedo far lighter than #111117"
+      },
+      {
+        "defect": "LOW_CONTRAST",
+        "region": "ribbon band — no hairlines or edge fades legible"
+      }
+    ],
+    "notes": "Ribbon plane exists with one pink tick, but content missing and a ghost gray slab pollutes the field.",
+    "runtimeError": null
+  },
+  "frameFed": null,
+  "ok": true,
+  "wallMs": 17869,
+  "finishReason": "stop",
+  "usage": {
+    "promptTokens": 6142,
+    "completionTokens": 2959
+  },
+  "costUsd": 0.0026967,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial, MeshStandardNodeMaterial } from 'three/webgpu';\nimport { uv, mix, smoothstep, oneMinus, mul, vec3 } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport { } from '@/primitives';\nimport { } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, BoxGeometry, Color } = ctx.THREE;\n\n  const root = new Group();\n\n  // --------------------------------------------------------------------\n  // 1. Gradient Backdrop (vertical fade)\n  // --------------------------------------------------------------------\n  const backdropW = 7.0;\n  const backdropH = 6.0;\n  const backdropGeom = new PlaneGeometry(backdropW, backdropH);\n  const backdropMat = new MeshBasicNodeMaterial({\n    color: new Color('#0b0b10'),\n    transparent: true,\n    side: ctx.THREE.DoubleSide,\n  });\n\n  const uvNode = uv();\n  const fadeTop = smoothstep(0.0, 0.09, uvNode.y);\n  const fadeBottom = oneMinus(smoothstep(0.91, 1.0, uvNode.y));\n  const verticalMask = mul(fadeTop, fadeBottom);\n  backdropMat.opacityNode = verticalMask;\n\n  const backdrop = new Mesh(backdropGeom, backdropMat);\n  backdrop.position.set(0, 0, -2.5);\n  root.add(backdrop);\n\n  // --------------------------------------------------------------------\n  // 2. Ribbon Plane\n  // --------------------------------------------------------------------\n  const ribbonW = 7.0;\n  const ribbonH = 0.35;\n  const ribbonGeom = new PlaneGeometry(ribbonW, ribbonH);\n  const ribbonMat = new MeshStandardNodeMaterial({\n    color: new Color('#111117'),\n    roughness: 0.6,\n    metalness: 0.2,\n    side: ctx.THREE.DoubleSide,\n  });\n\n  const ribbon = new Mesh(ribbonGeom, ribbonMat);\n  ribbon.position.set(0, 0, 0);\n  root.add(ribbon);\n\n  // --------------------------------------------------------------------\n  // 3. Top / Bottom Hairlines\n  // --------------------------------------------------------------------\n  const hairH = 0.006;\n  const hairGeom = new PlaneGeometry(ribbonW, hairH);\n  const hairMat = new MeshStandardNodeMaterial({\n    color: new Color('#23232b'),\n    roughness: 0.6,\n    metalness: 0,\n    side: ctx.THREE.DoubleSide,\n  });\n\n  const topHair = new Mesh(hairGeom, hairMat);\n  topHair.position.set(0, ribbonH / 2 - hairH / 2, 0.001);\n  const bottomHair = new Mesh(hairGeom, hairMat);\n  bottomHair.position.set(0, -ribbonH / 2 + hairH / 2, 0.001);\n  root.add(topHair, bottomHair);\n\n  // --------------------------------------------------------------------\n  // 4. Ticker Content (scrolling)\n  // --------------------------------------------------------------------\n  const scrollGroup = new Group();\n  scrollGroup.position.z = 0.02; // lift above ribbon\n  root.add(scrollGroup);\n\n  const textOpts = {\n    fontSize: 13,\n    color: '#e8ecf2',\n    align: 'left',\n    letterSpacing: 0.06,\n  };\n\n  const tickerItems = [\n    'CAL NA-01 BEAT 28800 VPH',\n    'POWER RESERVE 72H',\n    'CASE 40.5 MM 904L',\n    'REF 5811 IN STOCK',\n    'WAITLIST 1204',\n    'NEXT FITTING JUL 18',\n  ];\n\n  const gapSide = 0.5; // 0.5‑unit gap on each side of a tick\n  const tickW = 0.02;\n  const tickH = 0.14;\n  const tickDepth = 0.001;\n  const tickGeom = new BoxGeometry(tickW, tickH, tickDepth);\n  const tickMat = new MeshStandardNodeMaterial({\n    color: new Color('#ff2a38'),\n    emissive: new Color('#ff2a38'),\n    emissiveIntensity: 1.5,\n    metalness: 0,\n    roughness: 0,\n    side: ctx.THREE.DoubleSide,\n  });\n\n  const createTick = () => new Mesh(tickGeom, tickMat);\n\n  // rough character width estimate in scene units (fontSize 13 -> ~0.13 units)\n  const charUnit = 0.13 * 0.06; // approximated from spec spacing\n  const estimateTextWidth = (txt) => txt.length * charUnit;\n\n  let cursorX = -ribbonW / 2;\n\n  const addEntry = (txt) => {\n    // left gap\n    cursorX += gapSide;\n\n    // tick\n    const tick = createTick();\n    tick.position.set(cursorX + tickW / 2, 0, 0);\n    scrollGroup.add(tick);\n    cursorX += tickW + gapSide;\n\n    // text\n    const txtObj = ctx.fontAtlas.createText(txt, textOpts);\n    const txtW = estimateTextWidth(txt);\n    txtObj.position.set(cursorX + txtW / 2, 0, 0);\n    scrollGroup.add(txtObj);\n    cursorX += txtW;\n\n    // extra gap after entry\n    const extraGap = 0.3;\n    cursorX += extraGap;\n  };\n\n  tickerItems.forEach(addEntry);\n\n  // Record total span for looping\n  const totalSpan = cursorX + ribbonW / 2;\n\n  // Duplicate for seamless scrolling\n  const duplicate = scrollGroup.clone();\n  duplicate.position.x = totalSpan;\n  root.add(duplicate);\n\n  // --------------------------------------------------------------------\n  // 5. Apply cinematic primitive (fly-through) to scrolling container\n  // --------------------------------------------------------------------\n  const primitives = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      const fn = ctx.primitives[prim.name];\n      if (fn) {\n        const res = fn(scrollGroup, prim.params);\n        primitives.push(res);\n      }\n    }\n  }\n\n  // --------------------------------------------------------------------\n  // 6. Cleanup\n  // --------------------------------------------------------------------\n  root.userData.handlers = {};\n\n  root.userData.cleanup = () => {\n    // Dispose geometries & materials\n    backdropGeom.dispose();\n    backdropMat.dispose();\n    ribbonGeom.dispose();\n    ribbonMat.dispose();\n    hairGeom.dispose();\n    hairMat.dispose();\n    tickGeom.dispose();\n    tickMat.dispose();\n\n    // Dispose any text geometries (fontAtlas may own resources)\n    scrollGroup.traverse((obj) => {\n      if (obj.isMesh && obj.geometry) obj.geometry.dispose();\n    });\n    duplicate.traverse((obj) => {\n      if (obj.isMesh && obj.geometry) obj.geometry.dispose();\n    });\n\n    // Clear GSAP timelines\n    gsap.globalTimeline.clear();\n\n    // Cleanup primitives\n    primitives.forEach((p) => {\n      if (p && typeof p.cleanup === 'function') p.cleanup();\n    });\n\n    // Remove from parent\n    if (root.parent) root.parent.remove(root);\n  };\n\n  return root;\n}"
+}

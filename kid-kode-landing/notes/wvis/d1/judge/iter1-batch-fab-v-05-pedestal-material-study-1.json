@@ -1,0 +1,64 @@
+{
+  "label": "batch-fab-v-05-pedestal-material-study-1",
+  "phase": "iter1",
+  "judgedAt": "2026-07-12T05:35:36.789Z",
+  "judgeModel": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-05-pedestal-material-study-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-05-pedestal-material-study-1/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-05-pedestal-material-study-1/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-05-pedestal-material-study-1/F4.jpg"
+    },
+    {
+      "label": "F5",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-05-pedestal-material-study-1/F5.jpg"
+    }
+  ],
+  "mappingFile": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-05-pedestal-material-study-1/mapping.json",
+  "costUsd": 0.623837,
+  "durationApiMs": 59070,
+  "wallMs": 61391,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 15659,
+    "cache_read_input_tokens": 82679,
+    "output_tokens": 3843,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 15659,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 2952,
+        "cache_read_input_tokens": 44476,
+        "cache_creation_input_tokens": 9386,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9386
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":20,\"mustFix\":[{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"center object — tubes disconnected, does not read as torus knot; pedestal half-clipped\"},{\"defect\":\"ALL_BLACK_ELEMENT\",\"region\":\"center knot against right black field\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center object — flat matte diffuse, no metal response\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"whole frame — no brushed-metal PBR, no red accent, no contact shadow\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"left half — large white/grey field violates dark background spec\"},{\"defect\":\"FLAT_VOID\",\"region\":\"upper-right black region\"}],\"notes\":\"Geometry broken, matte plastic instead of brushed metal, palette inverted; only pedestal cylinder partially matches spec.\"},{\"frame\":\"F2\",\"score\":58,\"mustFix\":[{\"defect\":\"OFF_PALETTE\",\"region\":\"upper-left quadrant — huge blown-white blob field against dark-gradient spec\"},{\"defect\":\"FLAT_VOID\",\"region\":\"upper-right black region\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"pedestal base — contact shadow weak/absent; floor reads generic grey, not cinematic gradient\"}],\"notes\":\"Best of batch: knot topology correct, anisotropic metal streaks and red accent reflections present; background composition undermines it.\"},{\"frame\":\"F3\",\"score\":4,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame — uniform near-black, no geometry visible\"}],\"notes\":\"Solid dark frame; nothing rendered.\"},{\"frame\":\"F4\",\"score\":35,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center knot — matte white material, not brushed-metal PBR with anisotropy/clearcoat\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center knot — flat diffuse white, no specular metal response\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"pedestal top — spurious white rim ring; stray glowing artifact bottom-center\"},{\"defect\":\"FLAT_VOID\",\"region\":\"upper-left and right black regions\"}],\"notes\":\"Knot shape plausible and red floor accent present, but material completely wrong and artifacts break the study.\"},{\"frame\":\"F5\",\"score\":18,\"mustFix\":[{\"defect\":\"LOW_CONTRAST\",\"region\":\"upper-left — blown-out white knot merges into white background field\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"center — knot form melted/unreadable; pedestal renders as flat black slab, not cylinder\"},{\"defect\":\"ALL_BLACK_ELEMENT\",\"region\":\"lower-center pedestal slab\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center object — clipped whites, no material response\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"whole frame — no brushed metal, no red accent, no contact shadow\"}],\"notes\":\"Overexposed white-on-white with broken pedestal geometry; spec material entirely absent.\"}]}"
+}

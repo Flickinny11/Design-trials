@@ -1,0 +1,22 @@
+{
+  "bundle": "wvis-d7/claude-fable-5/v-12-photo-hero-composite-r100",
+  "contestant": "claude-fable-5",
+  "caseId": "v-12-photo-hero-composite",
+  "run": 100,
+  "capturedAt": "2026-07-12T06:07:38.242Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 9,
+    "nodeMounted": true,
+    "bundleId": "wvis-d7/claude-fable-5/v-12-photo-hero-composite-r100"
+  },
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

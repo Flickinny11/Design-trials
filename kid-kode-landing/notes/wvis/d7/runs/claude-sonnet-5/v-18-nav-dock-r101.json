@@ -1,0 +1,9 @@
+{
+  "wave": "wvis-d7",
+  "model": "claude-sonnet-5",
+  "stage": "revise1",
+  "caseId": "v-18-nav-dock",
+  "tag": "v-18-nav-dock-r101",
+  "ok": false,
+  "transportError": "transport failure after retries: HTTP 402: {\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 16384 tokens, but can only afford 478. To increase, visit https://openrouter.ai/settings/credits and add more credits\",\"code\":402,\"metadata\":{\"provider_name\":nul"
+}

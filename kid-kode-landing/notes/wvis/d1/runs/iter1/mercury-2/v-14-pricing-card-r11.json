@@ -1,0 +1,46 @@
+{
+  "wave": "wvis-d1",
+  "iter": 1,
+  "arm": "text-critique-only",
+  "contestant": "mercury-2",
+  "model": "mercury-2",
+  "route": "inception",
+  "caseId": "v-14-pricing-card",
+  "sourceTag": "v-14-pricing-card-r1",
+  "tag": "v-14-pricing-card-r11",
+  "run": 11,
+  "critiqueFed": {
+    "score": 5,
+    "mustFix": [
+      {
+        "defect": "BLANK_RENDER",
+        "region": "full frame — white placeholder square on black"
+      },
+      {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "full frame — no pricing card content"
+      },
+      {
+        "defect": "FLAT_VOID",
+        "region": "background field"
+      },
+      {
+        "defect": "RUNTIME_ERROR",
+        "region": "TypeError: ctx.THREE.MeshBasicNodeMaterial is not a constructor"
+      }
+    ],
+    "notes": "Duplicate of F2 failure state: placeholder quad, zero spec content.",
+    "runtimeError": "TypeError: ctx.THREE.MeshBasicNodeMaterial is not a constructor"
+  },
+  "frameFed": null,
+  "ok": true,
+  "wallMs": 6002,
+  "finishReason": "stop",
+  "usage": {
+    "promptTokens": 6546,
+    "completionTokens": 2028
+  },
+  "costUsd": 0.0031575,
+  "billing": "metered",
+  "output": "import { Group, Mesh, PlaneGeometry, MeshBasicNodeMaterial, MeshStandardNodeMaterial, Color } from 'three/webgpu';\nimport { gsap } from 'gsap';\nimport { uv, mix, color } from 'three/tsl';\nimport { primitives } from '@/primitives';\nimport { text } from '@/text';\n\nexport default function createNode(config, ctx) {\n  const group = new ctx.THREE.Group();\n\n  // ---------- Stage backdrop with vertical gradient ----------\n  const backdropGeom = new ctx.THREE.PlaneGeometry(7, 6);\n  const backdropMat = new MeshBasicNodeMaterial();\n  backdropMat.colorNode = mix(color('#ff4450'), color('#c1121f'), uv().y);\n  const backdropMesh = new ctx.THREE.Mesh(backdropGeom, backdropMat);\n  backdropMesh.position.set(0, 0, -2.5);\n  group.add(backdropMesh);\n\n  // ---------- Card dimensions ----------\n  const CARD_W = 2.4;\n  const CARD_H = 3.2;\n  const BORDER_THICK = 0.006;\n  const PADDING = 0.5; // base unit\n\n  // ---------- Border ----------\n  const borderGeom = new ctx.THREE.PlaneGeometry(CARD_W + BORDER_THICK * 2, CARD_H + BORDER_THICK * 2);\n  const borderMat = new MeshBasicNodeMaterial({ color: new Color('#2a2a33') });\n  const borderMesh = new ctx.THREE.Mesh(borderGeom, borderMat);\n  borderMesh.position.z = 0.001;\n  group.add(borderMesh);\n\n  // ---------- Background ----------\n  const bgGeom = new ctx.THREE.PlaneGeometry(CARD_W, CARD_H);\n  const bgMat = new MeshBasicNodeMaterial({ color: new Color('#16161d') });\n  const bgMesh = new ctx.THREE.Mesh(bgGeom, bgMat);\n  bgMesh.position.z = 0.002;\n  group.add(bgMesh);\n\n  // ---------- Header strip ----------\n  const HEADER_H = 0.08;\n  const headerGeom = new ctx.THREE.PlaneGeometry(CARD_W, HEADER_H);\n  const headerMat = new MeshStandardNodeMaterial({\n    color: new Color('#16161d'),\n    metalness: 0.5,\n    roughness: 0.55,\n    clearcoat: 0.2,\n  });\n  const headerMesh = new ctx.THREE.Mesh(headerGeom, headerMat);\n  headerMesh.position.set(0, CARD_H / 2 - HEADER_H / 2, 0.003);\n  group.add(headerMesh);\n\n  // ---------- Text ----------\n  const textGroup = new ctx.THREE.Group();\n  group.add(textGroup);\n\n  const addText = (content, opts, y) => {\n    const txt = ctx.fontAtlas.createText(content, opts);\n    txt.position.set(0, y, 0.004);\n    // ensure material is transparent for animation\n    txt.traverse((obj) => {\n      if (obj.material) {\n        obj.material.transparent = true;\n        obj.material.opacity = 1;\n      }\n    });\n    textGroup.add(txt);\n    return txt;\n  };\n\n  const topY = CARD_H / 2 - PADDING;\n\n  // Tier name\n  const tierY = topY - 0.31;\n  const tierText = addText('ATELIER RESERVE', {\n    fontSize: 20,\n    color: '#e8ecf2',\n    align: 'center',\n    letterSpacingPx: 0.08,\n  }, tierY);\n\n  // Price\n  const priceY = tierY - 0.55;\n  const priceText = addText('$480', {\n    fontSize: 62,\n    color: '#e8ecf2',\n    align: 'center',\n    letterSpacingPx: -0.01,\n  }, priceY);\n\n  // Caption\n  const captionY = priceY - 0.4;\n  const captionText = addText('PER MONTH, BILLED ANNUALLY', {\n    fontSize: 9,\n    color: '#e8ecf2',\n    align: 'center',\n    letterSpacingPx: 0.12,\n  }, captionY);\n\n  // Feature rows\n  const featureStartY = captionY - 0.6;\n  const FEATURE_H = 0.375;\n  const HAIRLINE = 0.006;\n  const featureTexts = [];\n  const features = [\n    'Quarterly movement service',\n    'Priority commission slots',\n    'Private fitting lounge access',\n    'Lifetime case refinishing',\n  ];\n  features.forEach((txt, i) => {\n    const y = featureStartY - i * (FEATURE_H + HAIRLINE);\n    const txtObj = addText(txt, {\n      fontSize: 13,\n      color: '#e8ecf2',\n      align: 'center',\n      letterSpacingPx: 0,\n    }, y);\n    txtObj.visible = false;\n    txtObj.traverse((obj) => {\n      if (obj.material) {\n        obj.material.transparent = true;\n        obj.material.opacity = 0;\n      }\n    });\n    txtObj.position.y += 0.2;\n    featureTexts.push(txtObj);\n  });\n\n  // CTA row with vertical gradient\n  const ctaY = -CARD_H / 2 + PADDING + 0.18;\n  const ctaGeom = new ctx.THREE.PlaneGeometry(1.4, 0.36);\n  const ctaMat = new MeshStandardNodeMaterial({\n    metalness: 0.3,\n    roughness: 0.5,\n    clearcoat: 0.2,\n    emissiveIntensity: 1.5,\n  });\n  ctaMat.colorNode = mix(color('#ff4450'), color('#c1121f'), uv().y);\n  ctaMat.emissiveNode = color('#ff2a38');\n  const ctaMesh = new ctx.THREE.Mesh(ctaGeom, ctaMat);\n  ctaMesh.position.set(0, ctaY, 0.004);\n  group.add(ctaMesh);\n\n  const ctaLabel = addText('JOIN THE RESERVE', {\n    fontSize: 13,\n    color: '#e8ecf2',\n    align: 'center',\n    letterSpacingPx: 0.08,\n  }, ctaY);\n  ctaLabel.traverse((obj) => {\n    if (obj.material) {\n      obj.material.transparent = true;\n      obj.material.opacity = 1;\n    }\n  });\n\n  // ---------- Animations ----------\n  const timelines = [];\n\n  // Card mount (weighted‑settle)\n  const mountTL = gsap.timeline({ defaults: { ease: 'power4.out' } });\n  mountTL.fromTo(\n    group.scale,\n    { x: 1.04, y: 1.04, z: 1.04 },\n    { x: 1, y: 1, z: 1, duration: 0.9 }\n  );\n  timelines.push(mountTL);\n\n  // Feature rows stagger fade‑up\n  const featureTL = gsap.timeline({ defaults: { ease: 'power2.out' } });\n  featureTexts.forEach((mesh, i) => {\n    featureTL.fromTo(\n      mesh.position,\n      { y: mesh.position.y },\n      {\n        y: mesh.position.y - 0.2,\n        duration: 0.5,\n        onStart: () => {\n          mesh.visible = true;\n        },\n        onComplete: () => {\n          mesh.traverse((obj) => {\n            if (obj.material) obj.material.opacity = 1;\n          });\n        },\n        delay: i * 0.08,\n      }\n    );\n  });\n  timelines.push(featureTL);\n\n  // CTA press interaction\n  const pressTL = gsap.timeline({ paused: true });\n  pressTL.to(ctaMesh.scale, {\n    x: 0.97,\n    y: 0.97,\n    z: 0.97,\n    duration: 0.12,\n    ease: 'back.out(1.275)',\n  });\n\n  group.userData.handlers = {\n    pointerdown: () => {\n      pressTL.restart();\n    },\n    pointerup: () => {\n      pressTL.reverse();\n    },\n  };\n\n  // ---------- Cleanup ----------\n  group.userData.cleanup = () => {\n    timelines.forEach((t) => t.kill());\n    pressTL.kill();\n    // dispose geometries\n    borderGeom.dispose();\n    bgGeom.dispose();\n    headerGeom.dispose();\n    ctaGeom.dispose();\n    backdropGeom.dispose();\n    // dispose materials\n    borderMat.dispose();\n    bgMat.dispose();\n    headerMat.dispose();\n    ctaMat.dispose();\n    backdropMat.dispose();\n    // dispose any mesh materials/textures\n    group.traverse((obj) => {\n      if (obj.isMesh) {\n        if (obj.geometry) obj.geometry.dispose();\n        if (obj.material) {\n          if (Array.isArray(obj.material)) {\n            obj.material.forEach((m) => m.dispose());\n          } else {\n            obj.material.dispose();\n          }\n        }\n      }\n    });\n  };\n\n  // Apply any cinematic primitives\n  if (Array.isArray(config.cinematicPrimitives)) {\n    config.cinematicPrimitives.forEach((p) => {\n      const primitive = ctx.primitives[p.name];\n      if (primitive) {\n        const inst = primitive(group, p.params);\n        const prev = group.userData.cleanup;\n        group.userData.cleanup = () => {\n          if (inst && typeof inst.cleanup === 'function') inst.cleanup();\n          if (prev) prev();\n        };\n      }\n    });\n  }\n\n  return group;\n}"
+}

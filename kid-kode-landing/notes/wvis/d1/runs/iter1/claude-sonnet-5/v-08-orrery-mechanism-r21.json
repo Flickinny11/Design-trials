@@ -1,0 +1,42 @@
+{
+  "wave": "wvis-d1",
+  "iter": 1,
+  "arm": "vision",
+  "contestant": "claude-sonnet-5",
+  "model": "anthropic/claude-sonnet-5",
+  "route": "openrouter",
+  "caseId": "v-08-orrery-mechanism",
+  "sourceTag": "v-08-orrery-mechanism-r2",
+  "tag": "v-08-orrery-mechanism-r21",
+  "run": 21,
+  "critiqueFed": {
+    "score": 44,
+    "mustFix": [
+      {
+        "defect": "BROKEN_COMPOSITION",
+        "region": "blown white plane, right third"
+      },
+      {
+        "defect": "GARBLED_TEXT",
+        "region": "artifact scribbles, upper-right quadrant"
+      },
+      {
+        "defect": "FLAT_VOID",
+        "region": "left background field"
+      }
+    ],
+    "notes": "Dark steel gears with red jewel glow read closer to spec; residual white-plane and artifact debris kill it.",
+    "runtimeError": null
+  },
+  "frameFed": "notes/bakeoff-b/frames/claude-sonnet-5/v-08-orrery-mechanism-r2.png",
+  "ok": true,
+  "wallMs": 2977,
+  "finishReason": "length",
+  "usage": {
+    "promptTokens": 11989,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.187818,
+  "billing": "metered",
+  "output": "import {\n  Group,\n  Mesh,\n  PlaneGeometry,\n  CylinderGeometry,\n  SphereGeometry,\n  Color,\n  Box3,\n  Vector3,\n  Clock,\n  DirectionalLight,\n  PointLight,\n  DoubleSide,\n  MeshPhysicalNodeMaterial,\n  MeshBasicNodeMaterial,\n} from 'three/webgpu';\nimport { uv, mix, smoothstep, vec2, vec3, length, clamp } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport '@/primitives';\nimport '@/text';\n\nexport default function createNode(config, ctx) {\n  const root = new Group();\n  root.name = 'orrery-mechanism';\n\n  const colors =\n    config.intent?.visualSpec?.colors ?? config.colors ?? {\n      background: '#0b0b10',\n      surface: '#14141a',\n      ink: '#16161d',\n      paper: '#e"
+}

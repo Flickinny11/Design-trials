@@ -1,0 +1,54 @@
+{
+  "wave": "wvis-d1",
+  "iter": 1,
+  "arm": "vision",
+  "contestant": "claude-opus-4.8",
+  "model": "anthropic/claude-opus-4.8",
+  "route": "openrouter",
+  "caseId": "v-04-kinetic-type-headline",
+  "sourceTag": "v-04-kinetic-type-headline-r2",
+  "tag": "v-04-kinetic-type-headline-r21",
+  "run": 21,
+  "critiqueFed": {
+    "score": 11,
+    "mustFix": [
+      {
+        "defect": "SCALE_ERROR",
+        "region": "upper-right — single glyph blob fills most of frame"
+      },
+      {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "center — no headline text, only stray underline"
+      },
+      {
+        "defect": "LOW_CONTRAST",
+        "region": "pink underline washed out against white blob"
+      },
+      {
+        "defect": "FLAT_VOID",
+        "region": "left and lower black field"
+      },
+      {
+        "defect": "DEAD_LIGHTING",
+        "region": "white mass — flat blurred fill"
+      },
+      {
+        "defect": "BROKEN_COMPOSITION",
+        "region": "whole frame"
+      }
+    ],
+    "notes": "One oversized blurred glyph and a floating faded underline; no legible type, composition broken.",
+    "runtimeError": null
+  },
+  "frameFed": "notes/bakeoff-b/frames/claude-opus-4.8/v-04-kinetic-type-headline-r2.png",
+  "ok": true,
+  "wallMs": 1795,
+  "finishReason": "stop",
+  "usage": {
+    "promptTokens": 10903,
+    "completionTokens": 10939
+  },
+  "costUsd": 0.32799,
+  "billing": "metered",
+  "output": "import { MeshStandardNodeMaterial, MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, vec2, vec3, mix, uniform, sin, dot, fract } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const {\n    Group, Mesh, PlaneGeometry, Color,\n    DirectionalLight, PointLight, AmbientLight,\n    Box3, Vector3,\n  } = ctx.THREE;\n\n  const COLORS = config.intent?.visualSpec?.colors ?? {\n    background: '#0b0b10', surface: '#101017', ink: '#16161d',\n    paper: '#e8ecf2', accent: '#ff2a38',\n  };\n\n  const group = new Group();\n  group.userData.handlers = {};\n  const timelines = [];\n  const primHandles = [];\n  const disposables = [];\n\n  // ---------- Backdrop stage (fills frame, engineered vertical gradient + grain) ----------\n  const backdropGeo = new PlaneGeometry(24, 15);\n  const backdropMat = new MeshBasicNodeMaterial();\n  const cTop = uniform(vec3(...new Color('#13131a').toArray()));\n  const cBot = uniform(vec3(...new Color('#0b0b10').toArray()));\n  const gr = fract(sin(dot(uv(), vec2(12.9898, 78.233))).mul(43758.5453));\n  const grain = gr.sub(0.5).mul(0.015);\n  backdropMat.colorNode = mix(cBot, cTop, uv().y).add(grain);\n  const backdrop = new Mesh(backdropGeo, backdropMat);\n  backdrop.position.set(0, 0, -2.5);\n  group.add(backdrop);\n  disposables.push(backdropGeo, backdropMat);\n\n  // ---------- Lights (node-local; illuminate the underline / any PBR) ----------\n  const ambient = new AmbientLight(new Color(COLORS.paper), 0.5);\n  group.add(ambient);\n\n  const key = new DirectionalLight(new Color(COLORS.paper), 1.1);\n  key.position.set(2.5, 3, 4);\n  group.add(key);\n\n  const rim = new PointLight(new Color(COLORS.accent), 1.0, 20);\n  rim.position.set(-3, -1.5, 2.5);\n  group.add(rim);\n\n  // ---------- Text bridging ----------\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const findRole = (r) => items.find((i) => i.role === r);\n  const captionText = (findRole('caption')?.text ?? 'NOVA ATELIER / CALIBRE PROGRAM').toUpperCase();\n  const heroText = findRole('hero')?.text ?? 'TIME, MACHINED.';\n  const subheadText = findRole('subhead')?.text ?? 'Every calibre begins as a solid billet.';\n\n  // deterministic fit: scale the created text to a target scene-unit em height,\n  // regardless of the atlas px->unit mapping. This kills the giant-blob failure.\n  const fitInto = (obj, targetHeight) => {\n    obj.updateWorldMatrix(true, true);\n    const box = new Box3().setFromObject(obj);\n    const size = new Vector3();\n    const center = new Vector3();\n    box.getSize(size);\n    box.getCenter(center);\n    const s = size.y > 0.0001 ? targetHeight / size.y : 1;\n    obj.scale.setScalar(s);\n    obj.position.set(-center.x * s, -center.y * s, 0);\n  };\n\n  // ---------- Caption kicker (mono 700, uppercase, letterspaced) ----------\n  const captionRaw = ctx.fontAtlas.createText(captionText, {\n    fontSize: 64,\n    color: COLORS.paper,\n    align: 'center',\n    letterSpacingPx: 8,\n  });\n  fitInto(captionRaw, 0.11);\n  const captionWrap = new Group();\n  captionWrap.add(captionRaw);\n  captionWrap.position.set(0, 1.15, 0);\n  group.add(captionWrap);\n\n  // ---------- Hero headline ----------\n  const heroGroup = new Group();      // weighted-settle target\n  heroGroup.position.set(0, 0.4, 0);\n  group.add(heroGroup);\n\n  const heroWrap = new Group();       // kinetic-text primitive target\n  heroGroup.add(heroWrap);\n\n  const heroRaw = ctx.fontAtlas.createText(heroText, {\n    fontSize: 96,\n    color: COLORS.paper,\n    align: 'center',\n  });\n  fitInto(heroRaw, 0.62);\n  heroWrap.add(heroRaw);\n\n  // ---------- Accent underline rule ----------\n  const ulGeo = new PlaneGeometry(2.6, 0.045);\n  ulGeo.translate(1.3, 0, 0); // anchor left\n  const ulMat = new MeshStandardNodeMaterial();\n  ulMat.color = new Color(COLORS.accent);\n  ulMat.emissive = new Color(COLORS.accent);\n  ulMat.emissiveIntensity = 1.2;\n  ulMat.roughness = 0.5;\n  ulMat.metalness = 0.2;\n  const underline = new Mesh(ulGeo, ulMat);\n  underline.position.set(-1.3, -0.05, 0.12);\n  underline.scale.x = 0;\n  group.add(underline);\n  disposables.push(ulGeo, ulMat);\n\n  // ---------- Subhead ----------\n  const subheadRaw = ctx.fontAtlas.createText(subheadText, {\n    fontSize: 64,\n    color: COLORS.paper,\n    align: 'center',\n  });\n  fitInto(subheadRaw, 0.2);\n  const subheadWrap = new Group();\n  subheadWrap.add(subheadRaw);\n  subheadWrap.position.set(0, -0.65, 0);\n  group.add(subheadWrap);\n\n  // ---------- Motion ----------\n  // caption fade-up\n  captionWrap.position.y = 1.15 + 0.2;\n  const capTl = gsap.timeline();\n  capTl.to(captionWrap.position, { y: 1.15, duration: 0.5, ease: 'power2.out' }, 0.1);\n  timelines.push(capTl);\n\n  // hero kinetic entrance via primitive + weighted settle\n  heroGroup.scale.setScalar(1.04);\n  const heroTl = gsap.timeline();\n  heroTl.fromTo(\n    heroGroup.scale,\n    { x: 1.04, y: 1.04, z: 1.04 },\n    { x: 1, y: 1, z: 1, duration: 0.9, ease: 'power4.out' },\n    0.6\n  );\n  // underline draw\n  heroTl.to(underline.scale, { x: 1, duration: 0.5, ease: 'power2.out' }, 0.85);\n  timelines.push(heroTl);\n\n  // subhead fade-up\n  subheadWrap.position.y = -0.65 - 0.2;\n  const subTl = gsap.timeline();\n  subTl.to(subheadWrap.position, { y: -0.65, duration: 0.5, ease: 'power2.out' }, 1.0);\n  timelines.push(subTl);\n\n  // idle: single slow breathing on hero (<=2%)\n  const idleTl = gsap.timeline({ delay: 2.2 });\n  idleTl.to(heroGroup.scale, {\n    x: 1.015, y: 1.015, z: 1.015,\n    duration: 4, ease: 'sine.inOut',\n    yoyo: true, repeat: -1,\n  });\n  timelines.push(idleTl);\n\n  // ---------- Apply cinematic primitives ----------\n  const prims = config.cinematicPrimitives ?? [];\n  for (const p of prims) {\n    const fn = ctx.primitives?.[p.name];\n    if (fn) {\n      const target = p.name === 'kinetic-text' ? heroWrap : group;\n      const handle = fn(target, p.params ?? {});\n      if (handle) primHandles.push(handle);\n    }\n  }\n\n  // ---------- Cleanup ----------\n  group.userData.cleanup = () => {\n    for (const tl of timelines) tl.kill();\n    for (const h of primHandles) h?.cleanup?.();\n    for (const d of disposables) d?.dispose?.();\n    group.traverse((o) => {\n      if (o.geometry) o.geometry.dispose?.();\n      if (o.material) {\n        if (Array.isArray(o.material)) o.material.forEach((m) => m.dispose?.());\n        else o.material.dispose?.();\n      }\n    });\n  };\n\n  return group;\n}"
+}

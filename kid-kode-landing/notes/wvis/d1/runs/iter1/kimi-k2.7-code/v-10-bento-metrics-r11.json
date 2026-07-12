@@ -1,0 +1,42 @@
+{
+  "wave": "wvis-d1",
+  "iter": 1,
+  "arm": "vision",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "caseId": "v-10-bento-metrics",
+  "sourceTag": "v-10-bento-metrics-r1",
+  "tag": "v-10-bento-metrics-r11",
+  "run": 11,
+  "critiqueFed": {
+    "score": 46,
+    "mustFix": [
+      {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "all three cells — no stat numerals or labels rendered"
+      },
+      {
+        "defect": "FLAT_VOID",
+        "region": "dominant left cell — vast empty surface, no sheen band or content"
+      },
+      {
+        "defect": "LOW_CONTRAST",
+        "region": "dominant cell upper-left — accent reduced to a near-invisible red speck"
+      }
+    ],
+    "notes": "Cleanest composition and machined edges of the batch, but tiles are contentless voids with almost no accent.",
+    "runtimeError": null
+  },
+  "frameFed": "notes/bakeoff-b/frames/kimi-k2.7-code/v-10-bento-metrics-r1.png",
+  "ok": true,
+  "wallMs": 1047,
+  "finishReason": "length",
+  "usage": {
+    "promptTokens": 7434,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.06269648,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial, MeshStandardNodeMaterial, MeshPhysicalNodeMaterial } from 'three/webgpu';\nimport { uv, vec2, vec3, color, mix, smoothstep, add, mul, clamp, sub, length } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const {\n    THREE: { Group, Mesh, PlaneGeometry, BoxGeometry, Shape, ExtrudeGeometry, DirectionalLight, PointLight }\n  } = ctx;\n\n  const root = new Group();\n  root.name = 'bento-metrics-grid';\n\n  const visual = config.intent?.visualSpec || {};\n  const colors = visual.colors || {\n    background: '#0b0b10',\n    surface: '#14141a',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    gradientStops: [{ at: 0, hex: '#101017' }, { at: 1, hex: '#1a1a22' }]\n  };\n  const cStops = colors.gradientStops || [];\n  const stop0 = cStops[0]?.hex || '#101017';\n  const stop1 = cStops[1]?.hex || '#1a1a22';\n  const paper = colors.paper || '#e8ecf2';\n  const accent = colors.accent || '#ff2a38';\n  const surface = colors.surface || '#14141a';\n\n  const timelines = [];\n  function killAll() {\n    timelines.forEach((tl) => tl?.kill && tl.kill());\n    timelines.length = 0;\n  }\n\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const itemText = (i) => (typeof i === 'string' ? i : i?.text || '');\n  const itemRole = (i) => (typeof i === 'object' && i !== null ? i.role : null);\n\n  const captionText =\n    itemText(items.find((i) => itemRole(i) === 'caption')) ||\n    'ATELIER METRICS / Q2 2026';\n  const domValueText =\n    itemText(items.find((i) => itemRole(i) === 'valueLarge')) || '0.002 mm';\n  const domLabelText =\n    itemText(items.filter((i) => itemRole(i) === 'label')[0]) ||\n    'Case tolerance"
+}

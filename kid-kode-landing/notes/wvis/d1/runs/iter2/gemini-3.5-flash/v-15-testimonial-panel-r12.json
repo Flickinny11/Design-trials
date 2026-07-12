@@ -1,0 +1,50 @@
+{
+  "wave": "wvis-d1",
+  "iter": 2,
+  "arm": "vision",
+  "contestant": "gemini-3.5-flash",
+  "model": "google/gemini-3.5-flash",
+  "route": "openrouter",
+  "caseId": "v-15-testimonial-panel",
+  "sourceTag": "v-15-testimonial-panel-r1",
+  "tag": "v-15-testimonial-panel-r12",
+  "run": 12,
+  "critiqueFed": {
+    "score": 34,
+    "mustFix": [
+      {
+        "defect": "OFF_PALETTE",
+        "region": "background field"
+      },
+      {
+        "defect": "OFF_PALETTE",
+        "region": "center panel"
+      },
+      {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "panel upper-left (oversized red quotation glyph absent)"
+      },
+      {
+        "defect": "DEAD_LIGHTING",
+        "region": "center panel"
+      },
+      {
+        "defect": "LOW_CONTRAST",
+        "region": "panel edge vs background field"
+      }
+    ],
+    "notes": "Legible quote and attribution, but light-gray washed palette breaks dark-first; red glyph reduced to a stray underline; flat lighting.",
+    "runtimeError": null
+  },
+  "frameFed": "notes/wvis/d1/frames-iter1/gemini-3.5-flash/v-15-testimonial-panel-r11.png",
+  "ok": true,
+  "wallMs": 2201,
+  "finishReason": "stop",
+  "usage": {
+    "promptTokens": 7888,
+    "completionTokens": 3885
+  },
+  "costUsd": 0.046797,
+  "billing": "metered",
+  "output": "import { MeshPhysicalNodeMaterial, MeshStandardNodeMaterial, MeshBasicNodeMaterial } from 'three/webgpu';\nimport { vec3, mix, uv } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const group = new THREE.Group();\n\n  // 1. Stage Backdrop: Dark vertical gradient to satisfy the dark-first design\n  const bgGeo = new THREE.PlaneGeometry(8.0, 6.5);\n  \n  // Clean, non-washed vertical gradient for background using basic material to avoid light wash\n  const bgGrad0 = vec3(0x0b / 255, 0x0b / 255, 0x10 / 255);\n  const bgGrad1 = vec3(0x05 / 255, 0x05 / 255, 0x08 / 255);\n  const bgMat = new MeshBasicNodeMaterial({\n    colorNode: mix(bgGrad1, bgGrad0, uv().y),\n    depthWrite: false\n  });\n  \n  const bgMesh = new THREE.Mesh(bgGeo, bgMat);\n  bgMesh.position.z = -1.5;\n  group.add(bgMesh);\n\n  // 2. Focused Lights for Dramatic Sculpting\n  const keyLight = new THREE.DirectionalLight('#ffffff', 1.2);\n  keyLight.position.set(2.0, 3.0, 4.0);\n  group.add(keyLight);\n\n  const accentRim = new THREE.DirectionalLight('#ff2a38', 0.9);\n  accentRim.position.set(-3.0, 2.0, 1.5);\n  group.add(accentRim);\n\n  // 3. Main Panel Container (3.4w x 1.9h)\n  const panelWidth = 3.4;\n  const panelHeight = 1.9;\n  const panelGroup = new THREE.Group();\n  group.add(panelGroup);\n\n  // High-contrast engineered gradient panel\n  const panelGeo = new THREE.PlaneGeometry(panelWidth, panelHeight);\n  const pGradColor0 = vec3(0x1a / 255, 0x1a / 255, 0x22 / 255);\n  const pGradColor1 = vec3(0x11 / 255, 0x11 / 255, 0x16 / 255);\n  const panelColorNode = mix(pGradColor1, pGradColor0, uv().y);\n\n  const panelMat = new MeshPhysicalNodeMaterial({\n    colorNode: panelColorNode,\n    roughness: 0.5,\n    metalness: 0.55,\n    clearcoat: 0.25,\n    clearcoatRoughness: 0.1\n  });\n  \n  const panelMesh = new THREE.Mesh(panelGeo, panelMat);\n  panelGroup.add(panelMesh);\n\n  // Hairline Border (0.006-unit #26262f)\n  const borderGeo = new THREE.EdgesGeometry(panelGeo);\n  const borderMat = new THREE.LineBasicMaterial({ color: 0x26262f });\n  const borderMesh = new THREE.LineSegments(borderGeo, borderMat);\n  borderMesh.position.z = 0.01;\n  panelGroup.add(borderMesh);\n\n  // 4. Typographic Content & Layout\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const quoteMarkCopy = textItems[0]?.text ?? '\"';\n  const quoteCopy = textItems[1]?.text ?? \"The bezel action alone is worth the wait. Nothing else on my wrist feels this considered.\";\n  const attributionCopy = textItems[2]?.text ?? \"M. OKAFOR\";\n  const captionCopy = textItems[3]?.text ?? \"COLLECTOR SINCE 2019\";\n\n  // Oversized Quote Mark (0.62 units tall)\n  const quoteMarkMesh = ctx.fontAtlas.createText(quoteMarkCopy, {\n    fontSize: 62,\n    color: '#ff2a38',\n    align: 'left'\n  });\n  // 0.5 padding from top-left: x = -1.7 + 0.5 = -1.2, y = 0.95 - 0.5 = 0.45\n  quoteMarkMesh.position.set(-1.2, 0.45, 0.05);\n  quoteMarkMesh.scale.setScalar(0.01);\n  panelGroup.add(quoteMarkMesh);\n\n  // Quote text (0.25 below quote mark -> y = 0.20, max width 2.4)\n  const formattedQuote = quoteCopy.replace(/(.{1,32})(\\s+|$)/g, \"$1\\n\").trim();\n  const quoteMesh = ctx.fontAtlas.createText(formattedQuote, {\n    fontSize: 20,\n    color: '#e8ecf2',\n    align: 'left'\n  });\n  quoteMesh.position.set(-1.2, 0.15, 0.04);\n  quoteMesh.scale.setScalar(0.01);\n  panelGroup.add(quoteMesh);\n\n  // Accent Rule (led by 0.2w x 0.02h emissive red graphic)\n  const ruleGeo = new THREE.PlaneGeometry(0.2, 0.02);\n  const ruleMat = new MeshStandardNodeMaterial({\n    color: '#ff2a38',\n    emissive: '#ff2a38',\n    emissiveIntensity: 1.4\n  });\n  const ruleMesh = new THREE.Mesh(ruleGeo, ruleMat);\n  ruleMesh.position.set(-1.1, -0.4, 0.04); // Left edge aligned at -1.2\n  panelGroup.add(ruleMesh);\n\n  // Attribution Text\n  const attributionMesh = ctx.fontAtlas.createText(attributionCopy, {\n    fontSize: 13,\n    color: '#e8ecf2',\n    align: 'left',\n    letterSpacingPx: 1.2\n  });\n  attributionMesh.position.set(-1.2, -0.55, 0.04);\n  attributionMesh.scale.setScalar(0.01);\n  panelGroup.add(attributionMesh);\n\n  // Caption Text\n  const captionMesh = ctx.fontAtlas.createText(captionCopy, {\n    fontSize: 9,\n    color: '#e8ecf2',\n    align: 'left',\n    letterSpacingPx: 1.5\n  });\n  captionMesh.position.set(-1.2, -0.7, 0.04);\n  captionMesh.scale.setScalar(0.01);\n  panelGroup.add(captionMesh);\n\n  // 5. Entrance Animations & GSAP Choreography\n  const tl = gsap.timeline();\n\n  // Reveal transition for entire panel\n  panelGroup.position.y = -0.2;\n  panelGroup.position.z = -0.5;\n  \n  tl.to(panelGroup.position, {\n    y: 0,\n    z: 0,\n    duration: 0.7,\n    ease: 'power3.out'\n  });\n\n  // Settling motion specifically on the primary quote mark\n  quoteMarkMesh.scale.setScalar(0);\n  tl.to(quoteMarkMesh.scale, {\n    x: 0.01,\n    y: 0.01,\n    z: 0.01,\n    duration: 0.9,\n    ease: 'back.out(1.7)'\n  }, 0.2);\n\n  // Apply visual configurations & primitives\n  const primitivesList = config.cinematicPrimitives || [];\n  const activePrimitives = [];\n  primitivesList.forEach((prim) => {\n    if (ctx.primitives[prim.name]) {\n      const activePrim = ctx.primitives[prim.name](group, prim.params);\n      activePrimitives.push(activePrim);\n    }\n  });\n\n  // 6. Cleanup\n  group.userData = {\n    cleanup: () => {\n      tl.kill();\n      activePrimitives.forEach(p => p?.cleanup?.());\n      bgGeo.dispose();\n      bgMat.dispose();\n      panelGeo.dispose();\n      panelMat.dispose();\n      borderGeo.dispose();\n      borderMat.dispose();\n      ruleGeo.dispose();\n      ruleMat.dispose();\n    }\n  };\n\n  return group;\n}"
+}

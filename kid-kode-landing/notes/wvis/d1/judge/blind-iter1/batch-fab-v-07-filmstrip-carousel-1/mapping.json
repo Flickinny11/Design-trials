@@ -1,0 +1,20 @@
+[
+  {
+    "label": "F1",
+    "bundleId": "wvis/glm-5.2/v-07-filmstrip-carousel-r21",
+    "contestant": "glm-5.2",
+    "source": "notes/wvis/d1/frames-iter1/glm-5.2/v-07-filmstrip-carousel-r21.png"
+  },
+  {
+    "label": "F2",
+    "bundleId": "wvis/deepseek-v4-flash/v-07-filmstrip-carousel-r21",
+    "contestant": "deepseek-v4-flash",
+    "source": "notes/wvis/d1/frames-iter1/deepseek-v4-flash/v-07-filmstrip-carousel-r21.png"
+  },
+  {
+    "label": "F3",
+    "bundleId": "wvis/gpt-oss-120b/v-07-filmstrip-carousel-r11",
+    "contestant": "gpt-oss-120b",
+    "source": "notes/wvis/d1/frames-iter1/gpt-oss-120b/v-07-filmstrip-carousel-r11.png"
+  }
+]

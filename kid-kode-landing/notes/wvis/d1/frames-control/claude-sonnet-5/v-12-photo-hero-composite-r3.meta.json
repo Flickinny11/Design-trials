@@ -1,0 +1,20 @@
+{
+  "bundle": "wvis/claude-sonnet-5/v-12-photo-hero-composite-r3",
+  "contestant": "claude-sonnet-5",
+  "caseId": "v-12-photo-hero-composite",
+  "run": 3,
+  "capturedAt": "2026-07-12T06:20:21.723Z",
+  "probe": {
+    "status": "error",
+    "error": "module did not default-export a function",
+    "renderables": 0,
+    "nodeMounted": false,
+    "bundleId": "wvis/claude-sonnet-5/v-12-photo-hero-composite-r3"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": "Transform failed with 1 error:\n<stdin>:157:4: ERROR: Unexpected end of file",
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

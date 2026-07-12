@@ -1,0 +1,27 @@
+{
+  "bundle": "wvis/deepseek-v4-flash/v-06-loop-column-gallery-r11",
+  "contestant": "deepseek-v4-flash",
+  "caseId": "v-06-loop-column-gallery",
+  "run": 11,
+  "capturedAt": "2026-07-12T05:29:37.870Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 27,
+    "nodeMounted": true,
+    "bundleId": "wvis/deepseek-v4-flash/v-06-loop-column-gallery-r11"
+  },
+  "consoleErrors": [
+    "THREE.TSL: TypeError: this.cNode.getNodeType is not a function \"scene-root.ts:136\"\n    at scene-root.ts:136:22\n    at scene-root.ts:164:22",
+    "THREE.TSL: TypeError: this.cNode.getNodeType is not a function \"scene-root.ts:136\"\n    at scene-root.ts:136:22\n    at scene-root.ts:164:22",
+    "THREE.TSL: TypeError: this.cNode.getNodeType is not a function \"scene-root.ts:136\"\n    at scene-root.ts:136:22\n    at scene-root.ts:164:22",
+    "THREE.TSL: TypeError: this.cNode.getNodeType is not a function \"scene-root.ts:136\"\n    at scene-root.ts:136:22\n    at scene-root.ts:164:22",
+    "THREE.TSL: TypeError: this.cNode.getNodeType is not a function \"scene-root.ts:136\"\n    at scene-root.ts:136:22\n    at scene-root.ts:164:22",
+    "THREE.TSL: TypeError: Cannot read properties of undefined (reading 'getNodeType') [Unknown location]"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

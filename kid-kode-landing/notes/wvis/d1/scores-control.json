@@ -1,0 +1,381 @@
+{
+  "judgedBy": "ROTATION: claude-fable-5 (all non-Fable) + claude-opus-4-8 (Fable renders). PRE-BLINDED anonymous 800px JPEGs, per-case sha-ordered batches, 2 calibration exemplars, W-BAKE pass-2 DL rubric. W-VIS D1 phase: control",
+  "renders": [
+    {
+      "bundleId": "wvis/mercury-2/v-02-particle-constellation-r3",
+      "phase": "control",
+      "contestant": "mercury-2",
+      "caseId": "v-02-particle-constellation",
+      "tag": "v-02-particle-constellation-r3",
+      "judgeModel": "claude-fable-5",
+      "score": 6,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — particle field collapsed to tiny square patch"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center — no red accent core, no headline, no depth falloff"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "center particle patch"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "ReferenceError: THREE is not defined"
+        }
+      ],
+      "notes": "Near-empty black frame; particles collapsed into a tiny faint square; scene, core, and copy absent.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "ReferenceError: THREE is not defined",
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/gemini-3.5-flash/v-02-particle-constellation-r3",
+      "phase": "control",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "v-02-particle-constellation",
+      "tag": "v-02-particle-constellation-r3",
+      "judgeModel": "claude-fable-5",
+      "score": 66,
+      "mustFix": [
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center accent core — red instances read as flat dim dots, no emissive/additive glow"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "bottom-center red caption, near-illegible"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "lower-third gradient band beneath constellation, sparse and washed"
+        }
+      ],
+      "notes": "Ellipsoid constellation with depth falloff and copy lands; core lacks glow, lower field washes flat, typography competent not flagship.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/glm-5.2/v-03-glass-prism-refraction-r3",
+      "phase": "control",
+      "contestant": "glm-5.2",
+      "caseId": "v-03-glass-prism-refraction",
+      "tag": "v-03-glass-prism-refraction-r3",
+      "judgeModel": "claude-fable-5",
+      "score": 3,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire frame"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center (prism, dispersion, rim light all absent)"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "background field"
+        }
+      ],
+      "notes": "Uniform near-black frame; no prism, refraction, iridescence, or accent renders at all.",
+      "renderable": false,
+      "probeStatus": "error",
+      "moduleRuntimeError": null,
+      "nodeMounted": false
+    },
+    {
+      "bundleId": "wvis/gpt-oss-120b/v-05-pedestal-material-study-r3",
+      "phase": "control",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r3",
+      "judgeModel": "claude-fable-5",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire frame"
+        },
+        {
+          "defect": "RUNTIME_ERROR",
+          "region": "TypeError: (0 , import_tsl.divide) is not a function"
+        }
+      ],
+      "notes": "Uniform near-black frame; nothing rendered. No knot, pedestal, lighting, or text.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": "TypeError: (0 , import_tsl.divide) is not a function",
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-opus-4.8/v-05-pedestal-material-study-r3",
+      "phase": "control",
+      "contestant": "claude-opus-4.8",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r3",
+      "judgeModel": "claude-fable-5",
+      "score": 22,
+      "mustFix": [
+        {
+          "defect": "ALL_BLACK_ELEMENT",
+          "region": "center knot mass"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center card"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "lower center (pedestal, contact shadow, brushed-metal PBR absent)"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center (blob occludes headline text)"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "left and right background field"
+        }
+      ],
+      "notes": "Knot is an unlit black silhouette blocking the title; typography and red caption survive, but no material, pedestal, or light response.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/kimi-k2.7-code/v-05-pedestal-material-study-r3",
+      "phase": "control",
+      "contestant": "kimi-k2.7-code",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r3",
+      "judgeModel": "claude-fable-5",
+      "score": 5,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "entire frame"
+        }
+      ],
+      "notes": "Uniform near-black frame; nothing rendered.",
+      "renderable": false,
+      "probeStatus": "error",
+      "moduleRuntimeError": null,
+      "nodeMounted": false
+    },
+    {
+      "bundleId": "wvis/claude-haiku-4.5/v-05-pedestal-material-study-r3",
+      "phase": "control",
+      "contestant": "claude-haiku-4.5",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r3",
+      "judgeModel": "claude-fable-5",
+      "score": 15,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center (torus knot absent entirely)"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "left and right edges (giant blurred white blobs)"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center pedestal (wedge-cut cylinder, geometry incomplete)"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center pedestal (flat gray fill, no PBR response)"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "background field (no accent, no gradient stops)"
+        }
+      ],
+      "notes": "Pedestal only, with a missing pie-slice; hero knot absent, flat gray material, incoherent white blobs dominate composition.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-sonnet-5/v-05-pedestal-material-study-r3",
+      "phase": "control",
+      "contestant": "claude-sonnet-5",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r3",
+      "judgeModel": "claude-fable-5",
+      "score": 34,
+      "mustFix": [
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "center knot (brushed-metal PBR replaced by matte white plaster; no anisotropy or clearcoat)"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center (knot clips through pedestal rim; sphere protrudes below)"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center card (flat ambient, no contact shadow on floor)"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "left background (huge blurred white letterform blob)"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center knot (white matte object, no accent red, no metal)"
+        }
+      ],
+      "notes": "Knot and pedestal exist but material is wrong, geometry interpenetrates, lighting flat, and background blob wrecks the frame.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/glm-5.2/v-06-loop-column-gallery-r3",
+      "phase": "control",
+      "contestant": "glm-5.2",
+      "caseId": "v-06-loop-column-gallery",
+      "tag": "v-06-loop-column-gallery-r3",
+      "judgeModel": "claude-fable-5",
+      "score": 12,
+      "mustFix": [
+        {
+          "defect": "FLAT_VOID",
+          "region": "left third and right edge background field"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "upper-center blown-out white blob, no material response"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire column — no photographic textures on any plate, untextured gray fills"
+        },
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "center — amorphous overexposed mass obscures column, gallery unreadable"
+        },
+        {
+          "defect": "LOW_CONTRAST",
+          "region": "lower-right plates, flat gray on black"
+        }
+      ],
+      "notes": "Plates render as voids and blown white mass, not photographs; only red edge slivers survive. Fails DL10/11/16 completely.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/deepseek-v4-flash/v-07-filmstrip-carousel-r3",
+      "phase": "control",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "v-07-filmstrip-carousel",
+      "tag": "v-07-filmstrip-carousel-r3",
+      "judgeModel": "claude-fable-5",
+      "score": 4,
+      "mustFix": [
+        {
+          "defect": "BLANK_RENDER",
+          "region": "entire frame near-empty except tiny center icon"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "background field"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "entire frame — no five-card 3D filmstrip, no photographs, no focused card"
+        },
+        {
+          "defect": "DEFAULT_BLUE_DRIFT",
+          "region": "center icon"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center icon — blue/violet, no #ff2a38 accent anywhere"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "center icon — flat fills, no material light response"
+        },
+        {
+          "defect": "SCALE_ERROR",
+          "region": "center — tiny placeholder glyph in vast empty field"
+        }
+      ],
+      "notes": "Near-blank frame: only a flat blue layers icon renders; carousel, photographic plates, and palette entirely absent.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    },
+    {
+      "bundleId": "wvis/claude-fable-5/v-01-orbit-product-hero-r3",
+      "phase": "control",
+      "contestant": "claude-fable-5",
+      "caseId": "v-01-orbit-product-hero",
+      "tag": "v-01-orbit-product-hero-r3",
+      "judgeModel": "claude-opus-4-8",
+      "score": 34,
+      "mustFix": [
+        {
+          "defect": "BROKEN_COMPOSITION",
+          "region": "left half — a stray flat white light-plane intrudes into frame, off-axis and unmotivated"
+        },
+        {
+          "defect": "FLAT_VOID",
+          "region": "left background block and right-side dark field — flat untextured fills, no material light response"
+        },
+        {
+          "defect": "DEAD_LIGHTING",
+          "region": "whole scene — no engineered key+rim; watch and plinth read evenly lit and lifeless"
+        },
+        {
+          "defect": "MISSING_SPEC_ELEMENT",
+          "region": "scene-wide — specified red #ff2a38 accent signal light absent"
+        },
+        {
+          "defect": "OFF_PALETTE",
+          "region": "center plinth — plain mid-grey cylinder, not the near-black #14141a engineered vertical gradient"
+        }
+      ],
+      "notes": "Recognizable watch but raw-viewport render: stray white plane breaks composition, dead flat lighting, grey plinth, no red accent signal.",
+      "renderable": true,
+      "probeStatus": "ready",
+      "moduleRuntimeError": null,
+      "nodeMounted": true
+    }
+  ]
+}

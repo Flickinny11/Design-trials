@@ -1,0 +1,50 @@
+{
+  "wave": "wvis-d1",
+  "iter": 1,
+  "arm": "vision",
+  "contestant": "claude-sonnet-5",
+  "model": "anthropic/claude-sonnet-5",
+  "route": "openrouter",
+  "caseId": "v-12-photo-hero-composite",
+  "sourceTag": "v-12-photo-hero-composite-r2",
+  "tag": "v-12-photo-hero-composite-r21",
+  "run": 21,
+  "critiqueFed": {
+    "score": 7,
+    "mustFix": [
+      {
+        "defect": "BLANK_RENDER",
+        "region": "center card"
+      },
+      {
+        "defect": "ALL_BLACK_ELEMENT",
+        "region": "center card"
+      },
+      {
+        "defect": "FLAT_VOID",
+        "region": "background field"
+      },
+      {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "entire frame — no photo, subject, or caption"
+      },
+      {
+        "defect": "BROKEN_COMPOSITION",
+        "region": "upper-right cropped letterform fragment"
+      }
+    ],
+    "notes": "Near-empty black frame; unlit black plate with a stray blurred glyph. Effectively unrendered.",
+    "runtimeError": null
+  },
+  "frameFed": "notes/bakeoff-b/frames/claude-sonnet-5/v-12-photo-hero-composite-r2.png",
+  "ok": true,
+  "wallMs": 2052,
+  "finishReason": "length",
+  "usage": {
+    "promptTokens": 12180,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.1882,
+  "billing": "metered",
+  "output": ""
+}

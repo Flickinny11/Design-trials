@@ -1,0 +1,46 @@
+{
+  "wave": "wvis-d1",
+  "iter": 1,
+  "arm": "vision",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "caseId": "v-05-pedestal-material-study",
+  "sourceTag": "v-05-pedestal-material-study-r1",
+  "tag": "v-05-pedestal-material-study-r11",
+  "run": 11,
+  "critiqueFed": {
+    "score": 37,
+    "mustFix": [
+      {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "center knot — matte white plastic instead of brushed-metal PBR"
+      },
+      {
+        "defect": "GARBLED_TEXT",
+        "region": "right of pedestal — '3' and 'GRIT' caption clipped/occluded"
+      },
+      {
+        "defect": "FLAT_VOID",
+        "region": "right background field — featureless dark region"
+      },
+      {
+        "defect": "OFF_PALETTE",
+        "region": "pedestal top face — tan/brown tint outside spec palette"
+      }
+    ],
+    "notes": "Best of batch: has contact shadow and light gradation, but material misses spec and text is broken.",
+    "runtimeError": null
+  },
+  "frameFed": "notes/bakeoff-b/frames/kimi-k2.7-code/v-05-pedestal-material-study-r1.png",
+  "ok": true,
+  "wallMs": 1479,
+  "finishReason": "length",
+  "usage": {
+    "promptTokens": 7120,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.0624704,
+  "billing": "metered",
+  "output": ""
+}

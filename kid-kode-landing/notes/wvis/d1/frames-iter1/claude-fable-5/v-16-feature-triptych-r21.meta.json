@@ -1,0 +1,20 @@
+{
+  "bundle": "wvis/claude-fable-5/v-16-feature-triptych-r21",
+  "contestant": "claude-fable-5",
+  "caseId": "v-16-feature-triptych",
+  "run": 21,
+  "capturedAt": "2026-07-12T05:28:05.408Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 29,
+    "nodeMounted": true,
+    "bundleId": "wvis/claude-fable-5/v-16-feature-triptych-r21"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

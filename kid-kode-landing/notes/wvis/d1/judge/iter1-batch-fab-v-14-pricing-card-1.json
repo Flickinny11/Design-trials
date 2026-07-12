@@ -1,0 +1,48 @@
+{
+  "label": "batch-fab-v-14-pricing-card-1",
+  "phase": "iter1",
+  "judgedAt": "2026-07-12T05:42:21.677Z",
+  "judgeModel": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-14-pricing-card-1/F1.jpg"
+    }
+  ],
+  "mappingFile": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-14-pricing-card-1/mapping.json",
+  "costUsd": 0.394212,
+  "durationApiMs": 24829,
+  "wallMs": 27728,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 10992,
+    "cache_read_input_tokens": 80586,
+    "output_tokens": 1192,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10992,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 783,
+        "cache_read_input_tokens": 42383,
+        "cache_creation_input_tokens": 6812,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6812
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 12, \"mustFix\": [ { \"defect\": \"SCALE_ERROR\", \"region\": \"entire frame — camera crashed into partial glyphs, card larger than viewport\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"entire frame — abstract block collage, no legible card layout\" }, { \"defect\": \"GARBLED_TEXT\", \"region\": \"left and right edges — giant clipped unreadable letterforms\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center card — no tier name, price figure, feature rows, machined header strip, or CTA\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center rectangles — flat albedo fills, no material light response\" } ], \"notes\": \"Renders on-palette but is an unreadable zoomed block collage; every spec element of the pricing card is absent.\" } ] }"
+}

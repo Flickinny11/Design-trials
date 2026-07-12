@@ -1,0 +1,60 @@
+{
+  "label": "batch-fab-v-12-photo-hero-composite-1",
+  "phase": "iter1",
+  "judgedAt": "2026-07-12T05:41:28.909Z",
+  "judgeModel": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-12-photo-hero-composite-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-12-photo-hero-composite-1/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-12-photo-hero-composite-1/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-12-photo-hero-composite-1/F4.jpg"
+    }
+  ],
+  "mappingFile": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-12-photo-hero-composite-1/mapping.json",
+  "costUsd": 0.516479,
+  "durationApiMs": 31136,
+  "wallMs": 33938,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 14247,
+    "cache_read_input_tokens": 81920,
+    "output_tokens": 2290,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14247,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1529,
+        "cache_read_input_tokens": 43717,
+        "cache_creation_input_tokens": 8733,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8733
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 14, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame — no photographic plate, no caption block, no subject\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"center — amorphous white blobs overlap a gray panel with no structure\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center gray panel — flat linear fill, no light response\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"left and right black background field\" }, { \"defect\": \"GARBLED_TEXT\", \"region\": \"lower-left of white block — red stroke reads as failed underline with no text\" } ], \"notes\": \"No photo, no grade, no caption; incoherent blob shapes over flat fills. Unusable render.\" }, { \"frame\": \"F2\", \"score\": 3, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame — uniform near-black, nothing rendered\" } ], \"notes\": \"Empty black frame; nothing from the spec rendered.\" }, { \"frame\": \"F3\", \"score\": 38, \"mustFix\": [ { \"defect\": \"ALL_BLACK_ELEMENT\", \"region\": \"center hero plate — photo area is a solid black rectangle\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center plate — imageUrl photograph, filmic grade, and subject separation absent\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field — flat ink with faint vignette only, no gradient scrim per spec\" } ], \"notes\": \"Caption block, kicker, red accent, and type discipline are correct; the hero photograph itself never rendered.\" }, { \"frame\": \"F4\", \"score\": 10, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame — no photograph and no caption text block\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"right half — giant soft white blob bleeds across the plate edge\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center card — flat vertical gradient, no material response\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"upper-right of center card — smeared red blur reads as artifact, not the signal accent\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"left third black background field\" } ], \"notes\": \"Abstract smears where the photo composite should be; only a stray red line and blur survive.\" } ] }"
+}

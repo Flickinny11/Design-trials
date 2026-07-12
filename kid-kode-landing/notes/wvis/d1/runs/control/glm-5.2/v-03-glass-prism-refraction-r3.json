@@ -1,0 +1,22 @@
+{
+  "wave": "wvis-d1",
+  "arm": "control-resample",
+  "contestant": "glm-5.2",
+  "model": "z-ai/glm-5.2",
+  "route": "openrouter",
+  "caseId": "v-03-glass-prism-refraction",
+  "sourceTag": "v-03-glass-prism-refraction-r2",
+  "tag": "v-03-glass-prism-refraction-r3",
+  "run": 3,
+  "originalScore": 46,
+  "ok": true,
+  "wallMs": 10108,
+  "finishReason": "length",
+  "usage": {
+    "promptTokens": 4288,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.023427840000000002,
+  "billing": "metered",
+  "output": ""
+}

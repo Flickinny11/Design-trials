@@ -1,0 +1,46 @@
+{
+  "wave": "wvis-d1",
+  "iter": 1,
+  "arm": "text-critique-only",
+  "contestant": "glm-5.2",
+  "model": "z-ai/glm-5.2",
+  "route": "openrouter",
+  "caseId": "v-19-empty-state",
+  "sourceTag": "v-19-empty-state-r2",
+  "tag": "v-19-empty-state-r21",
+  "run": 21,
+  "critiqueFed": {
+    "score": 8,
+    "mustFix": [
+      {
+        "defect": "FLAT_VOID",
+        "region": "background field"
+      },
+      {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "entire frame"
+      },
+      {
+        "defect": "BROKEN_COMPOSITION",
+        "region": "center"
+      },
+      {
+        "defect": "RUNTIME_ERROR",
+        "region": "TypeError: Cannot read properties of undefined (reading '0')"
+      }
+    ],
+    "notes": "Lone flat white square on void black; no panel, grid, ghost preview, copy, or accent.",
+    "runtimeError": "TypeError: Cannot read properties of undefined (reading '0')"
+  },
+  "frameFed": null,
+  "ok": true,
+  "wallMs": 1001,
+  "finishReason": "length",
+  "usage": {
+    "promptTokens": 7293,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.024689940000000004,
+  "billing": "metered",
+  "output": ""
+}

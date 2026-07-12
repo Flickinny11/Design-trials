@@ -73,10 +73,146 @@
       "costUsd": 0.484252,
       "billing": "subscription-equivalent",
       "at": "2026-07-12T05:39:35.760Z"
+    },
+    {
+      "batch": "batch-fab-v-10-bento-metrics-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 4,
+      "costUsd": 0.5228729999999999,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:40:19.305Z"
+    },
+    {
+      "batch": "batch-fab-v-11-gradient-cta-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 3,
+      "costUsd": 0.48564599999999997,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:40:54.939Z"
+    },
+    {
+      "batch": "batch-fab-v-12-photo-hero-composite-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 4,
+      "costUsd": 0.516479,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:41:28.909Z"
+    },
+    {
+      "batch": "batch-fab-v-13-brand-wall-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 1,
+      "costUsd": 0.390771,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:41:53.936Z"
+    },
+    {
+      "batch": "batch-fab-v-14-pricing-card-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 1,
+      "costUsd": 0.394212,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:42:21.678Z"
+    },
+    {
+      "batch": "batch-fab-v-15-testimonial-panel-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 2,
+      "costUsd": 0.435436,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:42:53.483Z"
+    },
+    {
+      "batch": "batch-fab-v-16-feature-triptych-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 1,
+      "costUsd": 0.383644,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:43:13.200Z"
+    },
+    {
+      "batch": "batch-fab-v-17-data-ribbon-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 1,
+      "costUsd": 0.395412,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:43:39.227Z"
+    },
+    {
+      "batch": "batch-fab-v-18-nav-dock-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 1,
+      "costUsd": 0.404003,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:44:09.040Z"
+    },
+    {
+      "batch": "batch-fab-v-19-empty-state-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 2,
+      "costUsd": 0.405893,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:44:32.711Z"
+    },
+    {
+      "batch": "batch-fab-v-20-footer-colophon-1",
+      "judgeModel": "claude-fable-5",
+      "frames": 2,
+      "costUsd": 0.460821,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:45:12.132Z"
+    },
+    {
+      "batch": "batch-op-v-01-orbit-product-hero-1",
+      "judgeModel": "claude-opus-4-8",
+      "frames": 1,
+      "costUsd": 0.5568379999999999,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:45:40.396Z"
+    },
+    {
+      "batch": "batch-op-v-04-kinetic-type-headline-1",
+      "judgeModel": "claude-opus-4-8",
+      "frames": 1,
+      "costUsd": 0.2150935,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:46:20.260Z"
+    },
+    {
+      "batch": "batch-op-v-06-loop-column-gallery-1",
+      "judgeModel": "claude-opus-4-8",
+      "frames": 1,
+      "costUsd": 0.198898,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:46:44.829Z"
+    },
+    {
+      "batch": "batch-op-v-16-feature-triptych-1",
+      "judgeModel": "claude-opus-4-8",
+      "frames": 1,
+      "costUsd": 0.206113,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:47:13.772Z"
+    },
+    {
+      "batch": "batch-op-v-17-data-ribbon-1",
+      "judgeModel": "claude-opus-4-8",
+      "frames": 1,
+      "costUsd": 0.218027,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:47:51.138Z"
+    },
+    {
+      "batch": "batch-op-v-18-nav-dock-1",
+      "judgeModel": "claude-opus-4-8",
+      "frames": 1,
+      "costUsd": 0.217404,
+      "billing": "subscription-equivalent",
+      "at": "2026-07-12T05:48:27.089Z"
     }
   ],
   "totals": {
     "meteredUsd": 0,
-    "subscriptionEquivalentUsd": 5.3666730000000005
+    "subscriptionEquivalentUsd": 11.774236499999999
   }
 }

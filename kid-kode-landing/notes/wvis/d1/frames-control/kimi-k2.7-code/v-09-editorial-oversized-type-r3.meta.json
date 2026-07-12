@@ -1,0 +1,20 @@
+{
+  "bundle": "wvis/kimi-k2.7-code/v-09-editorial-oversized-type-r3",
+  "contestant": "kimi-k2.7-code",
+  "caseId": "v-09-editorial-oversized-type",
+  "run": 3,
+  "capturedAt": "2026-07-12T06:21:01.523Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 9,
+    "nodeMounted": true,
+    "bundleId": "wvis/kimi-k2.7-code/v-09-editorial-oversized-type-r3"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

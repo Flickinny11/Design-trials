@@ -1,0 +1,14 @@
+[
+  {
+    "label": "F1",
+    "bundleId": "wvis/deepseek-v4-flash/v-20-footer-colophon-r21",
+    "contestant": "deepseek-v4-flash",
+    "source": "notes/wvis/d1/frames-iter1/deepseek-v4-flash/v-20-footer-colophon-r21.png"
+  },
+  {
+    "label": "F2",
+    "bundleId": "wvis/claude-sonnet-5/v-20-footer-colophon-r11",
+    "contestant": "claude-sonnet-5",
+    "source": "notes/wvis/d1/frames-iter1/claude-sonnet-5/v-20-footer-colophon-r11.png"
+  }
+]

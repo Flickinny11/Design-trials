@@ -1,0 +1,20 @@
+{
+  "bundle": "wvis/claude-opus-4.8/v-19-empty-state-r11",
+  "contestant": "claude-opus-4.8",
+  "caseId": "v-19-empty-state",
+  "run": 11,
+  "capturedAt": "2026-07-12T05:29:08.796Z",
+  "probe": {
+    "status": "error",
+    "error": "module did not default-export a function",
+    "renderables": 0,
+    "nodeMounted": false,
+    "bundleId": "wvis/claude-opus-4.8/v-19-empty-state-r11"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": "Transform failed with 1 error:\n<stdin>:63:12: ERROR: Unexpected end of file",
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

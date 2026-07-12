@@ -1,0 +1,22 @@
+{
+  "bundle": "wvis-d7/claude-sonnet-5/v-05-pedestal-material-study-r100",
+  "contestant": "claude-sonnet-5",
+  "caseId": "v-05-pedestal-material-study",
+  "run": 100,
+  "capturedAt": "2026-07-12T06:05:35.639Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 8,
+    "nodeMounted": true,
+    "bundleId": "wvis-d7/claude-sonnet-5/v-05-pedestal-material-study-r100"
+  },
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

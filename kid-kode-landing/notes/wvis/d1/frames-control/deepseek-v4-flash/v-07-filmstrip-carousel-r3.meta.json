@@ -1,0 +1,25 @@
+{
+  "bundle": "wvis/deepseek-v4-flash/v-07-filmstrip-carousel-r3",
+  "contestant": "deepseek-v4-flash",
+  "caseId": "v-07-filmstrip-carousel",
+  "run": 3,
+  "capturedAt": "2026-07-12T06:20:26.566Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 1,
+    "nodeMounted": true,
+    "bundleId": "wvis/deepseek-v4-flash/v-07-filmstrip-carousel-r3"
+  },
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

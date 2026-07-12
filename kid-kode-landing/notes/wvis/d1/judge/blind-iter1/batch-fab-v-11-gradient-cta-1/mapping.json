@@ -1,0 +1,20 @@
+[
+  {
+    "label": "F1",
+    "bundleId": "wvis/deepseek-v4-flash/v-11-gradient-cta-r11",
+    "contestant": "deepseek-v4-flash",
+    "source": "notes/wvis/d1/frames-iter1/deepseek-v4-flash/v-11-gradient-cta-r11.png"
+  },
+  {
+    "label": "F2",
+    "bundleId": "wvis/mercury-2/v-11-gradient-cta-r21",
+    "contestant": "mercury-2",
+    "source": "notes/wvis/d1/frames-iter1/mercury-2/v-11-gradient-cta-r21.png"
+  },
+  {
+    "label": "F3",
+    "bundleId": "wvis/gemini-3.5-flash/v-11-gradient-cta-r21",
+    "contestant": "gemini-3.5-flash",
+    "source": "notes/wvis/d1/frames-iter1/gemini-3.5-flash/v-11-gradient-cta-r21.png"
+  }
+]

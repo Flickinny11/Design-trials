@@ -1,0 +1,46 @@
+{
+  "wave": "wvis-d1",
+  "iter": 2,
+  "arm": "vision",
+  "contestant": "gemini-3.5-flash",
+  "model": "google/gemini-3.5-flash",
+  "route": "openrouter",
+  "caseId": "v-08-orrery-mechanism",
+  "sourceTag": "v-08-orrery-mechanism-r2",
+  "tag": "v-08-orrery-mechanism-r22",
+  "run": 22,
+  "critiqueFed": {
+    "score": 27,
+    "mustFix": [
+      {
+        "defect": "GARBLED_TEXT",
+        "region": "bottom center — clipped rotated caption"
+      },
+      {
+        "defect": "OFF_PALETTE",
+        "region": "gears — white plastic, not steel"
+      },
+      {
+        "defect": "DEAD_LIGHTING",
+        "region": "gear cluster, flat shading"
+      },
+      {
+        "defect": "BROKEN_COMPOSITION",
+        "region": "gear clipping into left gray wall"
+      }
+    ],
+    "notes": "White plastic gears wedged into a wall corner with clipped stray text; no metallic PBR or jewel accent.",
+    "runtimeError": null
+  },
+  "frameFed": "notes/wvis/d1/frames-iter1/gemini-3.5-flash/v-08-orrery-mechanism-r21.png",
+  "ok": true,
+  "wallMs": 3035,
+  "finishReason": "stop",
+  "usage": {
+    "promptTokens": 8414,
+    "completionTokens": 4296
+  },
+  "costUsd": 0.051285,
+  "billing": "metered",
+  "output": "import {\n  MeshBasicNodeMaterial,\n  MeshStandardNodeMaterial,\n  MeshPhysicalNodeMaterial\n} from 'three/webgpu';\nimport {\n  uv,\n  vec2,\n  vec3,\n  mix,\n  smoothstep,\n  uniform\n} from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { Group, Mesh, PlaneGeometry, SphereGeometry, CylinderGeometry, DirectionalLight, AmbientLight } = ctx.THREE;\n\n  const container = new Group();\n  const activeTimelines = [];\n  const activePrimitives = [];\n\n  // 1. NESTED GROUPS TO PRESERVE COMPOSITION & LEGIBILITY\n  const backdropGroup = new Group();\n  const subjectGroup = new Group();\n  const textGroup = new Group();\n  \n  container.add(backdropGroup);\n  container.add(subjectGroup);\n  container.add(textGroup);\n\n  // 2. BACKDROP (Fills the frame beautifully, static)\n  const backdropGeo = new PlaneGeometry(12, 10);\n  const backdropMat = new MeshBasicNodeMaterial();\n  \n  // Custom TSL gradient matching the spec: #0b0b10 -> #101017 -> #16161d\n  const uvs = uv();\n  const gradNode = mix(\n    vec3(0.043, 0.043, 0.063), // #0b0b10 (bottom)\n    mix(\n      vec3(0.063, 0.063, 0.090), // #101017 (middle)\n      vec3(0.086, 0.086, 0.114), // #16161d (top)\n      smoothstep(0.4, 1.0, uvs.y)\n    ),\n    smoothstep(0.0, 0.65, uvs.y)\n  );\n  backdropMat.colorNode = gradNode;\n\n  const backdrop = new Mesh(backdropGeo, backdropMat);\n  backdrop.position.set(0, 0, -3.0);\n  backdropGroup.add(backdrop);\n\n  // Ground Contact Shadow Plane\n  const shadowGeo = new PlaneGeometry(2.6, 1.2);\n  const shadowMat = new MeshBasicNodeMaterial({\n    transparent: true,\n    alphaWrite: false,\n    depthWrite: false\n  });\n  const shadowUv = uv().sub(0.5);\n  const shadowDist = shadowUv.mul(vec2(1.0, 2.16)).length();\n  const shadowAlpha = mix(0.5, 0.0, smoothstep(0.15, 0.5, shadowDist));\n  shadowMat.colorNode = vec3(0.02, 0.02, 0.03);\n  shadowMat.opacityNode = uniform(shadowAlpha);\n\n  const contactShadow = new Mesh(shadowGeo, shadowMat);\n  contactShadow.position.set(0, -1.2, -0.2);\n  contactShadow.rotation.x = -Math.PI / 2;\n  backdropGroup.add(contactShadow);\n\n  // 3. ORRERY MECHANISM SUBJECT SETUP (Inside subjectGroup)\n  const gearAssembly = new Group();\n  subjectGroup.add(gearAssembly);\n\n  // Darkened high-contrast steel material to prevent white plastic look (OFF_PALETTE fix)\n  const steelMat = new MeshPhysicalNodeMaterial({\n    color: 0x818690, // Iron grey rather than paper white\n    roughness: 0.5,\n    metalness: 0.85,  // Boost metalness to feel like machined steel\n    clearcoat: 0.25,\n    clearcoatRoughness: 0.3,\n    anisotropy: 0.7\n  });\n\n  const primaryGear = new Group();\n  const secondaryGear = new Group();\n  gearAssembly.add(primaryGear);\n  gearAssembly.add(secondaryGear);\n\n  secondaryGear.position.set(1.15, 0.35, -0.1);\n\n  if (config.meshUrl) {\n    ctx.glbLoader.loadGLB(config.meshUrl).then((gltf) => {\n      let originalMesh = null;\n      gltf.scene.traverse((child) => {\n        if (child.isMesh && !originalMesh) {\n          originalMesh = child;\n        }\n      });\n\n      if (originalMesh) {\n        originalMesh.geometry.computeBoundingBox();\n        const box = originalMesh.geometry.boundingBox;\n        const sizeX = box.max.x - box.min.x;\n        const scaleFit = 1.6 / (sizeX || 1.6);\n\n        // Primary Gear\n        const pMesh = originalMesh.clone();\n        pMesh.geometry = originalMesh.geometry.clone();\n        pMesh.geometry.center();\n        pMesh.scale.set(scaleFit, scaleFit, scaleFit);\n        pMesh.material = steelMat;\n        primaryGear.add(pMesh);\n\n        // Secondary Gear\n        const sMesh = originalMesh.clone();\n        sMesh.geometry = originalMesh.geometry.clone();\n        sMesh.geometry.center();\n        const smallScale = scaleFit * (0.9 / 1.6);\n        sMesh.scale.set(smallScale, smallScale, smallScale);\n        sMesh.material = steelMat;\n        secondaryGear.add(sMesh);\n      }\n    }).catch(err => {\n      console.warn(\"Falling back to basic geometries for gear meshes:\", err);\n    });\n  }\n\n  // Jewel pivot sphere (MeshPhysicalMaterial color #ff2a38)\n  const jewelGeo = new SphereGeometry(0.12, 32, 24);\n  const jewelMat = new MeshPhysicalNodeMaterial({\n    color: 0xff2a38,\n    transmission: 0.6,\n    ior: 1.76,\n    roughness: 0.1,\n    thickness: 0.2,\n    emissive: 0xff2a38,\n    emissiveIntensity: 1.8\n  });\n  const jewelPivot = new Mesh(jewelGeo, jewelMat);\n  jewelPivot.position.set(0, 0, 0.1);\n  primaryGear.add(jewelPivot);\n\n  // Arbor shafts (ink #16161d cylinders through both hubs)\n  const shaftGeo = new CylinderGeometry(0.05, 0.05, 0.8, 16);\n  const shaftMat = new MeshStandardNodeMaterial({\n    color: 0x16161d,\n    roughness: 0.6,\n    metalness: 0.5\n  });\n\n  const shaftPrimary = new Mesh(shaftGeo, shaftMat);\n  shaftPrimary.rotation.x = Math.PI / 2;\n  shaftPrimary.position.set(0, 0, -0.2);\n  primaryGear.add(shaftPrimary);\n\n  const shaftSecondary = new Mesh(shaftGeo, shaftMat);\n  shaftSecondary.rotation.x = Math.PI / 2;\n  shaftSecondary.position.set(0, 0, -0.2);\n  secondaryGear.add(shaftSecondary);\n\n  // 4. DRAMATIC LIGHTING RIG (Avoids DEAD_LIGHTING and BLOWN_WHITE_KEY)\n  const ambientLight = new AmbientLight(0x0b0b10, 0.4);\n  subjectGroup.add(ambientLight);\n\n  const keyLight = new DirectionalLight(0xe8ecf2, 1.1);\n  keyLight.position.set(3, 4, 3);\n  subjectGroup.add(keyLight);\n\n  const rimLight = new DirectionalLight(0xff2a38, 0.8);\n  rimLight.position.set(-3, -2, -1);\n  subjectGroup.add(rimLight);\n\n  // 5. TYPOGRAPHY ZONE (Facing camera directly, never garbled or clipped)\n  const items = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const headlineItem = items.find(i => i.role === 'headline' || i.text.length < 25);\n  const captionItem = items.find(i => i.role === 'caption' || i.text.length >= 25);\n\n  if (headlineItem) {\n    const textH = ctx.fontAtlas.createText(headlineItem.text, {\n      fontSize: 0.32,\n      color: '#e8ecf2',\n      align: 'center'\n    });\n    textH.position.set(0, -1.7, 0.2);\n    textGroup.add(textH);\n  }\n\n  if (captionItem) {\n    const textC = ctx.fontAtlas.createText(captionItem.text, {\n      fontSize: 0.09,\n      color: '#ff2a38',\n      align: 'center',\n      letterSpacingPx: 0.08\n    });\n    textC.position.set(0, -2.1, 0.2);\n    textGroup.add(textC);\n  }\n\n  // 6. ANIMATIONS & ROTATIONS (Continuous Meshing Physics)\n  const clock = { value: 0 };\n  const gearTimeline = gsap.to(clock, {\n    value: 100000,\n    duration: 100000,\n    ease: \"none\",\n    onUpdate: () => {\n      const t = clock.value;\n      primaryGear.rotation.z = t * 0.08;\n      secondaryGear.rotation.z = 2.45 - (t * 0.142);\n    }\n  });\n  activeTimelines.push(gearTimeline);\n\n  // Settle animated transition on entrance\n  gsap.fromTo(gearAssembly.position, \n    { y: -0.2, z: -0.4 }, \n    { y: 0, z: 0, duration: 1.2, ease: \"power3.out\" }\n  );\n\n  // Apply visual cinematic primitives directly to the subjectGroup (avoids rotating text or background)\n  if (config.cinematicPrimitives) {\n    for (const primitive of config.cinematicPrimitives) {\n      if (ctx.primitives[primitive.name]) {\n        const primResult = ctx.primitives[primitive.name](subjectGroup, primitive.params);\n        if (primResult) {\n          activePrimitives.push(primResult);\n        }\n      }\n    }\n  }\n\n  // 7. RESOURCE CLEANUP\n  container.userData.cleanup = function () {\n    activeTimelines.forEach(tl => tl.kill());\n    activePrimitives.forEach(p => {\n      if (typeof p.cleanup === 'function') p.cleanup();\n    });\n\n    steelMat.dispose();\n    jewelMat.dispose();\n    shaftMat.dispose();\n    shadowMat.dispose();\n    backdropMat.dispose();\n  };\n\n  return container;\n}"
+}

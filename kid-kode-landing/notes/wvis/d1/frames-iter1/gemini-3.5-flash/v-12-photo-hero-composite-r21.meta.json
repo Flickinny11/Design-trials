@@ -1,0 +1,22 @@
+{
+  "bundle": "wvis/gemini-3.5-flash/v-12-photo-hero-composite-r21",
+  "contestant": "gemini-3.5-flash",
+  "caseId": "v-12-photo-hero-composite",
+  "run": 21,
+  "capturedAt": "2026-07-12T05:30:19.470Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 7,
+    "nodeMounted": true,
+    "bundleId": "wvis/gemini-3.5-flash/v-12-photo-hero-composite-r21"
+  },
+  "consoleErrors": [
+    "THREE.TSL: NodeError: THREE.TSL: `texture( value )` function expects a valid instance of THREE.Texture(). \"scene-root.ts:136\"\n    at scene-root.ts:136:22\n    at scene-root.ts:164:22"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

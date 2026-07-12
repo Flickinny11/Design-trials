@@ -1,0 +1,38 @@
+{
+  "wave": "wvis-d1",
+  "iter": 1,
+  "arm": "text-critique-only",
+  "contestant": "gpt-oss-120b",
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "route": "fireworks",
+  "caseId": "v-05-pedestal-material-study",
+  "sourceTag": "v-05-pedestal-material-study-r1",
+  "tag": "v-05-pedestal-material-study-r11",
+  "run": 11,
+  "critiqueFed": {
+    "score": 3,
+    "mustFix": [
+      {
+        "defect": "BLANK_RENDER",
+        "region": "entire frame — near-black void"
+      },
+      {
+        "defect": "RUNTIME_ERROR",
+        "region": "ReferenceError: smoothstep is not defined"
+      }
+    ],
+    "notes": "Nothing rendered.",
+    "runtimeError": "ReferenceError: smoothstep is not defined"
+  },
+  "frameFed": null,
+  "ok": true,
+  "wallMs": 14422,
+  "finishReason": "stop",
+  "usage": {
+    "promptTokens": 6243,
+    "completionTokens": 2516
+  },
+  "costUsd": 0.0024460499999999995,
+  "billing": "metered",
+  "output": "import { Group, Mesh, PlaneGeometry, CylinderGeometry, TorusKnotGeometry, MeshBasicNodeMaterial, MeshStandardNodeMaterial, DirectionalLight, AmbientLight, DoubleSide } from 'three/webgpu';\nimport { uv, mix, lessThan, float, vec3, select, sub, div, length, mul, vec2, smoothstep } from 'three/tsl';\nimport { gsap } from 'gsap';\nimport { orbit } from '@/primitives';\nimport {} from '@/text';\n\nexport default function createNode(config, ctx) {\n  // -------------------------------------------------\n  // Helpers\n  // -------------------------------------------------\n  const toColor = (hex) => new ctx.THREE.Color(hex);\n  const colors = (config.colors ?? config.visual?.colors) || {};\n  const gradientStops = colors.gradientStops || [\n    { at: 0, hex: '#0b0b10' },\n    { at: 0.7, hex: '#101017' },\n    { at: 1, hex: '#16161d' },\n  ];\n  const getStop = (i) => gradientStops[i] ?? { at: 0, hex: '#000000' };\n  const bottomCol = toColor(getStop(0).hex);\n  const midCol = toColor(getStop(1).hex);\n  const topCol = toColor(getStop(2).hex);\n\n  // -------------------------------------------------\n  // Root group\n  // -------------------------------------------------\n  const root = new Group();\n\n  // -------------------------------------------------\n  // Backdrop with vertical gradient (Plane at z = -3)\n  // -------------------------------------------------\n  const backdropGeom = new PlaneGeometry(7, 6);\n  const uvNode = uv();\n  const y = uvNode.y;\n\n  const bottomColorNode = vec3(bottomCol.r, bottomCol.g, bottomCol.b);\n  const midColorNode = vec3(midCol.r, midCol.g, midCol.b);\n  const topColorNode = vec3(topCol.r, topCol.g, topCol.b);\n\n  const cond = lessThan(y, float(0.7));\n  const tLow = div(y, float(0.7));\n  const tHigh = div(sub(y, float(0.7)), float(0.3));\n  const lowMix = mix(bottomColorNode, midColorNode, tLow);\n  const highMix = mix(midColorNode, topColorNode, tHigh);\n  const gradColor = select(cond, lowMix, highMix);\n\n  const backdropMat = new MeshBasicNodeMaterial({\n    color: gradColor,\n    side: DoubleSide,\n    depthWrite: false,\n  });\n  const backdropMesh = new Mesh(backdropGeom, backdropMat);\n  backdropMesh.position.z = -3;\n  root.add(backdropMesh);\n\n  // -------------------------------------------------\n  // Pedestal cylinder\n  // -------------------------------------------------\n  const pedestalGeom = new CylinderGeometry(1.1, 1.1, 0.5, 32);\n  const pedestalMat = new MeshStandardNodeMaterial({\n    color: toColor('#14141a'),\n    roughness: 0.7,\n    metalness: 0.35,\n    side: DoubleSide,\n  });\n  const pedestalMesh = new Mesh(pedestalGeom, pedestalMat);\n  // top face at y = -0.35 -> center y = -0.35 - height/2\n  pedestalMesh.position.y = -0.35 - 0.25;\n  root.add(pedestalMesh);\n\n  // -------------------------------------------------\n  // Torus Knot (hero)\n  // -------------------------------------------------\n  const knotGeom = new TorusKnotGeometry(0.7, 0.22, 220, 36);\n  const knotMat = new MeshStandardNodeMaterial({\n    color: 0xffffff,\n    roughness: 0.55,\n    metalness: 0.55,\n    clearcoat: 0.22,\n    clearcoatRoughness: 0.35,\n    anisotropy: 0.9,\n    side: DoubleSide,\n  });\n  const knotMesh = new Mesh(knotGeom, knotMat);\n  knotMesh.position.set(0, 0.4, 0);\n  root.add(knotMesh);\n\n  // Load brushed metal roughness map and apply\n  let brushedTex = null;\n  if (config.imageUrl) {\n    ctx.textureLoader.loadTexture(config.imageUrl).then((tex) => {\n      brushedTex = tex;\n      knotMat.roughnessMap = tex;\n      knotMat.needsUpdate = true;\n    });\n  }\n\n  // -------------------------------------------------\n  // Contact shadow (simple radial fade)\n  // -------------------------------------------------\n  const shadowPlaneGeom = new PlaneGeometry(3, 3);\n  const shadowMat = new MeshBasicNodeMaterial({\n    color: vec3(0, 0, 0),\n    transparent: true,\n    side: DoubleSide,\n    depthWrite: false,\n  });\n  // Node based radial alpha\n  const uvS = uv();\n  const centered = sub(uvS, vec2(0.5, 0.5));\n  const dist = length(centered);\n  const radius = float(0.5); // half of plane size in uv space\n  const falloff = float(0.4 / 3); // normalized falloff distance\n  const alpha = mul(float(0.6), sub(float(1), smoothstep(radius, radius + falloff, dist)));\n  shadowMat.opacityNode = alpha;\n  const shadowMesh = new Mesh(shadowPlaneGeom, shadowMat);\n  shadowMesh.rotation.x = -Math.PI / 2;\n  shadowMesh.position.y = -0.36;\n  root.add(shadowMesh);\n\n  // -------------------------------------------------\n  // Lights\n  // -------------------------------------------------\n  const ambient = new AmbientLight(0xffffff, 0.6);\n  root.add(ambient);\n\n  const keyLight = new DirectionalLight(0xffffff, 1.2);\n  keyLight.position.set(3, 4, 3);\n  root.add(keyLight);\n\n  const rimLight = new DirectionalLight(toColor('#ff2a38'), 0.8);\n  rimLight.position.set(-3, -2, -3);\n  root.add(rimLight);\n\n  // -------------------------------------------------\n  // Text\n  // -------------------------------------------------\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of textItems) {\n    const role = (item.role ?? '').toLowerCase();\n    const opts = {\n      fontSize: item.typography?.fontSize ?? (role === 'headline' ? 68 : 18),\n      color: '#e8ecf2',\n      align: 'center',\n    };\n    const txtObj = ctx.fontAtlas.createText(item.text, opts);\n    const baselineOffset = role === 'headline' ? -1.2 : -1.6;\n    txtObj.position.set(0, baselineOffset, 0);\n    root.add(txtObj);\n  }\n\n  // -------------------------------------------------\n  // Cinematic primitives\n  // -------------------------------------------------\n  const primitives = [];\n  if (Array.isArray(config.cinematicPrimitives)) {\n    for (const prim of config.cinematicPrimitives) {\n      if (prim.name && ctx.primitives[prim.name]) {\n        const p = ctx.primitives[prim.name](root, prim.params || {});\n        primitives.push(p);\n      }\n    }\n  }\n\n  // -------------------------------------------------\n  // Cleanup\n  // -------------------------------------------------\n  root.userData.handlers = {};\n  root.userData.cleanup = () => {\n    backdropGeom.dispose();\n    backdropMat.dispose();\n    pedestalGeom.dispose();\n    pedestalMat.dispose();\n    knotGeom.dispose();\n    knotMat.dispose();\n    shadowPlaneGeom.dispose();\n    shadowMat.dispose();\n    if (brushedTex) brushedTex.dispose();\n    for (const p of primitives) {\n      if (p.cleanup) p.cleanup();\n    }\n    gsap.globalTimeline.clear();\n  };\n\n  return root;\n}"
+}

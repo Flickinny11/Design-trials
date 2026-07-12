@@ -1,0 +1,20 @@
+{
+  "bundle": "wvis/mercury-2/v-18-nav-dock-r21",
+  "contestant": "mercury-2",
+  "caseId": "v-18-nav-dock",
+  "run": 21,
+  "capturedAt": "2026-07-12T05:31:56.705Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 9,
+    "nodeMounted": true,
+    "bundleId": "wvis/mercury-2/v-18-nav-dock-r21"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

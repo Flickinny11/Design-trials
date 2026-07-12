@@ -1,0 +1,20 @@
+{
+  "bundle": "wvis/gemini-3.5-flash/v-02-particle-constellation-r21",
+  "contestant": "gemini-3.5-flash",
+  "caseId": "v-02-particle-constellation",
+  "run": 21,
+  "capturedAt": "2026-07-12T05:30:01.462Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 7,
+    "nodeMounted": true,
+    "bundleId": "wvis/gemini-3.5-flash/v-02-particle-constellation-r21"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

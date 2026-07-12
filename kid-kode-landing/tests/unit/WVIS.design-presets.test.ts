@@ -119,6 +119,8 @@ describe('W-VIS D3 — codegen prompt wiring (additive)', () => {
     const p = buildCodegenPrompt(node, { parent: null, siblings: [], children: [] }, { atlasIndex: 0, x: 0, y: 0, width: 1, height: 1 });
     expect(p.user).toContain('DESIGN PRESETS');
     expect(p.user).toContain('rig-product-hero');
-    expect(p.user).toContain('intensity 5.2');
+    // Key intensity reflects the physical-light retune (spot key ~x12.5 under
+    // decay-2 candela; commit 4e2e9332). The prompt block emits the shipped number.
+    expect(p.user).toContain('intensity 65');
   });
 });

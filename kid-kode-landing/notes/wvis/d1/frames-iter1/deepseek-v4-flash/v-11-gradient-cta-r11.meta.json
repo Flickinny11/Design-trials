@@ -1,0 +1,20 @@
+{
+  "bundle": "wvis/deepseek-v4-flash/v-11-gradient-cta-r11",
+  "contestant": "deepseek-v4-flash",
+  "caseId": "v-11-gradient-cta",
+  "run": 11,
+  "capturedAt": "2026-07-12T05:29:47.597Z",
+  "probe": {
+    "status": "error",
+    "error": "module did not default-export a function",
+    "renderables": 0,
+    "nodeMounted": false,
+    "bundleId": "wvis/deepseek-v4-flash/v-11-gradient-cta-r11"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": "Transform failed with 1 error:\n<stdin>:144:8: ERROR: The symbol \"borderGeom\" has already been declared",
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

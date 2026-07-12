@@ -1,0 +1,46 @@
+{
+  "wave": "wvis-d1",
+  "iter": 2,
+  "arm": "vision",
+  "contestant": "claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4.5",
+  "route": "openrouter",
+  "caseId": "v-09-editorial-oversized-type",
+  "sourceTag": "v-09-editorial-oversized-type-r2",
+  "tag": "v-09-editorial-oversized-type-r22",
+  "run": 22,
+  "critiqueFed": {
+    "score": 14,
+    "mustFix": [
+      {
+        "defect": "BROKEN_COMPOSITION",
+        "region": "upper-center white blur smear obscuring headline"
+      },
+      {
+        "defect": "GARBLED_TEXT",
+        "region": "upper half, duplicate overlapping headline layers"
+      },
+      {
+        "defect": "SCALE_ERROR",
+        "region": "full frame, type cropped off left and right edges"
+      },
+      {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "upper-left, mono uppercase kicker absent"
+      }
+    ],
+    "notes": "Overscaled overlapping type layers, soft white blur blob, cropped lines; red rule present but composition is wrecked.",
+    "runtimeError": null
+  },
+  "frameFed": "notes/wvis/d1/frames-iter1/claude-haiku-4.5/v-09-editorial-oversized-type-r21.png",
+  "ok": true,
+  "wallMs": 987,
+  "finishReason": "stop",
+  "usage": {
+    "promptTokens": 9015,
+    "completionTokens": 3307
+  },
+  "costUsd": 0.02555,
+  "billing": "metered",
+  "output": "```javascript\nimport { MeshBasicNodeMaterial } from 'three/webgpu';\nimport { uv, mix, color } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const { THREE } = ctx;\n  const group = new THREE.Group();\n  \n  // Parse text content with fallback to spec defaults\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  const textMap = {};\n  for (const item of textItems) {\n    if (item.role) {\n      textMap[item.role] = item.text;\n    }\n  }\n  \n  const kicker = textMap.kicker ?? 'NOVA ATELIER / JOURNAL';\n  const heroLine1 = textMap.heroLine1 ?? 'PRECISION IS';\n  const heroLine2 = textMap.heroLine2 ?? 'A HABIT.';\n  const body = textMap.body ?? 'Notes from the bench: tolerances, tempering, and the case for slower watchmaking.';\n  const caption = textMap.caption ?? 'ISSUE 12 / JULY 2026';\n  \n  const colors = config.intent?.visualSpec?.colors ?? {\n    background: '#0b0b10',\n    surface: '#14141a',\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38'\n  };\n  \n  // Create backdrop plane (7 x 5.5 units) with vertical TSL gradient\n  const backdropGeo = new THREE.PlaneGeometry(7, 5.5);\n  const colorTop = color(colors.background);\n  const colorBottom = color(colors.surface);\n  const gradientNode = mix(colorTop, colorBottom, uv().y);\n  \n  const backdropMat = new MeshBasicNodeMaterial({\n    colorNode: gradientNode,\n    side: THREE.FrontSide\n  });\n  \n  const backdrop = new THREE.Mesh(backdropGeo, backdropMat);\n  backdrop.position.z = 0;\n  group.add(backdrop);\n  \n  // Container for animated text blocks\n  const textContainer = new THREE.Group();\n  group.add(textContainer);\n  \n  // Kicker text (JetBrains Mono 700, uppercase, 18px, tracking 0.12em)\n  // Scale factor: 18px fontAtlas → 0.018 scene units per px ratio\n  const kickerObj = ctx.fontAtlas.createText(kicker.toUpperCase(), {\n    fontSize: 18,\n    color: colors.paper,\n    align: 'left',\n    letterSpacingPx: 2.16\n  });\n  kickerObj.scale.multiplyScalar(0.008);\n  kickerObj.position.set(-3.1, 1.7, 0.01);\n  kickerObj.userData.blockType = 'kicker';\n  kickerObj.userData.baseY = 1.7;\n  textContainer.add(kickerObj);\n  \n  // Hero line 1 (Lora 600, 124px, tracking -0.015em)\n  const hero1Obj = ctx.fontAtlas.createText(heroLine1, {\n    fontSize: 124,\n    color: colors.paper,\n    align: 'left',\n    letterSpacingPx: -1.86\n  });\n  hero1Obj.scale.multiplyScalar(0.005);\n  hero1Obj.position.set(-3.1, 0.9, 0.01);\n  hero1Obj.userData.blockType = 'hero';\n  hero1Obj.userData.baseY = 0.9;\n  textContainer.add(hero1Obj);\n  \n  // Hero line 2 (Lora 600, 124px, tracking -0.015em)\n  const hero2Obj = ctx.fontAtlas.createText(heroLine2, {\n    fontSize: 124,\n    color: colors.paper,\n    align: 'left',\n    letterSpacingPx: -1.86\n  });\n  hero2Obj.scale.multiplyScalar(0.005);\n  hero2Obj.position.set(-3.1, 0.25, 0.01);\n  hero2Obj.userData.blockType = 'hero';\n  hero2Obj.userData.baseY = 0.25;\n  textContainer.add(hero2Obj);\n  \n  // Accent underline rule (2.2 x 0.05 units, #ff2a38, emissive 1.2)\n  const ruleGeo = new THREE.PlaneGeometry(2.2, 0.05);\n  const ruleMat = new MeshBasicNodeMaterial({\n    color: colors.accent,\n    emissive: colors.accent,\n    emissiveIntensity: 1.2\n  });\n  const rule = new THREE.Mesh(ruleGeo, ruleMat);\n  rule.position.set(-3.1 + 1.1, -0.15, 0.02);\n  rule.scale.x = 0;\n  rule.userData.blockType = 'rule';\n  textContainer.add(rule);\n  \n  // Body paragraph (JetBrains Mono 400, 26px)\n  const bodyObj = ctx.fontAtlas.createText(body, {\n    fontSize: 26,\n    color: colors.paper,\n    align: 'left',\n    maxWidthPx: 450\n  });\n  bodyObj.scale.multiplyScalar(0.007);\n  bodyObj.position.set(-3.1, -0.8, 0.01);\n  bodyObj.userData.blockType = 'body';\n  bodyObj.userData.baseY = -0.8;\n  textContainer.add(bodyObj);\n  \n  // Caption (JetBrains Mono 400, 18px, tracking 0.08em)\n  const captionObj = ctx.fontAtlas.createText(caption, {\n    fontSize: 18,\n    color: colors.paper,\n    align: 'left',\n    letterSpacingPx: 1.44\n  });\n  captionObj.scale.multiplyScalar(0.008);\n  captionObj.position.set(-3.1, -1.9, 0.01);\n  captionObj.userData.blockType = 'caption';\n  captionObj.userData.baseY = -1.9;\n  textContainer.add(captionObj);\n  \n  // Animation timeline: rise-in stagger + rule draw\n  const timeline = gsap.timeline();\n  const blocks = [kickerObj, hero1Obj, hero2Obj, bodyObj, captionObj];\n  \n  // Set initial state for all text\n  blocks.forEach(block => {\n    block.traverse(child => {\n      if (child.material) {\n        child.material.transparent = true;\n        child.material.opacity = 0;\n      }\n    });\n  });\n  \n  // Animate blocks: rise-in with stagger (0.7s, 80ms stagger)\n  blocks.forEach((block, i) => {\n    const baseY = block.userData.baseY;\n    block.position.y = baseY + 0.4;\n    \n    timeline.to(\n      block.position,\n      {\n        y: baseY,\n        duration: 0.7,\n        ease: 'power3.out'\n      },\n      i * 0.08\n    );\n    \n    block.traverse(child => {\n      if (child.material) {\n        timeline.to(\n          child.material,\n          {\n            opacity: 1,\n            duration: 0.7,\n            ease: 'power2.out'\n          },\n          i * 0.08\n        );\n      }\n    });\n  });\n  \n  // Rule draws after hero lands (after 0.7s + 80ms*2)\n  timeline.to(\n    rule.scale,\n    {\n      x: 1,\n      duration: 0.5,\n      ease: 'cubic-bezier(0.25,0.46,0.45,0.94)'\n    },\n    0.76\n  );\n  \n  // Cleanup function\n  group.userData.cleanup = () => {\n    timeline.kill();\n    backdrop.geometry.dispose();\n    backdrop.material.dispose();\n    rule.geometry.dispose();\n    rule.material.dispose();\n    \n    const disposeTree = (obj) => {\n      obj.traverse(child => {\n        if (child.geometry) child.geometry.dispose();\n        if (child.material) {\n          if (Array.isArray(child.material)) {\n            child.material.forEach(m => m.dispose());\n          } else {\n            child.material.dispose();\n          }\n        }\n      });\n    };\n    \n    disposeTree(kickerObj);\n    disposeTree(hero1Obj);\n    disposeTree(hero2Obj);\n    disposeTree(bodyObj);\n    disposeTree(captionObj);\n  };\n  \n  return group;\n}\n```"
+}

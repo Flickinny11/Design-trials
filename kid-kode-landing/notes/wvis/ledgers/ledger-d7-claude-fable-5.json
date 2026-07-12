@@ -1,0 +1,233 @@
+{
+  "wave": "wvis",
+  "name": "d7-claude-fable-5",
+  "phase": "d7",
+  "model": "claude-fable-5",
+  "route": "claude-cli",
+  "calls": [
+    {
+      "stage": "gen",
+      "caseId": "v-01-orbit-product-hero",
+      "attempt": 1,
+      "promptTokens": 3263,
+      "completionTokens": 5292,
+      "costUsd": 1.350877,
+      "billing": "subscription-equivalent",
+      "route": "claude-cli",
+      "at": "2026-07-12T05:41:22.642Z"
+    },
+    {
+      "stage": "gen",
+      "caseId": "v-02-particle-constellation",
+      "attempt": 1,
+      "promptTokens": 3263,
+      "completionTokens": 6510,
+      "costUsd": 1.410399,
+      "billing": "subscription-equivalent",
+      "route": "claude-cli",
+      "at": "2026-07-12T05:41:34.438Z"
+    },
+    {
+      "stage": "gen",
+      "caseId": "v-03-glass-prism-refraction",
+      "attempt": 1,
+      "promptTokens": 3263,
+      "completionTokens": 5453,
+      "costUsd": 0.5913619999999999,
+      "billing": "subscription-equivalent",
+      "route": "claude-cli",
+      "at": "2026-07-12T05:42:55.339Z"
+    },
+    {
+      "stage": "gen",
+      "caseId": "v-04-kinetic-type-headline",
+      "attempt": 1,
+      "promptTokens": 3263,
+      "completionTokens": 5316,
+      "costUsd": 0.584983,
+      "billing": "subscription-equivalent",
+      "route": "claude-cli",
+      "at": "2026-07-12T05:43:05.005Z"
+    },
+    {
+      "stage": "gen",
+      "caseId": "v-05-pedestal-material-study",
+      "attempt": 1,
+      "promptTokens": 3263,
+      "completionTokens": 4995,
+      "costUsd": 0.566059,
+      "billing": "subscription-equivalent",
+      "route": "claude-cli",
+      "at": "2026-07-12T05:43:54.865Z"
+    },
+    {
+      "stage": "gen",
+      "caseId": "v-06-loop-column-gallery",
+      "attempt": 1,
+      "promptTokens": 3263,
+      "completionTokens": 6715,
+      "costUsd": 0.655269,
+      "billing": "subscription-equivalent",
+      "route": "claude-cli",
+      "at": "2026-07-12T05:44:21.663Z"
+    },
+    {
+      "stage": "gen",
+      "caseId": "v-07-filmstrip-carousel",
+      "attempt": 1,
+      "promptTokens": 3263,
+      "completionTokens": 6211,
+      "costUsd": 0.6314740000000001,
+      "billing": "subscription-equivalent",
+      "route": "claude-cli",
+      "at": "2026-07-12T05:45:05.066Z"
+    },
+    {
+      "stage": "gen",
+      "caseId": "v-08-orrery-mechanism",
+      "attempt": 1,
+      "promptTokens": 3263,
+      "completionTokens": 4931,
+      "costUsd": 0.5609310000000001,
+      "billing": "subscription-equivalent",
+      "route": "claude-cli",
+      "at": "2026-07-12T05:45:19.057Z"
+    },
+    {
+      "stage": "gen",
+      "caseId": "v-09-editorial-oversized-type",
+      "attempt": 1,
+      "promptTokens": 3263,
+      "completionTokens": 4088,
+      "costUsd": 0.520052,
+      "billing": "subscription-equivalent",
+      "route": "claude-cli",
+      "at": "2026-07-12T05:46:03.214Z"
+    },
+    {
+      "stage": "gen",
+      "caseId": "v-10-bento-metrics",
+      "attempt": 1,
+      "promptTokens": 3263,
+      "completionTokens": 5949,
+      "costUsd": 0.6170730000000001,
+      "billing": "subscription-equivalent",
+      "route": "claude-cli",
+      "at": "2026-07-12T05:46:31.279Z"
+    },
+    {
+      "stage": "gen",
+      "caseId": "v-11-gradient-cta",
+      "attempt": 1,
+      "promptTokens": 3263,
+      "completionTokens": 5936,
+      "costUsd": 0.6081070000000001,
+      "billing": "subscription-equivalent",
+      "route": "claude-cli",
+      "at": "2026-07-12T05:47:13.462Z"
+    },
+    {
+      "stage": "gen",
+      "caseId": "v-12-photo-hero-composite",
+      "attempt": 1,
+      "promptTokens": 3263,
+      "completionTokens": 5913,
+      "costUsd": 0.614117,
+      "billing": "subscription-equivalent",
+      "route": "claude-cli",
+      "at": "2026-07-12T05:47:40.990Z"
+    },
+    {
+      "stage": "gen",
+      "caseId": "v-13-brand-wall",
+      "attempt": 1,
+      "promptTokens": 3263,
+      "completionTokens": 5736,
+      "costUsd": 0.600271,
+      "billing": "subscription-equivalent",
+      "route": "claude-cli",
+      "at": "2026-07-12T05:48:17.838Z"
+    },
+    {
+      "stage": "gen",
+      "caseId": "v-14-pricing-card",
+      "attempt": 1,
+      "promptTokens": 3263,
+      "completionTokens": 6758,
+      "costUsd": 0.660329,
+      "billing": "subscription-equivalent",
+      "route": "claude-cli",
+      "at": "2026-07-12T05:48:58.192Z"
+    },
+    {
+      "stage": "gen",
+      "caseId": "v-15-testimonial-panel",
+      "attempt": 1,
+      "promptTokens": 3263,
+      "completionTokens": 5111,
+      "costUsd": 0.570462,
+      "billing": "subscription-equivalent",
+      "route": "claude-cli",
+      "at": "2026-07-12T05:49:17.619Z"
+    },
+    {
+      "stage": "gen",
+      "caseId": "v-16-feature-triptych",
+      "attempt": 1,
+      "promptTokens": 3263,
+      "completionTokens": 6775,
+      "costUsd": 0.660101,
+      "billing": "subscription-equivalent",
+      "route": "claude-cli",
+      "at": "2026-07-12T05:50:13.229Z"
+    },
+    {
+      "stage": "gen",
+      "caseId": "v-17-data-ribbon",
+      "attempt": 1,
+      "promptTokens": 3263,
+      "completionTokens": 4775,
+      "costUsd": 0.555387,
+      "billing": "subscription-equivalent",
+      "route": "claude-cli",
+      "at": "2026-07-12T05:50:18.302Z"
+    },
+    {
+      "stage": "gen",
+      "caseId": "v-18-nav-dock",
+      "attempt": 1,
+      "promptTokens": 3263,
+      "completionTokens": 6313,
+      "costUsd": 0.63107,
+      "billing": "subscription-equivalent",
+      "route": "claude-cli",
+      "at": "2026-07-12T05:51:31.123Z"
+    },
+    {
+      "stage": "gen",
+      "caseId": "v-19-empty-state",
+      "attempt": 1,
+      "promptTokens": 3263,
+      "completionTokens": 6330,
+      "costUsd": 0.629302,
+      "billing": "subscription-equivalent",
+      "route": "claude-cli",
+      "at": "2026-07-12T05:51:39.125Z"
+    },
+    {
+      "stage": "gen",
+      "caseId": "v-20-footer-colophon",
+      "attempt": 1,
+      "promptTokens": 3263,
+      "completionTokens": 5600,
+      "costUsd": 0.601327,
+      "billing": "subscription-equivalent",
+      "route": "claude-cli",
+      "at": "2026-07-12T05:52:40.693Z"
+    }
+  ],
+  "totals": {
+    "meteredUsd": 0,
+    "subscriptionEquivalentUsd": 13.618952000000002
+  }
+}

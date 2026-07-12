@@ -1,0 +1,14 @@
+[
+  {
+    "label": "F1",
+    "bundleId": "wvis/glm-5.2/v-15-testimonial-panel-r21",
+    "contestant": "glm-5.2",
+    "source": "notes/wvis/d1/frames-iter1/glm-5.2/v-15-testimonial-panel-r21.png"
+  },
+  {
+    "label": "F2",
+    "bundleId": "wvis/gemini-3.5-flash/v-15-testimonial-panel-r11",
+    "contestant": "gemini-3.5-flash",
+    "source": "notes/wvis/d1/frames-iter1/gemini-3.5-flash/v-15-testimonial-panel-r11.png"
+  }
+]

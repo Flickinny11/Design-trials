@@ -102,10 +102,131 @@
       "costUsd": 0.00110933,
       "billing": "metered",
       "at": "2026-07-12T05:39:27.357Z"
+    },
+    {
+      "phase": "d1-control",
+      "contestant": "deepseek-v4-flash",
+      "caseId": "v-11-gradient-cta",
+      "tag": "v-11-gradient-cta-r3",
+      "promptTokens": 4336,
+      "completionTokens": 12749,
+      "costUsd": 0.00225923,
+      "billing": "metered",
+      "at": "2026-07-12T05:44:16.379Z"
+    },
+    {
+      "phase": "d1-control",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "v-15-testimonial-panel",
+      "tag": "v-15-testimonial-panel-r3",
+      "promptTokens": 4590,
+      "completionTokens": 3459,
+      "costUsd": 0.038016,
+      "billing": "metered",
+      "at": "2026-07-12T05:44:33.214Z"
+    },
+    {
+      "phase": "d1-control",
+      "contestant": "gemini-3.5-flash",
+      "caseId": "v-02-particle-constellation",
+      "tag": "v-02-particle-constellation-r3",
+      "promptTokens": 4646,
+      "completionTokens": 2994,
+      "costUsd": 0.033915,
+      "billing": "metered",
+      "at": "2026-07-12T05:44:46.957Z"
+    },
+    {
+      "phase": "d1-control",
+      "contestant": "glm-5.2",
+      "caseId": "v-06-loop-column-gallery",
+      "tag": "v-06-loop-column-gallery-r3",
+      "promptTokens": 4267,
+      "completionTokens": 12053,
+      "costUsd": 0.017702100000000002,
+      "billing": "metered",
+      "at": "2026-07-12T05:57:26.837Z"
+    },
+    {
+      "phase": "d1-control",
+      "contestant": "glm-5.2",
+      "caseId": "v-03-glass-prism-refraction",
+      "tag": "v-03-glass-prism-refraction-r3",
+      "promptTokens": 4288,
+      "completionTokens": 16384,
+      "costUsd": 0.023427840000000002,
+      "billing": "metered",
+      "at": "2026-07-12T06:01:50.461Z"
+    },
+    {
+      "phase": "d1-control",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-17-data-ribbon",
+      "tag": "v-17-data-ribbon-r3",
+      "promptTokens": 4201,
+      "completionTokens": 4922,
+      "costUsd": 0.00358335,
+      "billing": "metered",
+      "at": "2026-07-12T06:02:14.967Z"
+    },
+    {
+      "phase": "d1-control",
+      "contestant": "gpt-oss-120b",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r3",
+      "promptTokens": 4292,
+      "completionTokens": 4685,
+      "costUsd": 0.0034548,
+      "billing": "metered",
+      "at": "2026-07-12T06:02:40.328Z"
+    },
+    {
+      "phase": "d1-control",
+      "contestant": "kimi-k2.7-code",
+      "caseId": "v-05-pedestal-material-study",
+      "tag": "v-05-pedestal-material-study-r3",
+      "promptTokens": 4261,
+      "completionTokens": 16384,
+      "costUsd": 0.06041192,
+      "billing": "metered",
+      "at": "2026-07-12T06:12:26.461Z"
+    },
+    {
+      "phase": "d1-control",
+      "contestant": "kimi-k2.7-code",
+      "caseId": "v-09-editorial-oversized-type",
+      "tag": "v-09-editorial-oversized-type-r3",
+      "promptTokens": 4220,
+      "completionTokens": 12286,
+      "costUsd": 0.0460394,
+      "billing": "metered",
+      "at": "2026-07-12T06:14:01.320Z"
+    },
+    {
+      "phase": "d1-control",
+      "contestant": "mercury-2",
+      "caseId": "v-02-particle-constellation",
+      "tag": "v-02-particle-constellation-r3",
+      "promptTokens": 4192,
+      "completionTokens": 1608,
+      "costUsd": 0.002254,
+      "billing": "metered",
+      "at": "2026-07-12T06:14:10.134Z"
+    },
+    {
+      "phase": "d1-control",
+      "contestant": "mercury-2",
+      "caseId": "v-08-orrery-mechanism",
+      "tag": "v-08-orrery-mechanism-r3",
+      "promptTokens": 4055,
+      "completionTokens": 1514,
+      "costUsd": 0.00214925,
+      "billing": "metered",
+      "at": "2026-07-12T06:14:15.343Z"
     }
   ],
   "totals": {
-    "meteredUsd": 1.7878663300000002,
+    "meteredUsd": 2.0210792200000003,
     "subscriptionEquivalentUsd": 0
   }
 }

@@ -1,0 +1,23 @@
+{
+  "bundle": "wvis/gpt-oss-120b/v-05-pedestal-material-study-r11",
+  "contestant": "gpt-oss-120b",
+  "caseId": "v-05-pedestal-material-study",
+  "run": 11,
+  "capturedAt": "2026-07-12T05:30:51.278Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 6,
+    "nodeMounted": true,
+    "bundleId": "wvis/gpt-oss-120b/v-05-pedestal-material-study-r11"
+  },
+  "consoleErrors": [
+    "THREE.TSL: TypeError: this.bNode.getNodeType is not a function \"scene-root.ts:136\"\n    at scene-root.ts:136:22\n    at scene-root.ts:164:22",
+    "THREE.TSL: TypeError: this.bNode.getNodeType is not a function \"scene-root.ts:136\"\n    at scene-root.ts:136:22\n    at scene-root.ts:164:22"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

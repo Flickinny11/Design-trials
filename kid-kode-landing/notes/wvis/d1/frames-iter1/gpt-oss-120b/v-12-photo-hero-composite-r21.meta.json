@@ -1,0 +1,22 @@
+{
+  "bundle": "wvis/gpt-oss-120b/v-12-photo-hero-composite-r21",
+  "contestant": "gpt-oss-120b",
+  "caseId": "v-12-photo-hero-composite",
+  "run": 21,
+  "capturedAt": "2026-07-12T05:31:05.012Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 7,
+    "nodeMounted": true,
+    "bundleId": "wvis/gpt-oss-120b/v-12-photo-hero-composite-r21"
+  },
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

@@ -1,0 +1,22 @@
+{
+  "wave": "wvis-d7",
+  "model": "claude-sonnet-5",
+  "stage": "revise1",
+  "iter": 1,
+  "caseId": "v-10-bento-metrics",
+  "tag": "v-10-bento-metrics-r101",
+  "run": 101,
+  "criticality": "standard",
+  "sawOwnFrame": true,
+  "referenceFrameArm": "image",
+  "ok": true,
+  "wallMs": 2643,
+  "usage": {
+    "promptTokens": 16452,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.196744,
+  "billing": "metered",
+  "route": "openrouter",
+  "output": "/**\n * NOVA_ATELIER_WORLD — Bento Metrics Grid (revision 2)\n * 1. COMPOSITION: A 5.5x3.5 bento on a graded, vignetted stage plane (z=-2.5).\n *    One dominant cell (3.25x3.5) occupies the left column top-to-bottom; two\n *    secondary cells (2.0x1.625 each) stack in the right column, 0.25u gutters.\n *    A mono caption header sits 0.5u above the grid, left-aligned to grid edge.\n * 2. LIGHT RIG: preset rig-tech-clinical — key directional #f2f4f6 @2.2 from\n *    [1.6,3,2.6], fill directional #e6e9ee @1.5 from [-2,2.4,2.2], rim directional\n *    #ffffff @1.0 from [0,2,-3], plus ambient floor 0.34. All node-local.\n * 3. MATERIALS: MeshPhysicalNodeMaterial slabs — surface #14141a family,\n *    roughness 0.5, metalness 0.45, clearcoat 0.2 — with a TSL diagonal\n *    engineered gradient (#101017 -> #1a1a22) + hard-stop sheen band. A larger\n *    backing slab reads as the 0.04u chamfer catching the rim light.\n * 4. MOTION: entrance = subtle weighted settle (translate 0.06u, scale 0.99->1,\n *    power3.out, 80ms stagger, dominant first) — deliberately NOT opacity-driven\n *    so text/atlas materials are never captured mid-fade-to-invisible. Hover =\n *    press-down (scale->0.97, 120ms) then weighted-settle (1.04->1.0, 900ms).\n * 5. FOCAL ELEMENT: the dominant cell's valueLarge \"0.002 mm\" — normalized to\n *    the spec's 0.62-unit em height, brightest sheen band + accent tick — is\n *    the single brightest, largest read in the frame.\n */\nimport {\n  Group,\n  Mesh,\n  BoxGeometry,\n  PlaneGeometry,\n  M"
+}

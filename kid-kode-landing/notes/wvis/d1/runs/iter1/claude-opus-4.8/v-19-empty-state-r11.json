@@ -1,0 +1,46 @@
+{
+  "wave": "wvis-d1",
+  "iter": 1,
+  "arm": "vision",
+  "contestant": "claude-opus-4.8",
+  "model": "anthropic/claude-opus-4.8",
+  "route": "openrouter",
+  "caseId": "v-19-empty-state",
+  "sourceTag": "v-19-empty-state-r1",
+  "tag": "v-19-empty-state-r11",
+  "run": 11,
+  "critiqueFed": {
+    "score": 44,
+    "mustFix": [
+      {
+        "defect": "ALL_BLACK_ELEMENT",
+        "region": "left-center quadrant"
+      },
+      {
+        "defect": "BROKEN_COMPOSITION",
+        "region": "upper-right corner"
+      },
+      {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "center panel"
+      },
+      {
+        "defect": "DEAD_LIGHTING",
+        "region": "accent button lower-right"
+      }
+    ],
+    "notes": "Panel, grid, ghost watch-card and red action present, but black slab occludes preview; white blob intrudes; guidance copy absent.",
+    "runtimeError": null
+  },
+  "frameFed": "notes/bakeoff-b/frames/claude-opus-4.8/v-19-empty-state-r1.png",
+  "ok": true,
+  "wallMs": 2397,
+  "finishReason": "length",
+  "usage": {
+    "promptTokens": 12644,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.47282,
+  "billing": "metered",
+  "output": "import {\n  MeshStandardNodeMaterial,\n  MeshBasicNodeMaterial,\n} from 'three/webgpu';\nimport {\n  uv,\n  vec2,\n  float,\n  mix,\n  length,\n  smoothstep,\n  fract,\n  abs,\n  clamp,\n  max,\n  color,\n  uniform,\n  positionLocal,\n} from 'three/tsl';\nimport { gsap } from 'gsap';\n\nexport default function createNode(config, ctx) {\n  const {\n    Group,\n    Mesh,\n    PlaneGeometry,\n    ShapeGeometry,\n    ExtrudeGeometry,\n    Shape,\n    DirectionalLight,\n    AmbientLight,\n  } = ctx.THREE;\n\n  const COL = {\n    background: '#0b0b10',\n    surface: '#16161d',\n    ink: '#16161d',\n    paper: '#e8ecf2',\n    accent: '#ff2a38',\n    g0: '#14141a',\n    g1: '#0b0b10',\n    ctaTop: '#ff4450',\n    ctaBot: '#c1121f',\n    border: '#26262f',\n  };\n\n  const root = new Group();\n  root.name = config?.id ?? 'rich-empty-state';\n\n  const timelines = [];\n  const disposables = [];\n\n  function roundedRectShape(w, h, r) {\n    const s = new Shape();\n    const x = -w / 2;\n    const y = -h / 2;\n    s.moveTo(x + r, y);\n    s.lineTo(x + w - r, y);\n    s.quadraticCurveTo(x + w, y, x + w, y + r);\n    s.lineTo(x + w, y + h - r);\n    s.quadraticCurveTo(x + w, y + h, x + w - r, y + h);\n    s.lineTo(x + r, y + h);\n    s.quadra"
+}

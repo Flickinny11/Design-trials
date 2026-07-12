@@ -1,0 +1,20 @@
+{
+  "bundle": "wvis/kimi-k2.7-code/v-06-loop-column-gallery-r21",
+  "contestant": "kimi-k2.7-code",
+  "caseId": "v-06-loop-column-gallery",
+  "run": 21,
+  "capturedAt": "2026-07-12T05:31:23.466Z",
+  "probe": {
+    "status": "error",
+    "error": "module did not default-export a function",
+    "renderables": 0,
+    "nodeMounted": false,
+    "bundleId": "wvis/kimi-k2.7-code/v-06-loop-column-gallery-r21"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": "Transform failed with 1 error:\n<stdin>:150:21: ERROR: Unexpected end of file",
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

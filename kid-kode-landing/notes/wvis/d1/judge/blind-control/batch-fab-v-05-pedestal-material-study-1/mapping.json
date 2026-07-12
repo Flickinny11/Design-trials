@@ -1,0 +1,32 @@
+[
+  {
+    "label": "F1",
+    "bundleId": "wvis/gpt-oss-120b/v-05-pedestal-material-study-r3",
+    "contestant": "gpt-oss-120b",
+    "source": "notes/wvis/d1/frames-control/gpt-oss-120b/v-05-pedestal-material-study-r3.png"
+  },
+  {
+    "label": "F2",
+    "bundleId": "wvis/claude-opus-4.8/v-05-pedestal-material-study-r3",
+    "contestant": "claude-opus-4.8",
+    "source": "notes/wvis/d1/frames-control/claude-opus-4.8/v-05-pedestal-material-study-r3.png"
+  },
+  {
+    "label": "F3",
+    "bundleId": "wvis/kimi-k2.7-code/v-05-pedestal-material-study-r3",
+    "contestant": "kimi-k2.7-code",
+    "source": "notes/wvis/d1/frames-control/kimi-k2.7-code/v-05-pedestal-material-study-r3.png"
+  },
+  {
+    "label": "F4",
+    "bundleId": "wvis/claude-haiku-4.5/v-05-pedestal-material-study-r3",
+    "contestant": "claude-haiku-4.5",
+    "source": "notes/wvis/d1/frames-control/claude-haiku-4.5/v-05-pedestal-material-study-r3.png"
+  },
+  {
+    "label": "F5",
+    "bundleId": "wvis/claude-sonnet-5/v-05-pedestal-material-study-r3",
+    "contestant": "claude-sonnet-5",
+    "source": "notes/wvis/d1/frames-control/claude-sonnet-5/v-05-pedestal-material-study-r3.png"
+  }
+]

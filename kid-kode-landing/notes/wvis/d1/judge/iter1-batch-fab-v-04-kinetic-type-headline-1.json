@@ -1,0 +1,68 @@
+{
+  "label": "batch-fab-v-04-kinetic-type-headline-1",
+  "phase": "iter1",
+  "judgedAt": "2026-07-12T05:34:35.351Z",
+  "judgeModel": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-04-kinetic-type-headline-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-04-kinetic-type-headline-1/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-04-kinetic-type-headline-1/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-04-kinetic-type-headline-1/F4.jpg"
+    },
+    {
+      "label": "F5",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-04-kinetic-type-headline-1/F5.jpg"
+    },
+    {
+      "label": "F6",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-04-kinetic-type-headline-1/F6.jpg"
+    }
+  ],
+  "mappingFile": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-04-kinetic-type-headline-1/mapping.json",
+  "costUsd": 0.6142540000000001,
+  "durationApiMs": 46232,
+  "wallMs": 48638,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 16730,
+    "cache_read_input_tokens": 83100,
+    "output_tokens": 3207,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 16730,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 2189,
+        "cache_read_input_tokens": 44897,
+        "cache_creation_input_tokens": 10036,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 10036
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{\"frames\":[{\"frame\":\"F1\",\"score\":5,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame — near-empty black field with lone white square\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center — no headline glyphs, no accent underline\"},{\"defect\":\"FLAT_VOID\",\"region\":\"background field\"}],\"notes\":\"Near-empty frame; a single untextured white quad instead of the MSDF headline. Nothing of the spec rendered.\"},{\"frame\":\"F2\",\"score\":2,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame — no type, no underline\"}],\"notes\":\"Solid black void; nothing rendered.\"},{\"frame\":\"F3\",\"score\":2,\"mustFix\":[{\"defect\":\"BLANK_RENDER\",\"region\":\"entire frame\"},{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"entire frame — no type, no underline\"}],\"notes\":\"Solid black void; identical failure to F2.\"},{\"frame\":\"F4\",\"score\":16,\"mustFix\":[{\"defect\":\"SCALE_ERROR\",\"region\":\"full frame — glyphs hundreds of times spec em height, cropped at all edges\"},{\"defect\":\"GARBLED_TEXT\",\"region\":\"upper two-thirds — letterforms unreadable and overlapping\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"center — misaligned gray panel behind glyph fragments\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"center panel — mid-gray not in ink/surface palette\"}],\"notes\":\"Camera or scale blowout; blurred glyph fragments swallow the frame. Accent line present but composition is destroyed.\"},{\"frame\":\"F5\",\"score\":58,\"mustFix\":[{\"defect\":\"MISSING_SPEC_ELEMENT\",\"region\":\"center headline — geometric sans, not Lora 600; no visible per-word z parallax\"},{\"defect\":\"DEAD_LIGHTING\",\"region\":\"center headline — flat 2D fills, no dimensional light response on glyph planes\"},{\"defect\":\"OFF_PALETTE\",\"region\":\"accent rule above headline — washed salmon-pink, not #ff2a38 signal red\"}],\"notes\":\"Legible, composed, on-brief hierarchy, but flat 2D type in the wrong face; underline sits above and reads pink.\"},{\"frame\":\"F6\",\"score\":10,\"mustFix\":[{\"defect\":\"FLAT_VOID\",\"region\":\"lower two-thirds — empty black field\"},{\"defect\":\"SCALE_ERROR\",\"region\":\"upper-left and upper-right corners — enormous blurred glyph fragments\"},{\"defect\":\"BROKEN_COMPOSITION\",\"region\":\"full frame — stray dark square and orphaned pink dash, no headline\"},{\"defect\":\"LOW_CONTRAST\",\"region\":\"center card — barely distinguishable from background\"}],\"notes\":\"Near-void frame with cropped glyph debris and an orphaned accent tick; headline absent.\"}]}"
+}

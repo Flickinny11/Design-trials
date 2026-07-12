@@ -1,0 +1,52 @@
+{
+  "label": "batch-fab-v-02-particle-constellation-1",
+  "phase": "control",
+  "judgedAt": "2026-07-12T06:21:59.766Z",
+  "judgeModel": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/wvis/d1/judge/blind-control/batch-fab-v-02-particle-constellation-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/wvis/d1/judge/blind-control/batch-fab-v-02-particle-constellation-1/F2.jpg"
+    }
+  ],
+  "mappingFile": "notes/wvis/d1/judge/blind-control/batch-fab-v-02-particle-constellation-1/mapping.json",
+  "costUsd": 0.46334200000000003,
+  "durationApiMs": 40585,
+  "wallMs": 38534,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 12079,
+    "cache_read_input_tokens": 81060,
+    "output_tokens": 2123,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12079,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1624,
+        "cache_read_input_tokens": 42857,
+        "cache_creation_input_tokens": 7425,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7425
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 6, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — particle field collapsed to tiny square patch\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — no red accent core, no headline, no depth falloff\" }, { \"defect\": \"LOW_CONTRAST\", \"region\": \"center particle patch\" } ], \"notes\": \"Near-empty black frame; particles collapsed into a tiny faint square; scene, core, and copy absent.\" }, { \"frame\": \"F2\", \"score\": 66, \"mustFix\": [ { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center accent core — red instances read as flat dim dots, no emissive/additive glow\" }, { \"defect\": \"LOW_CONTRAST\", \"region\": \"bottom-center red caption, near-illegible\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"lower-third gradient band beneath constellation, sparse and washed\" } ], \"notes\": \"Ellipsoid constellation with depth falloff and copy lands; core lacks glow, lower field washes flat, typography competent not flagship.\" } ] }\n```"
+}

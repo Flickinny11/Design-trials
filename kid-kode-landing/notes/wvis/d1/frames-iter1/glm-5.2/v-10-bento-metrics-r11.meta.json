@@ -1,0 +1,26 @@
+{
+  "bundle": "wvis/glm-5.2/v-10-bento-metrics-r11",
+  "contestant": "glm-5.2",
+  "caseId": "v-10-bento-metrics",
+  "run": 11,
+  "capturedAt": "2026-07-12T05:30:36.245Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 27,
+    "nodeMounted": true,
+    "bundleId": "wvis/glm-5.2/v-10-bento-metrics-r11"
+  },
+  "consoleErrors": [
+    "THREE.THREE.WebGLProgram: Shader Error 0 - VALIDATE_STATUS false\n\nProgram Info Log: Fragment shader is not compiled.\n\u0000\n\nFRAGMENT\n\nERROR: 0:95: 'NaN' : undeclared identifier\nERROR: 0:95: '.0' : syntax error\n\u0000\n\n  90: \t// flow\n  91: \t// code\n  92: \n  93: \tnodeVar0 = ( nodeVarying4.x - 0.5 );\n  94: \tnod",
+    "THREE.THREE.WebGLProgram: Shader Error 1282 - VALIDATE_STATUS false\n\nProgram Info Log: Fragment shader is not compiled.\n\u0000\n\nFRAGMENT\n\nERROR: 0:90: '#' : invalid character\nERROR: 0:90: '2a0e12' : invalid number\nERROR: 0:90: ',' : syntax error\n\u0000\n\n  85: void main() {\n  86: \n  87: \t// flow\n  88: \t// code",
+    "THREE.THREE.WebGLProgram: Shader Error 1282 - VALIDATE_STATUS false\n\nProgram Info Log: Fragment shader is not compiled.\n\u0000\n\nFRAGMENT\n\nERROR: 0:985: 'NaN' : undeclared identifier\nERROR: 0:985: '.0' : syntax error\n\u0000\n\n  980: \t// flow\n  981: \t// code\n  982: \n  983: \tnodeVar0 = ( ( nodeVarying6.x + nodeVa",
+    "THREE.THREE.WebGLProgram: Shader Error 1282 - VALIDATE_STATUS false\n\nProgram Info Log: Fragment shader is not compiled.\n\u0000\n\nFRAGMENT\n\nERROR: 0:90: 'NaN' : undeclared identifier\nERROR: 0:90: '.0' : syntax error\n\u0000\n\n  85: void main() {\n  86: \n  87: \t// flow\n  88: \t// code\n  89: \n> 90: \tDiffuseColor = ve",
+    "THREE.THREE.WebGLProgram: Shader Error 1282 - VALIDATE_STATUS false\n\nProgram Info Log: Fragment shader is not compiled.\n\u0000\n\nFRAGMENT\n\nERROR: 0:980: '#' : invalid character\nERROR: 0:980: '42424e' : invalid number\nERROR: 0:980: ',' : syntax error\n\u0000\n\n  975: void main() {\n  976: \n  977: \t// flow\n  978: \t"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

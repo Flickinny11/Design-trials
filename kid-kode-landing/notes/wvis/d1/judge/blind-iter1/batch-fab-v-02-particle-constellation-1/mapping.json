@@ -1,0 +1,26 @@
+[
+  {
+    "label": "F1",
+    "bundleId": "wvis/claude-opus-4.8/v-02-particle-constellation-r21",
+    "contestant": "claude-opus-4.8",
+    "source": "notes/wvis/d1/frames-iter1/claude-opus-4.8/v-02-particle-constellation-r21.png"
+  },
+  {
+    "label": "F2",
+    "bundleId": "wvis/gemini-3.5-flash/v-02-particle-constellation-r21",
+    "contestant": "gemini-3.5-flash",
+    "source": "notes/wvis/d1/frames-iter1/gemini-3.5-flash/v-02-particle-constellation-r21.png"
+  },
+  {
+    "label": "F3",
+    "bundleId": "wvis/gpt-oss-120b/v-02-particle-constellation-r11",
+    "contestant": "gpt-oss-120b",
+    "source": "notes/wvis/d1/frames-iter1/gpt-oss-120b/v-02-particle-constellation-r11.png"
+  },
+  {
+    "label": "F4",
+    "bundleId": "wvis/mercury-2/v-02-particle-constellation-r21",
+    "contestant": "mercury-2",
+    "source": "notes/wvis/d1/frames-iter1/mercury-2/v-02-particle-constellation-r21.png"
+  }
+]

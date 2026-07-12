@@ -1,0 +1,60 @@
+{
+  "label": "batch-fab-v-06-loop-column-gallery-1",
+  "phase": "iter1",
+  "judgedAt": "2026-07-12T05:36:07.580Z",
+  "judgeModel": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-06-loop-column-gallery-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-06-loop-column-gallery-1/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-06-loop-column-gallery-1/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-06-loop-column-gallery-1/F4.jpg"
+    }
+  ],
+  "mappingFile": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-06-loop-column-gallery-1/mapping.json",
+  "costUsd": 0.49709099999999995,
+  "durationApiMs": 28101,
+  "wallMs": 30771,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 14334,
+    "cache_read_input_tokens": 81984,
+    "output_tokens": 1864,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14334,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1080,
+        "cache_read_input_tokens": 43781,
+        "cache_creation_input_tokens": 8756,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8756
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 26, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"right-side plate column — plates are flat gray fills, no filmic photograph textures\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"left half / background field\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"all three plates — uniform gray, no light response\" }, { \"defect\": \"GARBLED_TEXT\", \"region\": \"center-left tiny illegible label\" } ], \"notes\": \"Column structure and red edge accents exist, but plates are gray voids, not photographs; only three visible, dead lighting.\" }, { \"frame\": \"F2\", \"score\": 4, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" } ], \"notes\": \"Uniform near-black frame; nothing rendered.\" }, { \"frame\": \"F3\", \"score\": 11, \"mustFix\": [ { \"defect\": \"FLAT_VOID\", \"region\": \"entire background field\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center card glow\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center card — tiny single element\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"whole frame — no six-plate loop column\" } ], \"notes\": \"One tiny blue-lit card in a black void; off-palette blue, no gallery column at all.\" }, { \"frame\": \"F4\", \"score\": 4, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame\" } ], \"notes\": \"Uniform near-black frame; nothing rendered.\" } ] }"
+}

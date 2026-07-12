@@ -1,0 +1,10 @@
+{
+  "wave": "wvis-d1",
+  "iter": 2,
+  "arm": "vision",
+  "contestant": "kimi-k2.7-code",
+  "caseId": "v-06-loop-column-gallery",
+  "tag": "v-06-loop-column-gallery-r22",
+  "ok": false,
+  "transportError": "transport failure after retries: The operation was aborted due to timeout"
+}

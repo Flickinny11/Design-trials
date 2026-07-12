@@ -1,0 +1,20 @@
+{
+  "bundle": "wvis/kimi-k2.7-code/v-10-bento-metrics-r11",
+  "contestant": "kimi-k2.7-code",
+  "caseId": "v-10-bento-metrics",
+  "run": 11,
+  "capturedAt": "2026-07-12T05:31:30.148Z",
+  "probe": {
+    "status": "error",
+    "error": "module did not default-export a function",
+    "renderables": 0,
+    "nodeMounted": false,
+    "bundleId": "wvis/kimi-k2.7-code/v-10-bento-metrics-r11"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": "Transform failed with 1 error:\n<stdin>:45:19: ERROR: Unterminated string literal",
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

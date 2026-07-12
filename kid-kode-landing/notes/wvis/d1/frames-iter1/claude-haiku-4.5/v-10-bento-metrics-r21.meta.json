@@ -1,0 +1,20 @@
+{
+  "bundle": "wvis/claude-haiku-4.5/v-10-bento-metrics-r21",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-10-bento-metrics",
+  "run": 21,
+  "capturedAt": "2026-07-12T05:28:38.416Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 14,
+    "nodeMounted": true,
+    "bundleId": "wvis/claude-haiku-4.5/v-10-bento-metrics-r21"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

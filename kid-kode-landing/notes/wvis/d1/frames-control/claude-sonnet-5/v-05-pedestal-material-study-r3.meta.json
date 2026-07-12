@@ -1,0 +1,20 @@
+{
+  "bundle": "wvis/claude-sonnet-5/v-05-pedestal-material-study-r3",
+  "contestant": "claude-sonnet-5",
+  "caseId": "v-05-pedestal-material-study",
+  "run": 3,
+  "capturedAt": "2026-07-12T06:20:18.648Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 7,
+    "nodeMounted": true,
+    "bundleId": "wvis/claude-sonnet-5/v-05-pedestal-material-study-r3"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

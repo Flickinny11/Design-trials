@@ -1,0 +1,20 @@
+{
+  "bundle": "wvis/deepseek-v4-flash/v-20-footer-colophon-r21",
+  "contestant": "deepseek-v4-flash",
+  "caseId": "v-20-footer-colophon",
+  "run": 21,
+  "capturedAt": "2026-07-12T05:29:56.982Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 18,
+    "nodeMounted": true,
+    "bundleId": "wvis/deepseek-v4-flash/v-20-footer-colophon-r21"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

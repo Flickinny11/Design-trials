@@ -1,0 +1,20 @@
+{
+  "bundle": "wvis/claude-sonnet-5/v-04-kinetic-type-headline-r11",
+  "contestant": "claude-sonnet-5",
+  "caseId": "v-04-kinetic-type-headline",
+  "run": 11,
+  "capturedAt": "2026-07-12T05:29:11.823Z",
+  "probe": {
+    "status": "error",
+    "error": "module did not default-export a function",
+    "renderables": 0,
+    "nodeMounted": false,
+    "bundleId": "wvis/claude-sonnet-5/v-04-kinetic-type-headline-r11"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": false,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

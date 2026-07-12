@@ -1,0 +1,48 @@
+{
+  "label": "batch-op-v-01-orbit-product-hero-1",
+  "phase": "iter1",
+  "judgedAt": "2026-07-12T05:45:40.395Z",
+  "judgeModel": "claude-opus-4-8",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-op-v-01-orbit-product-hero-1/F1.jpg"
+    }
+  ],
+  "mappingFile": "notes/wvis/d1/judge/blind-iter1/batch-op-v-01-orbit-product-hero-1/mapping.json",
+  "costUsd": 0.5568379999999999,
+  "durationApiMs": 25917,
+  "wallMs": 28249,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 47913,
+    "cache_read_input_tokens": 41118,
+    "output_tokens": 1570,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 47913,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1178,
+        "cache_read_input_tokens": 41118,
+        "cache_creation_input_tokens": 6795,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6795
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "```json\n{ \"frames\": [ { \"frame\": \"F1\", \"score\": 34, \"mustFix\": [ { \"defect\": \"DEAD_LIGHTING\", \"region\": \"left / upper-left quadrant — giant blown-out flat white light slab in frame\" }, { \"defect\": \"BROKEN_COMPOSITION\", \"region\": \"left quadrant white slab intruding; watch awkwardly tilted/leaning on plinth\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — watch body renders as chalky translucent glass/plastic, not brushed machined-metal PBR\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center subject — washed white material breaks RED/BLACK/WHITE ink-surface discipline\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"left field — large unmodulated blown-white region, no material response\" } ], \"notes\": \"Plinth + thin red rim accent present, but wrong translucent material, blown white light slab, and dead flat lighting make it clearly deficient.\" } ] }\n```"
+}

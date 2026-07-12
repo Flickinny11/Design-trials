@@ -1,0 +1,50 @@
+{
+  "wave": "wvis-d1",
+  "iter": 1,
+  "arm": "vision",
+  "contestant": "kimi-k2.7-code",
+  "model": "moonshotai/kimi-k2.7-code",
+  "route": "openrouter",
+  "caseId": "v-01-orbit-product-hero",
+  "sourceTag": "v-01-orbit-product-hero-r2",
+  "tag": "v-01-orbit-product-hero-r21",
+  "run": 21,
+  "critiqueFed": {
+    "score": 20,
+    "mustFix": [
+      {
+        "defect": "OFF_PALETTE",
+        "region": "center background field"
+      },
+      {
+        "defect": "BROKEN_COMPOSITION",
+        "region": "upper edge, cropped watch"
+      },
+      {
+        "defect": "SCALE_ERROR",
+        "region": "center, watch floating above plinth"
+      },
+      {
+        "defect": "DEAD_LIGHTING",
+        "region": "entire scene"
+      },
+      {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "no red accent signal light anywhere"
+      }
+    ],
+    "notes": "Giant white panel destroys dark-first palette; watch cropped and hovering; flat ambient shading, no key+rim or accent.",
+    "runtimeError": null
+  },
+  "frameFed": "notes/bakeoff-b/frames/kimi-k2.7-code/v-01-orbit-product-hero-r2.png",
+  "ok": true,
+  "wallMs": 3208,
+  "finishReason": "stop",
+  "usage": {
+    "promptTokens": 7204,
+    "completionTokens": 14418
+  },
+  "costUsd": 0.05564988,
+  "billing": "metered",
+  "output": "import { MeshBasicNodeMaterial, MeshStandardNodeMaterial, MeshPhysicalNodeMaterial } from 'three/webgpu';\nimport { uv, vec2, vec3, mix, smoothstep, mul, sub, length } from 'three/tsl';\nimport { gsap } from 'gsap';\n\nfunction makeWatchMaterial(src, THREE) {\n  const color = src.color ? src.color.clone() : new THREE.Color('#e8ecf2');\n  const mat = new MeshPhysicalNodeMaterial({\n    color,\n    map: src.map ?? null,\n    normalMap: src.normalMap ?? null,\n    roughnessMap: src.roughnessMap ?? null,\n    metalnessMap: src.metalnessMap ?? null,\n    roughness: 0.52,\n    metalness: 0.55,\n    clearcoat: 0.2,\n    clearcoatRoughness: 0.4,\n    anisotropy: 0.8,\n  });\n  if (src.emissive) {\n    mat.emissive = src.emissive.clone();\n    mat.emissiveIntensity = Math.min(1.6, src.emissiveIntensity ?? 1.0);\n  }\n  return mat;\n}\n\nexport default function createNode(config, ctx) {\n  const THREE = ctx.THREE;\n  const group = new THREE.Group();\n  const root = new THREE.Group();\n  group.add(root);\n\n  const colors = config.intent?.visualSpec?.colors ?? config.colors ?? {};\n  const surface = new THREE.Color(colors.surface ?? '#14141a');\n  const stops = colors.gradientStops ?? [\n    { at: 0, hex: '#0b0b10' },\n    { at: 0.55, hex: '#101017' },\n    { at: 1, hex: '#16161d' },\n  ];\n  const c0 = new THREE.Color(stops[0].hex);\n  const c1 = new THREE.Color(stops[1].hex);\n  const c2 = new THREE.Color(stops[2].hex);\n\n  const backdropGeo = new THREE.PlaneGeometry(7, 6);\n  const gradNode = mix(\n    mix(vec3(c0.r, c0.g, c0.b), vec3(c1.r, c1.g, c1.b), smoothstep(0.0, 0.55, uv().y)),\n    vec3(c2.r, c2.g, c2.b),\n    smoothstep(0.55, 1.0, uv().y)\n  );\n  const backdropMat = new MeshBasicNodeMaterial({ side: THREE.FrontSide });\n  backdropMat.colorNode = gradNode;\n  const backdrop = new THREE.Mesh(backdropGeo, backdropMat);\n  backdrop.position.set(0, 0, -2.5);\n  root.add(backdrop);\n\n  const plinthGeo = new THREE.CylinderGeometry(1.4, 1.4, 0.25, 64);\n  const plinthMat = new MeshStandardNodeMaterial({\n    color: surface,\n    roughness: 0.7,\n    metalness: 0.3,\n  });\n  const plinth = new THREE.Mesh(plinthGeo, plinthMat);\n  plinth.position.y = -1.1 - 0.125;\n  plinth.castShadow = true;\n  plinth.receiveShadow = true;\n  root.add(plinth);\n\n  const shadowGeo = new THREE.CircleGeometry(1.6, 64);\n  const radialDist = length(sub(uv(), vec2(0.5, 0.5)));\n  const radialNode = smoothstep(0.5, 0.0, radialDist);\n  const shadowMat = new MeshBasicNodeMaterial({ transparent: true, side: THREE.DoubleSide });\n  shadowMat.colorNode = vec3(0, 0, 0);\n  shadowMat.opacityNode = mul(radialNode, 0.55);\n  const shadow = new THREE.Mesh(shadowGeo, shadowMat);\n  shadow.rotation.x = -Math.PI / 2;\n  shadow.position.y = -1.225 - 0.02;\n  root.add(shadow);\n\n  const keyLight = new THREE.SpotLight(new THREE.Color('#ffffff'), 1.1);\n  keyLight.position.set(3.5, 4.5, 5);\n  keyLight.angle = Math.PI / 5;\n  keyLight.penumbra = 0.3;\n  keyLight.castShadow = true;\n  root.add(keyLight);\n\n  const accentLight = new THREE.SpotLight(new THREE.Color(colors.accent ?? '#ff2a38'), 0.9);\n  accentLight.position.set(-4, 1.5, 3.5);\n  accentLight.angle = Math.PI / 8;\n  accentLight.penumbra = 0.25;\n  accentLight.target.position.set(0, -0.2, 0);\n  accentLight.castShadow = false;\n  root.add(accentLight);\n  root.add(accentLight.target);\n\n  const backLight = new THREE.SpotLight(new THREE.Color('#e8ecf2'), 0.7);\n  backLight.position.set(-2, 3, -4);\n  backLight.angle = Math.PI / 5;\n  backLight.penumbra = 0.4;\n  backLight.target.position.set(0, 0, 0);\n  backLight.castShadow = false;\n  root.add(backLight);\n  root.add(backLight.target);\n\n  const fillLight = new THREE.PointLight(new THREE.Color('#e8ecf2'), 0.3);\n  fillLight.position.set(2, 2.5, -2);\n  root.add(fillLight);\n\n  const heroGroup = new THREE.Group();\n  root.add(heroGroup);\n\n  ctx.glbLoader.loadGLB(config.meshUrl).then((gltf) => {\n    const watchScene = gltf.scene;\n    watchScene.traverse((child) => {\n      if (child.isMesh) {\n        child.castShadow = true;\n        child.receiveShadow = true;\n        const mats = Array.isArray(child.material) ? child.material : [child.material];\n        child.material = mats.length === 1\n          ? makeWatchMaterial(mats[0], THREE)\n          : mats.map((m) => makeWatchMaterial(m, THREE));\n      }\n    });\n\n    const box = new THREE.Box3().setFromObject(watchScene);\n    const targetHeight = 2.2;\n    const scale = box.max.y > box.min.y ? targetHeight / (box.max.y - box.min.y) : 1;\n    watchScene.scale.setScalar(scale);\n\n    const scaledBox = new THREE.Box3().setFromObject(watchScene);\n    const center = scaledBox.getCenter(new THREE.Vector3());\n    watchScene.position.set(\n      -center.x,\n      -1.1 - scaledBox.min.y,\n      -center.z\n    );\n\n    heroGroup.add(watchScene);\n\n    gsap.from(heroGroup.scale, {\n      x: 0.96,\n      y: 0.96,\n      z: 0.96,\n      duration: 0.8,\n      ease: 'power3.out',\n    });\n  });\n\n  const textItems = config.textContent ?? config.intent?.visualSpec?.textContent ?? [];\n  for (const item of textItems) {\n    const typography = item.typography || {};\n    const opts = {\n      color: item.color ?? '#e8ecf2',\n      align: 'center',\n    };\n    if (typography.fontSize) opts.fontSize = typography.fontSize;\n    if (typeof typography.letterSpacing === 'number') {\n      opts.letterSpacingPx = typography.fontSize * typography.letterSpacing;\n    }\n    const label = ctx.fontAtlas.createText(String(item.text), opts);\n    let y = -1.5;\n    if (item.role === 'body') y = -2.0;\n    else if (item.role === 'caption') y = -2.45;\n    label.position.set(0, y, 0.5);\n    root.add(label);\n  }\n\n  let orbitResult = null;\n  let depthResult = null;\n  for (const p of config.cinematicPrimitives ?? []) {\n    if (p.name === 'orbit') {\n      orbitResult = ctx.primitives['orbit'](heroGroup, p.params ?? { speed: 0.15, radius: 0.6 });\n    } else if (p.name === 'depth-rotate') {\n      depthResult = ctx.primitives['depth-rotate'](heroGroup, p.params ?? { maxDeg: 6 });\n    }\n  }\n\n  group.userData.handlers = {};\n\n  group.userData.cleanup = () => {\n    if (orbitResult?.cleanup) orbitResult.cleanup();\n    if (depthResult?.cleanup) depthResult.cleanup();\n    gsap.killTweensOf(heroGroup);\n    gsap.killTweensOf(heroGroup.scale);\n    gsap.killTweensOf(heroGroup.rotation);\n    backdropGeo.dispose();\n    backdropMat.dispose();\n    plinthGeo.dispose();\n    plinthMat.dispose();\n    shadowGeo.dispose();\n    shadowMat.dispose();\n    heroGroup.traverse((o) => {\n      if (o.isMesh) {\n        o.geometry?.dispose();\n        if (Array.isArray(o.material)) {\n          o.material.forEach((m) => m?.dispose());\n        } else {\n          o.material?.dispose();\n        }\n      }\n    });\n  };\n\n  return group;\n}"
+}

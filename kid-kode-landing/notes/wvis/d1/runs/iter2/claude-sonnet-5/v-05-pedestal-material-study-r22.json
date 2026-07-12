@@ -1,0 +1,46 @@
+{
+  "wave": "wvis-d1",
+  "iter": 2,
+  "arm": "vision",
+  "contestant": "claude-sonnet-5",
+  "model": "anthropic/claude-sonnet-5",
+  "route": "openrouter",
+  "caseId": "v-05-pedestal-material-study",
+  "sourceTag": "v-05-pedestal-material-study-r2",
+  "tag": "v-05-pedestal-material-study-r22",
+  "run": 22,
+  "critiqueFed": {
+    "score": 35,
+    "mustFix": [
+      {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "center knot — matte white material, not brushed-metal PBR with anisotropy/clearcoat"
+      },
+      {
+        "defect": "DEAD_LIGHTING",
+        "region": "center knot — flat diffuse white, no specular metal response"
+      },
+      {
+        "defect": "BROKEN_COMPOSITION",
+        "region": "pedestal top — spurious white rim ring; stray glowing artifact bottom-center"
+      },
+      {
+        "defect": "FLAT_VOID",
+        "region": "upper-left and right black regions"
+      }
+    ],
+    "notes": "Knot shape plausible and red floor accent present, but material completely wrong and artifacts break the study.",
+    "runtimeError": null
+  },
+  "frameFed": "notes/wvis/d1/frames-iter1/claude-sonnet-5/v-05-pedestal-material-study-r21.png",
+  "ok": true,
+  "wallMs": 2107,
+  "finishReason": "length",
+  "usage": {
+    "promptTokens": 13534,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.190908,
+  "billing": "metered",
+  "output": ""
+}

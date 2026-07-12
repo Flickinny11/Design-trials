@@ -1,0 +1,60 @@
+{
+  "label": "batch-fab-v-02-particle-constellation-1",
+  "phase": "iter1",
+  "judgedAt": "2026-07-12T05:33:26.900Z",
+  "judgeModel": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-02-particle-constellation-1/F1.jpg"
+    },
+    {
+      "label": "F2",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-02-particle-constellation-1/F2.jpg"
+    },
+    {
+      "label": "F3",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-02-particle-constellation-1/F3.jpg"
+    },
+    {
+      "label": "F4",
+      "blindPath": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-02-particle-constellation-1/F4.jpg"
+    }
+  ],
+  "mappingFile": "notes/wvis/d1/judge/blind-iter1/batch-fab-v-02-particle-constellation-1/mapping.json",
+  "costUsd": 0.525994,
+  "durationApiMs": 39375,
+  "wallMs": 42072,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 14321,
+    "cache_read_input_tokens": 82004,
+    "output_tokens": 2446,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14321,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 1695,
+        "cache_read_input_tokens": 43801,
+        "cache_creation_input_tokens": 8723,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8723
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 64, \"mustFix\": [ { \"defect\": \"LOW_CONTRAST\", \"region\": \"center band — subtitle text tangled in dense particle field\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"particle cloud — flat white dots, no additive glow or depth-graded falloff on accent core\" } ], \"notes\": \"Full spec composition present: ellipsoidal cloud, red core, palette correct. Particles read flat; subtitle legibility suffers. Competent, not flagship.\" }, { \"frame\": \"F2\", \"score\": 42, \"mustFix\": [ { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"center — red accent core absent\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"lower half and background field — sparse faint dots, no constellation body\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"background field — no depth falloff or fog gradation visible\" } ], \"notes\": \"Typography clean and on-palette, but the constellation itself is nearly gone; reads as text over a void.\" }, { \"frame\": \"F3\", \"score\": 8, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"whole frame\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — particle system collapsed into tiny square block\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"whole frame — headline, subtitle, and red accent core absent\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Near-empty black frame; particles collapsed to a small square patch, no text, no accent core.\" }, { \"frame\": \"F4\", \"score\": 8, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"whole frame\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — particle system collapsed into tiny square block\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"whole frame — headline, subtitle, and red accent core absent\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" } ], \"notes\": \"Same failure as F3: near-void frame with a tiny square particle patch; spec unmet.\" } ] }"
+}

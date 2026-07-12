@@ -1,0 +1,54 @@
+{
+  "wave": "wvis-d1",
+  "iter": 1,
+  "arm": "text-critique-only",
+  "contestant": "glm-5.2",
+  "model": "z-ai/glm-5.2",
+  "route": "openrouter",
+  "caseId": "v-07-filmstrip-carousel",
+  "sourceTag": "v-07-filmstrip-carousel-r2",
+  "tag": "v-07-filmstrip-carousel-r21",
+  "run": 21,
+  "critiqueFed": {
+    "score": 8,
+    "mustFix": [
+      {
+        "defect": "BLANK_RENDER",
+        "region": "entire frame near-empty"
+      },
+      {
+        "defect": "FLAT_VOID",
+        "region": "background field"
+      },
+      {
+        "defect": "DEFAULT_BLUE_DRIFT",
+        "region": "center icon"
+      },
+      {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "entire frame — no five-card filmstrip"
+      },
+      {
+        "defect": "SCALE_ERROR",
+        "region": "center card"
+      },
+      {
+        "defect": "RUNTIME_ERROR",
+        "region": "TypeError: (0 , import_tsl.uv)(...).x.clone is not a function"
+      }
+    ],
+    "notes": "Tiny flat blue source texture floating in black void; no carousel, no perspective, no plates rendered.",
+    "runtimeError": "TypeError: (0 , import_tsl.uv)(...).x.clone is not a function"
+  },
+  "frameFed": null,
+  "ok": true,
+  "wallMs": 1744,
+  "finishReason": "length",
+  "usage": {
+    "promptTokens": 7424,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.02474496,
+  "billing": "metered",
+  "output": ""
+}

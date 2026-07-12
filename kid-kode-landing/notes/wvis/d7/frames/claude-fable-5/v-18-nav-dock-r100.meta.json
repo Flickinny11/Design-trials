@@ -1,0 +1,20 @@
+{
+  "bundle": "wvis-d7/claude-fable-5/v-18-nav-dock-r100",
+  "contestant": "claude-fable-5",
+  "caseId": "v-18-nav-dock",
+  "run": 100,
+  "capturedAt": "2026-07-12T06:08:03.396Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 15,
+    "nodeMounted": true,
+    "bundleId": "wvis-d7/claude-fable-5/v-18-nav-dock-r100"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

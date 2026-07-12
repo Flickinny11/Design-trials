@@ -1,0 +1,20 @@
+{
+  "bundle": "wvis/claude-sonnet-5/v-08-orrery-mechanism-r21",
+  "contestant": "claude-sonnet-5",
+  "caseId": "v-08-orrery-mechanism",
+  "run": 21,
+  "capturedAt": "2026-07-12T05:29:20.563Z",
+  "probe": {
+    "status": "error",
+    "error": "module did not default-export a function",
+    "renderables": 0,
+    "nodeMounted": false,
+    "bundleId": "wvis/claude-sonnet-5/v-08-orrery-mechanism-r21"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": "Transform failed with 1 error:\n<stdin>:31:16: ERROR: Unterminated string literal",
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

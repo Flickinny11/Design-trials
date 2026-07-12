@@ -1,0 +1,22 @@
+{
+  "bundle": "wvis/claude-fable-5/v-06-loop-column-gallery-r21",
+  "contestant": "claude-fable-5",
+  "caseId": "v-06-loop-column-gallery",
+  "run": 21,
+  "capturedAt": "2026-07-12T05:27:59.923Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 34,
+    "nodeMounted": true,
+    "bundleId": "wvis/claude-fable-5/v-06-loop-column-gallery-r21"
+  },
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

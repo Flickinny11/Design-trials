@@ -1,0 +1,14 @@
+[
+  {
+    "label": "F1",
+    "bundleId": "wvis/claude-opus-4.8/v-19-empty-state-r11",
+    "contestant": "claude-opus-4.8",
+    "source": "notes/wvis/d1/frames-iter1/claude-opus-4.8/v-19-empty-state-r11.png"
+  },
+  {
+    "label": "F2",
+    "bundleId": "wvis/glm-5.2/v-19-empty-state-r21",
+    "contestant": "glm-5.2",
+    "source": "notes/wvis/d1/frames-iter1/glm-5.2/v-19-empty-state-r21.png"
+  }
+]

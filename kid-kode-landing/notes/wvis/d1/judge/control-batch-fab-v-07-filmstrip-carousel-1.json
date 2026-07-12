@@ -1,0 +1,48 @@
+{
+  "label": "batch-fab-v-07-filmstrip-carousel-1",
+  "phase": "control",
+  "judgedAt": "2026-07-12T06:23:52.824Z",
+  "judgeModel": "claude-fable-5",
+  "route": "claude-cli-print",
+  "frames": [
+    {
+      "label": "F1",
+      "blindPath": "notes/wvis/d1/judge/blind-control/batch-fab-v-07-filmstrip-carousel-1/F1.jpg"
+    }
+  ],
+  "mappingFile": "notes/wvis/d1/judge/blind-control/batch-fab-v-07-filmstrip-carousel-1/mapping.json",
+  "costUsd": 0.39026500000000003,
+  "durationApiMs": 19920,
+  "wallMs": 22578,
+  "usage": {
+    "input_tokens": 3263,
+    "cache_creation_input_tokens": 10990,
+    "cache_read_input_tokens": 80590,
+    "output_tokens": 1114,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10990,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 23,
+        "output_tokens": 711,
+        "cache_read_input_tokens": 42387,
+        "cache_creation_input_tokens": 6806,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6806
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "result": "{ \"frames\": [ { \"frame\": \"F1\", \"score\": 4, \"mustFix\": [ { \"defect\": \"BLANK_RENDER\", \"region\": \"entire frame near-empty except tiny center icon\" }, { \"defect\": \"FLAT_VOID\", \"region\": \"background field\" }, { \"defect\": \"MISSING_SPEC_ELEMENT\", \"region\": \"entire frame — no five-card 3D filmstrip, no photographs, no focused card\" }, { \"defect\": \"DEFAULT_BLUE_DRIFT\", \"region\": \"center icon\" }, { \"defect\": \"OFF_PALETTE\", \"region\": \"center icon — blue/violet, no #ff2a38 accent anywhere\" }, { \"defect\": \"DEAD_LIGHTING\", \"region\": \"center icon — flat fills, no material light response\" }, { \"defect\": \"SCALE_ERROR\", \"region\": \"center — tiny placeholder glyph in vast empty field\" } ], \"notes\": \"Near-blank frame: only a flat blue layers icon renders; carousel, photographic plates, and palette entirely absent.\" } ] }"
+}

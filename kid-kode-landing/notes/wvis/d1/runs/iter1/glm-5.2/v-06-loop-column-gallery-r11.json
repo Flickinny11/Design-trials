@@ -1,0 +1,46 @@
+{
+  "wave": "wvis-d1",
+  "iter": 1,
+  "arm": "text-critique-only",
+  "contestant": "glm-5.2",
+  "model": "z-ai/glm-5.2",
+  "route": "openrouter",
+  "caseId": "v-06-loop-column-gallery",
+  "sourceTag": "v-06-loop-column-gallery-r1",
+  "tag": "v-06-loop-column-gallery-r11",
+  "run": 11,
+  "critiqueFed": {
+    "score": 18,
+    "mustFix": [
+      {
+        "defect": "BROKEN_COMPOSITION",
+        "region": "blown white L-shaped region upper-center and right"
+      },
+      {
+        "defect": "FLAT_VOID",
+        "region": "left half background field"
+      },
+      {
+        "defect": "DEFAULT_BLUE_DRIFT",
+        "region": "lower-center plate"
+      },
+      {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "column — duplicate glass renders, not distinct photos"
+      }
+    ],
+    "notes": "Column hinted with red edge accent, but overexposed slab dominates and plates repeat the same blue glass render.",
+    "runtimeError": null
+  },
+  "frameFed": null,
+  "ok": true,
+  "wallMs": 1200,
+  "finishReason": "length",
+  "usage": {
+    "promptTokens": 7347,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.02471262,
+  "billing": "metered",
+  "output": ""
+}

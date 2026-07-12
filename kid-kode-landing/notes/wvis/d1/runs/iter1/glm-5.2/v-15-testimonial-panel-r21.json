@@ -1,0 +1,54 @@
+{
+  "wave": "wvis-d1",
+  "iter": 1,
+  "arm": "text-critique-only",
+  "contestant": "glm-5.2",
+  "model": "z-ai/glm-5.2",
+  "route": "openrouter",
+  "caseId": "v-15-testimonial-panel",
+  "sourceTag": "v-15-testimonial-panel-r2",
+  "tag": "v-15-testimonial-panel-r21",
+  "run": 21,
+  "critiqueFed": {
+    "score": 28,
+    "mustFix": [
+      {
+        "defect": "MISSING_SPEC_ELEMENT",
+        "region": "lower card — attribution line absent"
+      },
+      {
+        "defect": "GARBLED_TEXT",
+        "region": "center-right — quote clipped mid-sentence past panel edge"
+      },
+      {
+        "defect": "BROKEN_COMPOSITION",
+        "region": "center card — text overflows panel bounds onto background"
+      },
+      {
+        "defect": "SCALE_ERROR",
+        "region": "upper-left of card — quotation mark tiny versus 0.62-unit spec"
+      },
+      {
+        "defect": "OFF_PALETTE",
+        "region": "center card — light gray surface, not #1a1a22→#111116 gradient"
+      },
+      {
+        "defect": "DEAD_LIGHTING",
+        "region": "center card — flat gradient, no border hairline or light response"
+      }
+    ],
+    "notes": "Dark background correct but panel washed gray, text overflows, no attribution; fails DL2/DL10 materiality.",
+    "runtimeError": null
+  },
+  "frameFed": null,
+  "ok": true,
+  "wallMs": 838,
+  "finishReason": "length",
+  "usage": {
+    "promptTokens": 6508,
+    "completionTokens": 16384
+  },
+  "costUsd": 0.024360240000000002,
+  "billing": "metered",
+  "output": ""
+}

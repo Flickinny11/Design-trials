@@ -1,0 +1,22 @@
+{
+  "bundle": "wvis/claude-haiku-4.5/v-09-editorial-oversized-type-r3",
+  "contestant": "claude-haiku-4.5",
+  "caseId": "v-09-editorial-oversized-type",
+  "run": 3,
+  "capturedAt": "2026-07-12T06:20:05.258Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 9,
+    "nodeMounted": true,
+    "bundleId": "wvis/claude-haiku-4.5/v-09-editorial-oversized-type-r3"
+  },
+  "consoleErrors": [
+    "THREE.THREE.WebGLProgram: Shader Error 0 - VALIDATE_STATUS false\n\nProgram Info Log: Fragment shader is not compiled.\n\u0000\n\nFRAGMENT\n\nERROR: 0:88: 'NaN' : undeclared identifier\nERROR: 0:88: '.0' : syntax error\n\u0000\n\n  83: void main() {\n  84: \n  85: \t// flow\n  86: \t// code\n  87: \n> 88: \tDiffuseColor = vec4("
+  ],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": true,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

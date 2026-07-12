@@ -1,0 +1,20 @@
+{
+  "bundle": "wvis/glm-5.2/v-06-loop-column-gallery-r11",
+  "contestant": "glm-5.2",
+  "caseId": "v-06-loop-column-gallery",
+  "run": 11,
+  "capturedAt": "2026-07-12T05:30:29.608Z",
+  "probe": {
+    "status": "error",
+    "error": "module did not default-export a function",
+    "renderables": 0,
+    "nodeMounted": false,
+    "bundleId": "wvis/glm-5.2/v-06-loop-column-gallery-r11"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": false,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}

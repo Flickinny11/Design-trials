@@ -1,0 +1,14 @@
+[
+  {
+    "label": "F1",
+    "bundleId": "wvis/claude-haiku-4.5/v-09-editorial-oversized-type-r3",
+    "contestant": "claude-haiku-4.5",
+    "source": "notes/wvis/d1/frames-control/claude-haiku-4.5/v-09-editorial-oversized-type-r3.png"
+  },
+  {
+    "label": "F2",
+    "bundleId": "wvis/kimi-k2.7-code/v-09-editorial-oversized-type-r3",
+    "contestant": "kimi-k2.7-code",
+    "source": "notes/wvis/d1/frames-control/kimi-k2.7-code/v-09-editorial-oversized-type-r3.png"
+  }
+]

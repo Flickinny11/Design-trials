@@ -1,0 +1,20 @@
+{
+  "bundle": "wvis/gpt-oss-120b/v-17-data-ribbon-r3",
+  "contestant": "gpt-oss-120b",
+  "caseId": "v-17-data-ribbon",
+  "run": 3,
+  "capturedAt": "2026-07-12T06:20:55.140Z",
+  "probe": {
+    "status": "ready",
+    "error": null,
+    "renderables": 29,
+    "nodeMounted": true,
+    "bundleId": "wvis/gpt-oss-120b/v-17-data-ribbon-r3"
+  },
+  "consoleErrors": [],
+  "depViolations": [],
+  "parsed": true,
+  "fenced": false,
+  "transformError": null,
+  "capturePath": "WebGL2 fallback (navigator.gpu undefined initScript), fresh page, 2500ms settle"
+}
