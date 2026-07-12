@@ -128,12 +128,15 @@ async function frameDataUrl(relPath) {
 }
 
 function prevModuleSource(item) {
-  if (item.prevModuleFrom === 'wbakeb-source') {
-    const rec = JSON.parse(readFileSync(path.join(ROOT, item.runFile), 'utf8'));
-    return extractModule(rec.output).source;
-  }
-  const rec = JSON.parse(readFileSync(path.join(ROOT, item.prevModuleFrom), 'utf8'));
-  return extractModule(rec.output).source;
+  const rec = JSON.parse(readFileSync(path.join(ROOT, item.prevModuleFrom === 'wbakeb-source' ? item.runFile : item.prevModuleFrom), 'utf8'));
+  const ex = extractModule(rec.output);
+  if (ex.source) return ex.source;
+  // Iteration-1 output failed the parse gate (no export-default module found).
+  // A real loop still iterates: feed the RAW previous output back so the model
+  // can see and fix its own format failure (BLANK_RENDER critique explains
+  // the render side). Only possible for iter-2 inputs; W-BAKEB sources in the
+  // sample are always renderable.
+  return rec.output ?? null;
 }
 
 async function runOne(item) {
