@@ -1,0 +1,106 @@
+{
+  "probedAt": "2026-07-12T04:41:59.015Z",
+  "pixelProbe": "1x1 red PNG data URL via OpenAI-compat image_url",
+  "vision": [
+    {
+      "id": "claude-sonnet-5",
+      "route": "deepinfra",
+      "model": "anthropic/claude-sonnet-5",
+      "vision": false,
+      "httpStatus": 402,
+      "latencyMs": 201,
+      "contentSample": "",
+      "error": "\"{\\\"detail\\\":{\\\"error\\\":\\\"You need positive balance to do inference. Please add balance manually or setup top-up\\\"}}\""
+    },
+    {
+      "id": "claude-haiku-4.5",
+      "route": "deepinfra",
+      "model": "anthropic/claude-haiku-4-5",
+      "vision": false,
+      "httpStatus": 402,
+      "latencyMs": 201,
+      "contentSample": "",
+      "error": "\"{\\\"detail\\\":{\\\"error\\\":\\\"You need positive balance to do inference. Please add balance manually or setup top-up\\\"}}\""
+    },
+    {
+      "id": "claude-fable-5",
+      "route": "deepinfra",
+      "model": "anthropic/claude-fable-5",
+      "vision": false,
+      "httpStatus": 402,
+      "latencyMs": 93,
+      "contentSample": "",
+      "error": "\"{\\\"detail\\\":{\\\"error\\\":\\\"You need positive balance to do inference. Please add balance manually or setup top-up\\\"}}\""
+    },
+    {
+      "id": "claude-opus-4.8",
+      "route": "deepinfra",
+      "model": "anthropic/claude-opus-4-8",
+      "vision": false,
+      "httpStatus": 402,
+      "latencyMs": 89,
+      "contentSample": "",
+      "error": "\"{\\\"detail\\\":{\\\"error\\\":\\\"You need positive balance to do inference. Please add balance manually or setup top-up\\\"}}\""
+    },
+    {
+      "id": "gemini-3.5-flash",
+      "route": "deepinfra",
+      "model": "google/gemini-3.5-flash",
+      "vision": false,
+      "httpStatus": 402,
+      "latencyMs": 90,
+      "contentSample": "",
+      "error": "\"{\\\"detail\\\":{\\\"error\\\":\\\"You need positive balance to do inference. Please add balance manually or setup top-up\\\"}}\""
+    },
+    {
+      "id": "glm-5.2",
+      "route": "deepinfra",
+      "model": "zai-org/GLM-5.2",
+      "vision": false,
+      "httpStatus": 402,
+      "latencyMs": 80,
+      "contentSample": "",
+      "error": "\"{\\\"detail\\\":{\\\"error\\\":\\\"You need positive balance to do inference. Please add balance manually or setup top-up\\\"}}\""
+    },
+    {
+      "id": "kimi-k2.7-code",
+      "route": "deepinfra",
+      "model": "moonshotai/Kimi-K2.7-Code",
+      "vision": false,
+      "httpStatus": 402,
+      "latencyMs": 71,
+      "contentSample": "",
+      "error": "\"{\\\"detail\\\":{\\\"error\\\":\\\"You need positive balance to do inference. Please add balance manually or setup top-up\\\"}}\""
+    },
+    {
+      "id": "deepseek-v4-flash",
+      "route": "deepinfra",
+      "model": "deepseek-ai/DeepSeek-V4-Flash",
+      "vision": false,
+      "httpStatus": 402,
+      "latencyMs": 76,
+      "contentSample": "",
+      "error": "\"{\\\"detail\\\":{\\\"error\\\":\\\"You need positive balance to do inference. Please add balance manually or setup top-up\\\"}}\""
+    },
+    {
+      "id": "mercury-2",
+      "route": "inception",
+      "model": "mercury-2",
+      "vision": false,
+      "httpStatus": 400,
+      "latencyMs": 148,
+      "contentSample": "",
+      "error": "{\"message\":[{\"type\":\"value_error\",\"loc\":[\"body\",\"messages\",0,\"content\"],\"msg\":\"Value error, Multimodal content type 'image_url' is not supported by the current models. Please use text-only content.\",\"input\":[{\"type\":\"text\",\"text\":\"One word: what colo"
+    },
+    {
+      "id": "gpt-oss-120b",
+      "route": "fireworks",
+      "model": "accounts/fireworks/models/gpt-oss-120b",
+      "vision": false,
+      "httpStatus": 400,
+      "latencyMs": 202,
+      "contentSample": "",
+      "error": "{\"object\":\"error\",\"type\":\"invalid_request_error\",\"code\":\"invalid_request_error\",\"message\":\"Unsupported ChatMessageContent type: image_url\"}"
+    }
+  ]
+}

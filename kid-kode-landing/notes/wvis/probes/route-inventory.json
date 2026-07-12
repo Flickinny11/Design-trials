@@ -1,0 +1,73 @@
+{
+  "probedAt": "2026-07-12T04:41:57.755Z",
+  "funding": [
+    {
+      "route": "openrouter",
+      "model": "openai/gpt-oss-120b",
+      "ok": true,
+      "httpStatus": 200,
+      "latencyMs": 1005,
+      "contentSample": null,
+      "error": null
+    },
+    {
+      "route": "deepinfra",
+      "model": "openai/gpt-oss-120b",
+      "ok": false,
+      "httpStatus": 402,
+      "latencyMs": 248,
+      "contentSample": null,
+      "error": "{\"detail\":{\"error\":\"You need positive balance to do inference. Please add balance manually or setup top-up\"}}"
+    },
+    {
+      "route": "fireworks",
+      "model": "accounts/fireworks/models/gpt-oss-120b",
+      "ok": true,
+      "httpStatus": 200,
+      "latencyMs": 655,
+      "contentSample": null,
+      "error": null
+    },
+    {
+      "route": "inception",
+      "model": "mercury-2",
+      "ok": true,
+      "httpStatus": 200,
+      "latencyMs": 734,
+      "contentSample": null,
+      "error": null
+    },
+    {
+      "route": "groq",
+      "model": "openai/gpt-oss-120b",
+      "ok": true,
+      "httpStatus": 200,
+      "latencyMs": 456,
+      "contentSample": "",
+      "error": null
+    },
+    {
+      "route": "cerebras",
+      "model": "gpt-oss-120b",
+      "ok": true,
+      "httpStatus": 200,
+      "latencyMs": 433,
+      "contentSample": null,
+      "error": null
+    }
+  ],
+  "openrouterCredits": {
+    "ok": true,
+    "httpStatus": 200,
+    "data": {
+      "total_credits": 99,
+      "total_usage": 75.261773122
+    }
+  },
+  "claudeCli": {
+    "ok": true,
+    "latencyMs": 5477,
+    "costUsd": 0.016794,
+    "sample": "ok"
+  }
+}

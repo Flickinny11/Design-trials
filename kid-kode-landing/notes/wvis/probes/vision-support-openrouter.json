@@ -1,0 +1,185 @@
+{
+  "probedAt": "2026-07-12T04:43:50.935Z",
+  "pricing": {
+    "anthropic/claude-fable-5": {
+      "promptUsdPerTok": 0.00001,
+      "completionUsdPerTok": 0.00005,
+      "imageUsd": 0,
+      "modality": "text+image+file->text"
+    },
+    "anthropic/claude-opus-4.8": {
+      "promptUsdPerTok": 0.000005,
+      "completionUsdPerTok": 0.000025,
+      "imageUsd": 0,
+      "modality": "text+image+file->text"
+    },
+    "anthropic/claude-sonnet-5": {
+      "promptUsdPerTok": 0.000002,
+      "completionUsdPerTok": 0.00001,
+      "imageUsd": 0,
+      "modality": "text+image+file->text"
+    },
+    "anthropic/claude-haiku-4.5": {
+      "promptUsdPerTok": 0.000001,
+      "completionUsdPerTok": 0.000005,
+      "imageUsd": 0,
+      "modality": "text+image+file->text"
+    },
+    "google/gemini-3.5-flash": {
+      "promptUsdPerTok": 0.0000015,
+      "completionUsdPerTok": 0.000009,
+      "imageUsd": 0.0000015,
+      "modality": "text+image+file+audio+video->text"
+    },
+    "moonshotai/kimi-k2.7-code": {
+      "promptUsdPerTok": 7.2e-7,
+      "completionUsdPerTok": 0.0000035,
+      "imageUsd": 0,
+      "modality": "text+image->text"
+    },
+    "z-ai/glm-5.2": {
+      "promptUsdPerTok": 4.2e-7,
+      "completionUsdPerTok": 0.00000132,
+      "imageUsd": 0,
+      "modality": "text->text"
+    },
+    "deepseek/deepseek-v4-flash": {
+      "promptUsdPerTok": 7.7e-8,
+      "completionUsdPerTok": 1.54e-7,
+      "imageUsd": 0,
+      "modality": "text->text"
+    },
+    "inception/mercury-2": {
+      "promptUsdPerTok": 2.5e-7,
+      "completionUsdPerTok": 7.5e-7,
+      "imageUsd": 0,
+      "modality": "text->text"
+    },
+    "openai/gpt-oss-120b": {
+      "promptUsdPerTok": 3.6e-8,
+      "completionUsdPerTok": 1.8e-7,
+      "imageUsd": 0,
+      "modality": "text->text"
+    },
+    "openai/gpt-5.6-luna": {
+      "promptUsdPerTok": 0.000001,
+      "completionUsdPerTok": 0.000006,
+      "imageUsd": 0,
+      "modality": "text+image+file->text"
+    },
+    "qwen/qwen3.7-plus": {
+      "promptUsdPerTok": 3.2e-7,
+      "completionUsdPerTok": 0.00000128,
+      "imageUsd": 0,
+      "modality": "text+image->text"
+    }
+  },
+  "vision": [
+    {
+      "model": "anthropic/claude-fable-5",
+      "route": "openrouter",
+      "vision": false,
+      "httpStatus": 200,
+      "latencyMs": 5090,
+      "contentSample": "Pink",
+      "error": null
+    },
+    {
+      "model": "anthropic/claude-opus-4.8",
+      "route": "openrouter",
+      "vision": false,
+      "httpStatus": 200,
+      "latencyMs": 1941,
+      "contentSample": "Pink",
+      "error": null
+    },
+    {
+      "model": "anthropic/claude-sonnet-5",
+      "route": "openrouter",
+      "vision": false,
+      "httpStatus": 200,
+      "latencyMs": 2273,
+      "contentSample": "Pink",
+      "error": null
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "route": "openrouter",
+      "vision": false,
+      "httpStatus": 200,
+      "latencyMs": 1101,
+      "contentSample": "White.",
+      "error": null
+    },
+    {
+      "model": "google/gemini-3.5-flash",
+      "route": "openrouter",
+      "vision": true,
+      "httpStatus": 200,
+      "latencyMs": 1542,
+      "contentSample": "Red",
+      "error": null
+    },
+    {
+      "model": "moonshotai/kimi-k2.7-code",
+      "route": "openrouter",
+      "vision": false,
+      "httpStatus": 200,
+      "latencyMs": 2520,
+      "contentSample": "",
+      "error": null
+    }
+  ],
+  "probe2": {
+    "probedAt": "2026-07-12T04:45:33.497Z",
+    "note": "1x1 pixel probe was an artifact (claude models answered Pink/White on a pure-red 1x1 — resampling ambiguity). Re-probed with a 64x64 solid-red PNG at max_tokens 128: ALL candidates answered Red.",
+    "results": [
+      {
+        "model": "anthropic/claude-fable-5",
+        "vision": true,
+        "answer": "Red"
+      },
+      {
+        "model": "anthropic/claude-opus-4.8",
+        "vision": true,
+        "answer": "Red"
+      },
+      {
+        "model": "anthropic/claude-sonnet-5",
+        "vision": true,
+        "answer": "Red"
+      },
+      {
+        "model": "anthropic/claude-haiku-4.5",
+        "vision": true,
+        "answer": "Red"
+      },
+      {
+        "model": "google/gemini-3.5-flash",
+        "vision": true,
+        "answer": "red (probe 1)"
+      },
+      {
+        "model": "moonshotai/kimi-k2.7-code",
+        "vision": true,
+        "answer": "Red"
+      }
+    ],
+    "armClassification": {
+      "visionArm": [
+        "claude-fable-5",
+        "claude-opus-4.8",
+        "claude-sonnet-5",
+        "claude-haiku-4.5",
+        "gemini-3.5-flash",
+        "kimi-k2.7-code"
+      ],
+      "textArm": [
+        "glm-5.2",
+        "deepseek-v4-flash",
+        "mercury-2",
+        "gpt-oss-120b"
+      ]
+    }
+  }
+}
